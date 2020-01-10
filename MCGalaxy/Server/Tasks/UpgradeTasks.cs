@@ -184,7 +184,7 @@ namespace MCGalaxy.Tasks {
             Database.Backend.ReadRows("Players", "ID,TimeSpent", null, ReadTimeSpent);
         }
         
-        static object ReadTimeSpent(IDataRecord record, object arg) {
+        static object ReadTimeSpent(IDBDataRecord record, object arg) {
             playerCount++;
             try {
                 int id = record.GetInt32(0);

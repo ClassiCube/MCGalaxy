@@ -34,7 +34,7 @@ namespace MCGalaxy.Eco {
             new ColumnDesc("fine", ColumnType.VarChar, 255),
         };
         
-        static object ListOld(IDataRecord record, object arg) {
+        static object ListOld(IDBDataRecord record, object arg) {
             EcoStats stats = ParseStats(record);
             stats.__unused = record.GetInt("money");            
             ((List<EcoStats>)arg).Add(stats);
@@ -78,7 +78,7 @@ namespace MCGalaxy.Eco {
                                              stats.Payment, stats.Salary, stats.Fine);
         }
         
-        static EcoStats ParseStats(IDataRecord record) {
+        static EcoStats ParseStats(IDBDataRecord record) {
             EcoStats stats;
             stats.Player = record.GetText("player");
             stats.Payment  = Parse(record.GetText("payment"));
@@ -96,7 +96,7 @@ namespace MCGalaxy.Eco {
             return raw.CaselessEq("%cNone") ? null : raw;
         }
         
-        static object ReadStats(IDataRecord record, object arg) { return ParseStats(record); }
+        static object ReadStats(IDBDataRecord record, object arg) { return ParseStats(record); }
         public static EcoStats RetrieveStats(string name) {
             EcoStats stats = default(EcoStats);
             stats.Player   = name;

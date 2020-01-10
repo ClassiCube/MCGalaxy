@@ -41,7 +41,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }
 
-        static object ListZones(IDataRecord record, object arg) {
+        static object ListZones(IDBDataRecord record, object arg) {
             Zone z = new Zone();
             z.MinX = (ushort)record.GetInt("SmallX");
             z.MinY = (ushort)record.GetInt("SmallY");

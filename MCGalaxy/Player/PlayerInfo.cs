@@ -119,7 +119,7 @@ namespace MCGalaxy {
         }
         
         
-        static object ReadAccounts(IDataRecord record, object arg) {
+        static object ReadAccounts(IDBDataRecord record, object arg) {
             List<string> names = (List<string>)arg;
             string name = record.GetText(0);
             

@@ -58,7 +58,7 @@ namespace MCGalaxy.DB {
             Database.Backend.DeleteTable(table);
         }
         
-        object DumpRow(IDataRecord record, object arg) {
+        object DumpRow(IDBDataRecord record, object arg) {
             if (errorOccurred) return arg;
             
             try {
@@ -124,7 +124,7 @@ namespace MCGalaxy.DB {
         }
         
         
-        void UpdateBlock(IDataRecord record) {
+        void UpdateBlock(IDBDataRecord record) {
             entry.OldRaw = Block.Invalid;
             entry.NewRaw = record.GetByte(5);
             byte blockFlags = record.GetByte(6);
@@ -138,14 +138,14 @@ namespace MCGalaxy.DB {
             }
         }
         
-        void UpdateCoords(IDataRecord record) {
+        void UpdateCoords(IDBDataRecord record) {
             int x = record.GetInt32(2);
             int y = record.GetInt32(3);
             int z = record.GetInt32(4);
             entry.Index = x + dims.X * (z + dims.Z * y);
         }
         
-        void UpdatePlayerID(IDataRecord record) {
+        void UpdatePlayerID(IDBDataRecord record) {
             int id;
             string user = record.GetString(0);
             if (!nameCache.TryGetValue(user, out id)) {
@@ -159,7 +159,7 @@ namespace MCGalaxy.DB {
             entry.PlayerID = id;
         }
         
-        void UpdateTimestamp(IDataRecord record) {
+        void UpdateTimestamp(IDBDataRecord record) {
             // date is in format yyyy-MM-dd hh:mm:ss
             string date = Database.Backend.RawGetDateTime(record, 1);
             int year =  (date[0] - '0') * 1000 + (date[1] - '0') * 100 + (date[2] - '0') * 10 + (date[3] - '0');

@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
             new ColumnDesc("tags", ColumnType.UInt24),
         };
         
-        static object ReadStats(IDataRecord record, object arg) {
+        static object ReadStats(IDBDataRecord record, object arg) {
             CtfStats stats;
             stats.Points   = record.GetInt("Points");
             stats.Captures = record.GetInt("Captures");

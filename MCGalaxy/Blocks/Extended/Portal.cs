@@ -55,7 +55,7 @@ namespace MCGalaxy.Blocks.Extended {
         }
         
         
-        internal static object ReadCoords(IDataRecord record, object arg) {
+        internal static object ReadCoords(IDBDataRecord record, object arg) {
             Vec3U16 pos;
             pos.X = (ushort)record.GetInt32(0);
             pos.Y = (ushort)record.GetInt32(1);
@@ -65,8 +65,8 @@ namespace MCGalaxy.Blocks.Extended {
             return arg;
         }
         
-        static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
-        static PortalExit ParseExit(IDataRecord record) {
+        static object ReadExit(IDBDataRecord record, object arg) { return ParseExit(record); }
+        static PortalExit ParseExit(IDBDataRecord record) {
             PortalExit data = new PortalExit();
             data.Map = record.GetText(0).Cp437ToUnicode();
             
@@ -76,7 +76,7 @@ namespace MCGalaxy.Blocks.Extended {
             return data;
         }
         
-        static object ReadAllExits(IDataRecord record, object arg) {
+        static object ReadAllExits(IDBDataRecord record, object arg) {
             ((List<PortalExit>)arg).Add(ParseExit(record));
             return arg;
         }

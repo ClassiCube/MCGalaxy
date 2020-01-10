@@ -103,7 +103,7 @@ namespace MCGalaxy.Games {
             new ColumnDesc("Additional1", ColumnType.Int32),
         };
         
-        static object ReadStats(IDataRecord record, object arg) {
+        static object ReadStats(IDBDataRecord record, object arg) {
             ZombieStats stats;
             stats.TotalRounds   = record.GetInt("TotalRounds");
             stats.MaxRounds     = record.GetInt("MaxRounds");

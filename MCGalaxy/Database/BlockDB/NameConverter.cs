@@ -38,7 +38,7 @@ namespace MCGalaxy.DB {
             return name != null ? name : "ID#" + id;
         }
         
-        static object ListIds(IDataRecord record, object arg) {
+        static object ListIds(IDBDataRecord record, object arg) {
             ((List<int>)arg).Add(record.GetInt32(0));
             return arg;
         }

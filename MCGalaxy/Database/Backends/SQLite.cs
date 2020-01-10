@@ -39,22 +39,22 @@ namespace MCGalaxy.SQL {
         public override bool EnforcesTextLength { get { return false; } }
         public override bool MultipleSchema { get { return false; } }
         
-        internal override IDbConnection CreateConnection() {
+        internal override IDBConnection CreateConnection() {
             return new MCGSQLiteConnection();
         }
         
-        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
+        internal override IDBCommand CreateCommand(string sql, IDBConnection conn) {
             return new SQLiteCommand(sql, (SQLiteConnection)conn);
         }
         
-        internal override IDbDataParameter CreateParameter() {
+        internal override IDBDataParameter CreateParameter() {
             return new SQLiteParameter();
         }
         
         
         public override void CreateDatabase() { }
         
-        public override string RawGetDateTime(IDataRecord record, int col) {
+        public override string RawGetDateTime(IDBDataRecord record, int col) {
             return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
         }
         
@@ -75,7 +75,7 @@ namespace MCGalaxy.SQL {
             return tables;
         }
         
-        static object IterateColumnNames(IDataRecord record, object arg) {
+        static object IterateColumnNames(IDBDataRecord record, object arg) {
             List<string> columns = (List<string>)arg;
             columns.Add(record.GetText("name"));
             return arg;
@@ -239,7 +239,7 @@ namespace MCGalaxy.SQL {
         internal static extern IntPtr sqlite3_errstr(SQLiteErrorCode rc); /* 3.7.15+ */
     }
 
-    public abstract class SQLiteConnection : IDbConnection {
+    public abstract class SQLiteConnection : IDBConnection {
         ConnectionState state = ConnectionState.Closed;
         internal int _transactionLevel;
         IntPtr handle;
@@ -247,11 +247,7 @@ namespace MCGalaxy.SQL {
         protected abstract bool ConnectionPooling { get; }
         protected abstract string DBPath { get; }
 
-        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel) {
-            return new SQLiteTransaction(this);
-        }
-
-        public IDbTransaction BeginTransaction() {
+        public IDBTransaction BeginTransaction() {
             return new SQLiteTransaction(this);
         }
 
@@ -259,7 +255,7 @@ namespace MCGalaxy.SQL {
         public int ConnectionTimeout { get { return SQLiteConvert.Timeout; } }     
         public string ConnectionString { get { return ""; } set { } }
 
-        public IDbCommand CreateCommand() { return new SQLiteCommand(this); }
+        public IDBCommand CreateCommand() { return new SQLiteCommand(this); }
         public string Database { get { return "main"; } }
 
         public long LastInsertRowId {
@@ -428,7 +424,7 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    public sealed class SQLiteCommand : IDbCommand {
+    public sealed class SQLiteCommand : IDBCommand {
         string strCmdText, strRemaining;
         SQLiteConnection conn;
         SQLiteParameterCollection parameters = new SQLiteParameterCollection();
@@ -437,7 +433,7 @@ namespace MCGalaxy.SQL {
         public SQLiteCommand(SQLiteConnection connection) : this(null, connection) { }
         public SQLiteCommand(string commandText, SQLiteConnection connection) {
             if (commandText != null) CommandText = commandText;
-            if (connection != null)   Connection = connection;
+            conn = connection;
         }
         
         void DisposeStatement() {
@@ -470,7 +466,6 @@ namespace MCGalaxy.SQL {
             return stmt;
         }
 
-        public void Cancel() { }
         public string CommandText {
             get { return strCmdText; }
             set { strCmdText = value; strRemaining = value; }
@@ -480,40 +475,33 @@ namespace MCGalaxy.SQL {
             get { return SQLiteConvert.Timeout; } set { }
         }
         
-        public IDbConnection Connection {
-            get { return conn; } set { conn = (SQLiteConnection)value; }
+        public bool IsConnectionClosed {
+            get { return conn == null || conn.State != ConnectionState.Open; }
         }
 
-        public CommandType CommandType { get { return CommandType.Text; } set { } }
-        public IDbDataParameter CreateParameter() { return new SQLiteParameter(); }
-        public IDataParameterCollection Parameters { get { return parameters; } }
-        public IDbTransaction Transaction { get { return null; } set { } }
+        public IDBDataParameterCollection Parameters { get { return parameters; } }
+        public IDBTransaction Transaction { get { return null; } set { } }
 
-        public IDataReader ExecuteReader(CommandBehavior behavior) {
+        public IDBDataReader ExecuteReader() {
             SQLiteConnection.Check(conn);
             return new SQLiteDataReader(this);
         }
-        public IDataReader ExecuteReader() { return ExecuteReader(0); }
 
         public int ExecuteNonQuery() {
-            using (IDataReader reader = ExecuteReader()) {
+            using (IDBDataReader reader = ExecuteReader()) {
                 while (reader.NextResult()) { }
                 return reader.RecordsAffected;
             }
         }
 
         public object ExecuteScalar() {
-            using (IDataReader reader = ExecuteReader()) {
+            using (IDBDataReader reader = ExecuteReader()) {
                 if (reader.Read()) return reader[0];
             }
             return null;
         }
 
         public void Prepare() { }
-
-        public UpdateRowSource UpdatedRowSource {
-            get { return UpdateRowSource.None; } set { }
-        }
     }
 
     static class SQLiteConvert {
@@ -711,7 +699,7 @@ namespace MCGalaxy.SQL {
         public TypeAffinity Affinity;
     }
 
-    public sealed class SQLiteDataReader : IDataReader {
+    public sealed class SQLiteDataReader : IDBDataReader {
         SQLiteCommand _command;
         SQLiteStatement stmt;
         int readState, rowsAffected, columns;
@@ -734,26 +722,16 @@ namespace MCGalaxy.SQL {
         void CheckClosed() {
             if (_command == null)
                 throw new InvalidOperationException("DataReader has been closed");
-            if (_command.Connection.State != ConnectionState.Open)
+            if (_command.IsConnectionClosed)
                 throw new InvalidOperationException("Connection was closed, statement was terminated");
         }
 
-        public int Depth { get { return 0; } }
         public int FieldCount { get { return columns; } }
 
         void VerifyForGet() {
             CheckClosed();
             if (readState != 0) throw new InvalidOperationException("No current row");
         }
-        
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length) {
-            throw new NotSupportedException();
-        }
-        
-        public IDataReader GetData(int i) { throw new NotSupportedException(); }
-        public decimal GetDecimal(int i) { throw new NotSupportedException(); }
-        public Guid GetGuid(int i) { throw new NotSupportedException(); }
-        public DataTable GetSchemaTable() { throw new NotSupportedException(); }
 
         public bool GetBoolean(int i) { return GetInt32(i) != 0; }
         public byte GetByte(int i) { return (byte)GetInt32(i); }
@@ -982,7 +960,7 @@ namespace MCGalaxy.SQL {
         public const int Done = 101;
     }
 
-    public sealed class SQLiteParameter : IDbDataParameter {
+    public sealed class SQLiteParameter : IDBDataParameter {
         int type = -1;
         object value;
         string name;
@@ -1011,24 +989,10 @@ namespace MCGalaxy.SQL {
                     type = (int)SQLiteConvert.TypeToDbType(value.GetType());
             }
         }
-        
-        public bool IsNullable { get { return true; } set { } }
-        public string SourceColumn { get { return ""; } set { } }
-        public ParameterDirection Direction { get { return 0; } set { } }
-        public DataRowVersion SourceVersion { get { return 0; } set { } }
-        
-        public byte Precision { get { return 0; } set { } }
-        public byte Scale { get { return 0; } set { } }
-        public int Size { get { return 0; } set { } }
     }
 
-    public sealed class SQLiteParameterCollection : IDataParameterCollection {
+    public sealed class SQLiteParameterCollection : IDBDataParameterCollection {
         internal List<SQLiteParameter> list = new List<SQLiteParameter>();
-        public bool IsSynchronized { get { return false; } }
-        public bool IsFixedSize { get { return false; } }
-        public bool IsReadOnly { get { return false; } }
-        public object SyncRoot { get { return null; } }
-        public IEnumerator GetEnumerator() { return null; }
 
         public int Add(object value) {
             list.Add((SQLiteParameter)value);
@@ -1036,22 +1000,6 @@ namespace MCGalaxy.SQL {
         }
 
         public void Clear() { list.Clear(); }
-        public int Count { get { return list.Count; } }
-        
-        public bool Contains(string name) { return false; }
-        public bool Contains(object value) { return false; }
-        public void CopyTo(Array array, int index) { }
-        
-        public object this[string name] { get {return null; } set { } }
-        public object this[int index] { get {return null; } set { } }
-        
-        public int IndexOf(string name) { return -1; }
-        public int IndexOf(object value) { return -1; }
-        public void Insert(int index, object value) { }
-
-        public void Remove(object value) { }
-        public void RemoveAt(string name) { }
-        public void RemoveAt(int index) { }
     }
 
     sealed class SQLiteStatement : IDisposable {
@@ -1260,14 +1208,14 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    public sealed class SQLiteTransaction : IDbTransaction {
+    public sealed class SQLiteTransaction : IDBTransaction {
         SQLiteConnection conn;
         
         internal SQLiteTransaction(SQLiteConnection connection) {
             conn = connection;
             if (conn._transactionLevel++ == 0) {
                 try {
-                    using (IDbCommand cmd = conn.CreateCommand()) {
+                    using (IDBCommand cmd = conn.CreateCommand()) {
                         cmd.CommandText = "BEGIN IMMEDIATE";
                         cmd.ExecuteNonQuery();
                     }
@@ -1291,16 +1239,13 @@ namespace MCGalaxy.SQL {
             IsValid(true);
 
             if (--conn._transactionLevel == 0) {
-                using (IDbCommand cmd = conn.CreateCommand()) {
+                using (IDBCommand cmd = conn.CreateCommand()) {
                     cmd.CommandText = "COMMIT";
                     cmd.ExecuteNonQuery();
                 }
             }
             conn = null;
         }
-
-        public IDbConnection Connection { get { return conn; } }
-        public IsolationLevel IsolationLevel { get { return IsolationLevel.Serializable; } }
 
         public void Rollback() {
             SQLiteConnection.Check(conn);
@@ -1312,7 +1257,7 @@ namespace MCGalaxy.SQL {
             if (conn == null) return;
             
             try {
-                using (IDbCommand cmd = conn.CreateCommand()) {
+                using (IDBCommand cmd = conn.CreateCommand()) {
                     cmd.CommandText = "ROLLBACK";
                     cmd.ExecuteNonQuery();
                 }

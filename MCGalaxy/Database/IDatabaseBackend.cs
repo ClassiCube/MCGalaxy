@@ -31,9 +31,9 @@ namespace MCGalaxy.SQL {
         /// <summary> Whether this backend supports multiple database schemas. </summary>
         public abstract bool MultipleSchema { get; }
         
-        internal abstract IDbConnection CreateConnection();
-        internal abstract IDbCommand CreateCommand(string sql, IDbConnection conn);
-        internal abstract IDbDataParameter CreateParameter();
+        internal abstract IDBConnection CreateConnection();
+        internal abstract IDBCommand CreateCommand(string sql, IDBConnection conn);
+        internal abstract IDBDataParameter CreateParameter();
         
         /// <summary> Suffix required after a WHERE clause for caseless string comparison. </summary>
         public string CaselessWhereSuffix { get; protected set; }
@@ -44,7 +44,7 @@ namespace MCGalaxy.SQL {
         /// <summary> Creates the schema for this database (if required). </summary>
         public abstract void CreateDatabase();
         
-        public abstract string RawGetDateTime(IDataRecord record, int col);
+        public abstract string RawGetDateTime(IDBDataRecord record, int col);
         
         protected internal virtual void ParseCreate(ref string cmd) { }
         

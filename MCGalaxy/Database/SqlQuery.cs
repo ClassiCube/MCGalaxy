@@ -26,12 +26,12 @@ namespace MCGalaxy.SQL {
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, object[] parameters, bool createDB) {
             IDatabaseBackend db = Database.Backend;
-            using (IDbConnection conn = db.CreateConnection()) {
+            using (IDBConnection conn = db.CreateConnection()) {
                 conn.Open();
                 if (!createDB && db.MultipleSchema)
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                using (IDBCommand cmd = db.CreateCommand(sql, conn)) {
                     FillParams(cmd, parameters);
                     cmd.ExecuteNonQuery();
                 }
@@ -42,14 +42,14 @@ namespace MCGalaxy.SQL {
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public static object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
             IDatabaseBackend db = Database.Backend;
-            using (IDbConnection conn = db.CreateConnection()) {
+            using (IDBConnection conn = db.CreateConnection()) {
                 conn.Open();
                 if (db.MultipleSchema)
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                using (IDBCommand cmd = db.CreateCommand(sql, conn)) {
                     FillParams(cmd, parameters);
-                    using (IDataReader reader = cmd.ExecuteReader()) {
+                    using (IDBDataReader reader = cmd.ExecuteReader()) {
                         while (reader.Read()) { arg = callback(reader, arg); }
                     }
                 }
@@ -59,13 +59,13 @@ namespace MCGalaxy.SQL {
         }
         
         
-        internal static void FillParams(IDbCommand cmd, object[] parameters) {
+        internal static void FillParams(IDBCommand cmd, object[] parameters) {
             if (parameters == null || parameters.Length == 0) return;
             IDatabaseBackend db = Database.Backend;
             
             string[] names = GetNames(parameters.Length);
             for (int i = 0; i < parameters.Length; i++) {
-                IDbDataParameter arg = db.CreateParameter();
+                IDBDataParameter arg = db.CreateParameter();
                 arg.ParameterName = names[i];
                 arg.Value = parameters[i];
                 cmd.Parameters.Add(arg);

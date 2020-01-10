@@ -39,7 +39,7 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        void MakeInsertFormat(IDataRecord record) {
+        void MakeInsertFormat(IDBDataRecord record) {
             sql.WriteLine("--");
             sql.WriteLine("-- Dumping data for table `{0}`", table);
             sql.WriteLine("--");
@@ -55,7 +55,7 @@ namespace MCGalaxy.SQL {
             gottenRows = true;
         }
         
-        object DumpRow(IDataRecord record, object arg) {
+        object DumpRow(IDBDataRecord record, object arg) {
             if (!gottenRows) MakeInsertFormat(record);
             sql.WriteLine(insertCols);
 

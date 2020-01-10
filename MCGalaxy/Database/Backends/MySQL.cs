@@ -34,18 +34,18 @@ namespace MCGalaxy.SQL {
         public override bool EnforcesTextLength { get { return true; } }
         public override bool MultipleSchema { get { return true; } }     
         
-        internal override IDbConnection CreateConnection() {
+        internal override IDBConnection CreateConnection() {
             const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
             string str = string.Format(format, Server.Config.MySQLHost, Server.Config.MySQLPort,
                                        Server.Config.MySQLUsername, Server.Config.MySQLPassword, Server.Config.DatabasePooling);
             return new MySqlConnection(str);
         }
         
-        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
+        internal override IDBCommand CreateCommand(string sql, IDBConnection conn) {
             return new MySqlCommand(sql, (MySqlConnection)conn);
         }
         
-        internal override IDbDataParameter CreateParameter() {
+        internal override IDBDataParameter CreateParameter() {
             return new MySqlParameter();
         }
 
@@ -55,7 +55,7 @@ namespace MCGalaxy.SQL {
             Database.Do(sql, true, null, null);
         }
         
-        public override string RawGetDateTime(IDataRecord record, int col) {
+        public override string RawGetDateTime(IDBDataRecord record, int col) {
             DateTime date = record.GetDateTime(col);
             return date.ToString(Database.DateFormat);
         }
@@ -82,7 +82,7 @@ namespace MCGalaxy.SQL {
         }
         
 
-        static object IterateExists(IDataRecord record, object arg) { return ""; }
+        static object IterateExists(IDBDataRecord record, object arg) { return ""; }
         public override bool TableExists(string table) {
             ValidateTable(table);
             return Database.Iterate("SHOW TABLES LIKE '" + table + "'",

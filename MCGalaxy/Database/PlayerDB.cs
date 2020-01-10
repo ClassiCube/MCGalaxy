@@ -122,7 +122,7 @@ namespace MCGalaxy.DB {
                                 null, n => n[0], "players", 20);
         }       
                 
-        static object ReadStats(IDataRecord record, object arg) {
+        static object ReadStats(IDBDataRecord record, object arg) {
             PlayerData stats = PlayerData.Parse(record);
             ((List<PlayerData>)arg).Add(stats); return arg;
         }
