@@ -70,12 +70,11 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -406,6 +405,72 @@
     <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\Backends\MySQL.cs" />
+    <Compile Include="Database\MySql.Data\Authentication\AuthenticationManager.cs" />
+    <Compile Include="Database\MySql.Data\Authentication\CachingSha2AuthenticationPlugin.cs" />
+    <Compile Include="Database\MySql.Data\Authentication\MySQLAuthenticationPlugin.cs" />
+    <Compile Include="Database\MySql.Data\Authentication\MySqlPemReader.cs" />
+    <Compile Include="Database\MySql.Data\Authentication\NativePasswordPlugins.cs" />
+    <Compile Include="Database\MySql.Data\Authentication\Sha256AuthenticationPlugin.cs" />
+    <Compile Include="Database\MySql.Data\CharSetMap.cs" />
+    <Compile Include="Database\MySql.Data\command.cs" />
+    <Compile Include="Database\MySql.Data\common\Cache.cs" />
+    <Compile Include="Database\MySql.Data\common\LowResolutionStopwatch.cs" />
+    <Compile Include="Database\MySql.Data\common\MyNetworkStream.cs" />
+    <Compile Include="Database\MySql.Data\common\MySqlTokenizer.cs" />
+    <Compile Include="Database\MySql.Data\common\Platform.cs" />
+    <Compile Include="Database\MySql.Data\common\StringUtility.cs" />
+    <Compile Include="Database\MySql.Data\common\Version.cs" />
+    <Compile Include="Database\MySql.Data\Connection.cs" />
+    <Compile Include="Database\MySql.Data\Crypt.cs" />
+    <Compile Include="Database\MySql.Data\datareader.cs" />
+    <Compile Include="Database\MySql.Data\Driver.cs" />
+    <Compile Include="Database\MySql.Data\Exception.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlCommand.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlConnection.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlConnectionStringBuilder.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlDataReader.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameter.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameterCollection.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlTrace.cs" />
+    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlTransaction.cs" />
+    <Compile Include="Database\MySql.Data\Field.cs" />
+    <Compile Include="Database\MySql.Data\MySqlConnectionStringBuilder.cs" />
+    <Compile Include="Database\MySql.Data\MysqlDefs.cs" />
+    <Compile Include="Database\MySql.Data\MySqlError.cs" />
+    <Compile Include="Database\MySql.Data\MySqlHelper.cs" />
+    <Compile Include="Database\MySql.Data\MySqlPacket.cs" />
+    <Compile Include="Database\MySql.Data\MySqlPool.cs" />
+    <Compile Include="Database\MySql.Data\MySqlPoolManager.cs" />
+    <Compile Include="Database\MySql.Data\MySqlPromotableTransaction.cs" />
+    <Compile Include="Database\MySql.Data\MySqlStream.cs" />
+    <Compile Include="Database\MySql.Data\NativeDriver.cs" />
+    <Compile Include="Database\MySql.Data\parameter.cs" />
+    <Compile Include="Database\MySql.Data\parameter_collection.cs" />
+    <Compile Include="Database\MySql.Data\PreparableStatement.cs" />
+    <Compile Include="Database\MySql.Data\Properties\Resources.Designer.cs" />
+    <Compile Include="Database\MySql.Data\ResultSet.cs" />
+    <Compile Include="Database\MySql.Data\Statement.cs" />
+    <Compile Include="Database\MySql.Data\TimedStream.cs" />
+    <Compile Include="Database\MySql.Data\transaction.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlBinary.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlBit.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlByte.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlConversionException.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlDateTime.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlDecimal.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlDouble.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlGuid.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlInt16.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlInt32.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlInt64.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlSingle.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlString.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlTime.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlUByte.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlUInt16.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlUInt32.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlUInt64.cs" />
+    <Compile Include="Database\MySql.Data\Types\MySqlValue.cs" />
     <Compile Include="Database\SqlQuery.cs" />
     <Compile Include="Database\PlayerData.cs" />
     <Compile Include="Database\Stats\OfflineStat.cs" />
@@ -708,6 +773,8 @@
     <None Include="..\README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Database\MySql.Data\Properties\keywords.txt" />
+    <None Include="Database\MySql.Data\Properties\ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Changelog.txt">
@@ -726,6 +793,13 @@
   <ItemGroup>
     <Folder Include="Commands\Maintenance" />
     <Folder Include="Config\Permissions" />
+    <Folder Include="Database\MySql.Data" />
+    <Folder Include="Database\MySql.Data\Authentication" />
+    <Folder Include="Database\MySql.Data\common" />
+    <Folder Include="Database\MySql.Data\extensions" />
+    <Folder Include="Database\MySql.Data\extensions\NonRT" />
+    <Folder Include="Database\MySql.Data\Properties" />
+    <Folder Include="Database\MySql.Data\Types" />
     <Folder Include="Database\Stats" />
     <Folder Include="Games\Weapons" />
     <Folder Include="Games\RoundsGame" />
@@ -739,6 +813,9 @@
     <Folder Include="Server\Maintenance" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Database\MySql.Data\Properties\Resources.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
