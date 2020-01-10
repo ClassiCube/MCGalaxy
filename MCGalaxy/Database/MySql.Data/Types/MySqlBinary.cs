@@ -90,7 +90,7 @@ namespace MySql.Data.Types
       }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       byte[] buffToWrite = (val as byte[]);
       if (buffToWrite == null)
@@ -101,18 +101,11 @@ namespace MySql.Data.Types
         else
         {
           string s = val.ToString();
-          if (length == 0)
-            length = s.Length;
-          else
-            s = s.Substring(0, length);
           buffToWrite = packet.Encoding.GetBytes(s);
         }
       }
 
-      // we assume zero length means write all of the value
-      if (length == 0)
-        length = buffToWrite.Length;
-
+      int length = buffToWrite.Length;
       if (buffToWrite == null)
         throw new MySqlException("Only byte arrays and strings can be serialized by MySqlBinary");
 

@@ -30,10 +30,11 @@ using IsolationLevel = System.Data.IsolationLevel;
 using System.Text;
 using MySql.Data.Common;
 using System.Diagnostics;
+using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed partial class MySqlConnection : DbConnection, IDisposable
+  public sealed class MySqlConnection : IDBConnection
   {
     internal ConnectionState connectionState;
     internal Driver driver;
@@ -96,20 +97,6 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    internal bool SoftClosed
-    {
-      get
-      {
-#if !RT
-        return (State == ConnectionState.Closed) &&
-          driver != null &&
-          driver.CurrentTransaction != null;
-#else
-        return false;            
-#endif
-      }
-    }
-
     internal bool IsInUse
     {
       get { return isInUse; }
@@ -128,35 +115,22 @@ namespace MySql.Data.MySqlClient
       get { return driver.ThreadID; }
     }
 
-    /// <summary>
-    /// Gets the name of the MySQL server to which to connect.
-    /// </summary>
-    public override string DataSource
-    {
-      get { return Settings.Server; }
-    }
-
-    public override int ConnectionTimeout
+    public int ConnectionTimeout
     {
       get { return (int)Settings.ConnectionTimeout; }
     }
 
-    public override string Database
+    public string Database
     {
       get { return database; }
     }
 
-    public override ConnectionState State
+    public ConnectionState State
     {
       get { return connectionState; }
     }
 
-    public override string ServerVersion
-    {
-      get { return driver.Version.ToString(); }
-    }
-
-    public override string ConnectionString
+    public string ConnectionString
     {
       get { return Settings.ConnectionString; }
       set
@@ -193,72 +167,7 @@ namespace MySql.Data.MySqlClient
 
     #endregion
 
-    #region Transactions
-
-#if !MONO && !RT
-    /// <summary>
-    /// Enlists in the specified transaction. 
-    /// </summary>
-    /// <param name="transaction">
-    /// A reference to an existing <see cref="System.Transactions.Transaction"/> in which to enlist.
-    /// </param>
-    public override void EnlistTransaction(Transaction transaction)
-    {
-      // enlisting in the null transaction is a noop
-      if (transaction == null)
-        return;
-
-      // guard against trying to enlist in more than one transaction
-      if (driver.CurrentTransaction != null)
-      {
-        if (driver.CurrentTransaction.BaseTransaction == transaction)
-          return;
-
-        throw new MySqlException("Already enlisted");
-      }
-
-      // now see if we need to swap out drivers.  We would need to do this since
-      // we have to make sure all ops for a given transaction are done on the
-      // same physical connection.
-      Driver existingDriver = DriverTransactionManager.GetDriverInTransaction(transaction);
-      if (existingDriver != null)
-      {
-        // we can't allow more than one driver to contribute to the same connection
-        if (existingDriver.IsInActiveUse)
-          throw new NotSupportedException("Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported");
-
-        // there is an existing driver and it's not being currently used.
-        // now we need to see if it is using the same connection string
-        string text1 = existingDriver.Settings.ConnectionString;
-        string text2 = Settings.ConnectionString;
-        if (String.Compare(text1, text2, true) != 0)
-          throw new NotSupportedException("Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported");
-
-        // close existing driver
-        // set this new driver as our existing driver
-        CloseFully();
-        driver = existingDriver;
-      }
-
-      if (driver.CurrentTransaction == null)
-      {
-        MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
-        if (!transaction.EnlistPromotableSinglePhase(t))
-          throw new NotSupportedException("MySQL Connector/Net does not currently support distributed transactions");
-
-        driver.CurrentTransaction = t;
-        DriverTransactionManager.SetDriverInTransaction(driver);
-        driver.IsInActiveUse = true;
-      }
-    }
-#endif
-
-    public new MySqlTransaction BeginTransaction()
-    {
-      return BeginTransaction(IsolationLevel.RepeatableRead);
-    }
-
-    public new MySqlTransaction BeginTransaction(IsolationLevel iso)
+    public IDBTransaction BeginTransaction()
     {
       //TODO: check note in help
       if (State != ConnectionState.Open)
@@ -268,31 +177,10 @@ namespace MySql.Data.MySqlClient
       if (driver.HasStatus(ServerStatusFlags.InTransaction))
         throw new InvalidOperationException("Nested transactions are not supported");
 
-      MySqlTransaction t = new MySqlTransaction(this, iso);
-
+      MySqlTransaction t = new MySqlTransaction(this);
       MySqlCommand cmd = new MySqlCommand("", this);
 
-      cmd.CommandText = "SET SESSION TRANSACTION ISOLATION LEVEL ";
-      switch (iso)
-      {
-        case IsolationLevel.ReadCommitted:
-          cmd.CommandText += "READ COMMITTED";
-          break;
-        case IsolationLevel.ReadUncommitted:
-          cmd.CommandText += "READ UNCOMMITTED";
-          break;
-        case IsolationLevel.RepeatableRead:
-          cmd.CommandText += "REPEATABLE READ";
-          break;
-        case IsolationLevel.Serializable:
-          cmd.CommandText += "SERIALIZABLE";
-          break;
-        case IsolationLevel.Chaos:
-          throw new NotSupportedException("Chaos isolation level is not supported.");
-        case IsolationLevel.Snapshot:
-          throw new NotSupportedException("Snapshot isolation level is not supported.");
-      }
-
+      cmd.CommandText = "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ";
       cmd.ExecuteNonQuery();
 
       cmd.CommandText = "BEGIN";
@@ -301,10 +189,7 @@ namespace MySql.Data.MySqlClient
       return t;
     }
 
-    #endregion
-
-    /// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
-    public override void ChangeDatabase(string databaseName)
+    public void ChangeDatabase(string databaseName)
     {
       if (databaseName == null || databaseName.Trim().Length == 0)
         throw new ArgumentException("Parameter is invalid", "databaseName");
@@ -338,28 +223,13 @@ namespace MySql.Data.MySqlClient
         return;
       ConnectionState oldConnectionState = connectionState;
       connectionState = newConnectionState;
-      if (broadcast)
-        OnStateChange(new StateChangeEventArgs(oldConnectionState, connectionState));
     }
 
-    public override void Open()
+    public void Open()
     {
       if (State == ConnectionState.Open)
         throw new InvalidOperationException("The connection is already open");
       SetState(ConnectionState.Connecting, true);
-
-#if !RT
-      // if we are auto enlisting in a current transaction, then we will be
-      // treating the connection as pooled
-      if (Settings.AutoEnlist && Transaction.Current != null)
-      {
-        driver = DriverTransactionManager.GetDriverInTransaction(Transaction.Current);
-        if (driver != null &&
-          (driver.IsInActiveUse ||
-          !driver.Settings.EquivalentTo(this.Settings)))
-          throw new NotSupportedException("Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported");
-      }
-#endif
 
       try
       {
@@ -398,19 +268,11 @@ namespace MySql.Data.MySqlClient
           ChangeDatabase(Settings.Database);
       }
 
-      // if we are opening up inside a current transaction, then autoenlist
-      // TODO: control this with a connection string option
-#if !MONO && !RT
-      if (Transaction.Current != null && Settings.AutoEnlist)
-        EnlistTransaction(Transaction.Current);
-#endif
-
       hasBeenOpen = true;
       SetState(ConnectionState.Open, true);
     }
 
-    /// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
-    public new MySqlCommand CreateCommand()
+    public IDBCommand CreateCommand()
     {
       // Return a new instance of a command object.
       MySqlCommand c = new MySqlCommand();
@@ -442,7 +304,7 @@ namespace MySql.Data.MySqlClient
         // if we are in a transaction, roll it back
         if (driver.HasStatus(ServerStatusFlags.InTransaction))
         {
-          MySqlTransaction t = new MySqlTransaction(this, IsolationLevel.Unspecified);
+          MySqlTransaction t = new MySqlTransaction(this);
           t.Rollback();
         }
 
@@ -453,8 +315,7 @@ namespace MySql.Data.MySqlClient
       driver = null;
     }
 
-    /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
-    public override void Close()
+    public void Close()
     {
       if (driver != null)
         driver.IsPasswordExpired = false;
@@ -466,31 +327,13 @@ namespace MySql.Data.MySqlClient
 
       // if the reader was opened with CloseConnection then driver
       // will be null on the second time through
-      if (driver != null)
-      {
-#if !RT
-        if (driver.CurrentTransaction == null)
-#endif
-          CloseFully();
-#if !RT
-        else
-          driver.IsInActiveUse = false;
-#endif
-      }
+      if (driver != null) CloseFully();
 
       SetState(ConnectionState.Closed, true);
     }
 
-    internal string CurrentDatabase()
-    {
-      if (Database != null && Database.Length > 0)
-        return Database;
-      MySqlCommand cmd = new MySqlCommand("SELECT database()", this);
-      return cmd.ExecuteScalar().ToString();
-    }
 
-
-
+    
     internal void HandleTimeoutOrThreadAbort(Exception ex)
     {
       bool isFatal = false;
@@ -639,51 +482,19 @@ namespace MySql.Data.MySqlClient
 
     #endregion
 
+    bool disposed;
     public void Dispose()
     {
       Dispose(true);
       GC.SuppressFinalize(this);
     }
     
-    private bool disposed = false;
-    public override DataTable GetSchema()
+    void Dispose(bool disposing)
     {
-      throw new NotImplementedException();
-    }
+      if (disposed) return;
 
-    public override DataTable GetSchema(string collectionName)
-    {
-      throw new NotImplementedException();
-    }
-
-    public override DataTable GetSchema(string collectionName, string[] restrictionValues)
-    {
-      throw new NotImplementedException();
-    }
-
-    protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
-    {
-      if (isolationLevel == IsolationLevel.Unspecified)
-        return BeginTransaction();
-      return BeginTransaction(isolationLevel);
-    }
-
-    protected override DbCommand CreateDbCommand()
-    {
-      return CreateCommand();
-    }
-    
-    protected override void Dispose(bool disposing)
-    {
-      if (disposed)
-        return;
-
-      if (State == ConnectionState.Open)
-        Close();
-
+      if (disposing && State == ConnectionState.Open) Close();
       disposed = true;
-      base.Dispose(disposing);
-
     }
   }
 

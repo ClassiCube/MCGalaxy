@@ -147,8 +147,7 @@ namespace MySql.Data.MySqlClient
       for (int i = 0; i < parametersToSend.Count; i++)
       {
         MySqlParameter p = parametersToSend[i];
-        nullMap[i] = (p.Value == DBNull.Value || p.Value == null) ||
-            p.Direction == ParameterDirection.Output;
+        nullMap[i] = (p.Value == DBNull.Value || p.Value == null);
         if (nullMap[i]) continue;
         packet.Encoding = p.Encoding;
         p.Serialize(packet, true, Connection.Settings);

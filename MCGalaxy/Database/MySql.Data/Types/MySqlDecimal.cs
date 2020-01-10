@@ -104,7 +104,7 @@ namespace MySql.Data.Types
       get { return "DECIMAL"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       decimal v = (val is decimal) ? (decimal)val : Convert.ToDecimal(val);
       string valStr = v.ToString(CultureInfo.InvariantCulture);

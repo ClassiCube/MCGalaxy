@@ -67,16 +67,12 @@ namespace MySql.Data.MySqlClient
 
     protected MySqlParameterCollection Parameters
     {
-      get { return command.Parameters; }
+      get { return (MySqlParameterCollection)command.Parameters; }
     }
 
     #endregion
 
     public virtual void Close(MySqlDataReader reader)
-    {
-    }
-
-    public virtual void Resolve(bool preparing)
     {
     }
 
@@ -101,8 +97,7 @@ namespace MySql.Data.MySqlClient
 
     protected virtual void BindParameters()
     {
-      MySqlParameterCollection parameters = command.Parameters;
-      InternalBindParameters(ResolvedCommandText, parameters, null);
+      InternalBindParameters(ResolvedCommandText, Parameters, null);
     }
 
     private void InternalBindParameters(string sql, MySqlParameterCollection parameters,
@@ -128,10 +123,6 @@ namespace MySql.Data.MySqlClient
         pos = tokenizer.StopIndex;
         if (MySqlTokenizer.IsParameter(token))
         {
-          if ((!parameters.containsUnnamedParameters && token.Length == 1 && parameterCount > 0) || parameters.containsUnnamedParameters && token.Length > 1)
-            throw new MySqlException("Mixing named and unnamed parameters is not allowed");
-
-          parameters.containsUnnamedParameters = token.Length == 1;
           if (SerializeParameter(parameters, packet, token, parameterCount))
             token = null;
           parameterCount++;
@@ -169,17 +160,7 @@ namespace MySql.Data.MySqlClient
     private bool SerializeParameter(MySqlParameterCollection parameters,
                                     MySqlPacket packet, string parmName, int parameterIndex)
     {
-      MySqlParameter parameter = null;
-
-      if (!parameters.containsUnnamedParameters)
-        parameter = parameters.GetParameterFlexible(parmName, false);
-      else
-      {
-        if (parameterIndex <= parameters.Count)
-          parameter = parameters[parameterIndex];
-        else
-          throw new MySqlException("Parameter index was not found in Parameter Collection");
-      }
+      MySqlParameter parameter = parameters.GetParameterFlexible(parmName, false);
 
       if (parameter == null)
       {

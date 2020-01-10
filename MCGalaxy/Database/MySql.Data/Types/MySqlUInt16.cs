@@ -75,7 +75,7 @@ namespace MySql.Data.Types
       get { return "SMALLINT"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       int v = (val is UInt16) ? (UInt16)val : Convert.ToUInt16(val);
       if (binary)

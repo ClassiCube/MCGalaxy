@@ -33,13 +33,13 @@ using System.Threading;
 using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
+using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed class MySqlCommand : DbCommand, IDisposable
+  public sealed class MySqlCommand : IDBCommand
   {
     MySqlConnection connection;
-    MySqlTransaction curTransaction;
     string cmdText;
     CommandType cmdType;
     MySqlParameterCollection parameters;
@@ -56,10 +56,9 @@ namespace MySql.Data.MySqlClient
     public MySqlCommand()
     {
       cmdType = CommandType.Text;
-      parameters = new MySqlParameterCollection(this);
+      parameters = new MySqlParameterCollection();
       cmdText = String.Empty;
       useDefaultTimeout = true;
-      Constructor();
     }
 
     public MySqlCommand(string cmdText)
@@ -72,14 +71,6 @@ namespace MySql.Data.MySqlClient
       : this(cmdText)
     {
       Connection = connection;
-    }
-
-    public MySqlCommand(string cmdText, MySqlConnection connection,
-            MySqlTransaction transaction)
-      :
-      this(cmdText, connection)
-    {
-      curTransaction = transaction;
     }
 
     #region Destructor
@@ -104,7 +95,7 @@ namespace MySql.Data.MySqlClient
       get { return lastInsertedId; }
     }
 
-    public override string CommandText
+    public string CommandText
     {
       get { return cmdText; }
       set
@@ -119,7 +110,7 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    public override int CommandTimeout
+    public int CommandTimeout
     {
       get { return useDefaultTimeout ? 30 : commandTimeout; }
       set
@@ -144,12 +135,6 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    public override CommandType CommandType
-    {
-      get { return cmdType; }
-      set { cmdType = value; }
-    }
-
     public bool IsPrepared
     {
       get { return statement != null && statement.IsPrepared; }
@@ -160,14 +145,6 @@ namespace MySql.Data.MySqlClient
       get { return connection; }
       set
       {
-        /*
-        * The connection is associated with the transaction
-        * so set the transaction object to return a null reference if the connection 
-        * is reset.
-        */
-        if (connection != value)
-          Transaction = null;
-
         connection = value;
 
         // if the user has not already set the command timeout, then
@@ -183,16 +160,9 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    public new MySqlParameterCollection Parameters
+    public IDBDataParameterCollection Parameters
     {
       get { return parameters; }
-    }
-
-
-    public new MySqlTransaction Transaction
-    {
-      get { return curTransaction; }
-      set { curTransaction = value; }
     }
 
     internal bool Canceled
@@ -211,31 +181,6 @@ namespace MySql.Data.MySqlClient
     #region Methods
 
     /// <summary>
-    /// Attempts to cancel the execution of a currently active command
-    /// </summary>
-    /// <remarks>
-    /// Cancelling a currently active query only works with MySQL versions 5.0.0 and higher.
-    /// </remarks>
-    public override void Cancel()
-    {
-      connection.CancelQuery(connection.ConnectionTimeout);
-      canceled = true;
-    }
-
-    /// <summary>
-    /// Creates a new instance of a <see cref="MySqlParameter"/> object.
-    /// </summary>
-    /// <remarks>
-    /// This method is a strongly-typed version of <see cref="IDbCommand.CreateParameter"/>.
-    /// </remarks>
-    /// <returns>A <see cref="MySqlParameter"/> object.</returns>
-    /// 
-    public new MySqlParameter CreateParameter()
-    {
-      return (MySqlParameter)CreateDbParameter();
-    }
-
-    /// <summary>
     /// Check the connection to make sure
     ///		- it is open
     ///		- it is not currently being used by a reader
@@ -244,10 +189,7 @@ namespace MySql.Data.MySqlClient
     private void CheckState()
     {
       // There must be a valid and open connection.
-      if (connection == null)
-        throw new InvalidOperationException("Connection must be valid and open.");
-
-      if (connection.State != ConnectionState.Open && !connection.SoftClosed)
+      if (connection == null || connection.State != ConnectionState.Open)
         throw new InvalidOperationException("Connection must be valid and open.");
 
       // Data readers have to be closed first
@@ -255,11 +197,10 @@ namespace MySql.Data.MySqlClient
         throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
     }
 
-    /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
-    public override int ExecuteNonQuery()
+    public int ExecuteNonQuery()
     {
       // ok, none of our interceptors handled this so we default
-      using (MySqlDataReader reader = ExecuteReader())
+      using (IDBDataReader reader = ExecuteReader())
       {
         reader.Close();
         return reader.RecordsAffected;
@@ -279,7 +220,7 @@ namespace MySql.Data.MySqlClient
     {
       if (statement != null)
         statement.Close(reader);
-      ResetSqlSelectLimit();
+      
       if (statement != null && connection != null && connection.driver != null)
         connection.driver.CloseQuery(connection, statement.StatementId);
       ClearCommandTimer();
@@ -298,30 +239,7 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    /// <summary>
-    /// Reset SQL_SELECT_LIMIT that could have been modified by CommandBehavior.
-    /// </summary>
-    internal void ResetSqlSelectLimit()
-    {
-      // if we are supposed to reset the sql select limit, do that here
-      if (resetSqlSelect)
-      {
-        resetSqlSelect = false;
-        MySqlCommand command = new MySqlCommand("SET SQL_SELECT_LIMIT=DEFAULT", connection);
-        command.internallyCreated = true;
-        command.ExecuteNonQuery();
-      }
-    }
-
-    /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
-    public new MySqlDataReader ExecuteReader()
-    {
-      return ExecuteReader(CommandBehavior.Default);
-    }
-
-
-    /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
-    public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
+    public IDBDataReader ExecuteReader()
     {
       // interceptors didn't handle this so we fall through
       bool success = false;
@@ -342,55 +260,18 @@ namespace MySql.Data.MySqlClient
         {
           throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first");
         }
-
-#if !RT
-        System.Transactions.Transaction curTrans = System.Transactions.Transaction.Current;
-
-        if (curTrans != null)
-        {
-          bool inRollback = false;
-          if (driver.CurrentTransaction != null)
-            inRollback = driver.CurrentTransaction.InRollback;
-          if (!inRollback)
-          {
-            System.Transactions.TransactionStatus status = System.Transactions.TransactionStatus.InDoubt;
-            try
-            {
-              // in some cases (during state transitions) this throws
-              // an exception. Ignore exceptions, we're only interested 
-              // whether transaction was aborted or not.
-              status = curTrans.TransactionInformation.Status;
-            }
-            catch (System.Transactions.TransactionException)
-            {
-            }
-            if (status == System.Transactions.TransactionStatus.Aborted)
-              throw new System.Transactions.TransactionAbortedException();
-          }
-        }
-#endif
+        
         commandTimer = new CommandTimer(connection, CommandTimeout);
-
         lastInsertedId = -1;
-
-        if (CommandType == CommandType.TableDirect)
-          sql = "SELECT * FROM " + sql;
 
         if (statement == null || !statement.IsPrepared)
         {
           statement = new PreparableStatement(this, sql);
         }
 
-        // stored procs are the only statement type that need do anything during resolve
-        statement.Resolve(false);
-
-        // Now that we have completed our resolve step, we can handle our
-        // command behaviors
-        HandleCommandBehaviors(behavior);
-
         try
         {
-          MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
+          MySqlDataReader reader = new MySqlDataReader(this, statement);
           connection.Reader = reader;
           canceled = false;
           // execute the statement
@@ -424,7 +305,6 @@ namespace MySql.Data.MySqlClient
           try
           {
             ResetReader();
-            ResetSqlSelectLimit();
           }
           catch (Exception)
           {
@@ -465,13 +345,12 @@ namespace MySql.Data.MySqlClient
     }
 
 
-    /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
-    public override object ExecuteScalar()
+    public object ExecuteScalar()
     {
       lastInsertedId = -1;
       object val = null;
 
-      using (MySqlDataReader reader = ExecuteReader())
+      using (IDBDataReader reader = ExecuteReader())
       {
         if (reader.Read())
           val = reader.GetValue(0);
@@ -480,38 +359,21 @@ namespace MySql.Data.MySqlClient
       return val;
     }
 
-    private void HandleCommandBehaviors(CommandBehavior behavior)
-    {
-      if ((behavior & CommandBehavior.SchemaOnly) != 0)
-      {
-        new MySqlCommand("SET SQL_SELECT_LIMIT=0", connection).ExecuteNonQuery();
-        resetSqlSelect = true;
-      }
-      else if ((behavior & CommandBehavior.SingleRow) != 0)
-      {
-        new MySqlCommand("SET SQL_SELECT_LIMIT=1", connection).ExecuteNonQuery();
-        resetSqlSelect = true;
-      }
-    }
-
-    /// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
     private void Prepare(int cursorPageSize)
     {
       using (new CommandTimer(Connection, CommandTimeout))
       {
         // if the length of the command text is zero, then just return
         string psSQL = CommandText;
-        if (psSQL == null ||
-             psSQL.Trim().Length == 0)
+        if (psSQL == null || psSQL.Trim().Length == 0)
           return;
 
         statement = new PreparableStatement(this, CommandText);
-        statement.Resolve(true);
         statement.Prepare();
       }
     }
 
-    public override void Prepare()
+    public void Prepare()
     {
       if (connection == null)
         throw new InvalidOperationException("The connection property has not been set.");
@@ -530,60 +392,13 @@ namespace MySql.Data.MySqlClient
       GC.SuppressFinalize(this);
     }
 
-    protected override void Dispose(bool disposing)
+    void Dispose(bool disposing)
     {
-      if (disposed)
-        return;
+      if (disposed) return;
 
-      if (disposing)
-        if (statement != null && statement.IsPrepared)
-          statement.CloseStatement();
-
-      base.Dispose(disposing);
+      if (disposing && statement != null && statement.IsPrepared)
+        statement.CloseStatement();
       disposed = true;
-    }
-
-    void Constructor()
-    {
-      UpdatedRowSource = UpdateRowSource.Both;
-    }
-
-    /// <summary>
-    /// Gets or sets how command results are applied to the DataRow when used by the 
-    /// Update method of the DbDataAdapter. 
-    /// </summary>
-    public override UpdateRowSource UpdatedRowSource { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the command object should be visible in a Windows Form Designer control. 
-    /// </summary>
-    public override bool DesignTimeVisible { get; set; }
-
-    protected override DbParameter CreateDbParameter()
-    {
-      return new MySqlParameter();
-    }
-
-    protected override DbConnection DbConnection
-    {
-      get { return Connection; }
-      set { Connection = (MySqlConnection)value; }
-    }
-
-    protected override DbParameterCollection DbParameterCollection
-    {
-      get { return Parameters; }
-    }
-
-    protected override DbTransaction DbTransaction
-    {
-      get { return Transaction; }
-      set { Transaction = (MySqlTransaction)value; }
-    }
-
-    protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
-    {
-      return ExecuteReader(behavior);
     }
   }
 }

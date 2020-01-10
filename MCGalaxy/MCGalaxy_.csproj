@@ -431,7 +431,6 @@
     <Compile Include="Database\MySql.Data\MySqlPacket.cs" />
     <Compile Include="Database\MySql.Data\MySqlPool.cs" />
     <Compile Include="Database\MySql.Data\MySqlPoolManager.cs" />
-    <Compile Include="Database\MySql.Data\MySqlPromotableTransaction.cs" />
     <Compile Include="Database\MySql.Data\MySqlStream.cs" />
     <Compile Include="Database\MySql.Data\MySqlTrace.cs" />
     <Compile Include="Database\MySql.Data\NativeDriver.cs" />

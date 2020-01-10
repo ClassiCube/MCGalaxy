@@ -79,7 +79,7 @@ namespace MySql.Data.Types
       get { return "BIT"; }
     }
 
-    public void WriteValue(MySqlPacket packet, bool binary, object value, int length)
+    public void WriteValue(MySqlPacket packet, bool binary, object value)
     {
       ulong v = (value is UInt64) ? (UInt64)value : Convert.ToUInt64(value);
       if (binary)

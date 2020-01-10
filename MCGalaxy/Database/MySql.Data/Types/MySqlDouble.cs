@@ -77,7 +77,7 @@ namespace MySql.Data.Types
       get { return "DOUBLE"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       double v = (val is double) ? (double)val : Convert.ToDouble(val);
       if (binary)

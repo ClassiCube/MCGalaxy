@@ -28,6 +28,7 @@ using MySql.Data.Common;
 using MySql.Data.Types;
 using System.Diagnostics;
 using System.Collections.Generic;
+using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
 {
@@ -48,10 +49,6 @@ namespace MySql.Data.MySqlClient
     internal int timeZoneOffset;
     private DateTime idleSince;    
 
-#if !RT
-    protected MySqlPromotableTransaction currentTransaction;
-    protected bool inActiveUse;
-#endif
     protected MySqlPool pool;
     private bool firstResult;
     protected IDriver handler;
@@ -110,19 +107,6 @@ namespace MySql.Data.MySqlClient
       set { encoding = value; }
     }
 
-#if !RT
-    public MySqlPromotableTransaction CurrentTransaction
-    {
-      get { return currentTransaction; }
-      set { currentTransaction = value; }
-    }
-
-    public bool IsInActiveUse
-    {
-      get { return inActiveUse; }
-      set { inActiveUse = value; }
-    }
-#endif
     public bool IsOpen
     {
       get { return isOpen; }
@@ -319,7 +303,7 @@ namespace MySql.Data.MySqlClient
       MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
       try
       {
-        using (MySqlDataReader reader = cmd.ExecuteReader())
+        using (IDBDataReader reader = cmd.ExecuteReader())
         {
           while (reader.Read())
           {
@@ -361,12 +345,15 @@ namespace MySql.Data.MySqlClient
       // now we load all the currently active collations
       try
       {
-        using (MySqlDataReader reader = cmd.ExecuteReader())
+        using (IDBDataReader reader = cmd.ExecuteReader())
         {
           charSets = new Dictionary<int, string>();
           while (reader.Read())
           {
-            charSets[Convert.ToInt32(reader["id"], NumberFormatInfo.InvariantInfo)] =
+            int idx    = reader.GetOrdinal("id");
+            object raw = reader.GetValue(idx);
+            
+            charSets[Convert.ToInt32(raw, NumberFormatInfo.InvariantInfo)] =
               reader.GetString(reader.GetOrdinal("charset"));
           }
         }
@@ -384,7 +371,7 @@ namespace MySql.Data.MySqlClient
 
       MySqlCommand cmd = new MySqlCommand("SHOW WARNINGS", connection);
       cmd.InternallyCreated = true;
-      using (MySqlDataReader reader = cmd.ExecuteReader())
+      using (IDBDataReader reader = cmd.ExecuteReader())
       {
         while (reader.Read())
         {

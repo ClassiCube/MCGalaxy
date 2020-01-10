@@ -80,15 +80,9 @@ namespace MySql.Data.Types
     }
 
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       string v = val.ToString();
-      if (length > 0)
-      {
-        length = Math.Min(length, v.Length);
-        v = v.Substring(0, length);
-      }
-
       if (binary)
         packet.WriteLenString(v);
       else

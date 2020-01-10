@@ -85,7 +85,7 @@ namespace MySql.Data.Types
       get { return is24Bit ? "MEDIUMINT" : "INT"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object v, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object v)
     {
       uint val = (v is uint) ? (uint)v : Convert.ToUInt32(v);
       if (binary)

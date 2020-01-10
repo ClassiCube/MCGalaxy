@@ -26,6 +26,7 @@ using System.Text;
 using MySql.Data.Common;
 using System.Collections.Generic;
 using System.Data;
+using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
 {
@@ -157,7 +158,7 @@ namespace MySql.Data.MySqlClient
       maxLengths = new Dictionary<string, int>();
 
       MySqlCommand cmd = new MySqlCommand("SHOW CHARSET", connection);
-      using (MySqlDataReader reader = cmd.ExecuteReader())
+      using (IDBDataReader reader = cmd.ExecuteReader())
       {
         while (reader.Read())
         {

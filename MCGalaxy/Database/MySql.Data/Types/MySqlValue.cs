@@ -35,7 +35,7 @@ namespace MySql.Data.Types
     Type SystemType { get; }
     string MySqlTypeName { get; }
 
-    void WriteValue(MySqlPacket packet, bool binary, object value, int length);
+    void WriteValue(MySqlPacket packet, bool binary, object value);
     IMySqlValue ReadValue(MySqlPacket packet, long length, bool isNull);
     void SkipValue(MySqlPacket packet);
   }

@@ -30,13 +30,14 @@ using System.Collections;
 using System.Data;
 using System.Data.Common;
 #endif
+using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
 {
   /// <summary>
   /// Represents a parameter to a <see cref="MySqlCommand"/>, and optionally, its mapping to <see cref="DataSet"/> columns. This class cannot be inherited.
   /// </summary>
-  public sealed class MySqlParameter : DbParameter, IDataParameter, IDbDataParameter
+  public sealed class MySqlParameter : IDBDataParameter
   {
     private const int UNSIGNED_MASK = 0x8000;
     private object paramValue;
@@ -44,56 +45,24 @@ namespace MySql.Data.MySqlClient
     private MySqlDbType mySqlDbType;
     private bool inferType = true;
 
-    #region Constructors
-
-    public MySqlParameter()
-    {
-      Init();
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MySqlParameter"/> class with the parameter name and a value of the new MySqlParameter.
-    /// </summary>
-    /// <param name="parameterName">The name of the parameter to map. </param>
-    /// <param name="value">An <see cref="Object"/> that is the value of the <see cref="MySqlParameter"/>. </param>
-    public MySqlParameter(string parameterName, object value) : this()
+    public MySqlParameter() { }
+    public MySqlParameter(string parameterName, object value)
     {
       ParameterName = parameterName;
       Value = value;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MySqlParameter"/> class with the parameter name and the data type.
-    /// </summary>
-    /// <param name="parameterName">The name of the parameter to map. </param>
-    /// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
     public MySqlParameter(string parameterName, MySqlDbType dbType) : this(parameterName, null)
     {
       MySqlDbType = dbType;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MySqlParameter"/> class with the parameter name, the <see cref="MySqlDbType"/>, and the size.
-    /// </summary>
-    /// <param name="parameterName">The name of the parameter to map. </param>
-    /// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
-    /// <param name="size">The length of the parameter. </param>
-    public MySqlParameter(string parameterName, MySqlDbType dbType, int size) : this(parameterName, dbType)
-    {
-      Size = size;
-    }
-
-    #endregion
-
-    #region Properties
-
-    public override String ParameterName
+    public string ParameterName
     {
       get { return paramName; }
-      set { SetParameterName(value); }
+      set { paramName = value; }
     }
 
-    internal MySqlParameterCollection Collection { get; set; }
     internal Encoding Encoding { get; set; }
 
     internal bool TypeHasBeenSet
@@ -112,21 +81,6 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
-    /// As of MySql version 4.1 and earlier, input-only is the only valid choice.
-    /// </summary>
-    public override ParameterDirection Direction { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the parameter accepts null values.
-    /// </summary>
-    public override Boolean IsNullable { get; set; }
-
-    /// <summary>
-    /// Gets or sets the MySqlDbType of the parameter.
-    /// </summary>
-    [DbProviderSpecificTypeProperty(true)]
     public MySqlDbType MySqlDbType
     {
       get { return mySqlDbType; }
@@ -137,61 +91,23 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    /// <summary>
-    /// Gets or sets the maximum size, in bytes, of the data within the column.
-    /// </summary>
-    public override int Size { get; set; }
-
-    /// <summary>
-    /// Gets or sets the value of the parameter.
-    /// </summary>
-    public override object Value
+    public object Value
     {
       get { return paramValue; }
       set
       {
         paramValue = value;
-        byte[] valueAsByte = value as byte[];
-        string valueAsString = value as string;
-
-        if (valueAsByte != null)
-          Size = valueAsByte.Length;
-        else if (valueAsString != null)
-          Size = valueAsString.Length;
-        if (inferType)
-          SetTypeFromValue();
+        if (inferType) SetTypeFromValue();
       }
     }
 
-    private IMySqlValue _valueObject;
+    IMySqlValue _valueObject;
     internal IMySqlValue ValueObject
     {
       get { return _valueObject; }
-      private set
-      {
-        _valueObject = value;
-      }
+      private set { _valueObject = value; }
     }
 
-    /// <summary>
-    /// Returns the possible values for this parameter if this parameter is of type
-    /// SET or ENUM.  Returns null otherwise.
-    /// </summary>
-    public IList PossibleValues { get; internal set; }
-
-    #endregion
-
-    private void SetParameterName(string name)
-    {
-        if (Collection != null)
-          Collection.ParameterNameChanged(this, paramName, name);
-        paramName = name;
-    }
-
-    /// <summary>
-    /// Overridden. Gets a string containing the <see cref="ParameterName"/>.
-    /// </summary>
-    /// <returns></returns>
     public override string ToString()
     {
       return paramName;
@@ -230,7 +146,7 @@ namespace MySql.Data.MySqlClient
           g.OldGuids = settings.OldGuids;
           ValueObject = g;
         }
-        ValueObject.WriteValue(packet, binary, paramValue, Size);
+        ValueObject.WriteValue(packet, binary, paramValue);
       }
     }
 
@@ -283,57 +199,7 @@ namespace MySql.Data.MySqlClient
     
     
     private DbType dbType;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MySqlParameter"/> class with the parameter name, the <see cref="MySqlDbType"/>, the size, and the source column name.
-    /// </summary>
-    /// <param name="parameterName">The name of the parameter to map. </param>
-    /// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
-    /// <param name="size">The length of the parameter. </param>
-    /// <param name="sourceColumn">The name of the source column. </param>
-    public MySqlParameter(string parameterName, MySqlDbType dbType, int size, string sourceColumn) : this(parameterName, dbType)
-    {
-      Size = size;
-      Direction = ParameterDirection.Input;
-      SourceColumn = sourceColumn;
-      SourceVersion = DataRowVersion.Current;
-    }
-
-    void Init()
-    {
-      SourceVersion = DataRowVersion.Current;
-      Direction = ParameterDirection.Input;
-    }
-
-    /// <summary>
-    /// Gets or sets the <see cref="DataRowVersion"/> to use when loading <see cref="Value"/>.
-    /// </summary>
-    public override DataRowVersion SourceVersion { get; set; }
-
-    /// <summary>
-    /// Gets or sets the name of the source column that is mapped to the <see cref="DataSet"/> and used for loading or returning the <see cref="Value"/>.
-    /// </summary>
-    public override String SourceColumn { get; set; }
-
-    /// <summary>
-    /// Resets the <b>DbType</b> property to its original settings. 
-    /// </summary>
-    public override void ResetDbType()
-    {
-      inferType = true;
-    }
-
-    /// <summary>
-    /// Sets or gets a value which indicates whether the source column is nullable. 
-    /// This allows <see cref="DbCommandBuilder"/> to correctly generate Update statements 
-    /// for nullable columns. 
-    /// </summary>
-    public override bool SourceColumnNullMapping { get; set; }
-
-    /// <summary>
-    /// Gets or sets the <see cref="DbType"/> of the parameter.
-    /// </summary>
-    public override DbType DbType
+    public DbType DbType
     {
       get { return dbType; }
       set

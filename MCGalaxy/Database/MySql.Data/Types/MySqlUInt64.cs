@@ -75,7 +75,7 @@ namespace MySql.Data.Types
       get { return "BIGINT"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       ulong v = (val is ulong) ? (ulong)val : Convert.ToUInt64(val);
       if (binary)

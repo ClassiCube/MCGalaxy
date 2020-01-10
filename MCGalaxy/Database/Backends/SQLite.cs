@@ -480,7 +480,6 @@ namespace MCGalaxy.SQL {
         }
 
         public IDBDataParameterCollection Parameters { get { return parameters; } }
-        public IDBTransaction Transaction { get { return null; } set { } }
 
         public IDBDataReader ExecuteReader() {
             SQLiteConnection.Check(conn);
@@ -496,7 +495,7 @@ namespace MCGalaxy.SQL {
 
         public object ExecuteScalar() {
             using (IDBDataReader reader = ExecuteReader()) {
-                if (reader.Read()) return reader[0];
+                if (reader.Read()) return reader.GetValue(0);
             }
             return null;
         }
@@ -884,8 +883,6 @@ namespace MCGalaxy.SQL {
         }
 
         public int RecordsAffected { get { return rowsAffected; } }
-        public object this[string name] { get { return GetValue(GetOrdinal(name)); } }
-        public object this[int i] { get { return GetValue(i); } }
     }
 
     sealed class SQLiteException : ExternalException {
@@ -994,9 +991,8 @@ namespace MCGalaxy.SQL {
     public sealed class SQLiteParameterCollection : IDBDataParameterCollection {
         internal List<SQLiteParameter> list = new List<SQLiteParameter>();
 
-        public int Add(object value) {
+        public void Add(object value) {
             list.Add((SQLiteParameter)value);
-            return list.Count - 1;
         }
 
         public void Clear() { list.Clear(); }

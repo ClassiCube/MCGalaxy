@@ -76,7 +76,7 @@ namespace MySql.Data.Types
       get { return "FLOAT"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       Single v = (val is Single) ? (Single)val : Convert.ToSingle(val);
       if (binary)

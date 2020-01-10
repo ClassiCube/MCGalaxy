@@ -75,7 +75,7 @@ namespace MySql.Data.Types
       get { return "TIME"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       if (!(val is TimeSpan))
         throw new MySqlException("Only TimeSpan objects can be serialized by MySqlTimeSpan");

@@ -85,7 +85,7 @@ namespace MySql.Data.Types
       get { return OldGuids ? "BINARY(16)" : "CHAR(36)"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       Guid guid = Guid.Empty;
       string valAsString = val as string;

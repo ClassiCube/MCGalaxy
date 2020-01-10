@@ -37,10 +37,8 @@ namespace MCGalaxy.SQL {
     public interface IDBCommand : IDisposable {
         string CommandText { get; set; }
         int CommandTimeout { get; }
-        bool IsConnectionClosed { get; }
-
+        //bool IsConnectionClosed { get; }
         IDBDataParameterCollection Parameters { get; }
-        IDBTransaction Transaction { get; set; }
         
         IDBDataReader ExecuteReader();
         int ExecuteNonQuery();
@@ -70,10 +68,7 @@ namespace MCGalaxy.SQL {
         string GetString(int i);
         object GetValue(int i);
         int GetValues(object[] values);
-        
         bool IsDBNull(int i);
-        object this[string name] { get; }
-        object this[int i] { get; }
     }
     
     public interface IDBDataReader : IDBDataRecord, IDisposable {
@@ -92,7 +87,7 @@ namespace MCGalaxy.SQL {
     }
 
     public interface IDBDataParameterCollection {
-        int Add(object value);
+        void Add(object value);
         void Clear();
     }
 

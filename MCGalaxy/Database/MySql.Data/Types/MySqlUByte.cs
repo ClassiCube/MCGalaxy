@@ -75,7 +75,7 @@ namespace MySql.Data.Types
       get { return "TINYINT"; }
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val)
     {
       byte v = (val is byte) ? (byte)val : Convert.ToByte(val);
       if (binary)

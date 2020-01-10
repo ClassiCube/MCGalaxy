@@ -65,7 +65,6 @@ namespace MCGalaxy.SQL {
             IDatabaseBackend db = Database.Backend;
             try {
                 using (IDBCommand cmd = db.CreateCommand(sql, conn)) {
-                    cmd.Transaction = transaction;
                     SqlQuery.FillParams(cmd, args);
                     cmd.ExecuteNonQuery();
                     return true;

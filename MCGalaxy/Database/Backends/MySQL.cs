@@ -35,7 +35,7 @@ namespace MCGalaxy.SQL {
         public override bool MultipleSchema { get { return true; } }     
         
         internal override IDBConnection CreateConnection() {
-            const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
+            const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};";
             string str = string.Format(format, Server.Config.MySQLHost, Server.Config.MySQLPort,
                                        Server.Config.MySQLUsername, Server.Config.MySQLPassword, Server.Config.DatabasePooling);
             return new MySqlConnection(str);

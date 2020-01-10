@@ -279,7 +279,7 @@ namespace MySql.Data.Types
       packet.WriteStringNoNull("'" + val + "'");
     }
 
-    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value, int length)
+    void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value)
     {
       MySqlDateTime dtValue;
 
