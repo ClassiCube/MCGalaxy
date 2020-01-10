@@ -903,18 +903,11 @@ namespace MySql.Data.MySqlClient
       if ((connectionFlags & ClientFlags.CONNECT_ATTRS) != 0)
       {
         string connectAttrs = string.Empty;
-        MySqlConnectAttrs attrs = new MySqlConnectAttrs();
-        foreach (PropertyInfo property in attrs.GetType().GetProperties())
-        {
-          string name = property.Name;
-          object[] customAttrs = property.GetCustomAttributes(typeof(DisplayNameAttribute), false);
-          if (customAttrs.Length > 0)
-            name = (customAttrs[0] as DisplayNameAttribute).DisplayName;
+        string name = "_client_name";
+        string value = "MySql Connector/NET";
 
-          string value = (string)property.GetValue(attrs, null);
-          connectAttrs += string.Format("{0}{1}", (char)name.Length, name);
-          connectAttrs += string.Format("{0}{1}", (char)value.Length, value);
-        }
+        connectAttrs += string.Format("{0}{1}", (char)name.Length, name);
+        connectAttrs += string.Format("{0}{1}", (char)value.Length, value);
         packet.WriteLenString(connectAttrs);
       }
     }

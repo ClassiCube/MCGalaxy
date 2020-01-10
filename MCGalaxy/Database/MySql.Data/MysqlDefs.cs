@@ -21,8 +21,6 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Reflection;
-using System.ComponentModel;
 
 namespace MySql.Data.MySqlClient
 {
@@ -329,35 +327,6 @@ namespace MySql.Data.MySqlClient
   }
 
   /// <summary>
-  /// Allows the user to specify the type of connection that should
-  /// be used.
-  /// </summary>
-  public enum MySqlConnectionProtocol
-  {
-    /// <summary>
-    /// TCP/IP style connection.  Works everywhere.
-    /// </summary>
-    Sockets = 1,
-    Socket = 1,
-    Tcp = 1,
-    /// <summary>
-    /// Named pipe connection.  Works only on Windows systems.
-    /// </summary>
-    Pipe = 2,
-    NamedPipe = 2,
-    /// <summary>
-    /// Unix domain socket connection.  Works only with Unix systems.
-    /// </summary>
-    UnixSocket = 3,
-    Unix = 3,
-    /// <summary>
-    /// Shared memory connection.  Currently works only with Windows systems.
-    /// </summary>
-    SharedMemory = 4,
-    Memory = 4
-  }
-
-  /// <summary>
   /// SSL options for connection.
   /// </summary>
   public enum MySqlSslMode
@@ -386,25 +355,6 @@ namespace MySql.Data.MySqlClient
     VerifyFull
   }
 
-  /// <summary>
-  /// Specifies the connection types supported
-  /// </summary>
-  public enum MySqlDriverType
-  {
-    /// <summary>
-    /// Use TCP/IP sockets.
-    /// </summary>
-    Native,
-    /// <summary>
-    /// Use client library.
-    /// </summary>
-    Client,
-    /// <summary>
-    /// Use MySQL embedded server.
-    /// </summary>
-    Embedded
-  }
-
   public enum MySqlCertificateStoreLocation
   {
     /// <summary>
@@ -419,143 +369,5 @@ namespace MySql.Data.MySqlClient
     /// User certificate store for the machine
     /// </summary>
     LocalMachine
-  }
-
-  internal class MySqlConnectAttrs
-  {
-    [DisplayName("_client_name")]
-    public string ClientName
-    {
-      get { return "MySql Connector/NET"; }
-    }
-
-#if !RT
-    [DisplayName("_pid")]
-    public string PID
-    {
-      get
-      {
-        string pid = string.Empty;
-        try
-        {
-          pid = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
-        }
-        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
-
-        return pid;
-      }
-    }
-
-    [DisplayName("_client_version")]
-    public string ClientVersion
-    {
-      get
-      {
-        string version = string.Empty;
-        try
-        {
-          version = Assembly.GetAssembly(typeof(MySqlConnectAttrs)).GetName().Version.ToString();
-        }
-        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
-        return version;
-      }
-    }
-
-    [DisplayName("_platform")]
-    public string Platform
-    {
-      get { return Is64BitOS() ? "x86_64" : "x86_32"; }
-    }
-
-    [DisplayName("program_name")]
-    public string ProgramName
-    {
-      get
-      {
-        string name = Environment.CommandLine;
-        try
-        {
-          string path = Environment.CommandLine.Substring(0, Environment.CommandLine.IndexOf("\" ")).Trim('"');
-          name = System.IO.Path.GetFileName(path);
-          if (Assembly.GetEntryAssembly() != null)
-            name = Assembly.GetEntryAssembly().ManifestModule.Name;
-        }
-        catch (Exception ex)
-        {
-          name = string.Empty;
-          System.Diagnostics.Debug.WriteLine(ex.ToString());
-        }
-        return name;
-      }
-    }
-
-    [DisplayName("_os")]
-    public string OS
-    {
-      get
-      {
-        string os = string.Empty;
-        try
-        {
-          os = Environment.OSVersion.Platform.ToString();
-          if (os == "Win32NT")
-          {
-            os = "Win";
-            os += Is64BitOS() ? "64" : "32";
-          }
-        }
-        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
-
-        return os;
-      }
-    }
-
-    [DisplayName("_os_details")]
-    public string OSDetails
-    {
-      get
-      {
-        string os = string.Empty;
-        try
-        {
-          var searcher = new System.Management.ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
-          var collection = searcher.Get();
-          foreach (var mgtObj in collection)
-          {
-            os = mgtObj.GetPropertyValue("Caption").ToString();
-            break;
-          }
-        }
-        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
-
-        return os;
-      }
-    }
-
-    [DisplayName("_thread")]
-    public string Thread
-    {
-      get
-      {
-        string thread = string.Empty;
-        try
-        {
-          thread = System.Diagnostics.Process.GetCurrentProcess().Threads[0].Id.ToString();
-        }
-        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
-
-        return thread;
-      }
-    }
-
-    private bool Is64BitOS()
-    {
-#if CLR4
-      return Environment.Is64BitOperatingSystem;
-#else
-      return Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "AMD64";
-#endif
-    }
-#endif
   }
 }

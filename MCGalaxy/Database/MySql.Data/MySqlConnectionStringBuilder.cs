@@ -44,10 +44,8 @@ namespace MySql.Data.MySqlClient
       // Server options
       options.Add(new MySqlConnectionStringOption("server", "host,data source,datasource,address,addr,network address", typeof(string), "" /*"localhost"*/, false));
       options.Add(new MySqlConnectionStringOption("database", "initial catalog", typeof(string), string.Empty, false));
-      options.Add(new MySqlConnectionStringOption("protocol", "connection protocol, connectionprotocol", typeof(MySqlConnectionProtocol), MySqlConnectionProtocol.Sockets, false));
       options.Add(new MySqlConnectionStringOption("port", null, typeof(uint), ( uint )3306, false));
       options.Add(new MySqlConnectionStringOption("pipe", "pipe name,pipename", typeof(string), "MYSQL", false));
-      options.Add(new MySqlConnectionStringOption("compress", "use compression,usecompression", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("allowbatch", "allow batch", typeof(bool), true, false));
       options.Add(new MySqlConnectionStringOption("logging", null, typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("sharedmemoryname", "shared memory name", typeof(string), "MYSQL", false));
@@ -156,16 +154,12 @@ namespace MySql.Data.MySqlClient
       options.Add(new MySqlConnectionStringOption("cacheserverproperties", "cache server properties", typeof(bool), false, false));
 
       // language and charset options
-      options.Add(new MySqlConnectionStringOption("characterset", "character set,charset", typeof(string), "", false));
-      options.Add(new MySqlConnectionStringOption("treatblobsasutf8", "treat blobs as utf8", typeof(bool), false, false));
-      options.Add(new MySqlConnectionStringOption("blobasutf8includepattern", null, typeof(string), "", false));
-      options.Add(new MySqlConnectionStringOption("blobasutf8excludepattern", null, typeof(string), "", false));
+      options.Add(new MySqlConnectionStringOption("characterset", "character set,charset", typeof(string), "", false));]
       options.Add(new MySqlConnectionStringOption("sslmode", "ssl mode", typeof(MySqlSslMode), MySqlSslMode.Preferred, false));
     }
 
     public MySqlConnectionStringBuilder()
     {
-      HasProcAccess = true;
       // Populate initial values
       lock (this)
       {
@@ -205,16 +199,6 @@ namespace MySql.Data.MySqlClient
     {
       get { return values["database"] as string; }
       set { SetValue("database", value); }
-    }
-
-    /// <summary>
-    /// Gets or sets the protocol that should be used for communicating
-    /// with MySQL.
-    /// </summary>
-    public MySqlConnectionProtocol ConnectionProtocol
-    {
-      get { return (MySqlConnectionProtocol)values["protocol"]; }
-      set { SetValue("protocol", value); }
     }
 
     /// <summary>
@@ -545,8 +529,6 @@ namespace MySql.Data.MySqlClient
     }
 
     #endregion
-
-    internal bool HasProcAccess { get; set; }
 
     public override object this[string keyword]
     {

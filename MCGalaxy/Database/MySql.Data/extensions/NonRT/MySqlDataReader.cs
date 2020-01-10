@@ -30,10 +30,6 @@ namespace MySql.Data.MySqlClient
 {
   public sealed partial class MySqlDataReader : DbDataReader, IDataReader, IDataRecord
   {
-    /// <summary>
-    /// Gets a value indicating the depth of nesting for the current row.  This method is not 
-    /// supported currently and always returns 0.
-    /// </summary>
     public override int Depth
     {
       get { return 0; }

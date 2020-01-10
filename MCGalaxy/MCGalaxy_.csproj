@@ -73,7 +73,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -431,7 +430,6 @@
     <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameter.cs" />
     <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlParameterCollection.cs" />
     <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlTrace.cs" />
-    <Compile Include="Database\MySql.Data\extensions\NonRT\MySqlTransaction.cs" />
     <Compile Include="Database\MySql.Data\Field.cs" />
     <Compile Include="Database\MySql.Data\MySqlConnectionStringBuilder.cs" />
     <Compile Include="Database\MySql.Data\MysqlDefs.cs" />

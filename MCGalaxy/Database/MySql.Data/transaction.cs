@@ -21,14 +21,12 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-#if !RT
 using System.Data;
-#endif
+using System.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
-  /// <include file='docs/MySqlTransaction.xml' path='docs/Class/*'/>
-  public sealed partial class MySqlTransaction : IDisposable
+  public sealed class MySqlTransaction : DbTransaction, IDisposable
   {
     private IsolationLevel level;
     private MySqlConnection conn;
@@ -122,6 +120,11 @@ namespace MySql.Data.MySqlClient
       MySqlCommand cmd = new MySqlCommand("ROLLBACK", conn);
       cmd.ExecuteNonQuery();
       open = false;
+    }
+    
+    protected override DbConnection DbConnection
+    {
+      get { return conn; }
     }
 
   }

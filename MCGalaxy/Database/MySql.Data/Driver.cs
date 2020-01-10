@@ -160,11 +160,6 @@ namespace MySql.Data.MySqlClient
       get { return (handler.Flags & ClientFlags.MULTI_STATEMENTS) != 0; }
     }
 
-    public bool SupportsConnectAttrs
-    {
-      get { return (handler.Flags & ClientFlags.CONNECT_ATTRS) != 0; }
-    }
-
     public bool SupportsPasswordExpiration
     {
       get { return (handler.Flags & ClientFlags.CAN_HANDLE_EXPIRED_PASSWORD) != 0; }
