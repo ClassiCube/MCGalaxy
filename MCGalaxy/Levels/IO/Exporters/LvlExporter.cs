@@ -41,7 +41,7 @@ namespace MCGalaxy.Levels.IO {
                 WriteHeader(lvl, gs, buffer);
                 WriteBlocksSection(lvl, gs, buffer);
                 WriteBlockDefsSection(lvl, gs, buffer);
-                WritePhysicsSection(lvl, gs, buffer);
+                lock (lvl.physTickLock) { WritePhysicsSection(lvl, gs, buffer); }
                 WriteZonesSection(lvl, gs, buffer);
             }
         }
@@ -97,49 +97,51 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void WritePhysicsSection(Level lvl, Stream gs, byte[] buffer) {
-            lock (lvl.physTickLock) {
-                // Count the number of physics checks with extra info
-                int used = 0, count = lvl.ListCheck.Count;
-                Check[] checks = lvl.ListCheck.Items;
-                for (int i = 0; i < count; i++) {
-                    if (checks[i].data.Raw == 0) continue;
-                    used++;
-                }
-                if (used == 0) return;
-                
-                gs.WriteByte(0xFC); // 'Ph'ysics 'C'hecks
-                NetUtils.WriteI32(used, buffer, 0);
-                gs.Write(buffer, 0, sizeof(int));
-                
-                fixed (byte* ptr = buffer) {
-                    WritePhysicsEntries(gs, lvl.ListCheck, buffer, ptr);
-                }
-            }
-        }
-        
-        static void WritePhysicsEntries(Stream gs, FastList<Check> items, byte[] buffer, byte* ptr) {
-            Check[] checks = items.Items;
-            int entries = 0, count = items.Count;
-            int* ptrInt = (int*)ptr;
-            const int bulkCount = bufferSize / 8;
-            
+            // Count the number of physics checks with extra info
+            int used = 0, count = lvl.ListCheck.Count;
+            Check[] checks = lvl.ListCheck.Items;
             for (int i = 0; i < count; i++) {
-                Check C = checks[i];
-                // Does this check have extra physics data
-                if (C.data.Raw == 0) continue;
-                *ptrInt = C.Index; ptrInt++;
-                *ptrInt = (int)C.data.Raw; ptrInt++;
-                entries++;
-                
-                // Have we filled the temp buffer?
-                if (entries != bulkCount) continue;
-                ptrInt = (int*)ptr;
-                gs.Write(buffer, 0, entries * 8);
-                entries = 0;
+                if (checks[i].data.Raw == 0) continue;
+                used++;
             }
+            if (used == 0) return;
             
-            if (entries == 0) return;
-            gs.Write(buffer, 0, entries * 8);
+            gs.WriteByte(0xFC); // 'Ph'ysics 'C'hecks
+            NetUtils.WriteI32(used, buffer, 0);
+            gs.Write(buffer, 0, sizeof(int));
+            
+            // NOTE: We have to be extremely careful here to make sure
+            //   that exactly 'used' entries are actually written.
+            // (this otherwise breaks zones getting imported from the map)
+            
+            // Locking physics tick ensures that the physics thread can't
+            //   change the entries in the checks list out from under us.
+            // Players deleting door blocks on a map with physics on does
+            //   add to the check list, but this won't cause a problem as
+            //   both the underlying array and count are cached here.
+            fixed (byte* ptr = buffer) {
+                int entries = 0;
+                int* ptrInt = (int*)ptr;
+                const int bulkCount = bufferSize / 8;
+            
+                for (int i = 0; i < count; i++) {
+                    Check C = checks[i];
+                    // Does this check have extra physics data
+                    if (C.data.Raw == 0) continue;
+                    *ptrInt = C.Index; ptrInt++;
+                    *ptrInt = (int)C.data.Raw; ptrInt++;
+                    entries++;
+                    
+                    // Have we filled the temp buffer?
+                    if (entries != bulkCount) continue;
+                    ptrInt = (int*)ptr;
+                    gs.Write(buffer, 0, entries * 8);
+                    entries = 0;
+                }
+                
+                if (entries == 0) return;
+                gs.Write(buffer, 0, entries * 8);
+            }
         }
         
         static void WriteZonesSection(Level lvl, Stream gs, byte[] buffer) {
