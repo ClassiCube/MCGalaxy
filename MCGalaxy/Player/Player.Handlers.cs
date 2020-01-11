@@ -403,8 +403,6 @@ namespace MCGalaxy {
             
             PlayerActions.Respawn(this);
             TimesDied++;
-            // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
-            if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
 
             if (Server.Config.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
                 Chat.MessageFromLevel(this, "λNICK %Shas died &3" + TimesDied + " times");

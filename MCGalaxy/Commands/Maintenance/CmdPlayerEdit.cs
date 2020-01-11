@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 SetInteger(p, args, PlayerData.ColumnLogins, 1000000000, who,
                            v => who.TimesVisited = v, type_norm);
             } else if (opt == "deaths") {
-                SetInteger(p, args, PlayerData.ColumnDeaths, short.MaxValue, who,
+                SetInteger(p, args, PlayerData.ColumnDeaths, 100000000, who,
                            v => who.TimesDied = v, type_norm);
             } else if (opt == "money") {
                 SetInteger(p, args, PlayerData.ColumnMoney, 100000000, who,
