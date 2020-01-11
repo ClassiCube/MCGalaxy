@@ -68,7 +68,7 @@ namespace MCGalaxy.SQL {
                 IDBDataParameter arg = db.CreateParameter();
                 arg.ParameterName = names[i];
                 arg.Value = parameters[i];
-                cmd.Parameters.Add(arg);
+                cmd.AddParam(arg);
             }
         }
         

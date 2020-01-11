@@ -82,7 +82,7 @@ namespace MySql.Data.MySqlClient
       {
         //paramList[i].ColumnName = (string) parameter_names[i];
         string parameterName = (string)parameter_names[i];
-        MySqlParameter p = Parameters.GetParameterFlexible(parameterName, false);
+        MySqlParameter p = command.FindParam(parameterName);
         if (p == null)
           throw new InvalidOperationException(
               String.Format("Parameter '{0}' was not found during prepare", parameterName));
@@ -150,7 +150,7 @@ namespace MySql.Data.MySqlClient
         nullMap[i] = (p.Value == DBNull.Value || p.Value == null);
         if (nullMap[i]) continue;
         packet.Encoding = p.Encoding;
-        p.Serialize(packet, true, Connection.Settings);
+        p.Serialize(packet, true);
       }
       if (nullMap != null)
         nullMap.CopyTo(packet.Buffer, nullMapPosition);
@@ -183,7 +183,7 @@ namespace MySql.Data.MySqlClient
       List<string> parameterMap = new List<string>();
 
       int startPos = 0;
-      string sql = ResolvedCommandText;
+      string sql = commandText;
       MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
       string parameter = tokenizer.NextParameter();
       while (parameter != null)

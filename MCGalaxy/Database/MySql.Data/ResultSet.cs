@@ -247,19 +247,6 @@ namespace MySql.Data.MySqlClient
       skippedRows = totalRows - rowIndex - 1;
     }
 
-    public bool FieldRead(int index)
-    {
-      Debug.Assert(Size > index);
-      return uaFieldsUsed[index];
-    }
-
-    public void SetValueObject(int i, IMySqlValue valueObject)
-    {
-      Debug.Assert(values != null);
-      Debug.Assert(i < values.Length);
-      values[i] = valueObject;
-    }
-
     /// <summary>
     /// Loads the column metadata for the current resultset
     /// </summary>

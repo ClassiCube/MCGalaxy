@@ -21,16 +21,9 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-#if !RT
 using System.Data;
-using System.Data.Common;
-using System.Transactions;
-using IsolationLevel = System.Data.IsolationLevel;
-#endif
-using System.Text;
-using MySql.Data.Common;
-using System.Diagnostics;
 using MCGalaxy.SQL;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -196,13 +189,6 @@ namespace MySql.Data.MySqlClient
       // in parallel
       lock (driver)
       {
-#if !RT
-        if (Transaction.Current != null &&
-          Transaction.Current.TransactionInformation.Status == TransactionStatus.Aborted)
-        {
-          throw new TransactionAbortedException();
-        }
-#endif
         // We use default command timeout for SetDatabase
         using (new CommandTimer(this, (int)Settings.DefaultCommandTimeout))
         {

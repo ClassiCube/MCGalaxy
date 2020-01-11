@@ -22,7 +22,6 @@
 
 using System;
 using System.Data;
-using System.Data.Common;
 using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient

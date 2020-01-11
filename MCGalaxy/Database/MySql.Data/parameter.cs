@@ -21,16 +21,10 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using MySql.Data.Types;
-using System.Globalization;
-using System.Reflection;
-using System.Text;
-using System.Collections;
-#if !RT
 using System.Data;
-using System.Data.Common;
-#endif
+using System.Text;
 using MCGalaxy.SQL;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
@@ -65,22 +59,6 @@ namespace MySql.Data.MySqlClient
 
     internal Encoding Encoding { get; set; }
 
-    internal bool TypeHasBeenSet
-    {
-      get { return inferType == false; }
-    }
-
-
-    internal string BaseName
-    {
-      get
-      {
-        if (ParameterName.StartsWith("@", StringComparison.Ordinal) || ParameterName.StartsWith("?", StringComparison.Ordinal))
-          return ParameterName.Substring(1);
-        return ParameterName;
-      }
-    }
-
     public MySqlDbType MySqlDbType
     {
       get { return mySqlDbType; }
@@ -108,11 +86,6 @@ namespace MySql.Data.MySqlClient
       private set { _valueObject = value; }
     }
 
-    public override string ToString()
-    {
-      return paramName;
-    }
-
     internal int GetPSType()
     {
       switch (mySqlDbType)
@@ -134,7 +107,7 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    internal void Serialize(MySqlPacket packet, bool binary, MySqlConnectionStringBuilder settings)
+    internal void Serialize(MySqlPacket packet, bool binary)
     {
       if (!binary && (paramValue == null || paramValue == DBNull.Value))
         packet.WriteStringNoNull("NULL");

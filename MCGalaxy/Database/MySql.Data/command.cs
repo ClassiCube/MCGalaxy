@@ -21,18 +21,10 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.IO;
-using System.Collections;
-using System.Text;
-#if !RT
-using System.Data;
-using System.Data.Common;
-#endif
-using MySql.Data.Common;
-using System.Threading;
-using System.Diagnostics;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Threading;
 using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
@@ -41,7 +33,7 @@ namespace MySql.Data.MySqlClient
   {
     MySqlConnection connection;
     string cmdText;
-    MySqlParameterCollection parameters;
+    List<MySqlParameter> parameters;
     internal Int64 lastInsertedId;
     private PreparableStatement statement;
     private int commandTimeout;
@@ -52,7 +44,7 @@ namespace MySql.Data.MySqlClient
 
     public MySqlCommand()
     {
-      parameters = new MySqlParameterCollection();
+      parameters = new List<MySqlParameter>();
       cmdText = String.Empty;
       useDefaultTimeout = true;
     }
@@ -143,10 +135,24 @@ namespace MySql.Data.MySqlClient
         }
       }
     }
-
-    public IDBDataParameterCollection Parameters
+    
+    public void AddParam(object value) 
     {
-      get { return parameters; }
+      parameters.Add((MySqlParameter)value); 
+    }
+    
+    public void ClearParams() 
+    {
+      parameters.Clear(); 
+    }
+    
+    internal MySqlParameter FindParam(string parameterName)
+    {
+      foreach (MySqlParameter p in parameters)
+      {
+        if (parameterName.Equals(p.ParameterName, StringComparison.OrdinalIgnoreCase)) return p;
+      }
+      return null;
     }
 
     internal bool InternallyCreated

@@ -21,9 +21,7 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using MCGalaxy.SQL;
 
 namespace MySql.Data.MySqlClient
@@ -35,43 +33,23 @@ namespace MySql.Data.MySqlClient
   {
     List<MySqlParameter> items = new List<MySqlParameter>();
 
-    public MySqlParameter Add(MySqlParameter value)
-    {
-      items.Add(value);
-      return value;
-    }
-
-    public MySqlParameter Add(string parameterName, object value)
-    {
-      return Add(new MySqlParameter(parameterName, value));
-    }
-
-    public MySqlParameter Add(string parameterName, MySqlDbType dbType)
-    {
-      return Add(new MySqlParameter(parameterName, dbType));
-    }
-
     public void Clear()
     {
       items.Clear();
     }
 
-    internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
+    internal MySqlParameter FindParam(string parameterName)
     {
       foreach (MySqlParameter p in items)
       {
         if (parameterName.Equals(p.ParameterName, StringComparison.OrdinalIgnoreCase)) return p;
       }
-
-      if (throwOnNotFound)
-        throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
       return null;
     }
 
-
     public void Add(object value)
     {
-      Add((MySqlParameter)value);
+      items.Add((MySqlParameter)value);
     }
   }
 }

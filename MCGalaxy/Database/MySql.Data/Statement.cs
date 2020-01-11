@@ -36,24 +36,14 @@ namespace MySql.Data.MySqlClient
     protected string commandText;
     private List<MySqlPacket> buffers;
 
-    private Statement(MySqlCommand cmd)
+    public Statement(MySqlCommand cmd, string text)
     {
       command = cmd;
+      commandText = text;
       buffers = new List<MySqlPacket>();
     }
 
-    public Statement(MySqlCommand cmd, string text)
-      : this(cmd)
-    {
-      commandText = text;
-    }
-
     #region Properties
-
-    public virtual string ResolvedCommandText
-    {
-      get { return commandText; }
-    }
 
     protected Driver Driver
     {
@@ -63,11 +53,6 @@ namespace MySql.Data.MySqlClient
     protected MySqlConnection Connection
     {
       get { return command.Connection; }
-    }
-
-    protected MySqlParameterCollection Parameters
-    {
-      get { return (MySqlParameterCollection)command.Parameters; }
     }
 
     #endregion
@@ -97,18 +82,10 @@ namespace MySql.Data.MySqlClient
 
     protected virtual void BindParameters()
     {
-      InternalBindParameters(ResolvedCommandText, Parameters, null);
-    }
-
-    private void InternalBindParameters(string sql, MySqlParameterCollection parameters,
-        MySqlPacket packet)
-    {
-      if (packet == null)
-      {
-        packet = new MySqlPacket(Driver.Encoding);
-        packet.Version = Driver.Version;
-        packet.WriteByte(0);
-      }
+      string sql = commandText;
+      MySqlPacket packet = new MySqlPacket(Driver.Encoding);
+      packet.Version = Driver.Version;
+      packet.WriteByte(0);
 
       MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
       tokenizer.ReturnComments = true;
@@ -123,7 +100,7 @@ namespace MySql.Data.MySqlClient
         pos = tokenizer.StopIndex;
         if (MySqlTokenizer.IsParameter(token))
         {
-          if (SerializeParameter(parameters, packet, token, parameterCount))
+          if (SerializeParameter(packet, token, parameterCount))
             token = null;
           parameterCount++;
         }
@@ -136,18 +113,6 @@ namespace MySql.Data.MySqlClient
       buffers.Add(packet);
     }
 
-    protected virtual bool ShouldIgnoreMissingParameter(string parameterName)
-    {
-      if (Connection.Settings.AllowUserVariables)
-        return true;
-      if (parameterName.StartsWith("@" + StoredProcedure.ParameterPrefix, StringComparison.OrdinalIgnoreCase))
-        return true;
-      if (parameterName.Length > 1 &&
-          (parameterName[1] == '`' || parameterName[1] == '\''))
-        return true;
-      return false;
-    }
-
     /// <summary>
     /// Serializes the given parameter to the given memory stream
     /// </summary>
@@ -157,21 +122,15 @@ namespace MySql.Data.MySqlClient
     /// </para>
     /// </remarks>
     /// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
-    private bool SerializeParameter(MySqlParameterCollection parameters,
-                                    MySqlPacket packet, string parmName, int parameterIndex)
+    private bool SerializeParameter(MySqlPacket packet, string parmName, int parameterIndex)
     {
-      MySqlParameter parameter = parameters.GetParameterFlexible(parmName, false);
+      MySqlParameter parameter = command.FindParam(parmName);
 
       if (parameter == null)
       {
-        // if we are allowing user variables and the parameter name starts with @
-        // then we can't throw an exception
-        if (parmName.StartsWith("@", StringComparison.Ordinal) && ShouldIgnoreMissingParameter(parmName))
-          return false;
-        throw new MySqlException(
-            String.Format("Parameter '{0}' must be defined", parmName));
+        throw new MySqlException(String.Format("Parameter '{0}' must be defined", parmName));
       }
-      parameter.Serialize(packet, false, Connection.Settings);
+      parameter.Serialize(packet, false);
       return true;
     }
   }

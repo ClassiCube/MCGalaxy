@@ -21,21 +21,13 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-#if !RT
-using System.Data.Common;
-using System.Runtime.Serialization;
-#endif
 
 namespace MySql.Data.MySqlClient
 {
   /// <summary>
   /// The exception that is thrown when MySQL returns an error. This class cannot be inherited.
   /// </summary>
-  /// <include file='docs/MySqlException.xml' path='MyDocs/MyMembers[@name="Class"]/*'/>
-#if !RT
-  [Serializable]
-#endif
-  public sealed class MySqlException : DbException
+  public sealed class MySqlException : Exception
   {
     private int errorCode;
     private bool isFatal;
@@ -71,13 +63,6 @@ namespace MySql.Data.MySqlClient
       : this(msg, errno, null)
     {
     }
-
-#if !RT
-    private MySqlException(SerializationInfo info, StreamingContext context)
-      : base(info, context)
-    {
-    }
-#endif
 
     /// <summary>
     /// Gets a number that identifies the type of error.

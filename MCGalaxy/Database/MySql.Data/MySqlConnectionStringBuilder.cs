@@ -23,10 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
-using System.Globalization;
-using System.Reflection;
-using MySql.Data.MySqlClient;
 
 namespace MySql.Data.MySqlClient
 {
@@ -98,7 +94,6 @@ namespace MySql.Data.MySqlClient
 
       options.Add(new MySqlConnectionStringOption("autoenlist", "auto enlist", typeof(bool), true, false));
       options.Add(new MySqlConnectionStringOption("respectbinaryflags", "respect binary flags", typeof(bool), true, false));
-      options.Add(new MySqlConnectionStringOption("allowuservariables", "allow user variables", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("interactivesession", "interactive session,interactive", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("functionsreturnstring", "functions return string", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("useaffectedrows", "use affected rows", typeof(bool), false, false));
@@ -327,12 +322,6 @@ namespace MySql.Data.MySqlClient
     {
       get { return (bool)values["respectbinaryflags"]; }
       set { SetValue("respectbinaryflags", value); }
-    }
-
-    public bool AllowUserVariables
-    {
-      get { return (bool)values["allowuservariables"]; }
-      set { SetValue("allowuservariables", value); }
     }
 
     public bool InteractiveSession

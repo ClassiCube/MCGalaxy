@@ -252,8 +252,7 @@ namespace MCGalaxy.SQL {
         }
 
         public void ChangeDatabase(string databaseName) { }
-        public int ConnectionTimeout { get { return SQLiteConvert.Timeout; } }     
-        public string ConnectionString { get { return ""; } set { } }
+        public int ConnectionTimeout { get { return SQLiteConvert.Timeout; } }
 
         public IDBCommand CreateCommand() { return new SQLiteCommand(this); }
         public string Database { get { return "main"; } }
@@ -427,7 +426,7 @@ namespace MCGalaxy.SQL {
     public sealed class SQLiteCommand : IDBCommand {
         string strCmdText, strRemaining;
         SQLiteConnection conn;
-        SQLiteParameterCollection parameters = new SQLiteParameterCollection();
+        internal List<SQLiteParameter> parameters = new List<SQLiteParameter>();
         SQLiteStatement stmt;
         
         public SQLiteCommand(SQLiteConnection connection) : this(null, connection) { }
@@ -478,8 +477,14 @@ namespace MCGalaxy.SQL {
         public bool IsConnectionClosed {
             get { return conn == null || conn.State != ConnectionState.Open; }
         }
-
-        public IDBDataParameterCollection Parameters { get { return parameters; } }
+        
+        public void AddParam(object value) { 
+            parameters.Add((SQLiteParameter)value); 
+        }
+        
+        public void ClearParams() { 
+            parameters.Clear(); 
+        }
 
         public IDBDataReader ExecuteReader() {
             SQLiteConnection.Check(conn);
@@ -979,16 +984,6 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    public sealed class SQLiteParameterCollection : IDBDataParameterCollection {
-        internal List<SQLiteParameter> list = new List<SQLiteParameter>();
-
-        public void Add(object value) {
-            list.Add((SQLiteParameter)value);
-        }
-
-        public void Clear() { list.Clear(); }
-    }
-
     sealed class SQLiteStatement : IDisposable {
         IntPtr handle;
         internal SQLiteConnection conn;
@@ -1054,14 +1049,14 @@ namespace MCGalaxy.SQL {
             return SQLiteConvert.FromUTF8(p, -1);
         }
 
-        internal void BindAll(SQLiteParameterCollection args) {
-            if (paramNames == null || args.list.Count == 0) return;
+        internal void BindAll(List<SQLiteParameter> list) {
+            if (paramNames == null || list.Count == 0) return;
             
-            foreach (SQLiteParameter arg in args.list) {
-                int i = FindParameter(arg.ParameterName);
+            foreach (SQLiteParameter param in list) {
+                int i = FindParameter(param.ParameterName);
                 if (i == -1) continue;
                 
-                SQLiteErrorCode n = BindParameter(i + 1, arg);
+                SQLiteErrorCode n = BindParameter(i + 1, param);
                 if (n != SQLiteErrorCodes.Ok) throw new SQLiteException(n, conn.GetLastError());
             }
         }

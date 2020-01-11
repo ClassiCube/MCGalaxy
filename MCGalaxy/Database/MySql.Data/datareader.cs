@@ -21,22 +21,15 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
-#if !RT
 using System.Data;
-using System.Data.Common;
-#endif
-using System.Collections;
-using MySql.Data.Types;
-using System.Collections.Generic;
 using System.Globalization;
-using MySql.Data.Common;
-using MySql.Data.MySqlClient;
 using System.Threading;
 using MCGalaxy.SQL;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed partial class MySqlDataReader : IDBDataReader
+  public sealed class MySqlDataReader : IDBDataReader
   {
     // The DataReader should always be open when returned to the user.
     private bool isOpen = true;
