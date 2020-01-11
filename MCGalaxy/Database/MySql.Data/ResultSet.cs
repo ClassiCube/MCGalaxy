@@ -157,12 +157,9 @@ namespace MySql.Data.MySqlClient
     }
 
 
-    public bool NextRow(CommandBehavior behavior)
+    public bool NextRow()
     {
       if (readDone) return false;
-
-      if ((behavior & CommandBehavior.SingleRow) != 0 && rowIndex == 0)
-        return false;
 
       // if we are at row index >= 0 then we need to fetch the data row and load it
       if (rowIndex >= 0)

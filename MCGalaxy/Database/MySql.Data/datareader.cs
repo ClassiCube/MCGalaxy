@@ -33,8 +33,6 @@ namespace MySql.Data.MySqlClient
   {
     // The DataReader should always be open when returned to the user.
     private bool isOpen = true;
-
-    private CommandBehavior commandBehavior;
     private MySqlCommand command;
     internal long affectedRows;
     internal Driver driver;
@@ -107,15 +105,9 @@ namespace MySql.Data.MySqlClient
     {
       if (!isOpen) return;
 
-      bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
-      CommandBehavior originalBehavior = commandBehavior;
-
       // clear all remaining resultsets
       try
       {
-        // Temporarily change to Default behavior to allow NextResult to finish properly.
-        if (!originalBehavior.Equals(CommandBehavior.SchemaOnly))
-          commandBehavior = CommandBehavior.Default;
         while (NextResult()) { }
       }
       catch (MySqlException ex)
@@ -155,15 +147,10 @@ namespace MySql.Data.MySqlClient
       {
         // always ensure internal reader is null (Bug #55558)
         connection.Reader = null;
-        commandBehavior = originalBehavior;
       }
       // we now give the command a chance to terminate.  In the case of
       // stored procedures it needs to update out and inout parameters
       command.Close(this);
-      commandBehavior = CommandBehavior.Default;
-
-      if (shouldCloseConnection)
-        connection.Close();
 
       command = null;
       connection.IsInUse = false;
@@ -368,14 +355,6 @@ namespace MySql.Data.MySqlClient
         resultSet.Close();
       }
 
-      // single result means we only return a single resultset.  If we have already
-      // returned one, then we return false
-      // TableDirect is basically a select * from a single table so it will generate
-      // a single result also
-      if (resultSet != null &&
-        ((commandBehavior & CommandBehavior.SingleResult) != 0))
-        return false;
-
       // next load up the next resultset if any
       try
       {
@@ -402,8 +381,6 @@ namespace MySql.Data.MySqlClient
           connection.Abort();
         if (ex.Number == 0)
           throw new MySqlException("Fatal error encountered attempting to read the resultset", ex);
-        if ((commandBehavior & CommandBehavior.CloseConnection) != 0)
-          Close();
         throw;
       }
     }
@@ -417,7 +394,7 @@ namespace MySql.Data.MySqlClient
 
       try
       {
-        return resultSet.NextRow(commandBehavior);
+        return resultSet.NextRow();
       }
       catch (TimeoutException tex)
       {
