@@ -43,17 +43,6 @@ namespace MySql.Data.MySqlClient
       options.Add(new MySqlConnectionStringOption("database", "initial catalog", typeof(string), string.Empty, false));
       options.Add(new MySqlConnectionStringOption("port", null, typeof(uint), ( uint )3306, false));
       options.Add(new MySqlConnectionStringOption("allowbatch", "allow batch", typeof(bool), true, false));
-      options.Add(new MySqlConnectionStringOption("useoldsyntax", "old syntax,oldsyntax,use old syntax", typeof(bool), false, true,
-        delegate(MySqlConnectionStringBuilder msb, MySqlConnectionStringOption sender, object value)
-        {
-          MySqlTrace.LogWarning(-1, "Use Old Syntax is now obsolete.  Please see documentation");
-          msb.SetValue("useoldsyntax", value);
-        },
-        delegate(MySqlConnectionStringBuilder msb, MySqlConnectionStringOption sender)
-        {
-          return (bool)msb.values["useoldsyntax"];
-        }
-        ));
       options.Add(new MySqlConnectionStringOption("connectiontimeout", "connection timeout,connect timeout", typeof(uint), (uint)15, false,
         delegate(MySqlConnectionStringBuilder msb, MySqlConnectionStringOption sender, object Value)
         {
@@ -92,7 +81,6 @@ namespace MySql.Data.MySqlClient
       options.Add(new MySqlConnectionStringOption("convertzerodatetime", "convert zero datetime", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("ignoreprepare", "ignore prepare", typeof(bool), true, false));
 
-      options.Add(new MySqlConnectionStringOption("autoenlist", "auto enlist", typeof(bool), true, false));
       options.Add(new MySqlConnectionStringOption("respectbinaryflags", "respect binary flags", typeof(bool), true, false));
       options.Add(new MySqlConnectionStringOption("interactivesession", "interactive session,interactive", typeof(bool), false, false));
       options.Add(new MySqlConnectionStringOption("functionsreturnstring", "functions return string", typeof(bool), false, false));
@@ -164,16 +152,6 @@ namespace MySql.Data.MySqlClient
     {
       get { return (bool)values["allowbatch"]; }
       set { SetValue("allowbatch", value); }
-    }
-
-    /// <summary>
-    /// Gets or sets a boolean value that indicates whether this connection uses
-    /// the old style (@) parameter markers or the new (?) style.
-    /// </summary>
-    public bool UseOldSyntax
-    {
-      get { return (bool)values["useoldsyntax"]; }
-      set { SetValue("useoldsyntax", value); }
     }
 
     /// <summary>
@@ -310,12 +288,6 @@ namespace MySql.Data.MySqlClient
     {
       get { return (bool)values["ignoreprepare"]; }
       set { SetValue("ignoreprepare", value); }
-    }
-
-    public bool AutoEnlist
-    {
-      get { return (bool)values["autoenlist"]; }
-      set { SetValue("autoenlist", value); }
     }
 
     public bool RespectBinaryFlags

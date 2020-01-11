@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -67,12 +66,10 @@ namespace MySql.Data.MySqlClient.Authentication
     struct PluginInfo
     {
       public string Type;
-      public Assembly Assembly;
 
       public PluginInfo(string type)
       {
         Type = type;
-        Assembly = null;
       }
     }
 }

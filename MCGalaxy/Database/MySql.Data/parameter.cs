@@ -46,11 +46,6 @@ namespace MySql.Data.MySqlClient
       Value = value;
     }
 
-    public MySqlParameter(string parameterName, MySqlDbType dbType) : this(parameterName, null)
-    {
-      MySqlDbType = dbType;
-    }
-
     public string ParameterName
     {
       get { return paramName; }

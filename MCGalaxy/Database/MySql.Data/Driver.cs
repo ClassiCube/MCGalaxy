@@ -271,9 +271,9 @@ namespace MySql.Data.MySqlClient
       charSetCmd.ExecuteNonQuery();
 
       if (charSet != null)
-        Encoding = CharSetMap.GetEncoding(Version, charSet);
+        Encoding = CharSetMap.GetEncoding(charSet);
       else
-        Encoding = CharSetMap.GetEncoding(Version, "utf-8");
+        Encoding = CharSetMap.GetEncoding("utf-8");
 
       handler.Configure();
     }

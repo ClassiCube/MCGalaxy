@@ -434,7 +434,6 @@
     <Compile Include="Database\MySql.Data\MySqlTrace.cs" />
     <Compile Include="Database\MySql.Data\NativeDriver.cs" />
     <Compile Include="Database\MySql.Data\parameter.cs" />
-    <Compile Include="Database\MySql.Data\parameter_collection.cs" />
     <Compile Include="Database\MySql.Data\PreparableStatement.cs" />
     <Compile Include="Database\MySql.Data\ResultSet.cs" />
     <Compile Include="Database\MySql.Data\Statement.cs" />

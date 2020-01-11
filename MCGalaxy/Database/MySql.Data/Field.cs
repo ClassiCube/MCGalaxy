@@ -64,7 +64,6 @@ namespace MySql.Data.MySqlClient
     public string RealTableName;
     public string DatabaseName;
     public Encoding Encoding;
-    public int maxLength;
 
     // protected fields
     protected ColumnFlags colFlags;
@@ -72,7 +71,6 @@ namespace MySql.Data.MySqlClient
     protected byte precision;
     protected byte scale;
     protected MySqlDbType mySqlDbType;
-    protected DBVersion connVersion;
     protected Driver driver;
     protected bool binaryOk;
     protected List<Type> typeConversions = new List<Type>();
@@ -82,8 +80,6 @@ namespace MySql.Data.MySqlClient
     public MySqlField(Driver driver)
     {
       this.driver = driver;
-      connVersion = driver.Version;
-      maxLength = 1;
       binaryOk = true;
     }
 
@@ -112,42 +108,6 @@ namespace MySql.Data.MySqlClient
       set { scale = value; }
     }
 
-    public int MaxLength
-    {
-      get { return maxLength; }
-      set { maxLength = value; }
-    }
-
-    public ColumnFlags Flags
-    {
-      get { return colFlags; }
-    }
-
-    public bool IsAutoIncrement
-    {
-      get { return (colFlags & ColumnFlags.AUTO_INCREMENT) > 0; }
-    }
-
-    public bool IsNumeric
-    {
-      get { return (colFlags & ColumnFlags.NUMBER) > 0; }
-    }
-
-    public bool AllowsNull
-    {
-      get { return (colFlags & ColumnFlags.NOT_NULL) == 0; }
-    }
-
-    public bool IsUnique
-    {
-      get { return (colFlags & ColumnFlags.UNIQUE_KEY) > 0; }
-    }
-
-    public bool IsPrimaryKey
-    {
-      get { return (colFlags & ColumnFlags.PRIMARY_KEY) > 0; }
-    }
-
     public bool IsBlob
     {
       get
@@ -171,20 +131,6 @@ namespace MySql.Data.MySqlClient
     public bool IsUnsigned
     {
       get { return (colFlags & ColumnFlags.UNSIGNED) > 0; }
-    }
-
-    public bool IsTextField
-    {
-      get
-      {
-        return Type == MySqlDbType.VarString || Type == MySqlDbType.VarChar ||
-                    Type == MySqlDbType.String || Type == MySqlDbType.Guid;
-      }
-    }
-
-    public int CharacterLength
-    {
-      get { return ColumnLength / MaxLength; }
     }
 
     public List<Type> TypeConversions
@@ -357,9 +303,7 @@ namespace MySql.Data.MySqlClient
       if (charSets == null || charSets.Count == 0 || CharacterSetIndex == -1) return;
       if (charSets[CharacterSetIndex] == null) return;
 
-      CharacterSet cs = CharSetMap.GetCharacterSet(version, (string)charSets[CharacterSetIndex]);
-      MaxLength = cs.byteCount;
-      Encoding = CharSetMap.GetEncoding(version, (string)charSets[CharacterSetIndex]);
+      Encoding = CharSetMap.GetEncoding((string)charSets[CharacterSetIndex]);
     }
   }
 }
