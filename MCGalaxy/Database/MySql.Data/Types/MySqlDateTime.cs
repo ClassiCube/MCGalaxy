@@ -225,11 +225,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return type; }
-    }
-
     object IMySqlValue.Value
     {
       get { return GetDateTime(); }
@@ -397,12 +392,6 @@ namespace MySql.Data.Types
       }
 
       return new MySqlDateTime(type, year, month, day, hour, minute, second, microsecond);
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      int len = packet.ReadByte();
-      packet.Position += len;
     }
 
     #endregion

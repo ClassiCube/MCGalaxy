@@ -56,11 +56,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.Decimal; }
-    }
-
     public byte Precision
     {
       get { return precision; }
@@ -125,12 +120,6 @@ namespace MySql.Data.Types
       else
         s = packet.ReadString(length);
       return new MySqlDecimal(s);
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      int len = (int)packet.ReadFieldLength();
-      packet.Position += len;
     }
 
     #endregion

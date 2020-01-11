@@ -52,11 +52,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.Double; }
-    }
-
     object IMySqlValue.Value
     {
       get { return mValue; }
@@ -115,11 +110,6 @@ namespace MySql.Data.Types
           d = double.MaxValue;
       }
       return new MySqlDouble(d);
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      packet.Position += 8;
     }
 
     #endregion

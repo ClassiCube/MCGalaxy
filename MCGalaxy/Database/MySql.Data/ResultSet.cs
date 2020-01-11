@@ -40,8 +40,6 @@ namespace MySql.Data.MySqlClient
     private Dictionary<string, int> fieldHashCI;
     private int rowIndex;
     private bool readDone;
-    private bool isSequential;
-    private int seqIndex;
     private int affectedRows;
     private long insertedId;
     private int statementId;
@@ -146,17 +144,6 @@ namespace MySql.Data.MySqlClient
 
         // keep count of how many columns we have left to access
         uaFieldsUsed[index] = true;
-
-        if (isSequential && index != seqIndex)
-        {
-          if (index < seqIndex)
-            throw new MySqlException("Invalid attempt to read a prior column using SequentialAccess");
-          while (seqIndex < (index - 1))
-            driver.SkipColumnValue(values[++seqIndex]);
-          values[index] = driver.ReadColumnValue(index, fields[index], values[index]);
-          seqIndex = index;
-        }
-
         return values[index];
       }
     }
@@ -176,9 +163,6 @@ namespace MySql.Data.MySqlClient
 
       if ((behavior & CommandBehavior.SingleRow) != 0 && rowIndex == 0)
         return false;
-
-      isSequential = (behavior & CommandBehavior.SequentialAccess) != 0;
-      seqIndex = -1;
 
       // if we are at row index >= 0 then we need to fetch the data row and load it
       if (rowIndex >= 0)
@@ -205,7 +189,10 @@ namespace MySql.Data.MySqlClient
         }
       }
 
-      if (!isSequential) ReadColumnData(false);
+      for (int i = 0; i < Size; i++)
+      {
+        values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
+      }
       rowIndex++;
       return true;
     }
@@ -267,22 +254,6 @@ namespace MySql.Data.MySqlClient
         if (!fieldHashCI.ContainsKey(columnName))
           fieldHashCI.Add(columnName, i);
         values[i] = fields[i].GetValueObject();
-      }
-    }
-
-    private void ReadColumnData(bool outputParms)
-    {
-      for (int i = 0; i < Size; i++)
-        values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
-
-      // we don't need to worry about caching the following since you won't have output
-      // params with TableDirect commands
-      if (outputParms)
-      {
-        bool rowExists = driver.FetchDataRow(statementId, fields.Length);
-        rowIndex = 0;
-        if (rowExists)
-          throw new MySqlException("INTERNAL ERROR:  More than one output parameter row detected");
       }
     }
   }

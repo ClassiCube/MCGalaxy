@@ -50,11 +50,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.Time; }
-    }
-
     object IMySqlValue.Value
     {
       get { return mValue; }
@@ -144,12 +139,6 @@ namespace MySql.Data.Types
       if (negate == 1)
         mValue = mValue.Negate();
       return this;
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      int len = packet.ReadByte();
-      packet.Position += len;
     }
 
     #endregion

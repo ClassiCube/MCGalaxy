@@ -60,11 +60,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.UInt32; }
-    }
-
     object IMySqlValue.Value
     {
       get { return mValue; }
@@ -97,19 +92,13 @@ namespace MySql.Data.Types
     IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
     {
       if (nullVal)
-        return new MySqlUInt32((this as IMySqlValue).MySqlDbType, true);
+        return new MySqlUInt32(MySqlDbType.UInt32, true);
 
       if (length == -1)
-        return new MySqlUInt32((this as IMySqlValue).MySqlDbType,
-                     (uint)packet.ReadInteger(4));
+        return new MySqlUInt32(MySqlDbType.UInt32, (uint)packet.ReadInteger(4));
       else
-        return new MySqlUInt32((this as IMySqlValue).MySqlDbType,
+        return new MySqlUInt32(MySqlDbType.UInt32,
                      UInt32.Parse(packet.ReadString(length), NumberStyles.Any, CultureInfo.InvariantCulture));
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      packet.Position += 4;
     }
 
     #endregion

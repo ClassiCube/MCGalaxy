@@ -50,11 +50,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.UInt64; }
-    }
-
     object IMySqlValue.Value
     {
       get { return mValue; }
@@ -93,11 +88,6 @@ namespace MySql.Data.Types
         return new MySqlUInt64(packet.ReadULong(8));
       else
         return new MySqlUInt64(UInt64.Parse(packet.ReadString(length)));
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      packet.Position += 8;
     }
 
     #endregion

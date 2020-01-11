@@ -664,20 +664,6 @@ namespace MySql.Data.MySqlClient
       return valObject.ReadValue(packet, length, isNull);
     }
 
-    public void SkipColumnValue(IMySqlValue valObject)
-    {
-      int length = -1;
-      if (nullMap == null)
-      {
-        length = (int)packet.ReadFieldLength();
-        if (length == -1) return;
-      }
-      if (length > -1)
-        packet.Position += length;
-      else
-        valObject.SkipValue(packet);
-    }
-
     public void GetColumnsData(MySqlField[] columns)
     {
       for (int i = 0; i < columns.Length; i++)

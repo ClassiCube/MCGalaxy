@@ -206,7 +206,7 @@ namespace MySql.Data.MySqlClient
       return Convert.ChangeType(value.Value, newType, CultureInfo.InvariantCulture);
     }
 
-    public String GetDataTypeName(int i)
+    public string GetDataTypeName(int i)
     {
       if (!isOpen)
         throw new Exception("No current query in data reader");

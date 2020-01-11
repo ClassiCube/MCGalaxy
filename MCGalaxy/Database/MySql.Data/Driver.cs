@@ -132,11 +132,6 @@ namespace MySql.Data.MySqlClient
       get { return charSets; }
     }
 
-    public bool SupportsOutputParameters
-    {
-      get { return Version.isAtLeast(5, 5, 0); }
-    }
-
     public bool SupportsBatch
     {
       get { return (handler.Flags & ClientFlags.MULTI_STATEMENTS) != 0; }
@@ -440,11 +435,6 @@ namespace MySql.Data.MySqlClient
       return handler.ReadColumnValue(index, field, value);
     }
 
-    public void SkipColumnValue(IMySqlValue valObject)
-    {
-      handler.SkipColumnValue(valObject);
-    }
-
     public void ResetTimeout(int timeoutMilliseconds)
     {
       handler.ResetTimeout(timeoutMilliseconds);
@@ -545,7 +535,6 @@ namespace MySql.Data.MySqlClient
     void SetDatabase(string dbName);
     void Reset();
     IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue valObject);
-    void SkipColumnValue(IMySqlValue valueObject);
     void GetColumnsData(MySqlField[] columns);
     void ResetTimeout(int timeout);
     int WarningCount { get; }

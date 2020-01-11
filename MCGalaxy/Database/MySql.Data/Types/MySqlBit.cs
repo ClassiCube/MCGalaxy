@@ -53,11 +53,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.Bit; }
-    }
-
     object IMySqlValue.Value
     {
       get

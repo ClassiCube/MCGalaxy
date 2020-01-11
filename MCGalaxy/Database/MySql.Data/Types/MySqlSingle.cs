@@ -51,11 +51,6 @@ namespace MySql.Data.Types
       get { return isNull; }
     }
 
-    MySqlDbType IMySqlValue.MySqlDbType
-    {
-      get { return MySqlDbType.Float; }
-    }
-
     object IMySqlValue.Value
     {
       get { return mValue; }
@@ -99,11 +94,6 @@ namespace MySql.Data.Types
       }
       return new MySqlSingle(Single.Parse(packet.ReadString(length),
      CultureInfo.InvariantCulture));
-    }
-
-    void IMySqlValue.SkipValue(MySqlPacket packet)
-    {
-      packet.Position += 4;
     }
 
     #endregion

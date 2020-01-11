@@ -30,13 +30,11 @@ namespace MySql.Data.Types
   internal interface IMySqlValue
   {
     bool IsNull { get; }
-    MySqlDbType MySqlDbType { get; }
     object Value { get; /*set;*/ }
     Type SystemType { get; }
     string MySqlTypeName { get; }
 
     void WriteValue(MySqlPacket packet, bool binary, object value);
     IMySqlValue ReadValue(MySqlPacket packet, long length, bool isNull);
-    void SkipValue(MySqlPacket packet);
   }
 }
