@@ -39,9 +39,12 @@ namespace MCGalaxy.Levels.IO {
                 byte[] buffer = new byte[bufferSize];
                 
                 WriteHeader(lvl, gs, buffer);
-                WriteBlocksSection(lvl, gs, buffer);
-                WriteBlockDefsSection(lvl, gs, buffer);
-                lock (lvl.physTickLock) { WritePhysicsSection(lvl, gs, buffer); }
+                // lock physics so it can't change blocks or checks during saving
+                lock (lvl.physTickLock) {
+                    WriteBlocksSection(lvl, gs, buffer);
+                    WriteBlockDefsSection(lvl, gs, buffer);
+                    WritePhysicsSection(lvl, gs, buffer); 
+                }
                 WriteZonesSection(lvl, gs, buffer);
             }
         }
