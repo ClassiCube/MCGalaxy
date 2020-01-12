@@ -44,7 +44,7 @@ namespace MCGalaxy.Levels.IO {
             return lvl;
         }
         
-        void ReadData(NbtCompound root, string name, out Level lvl) {
+        static void ReadData(NbtCompound root, string name, out Level lvl) {
             if (root["FormatVersion"].ByteValue > 1)
                 throw new NotSupportedException("Only version 1 of ClassicWorld format is supported.");
             
@@ -54,18 +54,45 @@ namespace MCGalaxy.Levels.IO {
             
             lvl = new Level(name, (ushort)x, (ushort)y, (ushort)z);
             lvl.blocks = root["BlockArray"].ByteArrayValue;
-            ConvertCustom(lvl);
+            ReadSpawn(root, lvl);
             
+            #if TEN_BIT_BLOCKS
+            // Can't use ConvertCustom, as that changes lvl.blocks
+            // (aka the array containing the lower 8 bits of block ids)
+            if (root.Contains("BlockArray2")) {
+                ReadExtBlocks(root, lvl); return;
+            }
+            #endif
+            ConvertCustom(lvl);
+        }
+        
+        #if TEN_BIT_BLOCKS
+        static void ReadExtBlocks(NbtCompound root, Level lvl) {
+            byte[] lo = root["BlockArray"].ByteArrayValue;
+            byte[] hi = root["BlockArray2"].ByteArrayValue;
+            
+            for (int i = 0; i < lo.Length; i++) {
+                if (hi[i] == 0 && lo[i] <= Block.CpeMaxBlock) continue;
+                ushort x, y, z;
+                
+                lvl.IntToPos(i, out x, out y, out z);
+                int b = ((hi[i] << 8) | lo[i]) + Block.Extended;
+                lvl.SetBlock(x, y, z, (BlockID)b);
+            }
+        }
+        #endif
+        
+        static void ReadSpawn(NbtCompound root, Level lvl) {
             if (!root.Contains("Spawn")) return;
             NbtTag spawn = root["Spawn"];
             lvl.spawnx = (ushort)spawn["X"].ShortValue;
             lvl.spawny = (ushort)spawn["Y"].ShortValue;
             lvl.spawnz = (ushort)spawn["Z"].ShortValue;
             lvl.rotx = spawn["H"].ByteValue;
-            lvl.roty = spawn["P"].ByteValue;
+            lvl.roty = spawn["P"].ByteValue;            
         }
         
-        void ReadMetadata(NbtCompound root, Level lvl) {
+        static void ReadMetadata(NbtCompound root, Level lvl) {
             if (!root.Contains("CPE")) return;
             NbtCompound cpe = (NbtCompound)root["CPE"];
             

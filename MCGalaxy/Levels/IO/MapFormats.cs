@@ -47,7 +47,7 @@ namespace MCGalaxy.Levels.IO {
             new DatImporter(), new McLevelImporter(),
         };
         
-        protected void ConvertCustom(Level lvl) {
+        protected static void ConvertCustom(Level lvl) {
             ushort x, y, z;
             byte[] blocks = lvl.blocks; // local var to avoid JIT bounds check
             for (int i = 0; i < blocks.Length; i++) {
