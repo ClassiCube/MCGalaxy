@@ -89,7 +89,7 @@ namespace MCGalaxy.Levels.IO {
             lvl.spawny = (ushort)spawn["Y"].ShortValue;
             lvl.spawnz = (ushort)spawn["Z"].ShortValue;
             lvl.rotx = spawn["H"].ByteValue;
-            lvl.roty = spawn["P"].ByteValue;            
+            lvl.roty = spawn["P"].ByteValue;
         }
         
         static void ReadMetadata(NbtCompound root, Level lvl) {
@@ -169,15 +169,13 @@ namespace MCGalaxy.Levels.IO {
                 def.FogR = fog[1]; def.FogG = fog[2]; def.FogB = fog[3];
                 
                 byte[] tex = props["Textures"].ByteArrayValue;
-                def.TopTex = tex[0]; def.BottomTex = tex[1];
-                def.LeftTex = tex[2]; def.RightTex = tex[3];
-                def.FrontTex = tex[4]; def.BackTex = tex[5];
+                ImportTexs(def, tex, 0);
+                if (tex.Length > 6) ImportTexs(def, tex, 6);
 
                 byte[] coords = props["Coords"].ByteArrayValue;
                 def.MinX = coords[0]; def.MinZ = coords[1]; def.MinY = coords[2];
                 def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
                 
-               
                 BlockID block = def.GetBlock();
                 if (block >= Block.ExtendedCount) {
                     Logger.Log(LogType.Warning, "Cannot import custom block {0} (ID {1})",
@@ -197,14 +195,21 @@ namespace MCGalaxy.Levels.IO {
                 BlockDefinition.Save(false, lvl);
         }
         
+        static void ImportTexs(BlockDefinition def, byte[] tex, int i) {
+            int s = i == 0 ? 0 : 8;
+            def.TopTex   |= (ushort)(tex[i+0] << s); def.BottomTex |= (ushort)(tex[i+1] << s);
+            def.LeftTex  |= (ushort)(tex[i+2] << s); def.RightTex  |= (ushort)(tex[i+3] << s);
+            def.FrontTex |= (ushort)(tex[i+4] << s); def.BackTex   |= (ushort)(tex[i+5] << s);
+        }
+        
         static bool PropsEquals(BlockDefinition a, BlockDefinition b) {
             if (b == null || b.Name == null) return false;
-            return a.Name == b.Name && a.CollideType == b.CollideType && a.Speed == b.Speed && a.TopTex == b.TopTex 
-                && a.BottomTex == b.BottomTex && a.BlocksLight == b.BlocksLight && a.WalkSound == b.WalkSound 
-                && a.FullBright == b.FullBright && a.Shape == b.Shape && a.BlockDraw == b.BlockDraw 
-                && a.FogDensity == b.FogDensity && a.FogR == b.FogR && a.FogG == b.FogG && a.FogB == b.FogB 
-                && a.MinX == b.MinX && a.MinY == b.MinY && a.MinZ == b.MinZ && a.MaxX == b.MaxX 
-                && a.MaxY == b.MaxY && a.MaxZ == b.MaxZ && a.LeftTex == b.LeftTex && a.RightTex == b.RightTex 
+            return a.Name == b.Name && a.CollideType == b.CollideType && a.Speed == b.Speed && a.TopTex == b.TopTex
+                && a.BottomTex == b.BottomTex && a.BlocksLight == b.BlocksLight && a.WalkSound == b.WalkSound
+                && a.FullBright == b.FullBright && a.Shape == b.Shape && a.BlockDraw == b.BlockDraw
+                && a.FogDensity == b.FogDensity && a.FogR == b.FogR && a.FogG == b.FogG && a.FogB == b.FogB
+                && a.MinX == b.MinX && a.MinY == b.MinY && a.MinZ == b.MinZ && a.MaxX == b.MaxX
+                && a.MaxY == b.MaxY && a.MaxZ == b.MaxZ && a.LeftTex == b.LeftTex && a.RightTex == b.RightTex
                 && a.FrontTex == b.FrontTex && a.BackTex == b.BackTex;
         }
     }
