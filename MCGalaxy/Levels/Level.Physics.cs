@@ -74,9 +74,12 @@ namespace MCGalaxy {
                         continue;
                     }
 
-                    DateTime tickStart = DateTime.UtcNow;
+                    DateTime tickStart = default(DateTime);
                     try {
-                        lock (physTickLock) PhysicsTick();
+                    	lock (physTickLock) {
+                            tickStart = DateTime.UtcNow;
+                            PhysicsTick();
+                    	}
                     } catch (Exception ex) {
                         Logger.LogError("Error in physics tick", ex);
                     }

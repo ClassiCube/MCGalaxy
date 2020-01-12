@@ -41,9 +41,9 @@ namespace MCGalaxy.Levels.IO {
                 WriteHeader(lvl, gs, buffer);
                 // lock physics so it can't change blocks or checks during saving
                 lock (lvl.physTickLock) {
-                    WriteBlocksSection(lvl, gs, buffer);
+                    WriteBlocksSection(lvl,    gs, buffer);
                     WriteBlockDefsSection(lvl, gs, buffer);
-                    WritePhysicsSection(lvl, gs, buffer); 
+                    WritePhysicsSection(lvl,   gs, buffer); 
                 }
                 WriteZonesSection(lvl, gs, buffer);
             }
