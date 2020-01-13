@@ -294,17 +294,11 @@ namespace MCGalaxy {
             
             try {
                 string propsPath = LevelInfo.PropsPath(lvl.MapName);
-                bool propsExisted = lvl.Config.Load(propsPath);
-                
-                if (propsExisted) {
+                if (lvl.Config.Load(propsPath)) {
                     lvl.SetPhysics(lvl.Config.Physics);
                 } else {
                     Logger.Log(LogType.ConsoleMessage, ".properties file for level {0} was not found.", lvl.MapName);
                 }
-                
-                // Backwards compatibility for older levels which had .env files.
-                string envPath = "levels/level properties/" + lvl.MapName + ".env";
-                lvl.Config.Load(envPath);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
