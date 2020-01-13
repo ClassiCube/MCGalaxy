@@ -91,9 +91,8 @@ namespace MCGalaxy {
         }
         
         static ConfigElement[] elems;
-        public static BlockDefinition[] Load(bool global, string mapName) {
-            BlockDefinition[] defs = new BlockDefinition[Block.ExtendedCount];
-            string path = global ? GlobalPath : "blockdefs/lvl_" + mapName + ".json";
+        public static BlockDefinition[] Load(string path) {
+        	BlockDefinition[] defs = new BlockDefinition[Block.ExtendedCount];
             if (!File.Exists(path)) return defs;
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             
@@ -124,6 +123,10 @@ namespace MCGalaxy {
             return defs;
         }
         
+        public static BlockDefinition[] LoadLevelDefs(string mapName) {
+            return Load("blockdefs/lvl_" + mapName + ".json");
+        }
+        
         public static void Save(bool global, Level lvl) {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
@@ -149,7 +152,7 @@ namespace MCGalaxy {
         
         public static void LoadGlobal() {
             BlockDefinition[] oldDefs = GlobalDefs;
-            GlobalDefs = Load(true, null);
+            GlobalDefs = Load(GlobalPath);
             GlobalDefs[Block.Air] = null;
             
             try {
