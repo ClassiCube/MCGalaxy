@@ -1,3 +1,11 @@
+v 1.9.1.7
+Fixed: Importing textures over 256 in .cw importer works now
+Fixed: Importing block ids over 255 in .cw importer works now
+Fixed: Rare bug where doors would get stuck as air form on saving
+Fixed: Incredibly rare bug which caused zones to get lost on saving level
+Fixed: Confusing behaviour where a block be both a portal/MB, portal/door etc. Now it can only be one at a time.
+Improved: Make /mirror x more logical in that it flips all X coordinates instead of Z coordinates (same for /mirror z)
+
 v 1.9.1.6
 Fixed: /money without arguments showing '' is not a valid player name
 Added: Ssupport for CPE VelocityControl
