@@ -302,10 +302,7 @@ namespace MCGalaxy {
         public static void SetMainLevel(Level lvl) {
             Level oldMain = mainLevel;
             mainLevel = lvl;
-            
-            mainLevel.Config.AutoUnload = false;
-            Server.Config.MainLevel = lvl.name;
-            
+            Server.Config.MainLevel = lvl.name;         
             oldMain.Config.AutoUnload = true;
             oldMain.AutoUnload();
         }
