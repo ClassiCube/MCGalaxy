@@ -304,7 +304,8 @@ namespace MCGalaxy {
             }
             lvl.BlockDB.Cache.Enabled = lvl.Config.UseBlockDB;
             
-            BlockDefinition[] defs = BlockDefinition.LoadLevelDefs(lvl.MapName);
+            string blockDefsPath   = Paths.MapBlockDefs(lvl.MapName);
+            BlockDefinition[] defs = BlockDefinition.Load(blockDefsPath);
             for (int b = 0; b < defs.Length; b++) {
                 if (defs[b] == null) continue;
                 lvl.UpdateCustomBlock((BlockID)b, defs[b]);

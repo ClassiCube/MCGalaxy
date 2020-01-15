@@ -123,13 +123,9 @@ namespace MCGalaxy {
             return defs;
         }
         
-        public static BlockDefinition[] LoadLevelDefs(string mapName) {
-            return Load("blockdefs/lvl_" + mapName + ".json");
-        }
-        
         public static void Save(bool global, Level lvl) {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
-            string path = global ? GlobalPath : "blockdefs/lvl_" + lvl.MapName + ".json";
+            string path = global ? GlobalPath : Paths.MapBlockDefs(lvl.MapName);
             BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
             
             using (StreamWriter w = new StreamWriter(path)) {

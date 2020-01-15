@@ -48,5 +48,7 @@ namespace MCGalaxy {
         
         public const string ImportsDir = "extra/import/";
         public const string WaypointsDir = "extra/Waypoints/";
+        
+        public static string MapBlockDefs(string map) { return "blockdefs/lvl_" + map + ".json"; }
     }
 }

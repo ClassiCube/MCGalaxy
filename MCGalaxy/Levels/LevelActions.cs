@@ -30,7 +30,6 @@ namespace MCGalaxy {
         
         static string BlockPropsLvlPath(string map) { return BlockProps.PropsPath("_" + map); }
         static string BlockPropsOldPath(string map) { return BlockProps.PropsPath("lvl_" + map); }
-        static string BlockDefsPath(string map)     { return "blockdefs/lvl_" + map + ".json"; }
         
         public static bool Backup(string map, string backupName) {
             string basePath = LevelInfo.BackupBasePath(map);
@@ -40,7 +39,7 @@ namespace MCGalaxy {
             
             bool lvl    = DoAction(LevelInfo.MapPath(map),   Path.Combine(path, map + ".lvl"),     action_copy);
             bool props  = DoAction(LevelInfo.PropsPath(map), Path.Combine(path, "map.properties"), action_copy);
-            bool defs   = DoAction(BlockDefsPath(map),       Path.Combine(path, "blockdefs.json"), action_copy);
+            bool defs   = DoAction(Paths.MapBlockDefs(map), Path.Combine(path, "blockdefs.json"), action_copy);
             bool blkOld = DoAction(BlockPropsOldPath(map),   Path.Combine(path, "blockprops.txt"), action_copy);
             bool blkCur = DoAction(BlockPropsLvlPath(map),   Path.Combine(path, "blockprops.txt"), action_copy);
             bool bots   = DoAction(BotsFile.BotsPath(map),   Path.Combine(path, "bots.json"),      action_copy);
@@ -231,8 +230,8 @@ namespace MCGalaxy {
                      LevelInfo.PropsPath(dst), action);
             DoAction("levels/level properties/" + src,
                      LevelInfo.PropsPath(dst), action);
-            DoAction(BlockDefsPath(src),
-                     BlockDefsPath(dst), action);
+            DoAction(Paths.MapBlockDefs(src),
+                     Paths.MapBlockDefs(dst), action);
             DoAction(BlockPropsOldPath(src),
                      BlockPropsOldPath(dst), action);
             DoAction(BlockPropsLvlPath(src),

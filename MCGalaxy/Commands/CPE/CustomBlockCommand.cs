@@ -121,8 +121,9 @@ namespace MCGalaxy.Commands.CPE {
                 return null;
             }
             
-            coloredMap = cfg.Color + map;
-            return BlockDefinition.LoadLevelDefs(map);
+            coloredMap  = cfg.Color + map;
+            string path = Paths.MapBlockDefs(map);
+            return BlockDefinition.Load(path);
         }
         
         static void CopyAllHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
