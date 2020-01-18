@@ -117,13 +117,13 @@ namespace MCGalaxy {
             if (!Directory.Exists("levels/deleted"))
                 Directory.CreateDirectory("levels/deleted");
             
-            if (File.Exists(LevelInfo.DeletedPath(map))) {
+            if (File.Exists(Paths.DeletedMapFile(map))) {
                 int num = 0;
-                while (File.Exists(LevelInfo.DeletedPath(map + num))) num++;
+                while (File.Exists(Paths.DeletedMapFile(map + num))) num++;
 
-                File.Move(LevelInfo.MapPath(map), LevelInfo.DeletedPath(map + num));
+                File.Move(LevelInfo.MapPath(map), Paths.DeletedMapFile(map + num));
             } else {
-                File.Move(LevelInfo.MapPath(map), LevelInfo.DeletedPath(map));
+                File.Move(LevelInfo.MapPath(map), Paths.DeletedMapFile(map));
             }
 
             DoAll(map, "", action_delete);
@@ -303,8 +303,8 @@ namespace MCGalaxy {
             lvl = ReadBackup(p, map, path, "backup copy");
             if (lvl != null) return lvl;
             
-            path = LevelInfo.PrevPath(map);
-            lvl = ReadBackup(p, map, path, "previous save");
+            path = Paths.PrevMapFile(map);
+            lvl  = ReadBackup(p, map, path, "previous save");
             if (lvl != null) return lvl;
             
             string backupDir = LevelInfo.BackupBasePath(map);

@@ -49,6 +49,13 @@ namespace MCGalaxy {
         public const string ImportsDir = "extra/import/";
         public const string WaypointsDir = "extra/Waypoints/";
         
+        /// <summary> Relative path of the file containing a map's block definitions. </summary>
         public static string MapBlockDefs(string map) { return "blockdefs/lvl_" + map + ".json"; }
+        
+        /// <summary> Relative path of a deleted level's map file. </summary>
+        public static string DeletedMapFile(string map) { return "levels/deleted/" + map + ".lvl"; }       
+        
+        /// <summary> Relative path of a level's previous save map file. </summary>
+        public static string PrevMapFile(string map) { return "levels/prev/" + map.ToLower() + ".lvl.prev"; }
     }
 }

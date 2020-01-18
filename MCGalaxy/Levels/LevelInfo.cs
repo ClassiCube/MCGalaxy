@@ -64,21 +64,10 @@ namespace MCGalaxy {
         public static bool MapExists(string name) {
             return File.Exists(MapPath(name));
         }
-        
-        
-        /// <summary> Relative path of a deleted level's map file </summary>
-        public static string DeletedPath(string name) {
-            return "levels/deleted/" + name + ".lvl";
-        }
-        
+                
         /// <summary> Relative path of a level's map file </summary>
         public static string MapPath(string name) {
             return "levels/" + name.ToLower() + ".lvl";
-        }
-        
-        /// <summary> Relative path of a level's previous save map file </summary>
-        public static string PrevPath(string name) {
-            return "levels/prev/" + name.ToLower() + ".lvl.prev";
         }
         
 
