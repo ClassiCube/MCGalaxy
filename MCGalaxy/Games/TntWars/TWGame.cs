@@ -96,7 +96,7 @@ namespace MCGalaxy.Games {
             // TODO: Is this even thread-safe
             data.OrigCol = p.color;
             
-            p.Extras.Put(twExtrasKey, data);
+            p.Extras[twExtrasKey] = data;
             return data;
         }
         

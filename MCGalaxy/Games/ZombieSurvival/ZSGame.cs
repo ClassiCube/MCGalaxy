@@ -92,7 +92,7 @@ namespace MCGalaxy.Games {
             data.MaxInfected = s.MaxInfected;     data.TotalInfected = s.TotalInfected;
             data.MaxRoundsSurvived = s.MaxRounds; data.TotalRoundsSurvived = s.TotalRounds;
             
-            p.Extras.Put(zsExtrasKey, data);
+            p.Extras[zsExtrasKey] = data;
             return data;
         }
 

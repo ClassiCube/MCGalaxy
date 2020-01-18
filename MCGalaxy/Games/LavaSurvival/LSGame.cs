@@ -42,7 +42,7 @@ namespace MCGalaxy.Games {
             object data;
             if (!p.Extras.TryGet("MCG_LS_DATA", out data)) {
                 data = new LSData();
-                p.Extras.Put("MCG_LS_DATA", data);
+                p.Extras["MCG_LS_DATA"] = data;
             }
             return (LSData)data;
         }

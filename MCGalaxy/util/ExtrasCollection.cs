@@ -73,9 +73,13 @@ namespace MCGalaxy {
             return defaultValue;
         }
 
+        [Obsolete("Use extras[key] = value; instead")]
         public void Put(string key, object value)       { this[key] = value; }
+        [Obsolete("Use extras[key] = value; instead")]
         public void PutBoolean(string key, bool value)  { this[key] = value; }
+        [Obsolete("Use extras[key] = value; instead")]
         public void PutInt(string key, int value)       { this[key] = value; }
+        [Obsolete("Use extras[key] = value; instead")]
         public void PutString(string key, string value) { this[key] = value; }
     }
 }

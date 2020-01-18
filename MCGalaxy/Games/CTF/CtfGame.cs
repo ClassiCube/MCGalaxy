@@ -71,7 +71,7 @@ namespace MCGalaxy.Games {
             CtfStats s = LoadStats(p.name);
             data.Captures = s.Captures; data.Points = s.Points; data.Tags = s.Tags;
             
-            p.Extras.Put(ctfExtrasKey, data);
+            p.Extras[ctfExtrasKey] = data;
             return data;
         }
         
