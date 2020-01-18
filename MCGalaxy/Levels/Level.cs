@@ -216,7 +216,7 @@ namespace MCGalaxy {
         void SaveCore(string path) {
             if (blocks == null) return;
             if (File.Exists(path)) {
-                string prevPath = LevelInfo.PrevPath(name);
+                string prevPath = Paths.PrevMapFile(name);
                 if (File.Exists(prevPath)) File.Delete(prevPath);
                 File.Copy(path, prevPath, true);
                 File.Delete(path);
