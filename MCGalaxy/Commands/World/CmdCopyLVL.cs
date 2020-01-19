@@ -44,10 +44,9 @@ namespace MCGalaxy.Commands.World {
             
             string dst = args[1];
             if (!Formatter.ValidMapName(p, dst)) return;
-            if (LevelInfo.MapExists(dst)) { p.Message("Level \"" + dst + "\" already exists."); return; }
 
             try {
-                LevelActions.CopyLevel(src, dst);
+            	if (!LevelActions.CopyLevel(p, src, dst)) return;
             } catch (IOException) {
                 p.Message("Level %W" + dst + " %Salready exists!"); return;
             }

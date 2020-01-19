@@ -173,18 +173,31 @@ namespace MCGalaxy {
                 Server.mainLevel = lvl;
         }
         
-        public static void CopyLevel(string src, string dst) {
+        /// <summary> Copies a map and related metadata. </summary>
+        /// <remarks> Backups and BlockDB are NOT copied. </remarks>
+        public static bool CopyLevel(Player p, string src, string dst) {
+            if (LevelInfo.MapExists(dst)) { 
+                p.Message("%WLevel \"{0}\" already exists.", dst); return false;
+            }
+            
+            // Make sure any changes to live map are saved first
+            Level lvl = LevelInfo.FindExact(src);
+            if (lvl != null && !lvl.Save(true)) {
+                p.Message("%WUnable to save {0}! Some recent block changes may not be copied.", src);
+            }
+            
             File.Copy(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             DoAll(src, dst, action_copy);
             CopyDatabaseTables(src, dst);
+            return true;
         }
         
         static void CopyDatabaseTables(string src, string dst) {
             object srcLocker = ThreadSafeCache.DBCache.GetLocker(src);
-            object dstLockder = ThreadSafeCache.DBCache.GetLocker(dst);
+            object dstLocker = ThreadSafeCache.DBCache.GetLocker(dst);
             
             lock (srcLocker)
-                lock (dstLockder)
+                lock (dstLocker)
             {
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.CreateTable("Portals" + dst, LevelDB.createPortals);
