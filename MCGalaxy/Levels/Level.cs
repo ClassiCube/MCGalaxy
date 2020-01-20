@@ -118,13 +118,29 @@ namespace MCGalaxy {
             return true;
         }
         
+        void Cleanup() {
+            // TODO: don't thread.Abort(), properly stop physics thread
+            try {
+                physThread.Abort();
+                physThread.Join();
+            } catch {
+            }
+            
+            Dispose();
+            Server.DoGC();
+        }
+        
+        /// <summary> Attempts to automatically unload this map. </summary>
         public bool AutoUnload() {
-            return Server.Config.AutoLoadMaps && Config.AutoUnload
-                && !IsMuseum && !HasPlayers() && Unload(true);
+        	bool can = IsMuseum || (Server.Config.AutoLoadMaps && Config.AutoUnload && !HasPlayers());
+        	return can && Unload(true);
         }
         
         public bool Unload(bool silent = false, bool save = true) {
-            if (Server.mainLevel == this || IsMuseum) return false;
+            if (Server.mainLevel == this) return false;
+            // Still cleanup resources, even if this is not a true level
+            if (IsMuseum) { Cleanup(); return true; }
+            
             OnLevelUnloadEvent.Call(this);
             if (cancelunload) {
                 Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);
@@ -148,15 +164,7 @@ namespace MCGalaxy {
                 Logger.LogError("Error saving bots", ex);
             }
 
-            try {
-                physThread.Abort();
-                physThread.Join();
-            } catch {
-            }
-            
-            Dispose();
-            Server.DoGC();
-
+            Cleanup();
             if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
             Logger.Log(LogType.SystemActivity, name + " was unloaded.");
             return true;

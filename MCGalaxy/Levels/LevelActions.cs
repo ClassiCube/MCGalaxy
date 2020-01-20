@@ -55,7 +55,7 @@ namespace MCGalaxy {
             if (LevelInfo.MapExists(dst)) { 
                 p.Message("%WLevel \"{0}\" already exists.", dst); return false;
             }
-        	
+            
             Level lvl = LevelInfo.FindExact(src);
             if (lvl == Server.mainLevel) {
                 p.Message("Cannot rename the main level."); return false;
@@ -69,7 +69,7 @@ namespace MCGalaxy {
                           "A game may currently be running on it.");
                 return false;
             }
-        	
+            
             File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             DoAll(src, dst, action_move);
             
@@ -100,7 +100,7 @@ namespace MCGalaxy {
             lock (srcLocker)
                 lock (dstLocker)
             {
-            	
+                
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
                 }
@@ -116,9 +116,9 @@ namespace MCGalaxy {
             p.Message("Updating portals that go to {0}..", src);
             List<string> tables = Database.Backend.AllTables();
             foreach (string table in tables) {
-            	if (!table.StartsWith("Portals")) continue;
-            	
-            	Database.Backend.UpdateRows(table, "ExitMap=@1",
+                if (!table.StartsWith("Portals")) continue;
+                
+                Database.Backend.UpdateRows(table, "ExitMap=@1",
                                             "WHERE ExitMap=@0", src, dst);
             }
         }
