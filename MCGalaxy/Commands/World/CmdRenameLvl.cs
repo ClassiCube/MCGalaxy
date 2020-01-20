@@ -31,25 +31,18 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
+                       
+            string src = Matcher.FindMaps(p, args[0]);
+            if (src == null) return;
+            if (!LevelInfo.Check(p, data.Rank, src, "rename this map")) return;
             
-            Level lvl = Matcher.FindLevels(p, args[0]);
-            if (lvl == null) return;
-            string newMap = args[1].ToLower();
-            if (!Formatter.ValidMapName(p, newMap)) return;
-            
-            if (LevelInfo.MapExists(newMap)) { p.Message("Level already exists."); return; }
-            if (lvl == Server.mainLevel) { p.Message("Cannot rename the main level."); return; }
-            if (!LevelInfo.Check(p, data.Rank, lvl, "rename this level")) return;
-            
-            List<Player> players = lvl.getPlayers();
-            lvl.Unload();
-            
-            LevelActions.Rename(p, lvl.name, newMap);
-            LevelActions.Load(p, newMap, true);
-            Chat.MessageGlobal("Renamed {0} to {1}", lvl.name, newMap);
-            // Move all the old players to the renamed map
-            foreach (Player pl in players)
-                PlayerActions.ChangeMap(pl, newMap);
+            string dst = args[1].ToLower();
+            if (!Formatter.ValidMapName(p, dst)) return;
+
+            if (!LevelActions.Rename(p, src, dst)) return;
+            Level ignored;
+            LevelConfig cfg = LevelInfo.GetConfig(src, out ignored);
+            Chat.MessageGlobal("Renamed {0} %Sto {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {

@@ -56,10 +56,13 @@ namespace MCGalaxy {
                 p.Message("%WLevel \"{0}\" already exists.", dst); return false;
             }
         	
-            Level lvl = LevelInfo.FindExact(dst);
+            Level lvl = LevelInfo.FindExact(src);
             if (lvl == Server.mainLevel) {
                 p.Message("Cannot rename the main level."); return false;
             }
+            
+            List<Player> players = null;
+            if (lvl != null) players = lvl.getPlayers();
             
             if (lvl != null && !lvl.Unload()) {
                 p.Message("Unable to rename the level, because it could not be unloaded. " +
@@ -78,6 +81,12 @@ namespace MCGalaxy {
             
             RenameDatabaseTables(src, dst);
             BlockDBFile.MoveBackingFile(src, dst);
+            if (players == null) return true;
+            
+            // Move all the old players to the renamed map
+            Load(p, dst, false);
+            foreach (Player pl in players)
+                PlayerActions.ChangeMap(pl, dst);
             return true;
         }
         
