@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Bots;
@@ -47,9 +48,25 @@ namespace MCGalaxy {
             return lvl && props && defs && blkOld && blkCur && bots;
         }
         
+        
         /// <summary> Renames the given map and associated metadata. Does not unload. </summary>
         /// <remarks> Backups are NOT renamed. </remarks>
-        public static void Rename(Player p, string src, string dst) {
+        public static bool Rename(Player p, string src, string dst) {
+            if (LevelInfo.MapExists(dst)) { 
+                p.Message("%WLevel \"{0}\" already exists.", dst); return false;
+            }
+        	
+            Level lvl = LevelInfo.FindExact(dst);
+            if (lvl == Server.mainLevel) {
+                p.Message("Cannot rename the main level."); return false;
+            }
+            
+            if (lvl != null && !lvl.Unload()) {
+                p.Message("Unable to rename the level, because it could not be unloaded. " +
+                          "A game may currently be running on it.");
+                return false;
+            }
+        	
             File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             DoAll(src, dst, action_move);
             
@@ -61,6 +78,7 @@ namespace MCGalaxy {
             
             RenameDatabaseTables(src, dst);
             BlockDBFile.MoveBackingFile(src, dst);
+            return true;
         }
         
         static void RenameDatabaseTables(string src, string dst) {
@@ -182,9 +200,10 @@ namespace MCGalaxy {
                 Server.mainLevel = lvl;
         }
         
+        
         /// <summary> Copies a map and related metadata. </summary>
         /// <remarks> Backups and BlockDB are NOT copied. </remarks>
-        public static bool CopyLevel(Player p, string src, string dst) {
+        public static bool Copy(Player p, string src, string dst) {
             if (LevelInfo.MapExists(dst)) { 
                 p.Message("%WLevel \"{0}\" already exists.", dst); return false;
             }

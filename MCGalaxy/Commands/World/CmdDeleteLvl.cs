@@ -31,10 +31,11 @@ namespace MCGalaxy.Commands.World {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.SplitSpaces().Length > 1) { Help(p); return; }
-            string map = Matcher.FindMaps(p, message);         
-            if (map == null) return;
+            string map = Matcher.FindMaps(p, message);
             
+            if (map == null) return;            
             if (!LevelInfo.Check(p, data.Rank, map, "delete this map")) return;
+            
             LevelActions.Delete(p, map);
         }
         

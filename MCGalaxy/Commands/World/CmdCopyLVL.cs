@@ -37,20 +37,14 @@ namespace MCGalaxy.Commands.World {
                 p.Message("You did not specify the destination level name."); return;
             }
             
-            string src = args[0];
-            src = Matcher.FindMaps(p, src);
+            string src = Matcher.FindMaps(p, args[0]);
             if (src == null) return;
             if (!LevelInfo.Check(p, data.Rank, src, "copy this map")) return;
             
             string dst = args[1];
             if (!Formatter.ValidMapName(p, dst)) return;
 
-            try {
-            	if (!LevelActions.CopyLevel(p, src, dst)) return;
-            } catch (IOException) {
-                p.Message("Level %W" + dst + " %Salready exists!"); return;
-            }
-            
+            if (!LevelActions.Copy(p, src, dst)) return;           
             Level ignored;
             LevelConfig cfg = LevelInfo.GetConfig(src, out ignored);
             p.Message("Level {0} %Shas been copied to {1}", cfg.Color + src, cfg.Color + dst);
