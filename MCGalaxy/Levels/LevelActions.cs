@@ -47,8 +47,9 @@ namespace MCGalaxy {
             return lvl && props && defs && blkOld && blkCur && bots;
         }
         
-        /// <summary> Renames the .lvl (and related) files and database tables. Does not unload. </summary>
-        public static void Rename(string src, string dst) {
+        /// <summary> Renames the given map and associated metadata. Does not unload. </summary>
+        /// <remarks> Backups are NOT renamed. </remarks>
+        public static void Rename(Player p, string src, string dst) {
             File.Move(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             DoAll(src, dst, action_move);
             
@@ -108,12 +109,20 @@ namespace MCGalaxy {
         }*/
         
         
-        public const string DeleteFailedMessage = "Unable to delete the level, because it could not be unloaded. A game may currently be running on it.";
-        /// <summary> Deletes the .lvl (and related) files and database tables. Unloads level if it is loaded. </summary>
-        public static bool Delete(string map) {
+        /// <summary> Deletes a map and associated metadata. </summary>
+        public static bool Delete(Player p, string map) {
             Level lvl = LevelInfo.FindExact(map);
-            if (lvl != null && !lvl.Unload()) return false;
+            if (lvl == Server.mainLevel) {
+                p.Message("Cannot delete the main level."); return false;
+            }
             
+            if (lvl != null && !lvl.Unload()) {
+                p.Message("Unable to delete the level, because it could not be unloaded. " +
+                          "A game may currently be running on it.");
+                return false;
+            }
+            
+            p.Message("Created backup.");
             if (!Directory.Exists("levels/deleted"))
                 Directory.CreateDirectory("levels/deleted");
             

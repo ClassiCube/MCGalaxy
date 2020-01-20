@@ -189,11 +189,8 @@ namespace MCGalaxy.Commands.World {
             }
             
             string map = p.level.name;
-            p.Message("Created backup.");
-            if (LevelActions.Delete(map)) {
+            if (LevelActions.Delete(p, map)) {
                 p.Message("Map " + map + " was removed.");
-            } else {
-                p.Message(LevelActions.DeleteFailedMessage);
             }
         }
 

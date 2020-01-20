@@ -31,16 +31,11 @@ namespace MCGalaxy.Commands.World {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.SplitSpaces().Length > 1) { Help(p); return; }
-            if (!Formatter.ValidMapName(p, message)) return;
-            string map = Matcher.FindMaps(p, message);
+            string map = Matcher.FindMaps(p, message);         
             if (map == null) return;
-
-            if (map.CaselessEq(Server.Config.MainLevel)) { p.Message("Cannot delete the main level."); return; }
-            if (!LevelInfo.Check(p, data.Rank, map, "delete this map")) return;
             
-            p.Message("Created backup.");
-            if (LevelActions.Delete(map)) return;
-            p.Message(LevelActions.DeleteFailedMessage);
+            if (!LevelInfo.Check(p, data.Rank, map, "delete this map")) return;
+            LevelActions.Delete(p, map);
         }
         
         public override void Help(Player p) {
