@@ -79,7 +79,7 @@ namespace MCGalaxy {
             } catch {
             }
             
-            RenameDatabaseTables(src, dst);
+            RenameDatabaseTables(p, src, dst);
             BlockDBFile.MoveBackingFile(src, dst);
             if (players == null) return true;
             
@@ -90,20 +90,19 @@ namespace MCGalaxy {
             return true;
         }
         
-        static void RenameDatabaseTables(string src, string dst) {
+        static void RenameDatabaseTables(Player p, string src, string dst) {
             if (Database.TableExists("Block" + src)) {
                 Database.Backend.RenameTable("Block" + src, "Block" + dst);
             }
             object srcLocker = ThreadSafeCache.DBCache.GetLocker(src);
-            object dstLockder = ThreadSafeCache.DBCache.GetLocker(dst);
+            object dstLocker = ThreadSafeCache.DBCache.GetLocker(dst);
             
             lock (srcLocker)
-                lock (dstLockder)
+                lock (dstLocker)
             {
+            	
                 if (Database.TableExists("Portals" + src)) {
                     Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
-                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap=@1",
-                                                "WHERE ExitMap=@0", src, dst);
                 }
                 
                 if (Database.TableExists("Messages" + src)) {
@@ -112,6 +111,15 @@ namespace MCGalaxy {
                 if (Database.TableExists("Zone" + src)) {
                     Database.Backend.RenameTable("Zone" + src, "Zone" + dst);
                 }
+            }
+            
+            p.Message("Updating portals that go to {0}..", src);
+            List<string> tables = Database.Backend.AllTables();
+            foreach (string table in tables) {
+            	if (!table.StartsWith("Portals")) continue;
+            	
+            	Database.Backend.UpdateRows(table, "ExitMap=@1",
+                                            "WHERE ExitMap=@0", src, dst);
             }
         }
         
