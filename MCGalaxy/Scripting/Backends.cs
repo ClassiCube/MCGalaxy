@@ -17,13 +17,17 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System.CodeDom.Compiler;
 using System;
 
 namespace MCGalaxy.Scripting {
     public sealed class ScriptingCS : IScripting {    
         
         public override string Ext { get { return ".cs"; } }        
-        public override string ProviderName { get { return "CSharp"; } }
+        public override string ProviderName { get { return "CSharp"; } }     
+        protected override void PrepareArgs(CompilerParameters args) {
+            args.CompilerOptions += " /unsafe";
+        }
         
         public override string CommandSkeleton {
             get {
@@ -81,6 +85,7 @@ namespace MCGalaxy
         
         public override string Ext { get { return ".vb"; } }
         public override string ProviderName { get { return "VisualBasic"; } }
+        protected override void PrepareArgs(CompilerParameters args) { }
         
         public override string CommandSkeleton {
             get {

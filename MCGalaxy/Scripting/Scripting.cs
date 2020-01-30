@@ -38,6 +38,7 @@ namespace MCGalaxy.Scripting {
         public abstract string Ext { get; }
         public abstract string ProviderName { get; }
         public abstract string CommandSkeleton { get; }
+        protected abstract void PrepareArgs(CompilerParameters args);
         
         public static IScripting CS = new ScriptingCS();
         public static IScripting VB = new ScriptingVB();
@@ -121,6 +122,7 @@ namespace MCGalaxy.Scripting {
         
         public CompilerResults CompileSource(string source, CompilerParameters args) {
             args.ReferencedAssemblies.Add("MCGalaxy_.dll");
+            PrepareArgs(args);
             source = source.Replace("MCLawl", "MCGalaxy");
             source = source.Replace("MCForge", "MCGalaxy");
             return compiler.CompileAssemblyFromSource(args, source);
