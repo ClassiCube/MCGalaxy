@@ -108,15 +108,11 @@ namespace MCGalaxy.Commands {
             foreach (Command cmd in Command.CopyAll()) {
                 Set(cmd.name, cmd.defaultRank, null, null);
             }
-
-            if (File.Exists(Paths.CmdPermsFile)) {
-                using (StreamReader r = new StreamReader(Paths.CmdPermsFile)) {
-                    ProcessLines(r);
-                }
-            } else {
-                Save();
+            if (!File.Exists(Paths.CmdPermsFile)) { Save(); return; }
+            
+            using (StreamReader r = new StreamReader(Paths.CmdPermsFile)) {
+                 ProcessLines(r);
             }
-
         }
         
         static void ProcessLines(StreamReader r) {

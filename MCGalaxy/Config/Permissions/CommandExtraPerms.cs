@@ -77,19 +77,15 @@ namespace MCGalaxy.Commands {
         }
         
 
-        static readonly object ioLock = new object();
-        
-        /// <summary> Saves the list of all extra permissions. </summary>
+        static readonly object ioLock = new object();      
+        /// <summary> Saves list of extra permissions to disc. </summary>
         public static void Save() {
-            lock (ioLock) {
-                try {
-                    SaveCore();
-                } catch (Exception ex) {
-                    Logger.LogError("Error saving " + Paths.CmdExtraPermsFile, ex);
-                }
+            try {
+                lock (ioLock) SaveCore();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving " + Paths.CmdExtraPermsFile, ex);
             }
-        }
-        
+        }        
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.CmdExtraPermsFile)) {
@@ -103,7 +99,7 @@ namespace MCGalaxy.Commands {
         }
         
 
-        /// <summary> Loads the list of all extra permissions. </summary>
+        /// <summary> Loads list of extra permissions to disc. </summary>
         public static void Load() {
             lock (ioLock) {
                 if (!File.Exists(Paths.CmdExtraPermsFile)) Save();

@@ -61,7 +61,7 @@ namespace MCGalaxy.Blocks {
         
         public void MessageCannotUse(Player p, string action) {
             p.Message("Only {0} can {1} {2}",
-                           Describe(), action, Block.GetName(p, ID));
+                      Describe(), action, Block.GetName(p, ID));
         }
         
         
@@ -98,13 +98,10 @@ namespace MCGalaxy.Blocks {
 
         static void LoadCore() {
             SetDefaultPerms();
+            if (!File.Exists(Paths.BlockPermsFile)) { Save(); return; }
             
-            if (File.Exists(Paths.BlockPermsFile)) {
-                using (StreamReader r = new StreamReader(Paths.BlockPermsFile)) {
-                    ProcessLines(r);
-                }
-            } else {
-                Save();
+            using (StreamReader r = new StreamReader(Paths.BlockPermsFile)) {
+                ProcessLines(r);
             }
         }
         
