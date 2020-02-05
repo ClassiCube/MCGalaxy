@@ -29,6 +29,9 @@ namespace MCGalaxy.Games {
         public float HitboxDist = 1f;
         [ConfigFloat("zombie-max-move-distance", "Zombie", 1.5625f)]
         public float MaxMoveDist = 1.5625f;
+        
+        [ConfigString("human-tablist-group", "Human", "&fHumans")]
+        public string HumanTabListGroup = "&fHumans"; 
 
         [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
         public bool NoPillaring = true;
@@ -36,6 +39,8 @@ namespace MCGalaxy.Games {
         public string ZombieName = "";
         [ConfigString("zombie-model-while-infected", "Zombie", "zombie")]
         public string ZombieModel = "zombie";
+        [ConfigString("zombie-tablist-group", "Zombie", "&cZombies")]
+        public string ZombieTabListGroup = "&cZombies";       
         
         [ConfigInt("zombie-invisibility-duration", "Zombie", 7, 1)]
         public int InvisibilityDuration = 7;

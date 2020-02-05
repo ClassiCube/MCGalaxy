@@ -68,14 +68,14 @@ namespace MCGalaxy.Games {
             if (p.Game.Referee) {
                 tabGroup = "&2Referees";
             } else if (Get(p).Infected) {
-                tabGroup = "&cZombies";
+                tabGroup = Config.ZombieTabListGroup;
                 if (Config.ZombieName.Length > 0 && !Get(dst).AkaMode) {
                     tabName = "&c" + Config.ZombieName;
                 } else {
                     tabName = "&c" + p.truename;
                 }
             } else {
-                tabGroup = "&fHumans";
+                tabGroup = Config.HumanTabListGroup;
             }
         }
         
