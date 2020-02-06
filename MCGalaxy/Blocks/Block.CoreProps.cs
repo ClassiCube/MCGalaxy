@@ -73,7 +73,8 @@ namespace MCGalaxy {
             props.IsRails  = b == Red || b == Op_Air;
             
             props.Drownable = b >= Water && b <= StillLava;
-            if (props.Drownable) props.DeathMessage = "@p %S&cdrowned.";
+            if (b == Water || b == StillWater) props.DeathMessage = "@p %S&cdrowned.";
+            if (b == Lava  || b == StillLava)  props.DeathMessage = "@p %Sburnt to a &ccrisp.";
             if (b == Air) props.DeathMessage = "@p %Shit the floor &chard.";
             
             string deathMsg = GetDeathMessage(b);
