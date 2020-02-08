@@ -81,8 +81,8 @@ namespace MCGalaxy.Games {
             
             foreach (Player pl in players) {
                 Position pos = pl.Pos;
-                pl.Extras.PutInt("MCG_CD_X", pos.X);
-                pl.Extras.PutInt("MCG_CD_Z", pos.Z);
+                pl.Extras["MCG_CD_X"] = pos.X;
+                pl.Extras["MCG_CD_Z"] = pos.Z;
             }
             RemoveAllSquareBorders();
         }

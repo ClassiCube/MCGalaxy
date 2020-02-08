@@ -64,7 +64,7 @@ namespace MCGalaxy.Core {
                     p.Message("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
                 
-                p.Extras.PutInt("MCG_PONY", used + 1);
+                p.Extras["MCG_PONY"] = used + 1;
             } else if (cmd == "rainbowdashlikescoolthings") {
                 p.cancelcommand = true;
                 if (!MessageCmd.CanSpeak(p, cmd)) return;
@@ -77,7 +77,7 @@ namespace MCGalaxy.Core {
                     p.Message("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");
                 }
                 
-                p.Extras.PutInt("MCG_RD", used + 1);
+                p.Extras["MCG_RD"] = used + 1;
             }
         }
     }
