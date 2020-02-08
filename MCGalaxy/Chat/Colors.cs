@@ -390,6 +390,7 @@ namespace MCGalaxy {
             b = (byte)(191 * ((hex >> 0) & 1) + 64 * (hex >> 3));
         }
         
+        /// <summary> Whether this colour has been modified from its default values. </summary>
         public bool IsModified() {
             if ((Code >= '0' && Code <= '9') || (Code >= 'a' && Code <= 'f')) {
                 ColorDesc def = Colors.DefaultCol(Code);

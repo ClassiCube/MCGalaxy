@@ -57,7 +57,7 @@ namespace MCGalaxy.Network {
         public static byte[] LevelFinalise(ushort width, ushort height, ushort length) {
             byte[] buffer = new byte[7];
             buffer[0] = Opcode.LevelFinalise;
-            NetUtils.WriteU16(width, buffer, 1);
+            NetUtils.WriteU16(width,  buffer, 1);
             NetUtils.WriteU16(height, buffer, 3);
             NetUtils.WriteU16(length, buffer, 5);
             return buffer;

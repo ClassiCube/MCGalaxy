@@ -1140,7 +1140,7 @@ namespace MCGalaxy.SQL {
         }
 
         SQLiteErrorCode BindParameter(int i, SQLiteParameter param) {
-            object obj = param.Value;
+            object obj  = param.Value;
             DbType type = param.DbType;
             if (obj != null && type == DbType.Object)
                 type = SQLiteConvert.TypeToDbType(obj.GetType());
@@ -1149,7 +1149,6 @@ namespace MCGalaxy.SQL {
                 return Interop.sqlite3_bind_null(handle, i);
             }
 
-            CultureInfo invariant = CultureInfo.InvariantCulture;
             switch (type) {
                 case DbType.DateTime:
                     //
@@ -1157,7 +1156,8 @@ namespace MCGalaxy.SQL {
                     //       for the connection.
                     // _sql.Bind_DateTime(this, index, Convert.ToDateTime(obj, cultureInfo));
                     return Bind_DateTime(i, (obj is string) ?
-                                         SQLiteConvert.ToDateTime((string)obj) : Convert.ToDateTime(obj, invariant));
+                                         SQLiteConvert.ToDateTime((string)obj) : 
+                                         Convert.ToDateTime(obj, CultureInfo.InvariantCulture));
                 case DbType.Boolean:
                     return Bind_Int32(i, Convert.ToBoolean(obj) ? 1 : 0);
                 case DbType.SByte:

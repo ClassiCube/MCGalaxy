@@ -71,9 +71,6 @@ namespace MCGalaxy.Drawing.Ops {
                     if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
                 }
             }
-            
-            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start, End, OldUndoBlock);
-            PerformOldUndo(args);
         }
         
         DrawOpOutput output;
@@ -91,33 +88,6 @@ namespace MCGalaxy.Drawing.Ops {
             if (x > Max.X || y > Max.Y || z > Max.Z) return;
             output(Place((ushort)x, (ushort)y, (ushort)z, block));
             found = true;
-        }
-        
-        
-        void PerformOldUndo(UndoFormatArgs args) {
-            List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
-            if (files.Count == 0) return;
-            found = true;
-            
-            foreach (string file in files) {
-                using (Stream s = File.OpenRead(file)) {
-                    UndoFormat.GetFormat(file).EnumerateEntries(s, args);
-                    if (args.Finished) break;
-                }
-            }
-        }
-        
-        void OldUndoBlock(UndoFormatEntry P) {            
-            if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
-            if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
-            
-            BlockID cur = Level.GetBlock(P.X, P.Y, P.Z);
-            if (cur == P.NewBlock || Block.Convert(cur) == Block.Water || Block.Convert(cur) == Block.Lava || cur == Block.Grass) {                
-                DrawOpBlock block;
-                block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-                block.Block = P.Block;
-                output(block);
-            }
         }
     }
 }

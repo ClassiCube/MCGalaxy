@@ -71,9 +71,6 @@ namespace MCGalaxy.Drawing.Ops {
                     if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
                 }
             }
-            
-            UndoFormatArgs args = new UndoFormatArgs(Level.name, Start, DateTime.MaxValue, OldHighlightBlock);
-            PerformOldHighlight(args);
         }
         
         DrawOpOutput output;
@@ -97,35 +94,6 @@ namespace MCGalaxy.Drawing.Ops {
             if (x > Max.X || y > Max.Y || z > Max.Z) return;
             output(Place((ushort)x, (ushort)y, (ushort)z, highlight));
             found = true;
-        }
-        
-        
-        void PerformOldHighlight(UndoFormatArgs args) {
-            List<string> files = UndoFormat.GetUndoFiles(who.ToLower());
-            if (files.Count == 0) return;
-            found = true;
-            
-            foreach (string file in files) {
-                using (Stream s = File.OpenRead(file)) {
-                    UndoFormat.GetFormat(file).EnumerateEntries(s, args);
-                    if (args.Finished) break;
-                }
-            }
-        }
-        
-        void OldHighlightBlock(UndoFormatEntry P) {
-            BlockID old = P.Block, newBlock = P.NewBlock;
-            if (P.X < Min.X || P.Y < Min.Y || P.Z < Min.Z) return;
-            if (P.X > Max.X || P.Y > Max.Y || P.Z > Max.Z) return;
-            
-            DrawOpBlock block;
-            block.Block = (newBlock == Block.Air
-                           || Block.Convert(old) == Block.Water || old == Block.StillWater
-                           || Block.Convert(old) == Block.Lava  || old == Block.StillLava)
-                ? DeleteHighlight : PlaceHighlight;
-                        
-            block.X = P.X; block.Y = P.Y; block.Z = P.Z;
-            output(block);
         }
     }
 }

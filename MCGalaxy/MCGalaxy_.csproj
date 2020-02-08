@@ -605,11 +605,8 @@
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\PlayerPhysics.cs" />
     <Compile Include="Player\SpamChecker.cs" />
-    <Compile Include="Database\Undo\UndoFormatCBin.cs" />
     <Compile Include="Player\Warp.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />
-    <Compile Include="Database\Undo\UndoFormatBin.cs" />
-    <Compile Include="Database\Undo\UndoFormatText.cs" />
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
