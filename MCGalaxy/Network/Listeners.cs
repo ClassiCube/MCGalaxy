@@ -37,13 +37,27 @@ namespace MCGalaxy.Network {
     public sealed class TcpListen : INetListen {
         Socket socket;
         
+        void AcceptIPV4OnIPV6Listener() {
+            if (socket.AddressFamily != AddressFamily.InterNetworkV6) return;
+            
+#if !NET_20
+            try {
+                socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to allow IPv4 connections to IPv6 listener ({0})", ex.Message);
+            }
+#endif
+        }
+        
         public override void Listen(IPAddress ip, int port) {
             if (IP == ip && Port == port) return;
             Close();
             IP = ip; Port = port;
             
             try {
-                socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);               
+                socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
+                AcceptIPV4OnIPV6Listener();                
                 socket.Bind(new IPEndPoint(ip, port));
                 
                 socket.Listen((int)SocketOptionName.MaxConnections);
