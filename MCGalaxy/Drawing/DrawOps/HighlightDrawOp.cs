@@ -62,14 +62,14 @@ namespace MCGalaxy.Drawing.Ops {
         }
         
         void PerformHighlight() {
-            if (ids.Length > 0) {
-                // can't use "using" as it creates a local var, and read lock reference may be changed by DrawOpPerformer class
-                try {
-                    BlockDBReadLock = Level.BlockDB.Locker.AccquireRead();
-                    if (Level.BlockDB.FindChangesBy(ids, Start, DateTime.MaxValue, out dims, HighlightBlock)) return;
-                } finally {
-                    if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
-                }
+            if (ids.Length == 0) return;
+                
+            // can't use "using" as it creates a local var, and read lock reference may be changed by DrawOpPerformer class
+            try {
+                BlockDBReadLock = Level.BlockDB.Locker.AccquireRead();
+                if (Level.BlockDB.FindChangesBy(ids, Start, DateTime.MaxValue, out dims, HighlightBlock)) return;
+            } finally {
+                if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
             }
         }
         
