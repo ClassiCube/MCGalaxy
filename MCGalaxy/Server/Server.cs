@@ -181,7 +181,7 @@ namespace MCGalaxy {
             }
             
             ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
-            Colors.LoadList();
+            Colors.Load();
             Alias.Load();
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();

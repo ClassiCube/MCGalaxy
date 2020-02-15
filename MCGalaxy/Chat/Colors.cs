@@ -99,7 +99,7 @@ namespace MCGalaxy {
                 if (!p.Supports(CpeExt.TextColors)) continue;
                 p.Send(Packet.SetTextColor(col));
             }
-            SaveList();
+            Save();
         }
 
         public static string Parse(string name) {
@@ -290,7 +290,17 @@ namespace MCGalaxy {
         }
 
         
-        internal static void SaveList() {
+        static readonly object ioLock = new object();
+        /// <summary> Saves list of changed colors to disc. </summary>
+        public static void Save() {
+            try {
+                lock (ioLock) SaveCore();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving " + Paths.CustomColorsFile, ex);
+            }
+        }
+        
+        static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
                 foreach (ColorDesc col in List) {
                     if (!col.IsModified()) continue;
@@ -299,9 +309,14 @@ namespace MCGalaxy {
                                 " " + col.R + " " + col.G + " " + col.B + " " + col.A);
                 }
             }
+        }        
+
+        /// <summary> Loads list of changed colors from disc. </summary>
+        public static void Load() {
+            lock (ioLock) LoadCore();
         }
         
-        internal static void LoadList() {
+        static void LoadCore() {
             if (!File.Exists(Paths.CustomColorsFile)) return;
             string[] lines = File.ReadAllLines(Paths.CustomColorsFile);
             ColorDesc col = default(ColorDesc);
