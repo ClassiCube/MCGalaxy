@@ -47,7 +47,6 @@ namespace MCGalaxy {
         
         public static int NonHiddenUniqueIPCount() {
             Player[] players = Online.Items;
-            List<string> IPs = new List<string>();
             Dictionary<string, bool> uniqueIPs = new Dictionary<string, bool>();
             foreach (Player p in players) {
                 if (!p.hidden) { 
