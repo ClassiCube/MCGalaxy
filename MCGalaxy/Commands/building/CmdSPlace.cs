@@ -15,84 +15,50 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Drawing.Ops;
 using System;
-using MCGalaxy.DB;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
-    public sealed class CmdSPlace : Command2 {
+    public sealed class CmdSPlace : DrawCmd {
         public override string name { get { return "SPlace"; } }
         public override string shortcut { get { return "set"; } }
-        public override string type { get { return CommandTypes.Building; } }
-        public override bool museumUsable { get { return false; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message, CommandData data) {
+        protected override string SelectionType { get { return "points"; } }
+        protected override string PlaceMessage { get { return "Place or break two blocks to determine direction."; } }
+        
+        protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             ushort distance = 0, interval = 0;
-            if (message.Length == 0) { Help(p); return; }
+            Player p       = dArgs.Player;
+            string message = dArgs.Message;
+            if (message.Length == 0) { Help(p); return null; }
             
             string[] parts = message.SplitSpaces();
-            if (!CommandParser.GetUShort(p, parts[0], "Distance", ref distance)) return;
-            if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval)) return;
+            if (!CommandParser.GetUShort(p, parts[0], "Distance", ref distance, 1)) return null;
+            if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval, 1)) return null;
 
-            if (distance < 1) {
-                p.Message("Enter a distance greater than 0."); return;
-            }
             if (interval >= distance) {
-                p.Message("The Interval cannot be greater than the distance."); return;
+                p.Message("%WThe Interval cannot be greater than the distance."); return null;
             }
 
-            DrawArgs dArgs = new DrawArgs();
-            dArgs.distance = distance; dArgs.interval = interval;
-            p.Message("Place or break two blocks to determine direction.");
-            p.MakeSelection(2, dArgs, DoSPlace);
+            SPlaceDrawOp op = new SPlaceDrawOp();
+            op.Distance = distance; op.Interval = interval;
+            return op;
         }
         
-        bool DoSPlace(Player p, Vec3S32[] m, object state, BlockID block) {
-            DrawArgs dArgs = (DrawArgs)state;
-            ushort distance = dArgs.distance, interval = dArgs.interval;
-            if (m[0] == m[1]) { p.Message("No direction was selected"); return false; }
-            
-            int dirX = 0, dirY = 0, dirZ = 0;
-            int dx = Math.Abs(m[1].X - m[0].X), dy = Math.Abs(m[1].Y - m[0].Y), dz = Math.Abs(m[1].Z - m[0].Z);
-            if (dy > dx && dy > dz) {
-                dirY = m[1].Y > m[0].Y ? 1 : -1;
-            } else if (dx > dz) {
-                dirX = m[1].X > m[0].X ? 1 : -1;
-            } else {
-                dirZ = m[1].Z > m[0].Z ? 1 : -1;
-            } 
-            
-            ushort endX = (ushort)(m[0].X + dirX * distance);
-            ushort endY = (ushort)(m[0].Y + dirY * distance);
-            ushort endZ = (ushort)(m[0].Z + dirZ * distance);
-            
-            BlockID held = p.GetHeldBlock();
-            if (!CommandParser.IsBlockAllowed(p, "place", held)) return false;
-            p.level.UpdateBlock(p, endX, endY, endZ, held, BlockDBFlags.Drawn, true);
-            
-            if (interval > 0) {
-                int x = m[0].X, y = m[0].Y, z = m[0].Z;
-                int delta = 0;
-                while (p.level.IsValidPos(x, y, z) && delta < distance) {
-                    p.level.UpdateBlock(p, (ushort)x, (ushort)y, (ushort)z, held, BlockDBFlags.Drawn, true);
-                    x += dirX * interval; y += dirY * interval; z += dirZ * interval;
-                    delta = Math.Abs(x - m[0].X) + Math.Abs(y - m[0].Y) + Math.Abs(z - m[0].Z);
-                }
-            } else {
-                p.level.UpdateBlock(p, (ushort)m[0].X, (ushort)m[0].Y, (ushort)m[0].Z, held, BlockDBFlags.Drawn, true);
-            }
-
-            if (!p.Ignores.DrawOutput) {
-                p.Message("Placed {1} blocks {0} apart.",
-                               interval > 0 ? interval : distance, Block.GetName(p, held));
-            }
-            return true;
+        protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
+            Player p = dArgs.Player;
+            if (m[0] == m[1]) { p.Message("No direction was selected"); m = null; }
         }
         
-        class DrawArgs { public ushort distance, interval; }
+        protected override void GetBrush(DrawArgs dArgs) {
+            SPlaceDrawOp op = (SPlaceDrawOp)dArgs.Op;
+            int count = 1;
+            if (op.Interval != 0) count++;
+            dArgs.BrushArgs = dArgs.Message.Splice(count, 0);
+        }
 
         public override void Help(Player p) {
             p.Message("%T/SPlace [distance] <interval>");

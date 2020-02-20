@@ -443,6 +443,7 @@
     <Compile Include="Drawing\DrawOps\RestoreSelectionDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\SPlaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TorusDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TreeDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\TriangleDrawOp.cs" />
