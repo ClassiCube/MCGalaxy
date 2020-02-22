@@ -64,8 +64,13 @@ namespace MCGalaxy.Games {
             }
             
             if (level != Map) return;
-            if (prevLevel == Map || LastMap.Length == 0 || prevLevel.name.CaselessEq(LastMap))
+            
+            if (prevLevel == Map || LastMap.Length == 0) {
                 announce = false;
+            } else if (prevLevel != null && prevLevel.name.CaselessEq(LastMap)) {
+                // prevLevel is null when player joins main map
+                announce = false;
+            }
         }
         
         protected void MessageMapInfo(Player p) {
