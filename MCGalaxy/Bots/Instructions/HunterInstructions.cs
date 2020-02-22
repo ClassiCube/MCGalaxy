@@ -64,9 +64,11 @@ namespace MCGalaxy.Bots {
             Orientation rot = bot.Rot;
             DirUtils.GetYawPitch(dir, out rot.RotY, out rot.HeadX);
             
+            dx = Math.Abs(dx); dy = Math.Abs(dy); dz = Math.Abs(dz);
+            
             // If we are very close to a player, switch from trying to look
             // at them to just facing the opposite direction to them
-            if (Math.Abs(dx) < 4 && Math.Abs(dz) < 4) {
+            if (dx < 4 && dz < 4) {
                 rot.RotY = (byte)(p.Rot.RotY + 128);
             }
             bot.Rot = rot;
