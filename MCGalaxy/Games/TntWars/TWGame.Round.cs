@@ -94,18 +94,21 @@ namespace MCGalaxy.Games {
             RoundInProgress = true;
             MessageMap(CpeMessageType.Announcement, "&4TNT Wars has started!");
             
-            bool won = false;
-            while (Running && !won) {
-                if (Config.Mode == TWGameMode.TDM) {
-                    won = Red.Score >= cfg.ScoreRequired || Blue.Score >= cfg.ScoreRequired;
-                } else {
-                    all = allPlayers.Items;
-                    foreach (Player p in all) {
-                        if (Get(p).Score >= cfg.ScoreRequired) won = true;
-                    }
-                }
+            while (Running && RoundInProgress && !HasSomeoneWon()) {
                 Thread.Sleep(250);
             }
+        }
+        
+        bool HasSomeoneWon() {
+            if (Config.Mode == TWGameMode.TDM) {
+                return Red.Score >= cfg.ScoreRequired || Blue.Score >= cfg.ScoreRequired;
+            }
+            
+            Player[] all = allPlayers.Items;
+            foreach (Player p in all) {
+                if (Get(p).Score >= cfg.ScoreRequired) return true;
+            }
+            return false;
         }
         
         void GracePeriod() {

@@ -31,12 +31,14 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             
             RoundInProgress = true;
-            while (Blue.Captures < cfg.RoundPoints && Red.Captures < cfg.RoundPoints) {
-                if (!Running) return;
-                if (!RoundInProgress) break;
+            while (Running && RoundInProgress && !HasSomeoneWon()) {
                 Tick();
                 Thread.Sleep(300);
             }
+        }
+              
+        bool HasSomeoneWon() {
+            return Blue.Captures >= cfg.RoundPoints || Red.Captures >= cfg.RoundPoints;
         }
         
         void Tick() {
