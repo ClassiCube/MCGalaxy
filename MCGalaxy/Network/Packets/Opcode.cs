@@ -71,7 +71,7 @@ namespace MCGalaxy.Network {
         //public const byte CpeSetHotbar = 45; //not implemented in MCGalaxy
         public const byte CpeSetSpawnpoint = 46;
         public const byte CpeVelocityControl = 47;
-        public const byte CpeDefineParticle = 48;
-        public const byte CpeSpawnParticle = 49;
+        public const byte CpeDefineEffect = 48;
+        public const byte CpeSpawnEffect = 49;
     }
 }

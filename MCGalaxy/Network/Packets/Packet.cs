@@ -389,20 +389,17 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] DefineParticle(byte particleID,
+        public static byte[] DefineEffect(byte effectID,
                                             byte U1, byte V1, byte U2, byte V2,
                                             byte tintRed, byte tintGreen, byte tintBlue,
                                             byte frameCount, byte particleCount,
                                             byte size, float sizeVariation,
-                                            int spread, float speed, float gravity,
+                                            float spread, float speed, float gravity,
                                             float baseLifetime, float lifetimeVariation,
-                                            bool expireUponTouchingGround,
-                                            bool fullBright
-                                           ) {
-            byte[] buffer = new byte[38];
-            buffer[0] = Opcode.CpeDefineParticle;
-            
-            buffer[1] = particleID;
+                                            bool expireUponTouchingGround, bool fullBright) {
+            byte[] buffer = new byte[36];
+            buffer[0] = Opcode.CpeDefineEffect;           
+            buffer[1] = effectID;
             
             buffer[2] = U1;
             buffer[3] = V1;
@@ -413,32 +410,30 @@ namespace MCGalaxy.Network {
             buffer[7] = tintGreen;
             buffer[8] = tintBlue;
             
-            buffer[9] = frameCount;
+            buffer[9]  = frameCount;
             buffer[10] = particleCount;
-            
             buffer[11] = size;
-            NetUtils.WriteI32((int)(sizeVariation * 10000), buffer, 12);
             
-            NetUtils.WriteI32((int)(spread), buffer, 16);
-            NetUtils.WriteI32((int)(speed * 10000), buffer, 20);
-            NetUtils.WriteI32((int)(gravity * 10000), buffer, 24);
+            NetUtils.WriteI32((int)(sizeVariation * 10000),     buffer, 12);         
+            NetUtils.WriteU16((ushort)(spread * 32),            buffer, 16);
+            NetUtils.WriteI32((int)(speed * 10000),             buffer, 18);
+            NetUtils.WriteI32((int)(gravity * 10000),           buffer, 22);
+            NetUtils.WriteI32((int)(baseLifetime * 10000),      buffer, 26);
+            NetUtils.WriteI32((int)(lifetimeVariation * 10000), buffer, 30);
             
-            NetUtils.WriteI32((int)(baseLifetime * 10000), buffer, 28);
-            NetUtils.WriteI32((int)(lifetimeVariation * 10000), buffer, 32);
-            
-            buffer[36] = expireUponTouchingGround ? (byte)1 : (byte)0;
-            buffer[37] = fullBright ? (byte)1 : (byte)0;
+            buffer[34] = expireUponTouchingGround ? (byte)1 : (byte)0;
+            buffer[35] = fullBright ? (byte)1 : (byte)0;
             return buffer;
         }
         
-        public static byte[] SpawnParticle(byte particleID, float x, float y, float z, float originX, float originY, float originZ) {
+        public static byte[] SpawnEffect(byte effectId, float x, float y, float z, float originX, float originY, float originZ) {
             byte[] buffer = new byte[26];
-            buffer[0] = Opcode.CpeSpawnParticle;
+            buffer[0] = Opcode.CpeSpawnEffect;
+            buffer[1] = effectId;
             
-            buffer[1] = particleID;
-            NetUtils.WriteI32((int)(x * 32), buffer, 2);
-            NetUtils.WriteI32((int)(y * 32), buffer, 6);
-            NetUtils.WriteI32((int)(z * 32), buffer, 10);
+            NetUtils.WriteI32((int)(x * 32),       buffer,  2);
+            NetUtils.WriteI32((int)(y * 32),       buffer,  6);
+            NetUtils.WriteI32((int)(z * 32),       buffer, 10);
             NetUtils.WriteI32((int)(originX * 32), buffer, 14);
             NetUtils.WriteI32((int)(originY * 32), buffer, 18);
             NetUtils.WriteI32((int)(originZ * 32), buffer, 22);
