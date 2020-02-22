@@ -420,11 +420,11 @@ namespace MCGalaxy.Network {
             NetUtils.WriteI32((int)(sizeVariation * 10000), buffer, 12);
             
             NetUtils.WriteI32((int)(spread), buffer, 16);
-            NetUtils.WriteI32((int)(speed * 1000), buffer, 20);
-            NetUtils.WriteI32((int)(gravity * 1000), buffer, 24);
+            NetUtils.WriteI32((int)(speed * 10000), buffer, 20);
+            NetUtils.WriteI32((int)(gravity * 10000), buffer, 24);
             
-            NetUtils.WriteI32((int)(baseLifetime * 1000), buffer, 28);
-            NetUtils.WriteI32((int)(lifetimeVariation * 1000), buffer, 32);
+            NetUtils.WriteI32((int)(baseLifetime * 10000), buffer, 28);
+            NetUtils.WriteI32((int)(lifetimeVariation * 10000), buffer, 32);
             
             buffer[36] = expireUponTouchingGround ? (byte)1 : (byte)0;
             buffer[37] = fullBright ? (byte)1 : (byte)0;
