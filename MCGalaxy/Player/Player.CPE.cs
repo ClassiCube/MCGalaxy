@@ -50,8 +50,7 @@ namespace MCGalaxy {
             new ExtEntry(CpeExt.TwoWayPing),       new ExtEntry(CpeExt.InventoryOrder),
             new ExtEntry(CpeExt.InstantMOTD),      new ExtEntry(CpeExt.FastMap),
             new ExtEntry(CpeExt.ExtTextures),      new ExtEntry(CpeExt.SetSpawnpoint),
-            new ExtEntry(CpeExt.VelocityControl),  new ExtEntry(CpeExt.DefineParticle),
-            new ExtEntry(CpeExt.SpawnParticle),
+            new ExtEntry(CpeExt.VelocityControl),  new ExtEntry(CpeExt.CustomParticles),
             #if TEN_BIT_BLOCKS
             new ExtEntry(CpeExt.ExtBlocks),
             #endif
@@ -219,8 +218,7 @@ namespace MCGalaxy {
         public const string ExtTextures = "ExtendedTextures";
         public const string SetSpawnpoint = "SetSpawnpoint";
         public const string VelocityControl = "VelocityControl";
-        public const string DefineParticle = "DefineParticle";
-        public const string SpawnParticle = "SpawnParticle";
+        public const string CustomParticles = "CustomParticles";
     }
     
     public enum CpeMessageType : byte {
