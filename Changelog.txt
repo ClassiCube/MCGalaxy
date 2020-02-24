@@ -1,3 +1,22 @@
+v 1.9.1.8
+Fixed: Don't turn off 'auto unload' when setting main world
+Fixed: /copylvl not saving level to disc first. 
+Fixed: /cmdset/blockset not behaving properly when used by multiple players simultaneously
+Improved: /renamelvl work with unloaded maps
+Improved: /renamelvl update all portals tables, so any portals that previously went to the map go to the new map
+Fixed: Rare issue where physics in museums map caused map to never get freed from memory
+Improved: Support compiling unsafe C# code for custom commands/plugins
+Improved: Allow changing tablist group name of zombies/humans in zombie survival
+Fixed: Exploit with /undo that allowed spamming BlockDB
+Improved: Allow info/remove/edit ing multiple blocks using lb/gb
+Improved: Make SPlace a draw op
+Added: Support for custom particles
+Fixed: botai hunt instruction not interacting properly with other instructions
+Fixed: /tw end not working
+Fixed: Players who join mid-round in TNT wars when it is running on main map joining spec team instead
+Fixed: Not getting sent to team spawn first time you join TNT wars or CTF
+Fixed: Don't crash if trying to call SendMessage causes a DllNotFoundExceptipn
+
 v 1.9.1.7
 Fixed: Importing textures over 256 in .cw importer works now
 Fixed: Importing block ids over 255 in .cw importer works now
