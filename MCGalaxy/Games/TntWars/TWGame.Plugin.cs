@@ -38,6 +38,7 @@ namespace MCGalaxy.Games {
         protected override void HookEventHandlers() {
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
+            OnSentMapEvent.Register(HandleSentMap, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             
@@ -47,6 +48,7 @@ namespace MCGalaxy.Games {
         protected override void UnhookEventHandlers() {
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
+            OnSentMapEvent.Unregister(HandleSentMap);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             
@@ -100,15 +102,16 @@ namespace MCGalaxy.Games {
             }
         }
         
+        void HandleSentMap(Player p, Level prevLevel, Level level) {
+            if (level != Map) return;
+            
+            MessageMapInfo(p);
+            if (TeamOf(p) == null) AutoAssignTeam(p);
+        }
+        
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
-            
-            if (level != Map) return;
-            MessageMapInfo(p);
-            allPlayers.Add(p);
-            
-            if (TeamOf(p) != null) return;
-            AutoAssignTeam(p);
+            if (level == Map) allPlayers.Add(p);
         }
         
         bool CheckTNTPlace(Player p, TWData data, ushort x, ushort y, ushort z) {

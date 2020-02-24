@@ -163,6 +163,7 @@ namespace MCGalaxy.Games {
         
         public override void PlayerJoinedGame(Player p) {
             bool announce = false;
+            HandleSentMap(p, Map, Map);
             HandleJoinedLevel(p, Map, Map, ref announce);
         }
         
