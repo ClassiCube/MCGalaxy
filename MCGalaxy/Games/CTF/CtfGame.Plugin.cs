@@ -35,6 +35,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
+            OnSentMapEvent.Register(HandleSentMap, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
             
             base.HookEventHandlers();
@@ -48,6 +49,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
+            OnSentMapEvent.Unregister(HandleSentMap);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
             
             base.UnhookEventHandlers();
@@ -131,21 +133,14 @@ namespace MCGalaxy.Games {
             }
         }
         
-        void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
-            HandleJoinedCommon(p, prevLevel, level, ref announce);
-            
+        void HandleSentMap(Player p, Level prevLevel, Level level) {
             if (level != Map) return;
             MessageMapInfo(p);
-            if (TeamOf(p) != null) return;
-            
-            if (Blue.Members.Count > Red.Members.Count) {
-                JoinTeam(p, Red);
-            } else if (Red.Members.Count > Blue.Members.Count) {
-                JoinTeam(p, Blue);
-            } else {
-                bool red = new Random().Next(2) == 0;
-                JoinTeam(p, red ? Red : Blue);
-            }
+            if (TeamOf(p) == null) AutoAssignTeam(p);
+        }
+		
+        void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+            HandleJoinedCommon(p, prevLevel, level, ref announce);
         }
     }
 }

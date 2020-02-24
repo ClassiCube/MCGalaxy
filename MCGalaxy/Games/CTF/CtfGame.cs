@@ -145,6 +145,7 @@ namespace MCGalaxy.Games {
         
         public override void PlayerJoinedGame(Player p) {
             bool announce = false;
+            HandleSentMap(p, Map, Map);
             HandleJoinedLevel(p, Map, Map, ref announce);
         }
 
@@ -154,6 +155,17 @@ namespace MCGalaxy.Games {
             team.Members.Remove(p);
             
             DropFlag(p, team);          
+        }
+        
+        void AutoAssignTeam(Player p) {     
+            if (Blue.Members.Count > Red.Members.Count) {
+                JoinTeam(p, Red);
+            } else if (Red.Members.Count > Blue.Members.Count) {
+                JoinTeam(p, Blue);
+            } else {
+                bool red = new Random().Next(2) == 0;
+                JoinTeam(p, red ? Red : Blue);
+            }
         }
         
         void JoinTeam(Player p, CtfTeam team) {

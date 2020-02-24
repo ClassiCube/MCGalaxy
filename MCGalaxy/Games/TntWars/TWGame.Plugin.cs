@@ -104,7 +104,6 @@ namespace MCGalaxy.Games {
         
         void HandleSentMap(Player p, Level prevLevel, Level level) {
             if (level != Map) return;
-            
             MessageMapInfo(p);
             if (TeamOf(p) == null) AutoAssignTeam(p);
         }
