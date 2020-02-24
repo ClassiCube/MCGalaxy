@@ -137,8 +137,13 @@ namespace MCGalaxy.Gui.Components {
         /// <summary> Scrolls to the end of the log </summary>
         internal void ScrollToEnd(int startIndex) {
             int lines = GetLineFromCharIndex(TextLength - 1) - startIndex + 1;
-            for (int i = 0; i < lines; i++) {
-                SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);
+            try {
+                for (int i = 0; i < lines; i++) {
+                    SendMessage(Handle, 0xB5, (IntPtr)1, IntPtr.Zero);
+                }
+            } catch (DllNotFoundException) {
+                // mono throws this if you're missing libMonoSupportW
+                // TODO: Maybe we should cache this instead of catching all the time
             }
             Invalidate();
         }
