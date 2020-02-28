@@ -396,7 +396,8 @@ namespace MCGalaxy.Network {
                                             byte size, float sizeVariation,
                                             float spread, float speed, float gravity,
                                             float baseLifetime, float lifetimeVariation,
-                                            bool expireUponTouchingGround, bool fullBright) {
+                                            bool expireUponTouchingGround, bool collidesSolid, bool collidesLiquid, bool collidesLeaves,
+                                            bool fullBright) {
             byte[] buffer = new byte[36];
             buffer[0] = Opcode.CpeDefineEffect;           
             buffer[1] = effectID;
@@ -420,8 +421,13 @@ namespace MCGalaxy.Network {
             NetUtils.WriteI32((int)(gravity * 10000),           buffer, 22);
             NetUtils.WriteI32((int)(baseLifetime * 10000),      buffer, 26);
             NetUtils.WriteI32((int)(lifetimeVariation * 10000), buffer, 30);
+            byte flags = 0;
+            if (expireUponTouchingGround) flags |= 1 << 0;
+            if (collidesSolid)            flags |= 1 << 1;
+            if (collidesLiquid)           flags |= 1 << 2;
+            if (collidesLeaves)           flags |= 1 << 3;
             
-            buffer[34] = expireUponTouchingGround ? (byte)1 : (byte)0;
+            buffer[34] = flags;
             buffer[35] = fullBright ? (byte)1 : (byte)0;
             return buffer;
         }
