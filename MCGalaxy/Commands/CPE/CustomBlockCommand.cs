@@ -795,17 +795,34 @@ namespace MCGalaxy.Commands.CPE {
         
         
         internal static void Help(Player p, string cmd) {
+            p.Message("%H{0} help page 1:", cmd.Substring(1));
             p.Message("%T{0} add [id] %H- begins creating a new custom block", cmd);
-            p.Message("%T{0} copyall [map] %H- clones all custom blocks in [map]", cmd);            
-            p.Message("%T{0} copy [id] [new id] %H- clones an existing custom block", cmd);
+            p.Message("%T{0} copy [id] <new id> %H- clones an existing custom block", cmd);
             p.Message("%T{0} edit [id] [property] [value] %H- edits that custom block", cmd);
-            p.Message("%T{0} list <offset> %H- lists all custom blocks", cmd);
             p.Message("%T{0} remove [id] %H- removes that custom block", cmd);
-            p.Message("%T{0} info [id] %H- shows info about that custom block", cmd);
-            p.Message("%HTo see the list of editable properties, type {0} edit", cmd);
+            p.Message("%HTo see the list of editable properties, type %T{0} edit", cmd);
+            p.Message("%HTo read help page 2, type %T/help {0} 2", cmd.Substring(1));
         }
         
         internal static void Help(Player p, string cmd, string args) {
+            if (args.CaselessEq("2")) { 
+                p.Message("%H{0} help page 2:", cmd.Substring(1));
+                p.Message("%T{0} copyall [map] %H- clones all custom blocks from [map]", cmd);                
+                p.Message("%T{0} list <offset> %H- lists all custom blocks", cmd);
+                p.Message("%T{0} info [id] %H- shows info about that custom block", cmd);
+                p.Message("%HYou may edit, remove or see info for multiple IDs at once.");
+                p.Message("%HUse %T/help {0} 3 %Hfor multi explanation.", cmd.Substring(1));
+                return;
+            }
+            else if (args.CaselessEq("3")) {
+                p.Message("%H{0} help page 3:", cmd.Substring(1));
+                p.Message("%HTo work with multiple block IDs at once,");
+                p.Message("%Huse a start and end range seperated by a dash.");
+                p.Message("%HFor example, %T{0} remove 21-24", cmd);
+                p.Message("%Hwould remove blocks with ID 21, 22, 23, and 24.", cmd);
+                p.Message("%HMulti editing only works with %T{0} edit, remove, or info", cmd);
+                return;
+            }
             if (!args.CaselessStarts("edit ")) { Help(p, cmd); return; }
             string prop = args.Substring(args.IndexOf(' ') + 1);
             prop = MapPropertyName(prop.ToLower());
