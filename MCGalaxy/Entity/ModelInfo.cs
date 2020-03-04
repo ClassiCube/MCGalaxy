@@ -121,9 +121,9 @@ namespace MCGalaxy {
         }
         
         /// <summary> Gives distance (in half-pixel world units) from feet to camera height </summary>
-        public static int CalcEyeHeight(string model) {
-            float scale = GetRawScale(model);
-            model = GetRawModel(model);
+        public static int CalcEyeHeight(Entity entity) {
+            float scale = (entity.ScaleY == 0) ? GetRawScale(entity.Model) : entity.ScaleY;
+            string model = GetRawModel(entity.Model);
             BlockID raw;
             if (BlockID.TryParse(model, out raw) && raw <= Block.MaxRaw) return 16; //lazily return middle of full block if it thinks it's a block ID.
             

@@ -155,8 +155,8 @@ namespace MCGalaxy.Bots {
         }
         
         static void FaceTowards(PlayerBot bot, Player p) {
-            int srcHeight = ModelInfo.CalcEyeHeight(p.Model);
-            int dstHeight = ModelInfo.CalcEyeHeight(bot.Model);
+            int srcHeight = ModelInfo.CalcEyeHeight(p);
+            int dstHeight = ModelInfo.CalcEyeHeight(bot);
             
             int dx = p.Pos.X - bot.Pos.X, dy = (p.Pos.Y + srcHeight) - (bot.Pos.Y + dstHeight), dz = p.Pos.Z - bot.Pos.Z;
             Vec3F32 dir = new Vec3F32(dx, dy, dz);

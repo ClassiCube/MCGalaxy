@@ -134,7 +134,7 @@ namespace MCGalaxy {
             return true;
         }
         
-        internal static bool Check(Player p, LevelPermission plRank, Level lvl, string action) {
+        public static bool Check(Player p, LevelPermission plRank, Level lvl, string action) {
             if (p.IsConsole) return true;
             if (!lvl.VisitAccess.CheckDetailed(p, plRank) || !lvl.BuildAccess.CheckDetailed(p, plRank)) {
                 p.Message("Hence, you cannot {0}.", action); return false;
