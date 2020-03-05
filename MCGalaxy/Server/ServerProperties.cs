@@ -64,7 +64,7 @@ namespace MCGalaxy {
             #pragma warning restore 0618
             
             if (!Directory.Exists(Server.Config.BackupDirectory))
-                Server.Config.BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
+                Server.Config.BackupDirectory = "levels/backups";
             
             Save();
             Server.SetMainLevel(Server.Config.MainLevel);

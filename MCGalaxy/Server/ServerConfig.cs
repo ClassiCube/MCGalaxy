@@ -97,7 +97,7 @@ namespace MCGalaxy {
         [ConfigTimespan("blockdb-backup-time", "Backup", 60, false)]
         public TimeSpan BlockDBSaveInterval = TimeSpan.FromSeconds(60);
         [ConfigString("backup-location", "Backup", "")]
-        public string BackupDirectory = Path.Combine(Utils.FolderPath, "levels/backups");
+        public string BackupDirectory = "levels/backups";
         
         [ConfigTimespan("afk-minutes", "Other", 10, true)]
         public TimeSpan AutoAfkTime = TimeSpan.FromMinutes(10);
