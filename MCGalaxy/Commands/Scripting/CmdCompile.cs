@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Scripting {
             
             if (!File.Exists(srcPath)) {
                 p.Message("File &9{0} %Snot found.", srcPath);
-            } else if (engine.Compile(srcPath, dstPath)) {
+            } else if (engine.Compile(srcPath, dstPath, p)) {
                 p.Message("Command compiled successfully.");
             } else {
                 p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");

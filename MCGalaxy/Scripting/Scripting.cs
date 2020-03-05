@@ -72,7 +72,8 @@ namespace MCGalaxy.Scripting {
             }
         }
 
-        public bool Compile(string srcPath, string dstPath) {
+        const int maxLog = 2;
+        public bool Compile(string srcPath, string dstPath, Player p) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
             args.OutputAssembly = dstPath;
@@ -100,10 +101,20 @@ namespace MCGalaxy.Scripting {
                 sb.AppendLine();
             }
             
+            int logged = 0;
+            foreach (CompilerError err in results.Errors) {
+                string type = err.IsWarning ? "Warning" : "Error";
+                p.Message("%W{0} #{1} on line {2} - {3}", type, err.ErrorNumber, err.Line, err.ErrorText);
+                
+                logged++;
+                if (logged >= maxLog) break;
+            }
+            if (results.Errors.Count > maxLog) p.Message(" %W.. and {0} more", results.Errors.Count - maxLog);
+            
             using (StreamWriter w = new StreamWriter(ErrorPath, true)) {
                 w.Write(sb.ToString());
             }
-            return !results.Errors.HasErrors;
+            return false;
         }
         
         List<string> ReadSource(string path, CompilerParameters args) {

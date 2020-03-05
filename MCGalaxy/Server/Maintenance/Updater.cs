@@ -90,6 +90,9 @@ namespace MCGalaxy {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.save();
                 
+                // Although Process.Start checks path exists, that won't work correctly when running from mono
+                //  (since 'mono' exists but Updater.exe might not)
+                // So always explicitly check that Updater.exe exists here
                 string path = Path.Combine(Utils.FolderPath, "Updater.exe");
                 if (!File.Exists(path)) throw new FileNotFoundException("Unable to find " + path);
                 
