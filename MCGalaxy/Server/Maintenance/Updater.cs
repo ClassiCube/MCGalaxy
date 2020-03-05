@@ -26,18 +26,19 @@ using MCGalaxy.Tasks;
 namespace MCGalaxy {
     public static class Updater {
         
-        public static string parent = Path.GetFileName(Assembly.GetEntryAssembly().Location);
+        static string exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
         public const string BaseURL = "https://raw.githubusercontent.com/UnknownShadow200/MCGalaxy/master/";
         public const string UploadsURL = "https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads";
+        
         const string CurrentVersionFile = BaseURL + "Uploads/current_version.txt";
         #if TEN_BIT_BLOCKS
-        const string DLLLocation = BaseURL + "Uploads/MCGalaxy_infid.dll?raw=true";
+        const string dllURL = BaseURL + "Uploads/MCGalaxy_infid.dll?raw=true";
         #else
-        const string DLLLocation = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
+        const string dllURL = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
         #endif
-        const string ChangelogLocation = BaseURL + "Changelog.txt";
-        const string EXELocation = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
-        const string CLILocation = BaseURL + "Uploads/MCGalaxyCLI.exe?raw=true";
+        const string changelogURL = BaseURL + "Changelog.txt";
+        const string guiURL = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
+        const string cliURL = BaseURL + "Uploads/MCGalaxyCLI.exe?raw=true";
 
         public static event EventHandler NewerVersionDetected;
         
@@ -74,10 +75,10 @@ namespace MCGalaxy {
                 }
                 
                 WebClient client = HttpUtil.CreateWebClient();
-                client.DownloadFile(DLLLocation, "MCGalaxy_.update");
-                client.DownloadFile(EXELocation, "MCGalaxy.update");
-                client.DownloadFile(CLILocation, "MCGalaxyCLI.update");
-                client.DownloadFile(ChangelogLocation, "Changelog.txt");
+                client.DownloadFile(dllURL, "MCGalaxy_.update");
+                client.DownloadFile(guiURL, "MCGalaxy.update");
+                client.DownloadFile(cliURL, "MCGalaxyCLI.update");
+                client.DownloadFile(changelogURL, "Changelog.txt");
 
                 Level[] levels = LevelInfo.Loaded.Items;
                 foreach (Level lvl in levels) {
@@ -89,12 +90,14 @@ namespace MCGalaxy {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.save();
                 
+                string path = Path.Combine(Utils.FolderPath, "Updater.exe");
+                if (!File.Exists(path)) throw new FileNotFoundException("Unable to find " + path);
+                
                 bool mono = Type.GetType("Mono.Runtime") != null;
                 if (!mono) {
-                    Process.Start("Updater.exe", "securitycheck10934579068013978427893755755270374" + parent);
+                    Process.Start(path, "securitycheck10934579068013978427893755755270374" + exeName);
                 } else {
-                    string path = Path.Combine(Utils.FolderPath, "Updater.exe");
-                    Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + parent);
+                    Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + exeName);
                 }
                 Server.Stop(false, "Updating server.");
             } catch (Exception ex) {
