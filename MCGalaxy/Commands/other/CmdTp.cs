@@ -83,9 +83,9 @@ namespace MCGalaxy.Commands.Misc {
                 pos = Position.FromFeetBlockCoords(P.X, P.Y, P.Z);
             } else {
                 // relative to feet position exactly
-                P = new Vec3S32(p.Pos.X, p.Pos.Y + Entities.CharacterHeight, p.Pos.Z);
+                P = new Vec3S32(p.Pos.X, p.Pos.Y - Entities.CharacterHeight, p.Pos.Z);
                 if (!CommandParser.GetCoords(p, args, 0, ref P)) return false;
-                pos = new Position(P.X, P.Y - Entities.CharacterHeight, P.Z);
+                pos = new Position(P.X, P.Y + Entities.CharacterHeight, P.Z);
             }
             
             int angle = 0;            
