@@ -53,6 +53,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p, string message) {
+            message = message.SplitSpaces()[0]; // only first argument
             foreach (SubCommand subCmd in subCommands) {
                 if (!subCmd.Group.CaselessEq(message)) continue;
                 p.MessageLines(subCmd.Help);
@@ -134,7 +135,8 @@ namespace MCGalaxy.Commands.World {
 
         static string[] blockPropsHelp = new string[] {
             "%T/os blockprops [id] [action] <args> %H- Changes properties of blocks in your map.",
-            "%H  See %T/Help blockprops %Hfor a list of actions",
+            "%H  See %T/Help blockprops %Hfor how to use this command.",
+            "%H  Remember to substitute /blockprops for /os blockprops when using the command based on the help",
         };
         
         static string[] envHelp = new string[] {
@@ -163,7 +165,8 @@ namespace MCGalaxy.Commands.World {
 
         static string[] levelBlockHelp = new string[] {
             "%T/os lb [action] <args> %H- Manages custom blocks on your map.",
-            "%H  See %T/Help lb %Hfor a list of actions",
+            "%H  See %T/Help lb %Hfor how to use this command.",
+            "%H  Remember to substitute /lb for /os lb when using the command based on the help",
         };
         
         static string[] mapHelp = new string[] {
