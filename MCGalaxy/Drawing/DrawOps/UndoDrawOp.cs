@@ -67,18 +67,19 @@ namespace MCGalaxy.Drawing.Ops {
             // can't use "using" as it creates a local var, and read lock reference may be changed by DrawOpPerformer class
             try {
                 BlockDBReadLock = Level.BlockDB.Locker.AccquireRead();
-                if (Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock)) return;
+                Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock);
             } finally {
                 if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
             }
             
             if (oldest == null) return;
             foreach (var kvp in oldest) {
-                int index = kvp.Key; 
+                int index = kvp.Key;
                 
                 int x = index % dims.X;
                 int y = (index / dims.X) / dims.Z;
-                int z = (index / dims.X) % dims.Z;           
+                int z = (index / dims.X) % dims.Z;
+
                 output(Place((ushort)x, (ushort)y, (ushort)z, kvp.Value));
             }
         }
