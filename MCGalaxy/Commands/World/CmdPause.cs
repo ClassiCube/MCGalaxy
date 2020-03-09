@@ -67,9 +67,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Pause [map] [seconds]");
-            p.Message("%HPauses physics on the given map for the specified number of seconds.");
-            p.Message("%H  If [map] is not given, pauses physics on the current map.");
+            p.Message("%T/Pause [level] [seconds]");
+            p.Message("%HPauses physics on the given level for the given number of seconds.");
+            p.Message("%H  If [level] is not given, pauses physics on the current level.");
             p.Message("%H  If [seconds] is not given, pauses physics for 30 seconds.");
         }
     }

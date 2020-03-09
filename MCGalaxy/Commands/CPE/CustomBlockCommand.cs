@@ -807,7 +807,7 @@ namespace MCGalaxy.Commands.CPE {
         internal static void Help(Player p, string cmd, string args) {
             if (args.CaselessEq("2")) { 
                 p.Message("%H{0} help page 2:", cmd.Substring(1));
-                p.Message("%T{0} copyall [map] %H- clones all custom blocks from [map]", cmd);                
+                p.Message("%T{0} copyall [level] %H- clones all custom blocks from [level]", cmd);                
                 p.Message("%T{0} list <offset> %H- lists all custom blocks", cmd);
                 p.Message("%T{0} info [id] %H- shows info about that custom block", cmd);
                 p.Message("%HYou may edit, remove or see info for multiple IDs at once.");

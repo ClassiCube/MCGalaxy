@@ -41,12 +41,12 @@ namespace MCGalaxy.Commands.World {
             if (!Formatter.ValidMapName(p, dst)) return;
 
             if (!LevelActions.Rename(p, src, dst)) return;
-            Chat.MessageGlobal("Map {0} %Swas renamed to {1}", cfg.Color + src, cfg.Color + dst);
+            Chat.MessageGlobal("Level {0} %Swas renamed to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/RenameLvl [map] [new name]");
-            p.Message("%HRenames [map] to [new name]");
+            p.Message("%T/RenameLvl [level] [new name]");
+            p.Message("%HRenames [level] to [new name]");
         }
     }
 }

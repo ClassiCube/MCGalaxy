@@ -76,7 +76,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            p.Message("%T/Buy {0} [map]", Name);
+            p.Message("%T/Buy {0} [level]", Name);
             OutputItemInfo(p);
             p.Message("The map used for the next round of " +
                            "zombie survival will be the given map.");

@@ -231,10 +231,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p)  {
-            p.Message("%T/MapInfo [map]");
-            p.Message("%HDisplay details of [map]");
-            p.Message("%T/MapInfo env [map]");
-            p.Message("%HDisplay environment details of [map]");
+            p.Message("%T/MapInfo [level]");
+            p.Message("%HDisplay details of [level]");
+            p.Message("%T/MapInfo env [level]");
+            p.Message("%HDisplay environment details of [level]");
         }
     }
 }

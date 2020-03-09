@@ -38,13 +38,13 @@ namespace MCGalaxy.Commands.World {
             if (!LevelInfo.Check(p, data.Rank, map, "delete this map",out cfg)) return;
 
             if (!LevelActions.Delete(p, map)) return;
-            Chat.MessageGlobal("Map {0} %Swas deleted", cfg.Color + map);
+            Chat.MessageGlobal("Level {0} %Swas deleted", cfg.Color + map);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/DeleteLvl [map]");
-            p.Message("%HCompletely deletes [map] (portals, MBs, everything)");
-            p.Message("%HA backup of the map is made in the levels/deleted folder");
+            p.Message("%T/DeleteLvl [level]");
+            p.Message("%HCompletely deletes [level] (portals, MBs, everything)");
+            p.Message("%HA backup of the level is made in the levels/deleted folder");
         }
     }
 }

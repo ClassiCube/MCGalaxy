@@ -187,11 +187,7 @@ namespace MCGalaxy.Commands.World {
                 p.Message("To delete your current map, type %T/os map delete");
                 return;
             }
-            
-            string map = p.level.name;
-            if (LevelActions.Delete(p, map)) {
-                p.Message("Map " + map + " was removed.");
-            }
+            UseCommand(p, "DeleteLvl", p.level.name);
         }
 
 

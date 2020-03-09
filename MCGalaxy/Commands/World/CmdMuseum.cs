@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Museum [map] [backup]");
-            p.Message("%HTeleports you to a backup of the given map.");
+            p.Message("%T/Museum [level] [backup]");
+            p.Message("%HTeleports you to a backup of the given level.");
         }
     }
 }

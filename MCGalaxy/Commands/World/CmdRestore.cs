@@ -95,10 +95,10 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Restore %H- lists all backups for the current map");
-            p.Message("%T/Restore [number] <map>");
-            p.Message("%HRestores a previous backup for the given map.");
-            p.Message("%H  If <map> is not given, your current map is used.");
+            p.Message("%T/Restore %H- lists all backups for the current level");
+            p.Message("%T/Restore [number] <level>");
+            p.Message("%HRestores a previous backup for the given level.");
+            p.Message("%H  If <level> is not given, the current level is used.");
         }
     }
 }

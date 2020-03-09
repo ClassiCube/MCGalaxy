@@ -96,13 +96,13 @@ namespace MCGalaxy.Commands.World {
         }      
 
         protected void ShowHelp(Player p, string action, string action2) {
-            p.Message("%T/{0} [map] [rank]", name);
-            p.Message("%HSets the lowest rank able to {0} the given map.", action);
-            p.Message("%T/{0} -max [map] [Rank]", name);
-            p.Message("%HSets the highest rank able to {0} the given map.", action);
-            p.Message("%T/{0} [map] +[name]", name);
+            p.Message("%T/{0} [level] [rank]", name);
+            p.Message("%HSets the lowest rank able to {0} the given level.", action);
+            p.Message("%T/{0} -max [level] [Rank]", name);
+            p.Message("%HSets the highest rank able to {0} the given level.", action);
+            p.Message("%T/{0} [level] +[name]", name);
             p.Message("%HAllows [name] to {0}, even if their rank cannot.", action2);
-            p.Message("%T/{0} [map] -[name]", name);
+            p.Message("%T/{0} [level] -[name]", name);
             p.Message("%HPrevents [name] from {0}ing, even if their rank can.", action2);
         }
     }
