@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
             if (!LevelActions.Copy(p, src, dst)) return;           
             Level ignored;
             LevelConfig cfg = LevelInfo.GetConfig(src, out ignored);
-            p.Message("Level {0} %Shas been copied to {1}", cfg.Color + src, cfg.Color + dst);
+            Chat.MessageGlobal("Map {0} %Swas copied to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {

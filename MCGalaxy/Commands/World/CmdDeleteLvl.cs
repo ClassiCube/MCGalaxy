@@ -36,7 +36,10 @@ namespace MCGalaxy.Commands.World {
             if (map == null) return;            
             if (!LevelInfo.Check(p, data.Rank, map, "delete this map")) return;
             
-            LevelActions.Delete(p, map);
+            Level ignored;
+            LevelConfig cfg = LevelInfo.GetConfig(map, out ignored);
+            if (!LevelActions.Delete(p, map)) return;
+            Chat.MessageGlobal("Map {0} %Swas deleted", cfg.Color + map);
         }
         
         public override void Help(Player p) {

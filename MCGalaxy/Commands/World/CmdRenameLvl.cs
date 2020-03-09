@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.World {
 
             if (!LevelActions.Rename(p, src, dst)) return;
             Level ignored;
-            LevelConfig cfg = LevelInfo.GetConfig(src, out ignored);
-            Chat.MessageGlobal("Renamed {0} %Sto {1}", cfg.Color + src, cfg.Color + dst);
+            LevelConfig cfg = LevelInfo.GetConfig(dst, out ignored);
+            Chat.MessageGlobal("Map {0} %Swas renamed to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {
