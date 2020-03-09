@@ -126,11 +126,8 @@ namespace MCGalaxy.Commands.Bots{
         
         void HandleList(Player p, string modifier) {
             string[] files = Directory.GetFiles("bots");
-            for (int i = 0; i < files.Length; i++) {
-                files[i] = Path.GetFileNameWithoutExtension(files[i]);
-            }
-            
-            MultiPageOutput.Output(p, files, f => f, "BotAI list", "bot AIs", modifier, false);
+            MultiPageOutput.Output(p, files, f => Path.GetFileName(f),
+                                   "BotAI list", "bot AIs", modifier, false);
         }
         
         void HandleInfo(Player p, string ai) {
