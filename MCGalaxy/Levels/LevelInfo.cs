@@ -121,9 +121,9 @@ namespace MCGalaxy {
             return cfg;
         }
         
-        internal static bool Check(Player p, LevelPermission plRank, string map, string action) {
+        public static bool Check(Player p, LevelPermission plRank, string map, string action, out LevelConfig cfg) {
+            Level lvl; cfg = GetConfig(map, out lvl);
             if (p.IsConsole) return true;
-            Level lvl; LevelConfig cfg = GetConfig(map, out lvl);
             if (lvl != null) return Check(p, plRank, lvl, action);
             
             AccessController visit = new LevelAccessController(cfg, map, true);
@@ -132,6 +132,11 @@ namespace MCGalaxy {
                 p.Message("Hence, you cannot {0}.", action); return false;
             }
             return true;
+        }
+        
+        public static bool Check(Player p, LevelPermission plRank, string map, string action) {
+            LevelConfig ignored;
+            return Check(p, plRank, map, action, out ignored);
         }
         
         public static bool Check(Player p, LevelPermission plRank, Level lvl, string action) {

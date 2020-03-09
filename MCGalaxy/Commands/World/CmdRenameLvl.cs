@@ -31,23 +31,22 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             if (args.Length != 2) { Help(p); return; }
+            LevelConfig cfg;
                        
             string src = Matcher.FindMaps(p, args[0]);
             if (src == null) return;
-            if (!LevelInfo.Check(p, data.Rank, src, "rename this map")) return;
+            if (!LevelInfo.Check(p, data.Rank, src, "rename this map", out cfg)) return;
             
             string dst = args[1].ToLower();
             if (!Formatter.ValidMapName(p, dst)) return;
 
             if (!LevelActions.Rename(p, src, dst)) return;
-            Level ignored;
-            LevelConfig cfg = LevelInfo.GetConfig(dst, out ignored);
             Chat.MessageGlobal("Map {0} %Swas renamed to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/RenameLvl [level] [new name]");
-            p.Message("%HRenames [level] to [new name]");
+            p.Message("%T/RenameLvl [map] [new name]");
+            p.Message("%HRenames [map] to [new name]");
         }
     }
 }

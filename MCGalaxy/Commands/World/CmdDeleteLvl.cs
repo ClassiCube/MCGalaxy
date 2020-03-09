@@ -32,12 +32,11 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.SplitSpaces().Length > 1) { Help(p); return; }
             string map = Matcher.FindMaps(p, message);
+            LevelConfig cfg;
             
             if (map == null) return;            
-            if (!LevelInfo.Check(p, data.Rank, map, "delete this map")) return;
-            
-            Level ignored;
-            LevelConfig cfg = LevelInfo.GetConfig(map, out ignored);
+            if (!LevelInfo.Check(p, data.Rank, map, "delete this map",out cfg)) return;
+
             if (!LevelActions.Delete(p, map)) return;
             Chat.MessageGlobal("Map {0} %Swas deleted", cfg.Color + map);
         }
@@ -45,7 +44,7 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             p.Message("%T/DeleteLvl [map]");
             p.Message("%HCompletely deletes [map] (portals, MBs, everything)");
-            p.Message("%HA backup of the map will be placed in the levels/deleted folder");
+            p.Message("%HA backup of the map is made in the levels/deleted folder");
         }
     }
 }

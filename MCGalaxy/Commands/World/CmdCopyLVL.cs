@@ -36,24 +36,23 @@ namespace MCGalaxy.Commands.World {
             if (args.Length < 2) {
                 p.Message("You did not specify the destination level name."); return;
             }
+            LevelConfig cfg;
             
             string src = Matcher.FindMaps(p, args[0]);
             if (src == null) return;
-            if (!LevelInfo.Check(p, data.Rank, src, "copy this map")) return;
+            if (!LevelInfo.Check(p, data.Rank, src, "copy this map", out cfg)) return;
             
             string dst = args[1];
             if (!Formatter.ValidMapName(p, dst)) return;
 
-            if (!LevelActions.Copy(p, src, dst)) return;           
-            Level ignored;
-            LevelConfig cfg = LevelInfo.GetConfig(src, out ignored);
+            if (!LevelActions.Copy(p, src, dst)) return;
             Chat.MessageGlobal("Map {0} %Swas copied to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CopyLvl [level] [copied level]");
-            p.Message("%HMakes a copy of [level] called [copied Level].");
-            p.Message("%HNote: The level's BlockDB is not copied.");
+            p.Message("%T/CopyLvl [map] [copied map]");
+            p.Message("%HMakes a copy of [map] called [copied map].");
+            p.Message("%HNote: The map's BlockDB is not copied.");
         }
     }
 }
