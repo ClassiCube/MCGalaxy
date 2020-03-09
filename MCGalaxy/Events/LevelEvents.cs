@@ -99,5 +99,32 @@ namespace MCGalaxy.Events.LevelEvents {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(x, y, z, extraInfo, l));
         }
-    }
+    }    
+    
+    public delegate void OnLevelRenamed(string srcMap, string dstMap);
+    public sealed class OnLevelRenamedEvent : IEvent<OnLevelRenamed> {
+        
+        public static void Call(string srcMap, string dstMap) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(srcMap, dstMap));
+        }
+    }    
+    
+    public delegate void OnLevelCopied(string srcMap, string dstMap);
+    public sealed class OnLevelCopiedEvent : IEvent<OnLevelCopied> {
+        
+        public static void Call(string srcMap, string dstMap) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(srcMap, dstMap));
+        }
+    }  
+        
+    public delegate void OnLevelDeleted(string map);
+    public sealed class OnLevelDeletedEvent : IEvent<OnLevelDeleted> {
+        
+        public static void Call(string map) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(map));
+        }
+    }  
 }

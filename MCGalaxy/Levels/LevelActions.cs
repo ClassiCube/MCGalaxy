@@ -81,6 +81,7 @@ namespace MCGalaxy {
             
             RenameDatabaseTables(p, src, dst);
             BlockDBFile.MoveBackingFile(src, dst);
+            OnLevelRenamedEvent.Call(src, dst);
             if (players == null) return true;
             
             // Move all the old players to the renamed map
@@ -173,6 +174,7 @@ namespace MCGalaxy {
             DoAll(map, "", action_delete);
             DeleteDatabaseTables(map);
             BlockDBFile.DeleteBackingFile(map);
+            OnLevelDeletedEvent.Call(map);
             return true;
         }
         
@@ -234,6 +236,7 @@ namespace MCGalaxy {
             File.Copy(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
             DoAll(src, dst, action_copy);
             CopyDatabaseTables(src, dst);
+            OnLevelCopiedEvent.Call(src, dst);
             return true;
         }
         
