@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
             p.Message("%HOutputs the help for the brush with that name.");
             List(p);
             p.Message("%H- If \"skip\" is used for a block name, " +
-                           "existing blocks in the map will not be replaced by this block.");
+                      "existing blocks in the map will not be replaced by this block.");
         }
 
         public override void Help(Player p, string message) {

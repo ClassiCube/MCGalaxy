@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using MCGalaxy.Events.LevelEvents;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdLoad : Command2 {

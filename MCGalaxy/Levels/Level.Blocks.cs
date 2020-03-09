@@ -43,7 +43,7 @@ namespace MCGalaxy {
         public byte[][] CustomBlocks;
         public int ChunksX, ChunksY, ChunksZ;
         
-        /// <summary> Relatively quick guess at whether this map might use custom blocks. </summary>
+        /// <summary> Relatively quick guess at whether this level might use custom blocks. </summary>
         public bool MightHaveCustomBlocks() {
             byte[][] customBlocks = CustomBlocks;
             if (customBlocks == null) return false;
@@ -80,7 +80,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Block.Invalid if coordinates outside map. </returns>
+        /// <returns> Block.Invalid if coordinates outside level. </returns>
         public BlockID GetBlock(ushort x, ushort y, ushort z) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return Block.Invalid;
             byte raw = blocks[x + Width * (z + y * Length)];
@@ -94,7 +94,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Block.Invalid if coordinates outside map. </returns>
+        /// <returns> Block.Invalid if coordinates outside level. </returns>
         public BlockID GetBlock(ushort x, ushort y, ushort z, out int index) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return Block.Invalid; }
             index = x + Width * (z + y * Length);

@@ -252,7 +252,7 @@
     <Compile Include="Commands\Information\CmdRankInfo.cs" />
     <Compile Include="Commands\Information\CmdServerInfo.cs" />
     <Compile Include="Commands\Information\CmdLastCmd.cs" />
-    <Compile Include="Commands\Information\CmdLevels.cs" />
+    <Compile Include="Commands\Information\CmdLoaded.cs" />
     <Compile Include="Commands\Information\CmdMapInfo.cs" />
     <Compile Include="Commands\Information\CmdNews.cs" />
     <Compile Include="Commands\Information\CmdOpRules.cs" />
@@ -265,7 +265,7 @@
     <Compile Include="Commands\Information\CmdDevs.cs" />
     <Compile Include="Commands\Information\CmdTime.cs" />
     <Compile Include="Commands\Information\CmdTop.cs" />
-    <Compile Include="Commands\Information\CmdWorlds.cs" />
+    <Compile Include="Commands\Information\CmdLevels.cs" />
     <Compile Include="Commands\Information\CmdView.cs" />
     <Compile Include="Commands\Information\CmdViewRanks.cs" />
     <Compile Include="Commands\Information\CmdWhere.cs" />

@@ -66,8 +66,7 @@ namespace MCGalaxy {
          /// <summary> Whether block changes made on this level should be saved to the BlockDB and .lvl files. </summary>
         public bool SaveChanges = true;
         
-        /// <summary> Whether this map sees server-wide chat. </summary>
-        /// <remarks> true if both worldChat and Server.worldChat are true. </remarks>
+        /// <summary> Whether players on this level sees server-wide chat. </summary>
         public bool SeesServerWideChat { get { return Config.ServerWideChat && Server.Config.ServerWideChat; } }
         
         internal readonly object saveLock = new object(), botsIOLock = new object();
