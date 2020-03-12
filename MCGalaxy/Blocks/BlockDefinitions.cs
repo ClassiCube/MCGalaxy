@@ -116,6 +116,9 @@ namespace MCGalaxy {
                     } else {
                         defs[block] = def;
                     }
+                    
+                    // In case user manually edited fallback in the json file
+                    def.FallBack = Math.Min(def.FallBack, Block.CpeMaxBlock);
                 }
             } catch (Exception ex) {
                 Logger.LogError("Error Loading block defs from " + path, ex);
