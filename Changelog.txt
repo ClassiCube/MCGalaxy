@@ -1,3 +1,18 @@
+v 1.9.1.9
+Improved: Make CalcEyeHeight take Y scale int account
+Improved: /tpp 0 0 0 puts you on the ground at level 0
+Fixed: Updating appearing to work with mono when Updater.exe is missing
+Improved: Backup path in server.properties defaults to relative path
+Improved: Log to player short summary of first 2 errors when compiling
+Fixed: Eyeheight of skeleton model
+Fixed: /copylvl,/renamelvl,/deletelvl consistently announce globally
+Fixed: /botai list showing wrong name when a . in a bot AI's name
+Fixed: /undo timespan not undoing some changes in rare cases
+Improved: Make help consistent with level/map
+Improved: /os map delete announces when level is deleted
+Improved: Rename /levels to /loaded and /worlds to /levels
+Fixed: Could manually set fallback for a custom block above 65
+
 v 1.9.1.8
 Fixed: Don't turn off 'auto unload' when setting main world
 Fixed: /copylvl not saving level to disc first. 
