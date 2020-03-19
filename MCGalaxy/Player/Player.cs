@@ -141,13 +141,13 @@ namespace MCGalaxy {
 
             // Player disconnected before SQL data was retrieved
             if (!gotSQLData) return;
-            long blocks = PlayerData.BlocksPacked(TotalPlaced, TotalModified);
-            long cuboided = PlayerData.CuboidPacked(TotalDeleted, TotalDrawn);
+            long blocks = PlayerData.Pack(TotalPlaced,  TotalModified);
+            long drawn  = PlayerData.Pack(TotalDeleted, TotalDrawn);
             Database.Backend.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
                                         "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8, Messages=@9", "WHERE Name=@10", 
                                         ip, LastLogin.ToString(Database.DateFormat),
                                         TimesVisited, TimesDied, money, blocks,
-                                        cuboided, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
+                                        drawn, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
         }
         
         public bool CanUse(Command cmd) { return group.Commands.Contains(cmd); }

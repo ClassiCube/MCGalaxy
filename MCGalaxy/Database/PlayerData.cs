@@ -122,12 +122,12 @@ namespace MCGalaxy.DB {
             data.Kicks    = record.GetInt(ColumnKicked);
             data.Messages = record.GetInt(ColumnMessages);
             
-            long blocks   = record.GetLong(ColumnTotalBlocks);
-            long cuboided = record.GetLong(ColumnTotalCuboided);
-            data.TotalModified = blocks & LowerBitsMask;
-            data.TotalPlaced   = blocks >> LowerBits;
-            data.TotalDrawn    = cuboided & LowerBitsMask;
-            data.TotalDeleted  = cuboided >> LowerBits;
+            long blocks = record.GetLong(ColumnTotalBlocks);
+            long drawn  = record.GetLong(ColumnTotalCuboided);
+            data.TotalModified = UnpackLo(blocks);
+            data.TotalPlaced   = UnpackHi(blocks);
+            data.TotalDrawn    = UnpackLo(drawn);
+            data.TotalDeleted  = UnpackHi(drawn);
             return data;
         }
         internal static object Read(IDataRecord record, object arg) { return Parse(record); }
@@ -166,12 +166,15 @@ namespace MCGalaxy.DB {
         }
         
         
-        internal static long BlocksPacked(long placed, long modified) {
-            return placed << LowerBits | modified;
+        internal static long UnpackHi(long value) {
+            // unsigned shift right
+            return (long)((ulong)value >> LowerBits);
         }
-        
-        internal static long CuboidPacked(long deleted, long drawn) {
-            return deleted << LowerBits | drawn;
+        internal static long UnpackLo(long value) {
+            return value & LowerBitsMask;
+        }
+        internal static long Pack(long hi, long lo) {
+            return hi << LowerBits | lo; 
         }
 
         public const int LowerBits = 38;
