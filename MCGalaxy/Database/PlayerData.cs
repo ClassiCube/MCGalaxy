@@ -41,9 +41,9 @@ namespace MCGalaxy.DB {
         public const string ColumnLastLogin  = "LastLogin";
         public const string ColumnTimeSpent  = "TimeSpent";
         
-        public const string ColumnTotalBlocks   = "totalBlocks";
-        public const string ColumnTotalCuboided = "totalCuboided";
-        public const string ColumnMessages      = "Messages";
+        public const string ColumnBlocks   = "totalBlocks";
+        public const string ColumnDrawn    = "totalCuboided";
+        public const string ColumnMessages = "Messages";
         
         public string Name, Color, Title, TitleColor, IP;
         public DateTime FirstLogin, LastLogin;
@@ -122,8 +122,8 @@ namespace MCGalaxy.DB {
             data.Kicks    = record.GetInt(ColumnKicked);
             data.Messages = record.GetInt(ColumnMessages);
             
-            long blocks = record.GetLong(ColumnTotalBlocks);
-            long drawn  = record.GetLong(ColumnTotalCuboided);
+            long blocks = record.GetLong(ColumnBlocks);
+            long drawn  = record.GetLong(ColumnDrawn);
             data.TotalModified = UnpackLo(blocks);
             data.TotalPlaced   = UnpackHi(blocks);
             data.TotalDrawn    = UnpackLo(drawn);
@@ -167,17 +167,18 @@ namespace MCGalaxy.DB {
         
         
         internal static long UnpackHi(long value) {
-            // unsigned shift right
-            return (long)((ulong)value >> LowerBits);
+            return (value >> HiBitsShift) & HiBitsMask;
         }
         internal static long UnpackLo(long value) {
-            return value & LowerBitsMask;
+            return value & LoBitsMask;
         }
         internal static long Pack(long hi, long lo) {
-            return hi << LowerBits | lo; 
+            return hi << HiBitsShift | lo; 
         }
 
-        public const int LowerBits = 38;
-        public const long LowerBitsMask = (1L << LowerBits) - 1;
+        public const int HiBitsShift = 38;
+        public const long LoBitsMask = (1L << HiBitsShift) - 1;
+        // convert negative to positive after shifting
+        public const long HiBitsMask = (1L << 26) - 1;
     }
 }
