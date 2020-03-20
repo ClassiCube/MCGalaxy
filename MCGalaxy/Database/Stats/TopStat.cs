@@ -75,6 +75,7 @@ namespace MCGalaxy.DB {
                         PlayerData.ColumnDrawn + " & " + PlayerData.LoBitsMask,
                         MostDrawn, FormatInteger),
             new TopStat("Placed", "Players",
+                        // TODO: Check if this works on MySQL too
                         PlayerData.ColumnBlocks + " >> " + PlayerData.HiBitsShift + " & " + PlayerData.HiBitsMask,
                         MostPlaced, FormatInteger),
             new TopStat("Deleted", "Players",
