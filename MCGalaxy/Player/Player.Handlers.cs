@@ -443,7 +443,7 @@ namespace MCGalaxy {
             if (ZSGame.Instance.HandlesChatMessage(this, text)) return;
             
             // Put this after vote collection so that people can vote even when chat is moderated
-            if (Server.chatmod && !voice) { Message("Chat moderation is on, you cannot speak."); return; }
+            if (Server.chatmod && !voice) { Message("Chat moderation is on, you cannot speak without %T/voice"); return; }
             
             // Filter out bad words
             if (Server.Config.ProfanityFiltering) text = ProfanityFilter.Parse(text);
