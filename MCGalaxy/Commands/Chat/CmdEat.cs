@@ -22,7 +22,6 @@ using MCGalaxy.Util;
 namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdEat : MessageCmd {
         public override string name { get { return "Eat"; } }
-        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) {
             if (DateTime.UtcNow < p.NextEat) {
