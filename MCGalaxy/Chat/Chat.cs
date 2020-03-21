@@ -148,7 +148,7 @@ namespace MCGalaxy {
         
         public static void MessageFrom(Player source, string msg,
                                        ChatMessageFilter filter = null, bool irc = false) {
-            if (source.level.SeesServerWideChat) {
+            if (source.level == null || source.level.SeesServerWideChat) {
                 MessageFrom(ChatScope.Global, source, msg, null, filter, irc);
             } else {
                 string prefix = Server.Config.ServerWideChat ? "<Local>" : "";
