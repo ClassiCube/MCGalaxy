@@ -104,6 +104,11 @@ namespace MCGalaxy.Commands.World {
             
             lock (lvl.saveLock) {
                 lvl.Backup(true);
+                
+                // Make sure zones are kept
+                res.Zones = lvl.Zones;
+                lvl.Zones = new VolatileArray<Zone>(false);
+            
                 IMapExporter.Formats[0].Write(LevelInfo.MapPath(lvl.name), res);
                 lvl.SaveChanges = false;
             }
