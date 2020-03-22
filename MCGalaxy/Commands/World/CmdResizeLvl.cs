@@ -60,7 +60,6 @@ namespace MCGalaxy.Commands.World {
             }
             
             Level resized = ResizeLevel(lvl, x, y, z);
-            if (resized == null) { p.Message("%WError resizing map."); return false; }
             LevelActions.Replace(lvl, resized);
             return true;
         }
@@ -99,6 +98,7 @@ namespace MCGalaxy.Commands.World {
                 Buffer.BlockCopy(src, 0, dst, 0, 16 * 16 * 16);
             }
             
+            // TODO: This copying is really ugly and probably not 100% right
             res.spawnx = lvl.spawnx; res.spawny = lvl.spawny; res.spawnz = lvl.spawnz;
             res.rotx = lvl.rotx; res.roty = lvl.roty;
             
