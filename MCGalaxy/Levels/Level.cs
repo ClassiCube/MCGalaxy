@@ -180,11 +180,6 @@ namespace MCGalaxy {
             }
         }
 
-        /// <summary> Returns whether the given coordinates are insides the boundaries of this level. </summary>
-        public bool InBound(ushort x, ushort y, ushort z) {
-            return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
-        }
-
         public void SaveSettings() { if (!IsMuseum) Config.SaveFor(MapName); }
 
         // Returns true if ListCheck does not already have an check in the position.
