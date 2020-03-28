@@ -38,9 +38,12 @@ namespace MCGalaxy.Scripting {
         public abstract string Ext { get; }
         public abstract string ProviderName { get; }
         public abstract string CommandSkeleton { get; }
-        protected abstract void PrepareArgs(CompilerParameters args);
         
+        /// <summary> Adds language-specific default arguments to list of arguments. </summary>
+        protected abstract void PrepareArgs(CompilerParameters args);
+        /// <summary> C# compiler instance. </summary>
         public static IScripting CS = new ScriptingCS();
+        /// <summary> Visual Basic compiler instance. </summary>
         public static IScripting VB = new ScriptingVB();
         
         public IScripting() {
@@ -65,7 +68,7 @@ namespace MCGalaxy.Scripting {
             syntax = syntax.Replace(@"\t", "\t");
             syntax = syntax.Replace("\r\n", "\n");
             syntax = syntax.Replace("\n", Environment.NewLine);
-            syntax = string.Format(syntax, cmdName.Capitalize(), cmdName);
+            syntax = string.Format(syntax, cmdName.Capitalize());
             
             using (StreamWriter sw = new StreamWriter(path)) {
                 sw.WriteLine(syntax);
@@ -73,6 +76,8 @@ namespace MCGalaxy.Scripting {
         }
 
         const int maxLog = 2;
+        /// <summary> Attempts to compile source code from the given file. </summary>
+        /// <remarks> Logs errors to player (summarised) and to IScripting.ErrorPath. </remarks>
         public bool Compile(string srcPath, string dstPath, Player p) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
@@ -117,7 +122,7 @@ namespace MCGalaxy.Scripting {
             return false;
         }
         
-        List<string> ReadSource(string path, CompilerParameters args) {
+        static List<string> ReadSource(string path, CompilerParameters args) {
             List<string> lines = Utils.ReadAllLinesList(path);
             // Allow referencing other assemblies using 'Reference [assembly name]' at top of the file
             for (int i = 0; i < lines.Count; i++) {
@@ -131,6 +136,7 @@ namespace MCGalaxy.Scripting {
             return lines;
         }
         
+        /// <summary> Compiles the given source code. </summary>
         public CompilerResults CompileSource(string source, CompilerParameters args) {
             args.ReferencedAssemblies.Add("MCGalaxy_.dll");
             PrepareArgs(args);
@@ -154,6 +160,7 @@ namespace MCGalaxy.Scripting {
             }
         }
         
+        /// <summary> Loads and registers all the commands in the given dll. </summary>
         public static string Load(string path) {
             try {
                 byte[] data = File.ReadAllBytes(path);
@@ -170,8 +177,6 @@ namespace MCGalaxy.Scripting {
                     return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
                 } else if (ex is BadImageFormatException) {
                     return file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
-                } else if (ex is PathTooLongException) {
-                    return "Class name is too long.";
                 } else if (ex is FileLoadException) {
                     return file + " or one of its dependencies could not be loaded. Details in the error log.";
                 }
@@ -180,6 +185,8 @@ namespace MCGalaxy.Scripting {
             return null;
         }
         
+        /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
+        /// <returns> The list of constructed instances. </returns>
         public static List<T> LoadTypes<T>(Assembly lib) {
             List<T> instances = new List<T>();
             

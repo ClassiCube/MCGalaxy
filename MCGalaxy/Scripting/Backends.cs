@@ -47,7 +47,7 @@ namespace MCGalaxy
 \tpublic class Cmd{0} : Command
 \t{{
 \t\t// The command's name (what you put after a slash to use this command)
-\t\tpublic override string name {{ get {{ return ""{1}""; }} }}
+\t\tpublic override string name {{ get {{ return ""{0}""; }} }}
 
 \t\t// Command's shortcut (please take care not to use an existing one, or you may have issues.)
 \t\tpublic override string shortcut {{ get {{ return """"; }} }}
@@ -73,7 +73,7 @@ namespace MCGalaxy
 \t\t// This one controls what happens when you use /Help [commandname].
 \t\tpublic override void Help(Player p)
 \t\t{{
-\t\t\tp.Message(""/{1} - Does stuff. Example command."");
+\t\t\tp.Message(""/{0} - Does stuff. Example command."");
 \t\t}}
 \t}}
 }}";
@@ -107,7 +107,7 @@ Namespace MCGalaxy
 ' The command's name (what you put after a slash to use this command)
 \t\tPublic Overrides ReadOnly Property name() As String
 \t\t\tGet
-\t\t\t\tReturn ""{1}""
+\t\t\t\tReturn ""{0}""
 \t\t\tEnd Get
 \t\tEnd Property
 
@@ -149,7 +149,7 @@ Namespace MCGalaxy
 
 ' This one controls what happens when you use /Help [commandname].
 \t\tPublic Overrides Sub Help(p As Player)
-\t\t\tp.Message(""/{1} - Does stuff. Example command."")
+\t\t\tp.Message(""/{0} - Does stuff. Example command."")
 
 \t\tEnd Sub
 \tEnd Class
