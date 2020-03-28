@@ -83,7 +83,8 @@ namespace MCGalaxy.Scripting {
             args.GenerateExecutable = false;
             args.OutputAssembly = dstPath;
             
-            List<string> source = ReadSource(srcPath, args);
+            int offset = 0;
+            List<string> source = ReadSource(srcPath, args, ref offset);
             CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
             if (!results.Errors.HasErrors) return true;
             
@@ -95,7 +96,7 @@ namespace MCGalaxy.Scripting {
             
             foreach (CompilerError err in results.Errors) {
                 string type = err.IsWarning ? "Warning" : "Error";                
-                sb.AppendLine(type + " on line " + err.Line + ":");
+                sb.AppendLine(type + " on line " + (err.Line + offset) + ":");
                 
                 if (err.Line > 0) sb.AppendLine(source[err.Line - 1]);
                 if (err.Column > 0) sb.Append(' ', err.Column - 1);
@@ -109,7 +110,7 @@ namespace MCGalaxy.Scripting {
             int logged = 0;
             foreach (CompilerError err in results.Errors) {
                 string type = err.IsWarning ? "Warning" : "Error";
-                p.Message("%W{0} #{1} on line {2} - {3}", type, err.ErrorNumber, err.Line, err.ErrorText);
+                p.Message("%W{0} #{1} on line {2} - {3}", type, err.ErrorNumber, err.Line + offset, err.ErrorText);
                 
                 logged++;
                 if (logged >= maxLog) break;
@@ -122,7 +123,7 @@ namespace MCGalaxy.Scripting {
             return false;
         }
         
-        static List<string> ReadSource(string path, CompilerParameters args) {
+        static List<string> ReadSource(string path, CompilerParameters args, ref int offset) {
             List<string> lines = Utils.ReadAllLinesList(path);
             // Allow referencing other assemblies using 'Reference [assembly name]' at top of the file
             for (int i = 0; i < lines.Count; i++) {
@@ -131,7 +132,8 @@ namespace MCGalaxy.Scripting {
                 int index = lines[i].IndexOf(' ') + 1;
                 string assem = lines[i].Substring(index);
                 args.ReferencedAssemblies.Add(assem);
-                lines.RemoveAt(i); i--;
+                lines.RemoveAt(i);
+                offset++; i--;
             }
             return lines;
         }
