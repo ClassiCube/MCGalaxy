@@ -87,14 +87,8 @@ namespace MCGalaxy {
                     CommandExtraPerms.Set(cmd.name, i + 1, extra[i].Description, 
                                           extra[i].Perm, null, null);
                 }
-            }
-            
-            CommandAlias[] aliases = cmd.Aliases;
-            if (aliases == null) return;
-            foreach (CommandAlias a in aliases) {
-                Alias alias = new Alias(a.Trigger, cmd.name, a.Format);
-                Alias.coreAliases.Add(alias);
-            }
+            }           
+            Alias.RegisterDefaults(cmd);
         }
         
         public static Command Find(string name) {
@@ -109,6 +103,8 @@ namespace MCGalaxy {
             foreach (Group grp in Group.GroupList) {
                 grp.Commands.Remove(cmd);
             }
+            
+            Alias.UnregisterDefaults(cmd);
             return removed;
         }
         
@@ -148,7 +144,7 @@ namespace MCGalaxy {
     }
     
     // Clunky design, but needed to stay backwards compatible with custom commands
-    public abstract class Command2 : Command {       
+    public abstract class Command2 : Command {
         public override void Use(Player p, string message) {
             if (p == null) p = Player.Console;
             Use(p, message, p.DefaultCmdData);

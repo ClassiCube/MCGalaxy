@@ -85,5 +85,21 @@ namespace MCGalaxy.Commands {
             }
             return null;
         }
+        
+        /// <summary> Registers default aliases specified by a command. </summary>
+        internal static void RegisterDefaults(Command cmd) {
+            CommandAlias[] aliases = cmd.Aliases;
+            if (aliases == null) return;
+            
+            foreach (CommandAlias a in aliases) {
+                Alias alias = new Alias(a.Trigger, cmd.name, a.Format);
+                coreAliases.Add(alias);
+            }
+        }
+        
+        internal static void UnregisterDefaults(Command cmd) {
+            if (cmd.Aliases == null) return;
+            coreAliases.RemoveAll(a => a.Target == cmd.name);
+        }
     }
 }
