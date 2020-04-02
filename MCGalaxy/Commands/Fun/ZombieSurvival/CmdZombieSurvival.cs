@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("%T/ZS set hitbox [distance]");
                 p.Message("%HSets furthest apart players can be before they are considered touching.");
                 p.Message("%T/ZS set maxmove [distance]");
-                p.Message("%HSets largest distance players can move in a tick" +
+                p.Message("%HSets largest distance players can move in a tick " +
                                "before they are considered speedhacking.");
             } else if (message.CaselessEq("map")) {
                 p.Message("%T/ZS set map %H-Views map settings");
