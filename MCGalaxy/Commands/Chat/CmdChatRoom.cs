@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
-                if (pl.Chatroom.CaselessEq(room)) {
+                if (pl.Chatroom != null && pl.Chatroom.CaselessEq(room)) {
                     pl.Chatroom = null;
                     pl.Message("You left the chatroom '{0}' because it is being deleted", room);
                 }
@@ -142,7 +142,7 @@ namespace MCGalaxy.Commands.Chatting {
                 p.Message("There is no chatroom named '{0}'", room); return;
             }
             
-            if (p.Chatroom.CaselessEq(room)) {
+            if (p.Chatroom != null && p.Chatroom.CaselessEq(room)) {
                 p.Message("You cannot spy on your own room");
             } else  if (p.spyChatRooms.CaselessContains(room)) {
                 p.Message("'{0}' is already in your spying list.", room);
