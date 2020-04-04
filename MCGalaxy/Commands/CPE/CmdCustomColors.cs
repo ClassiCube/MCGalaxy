@@ -133,7 +133,7 @@ namespace MCGalaxy.Commands.CPE {
         
         static bool CheckName(Player p, string arg) {
             if (Colors.Parse(arg).Length > 0) {
-                p.Message("There is already an existing color with the name \"{0}\".", arg);
+                p.Message("There is already an existing color named \"{0}\".", arg);
                 return false;
             }
             return true;

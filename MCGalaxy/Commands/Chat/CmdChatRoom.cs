@@ -112,12 +112,9 @@ namespace MCGalaxy.Commands.Chatting {
             if (!Check(p, parts, data, "chatroom to delete")) return;
 
             string room = parts[1];
-            if (!Chatrooms.CaselessContains(room)) {
+            if (!Chatrooms.CaselessRemove(room)) {
                 p.Message("There is no chatroom named '{0}'", room); return;
             }
-            
-            Chat.MessageGlobal("{0} is being deleted", room);
-            Chatrooms.CaselessRemove(room);
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
@@ -143,12 +140,12 @@ namespace MCGalaxy.Commands.Chatting {
             }
             
             if (p.Chatroom != null && p.Chatroom.CaselessEq(room)) {
-                p.Message("You cannot spy on your own room");
+                p.Message("You cannot spy on your own chatroom");
             } else  if (p.spyChatRooms.CaselessContains(room)) {
-                p.Message("'{0}' is already in your spying list.", room);
+                p.Message("You are already spying on chatroom '{0}'", room);
             } else {
                 p.spyChatRooms.Add(room);
-                p.Message("'{0}' has been added to your chat room spying list", room);
+                p.Message("You are now spying on chatroom '{0}'", room);
             }
         }
         
@@ -163,7 +160,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (pl == null) return;
             
             if (!Chatrooms.CaselessContains(room)) {
-                p.Message("There is no chatroom with the name '{0}'", room); return;
+                p.Message("There is no chatroom named '{0}'", room); return;
             }
             if (!CheckRank(p, data, pl, "force-join", false)) return;
             
