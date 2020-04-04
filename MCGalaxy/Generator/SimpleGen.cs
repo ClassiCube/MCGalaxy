@@ -158,10 +158,10 @@ namespace MCGalaxy.Generator {
         }
         
         unsafe static void MapSet(int width, int length, byte* ptr,
-                                  int yStart, int yEnd, byte block) {
-            int start = (yStart * length) * width;
+                                  int yBeg, int yEnd, byte block) {
+            int beg = (yBeg * length) * width;
             int end = (yEnd * length + (length - 1)) * width + (width - 1);
-            Utils.memset((IntPtr)ptr, block, start, end - start + 1);
+            Utils.memset((IntPtr)ptr, block, beg, end - beg + 1);
         }
         
         static void Cuboid(Level lvl, int minX, int minY, int minZ,

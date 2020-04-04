@@ -22,12 +22,15 @@ namespace MCGalaxy.Generator {
     public delegate bool MapGenFunc(Player p, Level lvl, string seed);
     public enum GenType { Simple, fCraft, Advanced };
     
-    /// <summary> Maintains a list of map generator instances. </summary>
+    /// <summary> Map generators initialise the blocks in a level. </summary>
+    /// <remarks> e.g. flatgrass generator, mountains theme generator, etc </remarks>
     public sealed class MapGen {
         public string Theme, Desc;
         public GenType Type;
         public MapGenFunc GenFunc;
         
+        /// <summary> Applies this map generator to the given level. </summary>
+        /// <returns> Whether generation was actually successful. </returns>
         public bool Generate(Player p, Level lvl, string seed) {
             lvl.Config.Theme = Theme;
             lvl.Config.Seed  = seed;
@@ -35,11 +38,13 @@ namespace MCGalaxy.Generator {
         }
         
         
+        /// <summary> Creates an RNG initialised with the given seed. </summary>
         public static Random MakeRng(string seed) {
             if (seed.Length == 0) return new Random();
             return new Random(MakeInt(seed));
         }
         
+        /// <summary> Generates an integer seed based on the given seed. </summary>
         public static int MakeInt(string seed) {
             if (seed.Length == 0) return new Random().Next();
             
@@ -66,6 +71,7 @@ namespace MCGalaxy.Generator {
             p.Message("%HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
         
+        /// <summary> Adds a new map generator to the list of generators. </summary>
         public static void Register(string theme, GenType type, MapGenFunc func, string desc) {
             MapGen gen = new MapGen() { Theme = theme, GenFunc = func, Desc = desc, Type = type };
             Generators.Add(gen);
