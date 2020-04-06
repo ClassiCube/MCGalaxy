@@ -430,6 +430,9 @@ namespace MCGalaxy {
             } else if (DoCommand(text)) {
                 return;
             }
+            
+            // Require admins to verify their password before chatting
+            if (Server.Config.verifyadmins && adminpen) { Message("%WYou must verify first with %T/Pass [Password]"); return; }
 
             // People who are muted can't speak or vote
             if (muted) { Message("You are muted."); return; } //Muted: Only allow commands
