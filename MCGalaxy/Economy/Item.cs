@@ -70,7 +70,7 @@ namespace MCGalaxy.Eco {
         
         protected void UseCommand(Player p, string cmd, string args) {
             CommandData data = default(CommandData);
-            data.Rank = LevelPermission.Nobody;
+            data.Rank    = LevelPermission.Nobody;
             data.Context = CommandContext.Purchase;
             Command.Find(cmd).Use(p, args, data);
         }

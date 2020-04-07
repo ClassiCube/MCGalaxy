@@ -130,7 +130,7 @@ namespace MCGalaxy.Eco {
             preset.name = args[2];
             
             ushort x = 0, y = 0, z = 0;
-            if (!CmdNewLvl.GetDimensions(p, args, 3, ref x, ref y, ref z)) return;
+            if (!MapGen.GetDimensions(p, args, 3, ref x, ref y, ref z)) return;
             preset.x = args[3]; preset.y = args[4]; preset.z = args[5];
             
             if (MapGen.Find(args[6]) == null) {
@@ -166,7 +166,7 @@ namespace MCGalaxy.Eco {
                 if (args[3] == "z") dims[2] = args[4];
                 
                 ushort x = 0, y = 0, z = 0;
-                if (!CmdNewLvl.GetDimensions(p, dims, 0, ref x, ref y, ref z)) return;
+                if (!MapGen.GetDimensions(p, dims, 0, ref x, ref y, ref z)) return;
                 preset.x = dims[0]; preset.y = dims[1]; preset.z = dims[2];
                 
                 p.Message("&aSuccessfully changed preset {0} size to &f{1}", args[3], args[4]);

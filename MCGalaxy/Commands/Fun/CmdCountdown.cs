@@ -20,6 +20,7 @@
 using System;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Games;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.Fun {
     
@@ -61,7 +62,7 @@ namespace MCGalaxy.Commands.Fun {
             }
             
             ushort x = 0, y = 0, z = 0;
-            if (!CmdNewLvl.GetDimensions(p, args, 1, ref x, ref y, ref z)) return;
+            if (!MapGen.GetDimensions(p, args, 1, ref x, ref y, ref z)) return;
             
             CountdownGame game = (CountdownGame)game_;
             game.GenerateMap(p, x, y, z);

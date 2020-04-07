@@ -17,6 +17,8 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Generator {    
     public delegate bool MapGenFunc(Player p, Level lvl, string seed);
@@ -83,6 +85,62 @@ namespace MCGalaxy.Generator {
             AdvNoiseGen.RegisterGenerators();
             Register("Heightmap", GenType.Advanced, HeightmapGen.Generate,
                      "%HSeed specifies the URL of the heightmap image");
+        }        
+        
+        
+        public static Level Generate(Player p, MapGen gen, string name, 
+                                     ushort x, ushort y, ushort z, string seed) {
+            name = name.ToLower();
+            if (!Formatter.ValidMapName(p, name)) return null;
+            if (LevelInfo.MapExists(name)) {
+                p.Message("%WLevel \"{0}\" already exists", name); return null;
+            }
+
+            if (Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
+                p.Message("You are already generating a map, please wait until that map has finished generating first.");
+                return null;
+            }
+            
+            Level lvl;
+            try {
+                p.Message("Generating map \"{0}\"..", name);
+                lvl = new Level(name, x, y, z);
+                if (!gen.Generate(p, lvl, seed)) { lvl.Dispose(); return null; }
+
+                string format = seed.Length > 0 ? "{0}%S created level {1}%S with seed \"{2}\"" : "{0}%S created level {1}";
+                string msg = string.Format(format, p.ColoredName, lvl.ColoredName, seed);
+                Chat.MessageGlobal(msg);
+            } finally {
+                Interlocked.Exchange(ref p.GeneratingMap, 0);
+                Server.DoGC();
+            }
+            return lvl;
+        }
+        
+        public static bool GetDimensions(Player p, string[] args, int i, 
+                                         ref ushort x, ref ushort y, ref ushort z) {
+            return 
+                CheckMapAxis(p, args[i    ], "Width",  ref x) &&
+                CheckMapAxis(p, args[i + 1], "Height", ref y) &&
+                CheckMapAxis(p, args[i + 2], "Length", ref z) &&
+                CheckMapVolume(p, x, y, z);
+        }
+        
+        static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
+            return CommandParser.GetUShort(p, input, type, ref len, 1, 16384);
+        }
+        
+         static bool CheckMapVolume(Player p, int x, int y, int z) {
+            if (p.IsConsole) return true;
+            int limit = p.group.GenVolume;
+            if ((long)x * y * z <= limit) return true;
+            
+            string text = "%WYou cannot create a map with over ";
+            if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
+            else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
+            else text += limit + " blocks";
+            p.Message(text);
+            return false;
         }
     }
 }

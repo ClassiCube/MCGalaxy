@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.World {
             if (!LevelInfo.Check(p, data.Rank, lvl, "resize this level")) return false;
             
             ushort x = 0, y = 0, z = 0;
-            if (!CmdNewLvl.GetDimensions(p, args, 1, ref x, ref y, ref z)) return false;
+            if (!MapGen.GetDimensions(p, args, 1, ref x, ref y, ref z)) return false;
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
             if (!confirmed && (x < lvl.Width || y < lvl.Height || z < lvl.Length)) {
