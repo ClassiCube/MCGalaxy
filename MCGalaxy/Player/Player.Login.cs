@@ -107,7 +107,6 @@ namespace MCGalaxy {
             SetPrefix();
             LoadCpeData();
             
-            if (Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank) Unverified = true;
             if (Server.noEmotes.Contains(name)) { parseEmotes = !Server.Config.ParseEmotes; }
 
             hideRank = Rank;
@@ -132,13 +131,8 @@ namespace MCGalaxy {
                 Message("&9You must read the &c/Rules &9and &c/Agree &9to them before you can build and use commands!");
                 agreed = false;
             }
-
-            if (Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank) {
-                if (!Directory.Exists("extra/passwords") || !File.Exists("extra/passwords/" + name + ".dat"))
-                    Message("%WPlease set your admin verification password with %T/SetPass [password]!");
-                else
-                    Message("%WPlease complete admin verification with %T/Pass [password]!");
-            }
+            
+            CheckIsUnverified();
             
             if (CanUse("Inbox") && Database.TableExists("Inbox" + name)) {
                 int count = Database.CountRows("Inbox" + name);

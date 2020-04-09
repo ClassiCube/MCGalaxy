@@ -63,7 +63,8 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (CheckHash(p.name, password)) {
                 p.Message("You are now &averified %Sand have &aaccess to admin commands and features.");
-                p.Unverified = false;
+                p.verifiedPass = true;
+                p.Unverified   = false;
             } else {
                 p.passtries++;
                 p.Message("%WWrong Password. %SRemember your password is %Wcase sensitive.");

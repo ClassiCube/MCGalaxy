@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -319,6 +320,18 @@ namespace MCGalaxy {
         public void BlockUntilLoad(int sleep) {
             while (Loading) 
                 Thread.Sleep(sleep);
+        }
+        
+        public void CheckIsUnverified() {
+            if (verifiedPass) return;
+            Unverified = Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank;
+            if (!Unverified) return;
+            
+            if (!File.Exists("extra/passwords/" + name + ".dat")) {
+                Message("%WPlease set your admin verification password with %T/SetPass [password]!");
+            } else {
+                Message("%WPlease complete admin verification with %T/Pass [password]!");
+            }
         }
         
         /// <summary> Sends a block change packet to the user containing the current block at the given coordinates. </summary>

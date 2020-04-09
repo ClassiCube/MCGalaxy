@@ -95,6 +95,8 @@ namespace MCGalaxy.Commands.Moderation {
             who.SendCurrentBlockPermissions();
             Entities.SpawnEntities(who, false);
             CheckBlockBindings(who);
+            
+            who.CheckIsUnverified();
         }
         
         /// <summary> Changes the rank of the given player from the old to the new rank. </summary>
