@@ -61,7 +61,7 @@ namespace MCGalaxy {
             if (level.IsMuseum && Blockchange == null) return;
             bool deletingBlock = !painting && !placing;
 
-            if (Server.Config.verifyadmins && adminpen) {
+            if (Unverified) {
                 Message("%WYou must first verify with %T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
@@ -612,7 +612,7 @@ namespace MCGalaxy {
             if (jailed) {
                 Message("You cannot use any commands while jailed."); return false;
             }
-            if (Server.Config.verifyadmins && adminpen && !(cmd == "pass" || cmd == "setpass")) {
+            if (Unverified && !(cmd == "pass" || cmd == "setpass")) {
                 Message("%WYou must verify first with %T/Pass [Password]"); return false;
             }
             

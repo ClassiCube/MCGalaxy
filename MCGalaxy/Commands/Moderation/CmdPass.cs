@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void VerifyPassword(Player p, string password) {
-            if (!p.adminpen) { p.Message("%WYou are already verified."); return; }
+            if (!p.Unverified) { p.Message("%WYou are already verified."); return; }
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
 
             if (password.IndexOf(' ') >= 0) { p.Message("Your password must be %Wone %Sword!"); return; }
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (CheckHash(p.name, password)) {
                 p.Message("You are now &averified %Sand have &aaccess to admin commands and features.");
-                p.adminpen = false;
+                p.Unverified = false;
             } else {
                 p.passtries++;
                 p.Message("%WWrong Password. %SRemember your password is %Wcase sensitive.");
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void SetPassword(Player p, string password) {
             string path = HashPath(p.name);
-            if (p.adminpen && File.Exists(path)) {
+            if (p.Unverified && File.Exists(path)) {
                 p.Message("%WYou must first verify with %T/pass [Password] %Wbefore you can change your password.");
                 p.Message("Forgot your password? Contact %W{0} %Sto %Wreset it.", Server.Config.OwnerName);
                 return;
@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player who = PlayerInfo.FindMatches(p, target);
             if (who == null) return;
             
-            if (!p.IsConsole && p.adminpen) {
+            if (!p.IsConsole && p.Unverified) {
                 p.Message("%WYou must first verify with %T/Pass [Password]"); return;
             }
             if (!p.IsConsole && !Server.Config.OwnerName.CaselessEq(p.name))  {

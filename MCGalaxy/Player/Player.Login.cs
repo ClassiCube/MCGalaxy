@@ -107,7 +107,7 @@ namespace MCGalaxy {
             SetPrefix();
             LoadCpeData();
             
-            if (Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank) adminpen = true;
+            if (Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank) Unverified = true;
             if (Server.noEmotes.Contains(name)) { parseEmotes = !Server.Config.ParseEmotes; }
 
             hideRank = Rank;

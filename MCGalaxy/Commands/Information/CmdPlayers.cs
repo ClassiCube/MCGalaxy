@@ -84,6 +84,7 @@ namespace MCGalaxy.Commands.Info {
             if (pl.frozen)       data.Append("-frozen");
             if (pl.Game.Referee) data.Append("-ref");
             if (pl.IsAfk)        data.Append("-afk");
+            if (pl.Unverified)   data.Append("-unverified");
             
             string lvlName = Colors.Strip(pl.level.name); // for museums
             data.Append(" (").Append(lvlName).Append("),");

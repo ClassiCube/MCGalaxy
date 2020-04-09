@@ -129,7 +129,7 @@ namespace MCGalaxy {
         public bool isFlying;
 
         public bool joker;
-        public bool adminpen;
+        public bool Unverified;
         public bool voice;
         
         public CommandData DefaultCmdData {
