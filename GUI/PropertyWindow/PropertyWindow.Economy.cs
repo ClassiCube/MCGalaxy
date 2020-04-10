@@ -186,8 +186,12 @@ namespace MCGalaxy.Gui {
         
         void eco_dgvRanks_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex == -1) return;
-            object name = eco_dgvRanks.Rows[e.RowIndex].Cells[0].Value;
+            object name  = eco_dgvRanks.Rows[e.RowIndex].Cells[0].Value;
             object price = eco_dgvRanks.Rows[e.RowIndex].Cells[1].Value;
+            
+            // On Mono this event is raised during initialising cells too
+            // However, first time event is raised, price is not initialised yet
+            if (price == null) return;
             
             Group grp = Group.Find(name.ToString());
             if (grp == null) return; // TODO: does this ever happen?
