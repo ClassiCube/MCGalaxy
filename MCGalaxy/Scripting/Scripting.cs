@@ -75,18 +75,23 @@ namespace MCGalaxy.Scripting {
             }
         }
 
-        const int maxLog = 2;
         /// <summary> Attempts to compile source code from the given file. </summary>
         /// <remarks> Logs errors to player (summarised) and to IScripting.ErrorPath. </remarks>
         public bool Compile(string srcPath, string dstPath, Player p) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
-            args.OutputAssembly = dstPath;
-            
+            args.OutputAssembly     = dstPath;
+            return !Compile(srcPath, args, p).Errors.HasErrors;
+        }
+
+        const int maxLog = 2;
+        /// <summary> Attempts to compile source code from the given file. </summary>
+        /// <remarks> Logs errors to player (summarised) and to IScripting.ErrorPath. </remarks>        
+        public CompilerResults Compile(string srcPath, CompilerParameters args, Player p) {
             int offset = 0;
             List<string> source = ReadSource(srcPath, args, ref offset);
             CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
-            if (!results.Errors.HasErrors) return true;
+            if (!results.Errors.HasErrors) return results;
             
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("############################################################");
@@ -120,7 +125,7 @@ namespace MCGalaxy.Scripting {
             using (StreamWriter w = new StreamWriter(ErrorPath, true)) {
                 w.Write(sb.ToString());
             }
-            return false;
+            return results;
         }
         
         static List<string> ReadSource(string path, CompilerParameters args, ref int offset) {

@@ -113,22 +113,22 @@ namespace MCGalaxy.Gui {
         void btnDiscard_Click(object sender, EventArgs e) { Dispose(); }
 
         void GetHelp(string toHelp) {
-            ConsoleHelpPlayer player = new ConsoleHelpPlayer();
-            Command.Find("Help").Use(player, toHelp);
-            Popup.Message(Colors.Strip(player.HelpOutput), "Help for /" + toHelp);
+            ConsoleHelpPlayer p = new ConsoleHelpPlayer();
+            Command.Find("Help").Use(p, toHelp);
+            Popup.Message(Colors.Strip(p.Messages), "Help for /" + toHelp);
         }
-        
-        sealed class ConsoleHelpPlayer : Player {
-            public string HelpOutput = "";
+    }
+	
+	sealed class ConsoleHelpPlayer : Player {
+        public string Messages = "";
             
-            public ConsoleHelpPlayer() : base("(console)") {
-                group = Group.NobodyRank;
-                SuperName = "Console";
-            }
+        public ConsoleHelpPlayer() : base("(console)") {
+            group = Group.NobodyRank;
+            SuperName = "Console";
+        }
             
-            public override void Message(byte id, string message) {
-                HelpOutput += message + "\r\n";
-            }
+        public override void Message(byte id, string message) {
+            Messages += message + "\r\n";
         }
     }
 }

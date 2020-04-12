@@ -13,12 +13,11 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Gui.Popups {
@@ -66,25 +65,21 @@ namespace MCGalaxy.Gui.Popups {
             }
             
             if (fileName.CaselessEnds(".dll")) {
-                byte[] data = File.ReadAllBytes(fileName);
+                byte[] data  = File.ReadAllBytes(fileName);
                 Assembly lib = Assembly.Load(data);
                 commands = IScripting.LoadTypes<Command>(lib);
             } else {
                 IScripting engine = fileName.CaselessEnds(".cs") ? IScripting.CS : IScripting.VB;
                 if (!File.Exists(fileName)) return;
+                ConsoleHelpPlayer p = new ConsoleHelpPlayer();
                 
                 CompilerParameters args = new CompilerParameters();
-                args.GenerateInMemory = true;
-                CompilerResults result = engine.CompileSource(File.ReadAllText(fileName), args);
+                args.GenerateInMemory   = true;
+                CompilerResults result  = engine.Compile(fileName, args, p);
 
                 if (result.Errors.HasErrors) {
-                    foreach (CompilerError err in result.Errors) {
-                        Logger.Log(LogType.Warning, "Error #" + err.ErrorNumber);
-                        Logger.Log(LogType.Warning, "Message: " + err.ErrorText);
-                        Logger.Log(LogType.Warning, "Line: " + err.Line);
-                        Logger.Log(LogType.Warning, "=================================");
-                    }
-                    Popup.Error("Error compiling from source. Check logs for more details.");
+                    string body = "\r\n\r\n" + Colors.Strip(p.Messages);
+                    Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
                     return;
                 }
                 commands = IScripting.LoadTypes<Command>(result.CompiledAssembly);
