@@ -96,15 +96,13 @@ namespace MCGalaxy.Eco {
             
             ushort x = 0, y = 0, z = 0;
             string[] xyz = { preset.x, preset.y, preset.z };
-            if (!MapGen.GetDimensions(p, xyz, 0, ref x, ref y, ref z)) return;
+            if (!MapGen.GetDimensions(p, xyz, 0, ref x, ref y, ref z, false)) return;
             
             MapGen gen = MapGen.Find(preset.type);
             Level lvl  = MapGen.Generate(p, gen, name, x, y, z, "");
             if (lvl == null) return;
             
-            CmdOverseer.SetPerms(p, lvl);
-            lvl.SaveSettings();
-            
+            MapGen.SetRealmPerms(p, lvl);           
             try {
                 lvl.Save(true);
             } finally {

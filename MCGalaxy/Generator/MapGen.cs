@@ -118,21 +118,21 @@ namespace MCGalaxy.Generator {
             }
             return lvl;
         }
-        
+
         public static bool GetDimensions(Player p, string[] args, int i, 
-                                         ref ushort x, ref ushort y, ref ushort z) {
+                                         ref ushort x, ref ushort y, ref ushort z, bool checkVolume = true) {
             return 
                 CheckMapAxis(p, args[i    ], "Width",  ref x) &&
                 CheckMapAxis(p, args[i + 1], "Height", ref y) &&
                 CheckMapAxis(p, args[i + 2], "Length", ref z) &&
-                CheckMapVolume(p, x, y, z);
+            	(!checkVolume || CheckMapVolume(p, x, y, z));
         }
         
         static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {
             return CommandParser.GetUShort(p, input, type, ref len, 1, 16384);
         }
         
-         static bool CheckMapVolume(Player p, int x, int y, int z) {
+        static bool CheckMapVolume(Player p, int x, int y, int z) {
             if (p.IsConsole) return true;
             int limit = p.group.GenVolume;
             if ((long)x * y * z <= limit) return true;
@@ -143,6 +143,19 @@ namespace MCGalaxy.Generator {
             else text += limit + " blocks";
             p.Message(text);
             return false;
+        }        
+                
+        /// <summary> Sets default permissions for a newly generated realm map. </summary>
+        internal static void SetRealmPerms(Player p, Level lvl) {
+            lvl.Config.RealmOwner = p.name;
+            const LevelPermission rank = LevelPermission.Nobody;
+            lvl.BuildAccess.Whitelist(Player.Console, rank, lvl, p.name);
+            lvl.VisitAccess.Whitelist(Player.Console, rank, lvl, p.name);
+
+            Group grp = Group.Find(Server.Config.OSPerbuildDefault);
+            if (grp == null) return;
+            
+            lvl.BuildAccess.SetMin(Player.Console, rank, lvl, grp);
         }
     }
 }

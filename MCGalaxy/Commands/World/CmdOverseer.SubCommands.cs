@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.Moderation;
+using MCGalaxy.Generator;
 
 namespace MCGalaxy.Commands.World {
     public sealed partial class CmdOverseer : Command2 {
@@ -159,7 +160,7 @@ namespace MCGalaxy.Commands.World {
             Level lvl = newLvl.GenerateMap(p, args, p.DefaultCmdData);
             if (lvl == null) return;
             
-            SetPerms(p, lvl);
+            MapGen.SetRealmPerms(p, lvl);
             p.Message("Use %T/os zone add [name] %Sto allow other players to build in the map.");
             
             try {
@@ -168,18 +169,6 @@ namespace MCGalaxy.Commands.World {
                 lvl.Dispose();
                 Server.DoGC();
             }
-        }
-        
-        internal static void SetPerms(Player p, Level lvl) {
-            lvl.Config.RealmOwner = p.name;
-            const LevelPermission rank = LevelPermission.Nobody;
-            lvl.BuildAccess.Whitelist(Player.Console, rank, lvl, p.name);
-            lvl.VisitAccess.Whitelist(Player.Console, rank, lvl, p.name);
-
-            Group grp = Group.Find(Server.Config.OSPerbuildDefault);
-            if (grp == null) return;
-            
-            lvl.BuildAccess.SetMin(Player.Console, rank, lvl, grp);
         }
         
         static void DeleteMap(Player p, string value) {
