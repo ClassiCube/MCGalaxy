@@ -91,7 +91,9 @@ namespace MCGalaxy.Generator {
         public static Level Generate(Player p, MapGen gen, string name, 
                                      ushort x, ushort y, ushort z, string seed) {
             name = name.ToLower();
+            if (gen == null) { PrintThemes(p); return null; }
             if (!Formatter.ValidMapName(p, name)) return null;
+            
             if (LevelInfo.MapExists(name)) {
                 p.Message("%WLevel \"{0}\" already exists", name); return null;
             }

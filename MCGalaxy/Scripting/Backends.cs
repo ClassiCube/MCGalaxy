@@ -150,7 +150,6 @@ Namespace MCGalaxy
 ' This one controls what happens when you use /Help [commandname].
 \t\tPublic Overrides Sub Help(p As Player)
 \t\t\tp.Message(""/{0} - Does stuff. Example command."")
-
 \t\tEnd Sub
 \tEnd Class
 End Namespace";

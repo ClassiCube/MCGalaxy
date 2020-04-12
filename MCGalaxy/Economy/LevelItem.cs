@@ -92,19 +92,25 @@ namespace MCGalaxy.Eco {
                 }
             }
             
-            if (LevelInfo.MapExists(name)) {
-                p.Message("%WLevel \"{0}\" already exists", name); return;
-            }
-            
             p.Message("&aCreating level: '&f" + name + "&a' . . .");
-            UseCommand(p, "NewLvl", name + " " + preset.x + " " + preset.y + " " + preset.z + " " + preset.type);
             
-            Level level = LevelActions.Load(Player.Console, name, true);
-            CmdOverseer.SetPerms(p, level);
-            level.SaveSettings();
-            PlayerActions.ChangeMap(p, name);
-
-            p.Message("&aSuccessfully created your map: '&f" + name + "&a'");
+            ushort x = 0, y = 0, z = 0;
+            string[] xyz = { preset.x, preset.y, preset.z };
+            if (!MapGen.GetDimensions(p, xyz, 0, ref x, ref y, ref z)) return;
+            
+            MapGen gen = MapGen.Find(preset.type);
+            Level lvl  = MapGen.Generate(p, gen, name, x, y, z, "");
+            if (lvl == null) return;
+            
+            CmdOverseer.SetPerms(p, lvl);
+            lvl.SaveSettings();
+            
+            try {
+                lvl.Save(true);
+            } finally {
+                lvl.Dispose();
+                Server.DoGC();
+            }
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         

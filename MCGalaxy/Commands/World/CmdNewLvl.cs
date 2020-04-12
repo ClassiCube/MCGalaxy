@@ -48,13 +48,12 @@ namespace MCGalaxy.Commands.World {
         internal Level GenerateMap(Player p, string[] args, CommandData data) {
             if (args.Length < 5) return null;
             MapGen gen = MapGen.Find(args[4]);
-            if (gen == null) { MapGen.PrintThemes(p); return null; }
-
             ushort x = 0, y = 0, z = 0;
+            
             if (!MapGen.GetDimensions(p, args, 1, ref x, ref y, ref z)) return null;
             string seed = args.Length == 6 ? args[5] : "";
             
-            if (gen.Type == GenType.Advanced && !CheckExtraPerm(p, data, 1)) return null;
+            if (gen != null && gen.Type == GenType.Advanced && !CheckExtraPerm(p, data, 1)) return null;
             return MapGen.Generate(p, gen, args[0], x, y, z, seed);
         }
         
