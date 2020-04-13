@@ -104,7 +104,9 @@ namespace MCGalaxy {
                 grp.Commands.Remove(cmd);
             }
             
-            Alias.UnregisterDefaults(cmd);
+            // typically Command.Unregister(Command.Find("xyz"))
+            // So don't error if Command.Find returned null
+            if (cmd != null) Alias.UnregisterDefaults(cmd);
             return removed;
         }
         
