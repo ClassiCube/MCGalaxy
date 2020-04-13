@@ -1,3 +1,21 @@
+v 1.9.2.0
+Fixed: Placed/deleted overflowing at 33 million
+Fixed: Turning off 'colours' option in GUI console shows raw colour codes
+Improved: More descriptive message when you're muted by chatmod
+Fixed: /hug and /high5 not working from console
+Fixed: Allow using /eat and /me from console
+Fixed: Zones getting lost with /resizelvl
+Improved: Don't lowercase command name in /cmdcreate output
+Fixed: /compile showing wrong error line number when source has 'reference' statements
+Fixed: Unloading custom commands not removing command aliases
+Improved: Simplify information in /ranks
+Fixed: /chatroom del and /chatroom spy throwing NullReferenceException
+Fixed: Not immediately asking for pass when you are ranked to a rank requiring password
+Fixed: Settings -> Eco -> Rank item in GUI crashing server on mono
+Fixed: Support 'reference' statements when compiling custom commands from GUI
+Improved: Simplify showing errors when compiling custom commands from GUI
+Fixed: /buy level erroring if level failed to generate
+
 v 1.9.1.9
 Improved: Make CalcEyeHeight take Y scale int account
 Improved: /tpp 0 0 0 puts you on the ground at level 0
