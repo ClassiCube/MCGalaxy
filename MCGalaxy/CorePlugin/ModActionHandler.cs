@@ -231,21 +231,18 @@ namespace MCGalaxy.Core {
         }
         
         static string FormatModTaskData(ModAction e) {
-            long assign = DateTime.UtcNow.ToUnixTime();
-            DateTime expiryTime;
+            long assign  = DateTime.UtcNow.ToUnixTime();
+            DateTime end = DateTime.MaxValue.AddYears(-1);
             
-            if (e.Duration == TimeSpan.Zero) {
-                expiryTime = DateTime.MaxValue;
-            } else {
+            if (e.Duration != TimeSpan.Zero) {
                 try {
-                    expiryTime = DateTime.UtcNow.Add(e.Duration);
+                    end = DateTime.UtcNow.Add(e.Duration);
                 } catch (ArgumentOutOfRangeException) {
-                    // user provided extreme expiry time
-                    expiryTime = DateTime.MaxValue;
+                    // user provided extreme expiry time, ignore it
                 }
             }
             
-            long expiry = expiryTime.ToUnixTime();
+            long expiry = end.ToUnixTime();
             string assigner = e.Actor.name;
             return assigner + " " + assign + " " + expiry;
         }
