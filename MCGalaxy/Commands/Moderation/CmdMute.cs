@@ -27,32 +27,32 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces(3);
+            string[] args = message.SplitSpaces(2);
             
             Player who = PlayerInfo.FindMatches(p, args[0]);
             if (who == null) {
                 if (Server.muted.Contains(args[0])) Unmute(p, args[0], args);
                 return;
             }
-
-            if (who.muted) {
-                Unmute(p, who.name, args);
-            } else {
-                Group group = ModActionCmd.CheckTarget(p, data, "mute", who.name);
-                if (group == null) return;
-                
-                TimeSpan duration = Server.Config.ChatSpamMuteTime;
-                if (args.Length > 1) {
-                    if (!CommandParser.GetTimespan(p, args[1], ref duration, "mute for", "s")) return;
-                }
-                
-                string reason = args.Length > 2 ? args[2] : "";
-                reason = ModActionCmd.ExpandReason(p, reason);
-                if (reason == null) return;
-                
-                ModAction action = new ModAction(who.name, p, ModActionType.Muted, reason, duration);
-                OnModActionEvent.Call(action);
+            if (who.muted) { Unmute(p, who.name, args); return; }
+            
+            Group group = ModActionCmd.CheckTarget(p, data, "mute", who.name);
+            if (group == null) return;
+            
+            // unmute has second argument as reason, mute has third argument instead
+            args = message.SplitSpaces(3);
+            
+            TimeSpan duration = Server.Config.ChatSpamMuteTime;
+            if (args.Length > 1) {
+                if (!CommandParser.GetTimespan(p, args[1], ref duration, "mute for", "s")) return;
             }
+            
+            string reason = args.Length > 2 ? args[2] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+            
+            ModAction action = new ModAction(who.name, p, ModActionType.Muted, reason, duration);
+            OnModActionEvent.Call(action);
         }
         
         static void Unmute(Player p, string name, string[] args) {
