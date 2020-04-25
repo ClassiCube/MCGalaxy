@@ -363,7 +363,15 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] SetSpawnpoint(Position pos, Orientation rot, bool extPos ) {
+        public static byte[] SetHotbar(BlockID rawId, byte slot, bool extBlocks) {
+            byte[] buffer = new byte[extBlocks ? 4 : 3];
+            buffer[0] = Opcode.CpeSetHotbar;
+            NetUtils.WriteBlock(rawId, buffer, 1, extBlocks);
+            buffer[extBlocks ? 3 : 2] = slot;
+            return buffer;
+        }
+        
+        public static byte[] SetSpawnpoint(Position pos, Orientation rot, bool extPos) {
             byte[] buffer = new byte[extPos ? 15 : 9];
             buffer[0] = Opcode.CpeSetSpawnpoint;
             NetUtils.WritePos(pos, buffer, 1, extPos);
