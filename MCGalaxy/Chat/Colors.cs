@@ -245,6 +245,8 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Removes all instances of % or &amp; and the character that follows.
+        /// Does *not* check if the character pair makes a real color </summary>
         public static string Strip(string value) {
             if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1) return value;
             char[] output = new char[value.Length];
@@ -261,6 +263,8 @@ namespace MCGalaxy {
             return new string(output, 0, usedChars);
         }
         
+        /// <summary> Removes all colors that are currently used.
+        /// This means % or &amp; may be kept if they are not followed a used color code </summary>
         public static string StripUsed(string message) {
             if (message.IndexOf('%') == -1 && message.IndexOf('&') == -1) return message;
             char[] output = new char[message.Length];
