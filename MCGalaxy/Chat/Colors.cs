@@ -261,6 +261,24 @@ namespace MCGalaxy {
             return new string(output, 0, usedChars);
         }
         
+        public static string StripUsed(string message) {
+            if (message.IndexOf('%') == -1 && message.IndexOf('&') == -1) return message;
+            char[] output = new char[message.Length];
+            int usedChars = 0;
+            
+            for (int i = 0; i < message.Length; i++) {
+                char c = message[i];
+                if ( (i < message.Length-1) &&
+                     (c == '%' || c == '&') &&
+                     (IsStandard(message[i+1]) || IsDefined(message[i+1])) ) {
+                    i++; // Skip over the following color code.
+                } else {
+                    output[usedChars++] = c;
+                }
+            }
+            return new string(output, 0, usedChars);
+        }
+        
         /// <summary> Removes all non-existent color codes, and converts
         /// custom colors to their fallback standard color codes if required. </summary>
         public static string Cleanup(string value, bool supportsCustomCols) {
