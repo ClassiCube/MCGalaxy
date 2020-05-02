@@ -125,6 +125,26 @@ namespace MCGalaxy.Commands.CPE {
             string path = Paths.MapBlockDefs(map);
             return BlockDefinition.Load(path);
         }
+
+        static bool DoCopy(Player p, bool global, string cmd, bool keepOrder, 
+                           BlockDefinition srcDef, BlockID src, BlockID dst) {
+            if (srcDef == null && src < Block.CpeCount) {
+                srcDef = DefaultSet.MakeCustomBlock(src);
+            }
+            if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return false; }
+            
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
+            BlockDefinition dstDef = defs[dst];
+            if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return false; }
+            
+            BlockProps props = global ? Block.Props[src] : p.level.Props[src];
+            dstDef = srcDef.Copy();
+            dstDef.SetBlock(dst);
+            if (!keepOrder) dstDef.InventoryOrder = -1;
+            
+            AddBlock(p, dstDef, global, cmd, props);
+            return true;
+        }
         
         static void CopyAllHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
             if (parts.Length < 2) { Help(p, cmd); return; }
@@ -151,8 +171,8 @@ namespace MCGalaxy.Commands.CPE {
         
         static void CopyHandler(Player p, string[] parts, CommandData data, bool global, string cmd) {
             if (parts.Length < 2) { Help(p, cmd); return; }
-            BlockID src, dst;            
-            if (!CheckBlock(p, parts[1], out src, true)) return;
+            BlockID min, max, dst;            
+            if (!CheckBlocks(p, parts[1], out min, out max, true)) return;
             
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;          
             if (parts.Length > 2) {
@@ -172,30 +192,13 @@ namespace MCGalaxy.Commands.CPE {
                 }
             }
 
-            if (!DoCopy(p, global, cmd, false, defs[src], src, dst)) return;           
-            string scope = global ? "global" : "level";
-            p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
-                      scope, Block.ToRaw(src), Block.ToRaw(dst));
-        }
-
-        static bool DoCopy(Player p, bool global, string cmd, bool keepOrder, 
-                           BlockDefinition srcDef, BlockID src, BlockID dst) {
-            if (srcDef == null && src < Block.CpeCount) {
-                srcDef = DefaultSet.MakeCustomBlock(src);
+            for (int i = min; i <= max && Block.ToRaw(dst) < Block.MaxRaw; i++, dst++) {
+                if (!DoCopy(p, global, cmd, false, defs[i], (BlockID)i, dst)) continue;
+                string scope = global ? "global" : "level";
+                
+                p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
+                          scope, Block.ToRaw((BlockID)i), Block.ToRaw(dst));
             }
-            if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return false; }
-            
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
-            BlockDefinition dstDef = defs[dst];
-            if (ExistsInScope(dstDef, dst, global)) { MessageAlreadyBlock(p, dst, global, cmd); return false; }
-            
-            BlockProps props = global ? Block.Props[src] : p.level.Props[src];
-            dstDef = srcDef.Copy();
-            dstDef.SetBlock(dst);
-            if (!keepOrder) dstDef.InventoryOrder = -1;
-            
-            AddBlock(p, dstDef, global, cmd, props);
-            return true;
         }        
         
         static void DoInfo(Player p, BlockID block, bool global, string cmd) {
@@ -649,10 +652,10 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool CheckBlock(Player p, string arg, out BlockID block, bool allowAir = false) {
+        static bool CheckBlock(Player p, string arg, out BlockID block, bool air = false) {
             block = Block.Invalid;
             BlockID raw = 0;
-            BlockID min = (BlockID)(allowAir ? 0 : 1);
+            BlockID min = (BlockID)(air ? 0 : 1);
             BlockID max = Block.MaxRaw;
             bool success = CommandParser.GetUShort(p, arg, "Block ID", ref raw, min, max);
             
@@ -660,15 +663,15 @@ namespace MCGalaxy.Commands.CPE {
             return success;
         }
         
-        static bool CheckBlocks(Player p, string arg, out BlockID min, out BlockID max) {
+        static bool CheckBlocks(Player p, string arg, out BlockID min, out BlockID max, bool air = false) {
             bool success;
             // Either "[id]" or "[min]-[max]"
             if (arg.IndexOf('-') == -1) {
-                success = CheckBlock(p, arg, out min);
+                success = CheckBlock(p, arg, out min, air);
                 max     = min;
             } else {
                 string[] bits = arg.Split(new char[] { '-' }, 2);
-                success = CheckBlock(p, bits[0], out min) & CheckBlock(p, bits[1], out max);
+                success = CheckBlock(p, bits[0], out min, air) & CheckBlock(p, bits[1], out max, air);
             }
             return success;
         }
