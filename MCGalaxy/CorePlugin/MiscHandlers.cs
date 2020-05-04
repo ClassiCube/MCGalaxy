@@ -99,7 +99,8 @@ namespace MCGalaxy.Core {
                 if (delta.LengthSquared > (reachSq + 1)) return false;
                 
                 string message = bots[i].ClickedOnText;
-                MessageBlock.Execute(p, message);
+                Vec3S32 feetPos = bots[i].Pos.FeetBlockCoords;
+                MessageBlock.Execute(p, message, (ushort)feetPos.X, (ushort)feetPos.Y, (ushort)feetPos.Z);
                 return true;
             }
             return false;

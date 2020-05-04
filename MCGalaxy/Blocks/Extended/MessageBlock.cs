@@ -32,18 +32,21 @@ namespace MCGalaxy.Blocks.Extended {
             message = message.Replace("@p", p.name);
             
             if (message != p.prevMsg || (alwaysRepeat || Server.Config.RepeatMBs)) {
-                Execute(p, message);
+                Execute(p, message, x, y, z);
             }
             return true;
         }
         
-        public static void Execute(Player p, string message) {
+        public static void Execute(Player p, string message, ushort x, ushort y, ushort z) {
             string text;
             List<string> cmds = GetParts(message, out text);
             if (text != null) p.Message(text);
             
             CommandData data = p.DefaultCmdData;
             data.Context = CommandContext.MessageBlock;
+            data.X = x;
+            data.Y = y;
+            data.Z = z;
             
             if (cmds.Count == 1) {
                 string[] parts = cmds[0].SplitSpaces(2);

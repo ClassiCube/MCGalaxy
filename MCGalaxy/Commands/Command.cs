@@ -143,6 +143,7 @@ namespace MCGalaxy {
     public struct CommandData {
         public LevelPermission Rank;
         public CommandContext Context;
+        public ushort X, Y, Z;
     }
     
     // Clunky design, but needed to stay backwards compatible with custom commands
