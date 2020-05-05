@@ -32,20 +32,19 @@ namespace MCGalaxy.Blocks.Extended {
             message = message.Replace("@p", p.name);
             
             if (message != p.prevMsg || (alwaysRepeat || Server.Config.RepeatMBs)) {
-                Vec3S32 MBCoords = new Vec3S32(x, y, z);
-                Execute(p, message, MBCoords);
+                Execute(p, message, new Vec3S32(x, y, z));
             }
             return true;
         }
         
-        public static void Execute(Player p, string message, Vec3S32 MBCoords) {
+        public static void Execute(Player p, string message, Vec3S32 mbCoords) {
             string text;
             List<string> cmds = GetParts(message, out text);
             if (text != null) p.Message(text);
             
             CommandData data = p.DefaultCmdData;
-            data.Context = CommandContext.MessageBlock;
-            data.MBCoords = MBCoords;
+            data.Context  = CommandContext.MessageBlock;
+            data.MBCoords = mbCoords;
             
             if (cmds.Count == 1) {
                 string[] parts = cmds[0].SplitSpaces(2);

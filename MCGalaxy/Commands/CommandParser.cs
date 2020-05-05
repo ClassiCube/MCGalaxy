@@ -145,7 +145,7 @@ namespace MCGalaxy.Commands {
             col = tmp; return true;
         }
         
-        internal static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {
+        public static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {
             return
                 GetCoord(p, args[argsOffset + 0], P.X, "X coordinate", out P.X) &&
                 GetCoord(p, args[argsOffset + 1], P.Y, "Y coordinate", out P.Y) &&
