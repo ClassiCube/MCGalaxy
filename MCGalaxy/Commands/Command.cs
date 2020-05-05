@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using MCGalaxy.Maths;
 using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
 
@@ -143,7 +144,7 @@ namespace MCGalaxy {
     public struct CommandData {
         public LevelPermission Rank;
         public CommandContext Context;
-        public ushort X, Y, Z;
+        public Vec3S32 MBCoords;
     }
     
     // Clunky design, but needed to stay backwards compatible with custom commands
