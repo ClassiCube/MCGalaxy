@@ -192,7 +192,7 @@ namespace MCGalaxy.Commands.CPE {
                 }
             }
 
-            for (int i = min; i <= max && Block.ToRaw(dst) < Block.MaxRaw; i++, dst++) {
+            for (int i = min; i <= max && Block.ToRaw(dst) <= Block.MaxRaw; i++, dst++) {
                 if (!DoCopy(p, global, cmd, false, defs[i], (BlockID)i, dst)) continue;
                 string scope = global ? "global" : "level";
                 
