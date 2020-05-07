@@ -135,7 +135,9 @@ namespace MCGalaxy.Scripting {
                 if (!lines[i].CaselessStarts("reference ")) break;
                 
                 int index = lines[i].IndexOf(' ') + 1;
-                string assem = lines[i].Substring(index);
+                // For consistency with C#, treat 'Reference X.dll;' as 'Reference X.dll'
+                string assem = lines[i].Substring(index).Replace(";", "");
+                
                 args.ReferencedAssemblies.Add(assem);
                 lines.RemoveAt(i);
                 offset++; i--;
