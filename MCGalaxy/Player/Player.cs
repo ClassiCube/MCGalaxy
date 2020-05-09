@@ -213,7 +213,7 @@ namespace MCGalaxy {
 
         bool leftServer = false;
         void LeaveServer(string chatMsg, string discMsg, bool isKick, bool sync = false) {
-            if (leftServer) return;
+            if (leftServer || IsSuper) return;
             leftServer = true;
             CriticalTasks.Clear();
             ZoneIn = null;
