@@ -62,8 +62,7 @@ namespace MCGalaxy {
                 case Opcode.CpeTwoWayPing:  return 1 + 1 + 2;
 
                 default:
-                    string msg = "Unhandled message id \"" + opcode + "\"!";
-                    Leave(msg, msg, true);
+                    Leave("Unhandled opcode \"" + opcode + "\"!", true);
                     return -1;
             }
         }

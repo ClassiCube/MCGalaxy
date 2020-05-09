@@ -191,25 +191,20 @@ namespace MCGalaxy {
         }
         
         /// <summary> Disconnects the players from the server,
-        /// with the given message shown in both chat and in the disconnect packet. </summary>
+        /// with the given messages shown in chat and in the disconnect packet. </summary>
         public void Leave(string chatMsg, string discMsg, bool sync = false) { 
             LeaveServer(chatMsg, discMsg, false, sync); 
         }
 
         /// <summary> Disconnects the players from the server,
-        /// with the given messages shown in chat and in the disconnect packet. </summary>        
-        public void Leave(string discMsg) { Leave(discMsg, false); }       
-        public void Leave(string discMsg, bool sync = false) {
-            LeaveServer(discMsg, discMsg, false, sync);
+        /// with the same message shown in chat and in the disconnect packet. </summary>        
+        public void Leave(string msg) { Leave(msg, false); }       
+        public void Leave(string msg, bool sync = false) {
+            LeaveServer(msg, msg, false, sync);
         }
         
         [Obsolete("Use Leave() or Kick() instead")]
-        public void leftGame(string discMsg = "") {
-            string chatMsg = discMsg;
-            if (chatMsg.Length > 0) chatMsg = "(" + chatMsg + ")"; // old format
-            LeaveServer(chatMsg, discMsg, true); 
-        }
-        
+        public void leftGame(string discMsg = "") { Kick(discMsg); }
 
         bool leftServer = false;
         void LeaveServer(string chatMsg, string discMsg, bool isKick, bool sync = false) {

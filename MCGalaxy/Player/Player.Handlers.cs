@@ -188,8 +188,7 @@ namespace MCGalaxy {
                 
                 byte action = buffer[offset + 7];
                 if (action > 1) {
-                    const string msg = "Unknown block action!";
-                    Leave(msg, msg, true); return;
+                    Leave("Unknown block action!", true); return;
                 }
                 
                 LastAction = DateTime.UtcNow;
@@ -496,8 +495,7 @@ namespace MCGalaxy {
 
             text = Regex.Replace(text, "  +", " ");
             if (text.IndexOf('&') >= 0) {
-                const string msg = "Illegal character in chat message!";
-                Leave(msg, msg, true); return true;
+                Leave("Illegal character in chat message!", true); return true;
             }
             return text.Length == 0;
         }
