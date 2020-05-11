@@ -211,8 +211,9 @@ namespace MCGalaxy.Commands.Bots {
             if (botName.Length == 0) {
                 if (!p.Supports(CpeExt.PlayerClick)) {
                     p.Message("Your client does not support clicking on entities.");
-                    p.Message("You must type either %T/botinfo [name] %Sor");
-                    p.Message("%T/whonick bot [nickname] %Sto see bot info.");
+                    p.Message("You must type %T/botinfo [name] %Sto see info.");
+                    p.Message("To help find the name of a nicknamed bot, try");
+                    p.Message("%T/whonick bot [nickname]");
                     return;
                 }
                 p.checkingBotInfo = true;
