@@ -62,6 +62,7 @@ namespace MCGalaxy {
         public LevelPermission hideRank = LevelPermission.Banned;
         public bool hidden;
         public bool painting;
+        public bool checkingBotInfo;
         public bool muted;
         public bool jailed;
         public bool agreed = true;

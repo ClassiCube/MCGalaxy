@@ -26,7 +26,11 @@ namespace MCGalaxy.Commands.Bots {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("BotAdd", "add"), new CommandAlias("BotRemove", "remove") }; }
+            get { return new[] {
+                    new CommandAlias("BotAdd", "add"),
+                    new CommandAlias("BotRemove", "remove"),
+                    new CommandAlias("BotInfo", "info")
+                }; }
         }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can modify bots that do not belong to them") }; }
@@ -35,6 +39,8 @@ namespace MCGalaxy.Commands.Bots {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
+            if (args[0].CaselessEq("info")) { BotInfo(p, args.Length < 2 ? "" : args[1]); return; }
+            
             if (args.Length < 2) { Help(p); return; }
             
             if (!Formatter.ValidName(p, args[1], "bot")) return;
@@ -201,6 +207,24 @@ namespace MCGalaxy.Commands.Bots {
             TryAddBot(p, clone);
         }
         
+        void BotInfo(Player p, string botName) {
+            if (botName.Length == 0) {
+                if (!p.Supports(CpeExt.PlayerClick)) {
+                    p.Message("Your client does not support clicking on entities.");
+                    p.Message("You must type either %T/botinfo [name] %Sor");
+                    p.Message("%T/whonick bot [nickname] %Sto see bot info.");
+                    return;
+                }
+                p.checkingBotInfo = true;
+                p.Message("Left, right, or middle click a bot to display its information.");
+                return;
+            }
+            PlayerBot bot = Matcher.FindBots(p, botName);
+            if (bot == null) return;
+            bot.DisplayInfo(p);
+            if (p.checkingBotInfo) { p.checkingBotInfo = false; p.Message("Note: pending click-to-check bot info has been cancelled."); }
+        }
+        
         public override void Help(Player p) {
             p.Message("%T/Bot add [name] %H- Adds a new bot at your position");
             p.Message("%T/Bot remove [name] %H- Removes the bot with that name");
@@ -215,6 +239,8 @@ namespace MCGalaxy.Commands.Bots {
             p.Message("%T/Bot rename [name] [new name] %H- Renames a bot");
             p.Message("%H  Note: To only change name tag of a bot, use %T/Nick bot");
             p.Message("%T/Bot copy [name] [new name] %H- Clones an existing bot");
+            p.Message("%T/Bot info %H- Displays info of the next bot you click");
+            p.Message("%T/Bot info [name] %H- Displays info of bot with that name");
         }
     }
 }

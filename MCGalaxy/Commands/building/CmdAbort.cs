@@ -27,6 +27,7 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message, CommandData data) {
             p.ClearBlockchange();
             p.painting = false;
+            p.checkingBotInfo = false;
             p.cmdTimer = false;
             p.staticCommands = false;
             p.deleteMode = false;
