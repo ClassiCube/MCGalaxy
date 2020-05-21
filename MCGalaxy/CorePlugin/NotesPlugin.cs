@@ -54,10 +54,8 @@ namespace MCGalaxy.Core {
              string src = e.Actor.name;
              
              string time = DateTime.UtcNow.ToString("dd/MM/yyyy");
-             string data = e.Target + " " + type + " " + src + " " + time;
-             if (e.Reason.Length > 0) {
-                 data += " " + e.Reason.Replace(" ", "%20");
-             }
+             string data = e.Target + " " + type + " " + src + " " + time + " " + 
+                           e.Reason.Replace(" ", "%20") + " " + e.Duration.Ticks;
              Server.Notes.Append(data);
         }
     }

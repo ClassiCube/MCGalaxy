@@ -48,12 +48,14 @@ namespace MCGalaxy.Commands.Moderation {
                 string[] args = line.SplitSpaces();
                 if (args.Length <= 3) continue;
                 
-                if (args.Length == 4) {
-                    p.Message(Action(args[1]) + " by " + args[2] + " on " + args[3]);
-                } else {
-                    p.Message(Action(args[1]) + " by " + args[2] + " on " + args[3]
-                                   + " - " + args[4].Replace("%20", " "));
-                }
+                string reason = args.Length > 4 ? args[4] : "";
+                long duration = 0;
+                if (args.Length > 5) long.TryParse(args[5], out duration);
+                
+                p.Message("{0} by {1} %Son {2}{3}{4}",
+                          Action(args[1]), PlayerInfo.GetColoredName(p, args[2]), args[3],
+                          duration      == 0 ? "" : " for " + TimeSpan.FromTicks(duration).Shorten(true),
+                          reason.Length == 0 ? "" : " - "   + reason.Replace("%20", " "));
             }
         }
         
