@@ -312,11 +312,16 @@ namespace MCGalaxy {
 
         #endregion
 
+        /// <summary> Returns whether the player is currently allowed to talk. </summary>
+        public bool CanSpeak() { return !muted && (voice || !Server.chatmod); }
+        
+        /// <summary> Blocks calling thread until all 'new map loaded' packets have been sent. </summary>
         public void BlockUntilLoad(int sleep) {
             while (Loading) 
                 Thread.Sleep(sleep);
         }
         
+        /// <summary> Checks if player is currently unverified, and if so, sends a message informing them </summary>
         public void CheckIsUnverified() {
             if (verifiedPass) return;
             Unverified = Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank;

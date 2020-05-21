@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
             TabList.Update(p, true);
             p.LastAction = DateTime.UtcNow;
 
-            bool cantSend = p.muted || (Server.chatmod && !p.voice);
+            bool cantSend = !p.CanSpeak();
             if (p.IsAfk) {
                 if (cantSend) {
                     p.Message("You are now marked as being AFK.");
