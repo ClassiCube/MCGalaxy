@@ -313,7 +313,9 @@ namespace MCGalaxy {
         #endregion
 
         /// <summary> Returns whether the player is currently allowed to talk. </summary>
-        public bool CanSpeak() { return !muted && (voice || !Server.chatmod); }
+        public bool CanSpeak() { 
+            return IsConsole || (!muted && (voice || !Server.chatmod));
+        }
         
         /// <summary> Blocks calling thread until all 'new map loaded' packets have been sent. </summary>
         public void BlockUntilLoad(int sleep) {
