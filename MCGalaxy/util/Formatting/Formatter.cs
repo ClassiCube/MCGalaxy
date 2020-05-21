@@ -25,9 +25,7 @@ namespace MCGalaxy {
     public static class Formatter {
         
         public static void PrintCommandInfo(Player p, Command cmd) {
-            ItemPerms perms = CommandPerms.Find(cmd.name);
-            if (perms == null) perms = new ItemPerms(cmd.defaultRank, null, null);
-            
+            ItemPerms perms = CommandPerms.Find(cmd.name) ?? new ItemPerms(cmd.defaultRank);
             p.Message("Usable by: " + perms.Describe());
             PrintAliases(p, cmd);
             

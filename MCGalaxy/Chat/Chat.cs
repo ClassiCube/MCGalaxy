@@ -46,14 +46,14 @@ namespace MCGalaxy {
         public static ItemPerms OpchatPerms { 
             get { 
                 ItemPerms perms = CommandExtraPerms.Find("OpChat", 1);
-                return perms != null ? perms : new ItemPerms(LevelPermission.Operator, null, null);
+                return perms ?? new ItemPerms(LevelPermission.Operator);
             }
         }
         
         public static ItemPerms AdminchatPerms {
             get { 
                 ItemPerms perms = CommandExtraPerms.Find("AdminChat", 1);
-                return perms != null ? perms : new ItemPerms(LevelPermission.Admin, null, null);
+                return perms ?? new ItemPerms(LevelPermission.Admin);
             }
         }
         

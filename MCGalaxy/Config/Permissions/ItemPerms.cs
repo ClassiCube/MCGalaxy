@@ -28,6 +28,8 @@ namespace MCGalaxy {
         public LevelPermission MinRank;
         public List<LevelPermission> Allowed, Disallowed;
         
+        public ItemPerms(LevelPermission min) { Init(min, null, null); }
+        
         public ItemPerms(LevelPermission min, List<LevelPermission> allowed,
                          List<LevelPermission> disallowed) {
             Init(min, allowed, disallowed);

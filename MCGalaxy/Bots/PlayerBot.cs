@@ -72,8 +72,7 @@ namespace MCGalaxy {
         
         public static bool CanEditAny(Player p) {
             if (LevelInfo.IsRealmOwner(p.name, p.level.name)) { return true; }
-            ItemPerms perms = CommandExtraPerms.Find("Bot", 1);
-            perms = perms == null ? new ItemPerms(LevelPermission.Operator, null, null) : perms;
+            ItemPerms perms = CommandExtraPerms.Find("Bot", 1) ?? new ItemPerms(LevelPermission.Operator);
             if (perms.UsableBy(p.Rank)) { return true; }
             return false;
         }
@@ -308,10 +307,10 @@ namespace MCGalaxy {
                          ScaleZ == 0 ? "none" : ScaleZ.ToString()
                         );
             }
-            if (String.IsNullOrEmpty(ClickedOnText)) { return; }
-            ItemPerms perms = CommandExtraPerms.Find("About", 1);
-            perms = perms == null ? new ItemPerms(LevelPermission.AdvBuilder, null, null) : perms;
-            if (!perms.UsableBy(p.Rank)) { return; } //don't show bot's ClickedOnText if player isn't allowed to see message block contents
+            
+            if (String.IsNullOrEmpty(ClickedOnText)) return;
+            ItemPerms perms = CommandExtraPerms.Find("About", 1) ?? new ItemPerms(LevelPermission.AdvBuilder);
+            if (!perms.UsableBy(p.Rank)) return; //don't show bot's ClickedOnText if player isn't allowed to see message block contents
             p.Message("  Clicked-on text: {0}", ClickedOnText);
         }
         

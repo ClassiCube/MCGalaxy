@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands.Eco {
             if (!ParseArgs(p, message, ref all, "pay", out trans)) return;
             
             // Player can use /pay messages to bypass a mute
+            // TODO: Make MessageCmd.CanSpeak more generic so that can be used here instead
             if (trans.Reason != null && !p.CanSpeak()) {
                 p.Message("%WCannot specify a payment reason, as you cannot currently speak");
                 return;

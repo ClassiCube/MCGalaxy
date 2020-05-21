@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void AnnounceOps(Player p, string msg) {
-            ItemPerms perms = new ItemPerms(p.hideRank, null, null);
+            ItemPerms perms = new ItemPerms(p.hideRank);
             Chat.MessageFrom(ChatScope.Perms, p, msg, perms, null, true);
         }
 
