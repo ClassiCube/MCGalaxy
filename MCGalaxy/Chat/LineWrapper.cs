@@ -101,43 +101,48 @@ namespace MCGalaxy {
         
         static string CleanupColorCodes(string value) {
             if (value.IndexOf('&') == -1) return value;
-            char[] output = new char[value.Length];
-            int used = 0, last = -200;
+            StringBuilder sb = new StringBuilder(value.Length);
+            int lastIdx  = -1;
             char lastCol = 'f';
+            bool combinable = false;
             
             for (int i = 0; i < value.Length; i++) {
-                // Not a color code so do nothing
-                if (value[i] != '&') { 
-                    output[used++] = value[i]; continue;
+                char c = value[i];
+                // Definitely not a colour code
+                if (c != '&') {
+                    if (c != ' ') combinable = false;
+                    sb.Append(c); continue;
                 }
+                
+                // Maybe still not a colour code
                 if (i == value.Length - 1 || !ValidColor(value[i + 1])) {
-                    output[used++] = value[i]; continue;
+                    combinable = false;
+                    sb.Append(c); continue;
                 }
+                
                 char col = value[i + 1];
                 if (col >= 'A' && col <= 'F') col += ' ';
                 
-                // Check for double color codes in a row
-                if (last == i - 2) {
-                    used--;
-                    output[used++] = col;
-                }
-                // Check for same color codes but not in a row
+                // Don't append duplicate colour codes
                 if (lastCol != col) {
-                    output[used++] = '&';
-                    output[used++] = col;
+                    // Remove first colour code in "&a&b or "&a   &b"
+                    if (combinable) sb.Remove(lastIdx, 2);
+                    
+                    sb.Append('&').Append(col);
+                    lastIdx = sb.Length - 2;
+                    lastCol = col;
+                    combinable = true;
                 }
-                last = i; i++; // skip over color code
-                lastCol = col;
+                i++; // skip over color code
             }
             
             // Trim trailing color codes
-            int j = value.Length;
-            while ((j - 2) >= 0) {
-                if (value[j - 2] != '&') break;
-                if (!ValidColor(value[j - 1])) break;
-                j -= 2; used -= 2;
+            while (sb.Length >= 2) {
+                if (sb[sb.Length - 2] != '&')       break;
+                if (!ValidColor(sb[sb.Length - 1])) break;
+                sb.Remove(sb.Length - 2, 2);
             }
-            return new string(output, 0, used);
-        }        
+            return sb.ToString();
+        }
     }
 }
