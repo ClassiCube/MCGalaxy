@@ -55,30 +55,29 @@ namespace MCGalaxy {
             motd = Colors.Strip(motd);
             bool isOp = p.Rank >= LevelPermission.Operator;
             
-            bool fly = true, noclip = true, speed = true, respawn = true, _3rdPerson = true;
+            bool fly = true, noclip = true, speed = true, respawn = true, thirdPerson = true;
             short maxJump = -1;
             string[] parts = motd.SplitSpaces();
+            
             for (int i = 0; i < parts.Length; i++) {
                 string part = parts[i];
-                if (part.CaselessEq("-hax")) {
-                    fly = false; noclip = false; speed = false; respawn = false; _3rdPerson = false;
-                } else if (part.CaselessEq("-ophax") && isOp) {
-                    fly = false; noclip = false; speed = false; respawn = false; _3rdPerson = false;
-                } else if (part.CaselessEq("+ophax") && isOp) {
-                    fly = true; noclip = true; speed = true; respawn = true; _3rdPerson = true;
-                }
+                if (       part.CaselessEq("-hax") || (part.CaselessEq("-ophax") && isOp)) {
+                    fly = false; noclip = false; speed = false; respawn = false; thirdPerson = false;
+                } else if (part.CaselessEq("+hax") || (part.CaselessEq("+ophax") && isOp)) {
+                    fly = true; noclip = true; speed = true; respawn = true; thirdPerson = true;
+                } 
                 
-                if (part.CaselessEq("+noclip")) { noclip = true; }
-                else if (part.CaselessEq("+fly")) { fly = true; }
-                else if (part.CaselessEq("+speed")) { speed = true; }
-                else if (part.CaselessEq("+respawn")) { respawn = true; }
-                else if (part.CaselessEq("+thirdperson")) { _3rdPerson = true; }
+                else if (part.CaselessEq("+noclip"))      { noclip = true; }
+                else if (part.CaselessEq("+fly"))         { fly = true; }
+                else if (part.CaselessEq("+speed"))       { speed = true; }
+                else if (part.CaselessEq("+respawn"))     { respawn = true; }
+                else if (part.CaselessEq("+thirdperson")) { thirdPerson = true; }
                 
-                if (part.CaselessEq("-noclip")) { noclip = false; }
-                else if (part.CaselessEq("-fly")) { fly = false; }
-                else if (part.CaselessEq("-speed")) { speed = false; }
-                else if (part.CaselessEq("-respawn")) { respawn = false; }
-                else if (part.CaselessEq("-thirdperson")) { _3rdPerson = false; }
+                else if (part.CaselessEq("-noclip"))      { noclip = false; }
+                else if (part.CaselessEq("-fly"))         { fly = false; }
+                else if (part.CaselessEq("-speed"))       { speed = false; }
+                else if (part.CaselessEq("-respawn"))     { respawn = false; }
+                else if (part.CaselessEq("-thirdperson")) { thirdPerson = false; }
                 
                 if (!part.CaselessStarts("jumpheight=")) continue;
                 string heightPart = part.Substring(part.IndexOf('=') + 1);
@@ -86,7 +85,7 @@ namespace MCGalaxy {
                 if (Utils.TryParseSingle(heightPart, out value))
                     maxJump = (short)(value * 32);
             }            
-            return Packet.HackControl(fly, noclip, speed, respawn, _3rdPerson, maxJump);
+            return Packet.HackControl(fly, noclip, speed, respawn, thirdPerson, maxJump);
         }
     }
 }
