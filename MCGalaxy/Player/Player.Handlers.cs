@@ -622,6 +622,19 @@ namespace MCGalaxy {
             return true;
         }
         
+        bool CanUseCommand(Command cmd) {
+            bool canUse = CanUse(cmd);
+            if (canUse) return true;
+            
+            // Some commands can be used on realm maps
+            if (LevelInfo.IsRealmOwner(level, name)) {
+                if (Server.RealmCmdsWhitelist.Contains(cmd.name)) return true;
+            }
+
+            CommandPerms.Find(cmd.name).MessageCannotUse(this);
+            return false;
+        }
+        
         Command GetCommand(ref string cmdName, ref string cmdArgs, CommandData data) {
             if (!CheckCommand(cmdName)) return null;
             Command.Search(ref cmdName, ref cmdArgs);
@@ -649,11 +662,7 @@ namespace MCGalaxy {
                     Message("Unknown command \"" + cmdName + "\"."); return null;
                 }
             }
-
-            if (!CanUse(command)) {
-                CommandPerms.Find(command.name).MessageCannotUse(this);
-                return null; 
-            }
+            if (!CanUseCommand(command)) return null;
             
             string reason = Command.GetDisabledReason(command.Enabled);
             if (reason != null) {

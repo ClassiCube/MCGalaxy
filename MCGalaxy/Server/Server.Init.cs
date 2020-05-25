@@ -82,6 +82,8 @@ namespace MCGalaxy {
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans  = PlayerExtList.Load(Paths.TempBansFile);
             
+            RealmCmdsWhitelist = PlayerList.Load("text/realmcmdswhitelist.txt");
+            
             if (Server.Config.WhitelistedOnly)
                 whiteList = PlayerList.Load("ranks/whitelist.txt");
 	    }
