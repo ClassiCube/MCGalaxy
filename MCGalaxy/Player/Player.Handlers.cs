@@ -627,8 +627,12 @@ namespace MCGalaxy {
             if (canUse) return true;
             
             // Some commands can be used on realm maps
-            if (LevelInfo.IsRealmOwner(level, name)) {
-                if (Server.RealmCmdsWhitelist.Contains(cmd.name)) return true;
+            if (Server.RealmCmdsWhitelist.Contains(cmd.name)) {
+                if (LevelInfo.IsRealmOwner(level, name)) return true;
+                
+                CommandPerms.Find(cmd.name).MessageCannotUse(this);
+                Message("However, %T/{0} %Scan be used on levels owned by you", cmd.name);
+                return false;
             }
 
             CommandPerms.Find(cmd.name).MessageCannotUse(this);
