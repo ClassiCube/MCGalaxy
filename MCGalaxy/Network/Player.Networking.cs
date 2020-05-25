@@ -202,8 +202,8 @@ namespace MCGalaxy {
             Send(packet);
             
             if (!Supports(CpeExt.HackControl)) return;
+            if (Game.Referee) motd += " +hax";
             Send(Hacks.MakeHackControl(this, motd));
-            if (Game.Referee) Send(Packet.HackControl(true, true, true, true, true, -1));
         }
 
         readonly object joinLock = new object();

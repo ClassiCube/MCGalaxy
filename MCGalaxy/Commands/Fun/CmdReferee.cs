@@ -42,11 +42,9 @@ namespace MCGalaxy.Commands.Fun {
             if (p.Supports(CpeExt.InstantMOTD)) {
                 p.SendMapMotd();
             } else if (p.Supports(CpeExt.HackControl)) {
-                if (p.Game.Referee) {
-                    p.Send(Packet.HackControl(true, true, true, true, true, -1));
-                } else {
-                    p.Send(Hacks.MakeHackControl(p, p.GetMotd()));
-                }
+                string motd = p.GetMotd();
+                if (p.Game.Referee) motd += " +hax";
+                p.Send(Hacks.MakeHackControl(p, motd));
             }
         }
         
