@@ -660,10 +660,10 @@ namespace MCGalaxy {
                 Message("Command is disabled as " + reason); return null;
             }
             if (level != null && level.IsMuseum && !command.museumUsable) {
-                Message("Cannot use this command while in a museum."); return null;
+                Message("Cannot use %T/{0} %Swhile in a museum.", command.name); return null;
             }
             if (frozen && !command.UseableWhenFrozen) {
-                Message("Cannot use this command while frozen."); return null;
+                Message("Cannot use %T/{0} %Swhile frozen.", command.name); return null;
             }
             return command;
         }
