@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.World {
             string arg2 = args.Length > 2 ? args[2] : "";
             
             bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
-            if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
+            if (mapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
                 p.Message("You may only perform that action on your own map."); return;
             }
             

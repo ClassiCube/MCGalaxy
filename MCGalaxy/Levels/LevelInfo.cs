@@ -111,6 +111,8 @@ namespace MCGalaxy {
             return "levels/level properties/" + name + ".properties";
         }
         
+        /// <summary> Gets the config/properties for the given map. </summary>
+        /// <param name="lvl"> If map also happens to be in memory, the Level instance. </param>
         public static LevelConfig GetConfig(string map, out Level lvl) {
             lvl = FindExact(map);
             if (lvl != null) return lvl.Config;
@@ -121,6 +123,7 @@ namespace MCGalaxy {
             return cfg;
         }
         
+        /// <summary> Checks whether player is allowed to perform the given action on the given map. </summary>
         public static bool Check(Player p, LevelPermission plRank, string map, string action, out LevelConfig cfg) {
             Level lvl; cfg = GetConfig(map, out lvl);
             if (p.IsConsole) return true;
@@ -133,12 +136,14 @@ namespace MCGalaxy {
             }
             return true;
         }
-        
+
+        /// <summary> Checks whether player is allowed to perform the given action on the given map. </summary>        
         public static bool Check(Player p, LevelPermission plRank, string map, string action) {
             LevelConfig ignored;
             return Check(p, plRank, map, action, out ignored);
         }
-        
+
+        /// <summary> Checks whether player is allowed to perform the given action on the given map. </summary>        
         public static bool Check(Player p, LevelPermission plRank, Level lvl, string action) {
             if (p.IsConsole) return true;
             if (!lvl.VisitAccess.CheckDetailed(p, plRank) || !lvl.BuildAccess.CheckDetailed(p, plRank)) {
@@ -154,10 +159,19 @@ namespace MCGalaxy {
             return true;
         }
         
+        /// <summary> Whether the given player is considered a realm owner of the given map. </summary>
         public static bool IsRealmOwner(string name, string map) {
             Level lvl = null;
             LevelConfig cfg = GetConfig(map, out lvl); 
-            
+            return IsRealmOwner(cfg, map, name);
+        }
+        
+        /// <summary> Whether the given player is considered a realm owner of the given map. </summary>        
+        public static bool IsRealmOwner(Level lvl, string name) {
+            return IsRealmOwner(lvl.Config, lvl.name, name);
+        }
+        
+        static bool IsRealmOwner(LevelConfig cfg, string map, string name) {
             string[] owners = cfg.RealmOwner.SplitComma();
             if (owners.Length > 0) {
                 foreach (string owner in owners) {
