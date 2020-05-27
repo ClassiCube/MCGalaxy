@@ -95,10 +95,14 @@ namespace MCGalaxy.Network {
         
         public static byte[] Message(string message, CpeMessageType type, bool hasCp437) {
             byte[] buffer = new byte[66];
-            buffer[0] = Opcode.Message;
-            buffer[1] = (byte)type;
-            NetUtils.Write(message, buffer, 2, hasCp437);
+            WriteMessage(message, (byte)type, hasCp437, buffer, 0);
             return buffer;
+        }
+        
+        public static void WriteMessage(string message, byte type, bool hasCp437, byte[] buffer, int index) {
+            buffer[index++] = Opcode.Message;
+            buffer[index++] = type;
+            NetUtils.Write(message, buffer, index, hasCp437);
         }
         
         public static byte[] Kick(string message, bool cp437) {
