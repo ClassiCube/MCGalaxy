@@ -163,13 +163,16 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                foreach (string raw in LineWrapper.Wordwrap(message)) {
-                    string line = raw;
-                    if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line))
-                        line += '\'';
-
-                    Send(Packet.Message(line, (CpeMessageType)id, hasCP437));
+                List<string> lines = LineWrapper.Wordwrap(message);
+                byte[] packet      = new byte[lines.Count * 66];
+                
+                for (int i = 0; i < lines.Count; i++) {
+                    string line = lines[i];
+                    if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line)) line += '\'';
+                    Packet.WriteMessage(line, id, hasCP437, packet, i * 66);
                 }
+                // So multi-line messages from multiple threads don't interleave
+                Send(packet);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -245,9 +248,9 @@ namespace MCGalaxy {
                 using (LevelChunkStream dst = new LevelChunkStream(this))
                     using (Stream stream = LevelChunkStream.CompressMapHeader(this, volume, dst))
                 {
-                	if (level.MightHaveCustomBlocks()) {
+                    if (level.MightHaveCustomBlocks()) {
                         LevelChunkStream.CompressMap(this, stream, dst);
-                	} else {
+                    } else {
                         LevelChunkStream.CompressMapSimple(this, stream, dst);
                     }
                 }
