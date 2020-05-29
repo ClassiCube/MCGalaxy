@@ -71,6 +71,9 @@ namespace MCGalaxy.Commands.Maintenance {
                 case "genlimit":
                     Chat.MessageAll(grp.ColoredName + "%S's map gen volume limit set to &b" + limit);
                     grp.GenVolume = limit; break;
+                case "realms":
+                    Chat.MessageAll(grp.ColoredName + "%S's max realms set to &b" + limit);
+                    grp.OverseerMaps = limit; break;
                 default:
                     Help(p); return;
             }
@@ -103,9 +106,9 @@ namespace MCGalaxy.Commands.Maintenance {
         public override void Help(Player p) {
             p.Message("%T/Limit [type] [amount] <rank>");
             p.Message("%HSets the limit for [type]");
-            p.Message("%HValid types: %Sreloadthreshold(rt), restartphysics(rp), " +
-                           "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen)");
-            p.Message("%H<rank> is required for drawlimit, maxundo, gen types.");
+            p.Message("%HValid types: %Sreloadthreshold, restartphysics(rp), " +
+                           "rpnormal, physicsundo(pu), drawlimit(dl), maxundo(mu), genlimit(gen), realms");
+            p.Message("%H<rank> is required for drawlimit, maxundo, gen, realms types.");
         }
     }
 }
