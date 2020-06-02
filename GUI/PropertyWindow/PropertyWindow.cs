@@ -13,10 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
-using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.Eco;
 using MCGalaxy.Events.GameEvents;

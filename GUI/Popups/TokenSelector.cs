@@ -1,8 +1,7 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt
-using System.Windows.Forms;
-using System.Drawing;
 using System;
-using MCGalaxy;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MCGalaxy.Gui.Popups {
     internal sealed partial class TokenSelector : Form {
