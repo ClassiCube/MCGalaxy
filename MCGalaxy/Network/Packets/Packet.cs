@@ -459,36 +459,44 @@ namespace MCGalaxy.Network {
             return buffer;
         }
 
-        static void WriteFloat(float f, ref byte[] buffer, int offset) {
-            NetUtils.WriteI32((int)(f * 10000), buffer, offset);
+        static void WriteFloat(float f, ref byte[] buffer, ref int i) {
+            NetUtils.WriteI32((int)(f * 10000), buffer, i);
+            i += 4;
         }
 
-        const int CustomModelPartPacketSize = 55;
+        const int MaxCustomModelParts = 64;
+        const int CustomModelPartPacketSize = 56;
         public static byte[] DefineModel(CustomModel customModel) {
-            // 3622 = 1 + NetUtils.StringSize + 3*4 + 3*4 + 3*4 + 1 + 64*CustomModelPartPacketSize
-            byte[] buffer = new byte[3622];
-            buffer[0] = Opcode.CpeDefineModel;
+            // 3695 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 1 + 64*56
+            byte[] buffer = new byte[
+                1 + NetUtils.StringSize
+                + 2*4 + 3*4 + 6*4 + 1
+                + 1 + MaxCustomModelParts*CustomModelPartPacketSize
+            ];
+            int i = 0;
+            buffer[i++] = Opcode.CpeDefineModel;
 
             // write model name
             NetUtils.Write(customModel.name, buffer, 1, false);
+            i += NetUtils.StringSize;
 
             // write nameY, eyeY
-            WriteFloat(customModel.nameY, ref buffer, 1 + NetUtils.StringSize);
-            WriteFloat(customModel.eyeY, ref buffer, 1 + NetUtils.StringSize + 4);
+            WriteFloat(customModel.nameY, ref buffer, ref i);
+            WriteFloat(customModel.eyeY, ref buffer, ref i);
 
             // write collisionBounds
-            WriteFloat(customModel.collisionBounds.X, ref buffer, 1 + NetUtils.StringSize + 8);
-            WriteFloat(customModel.collisionBounds.Y, ref buffer, 1 + NetUtils.StringSize + 12);
-            WriteFloat(customModel.collisionBounds.Z, ref buffer, 1 + NetUtils.StringSize + 16);
+            WriteFloat(customModel.collisionBounds.X, ref buffer, ref i);
+            WriteFloat(customModel.collisionBounds.Y, ref buffer, ref i);
+            WriteFloat(customModel.collisionBounds.Z, ref buffer, ref i);
 
             // write pickingBoundsAABB
-            WriteFloat(customModel.pickingBoundsAABB.Min.X, ref buffer, 1 + NetUtils.StringSize + 20);
-            WriteFloat(customModel.pickingBoundsAABB.Min.Y, ref buffer, 1 + NetUtils.StringSize + 24);
-            WriteFloat(customModel.pickingBoundsAABB.Min.Z, ref buffer, 1 + NetUtils.StringSize + 28);
+            WriteFloat(customModel.pickingBoundsAABB.Min.X, ref buffer, ref i);
+            WriteFloat(customModel.pickingBoundsAABB.Min.Y, ref buffer, ref i);
+            WriteFloat(customModel.pickingBoundsAABB.Min.Z, ref buffer, ref i);
 
-            WriteFloat(customModel.pickingBoundsAABB.Max.X, ref buffer, 1 + NetUtils.StringSize + 32);
-            WriteFloat(customModel.pickingBoundsAABB.Max.Y, ref buffer, 1 + NetUtils.StringSize + 36);
-            WriteFloat(customModel.pickingBoundsAABB.Max.Z, ref buffer, 1 + NetUtils.StringSize + 40);
+            WriteFloat(customModel.pickingBoundsAABB.Max.X, ref buffer, ref i);
+            WriteFloat(customModel.pickingBoundsAABB.Max.Y, ref buffer, ref i);
+            WriteFloat(customModel.pickingBoundsAABB.Max.Z, ref buffer, ref i);
 
             // write bool flags
             byte flags = 0;
@@ -496,55 +504,51 @@ namespace MCGalaxy.Network {
             flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
             flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
 
-            buffer[1 + NetUtils.StringSize + 44] = flags;
+            buffer[i++] = flags;
 
             // write # CustomModelParts
-            buffer[1 + NetUtils.StringSize + 45] = (byte)customModel.parts.Length;
+            buffer[i++] = (byte)customModel.parts.Length;
 
             // write each CustomModelPart
-            for (int i = 0; i < customModel.parts.Length; i++) {
-                Buffer.BlockCopy(
-                    BuildCustomModelPart(customModel.parts[i]),
-                    0,
-                    buffer,
-                    1 + NetUtils.StringSize + 46 + i*CustomModelPartPacketSize,
-                    CustomModelPartPacketSize
-                );
+            foreach (var part in customModel.parts) {
+                MakeCustomModelPart(part, ref buffer, ref i);
             }
 
             return buffer;
         }
 
-        static byte[] BuildCustomModelPart(CustomModelPart part) {
-            // 55 = 2*2 + 1*3 + 4*3 + 4*3 + 4*3 + 4*3
-            byte[] buffer = new byte[CustomModelPartPacketSize];
+        static void MakeCustomModelPart(CustomModelPart part, ref byte[] buffer, ref int i) {
+            // 56 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1
 
             // write BoxDesc
-            NetUtils.WriteU16(part.boxDesc.texX, buffer, 0);
-            NetUtils.WriteU16(part.boxDesc.texY, buffer, 2);
+            NetUtils.WriteU16(part.boxDesc.texX, buffer, i);
+            i += 2;
+            NetUtils.WriteU16(part.boxDesc.texY, buffer, i);
+            i += 2;
 
-            buffer[4] = part.boxDesc.sizeX;
-            buffer[5] = part.boxDesc.sizeY;
-            buffer[6] = part.boxDesc.sizeZ;
+            buffer[i++] = part.boxDesc.sizeX;
+            buffer[i++] = part.boxDesc.sizeY;
+            buffer[i++] = part.boxDesc.sizeZ;
 
-            WriteFloat(part.boxDesc.x1, ref buffer, 7);
-            WriteFloat(part.boxDesc.y1, ref buffer, 11);
-            WriteFloat(part.boxDesc.z1, ref buffer, 15);
+            WriteFloat(part.boxDesc.x1, ref buffer, ref i);
+            WriteFloat(part.boxDesc.y1, ref buffer, ref i);
+            WriteFloat(part.boxDesc.z1, ref buffer, ref i);
 
-            WriteFloat(part.boxDesc.x2, ref buffer, 19);
-            WriteFloat(part.boxDesc.y2, ref buffer, 23);
-            WriteFloat(part.boxDesc.z2, ref buffer, 27);
+            WriteFloat(part.boxDesc.x2, ref buffer, ref i);
+            WriteFloat(part.boxDesc.y2, ref buffer, ref i);
+            WriteFloat(part.boxDesc.z2, ref buffer, ref i);
 
-            WriteFloat(part.boxDesc.rotX, ref buffer, 31);
-            WriteFloat(part.boxDesc.rotY, ref buffer, 35);
-            WriteFloat(part.boxDesc.rotZ, ref buffer, 39);
+            WriteFloat(part.boxDesc.rotX, ref buffer, ref i);
+            WriteFloat(part.boxDesc.rotY, ref buffer, ref i);
+            WriteFloat(part.boxDesc.rotZ, ref buffer, ref i);
 
             // write rotation
-            WriteFloat(part.rotation.X, ref buffer, 43);
-            WriteFloat(part.rotation.Y, ref buffer, 47);
-            WriteFloat(part.rotation.Z, ref buffer, 51);
+            WriteFloat(part.rotation.X, ref buffer, ref i);
+            WriteFloat(part.rotation.Y, ref buffer, ref i);
+            WriteFloat(part.rotation.Z, ref buffer, ref i);
 
-            return buffer;
+            // write anim
+            buffer[i++] = (byte)part.anim;
         }
 
         #endregion
@@ -630,7 +634,7 @@ namespace MCGalaxy.Network {
         public byte sizeX, sizeY, sizeZ; /* Texture dimensions */
         public float x1,y1,z1, x2,y2,z2; /* Box corners coordinates */
         public float rotX,rotY,rotZ;     /* Rotation origin point */
-    };
+    }
 
     public class CustomModel {
         public string name;
@@ -664,5 +668,11 @@ namespace MCGalaxy.Network {
     public struct CustomModelPart {
         public BoxDesc boxDesc;
         public Vec3F32 rotation;
-    };
+        public CustomModelAnim anim;
+    }
+
+    public enum CustomModelAnim {
+        None = 0,
+        Head = 1,
+    }
 }
