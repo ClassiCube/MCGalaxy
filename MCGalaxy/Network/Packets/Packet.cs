@@ -463,34 +463,6 @@ namespace MCGalaxy.Network {
             NetUtils.WriteI32((int)(f * 10000), buffer, offset);
         }
 
-
-        public class CustomModel {
-            public string name;
-            public float nameY = 32.5f / 16.0f;
-            public float eyeY = 26.0f / 16.0f;
-            public Vec3F32 collisionBounds = new Vec3F32 {
-                X = (8.6f) / 16.0f,
-                Y = (28.1f) / 16.0f,
-                Z = (8.6f) / 16.0f
-            };
-            public AABBF32 pickingBoundsAABB = new AABBF32 {
-                Min = new Vec3F32 {
-                        X = (-8) / 16.0f,
-                        Y = (0) / 16.0f,
-                        Z = (-4) / 16.0f
-                    },
-                    Max = new Vec3F32 {
-                        X = (8) / 16.0f,
-                        Y = (32) / 16.0f,
-                        Z = (4) / 16.0f
-                    }
-            };
-            public bool bobbing = true;
-            public bool pushes = true;
-            public bool usesHumanSkin;
-            public CustomModelPart[] parts;
-        }
-
         const int CustomModelPartPacketSize = 55;
         public static byte[] DefineModel(CustomModel customModel) {
             // 3622 = 1 + NetUtils.StringSize + 3*4 + 3*4 + 3*4 + 1 + 64*CustomModelPartPacketSize
@@ -659,6 +631,35 @@ namespace MCGalaxy.Network {
         public float x1,y1,z1, x2,y2,z2; /* Box corners coordinates */
         public float rotX,rotY,rotZ;     /* Rotation origin point */
     };
+
+    public class CustomModel {
+        public string name;
+        // humanoid defaults
+        public float nameY = 32.5f / 16.0f;
+        public float eyeY = 26.0f / 16.0f;
+        public Vec3F32 collisionBounds = new Vec3F32 {
+            X = (8.6f) / 16.0f,
+            Y = (28.1f) / 16.0f,
+            Z = (8.6f) / 16.0f
+        };
+        public AABBF32 pickingBoundsAABB = new AABBF32 {
+            Min = new Vec3F32 {
+                X = (-8) / 16.0f,
+                Y = (0) / 16.0f,
+                Z = (-4) / 16.0f
+            },
+            Max = new Vec3F32 {
+                X = (8) / 16.0f,
+                Y = (32) / 16.0f,
+                Z = (4) / 16.0f
+            }
+        };
+        public bool bobbing = true;
+        public bool pushes = true;
+        // if true, uses skin from your account
+        public bool usesHumanSkin = true;
+        public CustomModelPart[] parts;
+    }
 
     public struct CustomModelPart {
         public BoxDesc boxDesc;

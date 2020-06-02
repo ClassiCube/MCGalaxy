@@ -758,4 +758,9 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+    <ItemGroup>
+  <Reference Include="Newtonsoft.Json">
+    <HintPath>Newtonsoft.Json.dll</HintPath>
+  </Reference>
+</ItemGroup>
 </Project>
