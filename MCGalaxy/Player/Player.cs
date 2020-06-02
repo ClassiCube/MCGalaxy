@@ -15,19 +15,16 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using MCGalaxy.Blocks;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.SQL;
-using MCGalaxy.Network;
-using MCGalaxy.Tasks;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
+using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {

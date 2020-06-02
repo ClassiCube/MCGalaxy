@@ -28,7 +28,6 @@ using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
     public partial class Player : IDisposable {
