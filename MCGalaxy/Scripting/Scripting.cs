@@ -128,11 +128,17 @@ namespace MCGalaxy.Scripting {
             return results;
         }
         
+        static bool IsReferenceLine(string line) {
+            // Originally only 'Reference X.dll' syntax was supported
+            // Later '//Reference X.dll' was added, and is preferred
+            return line.CaselessStarts("reference ") || line.CaselessStarts("//reference ");
+        }
+        
         static List<string> ReadSource(string path, CompilerParameters args, ref int offset) {
             List<string> lines = Utils.ReadAllLinesList(path);
             // Allow referencing other assemblies using 'Reference [assembly name]' at top of the file
             for (int i = 0; i < lines.Count; i++) {
-                if (!lines[i].CaselessStarts("reference ")) break;
+                if (!IsReferenceLine(lines[i])) break;
                 
                 int index = lines[i].IndexOf(' ') + 1;
                 // For consistency with C#, treat 'Reference X.dll;' as 'Reference X.dll'

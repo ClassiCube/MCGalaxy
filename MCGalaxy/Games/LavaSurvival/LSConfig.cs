@@ -16,13 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using System.Timers;
-using MCGalaxy.Commands;
-using MCGalaxy.Maths;
-using BlockID = System.UInt16;
 using MCGalaxy.Config;
-using System.Collections.Generic;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Games {
     
