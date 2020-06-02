@@ -465,9 +465,9 @@ namespace MCGalaxy.Network {
         }
 
         const int MaxCustomModelParts = 64;
-        const int CustomModelPartPacketSize = 56;
+        const int CustomModelPartPacketSize = 57;
         public static byte[] DefineModel(CustomModel customModel) {
-            // 3695 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 1 + 64*56
+            // 3759 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 1 + 64*57
             byte[] buffer = new byte[
                 1 + NetUtils.StringSize
                 + 2*4 + 3*4 + 6*4 + 1
@@ -503,6 +503,7 @@ namespace MCGalaxy.Network {
             flags |= (byte)((customModel.bobbing ? 1 : 0) << 0);
             flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
             flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
+            flags |= (byte)((customModel.calcHumanAnims ? 1 : 0) << 3);
 
             buffer[i++] = flags;
 
@@ -518,7 +519,7 @@ namespace MCGalaxy.Network {
         }
 
         static void MakeCustomModelPart(CustomModelPart part, ref byte[] buffer, ref int i) {
-            // 56 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1
+            // 57 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1 + 1
 
             // write BoxDesc
             NetUtils.WriteU16(part.boxDesc.texX, buffer, i);
@@ -549,6 +550,12 @@ namespace MCGalaxy.Network {
 
             // write anim
             buffer[i++] = (byte)part.anim;
+
+            // write bool flags
+            byte flags = 0;
+            flags |= (byte)((part.fullbright ? 1 : 0) << 0);
+
+            buffer[i++] = flags;
         }
 
         #endregion
@@ -662,17 +669,27 @@ namespace MCGalaxy.Network {
         public bool pushes = true;
         // if true, uses skin from your account
         public bool usesHumanSkin = true;
+        public bool calcHumanAnims = true;
         public CustomModelPart[] parts;
     }
 
-    public struct CustomModelPart {
+    public class CustomModelPart {
         public BoxDesc boxDesc;
-        public Vec3F32 rotation;
-        public CustomModelAnim anim;
+        public Vec3F32 rotation = new Vec3F32 {
+            X = 0.0f,
+            Y = 0.0f,
+            Z = 0.0f,
+        };
+        public CustomModelAnim anim = CustomModelAnim.None;
+        public bool fullbright = false;
     }
 
     public enum CustomModelAnim {
         None = 0,
         Head = 1,
+        LeftLeg = 2,
+        RightLeg = 3,
+        LeftArm = 4,
+        RightArm = 5,
     }
 }
