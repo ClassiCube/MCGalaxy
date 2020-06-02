@@ -148,4 +148,12 @@ namespace MCGalaxy.Maths {
             return count;
         }
     }
+
+    public struct AABBF32 {
+        /// <summary> Fixed-point min coordinate of this bounding box. </summary>
+        public Vec3F32 Min;
+        
+        /// <summary> Fixed-point max coordinate of this bounding box. </summary>
+        public Vec3F32 Max;
+    }
 }
