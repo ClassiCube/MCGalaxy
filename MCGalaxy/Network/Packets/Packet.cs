@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Diagnostics;
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
@@ -457,7 +458,65 @@ namespace MCGalaxy.Network {
             NetUtils.WriteI32((int)(originZ * 32), buffer, 22);
             return buffer;
         }
-        
+
+        const int CustomModelPartPacketSize = 55;
+        public static byte[] DefineModel(string modelName, CustomModelPart[] parts) {
+            // 3586 = 1 + NetUtils.StringSize + 1 + 64*CustomModelPartPacketSize
+            byte[] buffer = new byte[3586];
+            buffer[0] = Opcode.CpeDefineModel;
+
+            // write model name
+            NetUtils.Write(modelName, buffer, 1, false);
+
+            // write # CustomModelParts
+            buffer[1 + NetUtils.StringSize] = (byte)parts.Length;
+
+            // write each CustomModelPart
+            for (int i = 0; i < parts.Length; i++) {
+                Buffer.BlockCopy(
+                    BuildCustomModelPart(parts[i]),
+                    0,
+                    buffer,
+                    1 + NetUtils.StringSize + 1 + i*CustomModelPartPacketSize,
+                    CustomModelPartPacketSize
+                );
+            }
+
+            return buffer;
+        }
+
+        static byte[] BuildCustomModelPart(CustomModelPart part) {
+            // 55 = 2*2 + 1*3 + 4*3 + 4*3 + 4*3 + 4*3
+            byte[] buffer = new byte[CustomModelPartPacketSize];
+
+            // write BoxDesc
+            NetUtils.WriteU16(part.boxDesc.texX, buffer, 0);
+            NetUtils.WriteU16(part.boxDesc.texY, buffer, 2);
+
+            buffer[4] = part.boxDesc.sizeX;
+            buffer[5] = part.boxDesc.sizeY;
+            buffer[6] = part.boxDesc.sizeZ;
+
+            NetUtils.WriteI32((int)(part.boxDesc.x1 * 10000), buffer, 7);
+            NetUtils.WriteI32((int)(part.boxDesc.y1 * 10000), buffer, 11);
+            NetUtils.WriteI32((int)(part.boxDesc.z1 * 10000), buffer, 15);
+
+            NetUtils.WriteI32((int)(part.boxDesc.x2 * 10000), buffer, 19);
+            NetUtils.WriteI32((int)(part.boxDesc.y2 * 10000), buffer, 23);
+            NetUtils.WriteI32((int)(part.boxDesc.z2 * 10000), buffer, 27);
+
+            NetUtils.WriteI32((int)(part.boxDesc.rotX * 10000), buffer, 31);
+            NetUtils.WriteI32((int)(part.boxDesc.rotY * 10000), buffer, 35);
+            NetUtils.WriteI32((int)(part.boxDesc.rotZ * 10000), buffer, 39);
+
+            // write rotation
+            NetUtils.WriteI32((int)(part.rotation.X * 10000), buffer, 43);
+            NetUtils.WriteI32((int)(part.rotation.Y * 10000), buffer, 47);
+            NetUtils.WriteI32((int)(part.rotation.Z * 10000), buffer, 51);
+
+            return buffer;
+        }
+
         #endregion
         
         
@@ -534,4 +593,17 @@ namespace MCGalaxy.Network {
         }
         #endregion
     }
+
+    /* Describes data for a box being built. */
+    public struct BoxDesc {
+        public UInt16 texX, texY;        /* Texture origin */
+        public byte sizeX, sizeY, sizeZ; /* Texture dimensions */
+        public float x1,y1,z1, x2,y2,z2; /* Box corners coordinates */
+        public float rotX,rotY,rotZ;     /* Rotation origin point */
+    };
+
+    public struct CustomModelPart {
+        public BoxDesc boxDesc;
+        public Vec3F32 rotation;
+    };
 }
