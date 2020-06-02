@@ -463,50 +463,79 @@ namespace MCGalaxy.Network {
             NetUtils.WriteI32((int)(f * 10000), buffer, offset);
         }
 
+
+        public class CustomModel {
+            public string name;
+            public float nameY = 32.5f / 16.0f;
+            public float eyeY = 26.0f / 16.0f;
+            public Vec3F32 collisionBounds = new Vec3F32 {
+                X = (8.6f) / 16.0f,
+                Y = (28.1f) / 16.0f,
+                Z = (8.6f) / 16.0f
+            };
+            public AABBF32 pickingBoundsAABB = new AABBF32 {
+                Min = new Vec3F32 {
+                        X = (-8) / 16.0f,
+                        Y = (0) / 16.0f,
+                        Z = (-4) / 16.0f
+                    },
+                    Max = new Vec3F32 {
+                        X = (8) / 16.0f,
+                        Y = (32) / 16.0f,
+                        Z = (4) / 16.0f
+                    }
+            };
+            public bool bobbing = true;
+            public bool pushes = true;
+            public bool usesHumanSkin;
+            public CustomModelPart[] parts;
+        }
+
         const int CustomModelPartPacketSize = 55;
-        public static byte[] DefineModel(
-            string modelName,
-            float nameY,
-            float eyeY,
-            Vec3F32 collisionBounds,
-            AABBF32 pickingBoundsAABB,
-            CustomModelPart[] parts
-        ) {
+        public static byte[] DefineModel(CustomModel customModel) {
             // 3622 = 1 + NetUtils.StringSize + 3*4 + 3*4 + 3*4 + 1 + 64*CustomModelPartPacketSize
             byte[] buffer = new byte[3622];
             buffer[0] = Opcode.CpeDefineModel;
 
             // write model name
-            NetUtils.Write(modelName, buffer, 1, false);
+            NetUtils.Write(customModel.name, buffer, 1, false);
 
             // write nameY, eyeY
-            WriteFloat(nameY, ref buffer, 1 + NetUtils.StringSize);
-            WriteFloat(eyeY, ref buffer, 1 + NetUtils.StringSize + 4);
+            WriteFloat(customModel.nameY, ref buffer, 1 + NetUtils.StringSize);
+            WriteFloat(customModel.eyeY, ref buffer, 1 + NetUtils.StringSize + 4);
 
             // write collisionBounds
-            WriteFloat(collisionBounds.X, ref buffer, 1 + NetUtils.StringSize + 8);
-            WriteFloat(collisionBounds.Y, ref buffer, 1 + NetUtils.StringSize + 12);
-            WriteFloat(collisionBounds.Z, ref buffer, 1 + NetUtils.StringSize + 16);
+            WriteFloat(customModel.collisionBounds.X, ref buffer, 1 + NetUtils.StringSize + 8);
+            WriteFloat(customModel.collisionBounds.Y, ref buffer, 1 + NetUtils.StringSize + 12);
+            WriteFloat(customModel.collisionBounds.Z, ref buffer, 1 + NetUtils.StringSize + 16);
 
             // write pickingBoundsAABB
-            WriteFloat(pickingBoundsAABB.Min.X, ref buffer, 1 + NetUtils.StringSize + 20);
-            WriteFloat(pickingBoundsAABB.Min.Y, ref buffer, 1 + NetUtils.StringSize + 24);
-            WriteFloat(pickingBoundsAABB.Min.Z, ref buffer, 1 + NetUtils.StringSize + 28);
+            WriteFloat(customModel.pickingBoundsAABB.Min.X, ref buffer, 1 + NetUtils.StringSize + 20);
+            WriteFloat(customModel.pickingBoundsAABB.Min.Y, ref buffer, 1 + NetUtils.StringSize + 24);
+            WriteFloat(customModel.pickingBoundsAABB.Min.Z, ref buffer, 1 + NetUtils.StringSize + 28);
 
-            WriteFloat(pickingBoundsAABB.Max.X, ref buffer, 1 + NetUtils.StringSize + 32);
-            WriteFloat(pickingBoundsAABB.Max.Y, ref buffer, 1 + NetUtils.StringSize + 36);
-            WriteFloat(pickingBoundsAABB.Max.Z, ref buffer, 1 + NetUtils.StringSize + 40);
+            WriteFloat(customModel.pickingBoundsAABB.Max.X, ref buffer, 1 + NetUtils.StringSize + 32);
+            WriteFloat(customModel.pickingBoundsAABB.Max.Y, ref buffer, 1 + NetUtils.StringSize + 36);
+            WriteFloat(customModel.pickingBoundsAABB.Max.Z, ref buffer, 1 + NetUtils.StringSize + 40);
+
+            // write bool flags
+            byte flags = 0;
+            flags |= (byte)((customModel.bobbing ? 1 : 0) << 0);
+            flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
+            flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
+
+            buffer[1 + NetUtils.StringSize + 44] = flags;
 
             // write # CustomModelParts
-            buffer[1 + NetUtils.StringSize + 44] = (byte)parts.Length;
+            buffer[1 + NetUtils.StringSize + 45] = (byte)customModel.parts.Length;
 
             // write each CustomModelPart
-            for (int i = 0; i < parts.Length; i++) {
+            for (int i = 0; i < customModel.parts.Length; i++) {
                 Buffer.BlockCopy(
-                    BuildCustomModelPart(parts[i]),
+                    BuildCustomModelPart(customModel.parts[i]),
                     0,
                     buffer,
-                    1 + NetUtils.StringSize + 45 + i*CustomModelPartPacketSize,
+                    1 + NetUtils.StringSize + 46 + i*CustomModelPartPacketSize,
                     CustomModelPartPacketSize
                 );
             }
