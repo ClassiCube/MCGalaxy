@@ -43,15 +43,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public static bool CanSpeak(Player p, string cmd) {
-            if (p.IsConsole) return true;
-            
-            if (p.muted) { 
-                p.Message("Cannot use %T/{0} %Swhile muted.", cmd); return false; 
-            }
-            if (Server.chatmod && !p.voice) { 
-                p.Message("Cannot use %T/{0} %Swhile chat moderation is on without %T/Voice%S.", cmd); return false; 
-            }
-            return true;
+            return p.CheckCanSpeak("use %T/" + cmd);
         }
     }
     

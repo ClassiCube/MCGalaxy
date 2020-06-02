@@ -314,7 +314,22 @@ namespace MCGalaxy {
 
         /// <summary> Returns whether the player is currently allowed to talk. </summary>
         public bool CanSpeak() { 
-            return IsConsole || (!muted && (voice || !Server.chatmod));
+            return IsConsole || (!muted && !Unverified && (voice || !Server.chatmod));
+        }
+        
+        public bool CheckCanSpeak(string action) {
+            if (IsConsole) return true;
+            
+            if (muted) { 
+                Message("Cannot {0} %Swhile muted", action); return false; 
+            }
+            if (Server.chatmod && !voice) { 
+                Message("Cannot {0} %Swhile chat moderation is on without %T/Voice%S", action); return false; 
+            }
+            if (Unverified) {
+                Message("%WYou must first verify with %T/Pass [Password]"); return false;
+            }
+            return true;
         }
         
         /// <summary> Blocks calling thread until all 'new map loaded' packets have been sent. </summary>
