@@ -2,10 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace MCGalaxy {
     public sealed class CustomModelsPlugin : Plugin {
@@ -79,6 +81,24 @@ namespace MCGalaxy {
                 }
             );
             p.Send(data);
+
+            Logger.Log(LogType.Warning, bb.ToJson());
+        }
+
+        class WritablePropertiesOnlyResolver : DefaultContractResolver {
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization) {
+                IList<JsonProperty> props = base.CreateProperties(type, memberSerialization);
+                return props.Where(p => p.PropertyName != "parts" && p.Writable).ToList();
+            }
+        }
+
+        static JsonSerializerSettings jsonSettings = new JsonSerializerSettings {
+            ContractResolver = new WritablePropertiesOnlyResolver()
+        };
+
+        class StoredCustomModel {
+            public CustomModel customModel;
+            public string bbmodelName;
         }
 
         static void OnPlayerFinishConnecting(Player p) {
@@ -87,6 +107,68 @@ namespace MCGalaxy {
             }
 
             Logger.Log(LogType.Warning, "Sending DefineModel");
+
+            var customModel = new CustomModel {
+                name = "cat",
+                nameY = 0.0f,
+                eyeY = 0.0f,
+                bobbing = false,
+                parts = new CustomModelPart[] {
+                new CustomModelPart() {
+                boxDesc = new BoxDesc() {
+                texX = 0,
+                texY = 0,
+                sizeX = 8,
+                sizeY = 8,
+                sizeZ = 8,
+                x1 = -0.1f,
+                y1 = -0.1f,
+                z1 = -0.1f,
+                x2 = 0.1f,
+                y2 = 0.1f,
+                z2 = 0.1f,
+                rotX = 0,
+                rotY = 0,
+                rotZ = 0,
+                }
+                },
+                new CustomModelPart() {
+                boxDesc = new BoxDesc() {
+                texX = 0,
+                texY = 0,
+                sizeX = 8,
+                sizeY = 8,
+                sizeZ = 8,
+                x1 = 1.0f,
+                y1 = 1.0f,
+                z1 = 1.0f,
+                x2 = 1.1f,
+                y2 = 1.1f,
+                z2 = 1.1f,
+                rotX = 0,
+                rotY = 0,
+                rotZ = 0,
+                },
+                rotation = new Vec3F32() {
+                X = 45.0f,
+                Y = 0.0f,
+                Z = 0.0f
+                }
+                }
+                }
+            };
+
+            var storedCustomModel = new StoredCustomModel {
+                customModel = customModel,
+                bbmodelName = "big mommy gf"
+            };
+
+            var json = JsonConvert.SerializeObject(storedCustomModel, Formatting.Indented, jsonSettings);
+            Logger.Log(LogType.Warning, json);
+
+            var ag = JsonConvert.DeserializeObject<StoredCustomModel>(json);
+            Logger.Log(LogType.Warning, "" + ag.customModel.collisionBounds.Y);
+
             var data = Packet.DefineModel(
                 new CustomModel {
                     name = "cat",
@@ -139,6 +221,7 @@ namespace MCGalaxy {
                 });
             p.Send(data);
             p.Send(data);
+
         }
 
         class BlockBench {
@@ -146,6 +229,10 @@ namespace MCGalaxy {
                 public Meta meta;
                 public string name;
                 public Element[] elements;
+
+                public string ToJson() {
+                    return JsonConvert.SerializeObject(this);
+                }
 
                 public CustomModelPart[] ToCustomModelParts() {
                     var list = new List<CustomModelPart>();
