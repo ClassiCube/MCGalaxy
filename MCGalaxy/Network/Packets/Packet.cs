@@ -467,6 +467,10 @@ namespace MCGalaxy.Network {
         const int MaxCustomModelParts = 64;
         const int CustomModelPartPacketSize = 57;
         public static byte[] DefineModel(CustomModel customModel) {
+            if (customModel.parts.Length >= MaxCustomModelParts) {
+                throw new Exception("customModel.parts exceeds " + MaxCustomModelParts);
+            }
+            
             // 3759 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 1 + 64*57
             byte[] buffer = new byte[
                 1 + NetUtils.StringSize
