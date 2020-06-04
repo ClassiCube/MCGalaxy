@@ -460,7 +460,16 @@ namespace MCGalaxy.Network {
         }
 
         static void WriteFloat(float f, ref byte[] buffer, ref int i) {
-            NetUtils.WriteI32((int)(f * 10000), buffer, i);
+            if (float.IsNaN(f) || float.IsInfinity(f)) {
+                throw new Exception("WriteFloat non-real number");
+            }
+            byte[] floatBytes = BitConverter.GetBytes(f);
+            Buffer.BlockCopy(
+                floatBytes, 0,
+                buffer, i,
+                4
+            );
+
             i += 4;
         }
 
