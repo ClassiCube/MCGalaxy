@@ -201,11 +201,12 @@ namespace MCGalaxy {
             motd = Chat.Format(motd, this);
             OnSendingMotdEvent.Call(this, ref motd);
             
+            // change -hax into +hax etc
+            if (Game.Referee) motd = motd.Replace('-', '+');
             byte[] packet = Packet.Motd(this, motd);
             Send(packet);
             
             if (!Supports(CpeExt.HackControl)) return;
-            if (Game.Referee) motd += " +hax";
             Send(Hacks.MakeHackControl(this, motd));
         }
 
