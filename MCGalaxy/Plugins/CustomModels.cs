@@ -163,7 +163,6 @@ namespace MCGalaxy {
                     }
 
                     bool notifiedTexture = false;
-                    bool notifiedAutouv = false;
                     foreach (Element e in this.elements) {
                         if (e.visibility.HasValue && e.visibility.Value == false) {
                             continue;
@@ -187,18 +186,6 @@ namespace MCGalaxy {
                             notifiedTexture = true;
                         }
 
-                        if (!notifiedAutouv && e.autouv != 0) {
-                            Logger.Log(
-                                LogType.Warning,
-                                "Warning: Custom Model '" +
-                                this.name +
-                                "' uses autouv mode " +
-                                e.autouv +
-                                "! This cube will not appear correctly!"
-                            );
-                            notifiedAutouv = true;
-                        }
-
                         UInt16 texX = 0;
                         UInt16 texY = 0;
                         if (e.uv_offset != null) {
@@ -216,21 +203,15 @@ namespace MCGalaxy {
                         }
 
                         Vec3F32 v1 = new Vec3F32 {
-                            X = e.from[0],
-                            Y = e.from[1],
-                            Z = e.from[2],
+                            X = e.from[0] - e.inflate,
+                            Y = e.from[1] - e.inflate,
+                            Z = e.from[2] - e.inflate,
                         };
                         Vec3F32 v2 = new Vec3F32 {
-                            X = e.to[0],
-                            Y = e.to[1],
-                            Z = e.to[2],
+                            X = e.to[0] + e.inflate,
+                            Y = e.to[1] + e.inflate,
+                            Z = e.to[2] + e.inflate,
                         };
-
-                        Vec3F32 size = (v2 - v1);
-                        Vec3F32 center = v1 + 0.5f * size;
-
-                        Vec3F32 inflated_v1 = center - 0.5f * (1.0f + e.inflate * 0.5f * 0.5f) * size;
-                        Vec3F32 inflated_v2 = center + 0.5f * (1.0f + e.inflate * 0.5f * 0.5f) * size;
 
                         var part = new CustomModelPart {
                             boxDesc = new BoxDesc {
@@ -239,12 +220,12 @@ namespace MCGalaxy {
                             sizeX = (byte) Math.Abs(e.faces.up.uv[2] - e.faces.up.uv[0]),
                             sizeY = (byte) Math.Abs(e.faces.east.uv[3] - e.faces.east.uv[1]),
                             sizeZ = (byte) Math.Abs(e.faces.east.uv[2] - e.faces.east.uv[0]),
-                            x1 = inflated_v1.X / 16.0f,
-                            y1 = inflated_v1.Y / 16.0f,
-                            z1 = inflated_v1.Z / 16.0f,
-                            x2 = inflated_v2.X / 16.0f,
-                            y2 = inflated_v2.Y / 16.0f,
-                            z2 = inflated_v2.Z / 16.0f,
+                            x1 = v1.X / 16.0f,
+                            y1 = v1.Y / 16.0f,
+                            z1 = v1.Z / 16.0f,
+                            x2 = v2.X / 16.0f,
+                            y2 = v2.Y / 16.0f,
+                            z2 = v2.Z / 16.0f,
                             rotX = e.origin[0] / 16.0f,
                             rotY = e.origin[1] / 16.0f,
                             rotZ = e.origin[2] / 16.0f,
