@@ -154,9 +154,35 @@ namespace MCGalaxy {
                         throw new Exception("unimplemented: not using box_uv");
                     }
 
+                    bool notifiedTexture = false;
+                    bool notifiedAutouv = false;
                     foreach (Element e in this.elements) {
-                        if (e.autouv != 0) {
-                            throw new Exception("unimplemented: autouv not 0");
+                        if (e.visibility.HasValue && e.visibility.Value == false) {
+                            continue;
+                        }
+
+                        if (!notifiedTexture &&
+                            (!e.faces.north.texture.HasValue ||
+                                !e.faces.east.texture.HasValue ||
+                                !e.faces.south.texture.HasValue ||
+                                !e.faces.west.texture.HasValue ||
+                                !e.faces.up.texture.HasValue ||
+                                !e.faces.down.texture.HasValue
+                            )
+                        ) {
+                            Logger.Log(
+                                LogType.Warning,
+                                $"Warning: Custom Model '{this.name}' has one or more faces with no texture!"
+                            );
+                            notifiedTexture = true;
+                        }
+
+                        if (!notifiedAutouv && e.autouv != 0) {
+                            Logger.Log(
+                                LogType.Warning,
+                                $"Warning: Custom Model '{this.name}' uses autouv mode {e.autouv}! This cube will not appear correctly!"
+                            );
+                            notifiedAutouv = true;
                         }
 
                         UInt16 texX = 0;
@@ -247,7 +273,10 @@ namespace MCGalaxy {
                     // 3 numbers
                     public float[] to;
 
-                    // so far only 0?
+                    public bool? visibility;
+
+                    // if set to 1, uses a default png with some colors on it,
+                    // we will only support skin pngs, so maybe notify user?
                     public UInt16 autouv;
 
                     // optional
@@ -277,6 +306,7 @@ namespace MCGalaxy {
                 public class Face {
                     // 4 numbers
                     public UInt16[] uv;
+                    public UInt16? texture;
                 }
             }
 
