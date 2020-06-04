@@ -213,6 +213,13 @@ namespace MCGalaxy {
                             Z = e.to[2] + e.inflate,
                         };
 
+                        if (e.shade.HasValue && e.shade.Value == false) {
+                            // mirroring enabled
+                            v1.X *= -1;
+                            v2.X *= -1;
+                            rotation.X *= -1;
+                        }
+
                         var part = new CustomModelPart {
                             boxDesc = new BoxDesc {
                             texX = texX,
@@ -280,6 +287,10 @@ namespace MCGalaxy {
 
                     // optional
                     public float inflate;
+
+                    // if false, mirroring is enabled
+                    // if null, mirroring is disabled
+                    public bool? shade;
 
                     // so far only false?
                     // public locked: bool;
