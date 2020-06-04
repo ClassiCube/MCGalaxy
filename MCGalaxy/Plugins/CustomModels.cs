@@ -77,6 +77,8 @@ namespace MCGalaxy {
                 var parts = blockBench.ToCustomModelParts();
 
                 storedCustomModel.customModel.parts = parts;
+                storedCustomModel.customModel.uScale = blockBench.resolution.width;
+                storedCustomModel.customModel.vScale = blockBench.resolution.height;
 
                 CustomModels[realName] = storedCustomModel.customModel;
                 Logger.Log(LogType.SystemActivity, "CustomModels: Loaded model {0}.", storedCustomModel.customModel.name);
@@ -129,7 +131,12 @@ namespace MCGalaxy {
                 IList<JsonProperty> props = base.CreateProperties(type, memberSerialization);
                 // don't serialize "parts" because we store those in the full .bbmodel file
                 // Writable because Vec3F32 has some "getter-only" fields we don't want to serialize
-                return props.Where(p => p.PropertyName != "parts" && p.Writable).ToList();
+                return props.Where(p =>
+                    p.PropertyName != "parts" &&
+                    p.PropertyName != "uScale" &&
+                    p.PropertyName != "vScale" &&
+                    p.Writable
+                ).ToList();
             }
         }
 
@@ -142,6 +149,7 @@ namespace MCGalaxy {
                 public Meta meta;
                 public string name;
                 public Element[] elements;
+                public Resolution resolution;
 
                 public string ToJson() {
                     return JsonConvert.SerializeObject(this);
@@ -269,6 +277,10 @@ namespace MCGalaxy {
                     return list.ToArray();
                 }
 
+                public class Resolution {
+                    public UInt16 width;
+                    public UInt16 height;
+                }
                 public class Meta {
                     public bool box_uv;
                 }
