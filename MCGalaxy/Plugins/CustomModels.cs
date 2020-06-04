@@ -172,7 +172,9 @@ namespace MCGalaxy {
                         ) {
                             Logger.Log(
                                 LogType.Warning,
-                                $"Warning: Custom Model '{this.name}' has one or more faces with no texture!"
+                                "Warning: Custom Model '" +
+                                this.name +
+                                "' has one or more faces with no texture!"
                             );
                             notifiedTexture = true;
                         }
@@ -180,7 +182,11 @@ namespace MCGalaxy {
                         if (!notifiedAutouv && e.autouv != 0) {
                             Logger.Log(
                                 LogType.Warning,
-                                $"Warning: Custom Model '{this.name}' uses autouv mode {e.autouv}! This cube will not appear correctly!"
+                                "Warning: Custom Model '" +
+                                this.name +
+                                "' uses autouv mode " +
+                                e.autouv +
+                                "! This cube will not appear correctly!"
                             );
                             notifiedAutouv = true;
                         }
