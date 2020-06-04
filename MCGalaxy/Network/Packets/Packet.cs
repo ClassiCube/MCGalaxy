@@ -471,10 +471,10 @@ namespace MCGalaxy.Network {
                 throw new Exception("customModel.parts exceeds " + MaxCustomModelParts);
             }
             
-            // 3759 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 1 + 64*57
+            // 3763 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 2*2 + 1 + 64*57
             byte[] buffer = new byte[
                 1 + NetUtils.StringSize
-                + 2*4 + 3*4 + 6*4 + 1
+                + 2*4 + 3*4 + 6*4 + 1 + 2*2
                 + 1 + MaxCustomModelParts*CustomModelPartPacketSize
             ];
             int i = 0;
@@ -508,8 +508,14 @@ namespace MCGalaxy.Network {
             flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
             flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
             flags |= (byte)((customModel.calcHumanAnims ? 1 : 0) << 3);
-
+            flags |= (byte)((customModel.hideFirstPersonArm ? 1 : 0) << 4);
             buffer[i++] = flags;
+
+            // write uScale, vScale
+            NetUtils.WriteU16(customModel.uScale, buffer, i);
+            i += 2;
+            NetUtils.WriteU16(customModel.vScale, buffer, i);
+            i += 2;
 
             // write # CustomModelParts
             buffer[i++] = (byte)customModel.parts.Length;
@@ -674,6 +680,9 @@ namespace MCGalaxy.Network {
         // if true, uses skin from your account
         public bool usesHumanSkin = true;
         public bool calcHumanAnims = true;
+        public bool hideFirstPersonArm = false;
+        public UInt16 uScale = 64;
+        public UInt16 vScale = 64;
         public CustomModelPart[] parts;
     }
 
