@@ -55,7 +55,8 @@ namespace MCGalaxy.Generator {
             int index = 0, oneY = lvl.Width * lvl.Length;
             try {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
-                    p.Message("&cSize of the heightmap does not match Width x Length of the map");
+                    p.Message("&cHeightmap size ({0}x{1}) does not match Width x Length ({2}x{3}) of the level",
+            		          bmp.Width, bmp.Height, lvl.Width, lvl.Length);
                     p.Message("&cAs such, the map may not look accurate.");
                     bmp = Resize(bmp, lvl.Width, lvl.Length);
                 }
