@@ -577,6 +577,19 @@ namespace MCGalaxy.Network {
             buffer[i++] = flags;
         }
 
+        public static byte[] RemoveModel(string name) {
+            // 65 = 1 + 64
+            byte[] buffer = new byte[1 + NetUtils.StringSize];
+            int i = 0;
+            buffer[i++] = Opcode.CpeRemoveModel;
+
+            // write model name
+            NetUtils.Write(name, buffer, 1, false);
+            i += NetUtils.StringSize;
+
+            return buffer;
+        }
+
         #endregion
         
         

@@ -86,12 +86,12 @@ namespace MCGalaxy {
         }
 
         static void DefineModel(Player p, CustomModel model) {
-            if (!p.Supports(CpeExt.DefineModel)) { return; }
+            if (!p.Supports(CpeExt.CustomModels)) { return; }
             byte[] modelPacket = Packet.DefineModel(model);
             p.Send(modelPacket);
         }
         static void DefineModels(Player p) {
-            if (!p.Supports(CpeExt.DefineModel)) { return; }
+            if (!p.Supports(CpeExt.CustomModels)) { return; }
             foreach (KeyValuePair<string, CustomModel> entry in CustomModels) {
                 DefineModel(p, entry.Value);
                 p.Message("Defined model %b{0}%S!", entry.Key);
