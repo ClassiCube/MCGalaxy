@@ -214,10 +214,10 @@ namespace MCGalaxy {
                         };
 
                         if (e.shade.HasValue && e.shade.Value == false) {
-                            // mirroring enabled
-                            v1.X *= -1;
-                            v2.X *= -1;
-                            rotation.X *= -1;
+                            // mirroring enabled, flip X's
+                            float tmp = v1.X;
+                            v1.X = v2.X;
+                            v2.X = tmp;
                         }
 
                         var part = new CustomModelPart {
