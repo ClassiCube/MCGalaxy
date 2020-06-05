@@ -179,6 +179,20 @@ namespace MCGalaxy {
             return p == target || target == null || !target.hidden || data.Rank >= target.hideRank;
         }
 
+        public static void UpdateModel(Player pl, Entity entity, string model) {
+            Player[] players = PlayerInfo.Online.Items;
+            Level lvl = entity.Level;
+            entity.SetModel(model);
+            
+            if (pl.level != lvl || !pl.Supports(CpeExt.ChangeModel)) return;
+            if (!pl.CanSeeEntity(entity)) return;
+            
+            byte id = (pl == entity) ? Entities.SelfID : entity.EntityID;
+            string modelSend = Chat.Format(model, pl, true, false);
+            SendModel(pl, id, modelSend);
+            SendModelScales(pl, id, entity);
+        }
+
         public static void UpdateModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = entity.Level;

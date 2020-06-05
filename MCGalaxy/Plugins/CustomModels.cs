@@ -88,19 +88,35 @@ namespace MCGalaxy {
         static void DefineModel(Player p, CustomModel model) {
             if (!p.Supports(CpeExt.CustomModels)) { return; }
             byte[] modelPacket = Packet.DefineModel(model);
-            p.Send(modelPacket);
+            p.Send(modelPacket, true);
+
         }
-        static void DefineModels(Player p) {
-            if (!p.Supports(CpeExt.CustomModels)) { return; }
+
+        static void DefineModels(Player pl) {
+            if (!pl.Supports(CpeExt.CustomModels)) { return; }
             foreach (KeyValuePair<string, CustomModel> entry in CustomModels) {
-                DefineModel(p, entry.Value);
-                p.Message("Defined model %b{0}%S!", entry.Key);
+                var model = entry.Value;
+                DefineModel(pl, model);
+                // tell the client to update these entities who are currently
+                // using the same model
+                foreach (Player e in PlayerInfo.Online.Items) {
+                    if (e.Model == model.name) {
+                        Entities.UpdateModel(pl, e, model.name);
+                    }
+                }
+
+                foreach (PlayerBot e in pl.level.Bots.Items) {
+                    if (e.Model == model.name) {
+                        Entities.UpdateModel(pl, e, model.name);
+                    }
+                }
+                pl.Message("Defined model %b{0}%S!", entry.Key);
             }
         }
         static void DefineModelsForAllPlayers() {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                DefineModels(p);
+            foreach (Player pl in players) {
+                DefineModels(pl);
             }
         }
 
@@ -108,7 +124,7 @@ namespace MCGalaxy {
 
         public override void Load(bool startup) {
             //Logger.Log(LogType.Warning, "loading god");
-            OnPlayerFinishConnectingEvent.Register(OnPlayerFinishConnecting, Priority.Low);
+            OnJoinedLevelEvent.Register(OnJoinedLevel, Priority.Low);
 
             CreateCCmodelFromBBmodel();
             LoadModels();
@@ -117,10 +133,10 @@ namespace MCGalaxy {
         }
 
         public override void Unload(bool shutdown) {
-            OnPlayerFinishConnectingEvent.Unregister(OnPlayerFinishConnecting);
+            OnJoinedLevelEvent.Unregister(OnJoinedLevel);
         }
 
-        static void OnPlayerFinishConnecting(Player p) {
+        static void OnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             DefineModels(p);
         }
 
