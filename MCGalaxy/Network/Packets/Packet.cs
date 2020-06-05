@@ -459,20 +459,6 @@ namespace MCGalaxy.Network {
             return buffer;
         }
 
-        static void WriteFloat(float f, ref byte[] buffer, ref int i) {
-            if (float.IsNaN(f) || float.IsInfinity(f)) {
-                throw new Exception("WriteFloat non-real number");
-            }
-            byte[] floatBytes = BitConverter.GetBytes(f);
-            Buffer.BlockCopy(
-                floatBytes, 0,
-                buffer, i,
-                4
-            );
-
-            i += 4;
-        }
-
         const int MaxCustomModelParts = 64;
         const int CustomModelPartPacketSize = 57;
         public static byte[] DefineModel(CustomModel customModel) {
@@ -494,22 +480,33 @@ namespace MCGalaxy.Network {
             i += NetUtils.StringSize;
 
             // write nameY, eyeY
-            WriteFloat(customModel.nameY, ref buffer, ref i);
-            WriteFloat(customModel.eyeY, ref buffer, ref i);
+            NetUtils.WriteF32(customModel.nameY, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.eyeY, buffer, i);
+            i += 4;
 
             // write collisionBounds
-            WriteFloat(customModel.collisionBounds.X, ref buffer, ref i);
-            WriteFloat(customModel.collisionBounds.Y, ref buffer, ref i);
-            WriteFloat(customModel.collisionBounds.Z, ref buffer, ref i);
+            NetUtils.WriteF32(customModel.collisionBounds.X, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.collisionBounds.Y, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.collisionBounds.Z, buffer, i);
+            i += 4;
 
             // write pickingBoundsAABB
-            WriteFloat(customModel.pickingBoundsAABB.Min.X, ref buffer, ref i);
-            WriteFloat(customModel.pickingBoundsAABB.Min.Y, ref buffer, ref i);
-            WriteFloat(customModel.pickingBoundsAABB.Min.Z, ref buffer, ref i);
+            NetUtils.WriteF32(customModel.pickingBoundsAABB.Min.X, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.pickingBoundsAABB.Min.Y, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.pickingBoundsAABB.Min.Z, buffer, i);
+            i += 4;
 
-            WriteFloat(customModel.pickingBoundsAABB.Max.X, ref buffer, ref i);
-            WriteFloat(customModel.pickingBoundsAABB.Max.Y, ref buffer, ref i);
-            WriteFloat(customModel.pickingBoundsAABB.Max.Z, ref buffer, ref i);
+            NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.X, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.Y, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.Z, buffer, i);
+            i += 4;
 
             // write bool flags
             byte flags = 0;
@@ -550,22 +547,34 @@ namespace MCGalaxy.Network {
             buffer[i++] = part.boxDesc.sizeY;
             buffer[i++] = part.boxDesc.sizeZ;
 
-            WriteFloat(part.boxDesc.x1, ref buffer, ref i);
-            WriteFloat(part.boxDesc.y1, ref buffer, ref i);
-            WriteFloat(part.boxDesc.z1, ref buffer, ref i);
+            NetUtils.WriteF32(part.boxDesc.x1, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.boxDesc.y1, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.boxDesc.z1, buffer, i);
+            i += 4;
 
-            WriteFloat(part.boxDesc.x2, ref buffer, ref i);
-            WriteFloat(part.boxDesc.y2, ref buffer, ref i);
-            WriteFloat(part.boxDesc.z2, ref buffer, ref i);
+            NetUtils.WriteF32(part.boxDesc.x2, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.boxDesc.y2, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.boxDesc.z2, buffer, i);
+            i += 4;
 
-            WriteFloat(part.boxDesc.rotX, ref buffer, ref i);
-            WriteFloat(part.boxDesc.rotY, ref buffer, ref i);
-            WriteFloat(part.boxDesc.rotZ, ref buffer, ref i);
+            NetUtils.WriteF32(part.boxDesc.rotX, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.boxDesc.rotY, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.boxDesc.rotZ, buffer, i);
+            i += 4;
 
             // write rotation
-            WriteFloat(part.rotation.X, ref buffer, ref i);
-            WriteFloat(part.rotation.Y, ref buffer, ref i);
-            WriteFloat(part.rotation.Z, ref buffer, ref i);
+            NetUtils.WriteF32(part.rotation.X, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.rotation.Y, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.rotation.Z, buffer, i);
+            i += 4;
 
             // write anim
             buffer[i++] = (byte)part.anim;
