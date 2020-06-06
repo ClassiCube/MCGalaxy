@@ -25,17 +25,48 @@ namespace MCGalaxy {
         const string BBdirectory = "plugins/models/bbmodels/";
         const string CCdirectory = "plugins/models/";
 
-        class StoredCustomModel {
-            public CustomModel customModel;
-            public string bbmodelName;
+        // don't serialize "name" because we will use filename for model name
+        // don't serialize "parts" because we store those in the full .bbmodel file
+        // don't serialize "u/vScale" because we take it from bbmodel's resolution.width
+        struct StoredCustomModel {
+            public float nameY;
+            public float eyeY;
+            public Vec3F32 collisionBounds;
+            public AABBF32 pickingBoundsAABB;
+            public bool bobbing;
+            public bool pushes;
+            public bool usesHumanSkin;
+            public bool calcHumanAnims;
+            public bool hideFirstPersonArm;
         }
 
         static void WriteCCModelFile(string modelName, CustomModel model) {
-            model.name = modelName;
-
+            // convert to pixel units
             var storedCustomModel = new StoredCustomModel {
-                customModel = model,
-                bbmodelName = modelName
+                nameY = model.nameY * 16.0f,
+                eyeY = model.eyeY * 16.0f,
+                collisionBounds = {
+                    X = model.collisionBounds.X * 16.0f,
+                    Y = model.collisionBounds.Y * 16.0f,
+                    Z = model.collisionBounds.Z * 16.0f,
+                },
+                pickingBoundsAABB = {
+                    Min = new Vec3F32 {
+                        X = model.pickingBoundsAABB.Min.X * 16.0f,
+                        Y = model.pickingBoundsAABB.Min.Y * 16.0f,
+                        Z = model.pickingBoundsAABB.Min.Z * 16.0f,
+                    },
+                    Max = new Vec3F32 {
+                        X = model.pickingBoundsAABB.Max.X * 16.0f,
+                        Y = model.pickingBoundsAABB.Max.Y * 16.0f,
+                        Z = model.pickingBoundsAABB.Max.Z * 16.0f,
+                    },
+                },
+                bobbing = model.bobbing,
+                pushes = model.pushes,
+                usesHumanSkin = model.usesHumanSkin,
+                calcHumanAnims = model.calcHumanAnims,
+                hideFirstPersonArm = model.hideFirstPersonArm,
             };
 
             var storedJsonModel = JsonConvert.SerializeObject(storedCustomModel, Formatting.Indented, jsonSettings);
@@ -66,19 +97,48 @@ namespace MCGalaxy {
             }
         }
 
-        static StoredCustomModel ReadCCModelFile(string modelName) {
-            string contentsCC = File.ReadAllText(CCdirectory + modelName + storedModelExt);
-            string contentsBB = File.ReadAllText(BBdirectory + modelName + blockBenchExt);
+        static CustomModel ReadCCModelFile(string name) {
+            string contentsCC = File.ReadAllText(CCdirectory + name + storedModelExt);
+            string contentsBB = File.ReadAllText(BBdirectory + name + blockBenchExt);
 
             StoredCustomModel storedCustomModel = JsonConvert.DeserializeObject<StoredCustomModel>(contentsCC);
             var blockBench = BlockBench.Parse(contentsBB);
             var parts = blockBench.ToCustomModelParts();
 
-            storedCustomModel.customModel.parts = parts;
-            storedCustomModel.customModel.uScale = blockBench.resolution.width;
-            storedCustomModel.customModel.vScale = blockBench.resolution.height;
+            // convert to block units
+            var model = new CustomModel {
+                name = name,
+                parts = parts,
+                uScale = blockBench.resolution.width,
+                vScale = blockBench.resolution.height,
 
-            return storedCustomModel;
+                nameY = storedCustomModel.nameY / 16.0f,
+                eyeY = storedCustomModel.eyeY / 16.0f,
+                collisionBounds = new Vec3F32 {
+                    X = storedCustomModel.collisionBounds.X / 16.0f,
+                    Y = storedCustomModel.collisionBounds.Y / 16.0f,
+                    Z = storedCustomModel.collisionBounds.Z / 16.0f,
+                },
+                pickingBoundsAABB = new AABBF32 {
+                    Min = new Vec3F32 {
+                        X = storedCustomModel.pickingBoundsAABB.Min.X / 16.0f,
+                        Y = storedCustomModel.pickingBoundsAABB.Min.Y / 16.0f,
+                        Z = storedCustomModel.pickingBoundsAABB.Min.Z / 16.0f,
+                    },
+                    Max = new Vec3F32 {
+                        X = storedCustomModel.pickingBoundsAABB.Max.X / 16.0f,
+                        Y = storedCustomModel.pickingBoundsAABB.Max.Y / 16.0f,
+                        Z = storedCustomModel.pickingBoundsAABB.Max.Z / 16.0f,
+                    },
+                },
+                bobbing = storedCustomModel.bobbing,
+                pushes = storedCustomModel.pushes,
+                usesHumanSkin = storedCustomModel.usesHumanSkin,
+                calcHumanAnims = storedCustomModel.calcHumanAnims,
+                hideFirstPersonArm = storedCustomModel.hideFirstPersonArm,
+            };
+
+            return model;
         }
 
         static void LoadModels() {
@@ -94,13 +154,13 @@ namespace MCGalaxy {
                 if (!extension.CaselessEq(storedModelExt)) { continue; }
                 if (!File.Exists(BBdirectory + modelName + blockBenchExt)) { continue; }
 
-                StoredCustomModel storedCustomModel = ReadCCModelFile(modelName);
-                CustomModels[modelName] = storedCustomModel.customModel;
+                CustomModel model = ReadCCModelFile(modelName);
+                CustomModels[modelName] = model;
 
                 Logger.Log(
                     LogType.SystemActivity,
                     "CustomModels: Loaded model {0}.",
-                    storedCustomModel.customModel.name
+                    modelName
                 );
             }
         }
@@ -361,6 +421,7 @@ namespace MCGalaxy {
                                     if (chatType.set.Invoke(model, p, inputs)) {
                                         // field was set, update file!
                                         DefineModelForAllPlayers(model);
+                                        WriteCCModelFile(modelName, model);
                                         return;
                                     } else {
                                         p.Message("%cUMMMM");
@@ -387,17 +448,8 @@ namespace MCGalaxy {
         class WritablePropertiesOnlyResolver : DefaultContractResolver {
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization) {
                 IList<JsonProperty> props = base.CreateProperties(type, memberSerialization);
-                // don't serialize "name" because we will use filename for model name
-                // don't serialize "parts" because we store those in the full .bbmodel file
-                // don't serialize "u/vScale" because we take it from bbmodel's resolution.width
                 // Writable because Vec3F32 has some "getter-only" fields we don't want to serialize
-                return props.Where(p =>
-                    p.PropertyName != "name" &&
-                    p.PropertyName != "parts" &&
-                    p.PropertyName != "uScale" &&
-                    p.PropertyName != "vScale" &&
-                    p.Writable
-                ).ToList();
+                return props.Where(p => p.Writable).ToList();
             }
         }
 
