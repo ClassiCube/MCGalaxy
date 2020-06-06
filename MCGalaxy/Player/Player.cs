@@ -121,6 +121,20 @@ namespace MCGalaxy {
             if (title.Length > 0)   prefix += MakeTitle(title, titlecolor);
         }
         
+        /// <summary> Raises OnSettingColorEvent then sets color. </summary>
+        public void SetColor(string col) {
+            OnSettingColorEvent.Call(this, ref col);
+            color = col;
+        }
+        
+        /// <summary> Raises OnSettingColorEvent then sets color. </summary>
+        /// <remarks> If color differs from previous, respawns this player. </remarks>
+        public void UpdateColor(string col) {
+            string prevCol = color;
+            SetColor(col);
+            if (prevCol != color) Entities.GlobalRespawn(this);
+        }
+        
         internal string MakeTitle(string title, string titleCol) {
              return color + "[" + titleCol + title + color + "] ";
         }

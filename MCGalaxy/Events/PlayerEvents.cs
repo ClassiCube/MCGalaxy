@@ -225,6 +225,21 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
+    public delegate void OnSettingColor(Player p, ref string color);
+    /// <summary> Called when color is being updated for a player. </summary>
+    /// <remarks> e.g. You can use this to ensure player's color remains fixed to red while in a game. </remarks>
+    public sealed class OnSettingColorEvent : IEvent<OnSettingColor> {
+        
+        public static void Call(Player p, ref string color) {
+            IEvent<OnSettingColor>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, ref color); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+    
     public delegate void OnGettingMotd(Player p, ref string motd);
     /// <summary> Called when MOTD is being retrieved for a player. </summary>
     /// <remarks> e.g. You can use this event to make one player always have +hax motd. </remarks>

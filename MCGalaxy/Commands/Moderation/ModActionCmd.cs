@@ -84,9 +84,7 @@ namespace MCGalaxy.Commands.Moderation {
             who.AllowBuild = who.level.BuildAccess.CheckAllowed(who);
             if (who.hidden && who.hideRank < who.Rank) who.hideRank = who.Rank;
             
-            // If player has explicit /color, don't change it
-            string dbCol = PlayerDB.FindColor(who);
-            if (dbCol.Length == 0) who.color = newRank.Color;
+            who.SetColor(PlayerInfo.DefaultColor(who));
             who.SetPrefix();
             
             Entities.DespawnEntities(who, false);

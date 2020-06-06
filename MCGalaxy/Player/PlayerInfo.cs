@@ -38,6 +38,12 @@ namespace MCGalaxy {
                 : Group.GroupIn(name).Color + name.RemoveLastPlus();
         }
         
+        /// <summary> Calculates default color for the given player. </summary>
+        public static string DefaultColor(Player p) {
+            string col = PlayerDB.FindColor(p);
+            return col.Length > 0 ? col : p.group.Color;
+        }
+        
         public static int NonHiddenCount() {
             Player[] players = Online.Items;
             int count = 0;

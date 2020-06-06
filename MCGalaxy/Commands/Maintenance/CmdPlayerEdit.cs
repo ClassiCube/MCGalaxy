@@ -112,7 +112,7 @@ namespace MCGalaxy.Commands.Maintenance {
                             v => who.TotalTime = v);
             } else if (opt == "color") {
                 SetColor(p, args, PlayerData.ColumnColor, who,
-                         v => who.color = (v.Length == 0 ? who.group.Color : v));
+                         v => who.UpdateColor(v.Length == 0 ? who.group.Color : v));
             } else if (opt == "titlecolor") {
                 SetColor(p, args, PlayerData.ColumnTColor, who,
                          v => who.titlecolor = v);

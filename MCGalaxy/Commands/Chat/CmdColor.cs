@@ -51,17 +51,16 @@ namespace MCGalaxy.Commands.Chatting {
             string color = "";
             if (colName.Length == 0) {
                 Chat.MessageFrom(who, "λNICK %Shad their color removed");
-                who.color = who.group.Color;
+                who.UpdateColor(who.group.Color);
             } else {
                 color = Matcher.FindColor(p, colName);
                 if (color == null) return;
                 if (color == who.color) { p.Message(who.ColoredName + " %Salready has that color."); return; }
                 
                 Chat.MessageFrom(who, "λNICK %Shad their color changed to " + color + Colors.Name(color));
-                who.color = color;
+                who.UpdateColor(color);
             }
             
-            Entities.GlobalRespawn(who);
             who.SetPrefix();
             PlayerDB.Update(who.name, PlayerData.ColumnColor, color);
         }

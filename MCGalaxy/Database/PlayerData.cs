@@ -54,7 +54,7 @@ namespace MCGalaxy.DB {
         static object ReadID(IDataRecord record, object arg) { return record.GetInt32(0); }
         internal static void Create(Player p) {
             p.prefix = "";
-            p.color = p.group.Color;
+            p.SetColor(p.group.Color);
             p.FirstLogin = DateTime.Now;
             p.TimesVisited = 1;
             
@@ -79,8 +79,10 @@ namespace MCGalaxy.DB {
             
             p.title = data.Title;
             p.titlecolor = data.TitleColor;
-            p.color = data.Color;
-            if (p.color.Length == 0) p.color = p.group.Color;
+            
+            string col = data.Color;
+            if (col.Length == 0) col = p.group.Color;
+            p.SetColor(col);
             
             p.TotalModified = data.TotalModified;
             p.TotalDrawn = data.TotalDrawn;

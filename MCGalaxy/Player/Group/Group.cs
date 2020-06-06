@@ -216,10 +216,7 @@ namespace MCGalaxy {
             if (grp == null) grp = DefaultRank;
             p.group = grp;
             
-            if (PlayerDB.FindColor(p).Length == 0 && p.color != grp.Color) {
-                p.color = grp.Color;
-                Entities.GlobalRespawn(p);
-            }         
+            p.UpdateColor(PlayerInfo.DefaultColor(p));   
             p.SetPrefix();
         }
 
