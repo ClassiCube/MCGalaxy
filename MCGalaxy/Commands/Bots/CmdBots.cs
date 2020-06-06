@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Bots {
         public override string name { get { return "Bots"; } }
         public override string shortcut { get { return "BotList"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
 
         public override void Use(Player p, string message, CommandData data) { 
