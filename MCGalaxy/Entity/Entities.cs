@@ -16,8 +16,8 @@ using System;
 using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
-using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy {
 
@@ -237,6 +237,9 @@ namespace MCGalaxy {
                     model = pl.ConvertBlock(block).ToString();
                 }                
             }
+
+            OnBeforeChangeModelEvent.Call(pl, id, model);
+
             pl.Send(Packet.ChangeModel(id, model, pl.hasCP437));
         }
 

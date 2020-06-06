@@ -296,5 +296,15 @@ namespace MCGalaxy.Events.PlayerEvents {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p));
         }
-    }    
+    }
+    
+    public delegate void OnBeforeChangeModel(Player p, byte entityID, string model);
+    /// <summary> This event is called right before sending a ChangeModel packet to player `p`. </summary>
+    public sealed class OnBeforeChangeModelEvent : IEvent<OnBeforeChangeModel> {
+        
+        public static void Call(Player p, byte entityID, string model) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(p, entityID, model));
+        }
+    }
 }

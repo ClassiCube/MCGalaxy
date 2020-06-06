@@ -169,24 +169,16 @@ namespace MCGalaxy {
             }
         }
 
-        static void DefineModel(Player pl, CustomModel model) {
-            if (!pl.Supports(CpeExt.CustomModels)) { return; }
+        static void DefineModel(Player p, CustomModel model) {
+            if (!p.Supports(CpeExt.CustomModels)) { return; }
             byte[] modelPacket = Packet.DefineModel(model);
-            pl.Send(modelPacket, true);
+            p.Send(modelPacket);
+        }
 
-            // tell the client to update these entities who are currently
-            // using the same model
-            foreach (Player e in PlayerInfo.Online.Items) {
-                if (e.Model == model.name) {
-                    Entities.UpdateModel(pl, e, model.name);
-                }
-            }
-
-            foreach (PlayerBot e in pl.level.Bots.Items) {
-                if (e.Model == model.name) {
-                    Entities.UpdateModel(pl, e, model.name);
-                }
-            }
+        static void RemoveModel(Player p, string name) {
+            if (!p.Supports(CpeExt.CustomModels)) { return; }
+            byte[] modelPacket = Packet.RemoveModel(name);
+            p.Send(modelPacket);
         }
 
         static void DefineModelForAllPlayers(CustomModel model) {
@@ -195,18 +187,18 @@ namespace MCGalaxy {
             }
         }
 
-        static void DefineModels(Player pl) {
-            if (!pl.Supports(CpeExt.CustomModels)) { return; }
+        static void DefineModels(Player p) {
+            if (!p.Supports(CpeExt.CustomModels)) { return; }
             foreach (KeyValuePair<string, CustomModel> entry in CustomModels) {
                 var model = entry.Value;
-                DefineModel(pl, model);
-                pl.Message("Defined model %b{0}%S!", entry.Key);
+                DefineModel(p, model);
+                p.Message("Defined model %b{0}%S!", entry.Key);
             }
         }
         static void DefineModelsForAllPlayers() {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
-                DefineModels(pl);
+            foreach (Player p in players) {
+                DefineModels(p);
             }
         }
 
@@ -216,40 +208,116 @@ namespace MCGalaxy {
         public override void Load(bool startup) {
             command = new CmdCustomModel();
             Command.Register(command);
-            //Logger.Log(LogType.Warning, "loading god");
+
+            OnPlayerConnectEvent.Register(OnPlayerConnect, Priority.Low);
+            OnPlayerDisconnectEvent.Register(OnPlayerDisconnect, Priority.Low);
+
+            OnJoiningLevelEvent.Register(OnJoiningLevel, Priority.Low);
             OnJoinedLevelEvent.Register(OnJoinedLevel, Priority.Low);
+
+            OnBeforeChangeModelEvent.Register(OnBeforeChangeModel, Priority.Low);
 
             CreateCCmodelFromBBmodel();
             LoadModels();
 
-            DefineModelsForAllPlayers();
+            // DefineModelsForAllPlayers();
         }
 
         public override void Unload(bool shutdown) {
+            OnPlayerConnectEvent.Unregister(OnPlayerConnect);
+            OnPlayerDisconnectEvent.Unregister(OnPlayerDisconnect);
+            OnJoiningLevelEvent.Unregister(OnJoiningLevel);
             OnJoinedLevelEvent.Unregister(OnJoinedLevel);
+            OnBeforeChangeModelEvent.Unregister(OnBeforeChangeModel);
+
             if (command != null) {
                 Command.Unregister(command);
                 command = null;
             }
         }
 
-        static void OnJoinedLevel(Player pl, Level prevLevel, Level level, ref bool announce) {
-            DefineModels(pl);
+        static Dictionary<string, HashSet<string>> SentCustomModels = new Dictionary<string, HashSet<string>>();
+
+        static void CheckSendModel(Player p, string modelName) {
+            if (CustomModels.ContainsKey(modelName)) {
+                var sentModels = SentCustomModels[p.name];
+                if (!sentModels.Contains(modelName)) {
+                    sentModels.Add(modelName);
+
+                    var model = CustomModels[modelName];
+                    Logger.Log(LogType.SystemActivity, "DefineModel {0} {1}", p.name, modelName);
+                    DefineModel(p, model);
+                    p.Message("Defined model %b{0}%S!", modelName);
+                }
+            }
+        }
+
+        static void OnBeforeChangeModel(Player p, byte entityID, string modelName) {
+            CheckSendModel(p, modelName);
+            Logger.Log(LogType.SystemActivity, "ChangeModel {0} {1} {2}", p.name, modelName, entityID);
+        }
+
+        static void OnPlayerConnect(Player p) {
+            Logger.Log(LogType.SystemActivity, "OnPlayerConnect {0}", p.name);
+            SentCustomModels.Add(p.name, new HashSet<string>());
+        }
+
+        static void OnPlayerDisconnect(Player p, string reason) {
+            Logger.Log(LogType.SystemActivity, "OnPlayerDisconnect {0}", p.name);
+            SentCustomModels.Remove(p.name);
+        }
+
+        static void OnJoiningLevel(Player p, Level lvl, ref bool canJoin) {
+            Logger.Log(LogType.SystemActivity, "OnJoiningLevel {0} {1}", p.name, lvl.name);
+
+
+            var modelsInThisLevel = new HashSet<string>();
+            foreach (Player e in lvl.getPlayers()) {
+                modelsInThisLevel.Add(e.Model);
+            }
+            foreach (PlayerBot e in lvl.Bots.Items) {
+                modelsInThisLevel.Add(e.Model);
+            }
+            // also add our own model
+            modelsInThisLevel.Add(p.Model);
+
+
+            var sentModels = SentCustomModels[p.name];
+            // clone so we can modify while we iterate
+            foreach (var modelName in sentModels.ToArray()) {
+
+                // remove models not found in this level
+                if (!modelsInThisLevel.Contains(modelName)) {
+                    Logger.Log(LogType.SystemActivity, "OnJoiningLevel remove {0}", modelName);
+                    RemoveModel(p, modelName);
+                    sentModels.Remove(modelName);
+                }
+            }
+
+            // send new models not yet in player's list
+            foreach (var modelName in modelsInThisLevel) {
+                Logger.Log(LogType.SystemActivity, "OnJoiningLevel new {0}", modelName);
+                CheckSendModel(p, modelName);
+            }
+        }
+
+        static void OnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
+            Logger.Log(LogType.SystemActivity, "OnJoinedLevel {0} {1} {2}", p.name, prevLevel != null ? prevLevel.name : "NONE", level.name);
         }
 
         //------------------------------------------------------------------commands
 
         class ChatType {
             public Func<CustomModel, string> get;
-            // (model, pl, input) => bool
+            // (model, p, input) => bool
             public Func<CustomModel, Player, string[], bool> set;
             public string[] types;
 
             public ChatType(string type, Func<CustomModel, string> get, Func<CustomModel, Player, string, bool> set) {
                 this.types = new string[] { type };
                 this.get = get;
-                this.set = (model, pl, inputs) => {
-                    return set(model, pl, inputs[0]);
+                this.set = (model, p, inputs) => {
+                    return set(model, p, inputs[0]);
                 };
             }
 
@@ -264,9 +332,9 @@ namespace MCGalaxy {
             }
         }
 
-        static bool GetRealPixels(Player pl, string input, string argName, ref float output) {
+        static bool GetRealPixels(Player p, string input, string argName, ref float output) {
             float tmp = 0.0f;
-            if (CommandParser.GetReal(pl, input, "nameY", ref tmp)) {
+            if (CommandParser.GetReal(p, input, "nameY", ref tmp)) {
                 output = tmp / 16.0f;
                 return true;
             } else {
@@ -274,13 +342,13 @@ namespace MCGalaxy {
             }
         }
 
-        static Dictionary<string, ChatType> modifiableFields = new Dictionary<string, ChatType>(StringComparer.OrdinalIgnoreCase) {
+        static Dictionary<string, ChatType> ModifiableFields = new Dictionary<string, ChatType>(StringComparer.OrdinalIgnoreCase) {
             {
                 "nameY",
                 new ChatType(
                     "nameY",
                     (model) => "" + model.nameY * 16.0f,
-                    (model, pl, input) => GetRealPixels(pl, input, "nameY", ref model.nameY)
+                    (model, p, input) => GetRealPixels(p, input, "nameY", ref model.nameY)
                 )
             },
             {
@@ -288,7 +356,7 @@ namespace MCGalaxy {
                 new ChatType(
                     "eyeY",
                     (model) => "" + model.eyeY * 16.0f,
-                    (model, pl, input) => GetRealPixels(pl, input, "eyeY", ref model.eyeY)
+                    (model, p, input) => GetRealPixels(p, input, "eyeY", ref model.eyeY)
                 )
             },
             {
@@ -303,10 +371,10 @@ namespace MCGalaxy {
                             model.collisionBounds.Z * 16.0f
                         );
                     },
-                    (model, pl, input) => {
-                        if (!GetRealPixels(pl, input[0], "x", ref model.collisionBounds.X)) return false;
-                        if (!GetRealPixels(pl, input[1], "y", ref model.collisionBounds.Y)) return false;
-                        if (!GetRealPixels(pl, input[2], "z", ref model.collisionBounds.Z)) return false;
+                    (model, p, input) => {
+                        if (!GetRealPixels(p, input[0], "x", ref model.collisionBounds.X)) return false;
+                        if (!GetRealPixels(p, input[1], "y", ref model.collisionBounds.Y)) return false;
+                        if (!GetRealPixels(p, input[2], "z", ref model.collisionBounds.Z)) return false;
                         return true;
                     }
                 )
@@ -326,13 +394,13 @@ namespace MCGalaxy {
                             model.pickingBoundsAABB.Max.Z * 16.0f
                         );
                     },
-                    (model, pl, input) => {
-                        if (!GetRealPixels(pl, input[0], "minX", ref model.pickingBoundsAABB.Min.X)) return false;
-                        if (!GetRealPixels(pl, input[1], "minY", ref model.pickingBoundsAABB.Min.Y)) return false;
-                        if (!GetRealPixels(pl, input[2], "minZ", ref model.pickingBoundsAABB.Min.Z)) return false;
-                        if (!GetRealPixels(pl, input[3], "maxX", ref model.pickingBoundsAABB.Max.X)) return false;
-                        if (!GetRealPixels(pl, input[4], "maxY", ref model.pickingBoundsAABB.Max.Y)) return false;
-                        if (!GetRealPixels(pl, input[5], "maxZ", ref model.pickingBoundsAABB.Max.Z)) return false;
+                    (model, p, input) => {
+                        if (!GetRealPixels(p, input[0], "minX", ref model.pickingBoundsAABB.Min.X)) return false;
+                        if (!GetRealPixels(p, input[1], "minY", ref model.pickingBoundsAABB.Min.Y)) return false;
+                        if (!GetRealPixels(p, input[2], "minZ", ref model.pickingBoundsAABB.Min.Z)) return false;
+                        if (!GetRealPixels(p, input[3], "maxX", ref model.pickingBoundsAABB.Max.X)) return false;
+                        if (!GetRealPixels(p, input[4], "maxY", ref model.pickingBoundsAABB.Max.Y)) return false;
+                        if (!GetRealPixels(p, input[5], "maxZ", ref model.pickingBoundsAABB.Max.Z)) return false;
                         return true;
                     }
                 )
@@ -342,7 +410,7 @@ namespace MCGalaxy {
                 new ChatType(
                     "bobbing",
                     (model) => model.bobbing.ToString(),
-                    (model, pl, input) => CommandParser.GetBool(pl, input, ref model.bobbing)
+                    (model, p, input) => CommandParser.GetBool(p, input, ref model.bobbing)
                 )
             },
             {
@@ -350,7 +418,7 @@ namespace MCGalaxy {
                 new ChatType(
                     "pushes",
                     (model) => model.pushes.ToString(),
-                    (model, pl, input) => CommandParser.GetBool(pl, input, ref model.pushes)
+                    (model, p, input) => CommandParser.GetBool(p, input, ref model.pushes)
                 )
             },
             {
@@ -358,7 +426,7 @@ namespace MCGalaxy {
                 new ChatType(
                     "usesHumanSkin",
                     (model) => model.usesHumanSkin.ToString(),
-                    (model, pl, input) => CommandParser.GetBool(pl, input, ref model.usesHumanSkin)
+                    (model, p, input) => CommandParser.GetBool(p, input, ref model.usesHumanSkin)
                 )
             },
             {
@@ -366,7 +434,7 @@ namespace MCGalaxy {
                 new ChatType(
                     "calcHumanAnims",
                     (model) => model.calcHumanAnims.ToString(),
-                    (model, pl, input) => CommandParser.GetBool(pl, input, ref model.calcHumanAnims)
+                    (model, p, input) => CommandParser.GetBool(p, input, ref model.calcHumanAnims)
                 )
             },
             {
@@ -374,7 +442,7 @@ namespace MCGalaxy {
                 new ChatType(
                     "hideFirstPersonArm",
                     (model) => model.hideFirstPersonArm.ToString(),
-                    (model, pl, input) => CommandParser.GetBool(pl, input, ref model.hideFirstPersonArm)
+                    (model, p, input) => CommandParser.GetBool(p, input, ref model.hideFirstPersonArm)
                 )
             },
         };
@@ -407,7 +475,7 @@ namespace MCGalaxy {
                             // or
                             // /CustomModel config [model name] [field]
 
-                            foreach (var entry in modifiableFields) {
+                            foreach (var entry in ModifiableFields) {
                                 var fieldName = entry.Key;
                                 var chatType = entry.Value;
                                 p.Message(
@@ -418,8 +486,8 @@ namespace MCGalaxy {
                         } else if (words.Length >= 4) {
                             // /CustomModel config [model name] [field] [value]
                             var fieldName = words[2];
-                            if (modifiableFields.ContainsKey(fieldName)) {
-                                var chatType = modifiableFields[fieldName];
+                            if (ModifiableFields.ContainsKey(fieldName)) {
+                                var chatType = ModifiableFields[fieldName];
                                 var inputs = words.Skip(3).ToArray();
                                 if (inputs.Length == chatType.types.Length) {
                                     if (chatType.set.Invoke(model, p, inputs)) {
