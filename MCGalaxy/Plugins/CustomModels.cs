@@ -1,15 +1,13 @@
-//reference Newtonsoft.Json.dll
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using MCGalaxy.Commands;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace MCGalaxy {
     public sealed class CustomModelsPlugin : Plugin {
@@ -25,10 +23,10 @@ namespace MCGalaxy {
         const string BBdirectory = "plugins/models/bbmodels/";
         const string CCdirectory = "plugins/models/";
 
-        // don't serialize "name" because we will use filename for model name
-        // don't serialize "parts" because we store those in the full .bbmodel file
-        // don't serialize "u/vScale" because we take it from bbmodel's resolution.width
-        struct StoredCustomModel {
+        // don't store "name" because we will use filename for model name
+        // don't store "parts" because we store those in the full .bbmodel file
+        // don't store "u/vScale" because we take it from bbmodel's resolution.width
+        class StoredCustomModel {
             public float nameY;
             public float eyeY;
             public Vec3F32 collisionBounds;
@@ -38,19 +36,18 @@ namespace MCGalaxy {
             public bool usesHumanSkin;
             public bool calcHumanAnims;
             public bool hideFirstPersonArm;
-        }
 
-        static void WriteCCModelFile(string modelName, CustomModel model) {
-            // convert to pixel units
-            var storedCustomModel = new StoredCustomModel {
-                nameY = model.nameY * 16.0f,
-                eyeY = model.eyeY * 16.0f,
-                collisionBounds = {
+            public static StoredCustomModel FromCustomModel(CustomModel model) {
+                // convert to pixel units
+                var storedCustomModel = new StoredCustomModel {
+                    nameY = model.nameY * 16.0f,
+                    eyeY = model.eyeY * 16.0f,
+                    collisionBounds = {
                     X = model.collisionBounds.X * 16.0f,
                     Y = model.collisionBounds.Y * 16.0f,
                     Z = model.collisionBounds.Z * 16.0f,
                 },
-                pickingBoundsAABB = {
+                    pickingBoundsAABB = {
                     Min = new Vec3F32 {
                         X = model.pickingBoundsAABB.Min.X * 16.0f,
                         Y = model.pickingBoundsAABB.Min.Y * 16.0f,
@@ -62,15 +59,66 @@ namespace MCGalaxy {
                         Z = model.pickingBoundsAABB.Max.Z * 16.0f,
                     },
                 },
-                bobbing = model.bobbing,
-                pushes = model.pushes,
-                usesHumanSkin = model.usesHumanSkin,
-                calcHumanAnims = model.calcHumanAnims,
-                hideFirstPersonArm = model.hideFirstPersonArm,
-            };
+                    bobbing = model.bobbing,
+                    pushes = model.pushes,
+                    usesHumanSkin = model.usesHumanSkin,
+                    calcHumanAnims = model.calcHumanAnims,
+                    hideFirstPersonArm = model.hideFirstPersonArm,
+                };
+                return storedCustomModel;
+            }
 
-            var storedJsonModel = JsonConvert.SerializeObject(storedCustomModel, Formatting.Indented, jsonSettings);
-            File.WriteAllText(CCdirectory + modelName + storedModelExt, storedJsonModel);
+            public CustomModel ToCustomModel(string name) {
+                string contentsBB = File.ReadAllText(BBdirectory + name + blockBenchExt);
+                var blockBench = BlockBench.Parse(contentsBB);
+                var parts = blockBench.ToCustomModelParts();
+
+                // convert to block units
+                var model = new CustomModel {
+                    name = name,
+                    parts = parts,
+                    uScale = blockBench.resolution.width,
+                    vScale = blockBench.resolution.height,
+
+                    nameY = this.nameY / 16.0f,
+                    eyeY = this.eyeY / 16.0f,
+                    collisionBounds = new Vec3F32 {
+                        X = this.collisionBounds.X / 16.0f,
+                        Y = this.collisionBounds.Y / 16.0f,
+                        Z = this.collisionBounds.Z / 16.0f,
+                    },
+                    pickingBoundsAABB = new AABBF32 {
+                        Min = new Vec3F32 {
+                            X = this.pickingBoundsAABB.Min.X / 16.0f,
+                            Y = this.pickingBoundsAABB.Min.Y / 16.0f,
+                            Z = this.pickingBoundsAABB.Min.Z / 16.0f,
+                        },
+                        Max = new Vec3F32 {
+                            X = this.pickingBoundsAABB.Max.X / 16.0f,
+                            Y = this.pickingBoundsAABB.Max.Y / 16.0f,
+                            Z = this.pickingBoundsAABB.Max.Z / 16.0f,
+                        },
+                    },
+                    bobbing = this.bobbing,
+                    pushes = this.pushes,
+                    usesHumanSkin = this.usesHumanSkin,
+                    calcHumanAnims = this.calcHumanAnims,
+                    hideFirstPersonArm = this.hideFirstPersonArm,
+                };
+
+                return model;
+            }
+
+            public void WriteToFile(string name) {
+                string storedJsonModel = JsonConvert.SerializeObject(this, Formatting.Indented, jsonSettings);
+                File.WriteAllText(CCdirectory + name + storedModelExt, storedJsonModel);
+            }
+
+            public static StoredCustomModel ReadFromFile(string name) {
+                string contentsCC = File.ReadAllText(CCdirectory + name + storedModelExt);
+                StoredCustomModel storedCustomModel = JsonConvert.DeserializeObject<StoredCustomModel>(contentsCC);
+                return storedCustomModel;
+            }
         }
 
         static void CreateCCmodelFromBBmodel() {
@@ -86,7 +134,7 @@ namespace MCGalaxy {
                 if (!extension.CaselessEq(blockBenchExt)) { continue; }
                 if (File.Exists(CCdirectory + modelName + storedModelExt)) { continue; }
 
-                WriteCCModelFile(modelName, new CustomModel { });
+                StoredCustomModel.FromCustomModel(new CustomModel { }).WriteToFile(modelName);
 
                 Logger.Log(
                     LogType.SystemActivity,
@@ -95,50 +143,6 @@ namespace MCGalaxy {
                     CCdirectory
                 );
             }
-        }
-
-        static CustomModel ReadCCModelFile(string name) {
-            string contentsCC = File.ReadAllText(CCdirectory + name + storedModelExt);
-            string contentsBB = File.ReadAllText(BBdirectory + name + blockBenchExt);
-
-            StoredCustomModel storedCustomModel = JsonConvert.DeserializeObject<StoredCustomModel>(contentsCC);
-            var blockBench = BlockBench.Parse(contentsBB);
-            var parts = blockBench.ToCustomModelParts();
-
-            // convert to block units
-            var model = new CustomModel {
-                name = name,
-                parts = parts,
-                uScale = blockBench.resolution.width,
-                vScale = blockBench.resolution.height,
-
-                nameY = storedCustomModel.nameY / 16.0f,
-                eyeY = storedCustomModel.eyeY / 16.0f,
-                collisionBounds = new Vec3F32 {
-                    X = storedCustomModel.collisionBounds.X / 16.0f,
-                    Y = storedCustomModel.collisionBounds.Y / 16.0f,
-                    Z = storedCustomModel.collisionBounds.Z / 16.0f,
-                },
-                pickingBoundsAABB = new AABBF32 {
-                    Min = new Vec3F32 {
-                        X = storedCustomModel.pickingBoundsAABB.Min.X / 16.0f,
-                        Y = storedCustomModel.pickingBoundsAABB.Min.Y / 16.0f,
-                        Z = storedCustomModel.pickingBoundsAABB.Min.Z / 16.0f,
-                    },
-                    Max = new Vec3F32 {
-                        X = storedCustomModel.pickingBoundsAABB.Max.X / 16.0f,
-                        Y = storedCustomModel.pickingBoundsAABB.Max.Y / 16.0f,
-                        Z = storedCustomModel.pickingBoundsAABB.Max.Z / 16.0f,
-                    },
-                },
-                bobbing = storedCustomModel.bobbing,
-                pushes = storedCustomModel.pushes,
-                usesHumanSkin = storedCustomModel.usesHumanSkin,
-                calcHumanAnims = storedCustomModel.calcHumanAnims,
-                hideFirstPersonArm = storedCustomModel.hideFirstPersonArm,
-            };
-
-            return model;
         }
 
         static void LoadModels() {
@@ -154,7 +158,7 @@ namespace MCGalaxy {
                 if (!extension.CaselessEq(storedModelExt)) { continue; }
                 if (!File.Exists(BBdirectory + modelName + blockBenchExt)) { continue; }
 
-                CustomModel model = ReadCCModelFile(modelName);
+                CustomModel model = StoredCustomModel.ReadFromFile(modelName).ToCustomModel(modelName);
                 CustomModels[modelName] = model;
 
                 Logger.Log(
@@ -421,7 +425,7 @@ namespace MCGalaxy {
                                     if (chatType.set.Invoke(model, p, inputs)) {
                                         // field was set, update file!
                                         DefineModelForAllPlayers(model);
-                                        WriteCCModelFile(modelName, model);
+                                        StoredCustomModel.FromCustomModel(model).WriteToFile(modelName);
                                         return;
                                     } else {
                                         p.Message("%cUMMMM");
