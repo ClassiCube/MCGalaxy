@@ -1302,7 +1302,7 @@ namespace MCGalaxy.Gui
             // 
             this.rank_numMaps.Location = new System.Drawing.Point(259, 20);
             this.rank_numMaps.Maximum = new decimal(new int[] {
-                                    255,
+                                    2147483647,
                                     0,
                                     0,
                                     0});
