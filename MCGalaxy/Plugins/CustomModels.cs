@@ -17,7 +17,7 @@ namespace MCGalaxy {
 
         //------------------------------------------------------------------bbmodel/ccmodel file loading
 
-        public static Dictionary<string, CustomModel> CustomModels = new Dictionary<string, CustomModel>();
+        public static Dictionary<string, CustomModel> CustomModels = new Dictionary<string, CustomModel>(StringComparer.OrdinalIgnoreCase);
         const string blockBenchExt = ".bbmodel";
         const string storedModelExt = ".ccmodel";
         const string BBdirectory = "plugins/models/bbmodels/";
@@ -274,7 +274,7 @@ namespace MCGalaxy {
             }
         }
 
-        static Dictionary<string, ChatType> modifiableFields = new Dictionary<string, ChatType> {
+        static Dictionary<string, ChatType> modifiableFields = new Dictionary<string, ChatType>(StringComparer.OrdinalIgnoreCase) {
             {
                 "nameY",
                 new ChatType(
