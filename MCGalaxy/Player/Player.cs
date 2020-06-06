@@ -127,12 +127,15 @@ namespace MCGalaxy {
             color = col;
         }
         
-        /// <summary> Raises OnSettingColorEvent then sets color. </summary>
-        /// <remarks> If color differs from previous, respawns this player. </remarks>
+        /// <summary> Calls SetColor, then updates state depending on color. 
+        /// (e.g. entity name, tab list name, prefix, etc) </summary>
         public void UpdateColor(string col) {
             string prevCol = color;
             SetColor(col);
-            if (prevCol != color) Entities.GlobalRespawn(this);
+            
+            if (prevCol == color) return;
+            Entities.GlobalRespawn(this);
+            SetPrefix();
         }
         
         internal string MakeTitle(string title, string titleCol) {

@@ -179,7 +179,6 @@ namespace MCGalaxy.Games {
             if (data == null || p.Socket.Disconnected) return;
             
             p.UpdateColor(PlayerInfo.DefaultColor(p));
-            p.SetPrefix();
             TabList.Update(p, true);
         }
         
@@ -188,8 +187,6 @@ namespace MCGalaxy.Games {
             Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
             
             p.UpdateColor(team.Color);
-            p.SetPrefix();
-            
             p.Message("You are now on the " + team.ColoredName + " team!");
             TabList.Update(p, true);
         }

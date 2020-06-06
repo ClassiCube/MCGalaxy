@@ -216,8 +216,7 @@ namespace MCGalaxy {
             if (grp == null) grp = DefaultRank;
             p.group = grp;
             
-            p.UpdateColor(PlayerInfo.DefaultColor(p));   
-            p.SetPrefix();
+            p.UpdateColor(PlayerInfo.DefaultColor(p));
         }
 
         static readonly object saveLock = new object();

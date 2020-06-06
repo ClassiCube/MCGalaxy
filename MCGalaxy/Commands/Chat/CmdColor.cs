@@ -60,8 +60,6 @@ namespace MCGalaxy.Commands.Chatting {
                 Chat.MessageFrom(who, "λNICK %Shad their color changed to " + color + Colors.Name(color));
                 who.UpdateColor(color);
             }
-            
-            who.SetPrefix();
             PlayerDB.Update(who.name, PlayerData.ColumnColor, color);
         }
         
