@@ -559,16 +559,39 @@ namespace MCGalaxy {
                             fullbright = false,
                         };
 
-                        if (e.name.CaselessContains("head")) {
-                            part.anim = CustomModelAnim.Head;
-                        } else if (e.name.CaselessContains("leftleg")) {
-                            part.anim = CustomModelAnim.LeftLeg;
-                        } else if (e.name.CaselessContains("rightleg")) {
-                            part.anim = CustomModelAnim.RightLeg;
-                        } else if (e.name.CaselessContains("leftarm")) {
-                            part.anim = CustomModelAnim.LeftArm;
-                        } else if (e.name.CaselessContains("rightarm")) {
-                            part.anim = CustomModelAnim.RightArm;
+                        foreach (var attr in e.name.SplitComma()) {
+
+                            var animModifier = 1.0f;
+                            var colonSplit = attr.Split(':');
+                            if (colonSplit.Length >= 2) {
+                                animModifier = float.Parse(colonSplit[1]);
+                            }
+
+                            if (attr.CaselessStarts("head")) {
+                                part.anim = CustomModelAnim.Head;
+                            } else if (attr.CaselessStarts("leftleg")) {
+                                part.anim = CustomModelAnim.LeftLeg;
+                            } else if (attr.CaselessStarts("rightleg")) {
+                                part.anim = CustomModelAnim.RightLeg;
+                            } else if (attr.CaselessStarts("leftarm")) {
+                                part.anim = CustomModelAnim.LeftArm;
+                            } else if (attr.CaselessStarts("rightarm")) {
+                                part.anim = CustomModelAnim.RightArm;
+                            } else if (attr.CaselessStarts("spinxvelocity")) {
+                                part.anim = CustomModelAnim.SpinXVelocity;
+                            } else if (attr.CaselessStarts("spinyvelocity")) {
+                                part.anim = CustomModelAnim.SpinYVelocity;
+                            } else if (attr.CaselessStarts("spinzvelocity")) {
+                                part.anim = CustomModelAnim.SpinZVelocity;
+                            } else if (attr.CaselessStarts("spinx")) {
+                                part.anim = CustomModelAnim.SpinX;
+                            } else if (attr.CaselessStarts("spiny")) {
+                                part.anim = CustomModelAnim.SpinY;
+                            } else if (attr.CaselessStarts("spinz")) {
+                                part.anim = CustomModelAnim.SpinZ;
+                            }
+
+                            part.animModifier = animModifier;
                         }
 
                         if (e.name.CaselessContains("fullbright")) {
