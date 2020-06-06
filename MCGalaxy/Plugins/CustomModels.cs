@@ -225,6 +225,20 @@ namespace MCGalaxy {
             DefineModelsForAllPlayers();
         }
 
+        public override void Unload(bool shutdown) {
+            OnJoinedLevelEvent.Unregister(OnJoinedLevel);
+            if (command != null) {
+                Command.Unregister(command);
+                command = null;
+            }
+        }
+
+        static void OnJoinedLevel(Player pl, Level prevLevel, Level level, ref bool announce) {
+            DefineModels(pl);
+        }
+
+        //------------------------------------------------------------------commands
+
         class ChatType {
             public Func<CustomModel, string> get;
             // (model, pl, input) => bool
@@ -250,24 +264,10 @@ namespace MCGalaxy {
             }
         }
 
-        public override void Unload(bool shutdown) {
-            OnJoinedLevelEvent.Unregister(OnJoinedLevel);
-            if (command != null) {
-                Command.Unregister(command);
-                command = null;
-            }
-        }
-
-        static void OnJoinedLevel(Player pl, Level prevLevel, Level level, ref bool announce) {
-            DefineModels(pl);
-        }
-
-        //------------------------------------------------------------------commands
-
         static bool GetRealPixels(Player pl, string input, string argName, ref float output) {
             float tmp = 0.0f;
             if (CommandParser.GetReal(pl, input, "nameY", ref tmp)) {
-                output = tmp * 16.0f;
+                output = tmp / 16.0f;
                 return true;
             } else {
                 return false;
@@ -330,9 +330,9 @@ namespace MCGalaxy {
                         if (!GetRealPixels(pl, input[0], "minX", ref model.pickingBoundsAABB.Min.X)) return false;
                         if (!GetRealPixels(pl, input[1], "minY", ref model.pickingBoundsAABB.Min.Y)) return false;
                         if (!GetRealPixels(pl, input[2], "minZ", ref model.pickingBoundsAABB.Min.Z)) return false;
-                        if (!GetRealPixels(pl, input[0], "maxX", ref model.pickingBoundsAABB.Max.X)) return false;
-                        if (!GetRealPixels(pl, input[1], "maxY", ref model.pickingBoundsAABB.Max.Y)) return false;
-                        if (!GetRealPixels(pl, input[2], "maxZ", ref model.pickingBoundsAABB.Max.Z)) return false;
+                        if (!GetRealPixels(pl, input[3], "maxX", ref model.pickingBoundsAABB.Max.X)) return false;
+                        if (!GetRealPixels(pl, input[4], "maxY", ref model.pickingBoundsAABB.Max.Y)) return false;
+                        if (!GetRealPixels(pl, input[5], "maxZ", ref model.pickingBoundsAABB.Max.Z)) return false;
                         return true;
                     }
                 )
