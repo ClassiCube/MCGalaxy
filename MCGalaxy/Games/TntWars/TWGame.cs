@@ -48,7 +48,6 @@ namespace MCGalaxy.Games {
         public float ScoreMultiplier = 1f;
         public int LastKillStreakAnnounced;
         public Player HarmedBy; // For Assists
-        public string OrigCol;
         
         public void Reset(TWDifficulty diff) {
             bool easyish = diff == TWDifficulty.Easy || diff == TWDifficulty.Normal;
@@ -94,8 +93,6 @@ namespace MCGalaxy.Games {
             data = new TWData();
             
             // TODO: Is this even thread-safe
-            data.OrigCol = p.color;
-            
             p.Extras[twExtrasKey] = data;
             return data;
         }
@@ -181,7 +178,7 @@ namespace MCGalaxy.Games {
             // TODO: p.Socket.Disconnected check should be elsewhere
             if (data == null || p.Socket.Disconnected) return;
             
-            p.color = data.OrigCol;
+            p.UpdateColor(PlayerInfo.DefaultColor(p));
             p.SetPrefix();
             TabList.Update(p, true);
         }
@@ -190,7 +187,7 @@ namespace MCGalaxy.Games {
             team.Members.Add(p);
             Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
             
-            p.color = team.Color;
+            p.UpdateColor(team.Color);
             p.SetPrefix();
             
             p.Message("You are now on the " + team.ColoredName + " team!");

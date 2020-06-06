@@ -41,6 +41,7 @@ namespace MCGalaxy.Games {
             OnSentMapEvent.Register(HandleSentMap, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
+            OnSettingColorEvent.Register(HandleSettingColor, Priority.High);
             
             base.HookEventHandlers();
         }
@@ -51,6 +52,7 @@ namespace MCGalaxy.Games {
             OnSentMapEvent.Unregister(HandleSentMap);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
+            OnSettingColorEvent.Unregister(HandleSettingColor);
             
             base.UnhookEventHandlers();
         }
@@ -101,7 +103,13 @@ namespace MCGalaxy.Games {
                 tabGroup = "&7Spectators";
             }
         }
-        
+		
+        void HandleSettingColor(Player p, ref string color) {
+            if (p.level != Map) return;
+            TWTeam team = TeamOf(p);
+            if (team != null) color = team.Color;
+        }
+		
         void HandleSentMap(Player p, Level prevLevel, Level level) {
             if (level != Map) return;
             MessageMapInfo(p);
