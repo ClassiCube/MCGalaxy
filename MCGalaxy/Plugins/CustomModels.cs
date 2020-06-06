@@ -252,9 +252,34 @@ namespace MCGalaxy {
             }
         }
 
-        static void OnBeforeChangeModel(Player p, byte entityID, string modelName) {
-            CheckSendModel(p, modelName);
-            Logger.Log(LogType.SystemActivity, "ChangeModel {0} {1} {2}", p.name, modelName, entityID);
+        static void CheckAddRemove(Player p, Level level) {
+            var visibleModels = new HashSet<string>();
+            visibleModels.Add(p.Model);
+
+            foreach (Player e in level.getPlayers()) {
+                visibleModels.Add(e.Model);
+            }
+            foreach (PlayerBot e in level.Bots.Items) {
+                visibleModels.Add(e.Model);
+            }
+
+
+            var sentModels = SentCustomModels[p.name];
+            // clone so we can modify while we iterate
+            foreach (var modelName in sentModels.ToArray()) {
+                // remove models not found in this level
+                if (!visibleModels.Contains(modelName)) {
+                    Logger.Log(LogType.SystemActivity, "CheckAddRemove {0} remove {1}", p.name, modelName);
+                    RemoveModel(p, modelName);
+                    sentModels.Remove(modelName);
+                }
+            }
+
+            // send new models not yet in player's list
+            foreach (var modelName in visibleModels) {
+                Logger.Log(LogType.SystemActivity, "CheckAddRemove {0} checkadd {1}", p.name, modelName);
+                CheckSendModel(p, modelName);
+            }
         }
 
         static void OnPlayerConnect(Player p) {
@@ -265,44 +290,44 @@ namespace MCGalaxy {
         static void OnPlayerDisconnect(Player p, string reason) {
             Logger.Log(LogType.SystemActivity, "OnPlayerDisconnect {0}", p.name);
             SentCustomModels.Remove(p.name);
-        }
-
-        static void OnJoiningLevel(Player p, Level lvl, ref bool canJoin) {
-            Logger.Log(LogType.SystemActivity, "OnJoiningLevel {0} {1}", p.name, lvl.name);
 
 
-            var modelsInThisLevel = new HashSet<string>();
-            foreach (Player e in lvl.getPlayers()) {
-                modelsInThisLevel.Add(e.Model);
-            }
-            foreach (PlayerBot e in lvl.Bots.Items) {
-                modelsInThisLevel.Add(e.Model);
-            }
-            // also add our own model
-            modelsInThisLevel.Add(p.Model);
+            Level prevLevel = p.level;
 
-
-            var sentModels = SentCustomModels[p.name];
-            // clone so we can modify while we iterate
-            foreach (var modelName in sentModels.ToArray()) {
-
-                // remove models not found in this level
-                if (!modelsInThisLevel.Contains(modelName)) {
-                    Logger.Log(LogType.SystemActivity, "OnJoiningLevel remove {0}", modelName);
-                    RemoveModel(p, modelName);
-                    sentModels.Remove(modelName);
+            if (prevLevel != null) {
+                // tell other players still on the last map to remove our model
+                // if we were the last one using that model
+                foreach (Player e in prevLevel.getPlayers()) {
+                    if (e == p) continue;
+                    CheckAddRemove(e, prevLevel);
                 }
             }
+        }
 
-            // send new models not yet in player's list
-            foreach (var modelName in modelsInThisLevel) {
-                Logger.Log(LogType.SystemActivity, "OnJoiningLevel new {0}", modelName);
-                CheckSendModel(p, modelName);
-            }
+        static void OnJoiningLevel(Player p, Level level, ref bool canJoin) {
+            Level prevLevel = p.level;
+            Logger.Log(LogType.SystemActivity, "OnJoiningLevel {0} {1} {2}", p.name, prevLevel != null ? prevLevel.name : "NONE", level.name);
+
+            // send future/new model list to player
+            CheckAddRemove(p, level);
         }
 
         static void OnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             Logger.Log(LogType.SystemActivity, "OnJoinedLevel {0} {1} {2}", p.name, prevLevel != null ? prevLevel.name : "NONE", level.name);
+
+            if (prevLevel != null) {
+                // tell other players still on the last map to remove our model
+                // if we were the last one using that model
+                foreach (Player e in prevLevel.getPlayers()) {
+                    if (e == p) continue;
+                    CheckAddRemove(e, prevLevel);
+                }
+            }
+        }
+
+        static void OnBeforeChangeModel(Player p, byte entityID, string modelName) {
+            CheckSendModel(p, modelName);
+            Logger.Log(LogType.SystemActivity, "ChangeModel {0} {1} {2}", p.name, modelName, entityID);
         }
 
         //------------------------------------------------------------------commands
