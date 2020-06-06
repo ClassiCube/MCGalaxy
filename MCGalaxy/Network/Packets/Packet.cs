@@ -460,13 +460,13 @@ namespace MCGalaxy.Network {
         }
 
         const int MaxCustomModelParts = 64;
-        const int CustomModelPartPacketSize = 57;
+        const int CustomModelPartPacketSize = 61;
         public static byte[] DefineModel(CustomModel customModel) {
             if (customModel.parts.Length >= MaxCustomModelParts) {
                 throw new Exception("customModel.parts exceeds " + MaxCustomModelParts);
             }
             
-            // 3763 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 2*2 + 1 + 64*57
+            // 4019 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 2*2 + 1 + 64*61
             byte[] buffer = new byte[
                 1 + NetUtils.StringSize
                 + 2*4 + 3*4 + 6*4 + 1 + 2*2
@@ -535,7 +535,7 @@ namespace MCGalaxy.Network {
         }
 
         static void MakeCustomModelPart(CustomModelPart part, ref byte[] buffer, ref int i) {
-            // 57 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1 + 1
+            // 61 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1 + 4 + 1
 
             // write BoxDesc
             NetUtils.WriteU16(part.boxDesc.texX, buffer, i);
@@ -578,6 +578,8 @@ namespace MCGalaxy.Network {
 
             // write anim
             buffer[i++] = (byte)part.anim;
+            NetUtils.WriteF32(part.animModifier, buffer, i);
+            i += 4;
 
             // write bool flags
             byte flags = 0;
@@ -725,6 +727,7 @@ namespace MCGalaxy.Network {
             Z = 0.0f,
         };
         public CustomModelAnim anim = CustomModelAnim.None;
+        public float animModifier = 1.0f;
         public bool fullbright = false;
     }
 
@@ -735,5 +738,11 @@ namespace MCGalaxy.Network {
         RightLeg = 3,
         LeftArm = 4,
         RightArm = 5,
+        SpinX = 6,
+        SpinY = 7,
+        SpinZ = 8,
+        SpinXVelocity = 9,
+        SpinYVelocity = 10,
+        SpinZVelocity = 11,
     }
 }

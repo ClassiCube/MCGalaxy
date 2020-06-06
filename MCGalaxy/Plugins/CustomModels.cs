@@ -43,22 +43,22 @@ namespace MCGalaxy {
                     nameY = model.nameY * 16.0f,
                     eyeY = model.eyeY * 16.0f,
                     collisionBounds = {
-                    X = model.collisionBounds.X * 16.0f,
-                    Y = model.collisionBounds.Y * 16.0f,
-                    Z = model.collisionBounds.Z * 16.0f,
-                },
+                        X = model.collisionBounds.X * 16.0f,
+                        Y = model.collisionBounds.Y * 16.0f,
+                        Z = model.collisionBounds.Z * 16.0f,
+                    },
                     pickingBoundsAABB = {
-                    Min = new Vec3F32 {
-                        X = model.pickingBoundsAABB.Min.X * 16.0f,
-                        Y = model.pickingBoundsAABB.Min.Y * 16.0f,
-                        Z = model.pickingBoundsAABB.Min.Z * 16.0f,
+                        Min = new Vec3F32 {
+                            X = model.pickingBoundsAABB.Min.X * 16.0f,
+                            Y = model.pickingBoundsAABB.Min.Y * 16.0f,
+                            Z = model.pickingBoundsAABB.Min.Z * 16.0f,
+                        },
+                        Max = new Vec3F32 {
+                            X = model.pickingBoundsAABB.Max.X * 16.0f,
+                            Y = model.pickingBoundsAABB.Max.Y * 16.0f,
+                            Z = model.pickingBoundsAABB.Max.Z * 16.0f,
+                        },
                     },
-                    Max = new Vec3F32 {
-                        X = model.pickingBoundsAABB.Max.X * 16.0f,
-                        Y = model.pickingBoundsAABB.Max.Y * 16.0f,
-                        Z = model.pickingBoundsAABB.Max.Z * 16.0f,
-                    },
-                },
                     bobbing = model.bobbing,
                     pushes = model.pushes,
                     usesHumanSkin = model.usesHumanSkin,
