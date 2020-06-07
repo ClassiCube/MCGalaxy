@@ -64,13 +64,11 @@ namespace MCGalaxy.Levels.IO {
             public string Name;
             public byte Flags;
             public JFieldDesc[] Fields;
-            public List<object> Annotation;
             public JClassDesc SuperClass;
         }
         
         class JClassData {
             public object[] Values;
-            public List<object> Annotation;
         }
         
         class JObject {

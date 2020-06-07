@@ -29,12 +29,12 @@ namespace MCGalaxy.Levels.IO {
         
         public override Vec3U16 ReadDimensions(Stream src) {
             BinaryReader reader = new BinaryReader(src);
-            return ReadDimensions(reader);
+            return ReadHeader(reader);
         }
         
         public override Level Read(Stream src, string name, bool metadata) {
             BinaryReader reader = new BinaryReader(src);
-            Vec3U16 dims = ReadDimensions(reader);
+            Vec3U16 dims = ReadHeader(reader);
             Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
 
             lvl.spawnx = (ushort)(reader.ReadInt32() / 32);
@@ -43,8 +43,8 @@ namespace MCGalaxy.Levels.IO {
             lvl.rotx = reader.ReadByte();
             lvl.roty = reader.ReadByte();
 
-            reader.ReadUInt32(); // date modified
-            reader.ReadUInt32(); // date created
+            reader.ReadUInt32();  // date modified
+            reader.ReadUInt32();  // date created
             reader.ReadBytes(16); // uuid
             reader.ReadBytes(26); // layer index
             int metaSize = reader.ReadInt32();            
@@ -69,7 +69,7 @@ namespace MCGalaxy.Levels.IO {
             return lvl;
         }
         
-        static Vec3U16 ReadDimensions(BinaryReader reader) {
+        static Vec3U16 ReadHeader(BinaryReader reader) {
             if (reader.ReadInt32() != 0x0FC2AF40 || reader.ReadByte() != 13) {
                 throw new InvalidDataException( "Unexpected constant in .fcm file" );
             }
