@@ -158,11 +158,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static int LargestDelta(Level lvl, Vec3S32 point) {
-            Vec3S32 clamped;
-            clamped.X = Math.Max(0, Math.Min(point.X, lvl.Width  - 1));
-            clamped.Y = Math.Max(0, Math.Min(point.Y, lvl.Height - 1));
-            clamped.Z = Math.Max(0, Math.Min(point.Z, lvl.Length - 1));
-            
+            Vec3S32 clamped = lvl.ClampPos(point);
             int dx = Math.Abs(point.X - clamped.X);
             int dy = Math.Abs(point.Y - clamped.Y);
             int dz = Math.Abs(point.Z - clamped.Z);

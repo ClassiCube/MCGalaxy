@@ -45,9 +45,7 @@ namespace MCGalaxy.Commands.Building {
             P.Y = (p.Pos.Y - 32) / 32;
             if (message.Length > 0 && !ParseCoords(message, p, ref P)) return;
             
-            P.X = Clamp(P.X, p.level.Width);
-            P.Y = Clamp(P.Y, p.level.Height);
-            P.Z = Clamp(P.Z, p.level.Length);
+            P = p.level.ClampPos(P);
             if (DoMark(p, P.X, P.Y, P.Z)) return;
             
             Vec3U16 mark = (Vec3U16)P;
@@ -78,12 +76,6 @@ namespace MCGalaxy.Commands.Building {
             if (args[2].CaselessEq("Z")) args[2] = p.lastClick.Z.ToString();
             
             return CommandParser.GetCoords(p, args, 0, ref P);
-        }
-        
-        static int Clamp(int value, int axisLen) {
-            if (value < 0) return 0;
-            if (value >= axisLen) return axisLen - 1;
-            return value;
         }
         
         internal static bool DoMark(Player p, int x, int y, int z) {

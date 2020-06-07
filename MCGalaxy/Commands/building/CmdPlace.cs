@@ -49,21 +49,13 @@ namespace MCGalaxy.Commands.Building {
             }
 
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;            
-            P.X = Clamp(P.X, p.level.Width);
-            P.Y = Clamp(P.Y, p.level.Height);
-            P.Z = Clamp(P.Z, p.level.Length);
+            P = p.level.ClampPos(P);
             
             p.level.UpdateBlock(p, (ushort)P.X, (ushort)P.Y, (ushort)P.Z, block);
             string blockName = Block.GetName(p, block);
             if (!p.Ignores.DrawOutput) {
                 p.Message("{1} block was placed at ({0}).", P, blockName);
             }
-        }
-        
-        static int Clamp(int value, int axisLen) {
-            if (value < 0) return 0;
-            if (value >= axisLen) return axisLen - 1;
-            return value;
         }
         
         public override void Help(Player p) {

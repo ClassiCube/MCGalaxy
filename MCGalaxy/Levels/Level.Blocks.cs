@@ -441,6 +441,13 @@ namespace MCGalaxy {
             return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
+        public Vec3S32 ClampPos(Vec3S32 P) {
+            P.X = Math.Max(0, Math.Min(P.X, Width  - 1));
+            P.Y = Math.Max(0, Math.Min(P.Y, Height - 1));
+            P.Z = Math.Max(0, Math.Min(P.Z, Length - 1));
+            return P;
+        }
+        
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, BlockID block,
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
             int index;
