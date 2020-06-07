@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands.Building;
+using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
@@ -643,12 +644,15 @@ namespace MCGalaxy.Commands.CPE {
             string[] coords = parts.SplitSpaces();
             if (coords.Length != 3) return false;
             
-            int tx = 0, ty = 0, tz = 0;
-            if (!CommandParser.GetInt(p, coords[0], "X", ref tx, -127, 127)) return false;
-            if (!CommandParser.GetInt(p, coords[1], "Y", ref ty, -127, 127)) return false;
-            if (!CommandParser.GetInt(p, coords[2], "Z", ref tz, -127, 127)) return false;
+            // TODO: Having to cast to sbyte here is yucky. blockdefs code should be fixed instead
+            Vec3S32 P = new Vec3S32((sbyte)x, (sbyte)z, (sbyte)y); // blockdef files have z being height, we use y being height
+            if (!CommandParser.GetCoords(p, coords, 0, ref P)) return false;
             
-            x = (byte)tx; z = (byte)ty; y = (byte)tz; // blockdef files have z being height, we use y being height
+            if (!CommandParser.CheckRange(p, P.X, "X", -127, 127)) return false;
+            if (!CommandParser.CheckRange(p, P.Y, "Y", -127, 127)) return false;
+            if (!CommandParser.CheckRange(p, P.Z, "Z", -127, 127)) return false;
+            
+            x = (byte)P.X; z = (byte)P.Y; y = (byte)P.Z; // blockdef files have z being height, we use y being height
             return true;
         }
         

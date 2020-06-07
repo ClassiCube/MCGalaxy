@@ -77,6 +77,20 @@ namespace MCGalaxy.Commands {
         public const string TimespanHelp = "For example, to {0} 25 and a half hours, use \"1d1h30m\".";
         
         
+        public static bool CheckRange(Player p, int value, string argName, int min, int max) {
+            if (value >= min && value <= max) return true;
+            
+            // Try to provide more helpful range messages
+            if (max == int.MaxValue) {
+                p.Message("%W{0} must be {1} or greater", argName, min);
+            } else if (min == int.MinValue) {
+                p.Message("%W{0} must be {1} or less", argName, max);
+            } else {
+                p.Message("%W{0} must be between {1} and {2}", argName, min, max);
+            }
+            return false;
+        }
+        
         /// <summary> Attempts to parse the given argument as an integer. </summary>
         public static bool GetInt(Player p, string input, string argName, ref int result,
                                   int min = int.MinValue, int max = int.MaxValue) {
@@ -85,18 +99,7 @@ namespace MCGalaxy.Commands {
                 p.Message("%W\"{0}\" is not a valid integer.", input); return false;
             }
             
-            if (value < min || value > max) {
-                // Try to provide more helpful range messages
-                if (max == int.MaxValue) {
-                    p.Message("%W{0} must be {1} or greater", argName, min);
-                } else if (min == int.MinValue) {
-                    p.Message("%W{0} must be {1} or less", argName, max);
-                } else {
-                    p.Message("%W{0} must be between {1} and {2}", argName, min, max);
-                }
-                return false;
-            }
-            
+            if (!CheckRange(p, value, argName, min, max)) return false;
             result = value; return true;
         }
         
@@ -145,19 +148,22 @@ namespace MCGalaxy.Commands {
             col = tmp; return true;
         }
         
+        /// <summary> Attempts to parse the 3 given arguments as coordinates. </summary>
         public static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {
             return
-                GetCoord(p, args[argsOffset + 0], P.X, "X coordinate", out P.X) &&
-                GetCoord(p, args[argsOffset + 1], P.Y, "Y coordinate", out P.Y) &&
-                GetCoord(p, args[argsOffset + 2], P.Z, "Z coordinate", out P.Z);
+                GetCoord(p, args[argsOffset + 0], "X coordinate", ref P.X) &&
+                GetCoord(p, args[argsOffset + 1], "Y coordinate", ref P.Y) &&
+                GetCoord(p, args[argsOffset + 2], "Z coordinate", ref P.Z);
         }
         
-        static bool GetCoord(Player p, string arg, int cur, string axis, out int value) {
+        static bool GetCoord(Player p, string arg, string axis, ref int value) {
             bool relative = arg[0] == '~';
             if (relative) arg = arg.Substring(1);
-            value = 0;
             // ~ should work as ~0
-            if (relative && arg.Length == 0) { value += cur; return true; }
+            if (relative && arg.Length == 0) return true;
+            
+            int cur = value;
+            value   = 0;
             
             if (!GetInt(p, arg, axis, ref value)) return false;
             if (relative) value += cur;
