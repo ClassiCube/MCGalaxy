@@ -208,11 +208,11 @@ namespace MCGalaxy.Commands.Fun {
                 p.MakeSelection(2, zones, AddZoneCallback);
             } else if (IsDeleteCommand(opt)) {
                 if (args.Length > 4 && args[4].CaselessEq("all")) {
-                    p.Message("TNT Wars: Place a block to delete the zone for {0}!", msg);
-                    p.MakeSelection(1, zones, DeleteZoneCallback);
-                } else {
                     zones.Clear();
                     p.Message("TNT Wars: Deleted all zones for {0}!", msg);
+            	} else {
+                    p.Message("TNT Wars: Place a block to delete the zone for {0}!", msg);
+                    p.MakeSelection(1, zones, DeleteZoneCallback);
                 }
             } else if (opt.CaselessEq("check")) {
                 p.Message("TNT Wars: Place a block to check for {0}!", msg);
