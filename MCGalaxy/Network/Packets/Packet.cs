@@ -460,17 +460,16 @@ namespace MCGalaxy.Network {
         }
 
         const int MaxCustomModelParts = 64;
-        const int CustomModelPartPacketSize = 61;
         public static byte[] DefineModel(CustomModel customModel) {
             if (customModel.parts.Length >= MaxCustomModelParts) {
                 throw new Exception("customModel.parts exceeds " + MaxCustomModelParts);
             }
             
-            // 4019 = 1 + 64 + 2*4 + 3*4 + 6*4 + 1 + 2*2 + 1 + 64*61
+            // 4091 = 1 + 64 + 1 + 2*4 + 3*4 + 6*4 + 2*2 + 8 + 1 + 64*62
             byte[] buffer = new byte[
                 1 + NetUtils.StringSize
-                + 2*4 + 3*4 + 6*4 + 1 + 2*2
-                + 1 + MaxCustomModelParts*CustomModelPartPacketSize
+                + 1 + 2*4 + 3*4 + 6*4 + 2*2 + 8
+                + 1 + MaxCustomModelParts*62
             ];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineModel;
@@ -478,6 +477,15 @@ namespace MCGalaxy.Network {
             // write model name
             NetUtils.Write(customModel.name, buffer, 1, false);
             i += NetUtils.StringSize;
+
+            // write bool flags
+            byte flags = 0;
+            flags |= (byte)((customModel.bobbing ? 1 : 0) << 0);
+            flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
+            flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
+            flags |= (byte)((customModel.calcHumanAnims ? 1 : 0) << 3);
+            flags |= (byte)((customModel.hideFirstPersonArm ? 1 : 0) << 4);
+            buffer[i++] = flags;
 
             // write nameY, eyeY
             NetUtils.WriteF32(customModel.nameY, buffer, i);
@@ -508,20 +516,14 @@ namespace MCGalaxy.Network {
             NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.Z, buffer, i);
             i += 4;
 
-            // write bool flags
-            byte flags = 0;
-            flags |= (byte)((customModel.bobbing ? 1 : 0) << 0);
-            flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
-            flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
-            flags |= (byte)((customModel.calcHumanAnims ? 1 : 0) << 3);
-            flags |= (byte)((customModel.hideFirstPersonArm ? 1 : 0) << 4);
-            buffer[i++] = flags;
-
             // write uScale, vScale
             NetUtils.WriteU16(customModel.uScale, buffer, i);
             i += 2;
             NetUtils.WriteU16(customModel.vScale, buffer, i);
             i += 2;
+
+            // reserve 8 bytes for future use
+            i += 8;
 
             // write # CustomModelParts
             buffer[i++] = (byte)customModel.parts.Length;
@@ -535,7 +537,7 @@ namespace MCGalaxy.Network {
         }
 
         static void MakeCustomModelPart(CustomModelPart part, ref byte[] buffer, ref int i) {
-            // 61 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1 + 4 + 1
+            // 62 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1 + 4 + 1 + 1
 
             // write BoxDesc
             NetUtils.WriteU16(part.boxDesc.texX, buffer, i);
@@ -578,8 +580,13 @@ namespace MCGalaxy.Network {
 
             // write anim
             buffer[i++] = (byte)part.anim;
+
+            // write animModifier
             NetUtils.WriteF32(part.animModifier, buffer, i);
             i += 4;
+
+            // extra reserved byte for future use
+            i += 1;
 
             // write bool flags
             byte flags = 0;
