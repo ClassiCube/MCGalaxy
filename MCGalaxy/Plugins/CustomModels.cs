@@ -252,6 +252,20 @@ namespace MCGalaxy {
             }
         }
 
+        static void CheckRemoveModel(Player p, string modelName) {
+            if (CustomModels.ContainsKey(modelName)) {
+                var sentModels = SentCustomModels[p.name];
+                if (sentModels.Contains(modelName)) {
+                    sentModels.Remove(modelName);
+
+                    Logger.Log(LogType.SystemActivity, "RemoveModel {0} {1}", p.name, modelName);
+                    RemoveModel(p, modelName);
+                }
+            }
+        }
+
+        // removes all unused models from player, and
+        // sends all missing models in level to player
         static void CheckAddRemove(Player p, Level level) {
             var visibleModels = new HashSet<string>();
             visibleModels.Add(p.Model);
@@ -269,16 +283,48 @@ namespace MCGalaxy {
             foreach (var modelName in sentModels.ToArray()) {
                 // remove models not found in this level
                 if (!visibleModels.Contains(modelName)) {
-                    Logger.Log(LogType.SystemActivity, "CheckAddRemove {0} remove {1}", p.name, modelName);
-                    RemoveModel(p, modelName);
-                    sentModels.Remove(modelName);
+                    CheckRemoveModel(p, modelName);
                 }
             }
 
             // send new models not yet in player's list
             foreach (var modelName in visibleModels) {
-                Logger.Log(LogType.SystemActivity, "CheckAddRemove {0} checkadd {1}", p.name, modelName);
                 CheckSendModel(p, modelName);
+            }
+        }
+
+        static void CheckUpdateAll(string modelName) {
+            // re-define the model and do ChangeModel for each entity currently using this model
+
+            // remove this model from everyone's sent list
+            foreach (Player p in PlayerInfo.Online.Items) {
+                CheckRemoveModel(p, modelName);
+            }
+
+
+            // add this model back to players who see entities using it
+            foreach (Player p in PlayerInfo.Online.Items) {
+                CheckAddRemove(p, p.level);
+            }
+
+
+            // do ChangeModel on every entity with this model
+            // so that we update the model on the client
+            var loadedLevels = new Dictionary<string, Level>();
+            foreach (Player p in PlayerInfo.Online.Items) {
+                if (p.Model == modelName) {
+                    Entities.UpdateModel(p, p.Model);
+                }
+
+                loadedLevels.Add(p.level.name, p.level);
+            }
+            foreach (var entry in loadedLevels) {
+                var level = entry.Value;
+                foreach (PlayerBot e in level.Bots.Items) {
+                    if (e.Model == modelName) {
+                        Entities.UpdateModel(e, e.name);
+                    }
+                }
             }
         }
 
@@ -517,15 +563,13 @@ namespace MCGalaxy {
                                 if (inputs.Length == chatType.types.Length) {
                                     if (chatType.set.Invoke(model, p, inputs)) {
                                         // field was set, update file!
-                                        DefineModelForAllPlayers(model);
+
                                         StoredCustomModel.FromCustomModel(model).WriteToFile(modelName);
-                                        return;
-                                    } else {
-                                        p.Message("%cUMMMM");
-                                        return;
+                                        CheckUpdateAll(modelName);
                                     }
+                                    return;
                                 } else {
-                                    p.Message("%cnot enough inputs");
+                                    p.Message("%cnot enough args");
                                     return;
                                 }
                             } else {
