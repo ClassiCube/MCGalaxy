@@ -236,7 +236,7 @@ namespace MCGalaxy {
             }
         }
 
-        static Dictionary<string, HashSet<string>> SentCustomModels = new Dictionary<string, HashSet<string>>();
+        static Dictionary<string, HashSet<string>> SentCustomModels = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
 
         static void CheckSendModel(Player p, string modelName) {
             if (CustomModels.ContainsKey(modelName)) {
@@ -267,7 +267,7 @@ namespace MCGalaxy {
         // removes all unused models from player, and
         // sends all missing models in level to player
         static void CheckAddRemove(Player p, Level level) {
-            var visibleModels = new HashSet<string>();
+            var visibleModels = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             visibleModels.Add(p.Model);
 
             foreach (Player e in level.getPlayers()) {
@@ -294,6 +294,7 @@ namespace MCGalaxy {
         }
 
         static void CheckUpdateAll(string modelName) {
+            Logger.Log(LogType.SystemActivity, "CheckUpdateAll {0}", modelName);
             // re-define the model and do ChangeModel for each entity currently using this model
 
             // remove this model from everyone's sent list
@@ -310,21 +311,21 @@ namespace MCGalaxy {
 
             // do ChangeModel on every entity with this model
             // so that we update the model on the client
-            var loadedLevels = new Dictionary<string, Level>();
+            var loadedLevels = new Dictionary<string, Level>(StringComparer.OrdinalIgnoreCase);
             foreach (Player p in PlayerInfo.Online.Items) {
-                if (p.Model == modelName) {
+                if (p.Model.CaselessEq(modelName)) {
                     Entities.UpdateModel(p, p.Model);
                 }
 
                 if (!loadedLevels.ContainsKey(p.level.name)) {
-                loadedLevels.Add(p.level.name, p.level);
-            }
+                    loadedLevels.Add(p.level.name, p.level);
+                }
             }
             foreach (var entry in loadedLevels) {
                 var level = entry.Value;
                 foreach (PlayerBot e in level.Bots.Items) {
-                    if (e.Model == modelName) {
-                        Entities.UpdateModel(e, e.name);
+                    if (e.Model.CaselessEq(modelName)) {
+                        Entities.UpdateModel(e, e.Model);
                     }
                 }
             }
@@ -332,7 +333,7 @@ namespace MCGalaxy {
 
         static void OnPlayerConnect(Player p) {
             Logger.Log(LogType.SystemActivity, "OnPlayerConnect {0}", p.name);
-            SentCustomModels.Add(p.name, new HashSet<string>());
+            SentCustomModels.Add(p.name, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
         }
 
         static void OnPlayerDisconnect(Player p, string reason) {
@@ -374,7 +375,9 @@ namespace MCGalaxy {
         }
 
         static void OnBeforeChangeModel(Player p, byte entityID, string modelName) {
-            CheckSendModel(p, modelName);
+            // use CheckAddRemove because we also want to remove the previous model,
+            // if no one else is using it
+            CheckAddRemove(p, p.level);
             Logger.Log(LogType.SystemActivity, "ChangeModel {0} {1} {2}", p.name, modelName, entityID);
         }
 
@@ -534,7 +537,7 @@ namespace MCGalaxy {
                 var words = message.SplitSpaces();
                 if (words.Length >= 2) {
                     // /CustomModel config [model name]
-                    if (words[0] == "config") {
+                    if (words[0].CaselessEq("config")) {
                         var modelName = words[1];
                         if (!CustomModels.ContainsKey(modelName)) {
                             p.Message("%cmodel '%f{0}%c' not found", modelName);
@@ -578,6 +581,29 @@ namespace MCGalaxy {
                                 p.Message("%cno such field '{0}'", fieldName);
                                 return;
                             }
+                        }
+                    } else if (words[0].CaselessEq("upload")) {
+                        // /CustomModel upload
+                        // upload a personal bbmodel with a +
+
+                        if (words.Length == 2) {
+                            // /CustomModel upload [url]
+                            var url = words[1];
+                            var bytes = HttpUtil.DownloadData(url, p);
+                            if (bytes != null) {
+                                var modelName = p.name;
+                                File.WriteAllBytes(BBdirectory + modelName + blockBenchExt, bytes);
+
+                                if (!File.Exists(CCdirectory + modelName + storedModelExt)) {
+                                    // create a default ccmodel file if doesn't exist
+                                    StoredCustomModel.FromCustomModel(new CustomModel { }).WriteToFile(modelName);
+                                }
+
+                                CustomModel model = StoredCustomModel.ReadFromFile(modelName).ToCustomModel(modelName);
+                                CustomModels[modelName] = model;
+                                CheckUpdateAll(modelName);
+                            }
+                            return;
                         }
                     }
                 }
@@ -635,7 +661,7 @@ namespace MCGalaxy {
                         ) {
                             Logger.Log(
                                 LogType.Warning,
-                                "Warning: Custom Model '" +
+                                "Warning: Blockbench Model '" +
                                 this.name +
                                 "' has one or more faces with no texture!"
                             );
