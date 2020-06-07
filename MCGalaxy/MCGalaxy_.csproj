@@ -612,7 +612,6 @@
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="Plugins\CustomModels.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Database\SqlTransaction.cs" />
@@ -741,7 +740,7 @@
     <Folder Include="util\Threading" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
@@ -758,9 +757,4 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-    <ItemGroup>
-  <Reference Include="Newtonsoft.Json">
-    <HintPath>Newtonsoft.Json.dll</HintPath>
-  </Reference>
-</ItemGroup>
 </Project>
