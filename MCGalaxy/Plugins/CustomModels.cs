@@ -316,7 +316,9 @@ namespace MCGalaxy {
                     Entities.UpdateModel(p, p.Model);
                 }
 
+                if (!loadedLevels.ContainsKey(p.level.name)) {
                 loadedLevels.Add(p.level.name, p.level);
+            }
             }
             foreach (var entry in loadedLevels) {
                 var level = entry.Value;
