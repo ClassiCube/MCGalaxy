@@ -92,6 +92,10 @@ namespace MCGalaxy.Blocks.Physics {
             Explode(lvl, x, y, z, size + 3, rand, 3, game);
         }
         
+        static bool IsFuse(BlockID b, int dx, int dy, int dz) {
+            return dx == 0 && dy == 1 && dz == 0 && b == Block.StillLava;
+        }
+        
         static void Explode(Level lvl, ushort x, ushort y, ushort z,
                             int size, Random rand, int prob, TWGame game) {
             for (int xx = (x - size); xx <= (x + size ); ++xx)
@@ -99,12 +103,12 @@ namespace MCGalaxy.Blocks.Physics {
                     for (int zz = (z - size); zz <= (z + size); ++zz)
             {
                 int index;
-                BlockID block = lvl.GetBlock((ushort)xx, (ushort)yy, (ushort)zz, out index);
-                if (block == Block.Invalid) continue;
+                BlockID b = lvl.GetBlock((ushort)xx, (ushort)yy, (ushort)zz, out index);
+                if (b == Block.Invalid) continue;
                 
                 bool doDestroy = prob < 0 || rand.Next(1, 10) < prob;
-                if (doDestroy && Block.Convert(block) != Block.TNT) {
-                    if (game != null && block != Block.Air) {
+                if (doDestroy && Block.Convert(b) != Block.TNT) {
+                    if (game != null && b != Block.Air && !IsFuse(b, xx - x, yy - y, zz - z)) {
                         if (game.InZone((ushort)xx, (ushort)yy, (ushort)zz, game.tntImmuneZones))
                             continue;
                     }
@@ -116,13 +120,13 @@ namespace MCGalaxy.Blocks.Physics {
                         lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
                     } else {
                         PhysicsArgs args = default(PhysicsArgs);
-                        args.Type1 = PhysicsArgs.Drop; args.Value1 = 50;
+                        args.Type1 = PhysicsArgs.Drop;      args.Value1 = 50;
                         args.Type2 = PhysicsArgs.Dissipate; args.Value2 = 8;
                         lvl.AddCheck(index, false, args);
                     }
-                } else if (block == Block.TNT) {
+                } else if (b == Block.TNT) {
                     lvl.AddUpdate(index, Block.TNT_Small, default(PhysicsArgs));
-                } else if (block == Block.TNT_Small || block == Block.TNT_Big || block == Block.TNT_Nuke) {
+                } else if (b == Block.TNT_Small || b == Block.TNT_Big || b == Block.TNT_Nuke) {
                     lvl.AddCheck(index);
                 }
             }

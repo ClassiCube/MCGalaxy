@@ -652,6 +652,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!CommandParser.CheckRange(p, P.Y, "Y", -127, 127)) return false;
             if (!CommandParser.CheckRange(p, P.Z, "Z", -127, 127)) return false;
             
+            // TODO: Improve output message with relative coords (currently shows "Set max for Stone to ~ ~8 ~")
             x = (byte)P.X; z = (byte)P.Y; y = (byte)P.Z; // blockdef files have z being height, we use y being height
             return true;
         }
