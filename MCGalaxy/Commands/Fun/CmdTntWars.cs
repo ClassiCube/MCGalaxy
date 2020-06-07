@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands.Fun {
                 
                 if (value.CaselessEq("red")) {
                     cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                    p.Message("TNT Wars: Set &cRed %Sspawn");
+                    p.Message("Set &cRed %Sspawn");
                 } else if (value.CaselessEq("blue")) {
                     cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                    p.Message("TNT Wars: Set &9Blue %Sspawn");
+                    p.Message("Set &9Blue %Sspawn");
                 } else {
                     Help(p, "team"); return;
                 }
@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetInt(p, value, "TNT at a time", ref amount, 0)) return;
                 cfg.MaxActiveTnt = amount;
                 
-                p.Message("TNT Wars: Number of TNTs placeable by a player at a time is now {0}",
+                p.Message("Number of TNTs placeable by a player at a time is now {0}",
                                amount == 0 ? "unlimited" : value);
             } else if (prop.CaselessEq("graceperiod")) {
                 SetBool(p, ref cfg.GracePeriod, value, "Grace period");
@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetTimespan(p, value, ref time, "set grace time to", "s")) return;
                 cfg.GracePeriodTime = time;
                 
-                p.Message("TNT Wars: Grace period is now {0}", time.Shorten(true, true));
+                p.Message("Grace period is now {0}", time.Shorten(true, true));
             } else if (prop.CaselessEq("gamemode")) {
                 if (value.CaselessEq("tdm")) {
                     if (gameCfg.Mode == TWGameMode.FFA) {
@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetInt(p, value, "Points", ref score, 0)) return false;
                 cfg.ScoreRequired = score;
                 
-                p.Message("TNT Wars: Score required to win is now &a{0} %Spoints!", score);
+                p.Message("Score required to win is now &a{0} %Spoints!", score);
             } else if (opt.CaselessEq("streaks")) {
                 SetBool(p, ref cfg.Streaks, value, "Streaks");
             } else if (opt.CaselessEq("multi")) {
@@ -199,23 +199,23 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         bool HandleZone(Player p, TWGame game, bool noTntZone, string[] args) {
-            string msg = noTntZone ? "no TNT" : "no blocks deleted on explosions";
+            string type = noTntZone ? "no TNT" : "no blocks deleted on explosions";
             List<TWGame.TWZone> zones = noTntZone ? game.tntFreeZones : game.tntImmuneZones;
             string opt = args[3];
             
             if (IsCreateCommand(opt)) {
-                p.Message("TNT Wars: Place 2 blocks to create the zone for {0}!", msg);
+                p.Message("Place 2 blocks to create a {0} zone", type);
                 p.MakeSelection(2, zones, AddZoneCallback);
             } else if (IsDeleteCommand(opt)) {
                 if (args.Length > 4 && args[4].CaselessEq("all")) {
                     zones.Clear();
-                    p.Message("TNT Wars: Deleted all zones for {0}!", msg);
+                    p.Message("Deleted all {0} zones", type);
             	} else {
-                    p.Message("TNT Wars: Place a block to delete the zone for {0}!", msg);
+                    p.Message("Place a block to delete a {0} zone", type);
                     p.MakeSelection(1, zones, DeleteZoneCallback);
                 }
             } else if (opt.CaselessEq("check")) {
-                p.Message("TNT Wars: Place a block to check for {0}!", msg);
+                p.Message("Place a block to check for {0} zones", type);
                 p.MakeSelection(1, zones, CheckZoneCallback);
             } else {
                 return false;
@@ -225,14 +225,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool AddZoneCallback(Player p, Vec3S32[] marks, object state, BlockID block) {
             Vec3U16 p1 = (Vec3U16)marks[0], p2 = (Vec3U16)marks[1];
-            TWGame.TWZone zn = new TWGame.TWZone();
-            
-            zn.MinX = Math.Min(p1.X, p2.X);
-            zn.MinY = Math.Min(p1.Y, p2.Y);
-            zn.MinZ = Math.Min(p1.Z, p2.Z);
-            zn.MaxX = Math.Max(p1.X, p2.X);
-            zn.MaxY = Math.Max(p1.Y, p2.Y);
-            zn.MaxZ = Math.Max(p1.Z, p2.Z);
+            TWGame.TWZone zn = new TWGame.TWZone(p1, p2);
 
             List<TWGame.TWZone> zones = (List<TWGame.TWZone>)state;
             zones.Add(zn);
@@ -281,13 +274,13 @@ namespace MCGalaxy.Commands.Fun {
         
         static void SetDifficulty(TWGame game, TWDifficulty diff, Player p) {
             if (p.level != game.Map)
-                p.Message("TNT Wars: Changed difficulty to {0}", diff);
+                p.Message("Changed TNT wars difficulty to {0}", diff);
             game.SetDifficulty(diff);
         }
         
         static void SetBool(Player p, ref bool target, string opt, string name) {
             if (!CommandParser.GetBool(p, opt, ref target)) return;
-            p.Message("TNT Wars: {0} is now {1}", name, GetBool(target));
+            p.Message("{0} is now {1}", name, GetBool(target));
         }
         
         

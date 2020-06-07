@@ -236,7 +236,26 @@ namespace MCGalaxy.Games {
             cfg.Save(Map.name);
         }
         
-        public class TWZone { public ushort MinX, MinY, MinZ, MaxX, MaxY, MaxZ; }       
+        public class TWZone {
+            public ushort MinX, MinY, MinZ, MaxX, MaxY, MaxZ;
+            
+            public TWZone(Vec3U16 p1, Vec3U16 p2) {
+                MinX = Math.Min(p1.X, p2.X);
+                MinY = Math.Min(p1.Y, p2.Y);
+                MinZ = Math.Min(p1.Z, p2.Z);
+                
+                MaxX = Math.Max(p1.X, p2.X);
+                MaxY = Math.Max(p1.Y, p2.Y);
+                MaxZ = Math.Max(p1.Z, p2.Z);
+            }
+            
+            public string DescribeBounds() {
+                return
+                    " &b- (" + MinX + ", " + MinY + ", " + MinZ + 
+                    ") to (" + MaxX + ", " + MaxY + ", " + MaxZ + ")";
+            }
+        }
+        
         public bool InZone(ushort x, ushort y, ushort z, List<TWZone> zones) {
             foreach (TWZone Zn in zones) {
                 if (x >= Zn.MinX && y >= Zn.MinY && z >= Zn.MinZ
@@ -306,7 +325,7 @@ namespace MCGalaxy.Games {
         protected override string FormatStatus1(Player p) {
             if (Config.Mode != TWGameMode.TDM) return "";
             
-            return Red.ColoredName + ": &f" + Red.Score + "/" + cfg.ScoreRequired + ", "
+            return Red.ColoredName + ": &f" + Red.Score  + "/" + cfg.ScoreRequired + ", "
                 + Blue.ColoredName + ": &f" + Blue.Score + "/" + cfg.ScoreRequired;
         }
         
