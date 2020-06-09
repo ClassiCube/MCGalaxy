@@ -501,18 +501,18 @@ namespace MCGalaxy.Network {
             i += 4;
 
             // write pickingBoundsAABB
-            NetUtils.WriteF32(customModel.pickingBoundsAABB.Min.X, buffer, i);
+            NetUtils.WriteF32(customModel.pickingBoundsMin.X, buffer, i);
             i += 4;
-            NetUtils.WriteF32(customModel.pickingBoundsAABB.Min.Y, buffer, i);
+            NetUtils.WriteF32(customModel.pickingBoundsMin.Y, buffer, i);
             i += 4;
-            NetUtils.WriteF32(customModel.pickingBoundsAABB.Min.Z, buffer, i);
+            NetUtils.WriteF32(customModel.pickingBoundsMin.Z, buffer, i);
             i += 4;
 
-            NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.X, buffer, i);
+            NetUtils.WriteF32(customModel.pickingBoundsMax.X, buffer, i);
             i += 4;
-            NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.Y, buffer, i);
+            NetUtils.WriteF32(customModel.pickingBoundsMax.Y, buffer, i);
             i += 4;
-            NetUtils.WriteF32(customModel.pickingBoundsAABB.Max.Z, buffer, i);
+            NetUtils.WriteF32(customModel.pickingBoundsMax.Z, buffer, i);
             i += 4;
 
             // write uScale, vScale
@@ -702,17 +702,15 @@ namespace MCGalaxy.Network {
             Y = (28.1f) / 16.0f,
             Z = (8.6f) / 16.0f
         };
-        public AABBF32 pickingBoundsAABB = new AABBF32 {
-            Min = new Vec3F32 {
-                X = (-8) / 16.0f,
-                Y = (0) / 16.0f,
-                Z = (-4) / 16.0f
-            },
-            Max = new Vec3F32 {
-                X = (8) / 16.0f,
-                Y = (32) / 16.0f,
-                Z = (4) / 16.0f
-            }
+        public Vec3F32 pickingBoundsMin = new Vec3F32 {
+            X = (-8) / 16.0f,
+            Y = (0) / 16.0f,
+            Z = (-4) / 16.0f
+        };
+        public Vec3F32 pickingBoundsMax = new Vec3F32 {
+            X = (8) / 16.0f,
+            Y = (32) / 16.0f,
+            Z = (4) / 16.0f
         };
         public bool bobbing = true;
         public bool pushes = true;
