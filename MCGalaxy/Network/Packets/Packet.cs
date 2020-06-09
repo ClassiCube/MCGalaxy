@@ -458,9 +458,9 @@ namespace MCGalaxy.Network {
             return buffer;
         }
 
-        const int MaxCustomModelParts = 64;
+        public const int MaxCustomModelParts = 64;
         public static byte[] DefineModel(CustomModel customModel) {
-            if (customModel.parts.Length >= MaxCustomModelParts) {
+            if (customModel.parts.Length > MaxCustomModelParts) {
                 throw new Exception("customModel.parts exceeds " + MaxCustomModelParts);
             }
             
