@@ -239,15 +239,10 @@ namespace MCGalaxy.Maths {
         
         public static bool operator != (Vec3F32 a, Vec3F32 b) {
             return a.X != b.X || a.Y != b.Y || a.Z != b.Z;
-        }
-        
+        }      
         
         public override string ToString() {
             return X + "," + Y + "," + Z;
-        }
-        
-        public string ToString(string separator) {
-            return string.Format("{1}{0}{2}{0}{3}", separator, X, Y, Z);
         }
     }
 }

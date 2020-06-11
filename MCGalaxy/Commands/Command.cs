@@ -18,8 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using MCGalaxy.Maths;
 using MCGalaxy.Commands;
+using MCGalaxy.Maths;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
@@ -105,8 +105,8 @@ namespace MCGalaxy {
                 grp.Commands.Remove(cmd);
             }
             
-            // typically Command.Unregister(Command.Find("xyz"))
-            // So don't error if Command.Find returned null
+            // typical usage: Command.Unregister(Command.Find("xyz"))
+            // So don't throw exception if Command.Find returned null
             if (cmd != null) Alias.UnregisterDefaults(cmd);
             return removed;
         }
@@ -163,7 +163,7 @@ namespace MCGalaxy {
         public bool Remove(Command cmd) { return Command.Unregister(cmd); }
         
         [Obsolete("Use Command.Find() instead")]
-        public Command FindByName(string name) { return Command.Find(name); }        
+        public Command FindByName(string name) { return Command.Find(name); }
         [Obsolete("Use Command.Find() instead")]
         public Command Find(string name) {
             foreach (Command cmd in Command.allCmds) {
