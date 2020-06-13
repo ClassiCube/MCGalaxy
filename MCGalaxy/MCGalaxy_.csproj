@@ -538,6 +538,7 @@
     <Compile Include="Generator\Realistic\Noise.cs" />
     <Compile Include="Generator\Realistic\MapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
+    <Compile Include="Levels\EnvPreset.cs" />
     <Compile Include="Levels\Hacks.cs" />
     <Compile Include="Levels\IO\Exporters\LvlExporter.cs" />
     <Compile Include="Levels\IO\fNbt.cs" />
