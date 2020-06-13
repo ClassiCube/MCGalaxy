@@ -153,6 +153,24 @@ namespace MCGalaxy {
         public void SendMessage(byte id, string message) { Message(id, message); }
         public void Message(string message) { Message(0, message); }
         
+        // Need to combine chat line packets into one Send call, so that
+        // multi-line messages from multiple threads don't interleave
+        void SendLines(List<string> lines) {
+            for (int i = 0; i < lines.Count;) {
+                // Send buffer max size is 4096 bytes
+                // Divide by 66 (size of chat packet) gives ~62 lines
+                int count   = Math.Min(62, lines.Count - i);
+                byte[] data = new byte[count * 66];
+                
+                for (int j = 0; j < count; i++, j++) {
+                    string line = lines[i];
+                    if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line)) line += '\'';
+                    Packet.WriteMessage(line, id, hasCP437, data, j * 66);
+                }
+                Send(data);
+            }
+        }
+        
         public virtual void Message(byte id, string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
@@ -163,16 +181,7 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                List<string> lines = LineWrapper.Wordwrap(message);
-                byte[] packet      = new byte[lines.Count * 66];
-                
-                for (int i = 0; i < lines.Count; i++) {
-                    string line = lines[i];
-                    if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line)) line += '\'';
-                    Packet.WriteMessage(line, id, hasCP437, packet, i * 66);
-                }
-                // So multi-line messages from multiple threads don't interleave
-                Send(packet);
+                SendLines(LineWrapper.Wordwrap(message));
             } catch (Exception e) {
                 Logger.LogError(e);
             }
