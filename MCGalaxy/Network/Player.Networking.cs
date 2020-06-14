@@ -155,7 +155,7 @@ namespace MCGalaxy {
         
         // Need to combine chat line packets into one Send call, so that
         // multi-line messages from multiple threads don't interleave
-        void SendLines(List<string> lines) {
+        void SendLines(List<string> lines, byte id) {
             for (int i = 0; i < lines.Count;) {
                 // Send buffer max size is 4096 bytes
                 // Divide by 66 (size of chat packet) gives ~62 lines
@@ -181,7 +181,7 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                SendLines(LineWrapper.Wordwrap(message));
+                SendLines(LineWrapper.Wordwrap(message), id);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
