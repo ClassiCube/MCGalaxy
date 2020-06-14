@@ -31,11 +31,12 @@ namespace MCGalaxy {
                         //   fog   sky   clouds   sun   shadow
             { "Cartoon",  "00FFFF 1E90FF 00BFFF F5DEB3 F4A460" },
             { "Noir",     "000000 1F1F1F 000000 696969 1F1F1F" },
-            { "Trippy",   "4B0082 FFD700 006400 7CFC00 B22222" },
             { "Watery",   "5F9EA0 008080 008B8B E0FFFF 008B8B" },
+            { "Misty",    "BBBBBB 657694 9494A5 696984 4E4E69" },
             { "Gloomy",   "6A80A5 405875 405875 444466 3B3B59" },
             { "Cloudy",   "AFAFAF 8E8E8E 8E8E8E 9B9B9B 8C8C8C" },
             { "Sunset",   "FFA322 836668 9A6551 7F6C60 46444C" },
+            { "Dusk",     "D36538 836668 836668 525163 30304B" },
             { "Midnight", "131947 070A23 1E223A 181828 0F0F19" },
             { "Normal",   "    " },
         };
