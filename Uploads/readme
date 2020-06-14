@@ -12,4 +12,4 @@ Replace MCGalaxy_.dll with this file (i.e. rename it to MCGalaxy_.dll) to use it
 You probably don't want this version though, because it slightly reduces performance.
 Using a block over 255 will also make the map use twice as much memory in the client.
 
-You were warned!
+YOU WERE WARNED!

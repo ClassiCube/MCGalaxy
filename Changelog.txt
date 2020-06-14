@@ -1,3 +1,26 @@
+v 1.9.2.1
+Added: /limit realms to set max realms a rank can have from in-game
+Added: /BotInfo that shows information on the given bot
+Added: A few more env presets
+Fixed: Unmuting player only showing first word of reason in unmute message
+Fixed: Issues with extremely long mute times on mono
+Fixed: Quit/RageQuit/Hacks/CrashServer should not be usable from console/IRC
+Fixed: Use accurate block name in help for /portal multi
+Fixed: Don't allow custom /pay messages while muted
+Fixed: If you in referee mode and flying, when moving to another zone, fly mode would get turned off
+Fixed: Crash if you try to select a rank in the gui that has over 255 realms
+Fixed: Colors sometimes being wrong in TNT wars
+Fixed: /tw set zone delete and /tw set zone delete all having swapped behaviour
+Fixed: Fuse block not getting destroyed in nodestroy zones in TNT wars
+Improved: Also track duration of action in /notes
+Improved: Referee mode should still follow jumpheight= in motd
+Improved: 'Reference X.dll;' and '//Reference X.dll' can be used for custom commands/plugins as alternative to 'Reference X.dll'
+Improved: Allow lb/gb copying multiple blocks at once
+Improved: You shouldn't be able to speak while pending /pass verification
+Improved: Include dimensions of heightmap and level in warning message when they don't match
+Improved: Can still use /bots and /zonemark in museums
+Improved: Allow using relative coords for gb/lb min/max (Thanks 1Leiz)
+
 v 1.9.2.0
 Fixed: Placed/deleted overflowing at 33 million
 Fixed: Turning off 'colours' option in GUI console shows raw colour codes
