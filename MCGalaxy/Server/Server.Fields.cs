@@ -48,7 +48,12 @@ namespace MCGalaxy {
         public static string VersionString { get { return InternalVersion; } }
         
         public static string SoftwareName = "MCGalaxy";
-        public static string SoftwareNameVersioned { get { return SoftwareName + " " + VersionString; } }
+        static string fullName;
+        public static string SoftwareNameVersioned {
+            // By default, if SoftwareName gets externally changed, that is reflected in SoftwareNameVersioned too
+            get { return fullName ??  SoftwareName + " " + VersionString; }
+            set { fullName = value; }
+        }
 
         // URL hash for connecting to the server
         public static string Hash = String.Empty, URL = String.Empty;

@@ -169,10 +169,9 @@ namespace MCGalaxy {
         
         static void BackupDatabase(StreamWriter sql) {
             // NOTE: This does NOT account for foreign keys, BLOBs etc. It only works for what we actually put in the DB.
-            sql.WriteLine("-- {0} SQL Database Dump", Server.SoftwareName);
+            sql.WriteLine("-- {0} SQL database dump", Server.SoftwareNameVersioned);
             sql.WriteLine("-- Host: {0}", Server.Config.MySQLHost);
-            sql.WriteLine("-- Generation Time: {0:d} at {0:HH:mm:ss}", DateTime.Now);
-            sql.WriteLine("-- {0} version: {1}", Server.SoftwareName, Server.VersionString);
+            sql.WriteLine("-- Generated on {0:d} at {0:HH:mm:ss}", DateTime.Now);
             sql.WriteLine();
             sql.WriteLine();
 

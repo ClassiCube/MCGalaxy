@@ -52,10 +52,9 @@ namespace MCGalaxy {
             WebClient client = HttpUtil.CreateWebClient();
 
             try {
-                string raw = client.DownloadString(CurrentVersionFile);
-                Version latestVersion = new Version(raw);
+                string latest = client.DownloadString(CurrentVersionFile);
                 
-                if (latestVersion <= Server.Version) {
+                if (new Version(latest) <= Server.Version) {
                     Logger.Log(LogType.SystemActivity, "No update found!");
                 } else if (NewerVersionDetected != null) {
                     NewerVersionDetected(null, EventArgs.Empty);

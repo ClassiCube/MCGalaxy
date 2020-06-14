@@ -23,7 +23,6 @@ namespace MCGalaxy.Commands.Info {
         public override bool UseableWhenFrozen { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length > 0) { Help(p); return; }
             p.Message("&9{1} devs: %S{0}", Server.Devs.Join(), Server.SoftwareName);
             p.Message("&2{1} mods: %S{0}", Server.Mods.Join(), Server.SoftwareName);
         }
