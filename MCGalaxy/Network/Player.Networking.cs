@@ -155,7 +155,7 @@ namespace MCGalaxy {
         
         // Need to combine chat line packets into one Send call, so that
         // multi-line messages from multiple threads don't interleave
-        void SendLines(List<string> lines, byte id) {
+        void SendLines(List<string> lines, byte type) {
             for (int i = 0; i < lines.Count;) {
                 // Send buffer max size is 4096 bytes
                 // Divide by 66 (size of chat packet) gives ~62 lines
@@ -165,13 +165,13 @@ namespace MCGalaxy {
                 for (int j = 0; j < count; i++, j++) {
                     string line = lines[i];
                     if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line)) line += '\'';
-                    Packet.WriteMessage(line, id, hasCP437, data, j * 66);
+                    Packet.WriteMessage(line, type, hasCP437, data, j * 66);
                 }
                 Send(data);
             }
         }
         
-        public virtual void Message(byte id, string message) {
+        public virtual void Message(byte type, string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) {
                 message = Server.Config.DefaultColor + message;
@@ -181,7 +181,7 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                SendLines(LineWrapper.Wordwrap(message), id);
+                SendLines(LineWrapper.Wordwrap(message), type);
             } catch (Exception e) {
                 Logger.LogError(e);
             }

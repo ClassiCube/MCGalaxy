@@ -341,7 +341,7 @@ namespace MCGalaxy.Network {
                 SuperName = "IRC";
             }
             
-            public override void Message(byte id, string message) {
+            public override void Message(byte type, string message) {
                 message = IRCBot.ConvertMessage(message);
                 if (IRCChannel != null) {
                     Bot.Message(IRCChannel, message);

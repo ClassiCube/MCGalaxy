@@ -38,15 +38,12 @@ namespace MCGalaxy.Commands.World {
 
         static void HandleGoto(Player p, string map, string ignored) {
             byte mapNum = 0;
-            if (map.Length == 0 || map == "1") {
-                map = FirstMapName(p);
-            } else {
-                if (!byte.TryParse(map, out mapNum)) {
-                    p.MessageLines(gotoHelp);
-                    return;
-                }
-                map = p.name.ToLower() + map;
+            if (map.Length == 0) map = "1";
+            
+            if (!byte.TryParse(map, out mapNum)) {
+                p.MessageLines(gotoHelp); return;
             }
+            map = GetLevelName(p, mapNum);
             
             if (LevelInfo.FindExact(map) == null)
                 LevelActions.Load(p, map, !Server.Config.AutoLoadMaps);

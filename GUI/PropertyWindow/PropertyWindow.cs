@@ -124,7 +124,7 @@ namespace MCGalaxy.Gui {
             SuperName = "Console";
         }
             
-        public override void Message(byte id, string message) {
+        public override void Message(byte type, string message) {
             Messages += message + "\r\n";
         }
     }
