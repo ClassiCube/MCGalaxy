@@ -17,8 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
@@ -35,7 +33,6 @@ namespace MCGalaxy {
         public static ServerConfig Config = new ServerConfig();
         
         public static IRCBot IRC;
-        public static Thread locationChecker;
         public static DateTime StartTime;
         
         public static PlayerExtList AutoloadMaps;

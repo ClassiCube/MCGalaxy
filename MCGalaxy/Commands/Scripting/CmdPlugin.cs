@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Scripting {
         static void LoadPlugin(Player p, string name) {
             string path = IScripting.PluginPath(name);
             if (File.Exists(path)) {
-                if (Plugin.Load(name, false)) {
+                if (Plugin.Load(path, false)) {
                     p.Message("Plugin loaded successfully.");
                 } else {
                     p.Message("%WError loading plugin. See error logs for more information.");
