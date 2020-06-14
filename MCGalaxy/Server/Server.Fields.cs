@@ -44,14 +44,13 @@ namespace MCGalaxy {
         
         /// <summary> *** DO NOT USE THIS! *** Use VersionString, as this field is a constant and is inlined if used. </summary>
         public const string InternalVersion = "1.9.2.1";
-        public static Version Version { get { return new Version(InternalVersion); } }
-        public static string VersionString { get { return InternalVersion; } }
+        public static string Version { get { return InternalVersion; } }
         
         public static string SoftwareName = "MCGalaxy";
         static string fullName;
         public static string SoftwareNameVersioned {
             // By default, if SoftwareName gets externally changed, that is reflected in SoftwareNameVersioned too
-            get { return fullName ??  SoftwareName + " " + VersionString; }
+            get { return fullName ?? SoftwareName + " " + Version; }
             set { fullName = value; }
         }
 

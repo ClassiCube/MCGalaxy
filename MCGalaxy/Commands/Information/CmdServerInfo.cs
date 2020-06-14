@@ -40,15 +40,15 @@ namespace MCGalaxy.Commands.Info {
             int count = Database.CountRows("Players");
             p.Message("Server's name: &b{0}%S", Server.Config.Name);
             p.Message("&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
-                           count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
+                      count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
             p.Message("&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
-                           LevelInfo.Loaded.Count, Server.Config.Currency);
+                      LevelInfo.Loaded.Count, Server.Config.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             p.Message("Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
-                           up.Shorten(true), Server.SoftwareName, Server.VersionString);
+                      up.Shorten(true), Server.SoftwareName, Server.Version);
             p.Message("Player positions are updated every &b"
-                           + Server.Config.PositionUpdateInterval + " %Smilliseconds.");
+                      + Server.Config.PositionUpdateInterval + " %Smilliseconds.");
             
             string owner = Server.Config.OwnerName;
             if (!owner.CaselessEq("Notch") && !owner.CaselessEq("the owner")) {

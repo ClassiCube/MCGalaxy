@@ -50,7 +50,7 @@ namespace MCGalaxy {
         public static bool Load(Plugin p, bool startup) {
             try {
                 string ver = p.MCGalaxy_Version;
-                if (!String.IsNullOrEmpty(ver) && new Version(ver) > Server.Version) {
+                if (!String.IsNullOrEmpty(ver) && new Version(ver) > new Version(Server.Version)) {
                     Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", p.name, Server.SoftwareName);
                     return false;
                 }

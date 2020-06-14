@@ -54,7 +54,7 @@ namespace MCGalaxy {
             try {
                 string latest = client.DownloadString(CurrentVersionFile);
                 
-                if (new Version(latest) <= Server.Version) {
+                if (new Version(Server.Version) >= new Version(latest)) {
                     Logger.Log(LogType.SystemActivity, "No update found!");
                 } else if (NewerVersionDetected != null) {
                     NewerVersionDetected(null, EventArgs.Empty);
