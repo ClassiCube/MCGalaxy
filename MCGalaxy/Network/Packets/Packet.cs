@@ -458,23 +458,17 @@ namespace MCGalaxy.Network {
             return buffer;
         }
 
+        public const int MaxCustomModels = 64;
         public const int MaxCustomModelParts = 64;
-        public static byte[] DefineModel(CustomModel customModel) {
-            if (customModel.parts.Length > MaxCustomModelParts) {
-                throw new Exception("customModel.parts exceeds " + MaxCustomModelParts);
-            }
-            
-            // 4091 = 1 + 64 + 1 + 2*4 + 3*4 + 6*4 + 2*2 + 8 + 1 + 64*62
-            byte[] buffer = new byte[
-                1 + NetUtils.StringSize
-                + 1 + 2*4 + 3*4 + 6*4 + 2*2 + 8
-                + 1 + MaxCustomModelParts*62
-            ];
+        public static byte[] DefineModel(byte modelId, CustomModel customModel) {
+	        // 116 = 1 + 1 + 64 + 1 + 2*4 + 3*4 + 2*3*4 + 2*2 + 1
+            byte[] buffer = new byte[116];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineModel;
+            buffer[i++] = modelId;
 
             // write model name
-            NetUtils.Write(customModel.name, buffer, 1, false);
+            NetUtils.Write(customModel.name, buffer, i, false);
             i += NetUtils.StringSize;
 
             // write bool flags
@@ -521,55 +515,56 @@ namespace MCGalaxy.Network {
             NetUtils.WriteU16(customModel.vScale, buffer, i);
             i += 2;
 
-            // reserve 8 bytes for future use
-            i += 8;
-
             // write # CustomModelParts
-            buffer[i++] = (byte)customModel.parts.Length;
-
-            // write each CustomModelPart
-            foreach (var part in customModel.parts) {
-                MakeCustomModelPart(part, ref buffer, ref i);
-            }
+            buffer[i++] = customModel.partCount;
 
             return buffer;
         }
 
-        static void MakeCustomModelPart(CustomModelPart part, ref byte[] buffer, ref int i) {
-            // 62 = (2*2 + 3 + 3*4 + 3*4 + 3*4) + 3*4 + 1 + 4 + 1 + 1
+        public static byte[] DefineModelPart(byte modelId, CustomModelPart part) {
+	        // 104 = 1 + 1 + 3*4 + 3*4 + 6*(2*2 + 2*2) + 3*4 + 3*4 + 1 + 4 + 1
+            byte[] buffer = new byte[104];
+            int i = 0;
+            buffer[i++] = Opcode.CpeDefineModelPart;
+            buffer[i++] = modelId;
 
-            // write BoxDesc
-            NetUtils.WriteU16(part.boxDesc.texX, buffer, i);
-            i += 2;
-            NetUtils.WriteU16(part.boxDesc.texY, buffer, i);
-            i += 2;
-
-            buffer[i++] = part.boxDesc.sizeX;
-            buffer[i++] = part.boxDesc.sizeY;
-            buffer[i++] = part.boxDesc.sizeZ;
-
-            NetUtils.WriteF32(part.boxDesc.x1, buffer, i);
+            /* write min, max vec3 coords */
+            NetUtils.WriteF32(part.min.X, buffer, i);
             i += 4;
-            NetUtils.WriteF32(part.boxDesc.y1, buffer, i);
+            NetUtils.WriteF32(part.min.Y, buffer, i);
             i += 4;
-            NetUtils.WriteF32(part.boxDesc.z1, buffer, i);
+            NetUtils.WriteF32(part.min.Z, buffer, i);
             i += 4;
 
-            NetUtils.WriteF32(part.boxDesc.x2, buffer, i);
+            NetUtils.WriteF32(part.max.X, buffer, i);
             i += 4;
-            NetUtils.WriteF32(part.boxDesc.y2, buffer, i);
+            NetUtils.WriteF32(part.max.Y, buffer, i);
             i += 4;
-            NetUtils.WriteF32(part.boxDesc.z2, buffer, i);
-            i += 4;
-
-            NetUtils.WriteF32(part.boxDesc.rotX, buffer, i);
-            i += 4;
-            NetUtils.WriteF32(part.boxDesc.rotY, buffer, i);
-            i += 4;
-            NetUtils.WriteF32(part.boxDesc.rotZ, buffer, i);
+            NetUtils.WriteF32(part.max.Z, buffer, i);
             i += 4;
 
-            // write rotation
+            /* write u, v coords for our 6 faces */
+            for (int j = 0; j < 6; j++) {
+                NetUtils.WriteU16(part.u1[j], buffer, i);
+                i += 2;
+                NetUtils.WriteU16(part.v1[j], buffer, i);
+                i += 2;
+
+                NetUtils.WriteU16(part.u2[j], buffer, i);
+                i += 2;
+                NetUtils.WriteU16(part.v2[j], buffer, i);
+                i += 2;
+            }
+
+            /* write rotation origin point */
+            NetUtils.WriteF32(part.rotationOrigin.X, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.rotationOrigin.Y, buffer, i);
+            i += 4;
+            NetUtils.WriteF32(part.rotationOrigin.Z, buffer, i);
+            i += 4;
+
+            /* write rotation angles */
             NetUtils.WriteF32(part.rotation.X, buffer, i);
             i += 4;
             NetUtils.WriteF32(part.rotation.Y, buffer, i);
@@ -584,25 +579,20 @@ namespace MCGalaxy.Network {
             NetUtils.WriteF32(part.animModifier, buffer, i);
             i += 4;
 
-            // extra reserved byte for future use
-            i += 1;
-
             // write bool flags
             byte flags = 0;
             flags |= (byte)((part.fullbright ? 1 : 0) << 0);
 
             buffer[i++] = flags;
+
+            return buffer;
         }
 
-        public static byte[] RemoveModel(string name) {
-            // 65 = 1 + 64
-            byte[] buffer = new byte[1 + NetUtils.StringSize];
+        public static byte[] UndefineModel(byte modelId) {
+            byte[] buffer = new byte[2];
             int i = 0;
-            buffer[i++] = Opcode.CpeRemoveModel;
-
-            // write model name
-            NetUtils.Write(name, buffer, 1, false);
-            i += NetUtils.StringSize;
+            buffer[i++] = Opcode.CpeUndefineModel;
+            buffer[i++] = modelId;
 
             return buffer;
         }
@@ -720,11 +710,22 @@ namespace MCGalaxy.Network {
         public bool hideFirstPersonArm = false;
         public UInt16 uScale = 64;
         public UInt16 vScale = 64;
-        public CustomModelPart[] parts;
+        public byte partCount;
     }
 
     public class CustomModelPart {
-        public BoxDesc boxDesc;
+        /* min and max vec3 points */
+        public Vec3F32 min;
+        public Vec3F32 max;
+
+        /* uv coords in order: top, bottom, front, back, left, right */
+        public UInt16[] u1;
+        public UInt16[] v1;
+        public UInt16[] u2;
+        public UInt16[] v2;
+        /* rotation origin point */
+        public Vec3F32 rotationOrigin;
+        
         public Vec3F32 rotation = new Vec3F32 {
             X = 0.0f,
             Y = 0.0f,
