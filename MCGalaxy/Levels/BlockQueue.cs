@@ -22,17 +22,22 @@ using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {    
+    /// <summary> Manages a list of block updates to periodically broadcast to players. </summary>
     public sealed class BlockQueue : List<ulong> {
         
+        /// <summary> Time in milliseconds between ticks. </summary>
         public static int Interval = 100;
+        /// <summary>  Maximum number of block updates broadcasted in one tick. </summary>
         public static int UpdatesPerTick = 750;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
         
-        const int posShift = 32;
-        const int idShift = 12;
+        const int posShift  = 32;
+        const int idShift   = 12;
         const int blockMask = (1 << 12) - 1;
+        
         readonly object locker = new object();
 
+        /// <summary> Flushes the block updates queue for each loaded level. </summary>
         public static void Loop(SchedulerTask task) {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
@@ -45,6 +50,7 @@ namespace MCGalaxy {
             task.Delay = TimeSpan.FromMilliseconds(Interval);
         }
 
+        /// <summary> Adds a block update to the end of the queue. </summary>
         public void Add(Player p, int index, BlockID block) {
             // Bit packing format
             // 32-63: index
@@ -57,12 +63,14 @@ namespace MCGalaxy {
             lock (locker) Add(flags);
         }
         
+        /// <summary> Removes all block updates from the queue associated with the given player. </summary>
         public void RemoveAll(Player p) {
             lock (locker) {
                 RemoveAll(b => (int)((b >> idShift) & Player.SessionIDMask) == p.SessionID);
             }
         }
         
+        /// <summary> Removes all block updates from the queue. </summary>
         public void ClearAll() { lock (locker) Clear(); }
         
         void Process(Level lvl) {
@@ -75,8 +83,8 @@ namespace MCGalaxy {
                 if (count > UpdatesPerTick) count = UpdatesPerTick;
 
                 for (int i = 0; i < count; i++) {
-                    ulong flags = this[i];
-                    int index = (int)(flags >> posShift);
+                    ulong flags   = this[i];
+                    int index     = (int)(flags >> posShift);
                     BlockID block = (BlockID)(flags & blockMask);
                     bulkSender.Add(index, block);
                 }
