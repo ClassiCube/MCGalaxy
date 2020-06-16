@@ -461,7 +461,7 @@ namespace MCGalaxy.Network {
         public const int MaxCustomModels = 64;
         public const int MaxCustomModelParts = 64;
         public static byte[] DefineModel(byte modelId, CustomModel customModel) {
-	        // 116 = 1 + 1 + 64 + 1 + 2*4 + 3*4 + 2*3*4 + 2*2 + 1
+            // 116 = 1 + 1 + 64 + 1 + 2*4 + 3*4 + 2*3*4 + 2*2 + 1
             byte[] buffer = new byte[116];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineModel;
@@ -522,7 +522,7 @@ namespace MCGalaxy.Network {
         }
 
         public static byte[] DefineModelPart(byte modelId, CustomModelPart part) {
-	        // 104 = 1 + 1 + 3*4 + 3*4 + 6*(2*2 + 2*2) + 3*4 + 3*4 + 1 + 4 + 1
+            // 104 = 1 + 1 + 3*4 + 3*4 + 6*(2*2 + 2*2) + 3*4 + 3*4 + 1 + 4 + 1
             byte[] buffer = new byte[104];
             int i = 0;
             buffer[i++] = Opcode.CpeDefineModelPart;
