@@ -41,8 +41,13 @@ namespace MCGalaxy {
         public bool Public = false;
         [ConfigBool("verify-names", "Server", true)]
         public bool VerifyNames = true;
+        
         [ConfigBool("support-web-client", "Server", true)]
         public bool WebClient = true;
+        [ConfigString("ssl-certificate-path", "Other", "", true)]
+        public string SslCertPath = "";
+        [ConfigString("ssl-certificate-password", "Other", "", true)]
+        public string SslCertPass = "";
         
         [ConfigBool("autoload", "Server", true)]
         public bool AutoLoadMaps = true;        
