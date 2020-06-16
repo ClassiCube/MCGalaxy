@@ -492,7 +492,9 @@ namespace MCGalaxy.Network {
         public void Disconnect() { Disconnect(1000); }
         public override void Close() { s.Close(); }
     }
+    
 #if SECURE_WEBSOCKETS
+// This code is unfinished and experimental, and is terrible quality. I apologise in advance.
     public sealed class SecureSocket : INetSocket, INetProtocol {
         readonly INetSocket raw;
         WrapperStream wrapper;
@@ -515,8 +517,16 @@ namespace MCGalaxy.Network {
         public override void Close() { raw.Close(); }
         public void Disconnect() { Close(); }
         
-        public override void Send(byte[] buffer, bool sync) { ssl.Write(buffer); }
-        public override void SendLowPriority(byte[] buffer) { ssl.Write(buffer); }
+        // This is an extremely UGLY HACK 
+        readonly object locker = new object();
+        public override void Send(byte[] buffer, bool sync) {
+            try {
+                lock (locker) ssl.Write(buffer);
+            } catch (Exception ex) {
+                Logger.LogError("Error writing to secure stream", ex);
+            }
+        }
+        public override void SendLowPriority(byte[] buffer) { Send(buffer, false); }
         
         public int ProcessReceived(byte[] data, int count) {
             lock (wrapper.locker) {
