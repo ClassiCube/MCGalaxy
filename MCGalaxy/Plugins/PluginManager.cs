@@ -93,7 +93,6 @@ namespace MCGalaxy {
         public static void LoadAll() {
             LoadCorePlugin(new CorePlugin());
             LoadCorePlugin(new NotesPlugin());
-            LoadCorePlugin(new CustomModelsPlugin());
             
             if (Directory.Exists("plugins")) {
                 string[] files = Directory.GetFiles("plugins", "*.dll");
