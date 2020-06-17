@@ -44,29 +44,33 @@ namespace MCGalaxy.Commands.Maintenance {
                                    "%T/Shutdown abort %Sto abort the shutdown."); return;
                 }
                 
-                string reason = "";
-                int secTime = 0;
+                if (message.Length == 0) message = "10";
+                string reason;
+                TimeSpan delay;
                 string[] args = message.SplitSpaces(2);
                 
-                if (int.TryParse(args[0], out secTime)) {
+                try {
+                    delay  = args[0].ParseShort("s");
                     reason = args.Length > 1 ? args[1] : "";
-                } else {
-                    reason = args[0]; secTime = 10;
+                } catch {
+                    delay  = TimeSpan.FromSeconds(10);
+                    reason = args[0];
                 }
                 
-                if (secTime <= 0) { p.Message("Countdown time must be greater than zero"); return; } 
-                DoShutdown(secTime, reason);
+                int delaySec = (int)delay.TotalSeconds;
+                if (delaySec <= 0) { p.Message("Countdown time must be greater than zero"); return; } 
+                DoShutdown(delaySec, reason);
             }
         }
         
-        static void DoShutdown(int secTime, string reason) {
+        static void DoShutdown(int delay, string reason) {
             ShutdownArgs args = new ShutdownArgs();
-            args.Delay = secTime - 1;
+            args.Delay  = delay - 1;
             args.Reason = reason;
             
             if (reason.Length > 0) reason = ": " + reason;
             Log("Server shutdown started" + reason);
-            Log("Server shutdown in " + secTime + " seconds");
+            Log("Server shutdown in " + delay + " seconds");
             
             shutdownTask = Server.MainScheduler.QueueRepeat(
                 ShutdownCallback, args, TimeSpan.FromSeconds(1));
@@ -97,7 +101,9 @@ namespace MCGalaxy.Commands.Maintenance {
         
         public override void Help(Player p) {
             p.Message("%T/Shutdown [delay] <reason>");
-            p.Message("%HShuts the server down after [delay] seconds.");
+            p.Message("%HShuts the server down after [delay]");
+            p.Message("%T/Shutdown <reason>");
+            p.Message("%HShuts the server down after 10 seconds");
             p.Message("%T/Shutdown abort");
             p.Message("%HAborts the current server shutdown.");
         }
