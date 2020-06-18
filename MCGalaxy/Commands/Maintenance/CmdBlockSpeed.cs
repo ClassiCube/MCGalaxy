@@ -20,7 +20,6 @@ using System;
 namespace MCGalaxy.Commands.Maintenance { 
     public sealed class CmdBlockSpeed : Command2 {        
         public override string name { get { return "BlockSpeed"; } }
-        public override string shortcut { get { return "bs"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 

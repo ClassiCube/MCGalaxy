@@ -23,6 +23,9 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdLine : DrawCmd {
         public override string name { get { return "Line"; } }
         public override string shortcut { get { return "l"; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("ln") }; }
+        }
         
         protected override string SelectionType { get { return "endpoints"; } }
         protected override string PlaceMessage { get { return "Place or break two blocks to determine the endpoints."; } }
