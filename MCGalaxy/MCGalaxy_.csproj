@@ -262,7 +262,6 @@
     <Compile Include="Commands\Information\CmdRules.cs" />
     <Compile Include="Commands\Information\CmdSearch.cs" />
     <Compile Include="Commands\Information\CmdSeen.cs" />
-    <Compile Include="Commands\Information\CmdDevs.cs" />
     <Compile Include="Commands\Information\CmdTime.cs" />
     <Compile Include="Commands\Information\CmdTop.cs" />
     <Compile Include="Commands\Information\CmdLevels.cs" />

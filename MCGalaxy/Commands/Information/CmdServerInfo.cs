@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Info {
                       LevelInfo.Loaded.Count, Server.Config.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
-            p.Message("Been up for &b{0}%S, running &b{1} &a{2} %S(based on &bMCForge %Sand &bMCLawl%S).",
+            p.Message("Been up for &b{0}%S, running &b{1} &a{2} &f" + Updater.SourceURL,
                       up.Shorten(true), Server.SoftwareName, Server.Version);
             p.Message("Player positions are updated every &b"
                       + Server.Config.PositionUpdateInterval + " %Smilliseconds.");
