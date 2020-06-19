@@ -477,7 +477,6 @@ namespace MCGalaxy.Network {
             flags |= (byte)((customModel.pushes ? 1 : 0) << 1);
             flags |= (byte)((customModel.usesHumanSkin ? 1 : 0) << 2);
             flags |= (byte)((customModel.calcHumanAnims ? 1 : 0) << 3);
-            flags |= (byte)((customModel.hideFirstPersonArm ? 1 : 0) << 4);
             buffer[i++] = flags;
 
             // write nameY, eyeY
@@ -582,6 +581,7 @@ namespace MCGalaxy.Network {
             // write bool flags
             byte flags = 0;
             flags |= (byte)((part.fullbright ? 1 : 0) << 0);
+            flags |= (byte)((part.firstPersonArm ? 1 : 0) << 0);
 
             buffer[i++] = flags;
 
@@ -707,7 +707,6 @@ namespace MCGalaxy.Network {
         // if true, uses skin from your account
         public bool usesHumanSkin = true;
         public bool calcHumanAnims = true;
-        public bool hideFirstPersonArm = false;
         public UInt16 uScale = 64;
         public UInt16 vScale = 64;
         public byte partCount;
@@ -734,6 +733,7 @@ namespace MCGalaxy.Network {
         public CustomModelAnim anim = CustomModelAnim.None;
         public float animModifier = 1.0f;
         public bool fullbright = false;
+        public bool firstPersonArm = false;
     }
 
     public enum CustomModelAnim {
