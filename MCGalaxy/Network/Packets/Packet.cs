@@ -581,7 +581,7 @@ namespace MCGalaxy.Network {
             // write bool flags
             byte flags = 0;
             flags |= (byte)((part.fullbright ? 1 : 0) << 0);
-            flags |= (byte)((part.firstPersonArm ? 1 : 0) << 0);
+            flags |= (byte)((part.firstPersonArm ? 1 : 0) << 1);
 
             buffer[i++] = flags;
 
