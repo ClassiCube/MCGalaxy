@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.CPE {
             if (skin == who.truename) {
                 Server.skins.Remove(who.name);
             } else {
-                Server.skins.AddOrReplace(who.name, skin);
+                Server.skins.Update(who.name, skin);
             }
             Server.skins.Save();
         }

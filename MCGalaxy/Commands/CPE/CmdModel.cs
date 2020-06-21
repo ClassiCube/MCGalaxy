@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             if (!model.CaselessEq("humanoid")) {
-                Server.models.AddOrReplace(who.name, model);
+                Server.models.Update(who.name, model);
             } else {
                 Server.models.Remove(who.name);
             }
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.CPE {
             
             if (!changedAxisScale) return;
             if (who.ScaleX != 0 || who.ScaleY != 0 || who.ScaleZ != 0) {
-                Server.modelScales.AddOrReplace(who.name, who.ScaleX + " " + who.ScaleY + " " + who.ScaleZ);
+                Server.modelScales.Update(who.name, who.ScaleX + " " + who.ScaleY + " " + who.ScaleZ);
             } else {
                 Server.modelScales.Remove(who.name);
             }

@@ -40,14 +40,22 @@ namespace MCGalaxy {
             lock (locker) return new List<string>(lines);
         }
         
+        /// <summary> Returns number of names that are in this list. </summary>
         public int Count { get { lock (locker) return names.Count; } }
         
-        public void Add(string name, string data) {
+        /// <summary> Sets the data associated with the given name. </summary>
+        public void Update(string name, string data) {
             lock (locker) {
-                names.Add(name); lines.Add(name + Separator + data);
+                int idx = names.CaselessIndexOf(name);
+                if (idx == -1) {
+                    names.Add(name); lines.Add(name + Separator + data);
+                } else {
+                    lines[idx] = name + Separator + data;
+                }
             }
         }
         
+        /// <summary> Returns whether the given name was removed from this list. </summary>
         public bool Remove(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
@@ -59,22 +67,13 @@ namespace MCGalaxy {
             }
         }
 
+        /// <summary> Returns whether the given name is in this list. </summary>
         public bool Contains(string name) {
-            lock (locker)
-                return names.CaselessContains(name);
-        }
-        
-        public void AddOrReplace(string name, string data) {
-            lock (locker) {
-                int idx = names.CaselessIndexOf(name);
-                if (idx == -1) {
-                    names.Add(name); lines.Add(name + Separator + data);
-                } else {
-                    lines[idx] = name + Separator + data;
-                }
-            }
+            lock (locker) return names.CaselessContains(name);
         }
 
+        /// <summary> Retrieves the data associated with the given name. </summary>
+        /// <remarks> Returns null if there is no data associated. </remarks>
         public string FindData(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
@@ -85,6 +84,13 @@ namespace MCGalaxy {
                 return idx == -1 ? null : line.Substring(idx + 1);
             }
         }
+
+        
+        [Obsolete("Use Update instead")]
+        public void Add(string name, string data) { Update(name, data); }
+
+        [Obsolete("Use Update instead")]        
+        public void AddOrReplace(string name, string data) { Update(name, data); }
         
         
         public void Save() { Save(true); }
@@ -118,7 +124,7 @@ namespace MCGalaxy {
                 while ((line = r.ReadLine()) != null) {
                     list.lines.Add(line);
                     int sepIndex = line.IndexOf(separator);
-                    string name = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
+                    string name  = sepIndex >= 0 ? line.Substring(0, sepIndex) : line;
                     list.names.Add(name);
                 }
             }

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
         
         protected override void SetPlayerData(Player p, Player who, string args) {
             if (!ParseArgs(p, args, who)) return;
-            Server.rotations.AddOrReplace(who.name, who.Rot.RotX + " " + who.Rot.RotZ);
+            Server.rotations.Update(who.name, who.Rot.RotX + " " + who.Rot.RotZ);
             Server.rotations.Save();
         }
         

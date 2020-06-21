@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.CPE {
                 p.Send(Packet.ClickDistance((short)packedDist));
                 p.ReachDistance = dist;
                 p.Message("Set your reach distance to {0} blocks.", dist);
-                Server.reach.AddOrReplace(p.name, packedDist.ToString());
+                Server.reach.Update(p.name, packedDist.ToString());
                 Server.reach.Save();
             }
         }
