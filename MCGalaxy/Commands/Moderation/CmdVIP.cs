@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return;
             
-            if (!Server.vip.AddUnique(name)) {
+            if (!Server.vip.Add(name)) {
                 p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis already a VIP.");
             } else {
                 Server.vip.Save();

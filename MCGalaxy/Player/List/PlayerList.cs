@@ -23,7 +23,7 @@ using System.Text;
 namespace MCGalaxy {
     
     /// <summary> Represents a list of player names. Case insensitive. Thread safe. </summary>
-    public sealed class PlayerList {
+    public class PlayerList {
         public string Path;
         
         List<string> names = new List<string>();        
@@ -37,27 +37,11 @@ namespace MCGalaxy {
             lock (locker) return new List<string>(names);
         }
 
+        /// <summary> Returns number of names that are in this list. </summary>
         public int Count { get { lock (locker) return names.Count; } }
 
-        public void Add(string name) {
-            lock (locker) names.Add(name);
-        }
-
-        public bool Remove(string name) {
-            lock (locker) return names.CaselessRemove(name);
-        }
-        
-        /// <summary> Returns whether the given name is caselessly in this list. </summary>
-        public bool Contains(string name) {
-            lock (locker) return names.CaselessContains(name);
-        }
-        
-        /// <summary> Removes all names from this list. </summary>
-        public void Clear() {
-            lock (locker) names.Clear();
-        }
-
-        public bool AddUnique(string name) {
+        /// <summary> Returns whether the given name was actually added to this list. </summary>
+        public bool Add(string name) {
             lock (locker) {
                 int idx = names.CaselessIndexOf(name);
                 if (idx >= 0) return false;
@@ -66,8 +50,26 @@ namespace MCGalaxy {
             }
             return true;
         }
+
+        /// <summary> Returns whether the given name was removed from this list. </summary>
+        public bool Remove(string name) {
+            lock (locker) return names.CaselessRemove(name);
+        }
         
-        // only used for NameConverter
+        /// <summary> Returns whether the given name is in this list. </summary>
+        public bool Contains(string name) {
+            lock (locker) return names.CaselessContains(name);
+        }
+        
+        /// <summary> Removes all names from this list. </summary>
+        public void Clear() {
+            lock (locker) names.Clear();
+        }
+        
+
+        [Obsolete("Use Add instead")]
+        public bool AddUnique(string name) { return Add(name); }
+        
         internal int IndexOf(string name) {
             lock (locker) return names.CaselessIndexOf(name);
         }

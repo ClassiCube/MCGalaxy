@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Moderation {
                 }
                 
                 if (!p.opchat) opchat.Use(p, "", data);
-                Server.hidden.AddUnique(p.name);
+                Server.hidden.Add(p.name);
             } else {
                 AnnounceOps(p, "To Ops -λNICK%S- is now &fvisible");
                 p.hideRank = LevelPermission.Banned;

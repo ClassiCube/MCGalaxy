@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
                 case "add":
                     if (parts.Length < 2) { p.Message("You need to provide a name to add."); return; }
                     
-                    if (!Server.ircControllers.AddUnique(parts[1])) {
+                    if (!Server.ircControllers.Add(parts[1])) {
                         p.Message(parts[1] + " is already an IRC controller.");
                     } else {
                         Server.ircControllers.Save();

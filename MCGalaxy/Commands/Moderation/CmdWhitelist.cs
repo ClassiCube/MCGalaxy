@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Add(Player p, string player) {
-            if (!Server.whiteList.AddUnique(player)) {
+            if (!Server.whiteList.Add(player)) {
                 p.Message(player + " %Sis already on the whitelist!"); return;
             } else {
                 Chat.MessageFromOps(p, "λNICK %Sadded &f" + player + " %Sto the whitelist.");

@@ -56,7 +56,7 @@ namespace MCGalaxy.DB {
         
         /// <summary> Returns a non-database ID for the given name </summary>
         public static int InvalidNameID(string name) {
-            bool added = Server.invalidIds.AddUnique(name);
+            bool added = Server.invalidIds.Add(name);
             if (added) Server.invalidIds.Save();
             
             int index = Server.invalidIds.IndexOf(name);

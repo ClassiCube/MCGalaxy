@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Info {
             if (!Server.Config.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }
             if (!p.hasreadrules) { p.Message("&9You must read %T/Rules &9before agreeing."); return; }
             
-            if (!Server.agreed.AddUnique(p.name)) {
+            if (!Server.agreed.Add(p.name)) {
                 p.Message("You have already agreed to the rules.");
             } else {                
                 p.agreed = true;

@@ -23,7 +23,7 @@ using System.Text;
 namespace MCGalaxy {
     
     /// <summary> Represents a list of player names and simple associated data. Case insensitive. Thread safe. </summary>
-    public sealed class PlayerExtList {
+    public class PlayerExtList {
         public char Separator = ' ';
         public string Path;
         

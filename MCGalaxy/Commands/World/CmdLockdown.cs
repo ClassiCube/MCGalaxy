@@ -35,16 +35,13 @@ namespace MCGalaxy.Commands.World {
             
             map = Matcher.FindMaps(p, map);
             if (map == null) return;
-            
-            bool unlocking = Server.lockdown.Contains(map);
-            string action = unlocking ? "unlocked" : "locked";
-            Chat.MessageGlobal("Map " + map + " was " + action);
-            
-            if (unlocking) {
-                Server.lockdown.Remove(map);
+
+            if (Server.lockdown.Remove(map)) {
+                Chat.MessageGlobal("Map " + map + " was unlocked");
                 Chat.MessageFromOps(p, "Map " + map + " unlocked by: λNICK");
             } else {
-                Server.lockdown.AddUnique(map);
+                Server.lockdown.Add(map);
+                Chat.MessageGlobal("Map " + map + " was locked");
                 Chat.MessageFromOps(p, "Map " + map + " locked by: λNICK");
             }
             Server.lockdown.Save();
