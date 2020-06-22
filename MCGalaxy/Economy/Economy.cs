@@ -89,7 +89,7 @@ namespace MCGalaxy.Eco {
             new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(),
             new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(),
             new InfectMessageItem(), new NickItem(), new ReviveItem(),
-            new InvisibilityItem() };
+            new InvisibilityItem(), new SnackItem() };
         
         /// <summary> Finds the item whose name or one of its aliases caselessly matches the input. </summary>
         public static Item GetItem(string name) {
@@ -109,9 +109,6 @@ namespace MCGalaxy.Eco {
             return items.Length == 0 ? "(no enabled items)" : items;
         }
         
-        public static SimpleItem Color { get { return (SimpleItem)Items[0]; } }
-        public static SimpleItem TitleColor { get { return (SimpleItem)Items[1]; } }
-        public static SimpleItem Title { get { return (SimpleItem)Items[2]; } }
         public static RankItem Ranks { get { return (RankItem)Items[3]; } }
         public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
         

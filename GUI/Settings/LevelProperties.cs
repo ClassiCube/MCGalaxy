@@ -134,6 +134,7 @@ namespace MCGalaxy.Gui {
         
         void SetAutoload(bool value) {
             if (value) {
+                // Use AddOrReplace for backwards compatibility
                 Server.AutoloadMaps.AddOrReplace(lvl.name, lvl.physics.ToString());
             } else {
                 Server.AutoloadMaps.Remove(lvl.name);

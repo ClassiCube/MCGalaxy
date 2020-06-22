@@ -17,39 +17,23 @@
  */
 using System;
 using MCGalaxy.Eco;
-using MCGalaxy.Util;
 
 namespace MCGalaxy.Commands.Chatting {  
     public sealed class CmdEat : MessageCmd {
         public override string name { get { return "Eat"; } }
         
+        // Custom command, so can still be used even when economy is disabled
         public override void Use(Player p, string message, CommandData data) {
-            if (DateTime.UtcNow < p.NextEat) {
-                p.Message("You're still full - you need to wait at least " +
-                                   "10 seconds between snacks."); return;
-            }
-            if (Economy.Enabled && p.money < 1) {
-                p.Message("You need to have at least 1 &3" + Server.Config.Currency + 
-                                   " %Sto purchase a snack."); return;
-            }            
-
-            TextFile eatFile = TextFile.Files["Eat"];
-            eatFile.EnsureExists();
-            
-            string[] actions = eatFile.GetText();
-            string action = "ate some food";
-            if (actions.Length > 0)
-                action = actions[new Random().Next(actions.Length)];
-            
-            if (!TryMessage(p, "λNICK %S" + action)) return;
-            p.NextEat = DateTime.UtcNow.AddSeconds(10);
-            if (Economy.Enabled)
-                p.SetMoney(p.money - 1);  
+            Item item = Economy.GetItem("Snack");
+            item.OnBuyCommand(p, message, message.SplitSpaces());
         }
      
         public override void Help(Player p) {
+            SimpleItem item = (SimpleItem)Economy.GetItem("Snack");
             p.Message("%T/Eat %H- Eats a random snack.");
-            p.Message("%HIf economy is enabled, costs 1 &3" + Server.Config.Currency);
+            
+            if (item.Price == 0) return;
+            p.Message("%HCosts {0} &3{1} %Heach time", item.Price, Server.Config.Currency);
         }
     }
 }

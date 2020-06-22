@@ -114,15 +114,22 @@ namespace MCGalaxy.Eco {
             writer.WriteLine(Name + ":price:" + Price);
         }
         
+        protected bool CheckPrice(Player p) {
+            if (p.money < Price) {
+                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, Server.Config.Currency); 
+                return false;
+            }
+            return true;
+        }
+        
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (AllowsNoArgs && args.Length == 1) {
                 DoPurchase(p, message, args); return;
             }
             // Must always provide an argument.
             if (args.Length < 2) { OnStoreCommand(p); return; }
-            if (p.money < Price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, Server.Config.Currency); return;
-            }
+            // TODO: Move this into item stuff
+            if (!CheckPrice(p)) return;
             DoPurchase(p, message, args);
         }
         
