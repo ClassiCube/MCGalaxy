@@ -137,7 +137,7 @@ namespace MCGalaxy.DB {
             bool hasModel = !(who.Model.CaselessEq("humanoid") || who.Model.CaselessEq("human"));
             
             if (hasSkin && hasModel) {
-                p.Message("  Skin: &f{0}, %Smodel: &f{1}", who.SkinName, who.Model);
+                p.Message("  Skin: &f{0} %Smodel: &f{1}", who.SkinName, who.Model);
             } else if (hasSkin) {
                 p.Message("  Skin: &f{0}", who.SkinName);
             } else if (hasModel) {
