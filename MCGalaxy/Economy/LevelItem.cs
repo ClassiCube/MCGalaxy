@@ -72,16 +72,17 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (args.Length < 2) { OnStoreCommand(p); return; }
-            LevelPreset preset = FindPreset(args[1]);
+        protected internal override void OnPurchase(Player p, string raw) {
+            string[] args = raw.SplitSpaces();
+            if (raw.Length == 0) { OnStoreCommand(p); return; }
+            LevelPreset preset = FindPreset(args[0]);
             
             if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
             if (!CheckPrice(p, preset.price, "that map")) return;
             
             string name = null;
-            if (args.Length >= 3) {
-                name = p.name + "_" + args[2];
+            if (args.Length > 1) {
+                name = p.name + "_" + args[1];
             } else {
                 // use a numbered map by default
                 for (int i = 1; i < 100; i++) {
@@ -110,7 +111,7 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
         }
         
-        protected internal override void OnSetupCommand(Player p, string[] args) {
+        protected internal override void OnSetup(Player p, string[] args) {
             LevelPreset preset = FindPreset(args[2]);
             string cmd = args[1];
             
@@ -121,7 +122,7 @@ namespace MCGalaxy.Eco {
             } else if (Command.IsEditCommand(cmd)) {
                 EditPreset(p, args, preset);
             } else {
-                OnSetupCommandHelp(p);
+                OnSetupHelp(p);
             }
         }
         
@@ -188,8 +189,8 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnSetupCommandHelp(Player p) {
-            base.OnSetupCommandHelp(p);
+        protected internal override void OnSetupHelp(Player p) {
+            base.OnSetupHelp(p);
             p.Message("%T/Eco level add [name] [x] [y] [z] [theme] [price]");
             p.Message("%T/Eco level remove [name]");
             p.Message("%T/Eco level edit [name] [name/x/y/z/type/price] [value]");

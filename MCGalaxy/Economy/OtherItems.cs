@@ -30,7 +30,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Snack"; } }
         
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+        protected internal override void OnPurchase(Player p, string args) {
             if (DateTime.UtcNow < p.NextEat) {
                 p.Message("You're still full - you need to wait at least " +
                           "10 seconds between snacks."); return;

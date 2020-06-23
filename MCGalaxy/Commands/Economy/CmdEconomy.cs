@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Eco {
             if (item == null) {
                 p.Message("No item has that name, see %T/Eco help %Sfor a list of items.");
             } else {
-                item.OnSetupCommandHelp(p);
+                item.OnSetupHelp(p);
             }
         }
     }

@@ -32,10 +32,10 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "10Blocks"; } }
 
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+        protected internal override void OnPurchase(Player p, string args) {
             int count = 1;
             const string group = "Number of groups of 10 blocks";
-            if (args.Length >= 2 && !CommandParser.GetInt(p, args[1], group, ref count, 0, 10)) return;
+            if (args.Length > 0 && !CommandParser.GetInt(p, args, group, ref count, 0, 10)) return;
             
             if (!CheckPrice(p, count * Price, (count * 10) + " blocks")) return;
             
@@ -60,13 +60,13 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "QueueLevel"; } }
         
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+        protected internal override void OnPurchase(Player p, string args) {
             if (ZSGame.Instance.Picker.QueuedMap != null) {
                 p.Message("Someone else has already queued a level."); return;
             }
         	
-        	if (args.Length < 2) { OnStoreCommand(p); return; }
-            string map = Matcher.FindMaps(p, args[1]);
+        	if (args.Length == 0) { OnStoreCommand(p); return; }
+            string map = Matcher.FindMaps(p, args);
             if (map == null) return;
             
             if (!CheckPrice(p)) return;
@@ -91,12 +91,12 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "InfectMessage"; } }
         
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (args.Length < 2) { OnStoreCommand(p); return; }
-            string text = message.SplitSpaces(2)[1]; // keep spaces this way
+        protected internal override void OnPurchase(Player p, string msg) {
+            if (msg.Length == 0) { OnStoreCommand(p); return; }
             bool hasAToken = false;
-            for (int i = 0; i < text.Length; i++) {
-                if (!CheckEscape(text, i, ref hasAToken)) {
+            
+            for (int i = 0; i < msg.Length; i++) {
+                if (!CheckEscape(msg, i, ref hasAToken)) {
                     p.Message("You can only use {0} and {1} for tokens in infect messages."); return;
                 }
             }
@@ -108,11 +108,11 @@ namespace MCGalaxy.Eco {
             if (!CheckPrice(p)) return;
             ZSData data = ZSGame.Get(p);
             if (data.InfectMessages == null) data.InfectMessages = new List<string>();
-            data.InfectMessages.Add(text);
+            data.InfectMessages.Add(msg);
             
-            ZSConfig.AppendPlayerInfectMessage(p.name, text);
-            p.Message("&aAdded infect message: &f" + text);
-            Economy.MakePurchase(p, Price, "%3InfectMessage: " + message);
+            ZSConfig.AppendPlayerInfectMessage(p.name, msg);
+            p.Message("&aAdded infect message: &f" + msg);
+            Economy.MakePurchase(p, Price, "%3InfectMessage: " + msg);
         }
         
         static bool CheckEscape(string text, int i, ref bool hasAToken) {
@@ -134,7 +134,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Invisibility"; } }
 
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+        protected internal override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "an invisibility potion")) return;
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +
@@ -184,7 +184,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Revive"; } }
         
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+        protected internal override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "a revive potion")) return;
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy a revive potion " +

@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Eco {
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            string[] parts = message.SplitSpaces();
+            string[] parts = message.SplitSpaces(2);
             Item item = Economy.GetItem(parts[0]);
             if (item == null) { Help(p); return; }
 
@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Eco {
             if (data.Rank < item.PurchaseRank) {
                 Formatter.MessageNeedMinPerm(p, "+ can purchase a " + item.Name, item.PurchaseRank); return;
             }
-            item.OnBuyCommand(p, message, parts);
+            item.OnPurchase(p, parts.Length == 1 ? "" : parts[1]);
         }
         
         public override void Help(Player p) {

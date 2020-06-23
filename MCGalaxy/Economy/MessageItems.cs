@@ -28,15 +28,14 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "LoginMessage"; } }
         
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (args.Length == 1) {
+        protected internal override void OnPurchase(Player p, string msg) {
+            if (msg.Length == 0) {
                 PlayerDB.SetLoginMessage(p.name, "");
                 p.Message("&aYour login message was removed for free.");
                 return;
             }
             
         	if (!CheckPrice(p)) return;
-            string msg = message.SplitSpaces(2)[1]; // keep spaces this way
             if (msg == PlayerDB.GetLoginMessage(p)) {
                 p.Message("%WYou already have that login message."); return;
             }
@@ -57,15 +56,14 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "LogoutMessage"; } }
 
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (args.Length == 1) {
+        protected internal override void OnPurchase(Player p, string msg) {
+            if (msg.Length == 0) {
                 PlayerDB.SetLogoutMessage(p.name, "");
                 p.Message("&aYour logout message was removed for free.");
                 return;
         	}
             
-        	if (!CheckPrice(p)) return;
-            string msg = message.SplitSpaces(2)[1]; // keep spaces this way         
+        	if (!CheckPrice(p)) return;    
             if (msg == PlayerDB.GetLogoutMessage(p)) {
                 p.Message("%WYou already have that logout message."); return;
             }       

@@ -49,13 +49,13 @@ namespace MCGalaxy.Eco {
         
         
         /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
-        protected internal abstract void OnBuyCommand(Player p, string message, string[] args);
+        protected internal abstract void OnPurchase(Player p, string args);
         
         /// <summary> Called when the player does /eco [item name] [option] &lt;value&gt; </summary>
-        protected internal abstract void OnSetupCommand(Player p, string[] args);
+        protected internal abstract void OnSetup(Player p, string[] args);
         
         /// <summary> Called when the player does /eco help [item name] </summary>
-        protected internal virtual void OnSetupCommandHelp(Player p) {
+        protected internal virtual void OnSetupHelp(Player p) {
             p.Message("%T/Eco {0} enable/disable", Name.ToLower());
             p.Message("%HEnables/disables purchasing this item.");
             p.Message("%T/Eco {0} purchaserank [rank]", Name.ToLower());
@@ -85,7 +85,7 @@ namespace MCGalaxy.Eco {
                 PurchaseRank = grp.Permission;
                 p.Message("Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
             } else {
-                OnSetupCommand(p, args);
+                OnSetup(p, args);
             }
         }
         
@@ -122,7 +122,7 @@ namespace MCGalaxy.Eco {
         
         protected bool CheckPrice(Player p) { return CheckPrice(p, Price, "a " + Name); }
         
-        protected internal override void OnSetupCommand(Player p, string[] args) {
+        protected internal override void OnSetup(Player p, string[] args) {
             if (args[1].CaselessEq("price")) {
                 int cost = 0;
                 if (!CommandParser.GetInt(p, args[2], "Price", ref cost)) return;
@@ -134,8 +134,8 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected internal override void OnSetupCommandHelp(Player p) {
-            base.OnSetupCommandHelp(p);
+        protected internal override void OnSetupHelp(Player p) {
+            base.OnSetupHelp(p);
             p.Message("%T/Eco {0} price [amount]", Name.ToLower());
             p.Message("%HSets how many &3{0} %Hthis item costs.", Server.Config.Currency);
         }
