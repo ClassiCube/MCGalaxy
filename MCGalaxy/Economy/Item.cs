@@ -47,6 +47,27 @@ namespace MCGalaxy.Eco {
         /// <summary> Writes the properties of this item to the economy.properties file. </summary>
         public abstract void Serialise(StreamWriter writer);
         
+        
+        /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
+        protected internal abstract void OnBuyCommand(Player p, string message, string[] args);
+        
+        /// <summary> Called when the player does /eco [item name] [option] &lt;value&gt; </summary>
+        protected internal abstract void OnSetupCommand(Player p, string[] args);
+        
+        /// <summary> Called when the player does /eco help [item name] </summary>
+        protected internal virtual void OnSetupCommandHelp(Player p) {
+            p.Message("%T/Eco {0} enable/disable", Name.ToLower());
+            p.Message("%HEnables/disables purchasing this item.");
+            p.Message("%T/Eco {0} purchaserank [rank]", Name.ToLower());
+            p.Message("%HSets the lowest rank which can purchase this item.");
+        }
+
+        /// <summary> Called when the player does /store </summary>
+        protected internal abstract void OnStoreOverview(Player p);
+        
+        /// <summary> Called when the player does /store [item name] </summary>
+        protected internal abstract void OnStoreCommand(Player p);
+        
 
         internal void Setup(Player p, string[] args) {
             string cmd = args[1];
@@ -68,32 +89,20 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected void UseCommand(Player p, string cmd, string args) {
+        protected static void UseCommand(Player p, string cmd, string args) {
             CommandData data = default(CommandData);
             data.Rank    = LevelPermission.Nobody;
             data.Context = CommandContext.Purchase;
             Command.Find(cmd).Use(p, args, data);
         }
         
-        /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
-        protected internal abstract void OnBuyCommand(Player p, string message, string[] args);
-        
-        /// <summary> Called when the player does /eco [item name] [option] &lt;value&gt; </summary>
-        protected internal abstract void OnSetupCommand(Player p, string[] args);
-        
-        /// <summary> Called when the player does /eco help [item name] </summary>
-        protected internal virtual void OnSetupCommandHelp(Player p) {
-            p.Message("%T/Eco {0} enable/disable", Name.ToLower());
-            p.Message("%HEnables/disables purchasing this item.");
-            p.Message("%T/Eco {0} purchaserank [rank]", Name.ToLower());
-            p.Message("%HSets the lowest rank which can purchase this item.");
+        protected static bool CheckPrice(Player p, int price, string item) {
+            if (p.money < price) {
+                p.Message("%WYou don't have enough &3{1} %Wto buy {0}.", item, Server.Config.Currency); 
+                return false;
+            }
+            return true;
         }
-
-        /// <summary> Called when the player does /store </summary>
-        protected internal abstract void OnStoreOverview(Player p);
-        
-        /// <summary> Called when the player does /store [item name] </summary>
-        protected internal abstract void OnStoreCommand(Player p);
     }
     
     /// <summary> Simple item, in that it only has one cost value. </summary>
@@ -101,9 +110,6 @@ namespace MCGalaxy.Eco {
         
         /// <summary> How much this item costs to purchase. </summary>
         public int Price = 100;
-        
-        /// <summary> Whether providing no arguments is allowed. </summary>
-        protected bool AllowsNoArgs;
         
         public override void Parse(string line, string[] args) {
             if (args[1].CaselessEq("price"))
@@ -114,26 +120,7 @@ namespace MCGalaxy.Eco {
             writer.WriteLine(Name + ":price:" + Price);
         }
         
-        protected bool CheckPrice(Player p) {
-            if (p.money < Price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy a {0}.", Name, Server.Config.Currency); 
-                return false;
-            }
-            return true;
-        }
-        
-        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (AllowsNoArgs && args.Length == 1) {
-                DoPurchase(p, message, args); return;
-            }
-            // Must always provide an argument.
-            if (args.Length < 2) { OnStoreCommand(p); return; }
-            // TODO: Move this into item stuff
-            if (!CheckPrice(p)) return;
-            DoPurchase(p, message, args);
-        }
-        
-        protected abstract void DoPurchase(Player p, string message, string[] args);
+        protected bool CheckPrice(Player p) { return CheckPrice(p, Price, "a " + Name); }
         
         protected internal override void OnSetupCommand(Player p, string[] args) {
             if (args[1].CaselessEq("price")) {

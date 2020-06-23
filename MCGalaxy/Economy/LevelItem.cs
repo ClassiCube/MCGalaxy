@@ -75,11 +75,9 @@ namespace MCGalaxy.Eco {
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length < 2) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[1]);
-            if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
             
-            if (p.money < preset.price) {
-                p.Message("%WYou don't have enough &3" + Server.Config.Currency + "%W to buy that map"); return;
-            }
+            if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
+            if (!CheckPrice(p, preset.price, "that map")) return;
             
             string name = null;
             if (args.Length >= 3) {

@@ -28,20 +28,16 @@ namespace MCGalaxy.Eco {
         public BlocksItem() {
             Aliases = new string[] { "blocks", "bl", "b" };
             Price = 1;
-            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "10Blocks"; } }
 
-        protected override void DoPurchase(Player p, string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             int count = 1;
             const string group = "Number of groups of 10 blocks";
             if (args.Length >= 2 && !CommandParser.GetInt(p, args[1], group, ref count, 0, 10)) return;
             
-            if (p.money < Price * count) {
-                p.Message("%WYou don't have enough &3{2} %Wto buy {1} {0}.",
-                               Name, count * 10, Server.Config.Currency); return;
-            }
+            if (!CheckPrice(p, count * Price, (count * 10) + " blocks")) return;
             
             ZSData data = ZSGame.Get(p);
             data.BlocksLeft += 10 * count;
@@ -64,13 +60,16 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "QueueLevel"; } }
         
-        protected override void DoPurchase(Player p, string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (ZSGame.Instance.Picker.QueuedMap != null) {
                 p.Message("Someone else has already queued a level."); return;
             }
+        	
+        	if (args.Length < 2) { OnStoreCommand(p); return; }
             string map = Matcher.FindMaps(p, args[1]);
             if (map == null) return;
             
+            if (!CheckPrice(p)) return;
             UseCommand(p, "Queue", "level " + map);
             Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
         }
@@ -92,7 +91,8 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "InfectMessage"; } }
         
-        protected override void DoPurchase(Player p, string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
+            if (args.Length < 2) { OnStoreCommand(p); return; }
             string text = message.SplitSpaces(2)[1]; // keep spaces this way
             bool hasAToken = false;
             for (int i = 0; i < text.Length; i++) {
@@ -105,6 +105,7 @@ namespace MCGalaxy.Eco {
                                "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
             }
             
+            if (!CheckPrice(p)) return;
             ZSData data = ZSGame.Get(p);
             if (data.InfectMessages == null) data.InfectMessages = new List<string>();
             data.InfectMessages.Add(text);
@@ -134,9 +135,7 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "Invisibility"; } }
 
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (p.money < Price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy an {0}.", Name, Server.Config.Currency); return;
-            }
+            if (!CheckPrice(p, Price, "an invisibility potion")) return;
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +
                                "when a round of zombie survival is in progress."); return;
@@ -165,8 +164,6 @@ namespace MCGalaxy.Eco {
             Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
         }
         
-        protected override void DoPurchase(Player p, string message, string[] args) { }
-        
         protected internal override void OnStoreCommand(Player p) {
             p.Message("%T/Buy " + Name);
             OutputItemInfo(p);
@@ -188,11 +185,9 @@ namespace MCGalaxy.Eco {
         public override string Name { get { return "Revive"; } }
         
         protected internal override void OnBuyCommand(Player p, string message, string[] args) {
-            if (p.money < Price) {
-                p.Message("%WYou don't have enough &3" + Server.Config.Currency + "%W to buy a " + Name + "."); return;
-            }
+            if (!CheckPrice(p, Price, "a revive potion")) return;
             if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
-                p.Message("You can only buy an revive potion " +
+                p.Message("You can only buy a revive potion " +
                                    "when a round of zombie survival is in progress."); return;
             }
             
@@ -221,8 +216,6 @@ namespace MCGalaxy.Eco {
             data.RevivesUsed++;
             Economy.MakePurchase(p, Price, "%3Revive:");
         }
-        
-        protected override void DoPurchase(Player p, string message, string[] args) { }
         
         protected internal override void OnStoreCommand(Player p) {
             int time = ZSGame.Config.ReviveNoTime, expiry = ZSGame.Config.ReviveTooSlow;

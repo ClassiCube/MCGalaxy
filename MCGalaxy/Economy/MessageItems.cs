@@ -24,18 +24,18 @@ namespace MCGalaxy.Eco {
         
         public LoginMessageItem() {
             Aliases = new string[] { "login", "loginmsg", "loginmessage" };
-            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "LoginMessage"; } }
         
-        protected override void DoPurchase(Player p, string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 PlayerDB.SetLoginMessage(p.name, "");
                 p.Message("&aYour login message was removed for free.");
                 return;
             }
             
+        	if (!CheckPrice(p)) return;
             string msg = message.SplitSpaces(2)[1]; // keep spaces this way
             if (msg == PlayerDB.GetLoginMessage(p)) {
                 p.Message("%WYou already have that login message."); return;
@@ -53,18 +53,18 @@ namespace MCGalaxy.Eco {
         
         public LogoutMessageItem() {
             Aliases = new string[] { "logout", "logoutmsg", "logoutmessage" };
-            AllowsNoArgs = true;
         }
         
         public override string Name { get { return "LogoutMessage"; } }
 
-        protected override void DoPurchase(Player p, string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (args.Length == 1) {
                 PlayerDB.SetLogoutMessage(p.name, "");
                 p.Message("&aYour logout message was removed for free.");
                 return;
-            }
+        	}
             
+        	if (!CheckPrice(p)) return;
             string msg = message.SplitSpaces(2)[1]; // keep spaces this way         
             if (msg == PlayerDB.GetLogoutMessage(p)) {
                 p.Message("%WYou already have that logout message."); return;

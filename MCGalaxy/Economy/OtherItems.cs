@@ -25,13 +25,12 @@ namespace MCGalaxy.Eco {
         
         public SnackItem() {
             Aliases = new string[] { "snack" };
-            AllowsNoArgs = true;
             Price = 0;
         }
         
         public override string Name { get { return "Snack"; } }
         
-        protected override void DoPurchase(Player p, string message, string[] args) {
+        protected internal override void OnBuyCommand(Player p, string message, string[] args) {
             if (DateTime.UtcNow < p.NextEat) {
                 p.Message("You're still full - you need to wait at least " +
                           "10 seconds between snacks."); return;

@@ -87,10 +87,8 @@ namespace MCGalaxy.Eco {
             RankEntry nextRank = NextRank(p);
             if (nextRank == null) {
                 p.Message("%WYou are already at or past the max buyable rank"); return;
-            }           
-            if (p.money < nextRank.Price) {
-                p.Message("%WYou don't have enough &3" + Server.Config.Currency + " %Wto buy the next rank"); return;
             }
+            if (!CheckPrice(p, nextRank.Price, "the next rank")) return;
             
             Group rank = Group.Find(nextRank.Perm); // TODO: What if null reference happens here
             Command.Find("SetRank").Use(Player.Console, p.name + " " + rank.Name);
