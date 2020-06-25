@@ -674,14 +674,6 @@ namespace MCGalaxy.Network {
         #endregion
     }
 
-    /* Describes data for a box being built. */
-    public struct BoxDesc {
-        public UInt16 texX, texY;        /* Texture origin */
-        public byte sizeX, sizeY, sizeZ; /* Texture dimensions */
-        public float x1,y1,z1, x2,y2,z2; /* Box corners coordinates */
-        public float rotX,rotY,rotZ;     /* Rotation origin point */
-    }
-
     public class CustomModel {
         public string name;
         // humanoid defaults
