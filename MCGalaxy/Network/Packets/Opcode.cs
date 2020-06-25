@@ -73,5 +73,8 @@ namespace MCGalaxy.Network {
         public const byte CpeVelocityControl = 47;
         public const byte CpeDefineEffect = 48;
         public const byte CpeSpawnEffect = 49;
+        public const byte CpeDefineModel = 50;
+        public const byte CpeDefineModelPart = 51;
+        public const byte CpeUndefineModel = 52;
     }
 }
