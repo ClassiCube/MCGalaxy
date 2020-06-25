@@ -470,6 +470,7 @@
     <Compile Include="Economy\MessageItems.cs" />
     <Compile Include="Economy\NameItems.cs" />
     <Compile Include="Economy\RankItem.cs" />
+    <Compile Include="Entity\CustomModel.cs" />
     <Compile Include="Entity\Entities.cs" />
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="Entity\ModelInfo.cs" />
