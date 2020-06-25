@@ -136,12 +136,17 @@ namespace MCGalaxy {
             
             announce = !p.hidden && Server.Config.IRCShowWorldChanges;
             string msg = p.level.IsMuseum ? "λNICK %Swent to the " : "λNICK %Swent to ";
-            Chat.MessageFrom(ChatScope.Global, p, msg + lvl.ColoredName,
-                             null, FilterGoto(p), announce);
+            Chat.MessageFrom(ChatScope.All, p, msg + lvl.ColoredName,
+                             null, FilterGoto(p, prev, lvl), announce);
         }
         
-        static ChatMessageFilter FilterGoto(Player source) {
-            return (pl, obj) => Entities.CanSee(pl, source) && !pl.Ignores.WorldChanges;
+        static ChatMessageFilter FilterGoto(Player source, Level prev, Level lvl) {
+            return (pl, obj) =>
+                (Chat.FilterGlobal(pl, obj) ||
+                  Chat.FilterLevel(pl, prev) ||
+                  Chat.FilterLevel(pl, lvl)) &&
+                Entities.CanSee(pl, source) &&
+                !pl.Ignores.WorldChanges;
         }
         
         public static void Respawn(Player p) {
