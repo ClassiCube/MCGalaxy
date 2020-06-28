@@ -17,6 +17,7 @@
  */
 using System;
 using System.Threading;
+using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy {
@@ -50,11 +51,6 @@ namespace MCGalaxy {
             Pos = pos; lastPos = pos;
         }
         
-        public void SetModel(string model) {
-            Model   = model;
-            ModelBB = ModelInfo.CalcAABB(this);
-        }
-        
         public void SetYawPitch(byte yaw, byte pitch) {
             Orientation rot = Rot;
             rot.RotY = yaw; rot.HeadX = pitch;
@@ -70,5 +66,17 @@ namespace MCGalaxy {
         
         protected virtual void OnSetRot() { }
         
+        
+        /// <summary> Sets new model and updates internal state. </summary>  
+        public void SetModel(string model) {
+            Model   = model;
+            ModelBB = ModelInfo.CalcAABB(this);
+        }
+        
+        /// <summary> Calls SetModel, then broadcasts the new model to players. </summary>
+        public void UpdateModel(string model) {
+            SetModel(model);
+            Entities.BroadcastModel(this, model);
+        }
     }
 }

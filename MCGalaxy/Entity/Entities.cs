@@ -179,10 +179,12 @@ namespace MCGalaxy {
             return p == target || target == null || !target.hidden || data.Rank >= target.hideRank;
         }
 
-        public static void UpdateModel(Entity entity, string model) {
+        [Obsolete("Use entity.UpdateModel")]
+        public static void UpdateModel(Entity e, string model) { e.UpdateModel(model); }
+
+        internal static void BroadcastModel(Entity entity, string model) {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = entity.Level;
-            entity.SetModel(model);
             
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.Supports(CpeExt.ChangeModel)) continue;

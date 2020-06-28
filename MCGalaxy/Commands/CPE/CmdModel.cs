@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.CPE {
             bool changedAxisScale;
             model = ParseModel(p, bot, model, out changedAxisScale);
             if (model == null) return;
-            Entities.UpdateModel(bot, model);
+            bot.UpdateModel(model);
             
             p.Message("You changed the model of bot " + bot.ColoredName + " %Sto a &c" + model);
             BotsFile.Save(p.level);
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.CPE {
             bool changedAxisScale;
             model = ParseModel(p, who, model, out changedAxisScale);
             if (model == null) return;
-            Entities.UpdateModel(who, model);
+            who.UpdateModel(model);
             
             if (p != who) {
                 Chat.MessageFrom(who, "λNICK %Shad their model changed to a &c" + model);

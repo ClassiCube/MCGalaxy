@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
             
             base.UnhookEventHandlers();
         }
-
+		
         
         void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
             Player p = entity as Player;
