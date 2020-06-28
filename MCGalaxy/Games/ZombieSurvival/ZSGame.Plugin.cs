@@ -35,6 +35,7 @@ namespace MCGalaxy.Games {
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
             OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
+            OnSendingModelEvent.Register(HandleSendingModel, Priority.High);
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
@@ -50,6 +51,7 @@ namespace MCGalaxy.Games {
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
             OnBlockChangeEvent.Unregister(HandleBlockChange);
+            OnSendingModelEvent.Unregister(HandleSendingModel);
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
@@ -61,8 +63,14 @@ namespace MCGalaxy.Games {
         }
 		
         
-        void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
-            Player p = entity as Player;
+        void HandleSendingModel(Entity e, ref string model, Player dst) {
+            Player p = e as Player;
+            if (p == null || !Get(p).Infected) return;
+            model = p == dst ? p.Model : Config.ZombieModel;
+        }
+		
+        void HandleTabListEntryAdded(Entity e, ref string tabName, ref string tabGroup, Player dst) {
+            Player p = e as Player;
             if (p == null || p.level != Map) return;
             
             if (p.Game.Referee) {
@@ -84,8 +92,8 @@ namespace MCGalaxy.Games {
             UpdateStatus3(p);
         }
         
-        void HandleEntitySpawned(Entity entity, ref string name, ref string skin, ref string model, Player dst) {
-            Player p = entity as Player;
+        void HandleEntitySpawned(Entity e, ref string name, ref string skin, ref string model, Player dst) {
+            Player p = e as Player;
             if (p == null || !Get(p).Infected) return;
 
             name = p.truename;
@@ -93,7 +101,6 @@ namespace MCGalaxy.Games {
                 name = Config.ZombieName; skin = name;
             }
             name = Colors.red + name;
-            model = p == dst ? p.Model : Config.ZombieModel;
         }
         
         void HandlePlayerConnect(Player p) {

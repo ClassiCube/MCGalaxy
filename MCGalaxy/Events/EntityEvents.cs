@@ -81,4 +81,18 @@ namespace MCGalaxy.Events.EntityEvents {
             }
         }
     }
+
+    public delegate void OnSendingModel(Entity e, ref string model, Player dst);
+    /// <summary> Called when model is being sent to a player. </summary>
+    public sealed class OnSendingModelEvent : IEvent<OnSendingModel> {
+        
+        public static void Call(Entity e, ref string model, Player dst) {
+            IEvent<OnSendingModel>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(e, ref model, dst); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
 }

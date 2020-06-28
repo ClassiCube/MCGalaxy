@@ -55,7 +55,7 @@ namespace MCGalaxy.Games {
                 p.Message("Failed to load initial map!"); return;
             }
             
-            Chat.MessageGlobal("A game of {0} is starting on {1}%S!", GameName, Map.ColoredName);
+            Chat.MessageGlobal("{0} is starting on {1}%S!", GameName, Map.ColoredName);
             Logger.Log(LogType.GameActivity, "[{0}] Game started", GameName);
             
             StartGame();
