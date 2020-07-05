@@ -16,93 +16,91 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Blocks;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
+    public sealed class CpeExtension {
+        public string Name;
+        public byte ClientVersion, ServerVersion = 1;
+        
+        public CpeExtension(string name) { Name = name; }
+        public CpeExtension(string name, byte version) {
+            Name = name; ServerVersion = version;
+        }
+    }
+    
     public partial class Player {
         
-        class ExtEntry {
-            public string ExtName;
-            public byte ClientExtVersion, ServerExtVersion = 1;
-            
-            public ExtEntry(string extName) { ExtName = extName; }
-            public ExtEntry(string extName, byte extVersion) {
-                ExtName = extName; ServerExtVersion = extVersion;
-            }
-        }
-        
-        ExtEntry[] extensions = new ExtEntry[] {
-            new ExtEntry(CpeExt.ClickDistance),    new ExtEntry(CpeExt.CustomBlocks),
-            new ExtEntry(CpeExt.HeldBlock),        new ExtEntry(CpeExt.TextHotkey),
-            new ExtEntry(CpeExt.ExtPlayerList, 2), new ExtEntry(CpeExt.EnvColors),
-            new ExtEntry(CpeExt.SelectionCuboid),  new ExtEntry(CpeExt.BlockPermissions),
-            new ExtEntry(CpeExt.ChangeModel),      new ExtEntry(CpeExt.EnvMapAppearance, 2),
-            new ExtEntry(CpeExt.EnvWeatherType),   new ExtEntry(CpeExt.HackControl),
-            new ExtEntry(CpeExt.EmoteFix),         new ExtEntry(CpeExt.MessageTypes),
-            new ExtEntry(CpeExt.LongerMessages),   new ExtEntry(CpeExt.FullCP437),
-            new ExtEntry(CpeExt.BlockDefinitions), new ExtEntry(CpeExt.BlockDefinitionsExt, 2),
-            new ExtEntry(CpeExt.TextColors),       new ExtEntry(CpeExt.BulkBlockUpdate),
-            new ExtEntry(CpeExt.EnvMapAspect),     new ExtEntry(CpeExt.PlayerClick),
-            new ExtEntry(CpeExt.EntityProperty),   new ExtEntry(CpeExt.ExtEntityPositions),
-            new ExtEntry(CpeExt.TwoWayPing),       new ExtEntry(CpeExt.InventoryOrder),
-            new ExtEntry(CpeExt.InstantMOTD),      new ExtEntry(CpeExt.FastMap),
-            new ExtEntry(CpeExt.ExtTextures),      new ExtEntry(CpeExt.SetHotbar),
-            new ExtEntry(CpeExt.SetSpawnpoint),    new ExtEntry(CpeExt.VelocityControl),  
-            new ExtEntry(CpeExt.CustomParticles),  new ExtEntry(CpeExt.CustomModels),
+        public CpeExtension[] Extensions = new CpeExtension[] {
+            new CpeExtension(CpeExt.ClickDistance),    new CpeExtension(CpeExt.CustomBlocks),
+            new CpeExtension(CpeExt.HeldBlock),        new CpeExtension(CpeExt.TextHotkey),
+            new CpeExtension(CpeExt.ExtPlayerList, 2), new CpeExtension(CpeExt.EnvColors),
+            new CpeExtension(CpeExt.SelectionCuboid),  new CpeExtension(CpeExt.BlockPermissions),
+            new CpeExtension(CpeExt.ChangeModel),      new CpeExtension(CpeExt.EnvMapAppearance, 2),
+            new CpeExtension(CpeExt.EnvWeatherType),   new CpeExtension(CpeExt.HackControl),
+            new CpeExtension(CpeExt.EmoteFix),         new CpeExtension(CpeExt.MessageTypes),
+            new CpeExtension(CpeExt.LongerMessages),   new CpeExtension(CpeExt.FullCP437),
+            new CpeExtension(CpeExt.BlockDefinitions), new CpeExtension(CpeExt.BlockDefinitionsExt, 2),
+            new CpeExtension(CpeExt.TextColors),       new CpeExtension(CpeExt.BulkBlockUpdate),
+            new CpeExtension(CpeExt.EnvMapAspect),     new CpeExtension(CpeExt.PlayerClick),
+            new CpeExtension(CpeExt.EntityProperty),   new CpeExtension(CpeExt.ExtEntityPositions),
+            new CpeExtension(CpeExt.TwoWayPing),       new CpeExtension(CpeExt.InventoryOrder),
+            new CpeExtension(CpeExt.InstantMOTD),      new CpeExtension(CpeExt.FastMap),
+            new CpeExtension(CpeExt.ExtTextures),      new CpeExtension(CpeExt.SetHotbar),
+            new CpeExtension(CpeExt.SetSpawnpoint),    new CpeExtension(CpeExt.VelocityControl),
+            new CpeExtension(CpeExt.CustomParticles),  new CpeExtension(CpeExt.CustomModels),
             #if TEN_BIT_BLOCKS
-            new ExtEntry(CpeExt.ExtBlocks),
+            new CpeExtension(CpeExt.ExtBlocks),
             #endif
         };
         
-        ExtEntry FindExtension(string extName) {
-            foreach (ExtEntry ext in extensions) {
-                if (ext.ExtName.CaselessEq(extName)) return ext;
+        CpeExtension FindExtension(string extName) {
+            foreach (CpeExtension ext in Extensions) {
+                if (ext.Name.CaselessEq(extName)) return ext;
             }
             return null;
         }
         
-        // these are checked very frequently, so avoid overhead of HasCpeExt
+        // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
         hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate, hasExtTexs;
 
         void AddExtension(string extName, int version) {
-            ExtEntry ext = FindExtension(extName.Trim());
+            CpeExtension ext = FindExtension(extName.Trim());
             if (ext == null) return;
-            ext.ClientExtVersion = (byte)version;
+            ext.ClientVersion = (byte)version;
             
-            if (ext.ExtName == CpeExt.CustomBlocks) {
+            if (ext.Name == CpeExt.CustomBlocks) {
                 if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
                 hasCustomBlocks = true;
                 if (MaxRawBlock < Block.CpeMaxBlock) MaxRawBlock = Block.CpeMaxBlock;
-            } else if (ext.ExtName == CpeExt.ChangeModel) {
+            } else if (ext.Name == CpeExt.ChangeModel) {
                 hasChangeModel = true;
-            } else if (ext.ExtName == CpeExt.FullCP437) {
+            } else if (ext.Name == CpeExt.FullCP437) {
                 hasCP437 = true;
-            } else if (ext.ExtName == CpeExt.ExtPlayerList) {
+            } else if (ext.Name == CpeExt.ExtPlayerList) {
                 hasExtList = true;
-            } else if (ext.ExtName == CpeExt.BlockDefinitions) {
+            } else if (ext.Name == CpeExt.BlockDefinitions) {
                 hasBlockDefs = true;
                 if (MaxRawBlock < 255) MaxRawBlock = 255;
-            } else if (ext.ExtName == CpeExt.TextColors) {
+            } else if (ext.Name == CpeExt.TextColors) {
                 hasTextColors = true;
                 for (int i = 0; i < Colors.List.Length; i++) {
                     if (!Colors.List[i].IsModified()) continue;
                     Send(Packet.SetTextColor(Colors.List[i]));
                 }
-            } else if (ext.ExtName == CpeExt.ExtEntityPositions) {
+            } else if (ext.Name == CpeExt.ExtEntityPositions) {
                 hasExtPositions = true;
-            } else if (ext.ExtName == CpeExt.TwoWayPing) {
+            } else if (ext.Name == CpeExt.TwoWayPing) {
                 hasTwoWayPing = true;
-            } else if (ext.ExtName == CpeExt.BulkBlockUpdate) {
+            } else if (ext.Name == CpeExt.BulkBlockUpdate) {
                 hasBulkBlockUpdate = true;
-            } else if (ext.ExtName == CpeExt.ExtTextures) {
+            } else if (ext.Name == CpeExt.ExtTextures) {
                 hasExtTexs = true;
-            } 
+            }
             #if TEN_BIT_BLOCKS
-            else if (ext.ExtName == CpeExt.ExtBlocks) {
+            else if (ext.Name == CpeExt.ExtBlocks) {
                 hasExtBlocks = true;
                 if (MaxRawBlock < 767) MaxRawBlock = 767;
             }
@@ -111,8 +109,8 @@ namespace MCGalaxy {
 
         public bool Supports(string extName, int version = 1) {
             if (!hasCpe) return false;
-            ExtEntry ext = FindExtension(extName);
-            return ext != null && ext.ClientExtVersion == version;
+            CpeExtension ext = FindExtension(extName);
+            return ext != null && ext.ClientVersion == version;
         }
         
         string lastUrl = "";
@@ -163,7 +161,7 @@ namespace MCGalaxy {
         }
         
         public void SendCurrentBlockPermissions() {
-            if (!Supports(CpeExt.BlockPermissions)) return;           
+            if (!Supports(CpeExt.BlockPermissions)) return;
             // Write the block permissions as one bulk TCP packet
             SendAllBlockPermissions();
         }
@@ -236,7 +234,7 @@ namespace MCGalaxy {
         WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
         SidesOffset = 9, SkyboxHorSpeed = 10, SkyboxVerSpeed = 11,
         
-        Max,        
+        Max,
         Weather = 255, // this is internal, not an official env prop
     }
     
