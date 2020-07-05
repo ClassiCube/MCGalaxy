@@ -51,13 +51,20 @@ namespace MCGalaxy {
             Y = 0.0f,
             Z = 0.0f,
         };
-        public CustomModelAnim anim = CustomModelAnim.None;
-        public float animModifier = 1.0f;
+        public CustomModelAnim[] anims;
         public bool fullbright = false;
         public bool firstPersonArm = false;
     }
 
-    public enum CustomModelAnim {
+    public class CustomModelAnim {
+        public CustomModelAnimType type = CustomModelAnimType.None;
+        public float a = 1;
+        public float b = 1;
+        public float c = 1;
+        public float d = 1;
+    }
+
+    public enum CustomModelAnimType {
         None = 0,
         Head = 1,
         LeftLeg = 2,
@@ -70,5 +77,17 @@ namespace MCGalaxy {
         SpinXVelocity = 9,
         SpinYVelocity = 10,
         SpinZVelocity = 11,
+        SinTranslateX = 12,
+        SinTranslateY = 13,
+        SinTranslateZ = 14,
+        SinTranslateXVelocity = 15,
+        SinTranslateYVelocity = 16,
+        SinTranslateZVelocity = 17,
+        SinRotateX = 18,
+        SinRotateY = 19,
+        SinRotateZ = 20,
+        SinRotateXVelocity = 21,
+        SinRotateYVelocity = 22,
+        SinRotateZVelocity = 23
     }
 }

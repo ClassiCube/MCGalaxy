@@ -460,6 +460,7 @@ namespace MCGalaxy.Network {
 
         public const int MaxCustomModels = 64;
         public const int MaxCustomModelParts = 64;
+        public const int MaxCustomModelAnims = 4;
         public static byte[] DefineModel(byte modelId, CustomModel customModel) {
             // 116 = 1 + 1 + 64 + 1 + 2*4 + 3*4 + 2*3*4 + 2*2 + 1
             byte[] buffer = new byte[116];
@@ -521,8 +522,53 @@ namespace MCGalaxy.Network {
         }
 
         public static byte[] DefineModelPart(byte modelId, CustomModelPart part) {
-            // 104 = 1 + 1 + 3*4 + 3*4 + 6*(2*2 + 2*2) + 3*4 + 3*4 + 1 + 4 + 1
+            // v1: 104 = (1 + 1 + 3*4 + 3*4 + 6*(2*2 + 2*2) + 3*4 + 3*4) + 1 + 4 + 1
             byte[] buffer = new byte[104];
+            int i = WriteDefineModelPart(buffer, modelId, part);
+
+            buffer[i++] = (byte)part.anims[0].type;
+            NetUtils.WriteF32(part.anims[0].a, buffer, i);
+            i += 4;
+
+            // write bool flags
+            byte flags = 0;
+            flags |= (byte)((part.fullbright ? 1 : 0) << 0);
+            flags |= (byte)((part.firstPersonArm ? 1 : 0) << 1);
+
+            buffer[i++] = flags;
+
+            return buffer;
+        }
+        
+        public static byte[] DefineModelPartV2(byte modelId, CustomModelPart part) {
+            // v2: 167 = (1 + 1 + 3*4 + 3*4 + 6*(2*2 + 2*2) + 3*4 + 3*4) + 4*(1 + 4*4) + 1
+            byte[] buffer = new byte[167];
+            int i = WriteDefineModelPart(buffer, modelId, part);
+
+            for (int j = 0; j < MaxCustomModelAnims; j++) {
+                buffer[i++] = (byte)part.anims[j].type;
+
+                NetUtils.WriteF32(part.anims[j].a, buffer, i);
+                i += 4;
+                NetUtils.WriteF32(part.anims[j].b, buffer, i);
+                i += 4;
+                NetUtils.WriteF32(part.anims[j].c, buffer, i);
+                i += 4;
+                NetUtils.WriteF32(part.anims[j].d, buffer, i);
+                i += 4;
+            }
+
+            // write bool flags
+            byte flags = 0;
+            flags |= (byte)((part.fullbright ? 1 : 0) << 0);
+            flags |= (byte)((part.firstPersonArm ? 1 : 0) << 1);
+
+            buffer[i++] = flags;
+
+            return buffer;
+        }
+
+        public static int WriteDefineModelPart(byte[] buffer, byte modelId, CustomModelPart part) {
             int i = 0;
             buffer[i++] = Opcode.CpeDefineModelPart;
             buffer[i++] = modelId;
@@ -571,21 +617,7 @@ namespace MCGalaxy.Network {
             NetUtils.WriteF32(part.rotation.Z, buffer, i);
             i += 4;
 
-            // write anim
-            buffer[i++] = (byte)part.anim;
-
-            // write animModifier
-            NetUtils.WriteF32(part.animModifier, buffer, i);
-            i += 4;
-
-            // write bool flags
-            byte flags = 0;
-            flags |= (byte)((part.fullbright ? 1 : 0) << 0);
-            flags |= (byte)((part.firstPersonArm ? 1 : 0) << 1);
-
-            buffer[i++] = flags;
-
-            return buffer;
+            return i;
         }
 
         public static byte[] UndefineModel(byte modelId) {
