@@ -49,7 +49,7 @@ namespace MCGalaxy {
             new CpeExtension(CpeExt.InstantMOTD),      new CpeExtension(CpeExt.FastMap),
             new CpeExtension(CpeExt.ExtTextures),      new CpeExtension(CpeExt.SetHotbar),
             new CpeExtension(CpeExt.SetSpawnpoint),    new CpeExtension(CpeExt.VelocityControl),
-            new CpeExtension(CpeExt.CustomParticles),  new CpeExtension(CpeExt.CustomModels),
+            new CpeExtension(CpeExt.CustomParticles),  new CpeExtension(CpeExt.CustomModels, 2),
             #if TEN_BIT_BLOCKS
             new CpeExtension(CpeExt.ExtBlocks),
             #endif
