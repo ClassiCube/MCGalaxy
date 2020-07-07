@@ -60,10 +60,10 @@ namespace MCGalaxy {
         public CustomModelAnimType type = CustomModelAnimType.None;
         public CustomModelAnimAxis axis;
 
-        public float a = 1;
-        public float b = 1;
-        public float c = 1;
-        public float d = 1;
+        public float a;
+        public float b;
+        public float c;
+        public float d;
     }
 
     public enum CustomModelAnimType {
