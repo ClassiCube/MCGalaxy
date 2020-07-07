@@ -526,8 +526,8 @@ namespace MCGalaxy.Network {
             byte[] buffer = new byte[104];
             int i = WriteDefineModelPart(buffer, modelId, part);
 
-            buffer[i++] = (byte)part.anims[0].type;
-            NetUtils.WriteF32(part.anims[0].a, buffer, i);
+            // ignore animations
+            i++;
             i += 4;
 
             // write bool flags
@@ -546,15 +546,19 @@ namespace MCGalaxy.Network {
             int i = WriteDefineModelPart(buffer, modelId, part);
 
             for (int j = 0; j < MaxCustomModelAnims; j++) {
-                buffer[i++] = (byte)part.anims[j].type;
+                var anim = part.anims[j];
 
-                NetUtils.WriteF32(part.anims[j].a, buffer, i);
+                buffer[i++] = (byte)(
+                    ((byte)anim.type & 0x3F) | ((byte)anim.axis << 6)
+                );
+
+                NetUtils.WriteF32(anim.a, buffer, i);
                 i += 4;
-                NetUtils.WriteF32(part.anims[j].b, buffer, i);
+                NetUtils.WriteF32(anim.b, buffer, i);
                 i += 4;
-                NetUtils.WriteF32(part.anims[j].c, buffer, i);
+                NetUtils.WriteF32(anim.c, buffer, i);
                 i += 4;
-                NetUtils.WriteF32(part.anims[j].d, buffer, i);
+                NetUtils.WriteF32(anim.d, buffer, i);
                 i += 4;
             }
 

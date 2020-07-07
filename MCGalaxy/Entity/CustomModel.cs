@@ -58,6 +58,8 @@ namespace MCGalaxy {
 
     public class CustomModelAnim {
         public CustomModelAnimType type = CustomModelAnimType.None;
+        public CustomModelAnimAxis axis;
+
         public float a = 1;
         public float b = 1;
         public float c = 1;
@@ -67,27 +69,23 @@ namespace MCGalaxy {
     public enum CustomModelAnimType {
         None = 0,
         Head = 1,
-        LeftLeg = 2,
-        RightLeg = 3,
-        LeftArm = 4,
-        RightArm = 5,
-        SpinX = 6,
-        SpinY = 7,
-        SpinZ = 8,
-        SpinXVelocity = 9,
-        SpinYVelocity = 10,
-        SpinZVelocity = 11,
-        SinTranslateX = 12,
-        SinTranslateY = 13,
-        SinTranslateZ = 14,
-        SinTranslateXVelocity = 15,
-        SinTranslateYVelocity = 16,
-        SinTranslateZVelocity = 17,
-        SinRotateX = 18,
-        SinRotateY = 19,
-        SinRotateZ = 20,
-        SinRotateXVelocity = 21,
-        SinRotateYVelocity = 22,
-        SinRotateZVelocity = 23
+        LeftLegX = 2,
+        RightLegX = 3,
+        LeftArmX = 4,
+        LeftArmZ = 5,
+        RightArmX = 6,
+        RightArmZ = 7,
+        Spin = 8,
+        SpinVelocity = 9,
+        SinRotate = 10,
+        SinRotateVelocity = 11,
+        SinTranslate = 12,
+        SinTranslateVelocity = 13
+    }
+
+    public enum CustomModelAnimAxis {
+        X = 0,
+        Y = 1,
+        Z = 2,
     }
 }
