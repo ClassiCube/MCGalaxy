@@ -1,4 +1,16 @@
-v 1.9.2.1
+v 1.9.2.3
+* Added: /ln alias for /line (fCraft compatibility)
+* Added: Packets for custom models
+* Removed: /bs shortcut for /blockspeed
+* Improved: Parse /shutdown delay as timespan instead of integer seconds only
+* Removed: /devs, link to MCGalaxy source in /sinfo instead
+* Improved: Make /eat an economy item, so price can be configured
+* Improved: Make p.Extensions public
+* Fixed: Doing /model while a zombie in ZS still changing it
+* Fixed: Can't /os map add on server without + after names when there are existing maps with your account name, but you aren't realmowner of them
+* Fixed: Can't see map joining/leaving messages on maps with localchat on
+
+v 1.9.2.2
 Added: /limit realms to set max realms a rank can have from in-game
 Added: /BotInfo that shows information on the given bot
 Added: A few more env presets
