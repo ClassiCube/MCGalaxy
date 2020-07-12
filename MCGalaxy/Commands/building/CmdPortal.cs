@@ -146,7 +146,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
             
-            List<PortalExit> exits = Portal.GetAll(p.level.MapName);
+            List<PortalExit> exits = Portal.GetAllExits(p.level.MapName);
             foreach (PortalExit exit in exits) {
                 if (exit.Map != p.level.MapName) continue;
                 

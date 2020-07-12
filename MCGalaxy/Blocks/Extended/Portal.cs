@@ -84,12 +84,16 @@ namespace MCGalaxy.Blocks.Extended {
         
         internal static List<Vec3U16> GetAllCoords(string map) {
             List<Vec3U16> coords = new List<Vec3U16>();
+            if (!Database.TableExists("Portals" + map)) return coords;
+            
             Database.Backend.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
             return coords;
         }
 
-        public static List<PortalExit> GetAll(string map) {
+        public static List<PortalExit> GetAllExits(string map) {
             List<PortalExit> exits = new List<PortalExit>();
+            if (!Database.TableExists("Portals" + map)) return exits;
+            
             Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", exits, ReadAllExits);
             return exits;
         }

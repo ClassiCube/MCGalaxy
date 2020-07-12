@@ -106,6 +106,8 @@ namespace MCGalaxy.Blocks.Extended {
 
         public static List<Vec3U16> GetAllCoords(string map) {
             List<Vec3U16> coords = new List<Vec3U16>();
+            if (!Database.TableExists("Messages" + map)) return coords;
+                        
             Database.Backend.ReadRows("Messages" + map, "X,Y,Z", coords, Portal.ReadCoords);
             return coords;
         }

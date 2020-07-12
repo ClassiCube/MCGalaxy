@@ -91,9 +91,9 @@ namespace MCGalaxy {
         }
         
         internal static void LoadPortals(Level level, string map) {
-            level.hasPortals = Database.TableExists("Portals" + map);
-            if (!level.hasPortals) return;
             List<Vec3U16> coords = Portal.GetAllCoords(map);
+            level.hasPortals     = coords.Count > 0;
+            if (!level.hasPortals) return;
             
             foreach (Vec3U16 p in coords) {
                 BlockID block = level.GetBlock(p.X, p.Y, p.Z);
@@ -103,9 +103,9 @@ namespace MCGalaxy {
         }
         
         internal static void LoadMessages(Level level, string map) {
-            level.hasMessageBlocks = Database.TableExists("Messages" + map);
+            List<Vec3U16> coords   = MessageBlock.GetAllCoords(map);
+            level.hasMessageBlocks = coords.Count > 0;
             if (!level.hasMessageBlocks) return;
-            List<Vec3U16> coords = MessageBlock.GetAllCoords(map);
             
             foreach (Vec3U16 p in coords) {
                 BlockID block = level.GetBlock(p.X, p.Y, p.Z);
