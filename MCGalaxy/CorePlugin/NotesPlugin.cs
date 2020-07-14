@@ -20,7 +20,7 @@ using MCGalaxy.Events;
 
 namespace MCGalaxy.Core {
 
-    public sealed class NotesPlugin : Plugin_Simple {
+    public sealed class NotesPlugin : Plugin {
         public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.Version; } }
         public override string name { get { return "Core_NotesPlugin"; } }

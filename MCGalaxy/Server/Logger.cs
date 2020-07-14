@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Reflection;
 using System.Text;
 
 namespace MCGalaxy {
@@ -130,6 +131,18 @@ namespace MCGalaxy {
             try { sb.AppendLine("Message: " + ex.Message); } catch { }
             try { sb.AppendLine("Target: " + ex.TargetSite.Name); } catch { }
             try { sb.AppendLine("Trace: " + ex.StackTrace); } catch { }
+            
+            // For errors with loading plugins (e.g. missing dependancy) you get a 
+            //   Message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+            // which is pretty useless by itself, so check specifically for this case
+            try {
+                ReflectionTypeLoadException refEx = ex as ReflectionTypeLoadException;
+                if (refEx == null) return;
+                
+                sb.AppendLine("## Loader exceptions ##");
+                foreach (Exception loadEx in refEx.LoaderExceptions)
+                    DescribeError(loadEx, sb);
+            } catch { }
         }
     }
 }
