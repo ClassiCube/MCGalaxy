@@ -107,5 +107,10 @@ namespace MCGalaxy.Network {
             return string.Format("Lowest ping {0}ms, average {1}ms, highest {2}ms",
                                  LowestPing(), AveragePing(), HighestPing());
         }
+
+        public string FormatAll() {
+            return string.Format(" &A{0}%S:&7{1}%S:&C{2}",
+                                 LowestPing(), AveragePing(), HighestPing());
+        }
     }
 }

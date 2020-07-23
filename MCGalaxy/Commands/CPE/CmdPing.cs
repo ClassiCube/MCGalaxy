@@ -39,12 +39,12 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
-                p.Message("Ping/latency list for online players:");
+                p.Message("Ping/latency list for online players: (&ALo%S:&7Avg%S:&CHi%S)ms");
                 
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(data, p, pl)) continue;
                     if (pl.Ping.Measures() == 0) continue;
-                    p.Message(pl.ColoredName + " %S- " + pl.Ping.Format());
+                    p.Message(pl.Ping.FormatAll() + " %S- " + pl.ColoredName);
                 }
             }
         }
