@@ -134,7 +134,7 @@ namespace MCGalaxy {
             
             // For errors with loading plugins (e.g. missing dependancy) you get a 
             //   Message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
-            // which is pretty useless by itself, so check specifically for this case
+            // which is pretty useless by itself, so specifically handle this case
             try {
                 ReflectionTypeLoadException refEx = ex as ReflectionTypeLoadException;
                 if (refEx == null) return;
