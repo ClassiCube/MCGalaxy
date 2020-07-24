@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
-                p.Message("Ping/latency list for online players: (&ALo%S:&7Avg%S:&CHi%S)ms");
+                p.Message("Ping/latency list of online players: (&ALo%S:&7Avg%S:&CHi%S)ms");
                 
                 foreach (Player pl in players) {
                     if (!Entities.CanSee(data, p, pl)) continue;
