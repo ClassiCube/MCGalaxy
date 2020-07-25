@@ -136,7 +136,7 @@ namespace MCGalaxy.Drawing.Ops {
             letters['V']  = 0x1806010618000000UL;
             letters['W']  = 0x1F0204021F000000UL;
             letters['X']  = 0x1B041B0000000000UL;
-            letters['Y']  = 0x1008070810000000UL;
+            letters['Y']  = 0x1807180000000000UL;
             letters['Z']  = 0x1113151911000000UL;
             letters['0']  = 0x0E1315190E000000UL;
             letters['1']  = 0x091F010000000000UL;
