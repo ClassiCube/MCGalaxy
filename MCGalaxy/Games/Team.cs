@@ -35,6 +35,8 @@ namespace MCGalaxy.Games {
         
         public void Message(Player source, string message) {
             message = "&9- to team - λNICK: &f" + message;
+            if (!source.CheckCanSpeak("send teamchat")) return;
+            
             Chat.MessageChat(ChatScope.All, source, message, this,
                              (pl, arg) => pl.Game.Team == arg);
         }
