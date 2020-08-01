@@ -95,4 +95,19 @@ namespace MCGalaxy.Events.EntityEvents {
             }
         }
     }
+    
+    public delegate void OnGettingCanSeeEntity(Player p, ref bool canSee, Entity target);
+    /// <summary> Called when code is checking if this player can see the given entity. </summary>
+    /// <remarks> e.g. You can use this event to make a player invisible during a game. </remarks>
+    public sealed class OnGettingCanSeeEntityEvent : IEvent<OnGettingCanSeeEntity> {
+        
+        public static void Call(Player p, ref bool canSee, Entity target) {
+            IEvent<OnGettingCanSeeEntity>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, ref canSee, target); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
 }

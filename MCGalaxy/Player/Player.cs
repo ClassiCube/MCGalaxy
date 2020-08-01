@@ -20,6 +20,7 @@ using System.Threading;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Events.EconomyEvents;
+using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
@@ -80,16 +81,11 @@ namespace MCGalaxy {
         
         public override bool CanSeeEntity(Entity other) {
             Player target = other as Player;
-            if (target == null) return true; // not a player
-            if (target == this) return true; // always see self
+            if (other == this) return true; // always see self
             
-            // hidden via /hide or /ohide
-            // TODO: Just use Entities.CanSee
-            if (target.hidden) return Rank >= target.hideRank;
-            
-            if (!ZSGame.Instance.Running || Game.Referee) return true;
-            ZSData data = ZSGame.TryGet(target);
-            return data == null || !(target.Game.Referee || data.Invisible);
+            bool canSee = CanSee(target, Rank);
+            OnGettingCanSeeEntityEvent.Call(this, ref canSee, other);
+            return canSee;
         }        
         
         public BlockID GetHeldBlock() {

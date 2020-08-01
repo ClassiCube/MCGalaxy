@@ -42,6 +42,7 @@ namespace MCGalaxy.Games {
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
+            OnGettingCanSeeEntityEvent.Register(HandleCanSeeEntity, Priority.High);
             
             base.HookEventHandlers();
         }
@@ -58,17 +59,27 @@ namespace MCGalaxy.Games {
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
+            OnGettingCanSeeEntityEvent.Unregister(HandleCanSeeEntity);
             
             base.UnhookEventHandlers();
         }
-		
+        
+        
+        void HandleCanSeeEntity(Player p, ref bool canSee, Entity other) {
+            Player target = other as Player;
+            if (!canSee || p.Game.Referee) return;
+            
+            ZSData data = TryGet(target);
+            if (data == null) return;
+            canSee = !(target.Game.Referee || data.Invisible);
+        }
         
         void HandleSendingModel(Entity e, ref string model, Player dst) {
             Player p = e as Player;
             if (p == null || !Get(p).Infected) return;
             model = p == dst ? p.Model : Config.ZombieModel;
         }
-		
+        
         void HandleTabListEntryAdded(Entity e, ref string tabName, ref string tabGroup, Player dst) {
             Player p = e as Player;
             if (p == null || p.level != Map) return;
