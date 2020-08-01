@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Moderation {
             ItemPerms nextPerms = CommandExtraPerms.Find("Review", 2);
             
             foreach (Player pl in players) {
-                if (nextPerms.UsableBy(pl.Rank) && Entities.CanSee(data, p, pl)) {
+                if (nextPerms.UsableBy(pl.Rank) && p.CanSee(pl, data.Rank)) {
                     opsOn = true; break;
                 }
             }

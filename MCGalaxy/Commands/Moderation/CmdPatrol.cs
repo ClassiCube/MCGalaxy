@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Moderation {
             DateTime cutoff = DateTime.UtcNow.AddSeconds(-15);
             
             foreach (Player target in players) {
-                if (except.UsableBy(target.Rank) || !Entities.CanSee(data, p, target)) continue;
+                if (except.UsableBy(target.Rank) || !p.CanSee(target, data.Rank)) continue;
                 if (target == p || target.LastPatrol > cutoff) continue;
                 candidates.Add(target);
             }

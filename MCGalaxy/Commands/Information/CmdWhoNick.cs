@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Info {
             nick = Colors.Strip(nick);
             Player[] players = PlayerInfo.Online.Items;
             int matches;
-            return Matcher.Find(p, nick, out matches, players, pl => Entities.CanSee(p, pl),
+            return Matcher.Find(p, nick, out matches, players, pl => p.CanSee(pl),
                                 pl => Colors.Strip(pl.DisplayName), "online player nicks");
         }
         

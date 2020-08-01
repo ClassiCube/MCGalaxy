@@ -105,8 +105,9 @@ namespace MCGalaxy {
             FilterAllChatrooms, FilterRank, FilterPerms, FilterPM,
         };
         
+        /// <summary> Filters chat to only players that can see the source player. </summary>
         public static ChatMessageFilter FilterVisible(Player source) {
-            return (pl, obj) => Entities.CanSee(pl, source);
+            return (pl, obj) => pl.CanSee(source);
         }
  
         

@@ -174,11 +174,9 @@ namespace MCGalaxy {
         #endregion
         
         
-        /// <summary> Returns whether the given player is able to see the target player (e.g. in /who). </summary>
-        public static bool CanSee(Player p, Player target) {
-            return p == target || target == null || !target.hidden || p.Rank >= target.hideRank;
-        }
-        
+        [Obsolete("Use p.CanSee")]
+        public static bool CanSee(Player p, Player target) { return p.CanSee(target); }
+        [Obsolete("Use p.CanSee")]
         public static bool CanSee(CommandData data, Player p, Player target) {       
             return p == target || target == null || !target.hidden || data.Rank >= target.hideRank;
         }

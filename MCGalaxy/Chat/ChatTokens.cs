@@ -113,7 +113,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             int count = 0;
             foreach (Player pl in players) {
-                if (p == pl || Entities.CanSee(p, pl)) count++;
+                if (p == pl || p.CanSee(pl)) count++;
             }
             return count.ToString();
         }

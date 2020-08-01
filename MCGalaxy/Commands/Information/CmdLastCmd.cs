@@ -29,13 +29,11 @@ namespace MCGalaxy.Commands.Info {
             if (message.Length == 0) {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) {
-                    if (Entities.CanSee(data, p, pl))
-                        ShowLastCommand(p, pl);
+                    if (p.CanSee(pl, data.Rank)) ShowLastCommand(p, pl);
                 }
             } else {
                 Player who = PlayerInfo.FindMatches(p, message);
-                if (who != null)
-                    ShowLastCommand(p, who);
+                if (who != null) ShowLastCommand(p, who);
             }
         }
         

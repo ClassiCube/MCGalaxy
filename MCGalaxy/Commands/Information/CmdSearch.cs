@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Info {
         static void SearchPlayers(Player p, string keyword, string modifier) {
             Player[] online = PlayerInfo.Online.Items;
             List<string> players = FilterList(online, keyword, pl => pl.name,
-                                              pl => Entities.CanSee(p, pl), pl => pl.ColoredName);
+                                              pl => p.CanSee(pl), pl => pl.ColoredName);
             OutputList(p, keyword, "search players", "players", modifier, players);
         }
         

@@ -29,8 +29,9 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message, CommandData data) {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
             Player[] online = PlayerInfo.Online.Items;
+            
             foreach (Player pl in online) {
-                if (!Entities.CanSee(data, p, pl)) continue;
+                if (!p.CanSee(pl, data.Rank)) continue;
                 string appName = pl.appName;
                 if (String.IsNullOrEmpty(appName))
                     appName = "(unknown)";

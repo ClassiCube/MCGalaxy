@@ -269,12 +269,12 @@ namespace MCGalaxy {
                 PlayerActions.ReloadMap(p);
                 if (!announce) continue;
                 
-                if (src == null || !Entities.CanSee(p, src)) {
+                if (src == null || !p.CanSee(src)) {
                     p.Message("&bMap reloaded");
                 } else {
                     p.Message("&bMap reloaded by " + src.ColoredName);
                 }
-                if (Entities.CanSee(src, p)) {
+                if (src.CanSee(p)) {
                     src.Message("&4Finished reloading for " + p.ColoredName);
                 }
             }

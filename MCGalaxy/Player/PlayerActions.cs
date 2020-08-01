@@ -141,12 +141,9 @@ namespace MCGalaxy {
         }
         
         static ChatMessageFilter FilterGoto(Player source, Level prev, Level lvl) {
-            return (pl, obj) =>
-                (Chat.FilterGlobal(pl, obj) ||
-                  Chat.FilterLevel(pl, prev) ||
-                  Chat.FilterLevel(pl, lvl)) &&
-                Entities.CanSee(pl, source) &&
-                !pl.Ignores.WorldChanges;
+            return (pl, obj) => 
+                pl.CanSee(source) && !pl.Ignores.WorldChanges &&
+                (Chat.FilterGlobal(pl, obj) || Chat.FilterLevel(pl, prev) || Chat.FilterLevel(pl, lvl));
         }
         
         public static void Respawn(Player p) {

@@ -34,7 +34,7 @@ namespace MCGalaxy {
         public static string GetColoredName(Player p, string name) {
             Player target = FindExact(name);
             // TODO: select color from database?
-            return target != null && Entities.CanSee(p, target) ? target.ColoredName
+            return target != null && p.CanSee(target) ? target.ColoredName
                 : Group.GroupIn(name).Color + name.RemoveLastPlus();
         }
         
@@ -72,7 +72,7 @@ namespace MCGalaxy {
             if (!Formatter.ValidName(pl, name, "player")) return null;
             
             return Matcher.Find(pl, name, out matches, Online.Items,
-                                p => Entities.CanSee(pl, p) || !onlyCanSee,
+                                p => pl.CanSee(p) || !onlyCanSee,
                                 p => p.name, "online players");
         }
         
