@@ -296,5 +296,19 @@ namespace MCGalaxy.Events.PlayerEvents {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p));
         }
+    } 
+    
+    public delegate void OnGettingCanSee(Player p, LevelPermission plRank, ref bool canSee, Player target);
+    /// <summary> Called when code is checking if this player can see the given player. </summary>
+    public sealed class OnGettingCanSeeEvent : IEvent<OnGettingCanSee> {
+        
+        public static void Call(Player p, LevelPermission plRank, ref bool canSee, Player target) {
+            IEvent<OnGettingCanSee>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, plRank, ref canSee, target); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
     }    
 }

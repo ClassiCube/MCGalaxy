@@ -97,7 +97,7 @@ namespace MCGalaxy.Events.EntityEvents {
     }
     
     public delegate void OnGettingCanSeeEntity(Player p, ref bool canSee, Entity target);
-    /// <summary> Called when code is checking if this player can see the given entity. </summary>
+    /// <summary> Called when checking if this player can see the given entity as an entity in the level. </summary>
     /// <remarks> e.g. You can use this event to make a player invisible during a game. </remarks>
     public sealed class OnGettingCanSeeEntityEvent : IEvent<OnGettingCanSeeEntity> {
         

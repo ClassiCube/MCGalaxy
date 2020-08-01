@@ -76,15 +76,18 @@ namespace MCGalaxy {
         public bool CanSee(Player target) { return CanSee(target, Rank); }
         /// <summary> Whether this player can see the given player, as if they were the given rank. </summary>
         public bool CanSee(Player target, LevelPermission plRank) {
-            return target == this || target == null || !target.hidden || plRank >= target.hideRank;
+        	if (target == this || target == null) return true;
+        	
+        	bool canSee = !target.hidden || plRank >= target.hideRank;
+        	OnGettingCanSeeEvent.Call(this, plRank, ref canSee, target);
+        	return canSee;
         }
         
-        public override bool CanSeeEntity(Entity other) {
-            Player target = other as Player;
-            if (other == this) return true; // always see self
+        public override bool CanSeeEntity(Entity target) {
+            if (target == this) return true; // always see self
             
-            bool canSee = CanSee(target, Rank);
-            OnGettingCanSeeEntityEvent.Call(this, ref canSee, other);
+            bool canSee = CanSee(target as Player, Rank);
+            OnGettingCanSeeEntityEvent.Call(this, ref canSee, target);
             return canSee;
         }        
         

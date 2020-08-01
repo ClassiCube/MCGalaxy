@@ -57,7 +57,7 @@ namespace MCGalaxy {
             Rot = rot;
         }
 
-        /// <summary> Whether this player can see the given entity as an entity in the map. </summary>
+        /// <summary> Whether this player can see the given entity as an entity in the level. </summary>
         public abstract bool CanSeeEntity(Entity other); 
         public abstract byte EntityID { get; }
         /// <summary> The level this entity is currently on. </summary>

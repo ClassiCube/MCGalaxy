@@ -56,7 +56,7 @@ namespace MCGalaxy {
         /// <summary> Message to display once plugin is loaded. </summary>
         public virtual string welcome { get { return ""; } }
         /// <summary> The creator/author of this plugin. (Your name) </summary>
-        public abstract string creator { get; }
+        public virtual string creator { get { return ""; } }
         /// <summary> Whether or not to auto load this plugin on server startup. </summary>
         public virtual bool LoadAtStartup { get { return true; } }
     }
