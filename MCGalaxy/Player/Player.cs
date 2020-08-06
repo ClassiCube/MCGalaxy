@@ -310,7 +310,6 @@ namespace MCGalaxy {
             
             DrawOps.Clear();
             if (spamChecker != null) spamChecker.Clear();
-            spyChatRooms.Clear();
         }
 
         #endregion

@@ -210,11 +210,6 @@ namespace MCGalaxy {
         SpamChecker spamChecker;
         internal DateTime cmdUnblocked;
 
-        //Chatrooms
-        public string Chatroom;
-        public List<string> spyChatRooms = new List<string>();
-        public DateTime lastchatroomglobal;
-
         public WarpList Waypoints = new WarpList();
         public DateTime LastPatrol;
         public LevelPermission Rank { get { return group.Permission; } }

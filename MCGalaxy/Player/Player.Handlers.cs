@@ -451,13 +451,7 @@ namespace MCGalaxy {
 
             OnPlayerChatEvent.Call(this, text);
             if (cancelchat) { cancelchat = false; return; }
-
-            if (Chatroom != null) { 
-                string roomPrefix = "<ChatRoom: " + Chatroom + "> λNICK: &f";
-                Chat.MessageChat(ChatScope.Chatroom, this, roomPrefix + text, Chatroom, null);
-            } else {
-                Chat.MessageChat(this, "λFULL: &f" + text, null, true);
-            }
+            Chat.MessageChat(this, "λFULL: &f" + text, null, true);
         }
         
         bool FilterChat(ref string text, byte continued) {

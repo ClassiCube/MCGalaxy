@@ -22,10 +22,10 @@ namespace MCGalaxy {
         /// <summary> Messages all players on the server </summary>
         All,
         /// <summary> Messages all players on levels which see server-wide chat </summary>
-        /// <remarks> Excludes players who are ignoring all chat, or are in a chatroom </remarks>
+        /// <remarks> Excludes players who are ignoring all chat </remarks>
         Global,
         /// <summary> Messages all players on a particular level </summary>
-        /// <remarks> Excludes players who are ignoring all chat, or are in a chatroom </remarks>
+        /// <remarks> Excludes players who are ignoring all chat </remarks>
         Level,
         /// <summary> Messages all players in (or spying on) a particular chatroom. </summary>
         Chatroom,
@@ -83,26 +83,21 @@ namespace MCGalaxy {
 
         public static bool FilterAll(Player pl, object arg) { return true; }
         public static bool FilterGlobal(Player pl, object arg) {
-            return pl.IsSuper || (pl.level.SeesServerWideChat && !pl.Ignores.All && pl.Chatroom == null);
+            return pl.IsSuper || (pl.level.SeesServerWideChat && !pl.Ignores.All);
         }
         
         public static bool FilterLevel(Player pl, object arg) {
-            return pl.level == arg && !pl.Ignores.All && pl.Chatroom == null;
+            return pl.level == arg && !pl.Ignores.All;
         }
         
-        public static bool FilterChatroom(Player pl, object arg) {
-            string room = (string)arg;
-            return pl.Chatroom == room || pl.spyChatRooms.CaselessContains(room);
-        }
-        public static bool FilterAllChatrooms(Player pl, object arg) { return pl.Chatroom != null; }
-        
-        public static bool FilterRank(Player pl, object arg) { return pl.Rank == (LevelPermission)arg; }
+        static bool DeprecatedFilter(Player pl, object arg)   { return false; }    
+        public static bool FilterRank(Player pl, object arg)  { return pl.Rank == (LevelPermission)arg; }
         public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl.Rank); }
-        public static bool FilterPM(Player pl, object arg) { return pl == arg; }
+        public static bool FilterPM(Player pl, object arg)    { return pl == arg; }
         
         public static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {
-            FilterAll, FilterGlobal, FilterLevel, FilterChatroom, 
-            FilterAllChatrooms, FilterRank, FilterPerms, FilterPM,
+            FilterAll, FilterGlobal, FilterLevel, DeprecatedFilter, 
+            DeprecatedFilter, FilterRank, FilterPerms, FilterPM,
         };
         
         /// <summary> Filters chat to only players that can see the source player. </summary>

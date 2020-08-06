@@ -166,7 +166,6 @@
     <Compile Include="Commands\Chat\Cmd8Ball.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdAfk.cs" />
-    <Compile Include="Commands\Chat\CmdChatRoom.cs" />
     <Compile Include="Commands\Chat\CmdColor.cs" />
     <Compile Include="Commands\Chat\CmdEat.cs" />
     <Compile Include="Commands\Chat\CmdEmote.cs" />
