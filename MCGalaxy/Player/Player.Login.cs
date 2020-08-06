@@ -217,7 +217,7 @@ namespace MCGalaxy {
                 Chat.MessageFrom(this, "λNICK %Shas connected for the first time!");
                 Message("Welcome " + ColoredName + "%S! This is your first visit.");
             } else {
-                PlayerData.Apply((PlayerData)raw, this);
+                ((PlayerData)raw).ApplyTo(this);
                 Message("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
             }
             gotSQLData = true;

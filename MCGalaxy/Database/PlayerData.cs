@@ -71,28 +71,29 @@ namespace MCGalaxy.DB {
             }
         }
         
-        internal static void Apply(PlayerData data, Player p) {
-            p.TimesVisited = data.Logins + 1;
-            p.TotalTime = data.TotalTime;
-            p.DatabaseID = data.DatabaseID;
-            p.FirstLogin = data.FirstLogin;
+        /// <summary> Initialises the given player's stats from this instance. </summary>
+        public void ApplyTo(Player p) {
+            p.TimesVisited = Logins + 1;
+            p.TotalTime = TotalTime;
+            p.DatabaseID = DatabaseID;
+            p.FirstLogin = FirstLogin;
             
-            p.title = data.Title;
-            p.titlecolor = data.TitleColor;
+            p.title = Title;
+            p.titlecolor = TitleColor;
             
-            string col = data.Color;
+            string col = Color;
             if (col.Length == 0) col = p.group.Color;
             p.SetColor(col);
             
-            p.TotalModified = data.TotalModified;
-            p.TotalDrawn = data.TotalDrawn;
-            p.TotalPlaced = data.TotalPlaced;
-            p.TotalDeleted = data.TotalDeleted;
+            p.TotalModified = TotalModified;
+            p.TotalDrawn = TotalDrawn;
+            p.TotalPlaced = TotalPlaced;
+            p.TotalDeleted = TotalDeleted;
             
-            p.TimesDied = data.Deaths;
-            p.TotalMessagesSent = data.Messages;
-            p.money = data.Money;
-            p.TimesBeenKicked = data.Kicks;
+            p.TimesDied = Deaths;
+            p.TotalMessagesSent = Messages;
+            p.money = Money;
+            p.TimesBeenKicked = Kicks;
         }
         
         internal static PlayerData Parse(IDataRecord record) {
