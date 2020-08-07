@@ -36,16 +36,6 @@ namespace MCGalaxy.Core {
             }
             
             if (scope != ChatScope.PM) Logger.Log(logType, msg);
-            Player[] players = PlayerInfo.Online.Items;
-            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
-            
-            foreach (Player pl in players) {
-                if (pl == source || Chat.Ignoring(pl, source)) continue;
-                if (!scopeFilter(pl, arg)) continue;
-                if (filter != null && !filter(pl, arg)) continue;
-                
-                source.TotalMessagesSent++; break;
-            }
         }
         
         internal static void HandleCommand(Player p, string cmd, string args, CommandData data) {

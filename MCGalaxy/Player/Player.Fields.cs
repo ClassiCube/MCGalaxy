@@ -111,7 +111,7 @@ namespace MCGalaxy {
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public int SessionModified;
         public int TimesVisited, TimesBeenKicked, TimesDied;
-        public int TotalMessagesSent; // TODO: implement this
+        public int TotalMessagesSent;
         
         DateTime startTime;
         public TimeSpan TotalTime {

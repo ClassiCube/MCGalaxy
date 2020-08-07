@@ -151,7 +151,10 @@ namespace MCGalaxy {
                 MessageFrom(ChatScope.Level, source, prefix + msg, source.level, filter);
             }
         }
-        
+ 
+        /// <summary> Sends a message from the given player (e.g. message when requesting a review) </summary>
+        /// <remarks> For player chat type messages, Chat.MessageChat is more appropriate to use. </remarks>
+        /// <remarks> Only players not ignoring the given player will see this message. </remarks>
         public static void MessageFrom(ChatScope scope, Player source, string msg, object arg,
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
@@ -167,7 +170,7 @@ namespace MCGalaxy {
             }
         }
         
-        
+
         public static void MessageChat(Player source, string msg,
                                        ChatMessageFilter filter = null, bool irc = false) {
             if (source.level.SeesServerWideChat) {
@@ -178,18 +181,26 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Sends a chat message from the given player (e.g. regular player chat or /me) </summary>
+        /// <remarks> Chat messages will increase player's total messages sent in /info,
+        /// and count towards triggering automute for chat spamming </remarks>
+        /// <remarks> Only players not ignoring the given player will see this message. </remarks>
         public static void MessageChat(ChatScope scope, Player source, string msg, object arg,
                                        ChatMessageFilter filter, bool irc = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
+            bool counted = false;
             
             OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
             foreach (Player pl in players) {
                 if (Ignoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)
+                
                 if (pl != source) {
                     if (!scopeFilter(pl, arg)) continue;
                     if (filter != null && !filter(pl, arg)) continue;
+
+                    if (!counted) { source.TotalMessagesSent++; counted = true; }
                 } else {
                     // don't send PM back to self
                     if (scope == ChatScope.PM) { continue; }

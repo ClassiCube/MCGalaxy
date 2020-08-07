@@ -43,6 +43,8 @@ namespace MCGalaxy.Core {
         static void LogAction(ModAction e, Player target, string action) {
             if (e.Announce) {
                 // TODO: Chat.MessageFrom if target is online?
+                Player who = PlayerInfo.FindExact(e.Target);
+                // TODO: who.SeensAnyChatFrom
                 Chat.Message(ChatScope.Global, e.FormatMessage(e.TargetName, action),
                              null, null, true);
             } else {
