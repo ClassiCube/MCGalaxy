@@ -110,7 +110,6 @@ namespace MCGalaxy.Generator {
 
 
         public void PerlinNoise( float[,] map, int startOctave, int endOctave, float decay, int offsetX, int offsetY ) {
-            if( map == null ) throw new ArgumentNullException( "map" );
             float maxDim = 1f / Math.Max( map.GetLength( 0 ), map.GetLength( 1 ) );
             for( int x = map.GetLength( 0 ) - 1; x >= 0; x-- ) {
                 for( int y = map.GetLength( 1 ) - 1; y >= 0; y-- ) {
@@ -154,7 +153,6 @@ namespace MCGalaxy.Generator {
 
         // assumes normalized input
         public unsafe static void Marble( float[,] map ) {
-            if( map == null ) throw new ArgumentNullException( "map" );
             fixed( float* ptr = map ) {
                 for( int i = 0; i < map.Length; i++ ) {
                     ptr[i] = Math.Abs( ptr[i] * 2 - 1 );
@@ -164,7 +162,6 @@ namespace MCGalaxy.Generator {
 
 
         public static void ApplyBias( float[,] data, float c00, float c01, float c10, float c11, float midpoint ) {
-            if( data == null ) throw new ArgumentNullException( "data" );
             float maxX = 2f / data.GetLength( 0 );
             float maxY = 2f / data.GetLength( 1 );
             int offsetX = data.GetLength( 0 ) / 2;
@@ -181,19 +178,7 @@ namespace MCGalaxy.Generator {
         }
 
 
-        // assumes normalized input
-        public unsafe static void ScaleAndClip( float[,] data, float steepness ) {
-            if( data == null ) throw new ArgumentNullException( "data" );
-            fixed( float* ptr = data ) {
-                for( int i = 0; i < data.Length; i++ ) {
-                    ptr[i] = Math.Min( 1, Math.Max( 0, ptr[i] * steepness * 2 - steepness ) );
-                }
-            }
-        }
-
-
         public unsafe static void Invert( float[,] data ) {
-            if( data == null ) throw new ArgumentNullException( "data" );
             fixed( float* ptr = data ) {
                 for( int i = 0; i < data.Length; i++ ) {
                     ptr[i] = 1 - ptr[i];
@@ -203,8 +188,8 @@ namespace MCGalaxy.Generator {
 
         const float GaussianBlurDivisor = 1 / 273f;
         public static float[,] GaussianBlur5X5( float[,] heightmap ) {
-            if( heightmap == null ) throw new ArgumentNullException( "heightmap" );
             float[,] output = new float[heightmap.GetLength( 0 ), heightmap.GetLength( 1 )];
+            
             for( int x = heightmap.GetLength( 0 ) - 1; x >= 0; x-- ) {
                 for( int y = heightmap.GetLength( 1 ) - 1; y >= 0; y-- ) {
                     if( (x < 2) || (y < 2) || (x > heightmap.GetLength( 0 ) - 3) || (y > heightmap.GetLength( 1 ) - 3) ) {
@@ -223,7 +208,6 @@ namespace MCGalaxy.Generator {
 
 
         public static float[,] CalculateSlope( float[,] heightmap ) {
-            if( heightmap == null ) throw new ArgumentNullException( "heightmap" );
             float[,] output = new float[heightmap.GetLength( 0 ), heightmap.GetLength( 1 )];
 
             for( int x = heightmap.GetLength( 0 ) - 1; x >= 0; x-- ) {
@@ -250,10 +234,10 @@ namespace MCGalaxy.Generator {
         const int ThresholdSearchPasses = 10;
 
         public unsafe static float FindThreshold( float[,] data, float desiredCoverage ) {
-            if( data == null ) throw new ArgumentNullException( "data" );
             if( desiredCoverage == 0 ) return 0;
             if( desiredCoverage == 1 ) return 1;
             float threshold = 0.5f;
+            
             fixed( float* ptr = data ) {
                 for( int i = 0; i < ThresholdSearchPasses; i++ ) {
                     float coverage = CalculateCoverage( ptr, data.Length, threshold );

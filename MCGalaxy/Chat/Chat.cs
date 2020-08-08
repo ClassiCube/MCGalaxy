@@ -27,9 +27,9 @@ namespace MCGalaxy {
         /// <summary> Messages all players on a particular level </summary>
         /// <remarks> Excludes players who are ignoring all chat </remarks>
         Level,
-        /// <summary> Messages all players in (or spying on) a particular chatroom. </summary>
+        [Obsolete("Chatrooms have been removed")]
         Chatroom,
-        /// <summary> Messages all players in all chatrooms. </summary>
+        [Obsolete("Chatrooms have been removed")]
         AllChatrooms,
         
         /// <summary> Messages all players of a given rank </summary>

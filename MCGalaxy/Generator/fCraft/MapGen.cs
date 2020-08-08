@@ -32,7 +32,6 @@ namespace MCGalaxy.Generator {
         const int SeaFloorThickness = 3;
 
         public fCraftMapGen( fCraftMapGenArgs generatorArgs ) {
-            if( generatorArgs == null ) throw new ArgumentNullException( "generatorArgs" );
             args = generatorArgs;
             rand = new Random( args.Seed );
             noise = new Noise( args.Seed, NoiseInterpolationMode.Bicubic );
@@ -281,7 +280,6 @@ namespace MCGalaxy.Generator {
 
 
         void AddBeaches( Level map ) {
-            if( map == null ) throw new ArgumentNullException( "map" );
             int beachExtentSqr = (args.BeachExtent + 1) * (args.BeachExtent + 1);
             for( int x = 0; x < map.Width; x++ )
                 for( int z = 0; z < map.Length; z++ )
@@ -315,7 +313,6 @@ namespace MCGalaxy.Generator {
 
 
         void GenerateTrees( Level map ) {
-            if( map == null ) throw new ArgumentNullException( "map" );
             int minHeight = args.TreeHeightMin;
             int maxHeight = args.TreeHeightMax;
             int minTrunkPadding = args.TreeSpacingMin;
