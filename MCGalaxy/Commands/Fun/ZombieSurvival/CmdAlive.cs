@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using System.Collections.Generic;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Commands.Fun {    
@@ -24,8 +25,9 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            Player[] alive = ZSGame.Instance.Alive.Items;
-            if (alive.Length == 0) { p.Message("No one is alive."); return; }
+            List<Player> alive = PlayerInfo.OnlyCanSee(p, data.Rank, 
+                                                       ZSGame.Instance.Alive.Items);
+            if (alive.Count == 0) { p.Message("No one is alive."); return; }
             
             p.Message("Players who are &2alive %Sare:");
             p.Message(alive.Join(pl => pl.ColoredName));

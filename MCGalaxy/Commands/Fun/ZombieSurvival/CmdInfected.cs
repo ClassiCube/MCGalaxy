@@ -15,9 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System.Collections.Generic;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {    
+namespace MCGalaxy.Commands.Fun {
     public sealed class CmdInfected : Command2 {
         public override string name { get { return "Infected"; } }
         public override string shortcut { get { return "dead"; } }
@@ -25,8 +26,9 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            Player[] infected = ZSGame.Instance.Infected.Items;
-            if (infected.Length == 0) { p.Message("No one is infected"); return; }
+            List<Player> infected = PlayerInfo.OnlyCanSee(p, data.Rank,
+                                                          ZSGame.Instance.Infected.Items);
+            if (infected.Count == 0) { p.Message("No one is infected"); return; }
             
             p.Message("Players who are &cinfected %Sare:");
             p.Message(infected.Join(pl => "&c" + pl.DisplayName + "%S"));
