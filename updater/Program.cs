@@ -17,7 +17,7 @@ namespace Updater {
             usingConsole = IsConsole();
             if (args.Length < 1 || !args[0].Contains(check)) {
                 ShowMessage("Updater was started incorrectly.", true); return;
-            }           
+            }
             
             try {
                 args[0] = args[0].Replace(check, "");
@@ -28,8 +28,8 @@ namespace Updater {
                 while (Process.GetProcessesByName(args[0]).Length > 0) {
                     Thread.Sleep(1);
                 }
-            } catch (Exception e) { 
-            	UpdateFailed(e);
+            } catch (Exception e) {
+                UpdateFailed(e);
             }
             Update(args);
         }
@@ -63,7 +63,7 @@ namespace Updater {
                 if (!UpdateFile("MCGalaxy_", ".dll")) continue;
                 if (!UpdateFile("MCGalaxyCLI", ".exe")) continue;
 
-                StartProcess(args[0]);
+                TryStartProcess(args[0]);
                 return;
             }
         }
@@ -97,15 +97,21 @@ namespace Updater {
         
         
         static void StartProcess(string file) {
+            try {
+                Process.Start(file);
+            } catch {
+                if (Type.GetType("Mono.Runtime") == null) throw;
+                
+                // if running on mono, try again with 'mono /home/user1/MCG/MCGalaxyCLI.exe' instead
+                string absolutePath = AppDomain.CurrentDomain.BaseDirectory;
+                Process.Start("mono", Path.Combine(absolutePath, file));
+            }
+        }
+        
+        static void TryStartProcess(string file) {
             Console.WriteLine("Successfully updated MCGalaxy. Starting...");
             try {
-                bool mono = Type.GetType("Mono.Runtime") != null;
-                if (!mono) {
-                    Process.Start(file);
-                } else {
-                    string absolutePath = AppDomain.CurrentDomain.BaseDirectory;
-                    Process.Start("mono", Path.Combine(absolutePath, file));
-                }
+                StartProcess(file);
             } catch (Exception) {
                 ShowMessage("Updater has updated MCGalaxy, but was unable to start it. You will need to start it manually.", false);
             }

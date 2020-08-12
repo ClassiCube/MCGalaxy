@@ -100,7 +100,7 @@ namespace MCGalaxy {
                     Process.Start(path, "securitycheck10934579068013978427893755755270374" + exeName);
                 } catch {
                     if (Type.GetType("Mono.Runtime") == null) throw;                    
-                    // if running on mono, try again with 'mono /usr/bin/MCGalaxyCLI.exe' instead
+                    // if running on mono, try again with 'mono /home/user1/MCG/MCGalaxyCLI.exe' instead
                     Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + exeName);
                 }
                 Server.Stop(false, "Updating server.");
