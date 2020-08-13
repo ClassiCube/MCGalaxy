@@ -175,7 +175,6 @@ namespace MCGalaxy {
             w.WriteLine("#   server-name                   = The name which displays on classicube.net");
             w.WriteLine("#   motd                          = The message which displays when a player connects");
             w.WriteLine("#   port                          = The port to operate from");
-            w.WriteLine("#   console-only                  = Run without a GUI (useful for Linux servers with mono)");
             w.WriteLine("#   verify-names                  = Verify the validity of names");
             w.WriteLine("#   public                        = Set to true to appear in the public server list");
             w.WriteLine("#   max-players                   = The maximum number of connections");

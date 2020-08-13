@@ -91,7 +91,7 @@ namespace MCGalaxy.Cli {
 
         static void LogMessage(LogType type, string message) {
             if (!Server.Config.ConsoleLogging[(int)type]) return;
-        	
+            
             switch (type) {
                 case LogType.Error:
                     Write("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
@@ -110,13 +110,22 @@ namespace MCGalaxy.Cli {
         }
 
         static void ConsoleLoop() {
+            int eofs = 0;
             while (true) {
                 try {
                     string msg = Console.ReadLine();
-                    // msg is null when pressing Ctrl+C to shutdown CLI on Windows
-                    if (msg == null) { Write("&e** EOF, console no longer accepts input **"); break; }
+                    // null msg is triggered in two cases:
+                    //   a) when pressing Ctrl+C to shutdown CLI on Windows
+                    //   b) underlying terminal provides a bogus EOF
+                    // b) actually happens very rarely (e.g. a few times on startup with wine mono),
+                    // so ignore the first few EOFs to workaround this case
+                    if (msg == null) {
+                        eofs++;
+                        if (eofs >= 15) { Write("&e** EOF, console no longer accepts input **"); break; }
+                        continue;
+                    }
                     
-                    msg = msg.Trim(); // Trim whitespace
+                    msg = msg.Trim();
                     if (msg == "/") {
                         UIHelpers.RepeatCommand();
                     } else if (msg.Length > 0 && msg[0] == '/') {
