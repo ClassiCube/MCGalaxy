@@ -82,8 +82,8 @@ namespace MCGalaxy {
                 case LightPink: return Pink;
                 case ForestGreen: return Green;
                 case Brown: return Dirt;
-                case deepblue: return Blue;
-                case turquoise: return Cyan;
+                case DeepBlue: return Blue;
+                case Turquoise: return Cyan;
                 case Ice: return Glass;
                 case CeramicTile: return Iron;
                 case MagmaBlock: return Obsidian;

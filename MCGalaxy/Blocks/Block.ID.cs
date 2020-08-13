@@ -119,8 +119,8 @@ namespace MCGalaxy {
         public const byte LightPink = 55;
         public const byte ForestGreen = 56;
         public const byte Brown = 57;
-        public const byte deepblue = 58;
-        public const byte turquoise = 59;
+        public const byte DeepBlue = 58;
+        public const byte Turquoise = 59;
         public const byte Ice = 60;
         public const byte CeramicTile = 61;
         public const byte MagmaBlock = 62;

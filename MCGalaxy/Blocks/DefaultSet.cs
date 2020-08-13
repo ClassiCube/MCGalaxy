@@ -110,7 +110,7 @@ namespace MCGalaxy.Blocks {
             
             if (b >= Block.Red && b <= Block.White)
                 return SoundType.Cloth;
-            if (b >= Block.LightPink && b <= Block.turquoise)
+            if (b >= Block.LightPink && b <= Block.Turquoise)
                 return SoundType.Cloth;
             if (b == Block.Iron || b == Block.Gold)
                 return SoundType.Metal;

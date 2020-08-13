@@ -82,7 +82,7 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static string ReadString(BinaryReader reader) {
-            int length = reader.ReadUInt16();
+            int length  = reader.ReadUInt16();
             byte[] data = reader.ReadBytes(length);
             return Encoding.ASCII.GetString(data);
         }

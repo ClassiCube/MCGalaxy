@@ -75,7 +75,7 @@ namespace MCGalaxy {
             
             VisitAccess = new LevelAccessController(Config, name, true);
             BuildAccess = new LevelAccessController(Config, name, false);
-            listCheckExists = new SparseBitSet(Width, Height, Length);
+            listCheckExists  = new SparseBitSet(Width, Height, Length);
             listUpdateExists = new SparseBitSet(Width, Height, Length);
         }
 

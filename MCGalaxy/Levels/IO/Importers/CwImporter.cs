@@ -48,11 +48,10 @@ namespace MCGalaxy.Levels.IO {
             if (root["FormatVersion"].ByteValue > 1)
                 throw new NotSupportedException("Only version 1 of ClassicWorld format is supported.");
             
-            short x = root["X"].ShortValue, y = root["Y"].ShortValue, z = root["Z"].ShortValue;
-            if (x <= 0 || y <= 0 || z <= 0)
-                throw new InvalidDataException("Level dimensions must be > 0.");
-            
-            lvl = new Level(name, (ushort)x, (ushort)y, (ushort)z);
+            ushort width  = (ushort)root["X"].ShortValue;
+            ushort height = (ushort)root["Y"].ShortValue;
+            ushort length = (ushort)root["Z"].ShortValue;
+            lvl = new Level(name, width, height, length);
             lvl.blocks = root["BlockArray"].ByteArrayValue;
             ReadSpawn(root, lvl);
             

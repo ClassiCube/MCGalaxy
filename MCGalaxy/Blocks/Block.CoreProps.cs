@@ -60,7 +60,7 @@ namespace MCGalaxy {
             props.LavaKills = b == Wood || b == Log 
                 || b == Sponge || b == Bookshelf || b == Leaves || b == Crate;
             
-            if ((b >= Red && b <= White) || (b >= LightPink && b <= turquoise)) {
+            if ((b >= Red && b <= White) || (b >= LightPink && b <= Turquoise)) {
                 props.LavaKills = true;
             }
             if (b == Air || b == Sapling || (b >= Dandelion && b <= RedMushroom)) {
