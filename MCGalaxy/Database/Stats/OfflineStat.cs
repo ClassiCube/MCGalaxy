@@ -27,7 +27,7 @@ namespace MCGalaxy.DB {
 
         /// <summary> List of stats that can be output to /info. </summary>
         public static List<OfflineStatPrinter> Stats = new List<OfflineStatPrinter>() {
-            OfflineCoreLine,
+            CoreLine,
             (p, who) => OnlineStat.MiscLine(p, who.Name, who.Deaths, who.Money),
             BlocksModifiedLine,
             (p, who) => OnlineStat.BlockStatsLine(p, who.TotalPlaced, who.TotalDeleted, who.TotalDrawn),
@@ -39,12 +39,12 @@ namespace MCGalaxy.DB {
             (p, who) => OnlineStat.IPLine(p, who.Name, who.IP),            
         };
         
-        public static void OfflineCoreLine(Player p, PlayerData data) {
+        public static void CoreLine(Player p, PlayerData data) {
             Group group = Group.GroupIn(data.Name);
             string color = data.Color.Length == 0 ? group.Color : data.Color;
             string prefix = data.Title.Length == 0 ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
             string fullName = prefix + color + data.Name.RemoveLastPlus();
-            OnlineStat.CoreLine(p, fullName, data.Name, group, data.Messages);
+            OnlineStat.CommonCoreLine(p, fullName, data.Name, group, data.Messages);
         }
         
         public static void BlocksModifiedLine(Player p, PlayerData who) {

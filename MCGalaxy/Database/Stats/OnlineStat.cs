@@ -29,7 +29,7 @@ namespace MCGalaxy.DB {
 
         /// <summary> List of stats that can be output to /info. </summary>
         public static List<OnlineStatPrinter> Stats = new List<OnlineStatPrinter>() {
-            OnlineCoreLine,
+            CoreLine,
             (p, who) => MiscLine(p, who.name, who.TimesDied, who.money),
             BlocksModifiedLine,
             (p, who) => BlockStatsLine(p, who.TotalPlaced, who.TotalDeleted, who.TotalDrawn),
@@ -43,18 +43,18 @@ namespace MCGalaxy.DB {
             EntityLine,
         };
         
-        public static void OnlineCoreLine(Player p, Player who) {
-            string prefix = who.title.Length == 0 ? "" : who.MakeTitle(who.title, who.titlecolor);
+        public static void CoreLine(Player p, Player who) {
+            string prefix   = who.title.Length == 0 ? "" : who.MakeTitle(who.title, who.titlecolor);
             string fullName = prefix + who.ColoredName;
-            CoreLine(p, fullName, who.name, who.group, who.TotalMessagesSent);
+            CommonCoreLine(p, fullName, who.name, who.group, who.TotalMessagesSent);
         }
         
-        internal static void CoreLine(Player p, string fullName, string name, Group grp, int messages) {
+        internal static void CommonCoreLine(Player p, string fullName, string name, Group grp, int messages) {
             p.Message("{0} %S({1}) has:", fullName, name);
             p.Message("  Rank of {0}%S, wrote &a{1} %Smessages", grp.ColoredName, messages);
         }
         
-        internal static void MiscLine(Player p, string name, int deaths, int money) {
+        public static void MiscLine(Player p, string name, int deaths, int money) {
             if (Economy.Enabled) {
                 p.Message("  &a{0} &cdeaths%S, &a{2} %S{3}, {1} %Sawards",
                                deaths, Awards.AwardAmount(name), money, Server.Config.Currency);
