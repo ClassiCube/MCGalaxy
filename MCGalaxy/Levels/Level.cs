@@ -44,6 +44,10 @@ namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
         
         public Level(string name, ushort width, ushort height, ushort length) {
+            Init(name, width, height, length);
+        }
+        
+        void Init(string name, ushort width, ushort height, ushort length) {
             if (width  < 1) width  = 1;
             if (height < 1) height = 1;
             if (length < 1) length = 1;
@@ -62,21 +66,21 @@ namespace MCGalaxy {
             this.name = name; MapName = name.ToLower();
             BlockDB = new BlockDB(this);
             
-            blocks = new byte[Width * Height * Length];
-            ChunksX = Utils.CeilDiv16(Width);
-            ChunksY = Utils.CeilDiv16(Height);
-            ChunksZ = Utils.CeilDiv16(Length);
+            blocks  = new byte[width * height * length];
+            ChunksX = Utils.CeilDiv16(width);
+            ChunksY = Utils.CeilDiv16(height);
+            ChunksZ = Utils.CeilDiv16(length);
             CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
 
-            spawnx = (ushort)(Width / 2);
-            spawny = (ushort)(Height * 0.75f);
-            spawnz = (ushort)(Length / 2);
+            spawnx = (ushort)(width / 2);
+            spawny = (ushort)(height * 0.75f);
+            spawnz = (ushort)(length / 2);
             rotx = 0; roty = 0;
             
             VisitAccess = new LevelAccessController(Config, name, true);
             BuildAccess = new LevelAccessController(Config, name, false);
-            listCheckExists  = new SparseBitSet(Width, Height, Length);
-            listUpdateExists = new SparseBitSet(Width, Height, Length);
+            listCheckExists  = new SparseBitSet(width, height, length);
+            listUpdateExists = new SparseBitSet(width, height, length);
         }
 
         public List<Player> players { get { return getPlayers(); } }
@@ -132,8 +136,8 @@ namespace MCGalaxy {
         
         /// <summary> Attempts to automatically unload this map. </summary>
         public bool AutoUnload() {
-        	bool can = IsMuseum || (Server.Config.AutoLoadMaps && Config.AutoUnload && !HasPlayers());
-        	return can && Unload(true);
+            bool can = IsMuseum || (Server.Config.AutoLoadMaps && Config.AutoUnload && !HasPlayers());
+            return can && Unload(true);
         }
         
         public bool Unload(bool silent = false, bool save = true) {

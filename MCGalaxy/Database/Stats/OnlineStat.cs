@@ -24,10 +24,10 @@ namespace MCGalaxy.DB {
 
     public delegate void OnlineStatPrinter(Player p, Player who);
     
-    /// <summary> Prints stats for an online player in /whois. </summary>
+    /// <summary> Prints stats for an online player in /info. </summary>
     public static class OnlineStat {
 
-        /// <summary> List of stats that can be output to /whois. </summary>
+        /// <summary> List of stats that can be output to /info. </summary>
         public static List<OnlineStatPrinter> Stats = new List<OnlineStatPrinter>() {
             OnlineCoreLine,
             (p, who) => MiscLine(p, who.name, who.TimesDied, who.money),
@@ -43,7 +43,7 @@ namespace MCGalaxy.DB {
             EntityLine,
         };
         
-        static void OnlineCoreLine(Player p, Player who) {
+        public static void OnlineCoreLine(Player p, Player who) {
             string prefix = who.title.Length == 0 ? "" : who.MakeTitle(who.title, who.titlecolor);
             string fullName = prefix + who.ColoredName;
             CoreLine(p, fullName, who.name, who.group, who.TotalMessagesSent);
@@ -64,31 +64,31 @@ namespace MCGalaxy.DB {
             }
         }
         
-        static void BlocksModifiedLine(Player p, Player who) {
+        public static void BlocksModifiedLine(Player p, Player who) {
             p.Message("  Modified &a{0} %Sblocks, &a{1} %Ssince login", who.TotalModified, who.SessionModified);
         }
         
-        internal static void BlockStatsLine(Player p, long placed, long deleted, long drawn) {
+        public static void BlockStatsLine(Player p, long placed, long deleted, long drawn) {
             p.Message("    &a{0} %Splaced, &a{1} %Sdeleted, &a{2} %Sdrawn",
                            placed, deleted, drawn);
         }
         
-        static void TimeSpentLine(Player p, Player who) {
+        public static void TimeSpentLine(Player p, Player who) {
             TimeSpan timeOnline = DateTime.UtcNow - who.SessionStartTime;
             p.Message("  Spent &a{0} %Son the server, &a{1} %Sthis session",
                            who.TotalTime.Shorten(), timeOnline.Shorten());
         }
         
-        static void LoginLine(Player p, Player who) {
+        public static void LoginLine(Player p, Player who) {
             p.Message("  First login &a{0}%S, and is currently &aonline",
                            who.FirstLogin.ToString("yyyy-MM-dd"));
         }
         
-        internal static void LoginsLine(Player p, int logins, int kicks) {
+        public static void LoginsLine(Player p, int logins, int kicks) {
             p.Message("  Logged in &a{0} %Stimes, &c{1} %Sof which ended in a kick", logins, kicks);
         }
         
-        internal static void BanLine(Player p, string name) {
+        public static void BanLine(Player p, string name) {
             if (!Group.BannedRank.Players.Contains(name)) return;            
             string banner, reason, prevRank;
             DateTime time;
@@ -102,7 +102,7 @@ namespace MCGalaxy.DB {
             }
         }
         
-        internal static void SpecialGroupLine(Player p, string name) {
+        public static void SpecialGroupLine(Player p, string name) {
             if (Server.Devs.CaselessContains(name.RemoveLastPlus()))
                 p.Message("  Player is an &9{0} Developer", Server.SoftwareName);
             if (Server.Mods.CaselessContains(name.RemoveLastPlus()))
@@ -111,7 +111,7 @@ namespace MCGalaxy.DB {
                 p.Message("  Player is the &cServer owner");
         }
         
-        internal static void IPLine(Player p, string name, string ip) {
+        public static void IPLine(Player p, string name, string ip) {
             ItemPerms seeIpPerms = CommandExtraPerms.Find("WhoIs", 1);
             if (!seeIpPerms.UsableBy(p.Rank)) return;
             
@@ -123,7 +123,7 @@ namespace MCGalaxy.DB {
                 p.Message("  Player is &fWhitelisted");
         }
                 
-        static void IdleLine(Player p, Player who) {
+        public static void IdleLine(Player p, Player who) {
             TimeSpan idleTime = DateTime.UtcNow - who.LastAction;
             if (who.afkMessage != null) {
                 p.Message("  Idle for {0} (AFK {1}%S)", idleTime.Shorten(), who.afkMessage);
@@ -132,7 +132,7 @@ namespace MCGalaxy.DB {
             }
         }
         
-        static void EntityLine(Player p, Player who) {
+        public static void EntityLine(Player p, Player who) {
             bool hasSkin = !who.SkinName.CaselessEq(who.truename);
             bool hasModel = !(who.Model.CaselessEq("humanoid") || who.Model.CaselessEq("human"));
             

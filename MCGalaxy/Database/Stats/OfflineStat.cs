@@ -22,10 +22,10 @@ namespace MCGalaxy.DB {
     
     public delegate void OfflineStatPrinter(Player p, PlayerData who);
     
-    /// <summary> Prints stats for an offline player in /whois. </summary>
+    /// <summary> Prints stats for an offline player in /info. </summary>
     public static class OfflineStat {
 
-        /// <summary> List of stats that can be output to /whois. </summary>
+        /// <summary> List of stats that can be output to /info. </summary>
         public static List<OfflineStatPrinter> Stats = new List<OfflineStatPrinter>() {
             OfflineCoreLine,
             (p, who) => OnlineStat.MiscLine(p, who.Name, who.Deaths, who.Money),
@@ -39,7 +39,7 @@ namespace MCGalaxy.DB {
             (p, who) => OnlineStat.IPLine(p, who.Name, who.IP),            
         };
         
-        static void OfflineCoreLine(Player p, PlayerData data) {
+        public static void OfflineCoreLine(Player p, PlayerData data) {
             Group group = Group.GroupIn(data.Name);
             string color = data.Color.Length == 0 ? group.Color : data.Color;
             string prefix = data.Title.Length == 0 ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
@@ -47,15 +47,15 @@ namespace MCGalaxy.DB {
             OnlineStat.CoreLine(p, fullName, data.Name, group, data.Messages);
         }
         
-        static void BlocksModifiedLine(Player p, PlayerData who) {
+        public static void BlocksModifiedLine(Player p, PlayerData who) {
             p.Message("  Modified &a{0} %Sblocks", who.TotalModified);
         }
         
-        static void TimeSpentLine(Player p, PlayerData who) {
+        public static void TimeSpentLine(Player p, PlayerData who) {
             p.Message("  Spent &a{0} %Son the server", who.TotalTime.Shorten());
         }
                 
-        static void LoginLine(Player p, PlayerData who) {
+        public static void LoginLine(Player p, PlayerData who) {
             p.Message("  First login &a{0}%S, last login &a{1}",
                                  who.FirstLogin.ToString("yyyy-MM-dd"), who.LastLogin.ToString("yyyy-MM-dd"));
         }
