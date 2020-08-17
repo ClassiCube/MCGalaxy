@@ -44,11 +44,11 @@ namespace MCGalaxy.Levels.IO {
         
         void ReadData(NbtCompound root, string name, out Level lvl) {
             NbtCompound map = (NbtCompound)root["Map"];
-            ushort width = (ushort)map["Width"].ShortValue;
+            ushort width  = (ushort)map["Width" ].ShortValue;
             ushort height = (ushort)map["Height"].ShortValue;
             ushort length = (ushort)map["Length"].ShortValue;
-            lvl = new Level(name, width, height, length);
-            lvl.blocks = map["Blocks"].ByteArrayValue;
+            byte[] blocks = map["Blocks"].ByteArrayValue;            
+            lvl = new Level(name, width, height, length, blocks);
             
             NbtList spawn = (NbtList)map["Spawn"];
             lvl.spawnx = (ushort)spawn.Tags[0].ShortValue;

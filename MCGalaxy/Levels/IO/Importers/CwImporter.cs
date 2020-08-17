@@ -51,10 +51,10 @@ namespace MCGalaxy.Levels.IO {
             ushort width  = (ushort)root["X"].ShortValue;
             ushort height = (ushort)root["Y"].ShortValue;
             ushort length = (ushort)root["Z"].ShortValue;
-            lvl = new Level(name, width, height, length);
-            lvl.blocks = root["BlockArray"].ByteArrayValue;
-            ReadSpawn(root, lvl);
+            byte[] blocks = root["BlockArray"].ByteArrayValue;            
+            lvl = new Level(name, width, height, length, blocks);
             
+            ReadSpawn(root, lvl);           
             #if TEN_BIT_BLOCKS
             // Can't use ConvertCustom, as that changes lvl.blocks
             // (aka the array containing the lower 8 bits of block ids)

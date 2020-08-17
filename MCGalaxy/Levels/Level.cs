@@ -47,15 +47,21 @@ namespace MCGalaxy {
             Init(name, width, height, length);
         }
         
+        public Level(string name, ushort width, ushort height, ushort length, byte[] blocks) {
+            this.blocks = blocks;
+            Init(name, width, height, length);
+        }
+        
         void Init(string name, ushort width, ushort height, ushort length) {
             if (width  < 1) width  = 1;
             if (height < 1) height = 1;
             if (length < 1) length = 1;
-            
             Width = width; Height = height; Length = length;
+            
             for (int i = 0; i < CustomBlockDefs.Length; i++) {
                 CustomBlockDefs[i] = BlockDefinition.GlobalDefs[i];
             }
+            if (blocks == null) blocks = new byte[width * height * length];
             
             LoadDefaultProps();
             for (int i = 0; i < blockAABBs.Length; i++) {
@@ -64,9 +70,8 @@ namespace MCGalaxy {
             UpdateBlockHandlers();
             
             this.name = name; MapName = name.ToLower();
-            BlockDB = new BlockDB(this);
+            BlockDB   = new BlockDB(this);
             
-            blocks  = new byte[width * height * length];
             ChunksX = Utils.CeilDiv16(width);
             ChunksY = Utils.CeilDiv16(height);
             ChunksZ = Utils.CeilDiv16(length);
