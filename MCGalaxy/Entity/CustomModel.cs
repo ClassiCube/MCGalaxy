@@ -80,7 +80,15 @@ namespace MCGalaxy {
         SinRotate = 10,
         SinRotateVelocity = 11,
         SinTranslate = 12,
-        SinTranslateVelocity = 13
+        SinTranslateVelocity = 13,
+        SinSize = 14,
+        SinSizeVelocity = 15,
+        FlipRotate = 16,
+        FlipRotateVelocity = 17,
+        FlipTranslate = 18,
+        FlipTranslateVelocity = 19,
+        FlipSize = 20,
+        FlipSizeVelocity = 21
     }
 
     public enum CustomModelAnimAxis {
