@@ -45,6 +45,7 @@ namespace MCGalaxy {
             
             MapGen.Find("Flat").Generate(Player.Console, mainLevel, "");
             mainLevel.Save();
+            Level.LoadMetadata(mainLevel);
             LevelInfo.Add(mainLevel);
         }
         
