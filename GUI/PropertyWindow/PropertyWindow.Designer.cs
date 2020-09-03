@@ -1151,6 +1151,7 @@ namespace MCGalaxy.Gui
             this.adv_chkVerify.Text = "Verify Names";
             this.toolTip.SetToolTip(this.adv_chkVerify, "Make sure the user is who they claim to be.");
             this.adv_chkVerify.UseVisualStyleBackColor = true;
+            this.adv_chkVerify.CheckedChanged += new System.EventHandler(this.chkVerify_CheckedChanged);
             // 
             // srv_txtName
             // 

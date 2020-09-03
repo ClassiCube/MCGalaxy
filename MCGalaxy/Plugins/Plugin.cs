@@ -39,7 +39,7 @@ namespace MCGalaxy {
         /// <param name="shutdown"> True if plugin is being auto unloaded due to server shutting down, false if manually. </param>
         public abstract void Unload(bool shutdown);
         
-        /// <summary> Called when a player does /Help on the plugin. Typically, shows to the player what this plugin is about. </summary>
+        /// <summary> Called when a player does /Help on the plugin. Typically tells the player what this plugin is about. </summary>
         /// <param name="p"> Player who is doing /Help. </param>
         public virtual void Help(Player p) {
             p.Message("No help is available for this plugin.");
@@ -60,10 +60,10 @@ namespace MCGalaxy {
         /// <summary> Whether or not to auto load this plugin on server startup. </summary>
         public virtual bool LoadAtStartup { get { return true; } }
     }
-    
-    // Plugin used to be completely abstract, with Plugin_Simple having virtual methods
-    // However this is now obsolete as the virtual methods were moved into Plugin
-    // This class is just kept around for backwards compatibility
+
+    // This class is just kept around for backwards compatibility    
+    //   Plugin used to be completely abstract, with Plugin_Simple having virtual methods
+    //   However this is now obsolete as the virtual methods were moved into Plugin
     public abstract class Plugin_Simple : Plugin { }
 }
 
