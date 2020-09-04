@@ -36,21 +36,21 @@ namespace MCGalaxy.Commands.Info {
             if (message.CaselessEq("agree")) { Agree(p); return; }
             if (message.CaselessEq("disagree")) { Disagree(p, data); return; }
             
-            Player who = p;
+            Player target = p;
             if (message.Length > 0) {
                 if (!CheckExtraPerm(p, data, 1)) return;
-                who = PlayerInfo.FindMatches(p, message);
-                if (who == null) return;
+                target = PlayerInfo.FindMatches(p, message);
+                if (target == null) return;
             }
-            if (who != null) who.hasreadrules = true;
+            if (target != null) target.hasreadrules = true;
 
             string[] rules = rulesFile.GetText();
-            who.Message("Server Rules:");
-            who.MessageLines(rules);
+            target.Message("Server Rules:");
+            target.MessageLines(rules);
             
-            if (who != null && p != who) {
-                p.Message("Sent the rules to {0}%S.", who.ColoredName);
-                who.Message(p.ColoredName + " %Ssent you the rules.");
+            if (target != null && p != target) {
+            	p.Message("Sent the rules to {0}%S.", p.FormatNick(target));
+            	target.Message("{0} %Ssent you the rules.", target.FormatNick(p));
             }
         }
         

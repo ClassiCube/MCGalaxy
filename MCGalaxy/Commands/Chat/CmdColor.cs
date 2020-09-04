@@ -47,20 +47,20 @@ namespace MCGalaxy.Commands.Chatting {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string colName) {
-            string color = "";
+        protected override void SetPlayerData(Player p, Player target, string colName) {
+            string col = "";
             if (colName.Length == 0) {
-                Chat.MessageFrom(who, "λNICK %Shad their color removed");
-                who.UpdateColor(who.group.Color);
+                Chat.MessageFrom(target, "λNICK %Shad their color removed");
+                target.UpdateColor(target.group.Color);
             } else {
-                color = Matcher.FindColor(p, colName);
-                if (color == null) return;
-                if (color == who.color) { p.Message(who.ColoredName + " %Salready has that color."); return; }
+                col = Matcher.FindColor(p, colName);
+                if (col == null) return;
+                if (col == target.color) { p.Message("{0} %Salready has that color.", p.FormatNick(target)); return; }
                 
-                Chat.MessageFrom(who, "λNICK %Shad their color changed to " + color + Colors.Name(color));
-                who.UpdateColor(color);
+                Chat.MessageFrom(target, "λNICK %Shad their color changed to " + col + Colors.Name(col));
+                target.UpdateColor(col);
             }
-            PlayerDB.Update(who.name, PlayerData.ColumnColor, color);
+            PlayerDB.Update(target.name, PlayerData.ColumnColor, col);
         }
         
         public override void Help(Player p) {

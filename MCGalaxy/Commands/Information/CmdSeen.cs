@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info {
             if (matches > 1) return;
             if (matches == 1) {
                 Show(p, pl.ColoredName, pl.FirstLogin, pl.LastLogin);
-                p.Message(pl.ColoredName + " %Sis currently online.");
+                p.Message("{0} %Sis currently online.", p.FormatNick(pl));
                 return;
             }
 
@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Info {
         
         static void Show(Player p, string name, DateTime first, DateTime last) {
             TimeSpan firstDelta = DateTime.Now - first;
-            TimeSpan lastDelta = DateTime.Now - last;
+            TimeSpan lastDelta  = DateTime.Now - last;
             
             name = p.FormatNick(name);
             p.Message("{0} %Swas first seen at {1:H:mm} on {1:d} ({2} ago)", name, first, firstDelta.Shorten());

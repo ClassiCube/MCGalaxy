@@ -33,8 +33,7 @@ namespace MCGalaxy.Commands.Info {
             foreach (Player pl in online) {
                 if (!p.CanSee(pl, data.Rank)) continue;
                 string appName = pl.appName;
-                if (String.IsNullOrEmpty(appName))
-                    appName = "(unknown)";
+                if (String.IsNullOrEmpty(appName)) appName = "(unknown)";
                     
                List<Player> usingClient;
                if (!clients.TryGetValue(appName, out usingClient)) {
@@ -47,12 +46,12 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Players using:");
             foreach (var kvp in clients) {
                 StringBuilder builder = new StringBuilder();
-                List<Player> players = kvp.Value;
+                List<Player> players  = kvp.Value;
+                
                 for (int i = 0; i < players.Count; i++) {
-                    string name = Colors.Strip(players[i].DisplayName);
-                    builder.Append(name);
-                    if (i < players.Count - 1)
-                        builder.Append(", ");
+                	string nick = Colors.Strip(p.FormatNick(players[i]));
+                    builder.Append(nick);
+                    if (i < players.Count - 1) builder.Append(", ");
                 }
                 p.Message("  {0}: &f{1}", kvp.Key, builder.ToString());
             }

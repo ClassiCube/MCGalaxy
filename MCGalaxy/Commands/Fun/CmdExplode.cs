@@ -35,14 +35,14 @@ namespace MCGalaxy.Commands.Fun {
             
             ushort x = 0, y = 0, z = 0;
             if (args.Length == 1) {
-                Player who = PlayerInfo.FindMatches(p, args[0]);
-                if (who == null) return;
+                Player target = PlayerInfo.FindMatches(p, args[0]);
+                if (target == null) return;
                 
-                x = (ushort)who.Pos.BlockX;
-                y = (ushort)who.Pos.BlockY;
-                z = (ushort)who.Pos.BlockZ;
-                if (DoExplode(p, who.level, x, y, z))
-                    p.Message(who.ColoredName + " %Shas been exploded!");
+                x = (ushort)target.Pos.BlockX;
+                y = (ushort)target.Pos.BlockY;
+                z = (ushort)target.Pos.BlockZ;
+                if (DoExplode(p, target.level, x, y, z)) 
+                    p.Message("{0} %Shas been exploded!", p.FormatNick(target));
             } else if (args.Length == 3) {
                 if (!CommandParser.GetUShort(p, args[0], "X", ref x)) return;
                 if (!CommandParser.GetUShort(p, args[1], "Y", ref y)) return;

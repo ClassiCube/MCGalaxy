@@ -34,31 +34,31 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0 || message == p.possess) {
                 if (message.Length == 0 && p.possess.Length == 0) { Help(p); return; }
                 
-                Player who = PlayerInfo.FindExact(p.possess);
-                if (who == null) {
+                Player target = PlayerInfo.FindExact(p.possess);
+                if (target == null) {
                     p.possess = "";
                     p.Message("Possession disabled."); return;
                 }
-                if (who == p) {
+                if (target == p) {
                     p.Message("Cannot possess yourself!"); return;
                 }
-                who.following = "";
-                who.canBuild = true;
+                target.following = "";
+                target.canBuild = true;
                 p.possess = "";
-                if (!who.MarkPossessed()) return;
+                if (!target.MarkPossessed()) return;
                 
                 p.invincible = false;
                 Command.Find("Hide").Use(p, "", data);
-                p.Message("Stopped possessing " + who.ColoredName + "%S.");
+                p.Message("Stopped possessing {0}%S.", p.FormatNick(target));
             } else {
-                Player who = PlayerInfo.FindMatches(p, message);
-                if (who == null) return;
-                if (!CheckRank(p, data, who, "teleport", false)) return;
+                Player target = PlayerInfo.FindMatches(p, message);
+                if (target == null) return;
+                if (!CheckRank(p, data, target, "teleport", false)) return;
                 
-                if (who.possess.Length > 0) {
+                if (target.possess.Length > 0) {
                     p.Message("That player is currently possessing someone!"); return;
                 }
-                if (who.following.Length > 0) {
+                if (target.following.Length > 0) {
                     p.Message("That player is either following someone or already possessed."); return;
                 }                
                 if (p.possess.Length > 0) {
@@ -70,18 +70,18 @@ namespace MCGalaxy.Commands.Moderation {
                     }
                 }
                 
-                Command.Find("TP").Use(p, who.name, data);
+                Command.Find("TP").Use(p, target.name, data);
                 if (!p.hidden) Command.Find("Hide").Use(p, "", data);
-                p.possess = who.name;
-                who.following = p.name;
+                p.possess = target.name;
+                target.following = p.name;
                 if (!p.invincible) p.invincible = true;
                 
-                bool result = (skin == "#") ? who.MarkPossessed() : who.MarkPossessed(p.name);
+                bool result = (skin == "#") ? target.MarkPossessed() : target.MarkPossessed(p.name);
                 if (!result) return;
                 
-                Entities.Despawn(p, who);
-                who.canBuild = false;
-                p.Message("Successfully possessed {0}%S.", who.ColoredName);
+                Entities.Despawn(p, target);
+                target.canBuild = false;
+                p.Message("Successfully possessed {0}%S.", target.ColoredName);
             }
         }
 

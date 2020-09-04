@@ -232,8 +232,8 @@ namespace MCGalaxy.Games {
             foreach (BountyData b in bounties) {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
                 
-                string target = p.FormatNick(b.Target);
-                Map.Message("Bounty on " + target + " %Sis no longer active.");
+                string nick = p.FormatNick(b.Target);
+                Map.Message("Bounty on " + nick + " %Sis no longer active.");
                 Bounties.Remove(b);
                 
                 Player setter = PlayerInfo.FindExact(b.Origin);

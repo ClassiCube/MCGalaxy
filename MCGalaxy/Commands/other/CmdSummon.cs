@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Misc {
                     if (pl.level == p.level && pl != p && data.Rank > pl.Rank) {
                         pl.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
                         pl.SendPos(Entities.SelfID, p.Pos, p.Rot);
-                        pl.Message("You were summoned by " + p.ColoredName + "%S.");
+                        pl.Message("You were summoned by {0}%S.", pl.FormatNick(p));
                     }
                 }
                 Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
@@ -78,27 +78,27 @@ namespace MCGalaxy.Commands.Misc {
             who.Message("You were summoned by " + p.ColoredName + "%S.");
         }
         
-        static bool CheckVisitPerm(Player p, Player who, bool confirmed) {
-            AccessResult result = p.level.VisitAccess.Check(who.name, who.Rank);
+        static bool CheckVisitPerm(Player p, Player target, bool confirmed) {
+            AccessResult result = p.level.VisitAccess.Check(target.name, target.Rank);
             if (result == AccessResult.Allowed) return true;
             if (result == AccessResult.Whitelisted) return true;
             if (result == AccessResult.AboveMaxRank && confirmed) return true;
             if (result == AccessResult.BelowMinRank && confirmed) return true;
             
             if (result == AccessResult.Blacklisted) {
-                p.Message("{0} %Sis blacklisted from visiting this map.", who.ColoredName);
+                p.Message("{0} %Sis blacklisted from visiting this map.", p.FormatNick(target));
                 return false;
             } else if (result == AccessResult.BelowMinRank) {
                 p.Message("Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
                           Group.GetColoredName(p.level.VisitAccess.Min),
-                          who.ColoredName, who.group.ColoredName);
+                          p.FormatNick(target), target.group.ColoredName);
             } else if (result == AccessResult.AboveMaxRank) {
                 p.Message("Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
                           Group.GetColoredName(p.level.VisitAccess.Max),
-                          who.ColoredName, who.group.ColoredName);
+                          p.FormatNick(target), target.group.ColoredName);
             }
             
-            p.Message("If you still want to summon them, type %T/Summon {0} confirm", who.name);
+            p.Message("If you still want to summon them, type %T/Summon {0} confirm", target.name);
             return false;
         }
         

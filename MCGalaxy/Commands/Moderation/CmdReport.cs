@@ -117,9 +117,9 @@ namespace MCGalaxy.Commands.Moderation {
                 Directory.CreateDirectory("extra/reportedbackups");
             
             DeleteReport(target);
-            string targetName = p.FormatNick(target);
-            p.Message("Reports on {0} %Swere deleted.", targetName);
-            Chat.MessageFromOps(p, "λNICK %Sdeleted reports on " + targetName);
+            string nick = p.FormatNick(target);
+            p.Message("Reports on {0} %Swere deleted.", nick);
+            Chat.MessageFromOps(p, "λNICK %Sdeleted reports on " + nick);
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
         }
         

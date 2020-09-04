@@ -125,17 +125,17 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("There are no players in the review queue."); return;
             }
             
-            Player who = PlayerInfo.FindExact(user);
+            Player target = PlayerInfo.FindExact(user);
             Server.reviewlist.Remove(user);
             
-            if (who == null) {
+            if (target == null) {
                 p.Message("Player " + user + " is offline, and was removed from the review queue");
                 return;
             }
             
-            Command.Find("TP").Use(p, who.name, data);
+            Command.Find("TP").Use(p, target.name, data);
             p.Message("You have been teleported to " + user);
-            who.Message("Your review request has been answered by " + p.ColoredName + ".");
+            target.Message("Your review request has been answered by {0}.", target.FormatNick(p));
             AnnounceQueueChanged();
         }
         

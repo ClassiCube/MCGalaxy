@@ -272,10 +272,10 @@ namespace MCGalaxy {
                 if (src == null || !p.CanSee(src)) {
                     p.Message("&bMap reloaded");
                 } else {
-                    p.Message("&bMap reloaded by " + src.ColoredName);
+                    p.Message("&bMap reloaded by " + p.FormatNick(src));
                 }
                 if (src.CanSee(p)) {
-                    src.Message("&4Finished reloading for " + p.ColoredName);
+                    src.Message("&4Finished reloading for " + src.FormatNick(p));
                 }
             }
         }

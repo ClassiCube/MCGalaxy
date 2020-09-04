@@ -23,18 +23,18 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 && p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
-            Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
-            if (who == null) return;
-            if (!CheckRank(p, data, who, "voice", true)) return;
+            Player target = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
+            if (target == null) return;
+            if (!CheckRank(p, data, target, "voice", true)) return;
             
-            if (who.voice) {
-                p.Message("Removing voice status from " + who.ColoredName);
-                who.Message("Your voice status has been revoked.");
+            if (target.voice) {
+                p.Message("Removing voice status from " + p.FormatNick(target));
+                target.Message("Your voice status has been revoked.");
             } else {
-                p.Message("Giving voice status to " + who.ColoredName);
-                who.Message("You have received voice status.");
+                p.Message("Giving voice status to " + p.FormatNick(target));
+                target.Message("You have received voice status.");
             }
-            who.voice = !who.voice;
+            target.voice = !target.voice;
         }
         
         public override void Help(Player p) {

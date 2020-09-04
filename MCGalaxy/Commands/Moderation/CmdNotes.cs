@@ -36,12 +36,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             List<string> notes = Server.Notes.FindAllExact(name);
-            string target = p.FormatNick(name);
+            string nick = p.FormatNick(name);
             
             if (notes.Count == 0) {
-                p.Message("{0} %Shas no notes.", target); return;
+                p.Message("{0} %Shas no notes.", nick); return;
             } else {
-                p.Message("  Notes for {0}:", target);
+                p.Message("  Notes for {0}:", nick);
             }
             
             foreach (string line in notes) {

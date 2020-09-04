@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (!TryMessage(p, msg.Replace("λTARGET", reciever))) return false;
 
             if (messageWho && p != target && !Chat.Ignoring(target, p)) {
-                msg = msg.Replace("λNICK", p.ColoredName);
+                msg = msg.Replace("λNICK", target.FormatNick(p));
                 target.Message(msg.Replace("λTARGET", "you"));
             }
             return true;

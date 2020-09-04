@@ -213,23 +213,15 @@ namespace MCGalaxy {
         
                 
         static string UnescapeMessage(Player pl, Player src, string msg) {
-            if (pl.Ignores.Nicks && pl.Ignores.Titles) {
-                string srcColoredTruename = src.color + src.truename;
-                return msg
-                    .Replace("λFULL", src.GroupPrefix + srcColoredTruename)
-                    .Replace("λNICK", srcColoredTruename);
+            string nick = pl.FormatNick(src);
+            msg = msg.Replace("λNICK", nick);
+        	
+            if (pl.Ignores.Titles) {
+                return msg.Replace("λFULL", src.GroupPrefix + nick);
             } else if (pl.Ignores.Nicks) {
-                return msg
-                    .Replace("λFULL", src.color + src.prefix + src.truename)
-                    .Replace("λNICK", src.color + src.truename);
-            } else if (pl.Ignores.Titles) {
-                return msg
-                    .Replace("λFULL", src.GroupPrefix + src.ColoredName)
-                    .Replace("λNICK", src.ColoredName);
+                return msg.Replace("λFULL", src.color + src.prefix + src.truename);
             } else {
-                return msg
-                    .Replace("λFULL", src.FullName)
-                    .Replace("λNICK", src.ColoredName);
+                return msg.Replace("λFULL", src.FullName);
             }
         }
     }

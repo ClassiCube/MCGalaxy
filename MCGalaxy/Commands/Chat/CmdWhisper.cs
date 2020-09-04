@@ -28,12 +28,12 @@ namespace MCGalaxy.Commands.Chatting {
                 if (p.whisper) p.Message("All messages sent will now auto-whisper");
                 else p.Message("Whisper chat turned off");
             } else {
-                Player who = PlayerInfo.FindMatches(p, message);
-                if (who == null) { p.whisperTo = ""; p.whisper = false; return; }
+                Player target = PlayerInfo.FindMatches(p, message);
+                if (target == null) { p.whisperTo = ""; p.whisper = false; return; }
 
-                p.whisper = true;
-                p.whisperTo = who.name;
-                p.Message("Auto-whisper enabled. All messages will now be sent to " + who.ColoredName + ".");
+                p.whisper   = true;
+                p.whisperTo = target.name;
+                p.Message("Auto-whisper enabled. All messages will now be sent to {0}.", p.FormatNick(target));
             }
         }
 

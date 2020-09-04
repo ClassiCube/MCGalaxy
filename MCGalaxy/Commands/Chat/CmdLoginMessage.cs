@@ -32,14 +32,12 @@ namespace MCGalaxy.Commands.Chatting {
             UsePlayer(p, data, message, "login message");
         }
         
-        protected override void SetPlayerData(Player p, Player who, string msg) {
-            PlayerDB.SetLoginMessage(who.name, msg);
+        protected override void SetPlayerData(Player p, Player target, string msg) {
+            PlayerDB.SetLoginMessage(target.name, msg);
             if (msg.Length == 0) {
-                p.Message("Login message of {0} %Swas removed.",
-                               who.ColoredName);
+                p.Message("Login message of {0} %Swas removed.", p.FormatNick(target));
             } else {
-                p.Message("Login message of {0} %Swas changed to: {1}",
-                               who.ColoredName, msg);
+                p.Message("Login message of {0} %Swas changed to: {1}", p.FormatNick(target), msg);
             }
         }
         

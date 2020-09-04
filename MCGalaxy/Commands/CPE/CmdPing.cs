@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands.Chatting {
                 Player[] players = PlayerInfo.Online.Items;
                 p.Message("Ping/latency list of online players: (&ALo%S:&7Avg%S:&CHi%S)ms");
                 
-                foreach (Player pl in players) {
-                    if (!p.CanSee(pl, data.Rank)) continue;
-                    if (pl.Ping.Measures() == 0) continue;
-                    p.Message(pl.Ping.FormatAll() + " %S- " + pl.ColoredName);
+                foreach (Player target in players) {
+                    if (!p.CanSee(target, data.Rank)) continue;
+                    if (target.Ping.Measures() == 0)  continue;
+                    p.Message(target.Ping.FormatAll() + " %S- " + p.FormatNick(target));
                 }
             }
         }

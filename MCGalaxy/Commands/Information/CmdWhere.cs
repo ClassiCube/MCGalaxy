@@ -26,15 +26,15 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) message = p.name;
             int matches;
-            Player pl = PlayerInfo.FindMatches(p, message, out matches);
-            if (pl == null) return;
+            Player target = PlayerInfo.FindMatches(p, message, out matches);
+            if (target == null) return;
             
-            if (IGame.GameOn(pl.level) != null && !(p.IsSuper || p.Game.Referee)) {
+            if (IGame.GameOn(target.level) != null && !(p.IsSuper || p.Game.Referee)) {
                 p.Message("You can only use /where on people in games when you are in referee mode."); return;
             }
             
-            int x = pl.Pos.X, y = pl.Pos.Y - Entities.CharacterHeight, z = pl.Pos.Z;
-            p.Message("{0} %Sis on {1}", pl.ColoredName, pl.level.ColoredName);
+            int x = target.Pos.X, y = target.Pos.Y - Entities.CharacterHeight, z = target.Pos.Z;
+            p.Message("{0} %Sis on {1}", p.FormatNick(target), target.level.ColoredName);
             p.Message("   X: &b{0:F5} %SY: &b{1:F5} %SZ: &b{2:F5}",
                            x / 32.0, y / 32.0, z / 32.0);
             

@@ -86,10 +86,10 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("Your password was &aset to: &c" + password);
         }
         
-        void ResetPassword(Player p, string target) {
-            if (target.Length == 0) { Help(p); return; }
-            Player who = PlayerInfo.FindMatches(p, target);
-            if (who == null) return;
+        void ResetPassword(Player p, string name) {
+            if (name.Length == 0) { Help(p); return; }
+            Player target = PlayerInfo.FindMatches(p, name);
+            if (target == null) return;
             
             if (!p.IsConsole && p.Unverified) {
                 p.Message("%WYou must first verify with %T/Pass [Password]"); return;
@@ -98,12 +98,12 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("%WOnly console and the server owner may reset passwords."); return;
             }
             
-            string path = HashPath(who.name);
+            string path = HashPath(target.name);
             if (!File.Exists(path)) {
-                p.Message(who.ColoredName + " %Sdoes not have a password.");
+                p.Message("{0} %Sdoes not have a password.", p.FormatNick(target));
             } else {
                 File.Delete(path);
-                p.Message("Reset password for " + who.ColoredName);
+                p.Message("Reset password for {0}", p.FormatNick(target));
             }
         }
 

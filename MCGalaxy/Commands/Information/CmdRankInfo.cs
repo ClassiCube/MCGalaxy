@@ -35,12 +35,12 @@ namespace MCGalaxy.Commands.Info {
             if (name == null) return;
             
             List<string> rankings = Server.RankInfo.FindAllExact(name);
-            string target = p.FormatNick(name);
+            string nick = p.FormatNick(name);
             
             if (rankings.Count == 0) {
-                p.Message("{0} %Shas no rankings.", target); return;
+                p.Message("{0} %Shas no rankings.", nick); return;
             } else {
-                p.Message("  Rankings for {0}:", target);
+                p.Message("  Rankings for {0}:", nick);
             }
             
             foreach (string line in rankings) {

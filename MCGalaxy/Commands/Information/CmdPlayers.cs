@@ -67,25 +67,25 @@ namespace MCGalaxy.Commands.Info {
                 if (pl.group != group || !p.CanSee(pl, data.Rank)) continue;
                 
                 totalPlayers++;
-                Append(list, pl);
+                Append(p, list, pl);
             }
             return list;
         }
         
-        static void Append(GroupPlayers list, Player pl) {
+        static void Append(Player target, GroupPlayers list, Player p) {
             StringBuilder data = list.builder;
             data.Append(' ');
-            if (pl.voice) { data.Append("&f+").Append(list.group.Color); }
-            data.Append(Colors.Strip(pl.DisplayName));
+            if (p.voice) { data.Append("&f+").Append(list.group.Color); }
+            data.Append(Colors.Strip(target.FormatNick(p)));
             
-            if (pl.hidden)       data.Append("-hidden");
-            if (pl.muted)        data.Append("-muted");
-            if (pl.frozen)       data.Append("-frozen");
-            if (pl.Game.Referee) data.Append("-ref");
-            if (pl.IsAfk)        data.Append("-afk");
-            if (pl.Unverified)   data.Append("-unverified");
+            if (p.hidden)       data.Append("-hidden");
+            if (p.muted)        data.Append("-muted");
+            if (p.frozen)       data.Append("-frozen");
+            if (p.Game.Referee) data.Append("-ref");
+            if (p.IsAfk)        data.Append("-afk");
+            if (p.Unverified)   data.Append("-unverified");
             
-            string lvlName = Colors.Strip(pl.level.name); // for museums
+            string lvlName = Colors.Strip(p.level.name); // for museums
             data.Append(" (").Append(lvlName).Append("),");
         }
         

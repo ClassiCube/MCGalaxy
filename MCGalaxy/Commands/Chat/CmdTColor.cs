@@ -32,21 +32,21 @@ namespace MCGalaxy.Commands.Chatting {
             UsePlayer(p, data, message, "title color"); 
         }
         
-        protected override void SetPlayerData(Player p, Player who, string colName) {
-            string color = "";
+        protected override void SetPlayerData(Player p, Player target, string colName) {
+            string col = "";
             if (colName.Length == 0) {
-                Chat.MessageFrom(who, "λNICK %Shad their title color removed");
+                Chat.MessageFrom(target, "λNICK %Shad their title color removed");
             } else  {
-                color = Matcher.FindColor(p, colName);
-                if (color == null) return;
-                if (color == who.titlecolor) { p.Message(who.ColoredName + " %Salready has that title color."); return; }
+                col = Matcher.FindColor(p, colName);
+                if (col == null) return;
+                if (col == target.titlecolor) { p.Message("{0} %Salready has that title color.", p.FormatNick(target)); return; }
                 
-                Chat.MessageFrom(who, "λNICK %Shad their title color changed to " + color + Colors.Name(color));
+                Chat.MessageFrom(target, "λNICK %Shad their title color changed to " + col + Colors.Name(col));
             }
             
-            who.titlecolor = color;
-            who.SetPrefix();
-            PlayerDB.Update(who.name, PlayerData.ColumnTColor, color);
+            target.titlecolor = col;
+            target.SetPrefix();
+            PlayerDB.Update(target.name, PlayerData.ColumnTColor, col);
         }
 
         public override void Help(Player p) {

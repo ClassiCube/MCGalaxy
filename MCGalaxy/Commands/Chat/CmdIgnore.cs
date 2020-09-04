@@ -59,18 +59,17 @@ namespace MCGalaxy.Commands.Chatting {
                 p.Message("&aNo longer ignoring {0}", action);
             } else {
                 int matches;
-                Player who = PlayerInfo.FindMatches(p, action, out matches);
-                if (who == null) {
-                    if (matches == 0)
-                        p.Message("You must use the full name when unignoring offline players.");
+                Player target = PlayerInfo.FindMatches(p, action, out matches);
+                if (target == null) {
+                    if (matches == 0) p.Message("You must use the full name when unignoring offline players.");
                     return;
                 }
                 
-                if (p.Ignores.Names.CaselessRemove(who.name)) {
-                    p.Message("&aNo longer ignoring {0}", who.ColoredName);
+                if (p.Ignores.Names.CaselessRemove(target.name)) {
+                	p.Message("&aNo longer ignoring {0}", p.FormatNick(target));
                 } else {
-                    p.Ignores.Names.Add(who.name);
-                    p.Message("&cNow ignoring {0}", who.ColoredName);
+                    p.Ignores.Names.Add(target.name);
+                    p.Message("&cNow ignoring {0}", p.FormatNick(target));
                 }
             }
             p.Ignores.Save(p);

@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (receiver == null) return;
             
             if (!Chat.Ignoring(receiver, p)) {
-                receiver.Message("Message recieved from {0}%S. Check %T/inbox", p.ColoredName);
+                receiver.Message("Message recieved from {0}%S. Check %T/inbox", receiver.FormatNick(p));
             }
         }
         

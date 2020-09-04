@@ -61,26 +61,26 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Follow(Player p, string name, CommandData data, bool stealth) {
-            Player who = PlayerInfo.FindMatches(p, name);
-            if (who == null) return;
-            if (who == p) { p.Message("Cannot follow yourself."); return; }
-            if (!CheckRank(p, data, who, "follow", false)) return;
+            Player target = PlayerInfo.FindMatches(p, name);
+            if (target == null) return;
+            if (target == p) { p.Message("Cannot follow yourself."); return; }
+            if (!CheckRank(p, data, target, "follow", false)) return;
             
-            if (who.following.Length > 0) { 
-                p.Message(who.ColoredName+ " %Sis already following " + who.following); return; 
+            if (target.following.Length > 0) { 
+                p.Message("{0} %Sis already following {1}", p.FormatNick(target), target.following); return; 
             }
 
             if (!p.hidden) Command.Find("Hide").Use(p, "", data);
 
-            if (p.level != who.level) Command.Find("TP").Use(p, who.name, data);
+            if (p.level != target.level) Command.Find("TP").Use(p, target.name, data);
             if (p.following.Length > 0) {
                 Player old = PlayerInfo.FindExact(p.following);
                 if (old != null) Entities.Spawn(p, old);
             }
             
-            p.following = who.name;
-            p.Message("Following " + who.ColoredName + "%S. Use %T/Follow %Sto stop.");
-            Entities.Despawn(p, who);
+            p.following = target.name;
+            p.Message("Following {0}%S. Use %T/Follow %Sto stop.", p.FormatNick(target));
+            Entities.Despawn(p, target);
         }
         
         public override void Help(Player p) {
