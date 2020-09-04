@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Info {
                 p.Message("No players last played with the given IP.");
             } else {
                 p.Message("These players have the same IP:");
-                p.Message(accounts.Join(alt => PlayerInfo.GetColoredName(p, alt)));
+                p.Message(accounts.Join(alt => p.FormatNick(alt)));
             }
         }
 

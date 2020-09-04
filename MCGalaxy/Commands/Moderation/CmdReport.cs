@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (users.Length > 0) {
                 p.Message("The following players have been reported:");
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, users, pl => PlayerInfo.GetColoredName(p, pl),
+                MultiPageOutput.Output(p, users, pl => p.FormatNick(pl),
                                        "Review list", "players", modifier, false);
                 
                 p.Message("Use %T/Report check [Player] %Sto view report details.");
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Directory.CreateDirectory("extra/reportedbackups");
             
             DeleteReport(target);
-            string targetName = PlayerInfo.GetColoredName(p, target);
+            string targetName = p.FormatNick(target);
             p.Message("Reports on {0} %Swere deleted.", targetName);
             Chat.MessageFromOps(p, "λNICK %Sdeleted reports on " + targetName);
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
@@ -151,7 +151,7 @@ namespace MCGalaxy.Commands.Moderation {
             ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);
             if (reports.Count >= 5) {
                 p.Message("{0} %Walready has 5 reports! Please wait until an {1} %Whas reviewed these reports first!",
-                               PlayerInfo.GetColoredName(p, target), checkPerms.Describe());
+                          p.FormatNick(target), checkPerms.Describe());
                 return;
             }
             

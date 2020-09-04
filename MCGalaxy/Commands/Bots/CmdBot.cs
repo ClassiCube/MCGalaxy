@@ -104,13 +104,13 @@ namespace MCGalaxy.Commands.Bots {
                     if (PlayerBot.CanEditAny(p) || ownerName.CaselessEq(p.name)) {
                         int removedCount = PlayerBot.RemoveBotsOwnedBy(p, ownerName, p.level, false);
                         if (removedCount == 0) {
-                            p.Message("There are no bots owned by {0}%S in this level.", PlayerInfo.GetColoredName(p, ownerName));
+                            p.Message("There are no bots owned by {0}%S in this level.", p.FormatNick(ownerName));
                         } else {
-                            p.Message("Removed {0} bot{1} belonging to {2}%S.", removedCount, removedCount > 1 ? "s" : "", PlayerInfo.GetColoredName(p, ownerName));
+                            p.Message("Removed {0} bot{1} belonging to {2}%S.", removedCount, removedCount > 1 ? "s" : "", p.FormatNick(ownerName));
                             BotsFile.Save(p.level);
                         }
                     } else {
-                        p.Message("%WYou cannot remove all bots belonging to {0}%W unless you are the owner of this map.", PlayerInfo.GetColoredName(p, ownerName));
+                        p.Message("%WYou cannot remove all bots belonging to {0}%W unless you are the owner of this map.", p.FormatNick(ownerName));
                     }
                     return;
                 }

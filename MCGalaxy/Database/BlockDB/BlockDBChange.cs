@@ -30,7 +30,7 @@ namespace MCGalaxy.DB {
             BlockID oldBlock = e.OldBlock, newBlock = e.NewBlock;
             DateTime time = BlockDB.Epoch.AddSeconds(e.TimeDelta);
             TimeSpan delta = DateTime.UtcNow.Subtract(time);
-            name = PlayerInfo.GetColoredName(p, name);
+            name = p.FormatNick(name);
             
             if (newBlock == Block.Air) {
                 p.Message("{0} ago {1} &4deleted %S{2}{3}",

@@ -49,10 +49,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             if (!Server.vip.Add(name)) {
-                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis already a VIP.");
+                p.Message("{0} %Sis already a VIP.", p.FormatNick(name));
             } else {
                 Server.vip.Save();
-                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis now a VIP.");
+                p.Message("{0} %Sis now a VIP.", p.FormatNick(name));
                 
                 Player vip = PlayerInfo.FindExact(name);
                 if (vip != null) vip.Message("You are now a VIP!");
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             if (!Server.vip.Remove(name)) {
-                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis not a VIP.");
+                p.Message("{0} %Sis not a VIP.", p.FormatNick(name));
             } else {
                 Server.vip.Save();
-                p.Message(PlayerInfo.GetColoredName(p, name) + " %Sis no longer a VIP.");
+                p.Message("{0} %Sis no longer a VIP.", p.FormatNick(name));
                 
                 Player vip = PlayerInfo.FindExact(name);
                 if (vip != null) vip.Message("You are no longer a VIP!");

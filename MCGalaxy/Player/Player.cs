@@ -76,11 +76,11 @@ namespace MCGalaxy {
         public bool CanSee(Player target) { return CanSee(target, Rank); }
         /// <summary> Whether this player can see the given player, as if they were the given rank. </summary>
         public bool CanSee(Player target, LevelPermission plRank) {
-        	if (target == this || target == null) return true;
-        	
-        	bool canSee = !target.hidden || plRank >= target.hideRank;
-        	OnGettingCanSeeEvent.Call(this, plRank, ref canSee, target);
-        	return canSee;
+            if (target == this || target == null) return true;
+            
+            bool canSee = !target.hidden || plRank >= target.hideRank;
+            OnGettingCanSeeEvent.Call(this, plRank, ref canSee, target);
+            return canSee;
         }
         
         public override bool CanSeeEntity(Entity target) {
@@ -364,7 +364,21 @@ namespace MCGalaxy {
             }
         }
         
-                
+          
+        /// <summary> Formats a player name for displaying in chat. </summary>
+        public string FormatNick(string name) {
+            Player target = PlayerInfo.FindExact(name);
+            // TODO: select color from database?
+            if (target != null && CanSee(target)) return FormatNick(target);
+            return Group.GroupIn(name).Color + name.RemoveLastPlus();
+        }
+
+        /// <summary> Formats a player's name for displaying in chat. </summary>        
+        public string FormatNick(Player target) {
+            if (Ignores.Nicks) return target.color + target.truename;
+            return target.color + target.DisplayName;
+        }
+        
         /// <summary> Blocks calling thread until all 'new map loaded' packets have been sent. </summary>
         public void BlockUntilLoad(int sleep) {
             while (Loading) 

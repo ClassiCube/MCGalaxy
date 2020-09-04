@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
             
             string plName = PlayerInfo.FindMatchesPreferOnline(p, message);
             if (plName == null) return;
-            string colName = PlayerInfo.GetColoredName(p, plName);
+            string nick = p.FormatNick(plName);
             
             string tempData = Server.tempBans.FindData(plName);
             string tempBanner = null, tempReason = null;
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Info {
             
             bool permaBanned = Group.BannedRank.Players.Contains(plName);
             bool isBanned = permaBanned || tempExpiry >= DateTime.UtcNow;
-            string msg = colName;
+            string msg = nick;
             string ip = PlayerInfo.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Info {
             if (banner != null) {
                 DisplayDetails(p, banner, reason, time, permaBanned ? "Banned" : "Last banned");
             } else {
-                p.Message("No previous bans recorded for {0}%S.", colName);
+                p.Message("No previous bans recorded for {0}%S.", nick);
             }            
             Ban.GetUnbanData(plName, out banner, out reason, out time);
             DisplayDetails(p, banner, reason, time, permaBanned ? "Last unbanned" : "Unbanned");
@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Info {
         static string GetName(Player p, string user) {
             // ban/unban uses truename
             if (Server.Config.ClassicubeAccountPlus && !user.EndsWith("+")) user += "+";
-            return PlayerInfo.GetColoredName(p, user);
+            return p.FormatNick(user);
         }
         
         public override void Help(Player p) {

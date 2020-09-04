@@ -103,8 +103,7 @@ namespace MCGalaxy.Commands.Info {
             if (String.IsNullOrEmpty(realmOwner)) return;
             
             string[] owners = realmOwner.SplitComma();
-            p.Message("  This map is a personal realm of {0}",
-                           owners.Join(n => PlayerInfo.GetColoredName(p, n)));
+            p.Message("  This map is a personal realm of {0}", owners.Join(n => p.FormatNick(n)));
         }
         
         static void PrintRanks(Player p, AccessController access, string initial) {
@@ -117,8 +116,7 @@ namespace MCGalaxy.Commands.Info {
             if (!ZSGame.Instance.HasMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.SplitComma();
-            p.Message("Map authors: {0}",
-                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+            p.Message("Map authors: {0}", authors.Join(n => p.FormatNick(n)));
             int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;
             p.Message("&a{0} %Srounds played total, &a{1}% %Swin chance for humans.",
                            cfg.RoundsPlayed, winChance);

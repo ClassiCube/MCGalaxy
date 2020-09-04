@@ -95,8 +95,7 @@ namespace MCGalaxy.DB {
             Ban.GetBanData(name, out banner, out reason, out time, out prevRank);
             
             if (banner != null) {
-                p.Message("  Banned for {0} by {1}",
-                               reason, PlayerInfo.GetColoredName(p, banner));
+                p.Message("  Banned for {0} by {1}", reason, p.FormatNick(banner));
             } else {
                 p.Message("  Is banned");
             }

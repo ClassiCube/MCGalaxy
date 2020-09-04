@@ -203,7 +203,7 @@ namespace MCGalaxy {
                     if (!counted) { source.TotalMessagesSent++; counted = true; }
                 } else {
                     // don't send PM back to self
-                    if (scope == ChatScope.PM) { continue; }
+                    if (scope == ChatScope.PM) continue;
                 }
                 
                 pl.Message(UnescapeMessage(pl, source, msg));

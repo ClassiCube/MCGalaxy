@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Eco {
                 who.SetMoney(who.money + trans.Amount);
             }
             
-            trans.TargetFormatted = PlayerInfo.GetColoredName(p, trans.TargetName);
+            trans.TargetFormatted = p.FormatNick(trans.TargetName);
             trans.Type = EcoTransactionType.Payment;
             OnEcoTransactionEvent.Call(trans);
         }

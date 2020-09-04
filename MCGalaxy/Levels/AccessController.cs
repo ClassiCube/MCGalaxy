@@ -68,7 +68,7 @@ namespace MCGalaxy {
             
             string whitelist = "";
             if (Whitelisted.Count > 0) {
-                whitelist = "(and " + Whitelisted.Join(pl => PlayerInfo.GetColoredName(p, pl)) + "%S) ";
+                whitelist = "(and " + Whitelisted.Join(pl => p.FormatNick(pl)) + "%S) ";
             }
             
             if (access == AccessResult.BelowMinRank) {
@@ -89,7 +89,7 @@ namespace MCGalaxy {
             
             List<string> whitelist = Whitelisted;
             foreach (string name in whitelist) {
-                perms.Append(", " + PlayerInfo.GetColoredName(p, name));
+                perms.Append(", " + p.FormatNick(name));
             }
 
             List<string> blacklist = Blacklisted;
@@ -97,7 +97,7 @@ namespace MCGalaxy {
             
             perms.Append(" %S(except ");
             foreach (string name in blacklist) {
-                perms.Append(PlayerInfo.GetColoredName(p, name) + ", ");
+                perms.Append(p.FormatNick(name) + ", ");
             }
             perms.Remove(perms.Length - 2, 2);
             perms.Append("%S)");
@@ -123,7 +123,7 @@ namespace MCGalaxy {
         public bool Whitelist(Player p, LevelPermission plRank, Level lvl, string target) {
             if (!CheckList(p, plRank, target, true)) return false;
             if (Whitelisted.CaselessContains(target)) {
-                p.Message("{0} %Sis already whitelisted.", PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Sis already whitelisted.", p.FormatNick(target));
                 return true;
             }
             
@@ -139,7 +139,7 @@ namespace MCGalaxy {
         public bool Blacklist(Player p, LevelPermission plRank, Level lvl, string target) {
             if (!CheckList(p, plRank, target, false)) return false;
             if (Blacklisted.CaselessContains(target)) {
-                p.Message("{0} %Sis already blacklisted.", PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Sis already blacklisted.", p.FormatNick(target));
                 return true;
             }
             
@@ -159,7 +159,7 @@ namespace MCGalaxy {
         }
         
         public void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
-            string msg = PlayerInfo.GetColoredName(p, name);
+            string msg = p.FormatNick(name);
             if (removedFromOpposite) {
                 msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
             } else {
@@ -196,7 +196,7 @@ namespace MCGalaxy {
                 return false;
             } else if (Check(name, group.Permission) == AccessResult.Blacklisted) {
                 p.Message("{0} %Sis blacklisted from {1} {2}%S.",
-                               PlayerInfo.GetColoredName(p, name), ActionIng, ColoredName);
+                          p.FormatNick(name), ActionIng, ColoredName);
                 return false;
             }
             return true;

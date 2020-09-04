@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Eco {
                 who.SetMoney(money);
             }
             
-            trans.TargetFormatted = PlayerInfo.GetColoredName(p, trans.TargetName);
+            trans.TargetFormatted = p.FormatNick(trans.TargetName);
             trans.Type = EcoTransactionType.Take;
             OnEcoTransactionEvent.Call(trans);
         }

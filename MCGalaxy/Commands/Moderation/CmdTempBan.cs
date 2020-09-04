@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (group == null) return;
             
             if (Server.tempBans.Contains(target)) {
-                p.Message("{0} %Sis already temp-banned.", PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Sis already temp-banned.", p.FormatNick(target));
                 return;
             }
             

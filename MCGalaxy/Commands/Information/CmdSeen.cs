@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands.Info {
             TimeSpan firstDelta = DateTime.Now - first;
             TimeSpan lastDelta = DateTime.Now - last;
             
-            name = PlayerInfo.GetColoredName(p, name);
+            name = p.FormatNick(name);
             p.Message("{0} %Swas first seen at {1:H:mm} on {1:d} ({2} ago)", name, first, firstDelta.Shorten());
-            p.Message("{0} %Swas last seen at {1:H:mm} on {1:d} ({2} ago)", name, last, lastDelta.Shorten());
+            p.Message("{0} %Swas last seen at {1:H:mm} on {1:d} ({2} ago)",  name, last,  lastDelta.Shorten());
         }
         
         public override void Help(Player p) {

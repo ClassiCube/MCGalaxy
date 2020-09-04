@@ -213,7 +213,7 @@ namespace MCGalaxy.Commands.Maintenance {
 
         
         static void MessageDataChanged(Player p, string name, string type, string value) {
-            name = PlayerInfo.GetColoredName(p, name);
+            name = p.FormatNick(name);
             if (value.Length == 0) {
                 p.Message("The {1} data for &b{0} %Shas been reset.", name, type);
             } else {

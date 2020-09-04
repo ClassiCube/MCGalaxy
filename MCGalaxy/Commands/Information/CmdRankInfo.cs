@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Info {
             if (name == null) return;
             
             List<string> rankings = Server.RankInfo.FindAllExact(name);
-            string target = PlayerInfo.GetColoredName(p, name);
+            string target = p.FormatNick(name);
             
             if (rankings.Count == 0) {
                 p.Message("{0} %Shas no rankings.", target); return;
@@ -67,8 +67,7 @@ namespace MCGalaxy.Commands.Info {
                 p.Message("&aFrom {0} &ato {1} &a{2} ago", 
                                Group.GetColoredName(oldRank), Group.GetColoredName(newRank), 
                                delta.Shorten(true, false));
-                p.Message("&aBy %S{0}&a, reason: %S{1}", 
-                               PlayerInfo.GetColoredName(p, args[1]), reason);
+                p.Message("&aBy %S{0}&a, reason: %S{1}", p.FormatNick(args[1]), reason);
             }
         }
         

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (curRank == newRank) {
                 p.Message("{0} %Sis already ranked {1}",
-                          PlayerInfo.GetColoredName(p, target), curRank.ColoredName);
+                          p.FormatNick(target), curRank.ColoredName);
                 return;
             }
             if (!CanChangeRank(target, curRank, newRank, p, data, ref reason)) return;
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (newRank.Permission == curRank.Permission) {
                 p.Message("{0} %Sis already ranked {1}.",
-                          PlayerInfo.GetColoredName(p, name), curRank.ColoredName); return false;
+                          p.FormatNick(name), curRank.ColoredName); return false;
             }
             
             OnChangingGroupEvent.Call(name, curRank, newRank);

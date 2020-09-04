@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Info {
             
             p.Message("&a{0}:", stat.Title());
             for (int i = 0; i < stats.Count; i++) {
-                string name  = PlayerInfo.GetColoredName(p, stats[i][0]);
+                string name  = p.FormatNick(stats[i][0]);
                 string value = stat.Formatter(stats[i][1]);
                 p.Message("{0}) {1} %S- {2}", offset + (i + 1), name, value);
             }

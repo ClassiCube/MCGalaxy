@@ -73,8 +73,7 @@ namespace MCGalaxy.Commands.Moderation {
         internal static void Delete(Player p, string target, CommandData data) {
             string line = Server.tempRanks.FindData(target);
             if (line == null) {
-                p.Message("{0} %Whas not been assigned a temp rank.",
-                          PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Whas not been assigned a temp rank.", p.FormatNick(target));
                 return;
             }
             
@@ -96,8 +95,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void Info(Player p, string target) {
             string data = Server.tempRanks.FindData(target);
             if (data == null) {
-                p.Message("{0} %Whas not been assigned a temp rank.",
-                               PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Whas not been assigned a temp rank.", p.FormatNick(target));
             } else {
                 PrintTempRankInfo(p, target, data);
             }
@@ -128,8 +126,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             TimeSpan assignDelta = DateTime.UtcNow - assigned;
             TimeSpan expireDelta = expiry - DateTime.UtcNow;
-            p.Message("Temp rank information for {0}:",
-                           PlayerInfo.GetColoredName(p, name));
+            p.Message("Temp rank information for {0}:", p.FormatNick(name));
             p.Message("  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
                            oldRank, tempRank, assigner,
                            assignDelta.Shorten(), expireDelta.Shorten());

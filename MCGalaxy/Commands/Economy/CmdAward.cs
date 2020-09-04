@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Eco {
             string award = Matcher.FindAwards(p, args[1]);
             if (award == null) { p.Message("Use %T/Awards %Sfor a list of awards"); return; }
 
-            string displayName = PlayerInfo.GetColoredName(p, plName);
+            string displayName = p.FormatNick(plName);
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
                     Chat.MessageGlobal("{0} %Swas awarded: &b{1}", displayName, award);

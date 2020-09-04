@@ -31,12 +31,7 @@ namespace MCGalaxy {
             return target != null ? target.group : Group.GroupIn(name);
         }
         
-        public static string GetColoredName(Player p, string name) {
-            Player target = FindExact(name);
-            // TODO: select color from database?
-            return target != null && p.CanSee(target) ? target.ColoredName
-                : Group.GroupIn(name).Color + name.RemoveLastPlus();
-        }
+        public static string GetColoredName(Player p, string name) { return p.FormatNick(name); }
         
         /// <summary> Calculates default color for the given player. </summary>
         public static string DefaultColor(Player p) {
@@ -54,10 +49,9 @@ namespace MCGalaxy {
         public static int NonHiddenUniqueIPCount() {
             Player[] players = Online.Items;
             Dictionary<string, bool> uniqueIPs = new Dictionary<string, bool>();
+            
             foreach (Player p in players) {
-                if (!p.hidden) { 
-                    uniqueIPs[p.ip] = true;
-                }
+                if (!p.hidden) uniqueIPs[p.ip] = true;
             }
             return uniqueIPs.Count;
         }

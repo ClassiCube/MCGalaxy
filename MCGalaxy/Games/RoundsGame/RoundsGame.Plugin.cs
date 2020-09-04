@@ -79,8 +79,7 @@ namespace MCGalaxy.Games {
             string[] authors = Map.Config.Authors.SplitComma();
             if (authors.Length == 0) return;
             
-            p.Message("It was created by {0}",
-                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
+            p.Message("It was created by {0}", authors.Join(n => p.FormatNick(n)));
         }
         
         protected void HandleLevelUnload(Level lvl) {

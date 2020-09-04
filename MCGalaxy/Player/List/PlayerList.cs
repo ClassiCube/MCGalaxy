@@ -99,7 +99,7 @@ namespace MCGalaxy {
             } else {
                 p.Message("{0}:", group.Capitalize());
                 MultiPageOutput.Output(p, list,
-                                       (name) => PlayerInfo.GetColoredName(p, name),
+                                       (name) => p.FormatNick(name),
                                        listCmd, "players", modifier, false);
             }
         }

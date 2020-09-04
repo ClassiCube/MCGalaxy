@@ -60,8 +60,7 @@ namespace MCGalaxy.Commands.Info {
                 Help(p); return;
             }
 
-            p.Message("OpStats for {0} %Ssince {1}",
-                           PlayerInfo.GetColoredName(p, name), start);
+            p.Message("OpStats for {0} %Ssince {1}", p.FormatNick(name), start);
             
             int reviews = Count(start, end, name, "review", "LIKE 'next'");
             int ranks = Count(start, end, name, "setrank", "!=''");

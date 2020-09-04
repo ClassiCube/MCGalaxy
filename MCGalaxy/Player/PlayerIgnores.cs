@@ -87,7 +87,7 @@ namespace MCGalaxy {
         public void Output(Player p) {
             if (Names.Count > 0) {
                 p.Message("&cCurrently ignoring the following players:");
-                p.Message(Names.Join(n => PlayerInfo.GetColoredName(p, n)));
+                p.Message(Names.Join(n => p.FormatNick(n)));
             }
             if (IRCNicks.Count > 0) {
                 p.Message("&cCurrently ignoring the following IRC nicks:");

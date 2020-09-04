@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Moderation {
             obj.Deserialise(elems, info);            
             
             string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}%S/&b{2}" : "&b{2}";
-            string target = name == null ? ip : "of " + PlayerInfo.GetColoredName(p, name);
+            string target = name == null ? ip : "of " + p.FormatNick(name);
             p.Message("The IP {0} %Straces to: " + suffix, target, info.region, info.country);
         }
         

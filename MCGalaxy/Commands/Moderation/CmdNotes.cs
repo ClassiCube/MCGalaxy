@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (name == null) return;
             
             List<string> notes = Server.Notes.FindAllExact(name);
-            string target = PlayerInfo.GetColoredName(p, name);
+            string target = p.FormatNick(name);
             
             if (notes.Count == 0) {
                 p.Message("{0} %Shas no notes.", target); return;
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (args.Length > 5) long.TryParse(args[5], out duration);
                 
                 p.Message("{0} by {1} %Son {2}{3}{4}",
-                          Action(args[1]), PlayerInfo.GetColoredName(p, args[2]), args[3],
+                          Action(args[1]), p.FormatNick(args[2]), args[3],
                           duration      == 0 ? "" : " for " + TimeSpan.FromTicks(duration).Shorten(true),
                           reason.Length == 0 ? "" : " - "   + reason.Replace("%20", " "));
             }

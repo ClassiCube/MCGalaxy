@@ -232,7 +232,7 @@ namespace MCGalaxy.Games {
             foreach (BountyData b in bounties) {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
                 
-                string target = PlayerInfo.GetColoredName(p, b.Target);
+                string target = p.FormatNick(b.Target);
                 Map.Message("Bounty on " + target + " %Sis no longer active.");
                 Bounties.Remove(b);
                 

@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Eco {
                 target = who.name; money = who.money;
             }
 
-            string targetName = PlayerInfo.GetColoredName(p, target);
+            string targetName = p.FormatNick(target);
             p.Message("Economy stats for {0}%S:", targetName);
             p.Message(" Current balance: &f{0} &3{1}", money, Server.Config.Currency);
             

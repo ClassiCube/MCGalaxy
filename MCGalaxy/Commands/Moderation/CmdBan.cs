@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (group == null) return;
             
             if (group.Permission == LevelPermission.Banned) {
-                p.Message("{0} %Sis already banned.", PlayerInfo.GetColoredName(p, target));
+                p.Message("{0} %Sis already banned.", p.FormatNick(target));
                 return;
             }
 

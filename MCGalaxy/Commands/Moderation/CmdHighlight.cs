@@ -87,11 +87,11 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (op.found) {
                 p.Message("Now highlighting past &b{0} %Sfor {1}",
-                               delta.Shorten(true), PlayerInfo.GetColoredName(p, who));
+                           delta.Shorten(true), p.FormatNick(who));
                 p.Message("%WUse /reload to un-highlight");
             } else {
                 p.Message("No changes found by {1} %Sin the past &b{0}",
-                               delta.Shorten(true), PlayerInfo.GetColoredName(p, who));
+                           delta.Shorten(true), p.FormatNick(who));
             }
         }
 

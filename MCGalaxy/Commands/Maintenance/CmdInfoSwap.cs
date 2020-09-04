@@ -40,8 +40,7 @@ namespace MCGalaxy.Commands.Maintenance {
             SwapGroups(src, dst, srcGroup, dstGroup);
             
             p.Message("Successfully infoswapped {0} %Sand {1}",
-                      PlayerInfo.GetColoredName(p, src),
-                      PlayerInfo.GetColoredName(p, dst));
+                      p.FormatNick(src), p.FormatNick(dst));
         }
         
         static string GetName(Player p, string name) {

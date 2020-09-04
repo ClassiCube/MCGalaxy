@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Chatting {
                                     p.name, DateTime.Now.ToString(Database.DateFormat), message);
 
             Player receiver = PlayerInfo.FindExact(receiverName);
-            p.Message("Message sent to {0}%S.", PlayerInfo.GetColoredName(p, receiverName));
+            p.Message("Message sent to {0}%S.", p.FormatNick(receiverName));
             if (receiver == null) return;
             
             if (!Chat.Ignoring(receiver, p)) {
