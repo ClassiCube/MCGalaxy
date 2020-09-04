@@ -47,10 +47,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void Unfollow(Player p, CommandData data, bool stealth) {
-            Player who = PlayerInfo.FindExact(p.following);
-            p.Message("Stopped following ", who == null ? p.following : who.ColoredName);
+            p.Message("Stopped following " + p.FormatNick(p.following));
             p.following = "";
-            if (who != null) Entities.Spawn(p, who);
+            
+            Player target = PlayerInfo.FindExact(p.following);
+            if (target != null) Entities.Spawn(p, target);
             
             if (!p.hidden) return;
             if (!stealth) {

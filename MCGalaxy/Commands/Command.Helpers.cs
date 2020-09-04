@@ -63,9 +63,9 @@ namespace MCGalaxy {
             return false;
         }
         
-        protected internal static bool CheckRank(Player p, CommandData data, Player who, 
+        protected internal static bool CheckRank(Player p, CommandData data, Player target, 
                                                  string action, bool canAffectOwnRank) {
-            return p == who || CheckRank(p, data, who.Rank, action, canAffectOwnRank);
+            return p == target || CheckRank(p, data, target.Rank, action, canAffectOwnRank);
         }
         
         protected internal static bool CheckRank(Player p, CommandData data, LevelPermission rank, 

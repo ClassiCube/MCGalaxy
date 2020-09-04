@@ -33,20 +33,20 @@ namespace MCGalaxy.Commands.Misc {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can summon all players") }; }
         }
 
-        public override void Use(Player p, string target, CommandData data) {
-            if (target.Length == 0) { Help(p); return; }
+        public override void Use(Player p, string message, CommandData data) {
+            if (message.Length == 0) { Help(p); return; }
             
-            if (!target.CaselessEq("all")) {
-                SummonPlayer(p, target, data);
+            if (!message.CaselessEq("all")) {
+                SummonPlayer(p, message, data);
             } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
                 
-                foreach (Player pl in players) {
-                    if (pl.level == p.level && pl != p && data.Rank > pl.Rank) {
-                        pl.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                        pl.SendPos(Entities.SelfID, p.Pos, p.Rot);
-                        pl.Message("You were summoned by {0}%S.", pl.FormatNick(p));
+                foreach (Player target in players) {
+                    if (target.level == p.level && target != p && data.Rank > target.Rank) {
+                        target.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
+                        target.SendPos(Entities.SelfID, p.Pos, p.Rot);
+                        target.Message("You were summoned by {0}%S.", target.FormatNick(p));
                     }
                 }
                 Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
