@@ -25,9 +25,12 @@ namespace MCGalaxy {
         internal static string[] coreNames = new string[Block.Count];
         public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
-        public static bool ExistsGlobal(BlockID b) {
+        public static bool ExistsGlobal(BlockID b) { return ExistsFor(Player.Console, b); }
+        
+        public static bool ExistsFor(Player p, BlockID b) {
             if (b < Block.Count) return !Undefined(b);
-            if (b >= Block.Extended && b < Block.Extended + Block.CpeCount) return false;
+            
+            if (!p.IsSuper) return p.level.GetBlockDef(b) != null;
             return BlockDefinition.GlobalDefs[b] != null;
         }
         

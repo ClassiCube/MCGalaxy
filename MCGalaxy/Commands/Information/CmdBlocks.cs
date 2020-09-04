@@ -32,28 +32,25 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
-            string modifier = args.Length > 1 ? args[1] : "";            
+            string modifier = args.Length > 1 ? args[1] : "";
             string type = args[0];
             BlockID block;
             
             if (type.Length == 0 || type.CaselessEq("basic")) {
                 p.Message("Basic blocks: ");
-                MultiPageOutput.Output(p, BasicBlocks(), 
-                                       b => FormatBlockName(p, b),
-                                       "Blocks basic", "blocks", modifier, false);
+                OutputBlocks(p, "basic", modifier,
+                             b => !Block.IsPhysicsType(b));
             } else if (type.CaselessEq("all") || type.CaselessEq("complex")) {
                 p.Message("Complex blocks: ");
-                MultiPageOutput.Output(p, ComplexBlocks(), 
-                                       b => FormatBlockName(p, b),
-                                       "Blocks complex", "blocks", modifier, false);
+                OutputBlocks(p, "complex", modifier,
+                             b => Block.IsPhysicsType(b));
             } else if ((block = Block.Parse(p, type)) != Block.Invalid) {
                 OutputBlockInfo(p, block);
             } else if (Group.Find(type) != null) {
                 Group grp = Group.Find(type);
                 p.Message("Blocks which {0} %Scan place: ", grp.ColoredName);
-                MultiPageOutput.Output(p, RankBlocks(grp.Permission), 
-                                       b => FormatBlockName(p, b),
-                                       "Blocks " + type, "blocks", modifier, false);
+                OutputBlocks(p, type, modifier,
+                             b => grp.Blocks[b]);
             } else if (args.Length > 1) {
                 Help(p);
             } else {
@@ -61,10 +58,20 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
+        static void OutputBlocks(Player p, string type, string modifier, Predicate<BlockID> selector) {
+            List<BlockID> blocks = new List<BlockID>(Block.ExtendedCount);
+            for (BlockID b = 0; b < Block.ExtendedCount; b++) {
+                if (Block.ExistsFor(p, b) && selector(b)) blocks.Add(b);
+            }
+
+            MultiPageOutput.Output(p, blocks, b => FormatBlockName(p, b),
+                                   "Blocks " + type, "blocks", modifier, false);
+        }
+        
         static List<BlockID> BasicBlocks() {
             List<BlockID> blocks = new List<BlockID>(Block.CpeCount);
-            for (BlockID block = Block.Air; block < Block.CpeCount; block++) { 
-                blocks.Add(block); 
+            for (BlockID block = Block.Air; block < Block.CpeCount; block++) {
+                blocks.Add(block);
             }
             return blocks;
         }
