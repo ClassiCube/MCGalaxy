@@ -27,16 +27,16 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces();
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            if (!CheckRank(p, data, who, "hide", false)) return;
+            Player target = PlayerInfo.FindMatches(p, args[0]);
+            if (target == null) return;
+            if (!CheckRank(p, data, target, "hide", false)) return;
             
             bool own = args.Length >= 2 && args[1].CaselessEq("myrank");
-            if (!own) data.Rank = who.Rank;
+            if (!own) data.Rank = target.Rank;
             
-            Command.Find("Hide").Use(who, "", data);
+            Command.Find("Hide").Use(target, "", data);
             p.Message("Hidden {0} %Sfrom players ranked below {1}",
-                      who.ColoredName, Group.GetColoredName(data.Rank));
+                      p.FormatNick(target), Group.GetColoredName(data.Rank));
         }
 
         public override void Help(Player p) {

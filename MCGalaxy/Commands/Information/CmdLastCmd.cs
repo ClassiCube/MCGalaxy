@@ -37,14 +37,14 @@ namespace MCGalaxy.Commands.Info {
             }
         }
         
-        static void ShowLastCommand(Player p, Player who) {
-            if (who.lastCMD.Length == 0) {
-                p.Message("{0} %Shas not used any commands yet.", 
-                               who.ColoredName);
+        static void ShowLastCommand(Player p, Player target) {
+            if (target.lastCMD.Length == 0) {
+        		p.Message("{0} %Shas not used any commands yet.", 
+        		          p.FormatNick(target));
             } else {
-                TimeSpan delta = DateTime.UtcNow - who.lastCmdTime;
+                TimeSpan delta = DateTime.UtcNow - target.lastCmdTime;
                 p.Message("{0} %Slast used \"{1}\" {2} ago", 
-                               who.ColoredName, who.lastCMD, delta.Shorten(true));
+                          p.FormatNick(target), target.lastCMD, delta.Shorten(true));
             }
         }
         

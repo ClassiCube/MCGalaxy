@@ -40,16 +40,15 @@ namespace MCGalaxy.Commands.Misc {
             ShowPlayerMessage(p, who);
         }
         
-        static void ShowPlayerMessage(Player p, Player who) {
-            string msg = who.invincible ? "now invincible" : "no longer invincible";
-            if (p == who)
-                p.Message("You are {0}", msg);
-            else
-                p.Message("{0} %Sis {1}.", who.ColoredName, msg);
-            
-            string globalMsg = who.invincible ? Server.Config.InvincibleMessage : "has stopped being invincible";
-            if (Server.Config.ShowInvincibleMessage && !who.hidden) {
-                Chat.MessageFrom(who, "λNICK %S" + globalMsg);
+        static void ShowPlayerMessage(Player p, Player target) {
+            string msg = target.invincible ? "now invincible" : "no longer invincible";
+            if (p == target) p.Message("You are {0}", msg);
+
+            string globalMsg = target.invincible ? Server.Config.InvincibleMessage : "has stopped being invincible";
+            if (Server.Config.ShowInvincibleMessage && !target.hidden) {
+                Chat.MessageFrom(target, "λNICK %S" + globalMsg);
+            } else if (p != target) {
+                p.Message("{0} %Sis {1}.", p.FormatNick(target), msg);
             }
         }
         
