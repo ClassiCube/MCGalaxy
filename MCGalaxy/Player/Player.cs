@@ -351,12 +351,6 @@ namespace MCGalaxy {
             return true;
         }
         
-        /// <summary> Blocks calling thread until all 'new map loaded' packets have been sent. </summary>
-        public void BlockUntilLoad(int sleep) {
-            while (Loading) 
-                Thread.Sleep(sleep);
-        }
-        
         /// <summary> Checks if player is currently unverified, and if so, sends a message informing them </summary>
         public void CheckIsUnverified() {
             if (verifiedPass) return;
@@ -368,6 +362,13 @@ namespace MCGalaxy {
             } else {
                 Message("%WPlease complete admin verification with %T/Pass [password]!");
             }
+        }
+        
+                
+        /// <summary> Blocks calling thread until all 'new map loaded' packets have been sent. </summary>
+        public void BlockUntilLoad(int sleep) {
+            while (Loading) 
+                Thread.Sleep(sleep);
         }
         
         /// <summary> Sends a block change packet to the user containing the current block at the given coordinates. </summary>

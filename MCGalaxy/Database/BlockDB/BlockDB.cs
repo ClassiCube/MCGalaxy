@@ -44,7 +44,8 @@ namespace MCGalaxy.DB {
         public readonly IReaderWriterLock Locker;
         
         public BlockDB(Level lvl) {
-            MapName = lvl.name;
+            MapName       = lvl.name;
+            Cache.Enabled = lvl.Config.UseBlockDB; 
             ReadDimensions();
             Locker = new IReaderWriterLock();
             

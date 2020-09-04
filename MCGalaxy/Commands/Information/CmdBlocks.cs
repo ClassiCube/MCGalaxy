@@ -125,9 +125,9 @@ namespace MCGalaxy.Commands.Info {
             if (Block.NeedRestart(b)) p.Message("  The block's physics will auto-start");
             
             if (Physics(scope, b)) {
-                p.Message("  Affects physics in some way"); //AFFECT!
+                p.Message("  Affects physics in some way");
             } else {
-                p.Message("  Does not affect physics in any way"); //It's AFFECT!
+                p.Message("  Does not affect physics in any way");
             }
 
             if (Block.AllowBreak(b))     p.Message("  Anybody can activate this block");

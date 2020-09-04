@@ -73,13 +73,10 @@ namespace MCGalaxy {
                 case Opcode.Handshake:
                     HandleLogin(buffer, offset); break;
                 case Opcode.SetBlockClient:
-                    if (!loggedIn) break;
                     HandleBlockchange(buffer, offset); break;
                 case Opcode.EntityTeleport:
-                    if (!loggedIn) break;
                     HandleMovement(buffer, offset); break;
                 case Opcode.Message:
-                    if (!loggedIn) break;
                     HandleChat(buffer, offset); break;
                 case Opcode.CpeExtInfo:
                     HandleExtInfo(buffer, offset); break;

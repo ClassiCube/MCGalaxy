@@ -220,7 +220,8 @@ namespace MCGalaxy {
         }
         
         void HandleMovement(byte[] buffer, int offset) {
-            if (!loggedIn || trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
+            if (!loggedIn) return;
+            if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             if (Supports(CpeExt.HeldBlock)) {
                 RawHeldBlock = ReadBlock(buffer, offset + 1);
                 if (hasExtBlocks) offset++; // corret offset for position later

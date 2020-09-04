@@ -187,9 +187,8 @@ namespace MCGalaxy.Commands {
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
         public static bool GetBlockIfAllowed(Player p, string input, out BlockID block, bool allowSkip = false) {
-            if (!GetBlock(p, input, out block, allowSkip)) return false;
-            if (allowSkip && block == Block.Invalid) return true;
-            return IsBlockAllowed(p, "draw with", block);
+            return GetBlock(p, input, out block, allowSkip) 
+                && IsBlockAllowed(p, "draw with", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>

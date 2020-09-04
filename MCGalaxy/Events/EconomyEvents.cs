@@ -30,7 +30,7 @@ namespace MCGalaxy.Events.EconomyEvents {
         }
     }
     
-    public sealed class EcoTransaction {        
+    public sealed class EcoTransaction {
         public Player Source;
         public string TargetName, TargetFormatted;
         
