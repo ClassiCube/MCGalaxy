@@ -68,32 +68,6 @@ namespace MCGalaxy.Commands.Info {
                                    "Blocks " + type, "blocks", modifier, false);
         }
         
-        static List<BlockID> BasicBlocks() {
-            List<BlockID> blocks = new List<BlockID>(Block.CpeCount);
-            for (BlockID block = Block.Air; block < Block.CpeCount; block++) {
-                blocks.Add(block);
-            }
-            return blocks;
-        }
-        
-        static List<BlockID> ComplexBlocks() {
-            List<BlockID> blocks = new List<BlockID>(Block.Count);
-            for (BlockID block = Block.CpeCount; block < Block.Count; block++) {
-                if (Block.ExistsGlobal(block)) blocks.Add(block);
-            }
-            return blocks;
-        }
-        
-        static List<BlockID> RankBlocks(LevelPermission perm) {
-            List<BlockID> blocks = new List<BlockID>(Block.Count);
-            foreach (BlockPerms perms in BlockPerms.List) {
-                if (!perms.UsableBy(perm)) continue;
-                if (!Block.ExistsGlobal(perms.ID)) continue;
-                blocks.Add(perms.ID);
-            }
-            return blocks;
-        }
-        
         internal static string FormatBlockName(Player p, BlockID block) {
             BlockPerms perms = BlockPerms.Find(block);
             return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
