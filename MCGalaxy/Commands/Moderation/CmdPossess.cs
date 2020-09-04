@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Entities.Despawn(p, target);
                 target.canBuild = false;
-                p.Message("Successfully possessed {0}%S.", target.ColoredName);
+                p.Message("Successfully possessed {0}%S.", p.FormatNick(target));
             }
         }
 

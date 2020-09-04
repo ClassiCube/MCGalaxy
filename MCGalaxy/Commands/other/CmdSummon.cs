@@ -57,25 +57,25 @@ namespace MCGalaxy.Commands.Misc {
             string[] args = message.SplitSpaces();
             bool confirmed = args.Length > 1 && args[1].CaselessEq("confirm");
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
-            if (!CheckRank(p, data, who, "summon", true)) return;
+            Player target = PlayerInfo.FindMatches(p, args[0]);
+            if (target == null) return;
+            if (!CheckRank(p, data, target, "summon", true)) return;
             
-            if (p.level != who.level) {
-                if (!CheckVisitPerm(p, who, confirmed)) return;
-                p.Message(who.ColoredName + " %Sis in a different level, moving them..");
+            if (p.level != target.level) {
+                if (!CheckVisitPerm(p, target, confirmed)) return;
+                p.Message("{0} %Sis in a different level, moving them..", p.FormatNick(target));
                 
-                who.summonedMap = p.level.name;
-                PlayerActions.ChangeMap(who, p.level);
-                who.summonedMap = null;
+                target.summonedMap = p.level.name;
+                PlayerActions.ChangeMap(target, p.level);
+                target.summonedMap = null;
                 p.BlockUntilLoad(10); // wait for them to load
             }
 
-            if (p.level != who.level) return; // in case they were unable to move to this level
+            if (p.level != target.level) return; // in case they were unable to move to this level
             
-            who.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-            who.SendPos(Entities.SelfID, p.Pos, p.Rot);
-            who.Message("You were summoned by " + p.ColoredName + "%S.");
+            target.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
+            target.SendPos(Entities.SelfID, p.Pos, p.Rot);
+            target.Message("You were summoned by {0}%S.", target.FormatNick(p));
         }
         
         static bool CheckVisitPerm(Player p, Player target, bool confirmed) {

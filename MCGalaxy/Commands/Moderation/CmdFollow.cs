@@ -67,7 +67,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CheckRank(p, data, target, "follow", false)) return;
             
             if (target.following.Length > 0) { 
-                p.Message("{0} %Sis already following {1}", p.FormatNick(target), target.following); return; 
+                p.Message("{0} %Sis already following {1}", 
+            	          p.FormatNick(target), p.FormatNick(target.following)); return;
             }
 
             if (!p.hidden) Command.Find("Hide").Use(p, "", data);

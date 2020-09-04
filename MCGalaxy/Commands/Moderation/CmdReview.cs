@@ -134,7 +134,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Command.Find("TP").Use(p, target.name, data);
-            p.Message("You have been teleported to " + user);
+            p.Message("You have been teleported to " + p.FormatNick(target));
             target.Message("Your review request has been answered by {0}.", target.FormatNick(p));
             AnnounceQueueChanged();
         }
