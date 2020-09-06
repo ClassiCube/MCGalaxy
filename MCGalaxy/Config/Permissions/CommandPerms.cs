@@ -98,7 +98,11 @@ namespace MCGalaxy.Commands {
         /// <summary> Loads list of command permissions from disc. </summary>
         public static void Load() {
             lock (ioLock) LoadCore();
-            
+            ApplyChanges();
+        }
+
+        /// <summary> Applies new command permissions to server state. </summary>
+        public static void ApplyChanges() {
             foreach (Group grp in Group.GroupList) {
                 grp.SetUsableCommands();
             }

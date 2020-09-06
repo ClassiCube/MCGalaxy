@@ -90,7 +90,11 @@ namespace MCGalaxy.Blocks {
         /// <summary> Loads list of block permissions from disc. </summary>
         public static void Load() {
             lock (ioLock) LoadCore();
-            
+            ApplyChanges();
+        }
+        
+        /// <summary> Applies new block permissions to server state. </summary>
+        public static void ApplyChanges() {
             foreach (Group grp in Group.GroupList) {
                 grp.SetUsableBlocks();
             }

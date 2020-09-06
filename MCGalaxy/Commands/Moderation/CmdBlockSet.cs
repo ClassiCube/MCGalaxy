@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {
             BlockPerms.Save();
-            BlockPerms.Load();
+            BlockPerms.ApplyChanges();
             
             BlockID block = ((BlockPerms)perms).ID;
             if (!Block.IsPhysicsType(block)) {

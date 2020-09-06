@@ -25,14 +25,14 @@ namespace MCGalaxy {
     public static class PlayerActions {
         
         public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
-        public static bool ChangeMap(Player p, Level lvl) { return ChangeMap(p, lvl, null); }
+        public static bool ChangeMap(Player p, Level lvl)   { return ChangeMap(p, lvl, null); }
         
         static bool ChangeMap(Player p, Level lvl, string name) {
             if (Interlocked.CompareExchange(ref p.UsingGoto, 1, 0) == 1) {
                 p.Message("Cannot use /goto, already joining a map."); return false;
             }
             Level oldLevel = p.level;
-            bool didJoin = false;
+            bool didJoin   = false;
             
             try {
                 didJoin = name == null ? GotoLevel(p, lvl) : GotoMap(p, name);

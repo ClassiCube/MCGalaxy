@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Moderation {
         protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {
             if (perms is CommandPerms) {
                 CommandPerms.Save();
-                CommandPerms.Load();
+                CommandPerms.ApplyChanges();
                 Announce(p, perms.ItemName + msg);
             } else {
                 CommandExtraPerms.Save();
