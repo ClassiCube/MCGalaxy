@@ -21,23 +21,20 @@ namespace MCGalaxy {
 
     public static class LineWrapper {
         
-        static string FinishLine(char[] line, int len, out char prevColCode) {
-            prevColCode = '\0';
-            // find last colour code in the line
+        static char LastColCode(char[] line, int len) {
             for (int i = len - 2; i >= 0; i--) {
                 if (line[i] != '&') continue;
                 
                 char col = line[i + 1];
-                if (Colors.Map(ref col)) { prevColCode = col; break; }
+                if (Colors.Map(ref col)) return col;
             }
-            return new string(line, 0, len);
+            return '\0';
         }
         
-        // TODO: Optimize this using a StringBuilder
+        // TODO: Add outputLine argument, instead of returning string list
         public static List<string> Wordwrap(string message) {
             List<string> lines = new List<string>();
-            message = Regex.Replace(message, @"(&[0-9a-f])+(&[0-9a-f])", "$2");
-            message = Regex.Replace(message, @"(&[0-9a-f])+$", "");
+            message = CleanupColorCodes(message);
 
             const int limit = NetUtils.StringSize; // max characters on one line
             const int maxLineLen = limit + 2;      // +2 in case text is longer than one line
@@ -76,7 +73,7 @@ namespace MCGalaxy {
                 
                 // No need for any more linewrapping
                 if (length < limit) {
-                    lines.Add(FinishLine(line, length, out prevColCode)); 
+                    lines.Add(new string(line, 0, length));
                     break;
                 }
                 multilined = true;
@@ -100,14 +97,16 @@ namespace MCGalaxy {
                 if (line[length - 1] == '&') {
                     length--; offset--;
                 }
-                lines.Add(FinishLine(line, length, out prevColCode));  
+                
+                prevColCode = LastColCode(line, length);
+                lines.Add(new string(line, 0, length));
             }
             return lines;
         }
         
         static bool ValidColor(char c) { return Colors.IsStandard(c) || Colors.IsDefined(c); }
         
-        static string CleanupColorCodes(string value) {
+        public static string CleanupColorCodes(string value) {
             if (value.IndexOf('&') == -1) return value;
             StringBuilder sb = new StringBuilder(value.Length);
             int lastIdx  = -1;
