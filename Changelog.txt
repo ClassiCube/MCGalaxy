@@ -1,3 +1,22 @@
+v 1.9.2.5
+Improved: Make Y in /write 3 blocks wide instead of 5
+Fixed: Being able to use /team to spam (X was muted) messages
+Removed: Chatrooms due to very little use, and team chat/map only chat mostly replaces this
+Fixed: Being able to see hidden players in /alive and /infected in ZS
+Fixed: Updating not working when running mono through wine
+Fixed: .cw maps with dimensions between 32768-65535 not importing
+Fixed: Command line input not working in CLI when running through wine on mono
+Improved: Reduced memory usage when importing cw/mclevel maps
+Fixed: main level generated when main level doesn't exist i.e. first time you start the server) not saving changes to /b
+Improved: Confirmation warning popup if the user tries to disable name verify names
+Improved: Make output of many more commands account for whether user ignores custom nicks
+Fixed: /follow not showing player name with 'stopped following' message
+Fixed: /gen not showing completion message when used from map with level-only chat
+Fixed: /inv [player] showing message twice
+Improved: /blocks also include custom blocks
+Fixed: /search blocks not including classic/CPE blocks in search list
+Improved: Don't reload files from disc when doing blockset/cmdset
+
 v 1.9.2.4
 Fixed: Custom models plugin not working
 Fixed: Doing portal/mb show on map without any portals/mbs adding entry to error log

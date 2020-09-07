@@ -40,7 +40,7 @@ namespace MCGalaxy {
         public static PlayerMetaList Notes = new PlayerMetaList("text/notes.txt");
         
         /// <summary> *** DO NOT USE THIS! *** Use VersionString, as this field is a constant and is inlined if used. </summary>
-        public const string InternalVersion = "1.9.2.4";
+        public const string InternalVersion = "1.9.2.5";
         public static string Version { get { return InternalVersion; } }
         
         public static string SoftwareName = "MCGalaxy";
