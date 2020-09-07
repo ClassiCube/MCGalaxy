@@ -125,12 +125,12 @@ namespace MCGalaxy.Eco {
         }
         
         public static string AwardAmount(string playerName) {
-            int allAwards = AwardsList.Count;
-            List<string> awards = GetPlayerAwards(playerName);
-            if (awards == null) return "&f0/" + allAwards + " (0%)";
+            int total = AwardsList.Count;
+            List<string> awards = GetCurrentPlayerAwards(playerName);
+            if (awards == null || total == 0) return "&f0/" + total + " (0%)";
             
-            double percentage = Math.Round(((double)awards.Count / allAwards) * 100, 2);
-            return "&f" + awards.Count + "/" + allAwards + " (" + percentage + "%)";
+            double percentHas = Math.Round(((double)awards.Count / total) * 100, 2);
+            return "&f" + awards.Count + "/" + total + " (" + percentHas + "%)";
         }
         
         public static List<string> GetPlayerAwards(string name) {
@@ -138,6 +138,17 @@ namespace MCGalaxy.Eco {
                 if (pl.Name.CaselessEq(name)) return pl.Awards;
             }
             return null;
+        }
+        
+        public static List<string> GetCurrentPlayerAwards(string name) {
+            List<string> awards = GetPlayerAwards(name);
+            if (awards == null) return null;
+            
+            // Some awards may have been deleted
+            for (int i = awards.Count - 1; i >= 0; i--) {
+                if (!Exists(awards[i])) awards.RemoveAt(i);
+            }
+            return awards;
         }
         #endregion
         
