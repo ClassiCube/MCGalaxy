@@ -115,8 +115,11 @@ namespace MCGalaxy.Commands.World {
                 if (!access.Whitelisted.CaselessContains(p.name)) {
                     access.Whitelist(Player.Console, LevelPermission.Nobody, p.level, p.name);
                 }
+                
+                if (value.Length > 0) value = p.level.name + " " + value;
                 UseCommand(p, "PerVisit", value);
             } else if (cmd == "PERBUILD") {
+                if (value.Length > 0) value = p.level.name + " " + value;
                 UseCommand(p, "PerBuild", value);
             } else if (cmd == "TEXTURE" || cmd == "TEXTUREZIP" || cmd == "TEXTUREPACK") {
                 if (value.Length == 0) value = "normal";

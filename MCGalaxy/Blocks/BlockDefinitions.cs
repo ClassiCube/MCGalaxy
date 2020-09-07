@@ -127,9 +127,13 @@ namespace MCGalaxy {
         }
         
         public static void Save(bool global, Level lvl) {
-            if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             string path = global ? GlobalPath : Paths.MapBlockDefs(lvl.MapName);
             BlockDefinition[] defs = global ? GlobalDefs : lvl.CustomBlockDefs;
+            Save(global, defs, path);
+        }
+        
+        public static void Save(bool global, BlockDefinition[] defs, string path) {
+            if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             
             using (StreamWriter w = new StreamWriter(path)) {
                 w.WriteLine("[");
