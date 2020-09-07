@@ -21,78 +21,86 @@ namespace MCGalaxy {
 
     public static class LineWrapper {
         
+        static string FinishLine(char[] line, int len, out char prevColCode) {
+            prevColCode = '\0';
+            // find last colour code in the line
+            for (int i = len - 2; i >= 0; i--) {
+                if (line[i] != '&') continue;
+                
+                char col = line[i + 1];
+                if (Colors.Map(ref col)) { prevColCode = col; break; }
+            }
+            return new string(line, 0, len);
+        }
+        
         // TODO: Optimize this using a StringBuilder
         public static List<string> Wordwrap(string message) {
             List<string> lines = new List<string>();
             message = Regex.Replace(message, @"(&[0-9a-f])+(&[0-9a-f])", "$2");
             message = Regex.Replace(message, @"(&[0-9a-f])+$", "");
 
-            int limit = NetUtils.StringSize; string color = "";
-            while (message.Length > 0) {
-
-                if (lines.Count > 0 ) {
-                    if (message[0] == '&')
-                        message = "> " + message.Trim();
-                    else
-                        message = "> " + color + message.Trim();
-                }
-
-                if (message.IndexOf("&") == message.IndexOf("&", message.IndexOf("&") + 1) - 2)
-                    message = message.Remove(message.IndexOf("&"), 2);
-
-                if (message.Length <= limit) { lines.Add(message); break; }
-                for (int i = limit - 1; i > limit - 20; i--)
-                    if (message[i] == ' ') {
-                        lines.Add(message.Substring(0, i));
-                        goto Next;
-                    }
-
-            retry:
-                if (message.Length == 0 || limit == 0) { return lines; }
-
-                try {
-                    if (message.Substring(limit - 2, 1) == "&" || message.Substring(limit - 1, 1) == "&") {
-                        message = message.Remove(limit - 2, 1);
-                        limit -= 2;
-                        goto retry;
-                    }
-                    else if (message[limit - 1] < 32 || message[limit - 1] > 127) {
-                        message = message.Remove(limit - 1, 1);
-                        limit -= 1;
-                        //goto retry;
+            const int limit = NetUtils.StringSize; // max characters on one line
+            const int maxLineLen = limit + 2;      // +2 in case text is longer than one line
+            char[] line = new char[maxLineLen];
+            
+            bool multilined  = false;
+            char prevColCode = '\0';
+            int trim;
+            // TODO: How does < 32 or > 127 behave with original java client
+            
+            for (int offset = 0; offset < message.Length; ) {
+                int length = 0;
+                // "Line1", "> Line2", "> Line3"
+                if (multilined) {
+                    line[0] = '>'; line[1] = ' ';
+                    length += 2;
+                    
+                    // Make sure split up lines have the right colour
+                    if (prevColCode != '\0') {
+                        line[2] = '&'; line[3] = prevColCode;
+                        length += 2;
                     }
                 }
-                catch { return lines; }
-                lines.Add(message.Substring(0, limit));
-
-            Next: message = message.Substring(lines[lines.Count - 1].Length);
-                if (lines.Count == 1) limit = 60;
-
-                int index = lines[lines.Count - 1].LastIndexOf('&');
-                if (index != -1) {
-                    if (index < lines[lines.Count - 1].Length - 1) {
-                        char next = lines[lines.Count - 1][index + 1];
-                        if (Colors.Map(ref next)) color = "&" + next;
-                        if (index == lines[lines.Count - 1].Length - 1) {
-                            lines[lines.Count - 1] = lines[lines.Count - 1].Substring(0, lines[lines.Count - 1].Length - 2);
-                        }
-                    }
-                    else if (message.Length != 0) {
-                        char next = message[0];
-                        if (Colors.Map(ref next)) color = "&" + next;
-                        lines[lines.Count - 1] = lines[lines.Count - 1].Substring(0, lines[lines.Count - 1].Length - 1);
-                        message = message.Substring(1);
+                
+                // Copy across text up to current line length
+                // Also trim the line of starting spaces
+                bool foundStart = false;
+                for (; length < maxLineLen && offset < message.Length;) {
+                    char c = message[offset++];
+                    
+                    if (c != ' ' || foundStart) {
+                        line[length++] = c;
+                        foundStart      = true;
                     }
                 }
-            }
-            for (int i = 0; i < lines.Count; i++) // Gotta do it the old fashioned way...
-            {
-                char[] temp = lines[i].ToCharArray();
-                if (temp[temp.Length - 2] == '&') {
-                    temp[temp.Length - 1] = ' ';
-                    temp[temp.Length - 2] = ' ';
+                
+                // No need for any more linewrapping
+                if (length < limit) {
+                    lines.Add(FinishLine(line, length, out prevColCode)); 
+                    break;
                 }
-                lines[i] = new string(temp);
+                multilined = true;
+                
+                // Try to split up this line nicely
+                for (int i = limit - 1; i > limit - 20; i--) {
+                    if (line[i] != ' ') continue;
+                    
+                    trim = length - i;
+                    length -= trim; offset -= trim;
+                    break;
+                }
+                
+                // Couldn't split line up? Deal with leftover characters next line
+                if (length > limit) {
+                    trim = length - limit;
+                    length -= trim; offset -= trim;    
+                }
+                
+                // Don't split up line in middle of colour code
+                if (line[length - 1] == '&') {
+                    length--; offset--;
+                }
+                lines.Add(FinishLine(line, length, out prevColCode));  
             }
             return lines;
         }
