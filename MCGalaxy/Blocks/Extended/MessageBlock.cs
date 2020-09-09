@@ -103,15 +103,40 @@ namespace MCGalaxy.Blocks.Extended {
             }
         }
 
-
+        
+        /// <summary> Returns whether a Messages table for the given map exists in the DB. </summary>
+        public static bool ExistsInDB(string map) { return Database.TableExists("Messages" + map); }
+        
+        /// <summary> Returns the coordinates for all message blocks in the given map. </summary>
         public static List<Vec3U16> GetAllCoords(string map) {
             List<Vec3U16> coords = new List<Vec3U16>();
-            if (!Database.TableExists("Messages" + map)) return coords;
+            if (!ExistsInDB(map)) return coords;
                         
             Database.Backend.ReadRows("Messages" + map, "X,Y,Z", coords, Portal.ReadCoords);
             return coords;
         }
         
+        /// <summary> Deletes all message blocks for the given map. </summary>
+        public static void DeleteAll(string map) {
+            if (!ExistsInDB(map)) return;
+            Database.Backend.DeleteTable("Messages" + map);
+        }
+        
+        /// <summary> Copies all message blocks from the given map to another map. </summary>
+        public static void CopyAll(string src, string dst) {
+            if (!ExistsInDB(src)) return;
+            Database.Backend.CreateTable("Messages" + dst, LevelDB.createMessages);
+            Database.Backend.CopyAllRows("Messages" + src, "Messages" + dst);
+        }
+        
+        /// <summary> Moves all message blocks from the given map to another map. </summary>
+        public static void MoveAll(string src, string dst) {
+            if (!ExistsInDB(src)) return;
+            Database.Backend.RenameTable("Messages" + src, "Messages" + dst);
+        }
+        
+        
+        /// <summary> Returns the text for the given message block in the given map. </summary>
         public static string Get(string map, ushort x, ushort y, ushort z) {
             string msg = Database.ReadString("Messages" + map, "Message",
                                              "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
@@ -122,11 +147,13 @@ namespace MCGalaxy.Blocks.Extended {
             return msg;
         }
         
+        /// <summary> Deletes the given message block from the given map. </summary>
         public static void Delete(string map, ushort x, ushort y, ushort z) {
             Database.Backend.DeleteRows("Messages" + map,
                                         "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
         }
         
+        /// <summary> Creates or updates the given message block in the given map. </summary>
         public static void Set(string map, ushort x, ushort y, ushort z, string contents) {
             contents = contents.Replace("'", "\\'");
             contents = Colors.Escape(contents);

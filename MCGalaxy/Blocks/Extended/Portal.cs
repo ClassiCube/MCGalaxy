@@ -82,22 +82,51 @@ namespace MCGalaxy.Blocks.Extended {
         }
         
         
-        internal static List<Vec3U16> GetAllCoords(string map) {
+        /// <summary> Returns whether a Portals table for the given map exists in the DB. </summary>
+        public static bool ExistsInDB(string map) { return Database.TableExists("Portals" + map); }
+        
+        /// <summary> Returns the coordinates for all portals in the given map. </summary>
+        public static List<Vec3U16> GetAllCoords(string map) {
             List<Vec3U16> coords = new List<Vec3U16>();
-            if (!Database.TableExists("Portals" + map)) return coords;
+            if (!ExistsInDB(map)) return coords;
             
             Database.Backend.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
             return coords;
         }
 
+        /// <summary> Returns the exit details associated with each portal in the given map. </summary>
         public static List<PortalExit> GetAllExits(string map) {
             List<PortalExit> exits = new List<PortalExit>();
-            if (!Database.TableExists("Portals" + map)) return exits;
+            if (!ExistsInDB(map)) return exits;
             
             Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", exits, ReadAllExits);
             return exits;
         }
         
+        /// <summary> Deletes all portals for the given map. </summary>
+        public static void DeleteAll(string map) {
+            if (!ExistsInDB(map)) return;
+            Database.Backend.DeleteTable("Portals" + map);
+        }
+        
+        /// <summary> Copies all portals from the given map to another map. </summary>
+        public static void CopyAll(string src, string dst) {
+            if (!ExistsInDB(src)) return;
+            Database.Backend.CreateTable("Portals" + dst, LevelDB.createPortals);
+            Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);
+            // Fixup portal exists that go to the same map
+            Database.Backend.UpdateRows("Portals" + dst, "ExitMap=@1", "WHERE ExitMap=@0", src, dst);
+        }
+        
+        /// <summary> Moves all portals from the given map to another map. </summary>
+        public static void MoveAll(string src, string dst) {
+            if (!ExistsInDB(src)) return;
+            Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
+        }
+        
+        
+        /// <summary> Returns the exit details for the given portal in the given map. </summary>
+        /// <remarks> Returns null if the given portal does not actually exist. </remarks>
         public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
             object raw = Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
                                                    null, ReadExit,
@@ -105,12 +134,14 @@ namespace MCGalaxy.Blocks.Extended {
             return (PortalExit)raw;
         }
         
+        /// <summary> Deletes the given portal from the given map. </summary>
         public static void Delete(string map, ushort x, ushort y, ushort z) {
             Database.Backend.DeleteRows("Portals" + map,
                                         "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
         }
         
-        public static void Set(string map, ushort x, ushort y, ushort z, 
+        /// <summary> Creates or updates the given portal in the given map. </summary>
+        public static void Set(string map, ushort x, ushort y, ushort z,
                                ushort exitX, ushort exitY, ushort exitZ, string exitMap) {
             Database.Backend.CreateTable("Portals" + map, LevelDB.createPortals);
             int count = Database.CountRows("Portals" + map,

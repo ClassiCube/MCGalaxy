@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Blocks;
+using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
 using MCGalaxy.Events.LevelEvents;
@@ -101,14 +102,9 @@ namespace MCGalaxy {
             lock (srcLocker)
                 lock (dstLocker)
             {
-                
-                if (Database.TableExists("Portals" + src)) {
-                    Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
-                }
-                
-                if (Database.TableExists("Messages" + src)) {
-                    Database.Backend.RenameTable("Messages" + src, "Messages" + dst);
-                }
+            	Portal.MoveAll(src, dst);
+            	MessageBlock.MoveAll(src, dst);
+            	
                 if (Database.TableExists("Zone" + src)) {
                     Database.Backend.RenameTable("Zone" + src, "Zone" + dst);
                 }
@@ -185,12 +181,9 @@ namespace MCGalaxy {
             
             object locker = ThreadSafeCache.DBCache.GetLocker(map);
             lock (locker) {
-                if (Database.TableExists("Portals" + map)) {
-                    Database.Backend.DeleteTable("Portals" + map);
-                }
-                if (Database.TableExists("Messages" + map)) {
-                    Database.Backend.DeleteTable("Messages" + map);
-                }
+            	Portal.DeleteAll(map);
+            	MessageBlock.DeleteAll(map);
+            	
                 if (Database.TableExists("Zone" + map)) {
                     Database.Backend.DeleteTable("Zone" + map);
                 }
@@ -247,17 +240,8 @@ namespace MCGalaxy {
             lock (srcLocker)
                 lock (dstLocker)
             {
-                if (Database.TableExists("Portals" + src)) {
-                    Database.Backend.CreateTable("Portals" + dst, LevelDB.createPortals);
-                    Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);
-                    Database.Backend.UpdateRows("Portals" + dst, "ExitMap=@1",
-                                                "WHERE ExitMap=@0", src, dst);
-                }
-                
-                if (Database.TableExists("Messages" + src)) {
-                    Database.Backend.CreateTable("Messages" + dst, LevelDB.createMessages);
-                    Database.Backend.CopyAllRows("Messages" + src, "Messages" + dst);
-                }
+            	Portal.CopyAll(src, dst);
+            	MessageBlock.CopyAll(src, dst);
             }
         }
 

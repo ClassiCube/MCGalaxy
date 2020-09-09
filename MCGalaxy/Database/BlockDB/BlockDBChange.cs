@@ -46,7 +46,8 @@ namespace MCGalaxy.DB {
         }
         
         public static void OutputMessageBlock(Player p, BlockID block, ushort x, ushort y, ushort z) {
-            if (!p.level.Props[block].IsMessageBlock) return;
+            if (!p.level.Props[block].IsMessageBlock)      return;
+            if (!MessageBlock.ExistsInDB(p.level.MapName)) return;
             string message = MessageBlock.Get(p.level.MapName, x, y, z);
             
             if (message == null) return;
@@ -54,7 +55,8 @@ namespace MCGalaxy.DB {
         }
         
         public static void OutputPortal(Player p, BlockID block, ushort x, ushort y, ushort z) {
-            if (!p.level.Props[block].IsPortal) return;
+            if (!p.level.Props[block].IsPortal)      return;
+            if (!Portal.ExistsInDB(p.level.MapName)) return;
             PortalExit exit = Portal.Get(p.level.MapName, x, y, z);
             
             if (exit == null) return;
