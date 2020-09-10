@@ -51,7 +51,7 @@ namespace MCGalaxy {
             BlockID old = level.GetBlock(x, y, z);
             if (old == Block.Invalid) return;
             
-            if (jailed || frozen || !canBuild) { RevertBlock(x, y, z); return; }
+            if (jailed || frozen || possessed) { RevertBlock(x, y, z); return; }
             if (!agreed) {
                 Message(mustAgreeMsg);
                 RevertBlock(x, y, z); return;

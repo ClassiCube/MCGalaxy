@@ -54,8 +54,7 @@ namespace MCGalaxy.Tasks {
                 Player who = PlayerInfo.FindExact(p.following);
                 if (who == null || who.level != p.level) {
                     p.following = "";
-                    if (!p.canBuild)
-                        p.canBuild = true;
+                    p.possessed = false;
                     if (who != null && who.possess == p.name)
                         who.possess = "";
                     return;

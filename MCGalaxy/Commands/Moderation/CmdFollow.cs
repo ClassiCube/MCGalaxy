@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (!p.canBuild) { p.Message("You're currently being &4possessed%S!"); return; }
+            if (p.possessed) { p.Message("You're currently being &4possessed%S!"); return; }
             string[] args = message.SplitSpaces(2);
             string name = args[0];
             
