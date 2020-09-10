@@ -111,7 +111,7 @@ namespace MCGalaxy.Network {
                 }
                 p.Message("Finished downloading.");
             } catch (Exception ex) {
-                Logger.LogError("Error downloading", ex);
+                Logger.LogError("Error downloading " + url, ex);
                 p.Message("%WFailed to download from &f" + url);
                 return null;
             }
