@@ -185,19 +185,10 @@ namespace MCGalaxy.Games {
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             if (p.level != Map) return;
             BlockID old = Map.GetBlock(x, y, z);
-            
-            if (Map.Config.BuildType == BuildType.NoModify) {
-                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
-            }
-            if (Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock) {
-                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
-            }
-            
-            if (p.Game.Referee) return;
             ZSData data = Get(p);
             
             // Check pillaring
-            if (placing && !Map.Config.Pillaring) {
+            if (placing && !Map.Config.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(block, old)) {
                     data.BlocksStacked = 0;
                 } else if (CheckCoords(p, data, x, y, z)) {
@@ -208,6 +199,15 @@ namespace MCGalaxy.Games {
                 if (WarnPillaring(p, data, x, y, z)) { p.cancelBlock = true; return; }
             }
             data.LastX = x; data.LastY = y; data.LastZ = z;
+            
+            if (Map.Config.BuildType == BuildType.NoModify) {
+                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+            }
+            if (Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock) {
+                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+            }
+            
+            if (p.Game.Referee) return;
             
             if (placing || (!placing && p.painting)) {
                 if (data.BlocksLeft <= 0) {
