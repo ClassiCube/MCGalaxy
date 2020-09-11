@@ -185,19 +185,11 @@ namespace MCGalaxy.Games {
         void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
             if (p.level != Map) return;
             BlockID old = Map.GetBlock(x, y, z);
-            
-            if (Map.Config.BuildType == BuildType.NoModify) {
-                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
-            }
-            if (Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock) {
-                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
-            }
-            
-            if (p.Game.Referee) return;
             ZSData data = Get(p);
+            bool nonReplacable = Map.Config.BuildType == BuildType.NoModify || Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock;
             
             // Check pillaring
-            if (placing && !Map.Config.Pillaring) {
+            if (placing && !Map.Config.Pillaring && !p.Game.Referee) {
                 if (NotPillaring(block, old)) {
                     data.BlocksStacked = 0;
                 } else if (CheckCoords(p, data, x, y, z)) {
@@ -205,9 +197,15 @@ namespace MCGalaxy.Games {
                 } else {
                     data.BlocksStacked = 0;
                 }
-                if (WarnPillaring(p, data, x, y, z)) { p.cancelBlock = true; return; }
+                if (WarnPillaring(p, data, x, y, z, nonReplacable)) { p.cancelBlock = true; return; }
             }
             data.LastX = x; data.LastY = y; data.LastZ = z;
+            
+            if (nonReplacable) {
+                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+            }
+            
+            if (p.Game.Referee) return;
             
             if (placing || (!placing && p.painting)) {
                 if (data.BlocksLeft <= 0) {
@@ -241,8 +239,8 @@ namespace MCGalaxy.Games {
                 || (maxX == x && minZ == z) || (maxX == x && maxZ == z);
         }
         
-        static bool WarnPillaring(Player p, ZSData data, ushort x, ushort y, ushort z) {
-            if (data.BlocksStacked == 2) {
+        static bool WarnPillaring(Player p, ZSData data, ushort x, ushort y, ushort z, bool nonReplacable) {
+            if ((!nonReplacable && data.BlocksStacked == 2) || (nonReplacable && data.BlocksStacked == 1)) {
                 TimeSpan delta = DateTime.UtcNow - data.LastPillarWarn;
                 if (delta.TotalSeconds >= 5) {
                     Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
@@ -251,7 +249,7 @@ namespace MCGalaxy.Games {
                 
                 string action = data.PillarFined ? "kicked" : "fined 10 " + Server.Config.Currency;
                 p.Message("You are pillaring! %WStop before you are " + action + "!");
-            } else if (data.BlocksStacked == 4) {
+            } else if ((!nonReplacable && data.BlocksStacked == 4) || (nonReplacable && data.BlocksStacked == 2)) {
                 if (!data.PillarFined) {
                     Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
                     Command.Find("Take").Use(Player.Console, p.name + " 10 Auto fine for pillaring");
