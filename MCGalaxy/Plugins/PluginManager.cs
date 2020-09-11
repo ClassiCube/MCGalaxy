@@ -31,8 +31,7 @@ namespace MCGalaxy {
         /// <summary> Loads all plugins from the given path. </summary>
         public static bool Load(string path, bool startup) {
             try {
-                byte[] data  = File.ReadAllBytes(path);
-                Assembly lib = Assembly.Load(data);
+                Assembly lib = IScripting.LoadAssembly(path);
                 List<Plugin> plugins = IScripting.LoadTypes<Plugin>(lib);
                 
                 foreach (Plugin plugin in plugins) {

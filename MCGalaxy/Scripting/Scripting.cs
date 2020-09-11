@@ -178,8 +178,7 @@ namespace MCGalaxy.Scripting {
         /// <summary> Loads and registers all the commands in the given dll. </summary>
         public static string Load(string path) {
             try {
-                byte[] data = File.ReadAllBytes(path);
-                Assembly lib = Assembly.Load(data);
+                Assembly lib = LoadAssembly(path);
                 List<Command> commands = LoadTypes<Command>(lib);
                 
                 if (commands.Count == 0) return "No commands in dll file";
@@ -216,6 +215,24 @@ namespace MCGalaxy.Scripting {
                 instances.Add((T)instance);
             }
             return instances;
+        }
+        
+        static byte[] GetDebugData(string path) {
+            path = Path.ChangeExtension(path, ".pdb");
+            if (!File.Exists(path)) return null;
+            
+            try {
+                return File.ReadAllBytes(path);
+            } catch (Exception ex) {
+                Logger.LogError("Error loading .pdb " + path, ex);
+                return null;
+            }
+        }
+        
+        public static Assembly LoadAssembly(string path) {
+            byte[] data  = File.ReadAllBytes(path);
+            byte[] debug = GetDebugData(path);
+            return Assembly.Load(data, debug);
         }
     }
 }
