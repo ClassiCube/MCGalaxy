@@ -97,28 +97,29 @@ namespace MCGalaxy {
                 }
             }
 
-            BlockID held = block;
+            BlockID raw = placing ? block : Block.Air;
             block = BlockBindings[block];
             if (!CheckManualChange(old, block, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }
             if (ModeBlock != Block.Invalid) block = ModeBlock;
-            
-            // Ignores updating blocks that are the same and revert block back only to the player
+
             BlockID newB = deletingBlock ? Block.Air : block;
+            ChangeResult result;
+            
             if (old == newB) {
-                if (painting || !Block.VisuallyEquals(old, held)) RevertBlock(x, y, z);
-                return;
+                // Ignores updating blocks that are the same and revert block back only to the player
+                result = ChangeResult.Unchanged;
+            } else if (deletingBlock) {
+                result = DeleteBlock(old, x, y, z, block);
+            } else {
+                result = PlaceBlock(old, x, y, z, block);
             }
             
-            if (deletingBlock) {
-                DeleteBlock(old, x, y, z, block);
-            } else {
-                ChangeResult result = PlaceBlock(old, x, y, z, block);
-                // Client always assumes delete succeeds, so we need to echo back the painted over block
-                // if the block was not changed visually (e.g. they paint white with door_white)
-                if (painting && result != ChangeResult.Modified) RevertBlock(x, y, z);
-            }
+            if (result == ChangeResult.Modified) return;
+            // Client always assumes that the place/delete succeeds
+            // So if actually didn't, need to revert to the actual block
+            if (!Block.VisuallyEquals(raw, old)) RevertBlock(x, y, z);
         }
         
         internal bool CheckManualChange(BlockID old, BlockID block, bool deleteMode) {
@@ -130,12 +131,12 @@ namespace MCGalaxy {
             return CommandParser.IsBlockAllowed(this, "place", block);
         }
         
-        void DeleteBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
-            if (deleteMode) { ChangeBlock(x, y, z, Block.Air); return; }
+        ChangeResult DeleteBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
+            if (deleteMode) return ChangeBlock(x, y, z, Block.Air);
 
             HandleDelete handler = level.deleteHandlers[old];
-            if (handler != null) { handler(this, old, x, y, z); return; }
-            ChangeBlock(x, y, z, Block.Air);
+            if (handler != null) return handler(this, old, x, y, z);
+            return ChangeBlock(x, y, z, Block.Air);
         }
 
         ChangeResult PlaceBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
@@ -149,7 +150,7 @@ namespace MCGalaxy {
         /// <returns> Return code from DoBlockchange </returns>
         public ChangeResult ChangeBlock(ushort x, ushort y, ushort z, BlockID block) {
             BlockID old = level.GetBlock(x, y, z);
-            ChangeResult result = level.DoBlockchange(this, x, y, z, block);
+            ChangeResult result = level.TryChangeBlock(this, x, y, z, block);
             
             if (result == ChangeResult.Unchanged) return result;
             if (result == ChangeResult.Modified)  level.BroadcastChange(x, y, z, block);

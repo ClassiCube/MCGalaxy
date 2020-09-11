@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.World {
                     above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
                     BlockID grass = lvl.Props[block].GrassBlock;
                     
-                    if (lvl.LightPasses(above) && p.level.DoBlockchange(p, x, y, z, grass) == ChangeResult.Modified) {
+                    if (lvl.LightPasses(above) && p.level.TryChangeBlock(p, x, y, z, grass) == ChangeResult.Modified) {
                         buffer.Add(index, grass);
                         totalFixed++;
                     }
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.World {
                     above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
                     BlockID dirt = lvl.Props[block].DirtBlock;
                     
-                    if (!lvl.LightPasses(above) && p.level.DoBlockchange(p, x, y, z, dirt) == ChangeResult.Modified) {
+                    if (!lvl.LightPasses(above) && p.level.TryChangeBlock(p, x, y, z, dirt) == ChangeResult.Modified) {
                         buffer.Add(index, dirt);
                         totalFixed++;
                     }
@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.World {
                     }
                     
                     BlockID grass = lvl.Props[block].GrassBlock;
-                    if (!inShadow && p.level.DoBlockchange(p, x, y, z, grass) == ChangeResult.Modified) {
+                    if (!inShadow && p.level.TryChangeBlock(p, x, y, z, grass) == ChangeResult.Modified) {
                         buffer.Add(lvl.PosToInt(x, y, z), grass);
                         totalFixed++;
                     }
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.World {
                     }
                     
                     BlockID dirt = lvl.Props[block].DirtBlock;
-                    if (inShadow && p.level.DoBlockchange(p, x, y, z, dirt) == ChangeResult.Modified) {
+                    if (inShadow && p.level.TryChangeBlock(p, x, y, z, dirt) == ChangeResult.Modified) {
                         buffer.Add(lvl.PosToInt(x, y, z), dirt);
                         totalFixed++;
                     }

@@ -23,7 +23,7 @@ namespace MCGalaxy.Blocks {
 
     /// <summary> Handles the player deleting a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
-    public delegate void HandleDelete(Player p, BlockID oldBlock, ushort x, ushort y, ushort z);
+    public delegate ChangeResult HandleDelete(Player p, BlockID oldBlock, ushort x, ushort y, ushort z);
 
     /// <summary> Handles the player placing a block at the given coordinates. </summary>
     /// <remarks> Use p.ChangeBlock to do a normal player block change (adds to BlockDB, updates dirt/grass beneath) </remarks>
