@@ -137,8 +137,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Group group = PlayerInfo.GetGroup(target);
-            if (p.IsConsole) return group;
-            if (!Command.CheckRank(p, data, group.Permission, action, false)) return null;
+            if (!Command.CheckRank(p, data, target, group.Permission, action, false)) return null;
             return group;
         }
         

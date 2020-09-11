@@ -65,18 +65,21 @@ namespace MCGalaxy {
         
         protected internal static bool CheckRank(Player p, CommandData data, Player target, 
                                                  string action, bool canAffectOwnRank) {
-            return p == target || CheckRank(p, data, target.Rank, action, canAffectOwnRank);
+            return CheckRank(p, data, target.name, target.Rank, action, canAffectOwnRank);
         }
         
-        protected internal static bool CheckRank(Player p, CommandData data, LevelPermission rank, 
+        protected internal static bool CheckRank(Player p, CommandData data, 
+                                                 string plName, LevelPermission plRank,
                                                  string action, bool canAffectOwnRank) {
-            if (canAffectOwnRank && rank <= data.Rank) return true;
-            if (!canAffectOwnRank && rank < data.Rank) return true;
+            if (p.name.CaselessEq(plName)) return true;
+            if (p.IsConsole || plRank < data.Rank) return true;
+            if (canAffectOwnRank && plRank == data.Rank) return true;
             
-            if (canAffectOwnRank)
+            if (canAffectOwnRank) {
                 p.Message("Can only {0} players ranked {1} %Sor below", action, p.group.ColoredName);
-            else
+            } else {
                 p.Message("Can only {0} players ranked below {1}", action, p.group.ColoredName);
+            }
             return false;
         }
         
