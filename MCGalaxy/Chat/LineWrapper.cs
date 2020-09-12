@@ -40,7 +40,7 @@ namespace MCGalaxy {
             const int maxLineLen = limit + 2;      // +2 in case text is longer than one line
             char[] line = new char[maxLineLen];
             
-            bool multilined  = false;
+            bool firstLine   = true;
             char prevColCode = '\0';
             int trim;
             // TODO: How does < 32 or > 127 behave with original java client
@@ -48,7 +48,7 @@ namespace MCGalaxy {
             for (int offset = 0; offset < message.Length; ) {
                 int length = 0;
                 // "Line1", "> Line2", "> Line3"
-                if (multilined) {
+                if (!firstLine) {
                     line[0] = '>'; line[1] = ' ';
                     length += 2;
                     
@@ -60,8 +60,9 @@ namespace MCGalaxy {
                 }
                 
                 // Copy across text up to current line length
-                // Also trim the line of starting spaces
-                bool foundStart = false;
+                // Also trim the line of starting spaces on subsequent lines
+                // (note first line is NOT trimmed for spaces)
+                bool foundStart = firstLine;
                 for (; length < maxLineLen && offset < message.Length;) {
                     char c = message[offset++];
                     
@@ -76,7 +77,7 @@ namespace MCGalaxy {
                     lines.Add(new string(line, 0, length));
                     break;
                 }
-                multilined = true;
+                firstLine = false;
                 
                 // Try to split up this line nicely
                 for (int i = limit - 1; i > limit - 20; i--) {
