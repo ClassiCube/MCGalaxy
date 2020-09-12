@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Building {
             Vec3U16 mark = (Vec3U16)P;
             // We only want to activate blocks in the world
             BlockID old = p.level.GetBlock(mark.X, mark.Y, mark.Z);
-            if (!p.CheckManualChange(old, Block.Air, true)) return;
+            if (!p.CheckManualChange(old, true)) return;
             
             HandleDelete handler = p.level.deleteHandlers[old];
             if (handler != null) {
