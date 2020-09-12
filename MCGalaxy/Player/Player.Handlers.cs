@@ -97,11 +97,12 @@ namespace MCGalaxy {
                 }
             }
 
-            BlockID raw = placing ? block : Block.Air;
-            block = BlockBindings[block];
-            if (!CheckManualChange(old, block, deletingBlock)) {
+            if (!CheckManualChange(old, deletingBlock)) {
                 RevertBlock(x, y, z); return;
             }
+            
+            BlockID raw = placing ? block : Block.Air;
+            block = BlockBindings[block];
             if (ModeBlock != Block.Invalid) block = ModeBlock;
 
             BlockID newB = deletingBlock ? Block.Air : block;
@@ -111,7 +112,10 @@ namespace MCGalaxy {
                 // Ignores updating blocks that are the same and revert block back only to the player
                 result = ChangeResult.Unchanged;
             } else if (deletingBlock) {
-                result = DeleteBlock(old, x, y, z, block);
+                result = DeleteBlock(old, x, y, z);
+            } else if (!CommandParser.IsBlockAllowed(this, "place", block)) {
+                // Not allowed to place new block
+                result = ChangeResult.Unchanged;
             } else {
                 result = PlaceBlock(old, x, y, z, block);
             }
@@ -122,16 +126,16 @@ namespace MCGalaxy {
             if (!Block.VisuallyEquals(raw, old)) RevertBlock(x, y, z);
         }
         
-        internal bool CheckManualChange(BlockID old, BlockID block, bool deleteMode) {
+        internal bool CheckManualChange(BlockID old, bool deleteMode) {
             if (!group.Blocks[old] && !level.BuildIn(old) && !Block.AllowBreak(old)) {
                 string action = deleteMode ? "delete" : "replace";
                 BlockPerms.Find(old).MessageCannotUse(this, action);
                 return false;
             }
-            return CommandParser.IsBlockAllowed(this, "place", block);
+            return true;
         }
         
-        ChangeResult DeleteBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
+        ChangeResult DeleteBlock(BlockID old, ushort x, ushort y, ushort z) {
             if (deleteMode) return ChangeBlock(x, y, z, Block.Air);
 
             HandleDelete handler = level.deleteHandlers[old];
