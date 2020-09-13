@@ -15,7 +15,6 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace MCGalaxy {
 
@@ -31,10 +30,14 @@ namespace MCGalaxy {
             return '\0';
         }
         
+        static bool IsWrapper(char c) {
+            return c == ' ' || c == '-' || c == '/' || c == '\\';
+        }
+        
         // TODO: Add outputLine argument, instead of returning string list
-        public static List<string> Wordwrap(string message) {
+        public static List<string> Wordwrap(string message, bool supportsCustomCols) {
             List<string> lines = new List<string>();
-            message = CleanupColorCodes(message);
+            message = CleanupColors(message, supportsCustomCols);
 
             const int limit = NetUtils.StringSize; // max characters on one line
             const int maxLineLen = limit + 2;      // +2 in case text is longer than one line
@@ -81,7 +84,7 @@ namespace MCGalaxy {
                 
                 // Try to split up this line nicely
                 for (int i = limit - 1; i > limit - 20; i--) {
-                    if (line[i] != ' ') continue;
+                    if (!IsWrapper(line[i])) continue;
                     
                     trim = length - i;
                     length -= trim; offset -= trim;
@@ -107,7 +110,10 @@ namespace MCGalaxy {
         
         static bool ValidColor(char c) { return Colors.IsStandard(c) || Colors.IsDefined(c); }
         
-        public static string CleanupColorCodes(string value) {
+        /// <summary> Removes redundant colour codes and fixes some colour codes to behave correctly for older clients </summary>
+        /// <param name="supportsCustomCols">if false, fixes colour codes for compatibility 
+        /// (e.g. converts custom colour codes into fallback colour code) </param>
+        public static string CleanupColors(string value, bool supportsCustomCols) {
             if (value.IndexOf('&') == -1) return value;
             StringBuilder sb = new StringBuilder(value.Length);
             int lastIdx  = -1;
@@ -124,12 +130,24 @@ namespace MCGalaxy {
                 
                 // Maybe still not a colour code
                 if (i == value.Length - 1 || !ValidColor(value[i + 1])) {
-                    combinable = false;
-                    sb.Append(c); continue;
+                    if (!supportsCustomCols) {
+                        // Although ClassiCube in classic mode supports invalid colours,
+                        //  the original vanilla client crashes with invalid colour codes
+                        // Since it's impossible to identify which client is being used,
+                        //  just remove the ampersands to be on the safe side
+                        i++;
+                    } else {
+                        // Treat the & like a normal character
+                        combinable = false;
+                        sb.Append(c); 
+                    }
+                    continue;
                 }
                 
                 char col = value[i + 1];
+                // A-F --> a-f
                 if (col >= 'A' && col <= 'F') col += ' ';
+                if (!supportsCustomCols) col = Colors.Get(col).Fallback;
                 
                 // Don't append duplicate colour codes
                 if (lastCol != col) {

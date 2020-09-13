@@ -59,9 +59,7 @@ namespace MCGalaxy {
         
         public static string Format(string message, Player p, bool tokens = true, bool emotes = true) {
             message = Colors.Escape(message);
-            StringBuilder sb = new StringBuilder(message);
-            Colors.Cleanup(sb, p.hasTextColors);
-            
+            StringBuilder sb = new StringBuilder(message);      
             if (tokens) ChatTokens.Apply(sb, p);
             if (!emotes) return sb.ToString();
             

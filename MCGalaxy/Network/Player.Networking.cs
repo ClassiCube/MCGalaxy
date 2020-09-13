@@ -178,7 +178,7 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                SendLines(LineWrapper.Wordwrap(message), type);
+                SendLines(LineWrapper.Wordwrap(message, hasTextColors), type);
             } catch (Exception e) {
                 Logger.LogError(e);
             }

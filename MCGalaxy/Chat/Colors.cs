@@ -283,8 +283,7 @@ namespace MCGalaxy {
             return new string(output, 0, usedChars);
         }
         
-        /// <summary> Removes all non-existent color codes, and converts
-        /// custom colors to their fallback standard color codes if required. </summary>
+        [Obsolete("LineWrapper.CleanupColors is a better alternative")]
         public static string Cleanup(string value, bool supportsCustomCols) {
             StringBuilder sb = new StringBuilder(value);
             Cleanup(sb, supportsCustomCols);
