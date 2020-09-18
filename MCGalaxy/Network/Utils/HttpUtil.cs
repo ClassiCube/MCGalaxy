@@ -96,6 +96,16 @@ namespace MCGalaxy.Network {
             url = url.Replace("dl.dropboxusercontent.com", "dl.dropbox.com");
         }
         
+        static int GetHttpStatus(Exception ex) {
+            try {
+                WebException webEx = (WebException)ex;
+                return (int)((HttpWebResponse)webEx.Response).StatusCode;
+            } catch {
+                // exception was not webexception, or couldn't get status code
+                return -1; 
+            }
+        }
+        
         public static byte[] DownloadData(string url, Player p) {
             FilterURL(ref url);
             Uri uri;
@@ -111,8 +121,11 @@ namespace MCGalaxy.Network {
                 }
                 p.Message("Finished downloading.");
             } catch (Exception ex) {
+                int status = GetHttpStatus(ex);
                 Logger.LogError("Error downloading " + url, ex);
-                p.Message("%WFailed to download from &f" + url);
+                
+                string msg = status == -1 ? "from &f{0}" : "({1} error) from &f{0}";
+                p.Message("%WFailed to download " + msg, url, status);
                 return null;
             }
             return data;
