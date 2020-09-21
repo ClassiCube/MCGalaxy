@@ -20,15 +20,31 @@ namespace MCGalaxy {
 
     public static class LineWrapper {
         
-        static char LastColCode(char[] line, int len) {
-            for (int i = len - 2; i >= 0; i--) {
+        static bool EndsInEmote(char[] line, int length, int lineLength) {
+			length = Math.Min(length, lineLength);
+			
+            // skip trailing spaces
+            for (; length > 0 & line[length - 1] == ' '; length--) { }
+            if (length == 0) return false;
+            
+            char last = line[length - 1];
+            return last.UnicodeToCp437() != last;
+        }
+        
+        static char LastColor(char[] line, int length) {
+            for (int i = length - 2; i >= 0; i--) {
                 if (line[i] != '&') continue;
                 
                 char col = line[i + 1];
                 if (Colors.Map(ref col)) return col;
             }
-            return '\0';
+            return 'f';
         }
+		
+		static string MakeLine(char[] line, int length, bool emoteFix) {
+			if (emoteFix) line[length++] = '\'';
+			return new string(line, 0, length);
+		}
         
         // try to wrap on cut off words
         // TODO: fix this to do AFTER wrapper char
@@ -43,10 +59,9 @@ namespace MCGalaxy {
             const int maxLineLen = limit + 1; // +1 because need to know if length of line overshot limit
             char[] line = new char[maxLineLen];
             
-            bool firstLine   = true;
-            char prevColCode = '\0';
+            bool firstLine = true;
+            char lastColor = 'f';
             int trim;
-            // TODO: How does < 32 or > 127 behave with original java client
             
             for (int offset = 0; offset < message.Length; ) {
                 int length = 0;
@@ -56,14 +71,15 @@ namespace MCGalaxy {
                     length += 2;
                     
                     // Make sure split up lines have the right colour
-                    if (prevColCode != '\0') {
-                        line[2] = '&'; line[3] = prevColCode;
+                    if (lastColor != 'f') {
+                        line[2] = '&'; line[3] = lastColor;
                         length += 2;
                     }
                 } else if (!supportsEmotes) {
                     // If message starts with emote then prepend &f
                     // (otherwise original minecraft classic trims it)
-                    if (message[0] < ' ' || message[0] > '~') {
+                    char first = message[0];
+                    if (first < ' ' || first > '~') {
                         line[0] = '&'; line[1] = 'f';
                         length += 2;
                     }
@@ -82,9 +98,17 @@ namespace MCGalaxy {
                     }
                 }
                 
-                // No need for any more linewrapping
-                if (length < limit) {
-                    lines.Add(new string(line, 0, length));
+                int lineLength = limit;
+                bool emoteFix  = false;
+                // Check if need to add padding ' to line end
+                if (!supportsEmotes && EndsInEmote(line, length, lineLength)) {
+                    lineLength--;
+                    emoteFix = true;
+                }
+                
+                // No need for any more linewrapping?
+                if (length < lineLength) {
+                	lines.Add(MakeLine(line, length, emoteFix));
                     break;
                 }
                 firstLine = false;
@@ -99,18 +123,16 @@ namespace MCGalaxy {
                 }
                 
                 // Couldn't split line up? Deal with leftover characters next line
-                if (length > limit) {
-                    trim = length - limit;
-                    length -= trim; offset -= trim;    
+                if (length > lineLength) {
+                    trim = length - lineLength;
+                    length -= trim; offset -= trim;
                 }
                 
                 // Don't split up line in middle of colour code
-                if (line[length - 1] == '&') {
-                    length--; offset--;
-                }
+                if (line[length - 1] == '&') { length--; offset--; }
                 
-                prevColCode = LastColCode(line, length);
-                lines.Add(new string(line, 0, length));
+                lastColor = LastColor(line, length);
+                lines.Add(MakeLine(line, length, emoteFix));
             }
             return lines;
         }
