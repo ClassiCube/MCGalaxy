@@ -50,47 +50,39 @@ namespace MCGalaxy {
             "█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■\u00a0";
         
         public static string Replace(string message) {
-            return Unescape(message, '(', ')', Keywords);
-        }
-        
-        public static string Unescape(string message, char start, char end, 
-                                      Dictionary<string, char> tokens)
-        {
-            if (message == null)
-                throw new ArgumentNullException("message");
-            int startIndex = message.IndexOf(start);
-            if (startIndex == -1) return message;
+            Dictionary<string, char> tokens = Keywords;
+            int begIndex = message.IndexOf('(');
+            if (begIndex == -1) return message;
 
-            StringBuilder output = new StringBuilder(message.Length);
+            StringBuilder output  = new StringBuilder(message.Length);
             int lastAppendedIndex = 0;
-            while (startIndex != -1) {
-                int endIndex = message.IndexOf(end, startIndex + 1);
-                if (endIndex == -1)
-                    break;
+            while (begIndex != -1) {
+                int endIndex = message.IndexOf(')', begIndex + 1);
+                if (endIndex == -1) break;
 
                 bool escaped = false;
-                for (int i = startIndex - 1; i >= 0 && message[i] == '\\'; i--) {
+                for (int i = begIndex - 1; i >= 0 && message[i] == '\\'; i--) {
                     escaped = !escaped;
                 }
 
-                string keyword = message.Substring(startIndex + 1, endIndex - startIndex - 1);
+                string keyword = message.Substring(begIndex + 1, endIndex - begIndex - 1);
                 char substitute;
                 if (tokens.TryGetValue(keyword.ToLowerInvariant(), out substitute))
                 {
                     if (escaped) {
-                        startIndex++;
-                        output.Append(message, lastAppendedIndex, startIndex - lastAppendedIndex - 2);
-                        lastAppendedIndex = startIndex - 1;
+                        begIndex++;
+                        output.Append(message, lastAppendedIndex, begIndex - lastAppendedIndex - 2);
+                        lastAppendedIndex = begIndex - 1;
                     } else {
-                        output.Append(message, lastAppendedIndex, startIndex - lastAppendedIndex);
+                        output.Append(message, lastAppendedIndex, begIndex - lastAppendedIndex);
                         output.Append(substitute);
-                        startIndex = endIndex + 1;
-                        lastAppendedIndex = startIndex;
+                        begIndex = endIndex + 1;
+                        lastAppendedIndex = begIndex;
                     }
                 } else {
-                    startIndex++;
+                    begIndex++;
                 }
-                startIndex = message.IndexOf(start, startIndex);
+                begIndex = message.IndexOf('(', begIndex);
             }
             output.Append(message, lastAppendedIndex, message.Length - lastAppendedIndex);
             return output.ToString();

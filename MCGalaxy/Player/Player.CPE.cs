@@ -63,7 +63,7 @@ namespace MCGalaxy {
         }
         
         // these are checked very frequently, so avoid overhead of .Supports(
-        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
+        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks, hasEmoteFix,
         hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate, hasExtTexs;
 
         void AddExtension(string extName, int version) {
@@ -77,6 +77,8 @@ namespace MCGalaxy {
                 if (MaxRawBlock < Block.CpeMaxBlock) MaxRawBlock = Block.CpeMaxBlock;
             } else if (ext.Name == CpeExt.ChangeModel) {
                 hasChangeModel = true;
+            } else if (ext.Name == CpeExt.EmoteFix) {
+                hasEmoteFix = true;
             } else if (ext.Name == CpeExt.FullCP437) {
                 hasCP437 = true;
             } else if (ext.Name == CpeExt.ExtPlayerList) {

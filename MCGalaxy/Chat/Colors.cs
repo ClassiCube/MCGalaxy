@@ -296,6 +296,7 @@ namespace MCGalaxy {
             for (int i = 0; i < value.Length; i++) {
                 char c = value[i];
                 if (c != '&' || i == value.Length - 1) continue;
+                // TODO: Not use for IRC
                 
                 char code = value[i + 1];
                 if (IsStandard(code)) {

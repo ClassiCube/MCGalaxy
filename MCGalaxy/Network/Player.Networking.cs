@@ -160,9 +160,7 @@ namespace MCGalaxy {
                 byte[] data = new byte[count * 66];
                 
                 for (int j = 0; j < count; i++, j++) {
-                    string line = lines[i];
-                    if (!Supports(CpeExt.EmoteFix) && LineEndsInEmote(line)) line += '\'';
-                    Packet.WriteMessage(line, type, hasCP437, data, j * 66);
+                    Packet.WriteMessage(lines[i], type, hasCP437, data, j * 66);
                 }
                 Send(data);
             }
@@ -178,7 +176,8 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                SendLines(LineWrapper.Wordwrap(message, hasTextColors), type);
+                message = LineWrapper.CleanupColors(message, hasTextColors);
+                SendLines(LineWrapper.Wordwrap(message, hasEmoteFix), type);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -199,6 +198,7 @@ namespace MCGalaxy {
             }
             
             message = Chat.Format(message, this);
+            message = LineWrapper.CleanupColors(message, hasTextColors);
             Send(Packet.Message(message, type, hasCP437));
         }
 

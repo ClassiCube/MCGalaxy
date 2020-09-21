@@ -30,17 +30,17 @@ namespace MCGalaxy {
             return '\0';
         }
         
+		// try to wrap on cut off words
+		// TODO: fix this to do AFTER wrapper char
         static bool IsWrapper(char c) {
             return c == ' ' || c == '-' || c == '/' || c == '\\';
         }
         
         // TODO: Add outputLine argument, instead of returning string list
-        public static List<string> Wordwrap(string message, bool supportsCustomCols) {
-            List<string> lines = new List<string>();
-            message = CleanupColors(message, supportsCustomCols);
-
-            const int limit = NetUtils.StringSize; // max characters on one line
-            const int maxLineLen = limit + 2;      // +2 in case text is longer than one line
+        public static List<string> Wordwrap(string message, bool supportsEmotes) {
+            List<string> lines   = new List<string>();
+            const int limit      = NetUtils.StringSize; // max characters on one line
+            const int maxLineLen = limit + 2; // +2 in case text is longer than one line
             char[] line = new char[maxLineLen];
             
             bool firstLine   = true;
@@ -64,7 +64,7 @@ namespace MCGalaxy {
                 
                 // Copy across text up to current line length
                 // Also trim the line of starting spaces on subsequent lines
-                // (note first line is NOT trimmed for spaces)
+                // (note that first line is NOT trimmed for spaces)
                 bool foundStart = firstLine;
                 for (; length < maxLineLen && offset < message.Length;) {
                     char c = message[offset++];
