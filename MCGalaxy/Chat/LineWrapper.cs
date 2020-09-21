@@ -45,9 +45,7 @@ namespace MCGalaxy {
 			if (emoteFix) line[length++] = '\'';
 			return new string(line, 0, length);
 		}
-        
-        // try to wrap on cut off words
-        // TODO: fix this to do AFTER wrapper char
+
         static bool IsWrapper(char c) {
             return c == ' ' || c == '-' || c == '/' || c == '\\';
         }
@@ -57,11 +55,10 @@ namespace MCGalaxy {
             List<string> lines   = new List<string>();
             const int limit      = NetUtils.StringSize; // max characters on one line
             const int maxLineLen = limit + 1; // +1 because need to know if length of line overshot limit
-            char[] line = new char[maxLineLen];
             
+            char[] line    = new char[maxLineLen];
             bool firstLine = true;
             char lastColor = 'f';
-            int trim;
             
             for (int offset = 0; offset < message.Length; ) {
                 int length = 0;
@@ -86,7 +83,7 @@ namespace MCGalaxy {
                 }
                 
                 // Copy across text up to current line length
-                // Also trim the line of starting spaces on subsequent lines
+                // Also trim leading spaces on subsequent lines
                 // (note that first line is NOT trimmed for spaces)
                 bool foundStart = firstLine;
                 for (; length < maxLineLen && offset < message.Length;) {
@@ -101,6 +98,7 @@ namespace MCGalaxy {
                 int lineLength = limit;
                 bool emoteFix  = false;
                 // Check if need to add padding ' to line end
+                // (Lines ended in emote are trimmed by minecraft classic client)
                 if (!supportsEmotes && EndsInEmote(line, length, lineLength)) {
                     lineLength--;
                     // If last character on line was an emote, but second last
@@ -120,15 +118,16 @@ namespace MCGalaxy {
                 for (int i = lineLength - 1; i > limit - 20; i--) {
                     if (!IsWrapper(line[i])) continue;
                     
-                    trim = length - i;
-                    length -= trim; offset -= trim;
+                    i++; // include line wrapper character on this line
+                    offset -= length - i;
+                    length  = i;
                     break;
                 }
                 
                 // Couldn't split line up? Deal with leftover characters next line
                 if (length > lineLength) {
-                    trim = length - lineLength;
-                    length -= trim; offset -= trim;
+                    offset -= length - lineLength;
+                    length  = lineLength;
                 }
                 
                 // Don't split up line in middle of colour code
