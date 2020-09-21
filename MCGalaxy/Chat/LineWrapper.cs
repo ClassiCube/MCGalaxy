@@ -30,8 +30,8 @@ namespace MCGalaxy {
             return '\0';
         }
         
-		// try to wrap on cut off words
-		// TODO: fix this to do AFTER wrapper char
+        // try to wrap on cut off words
+        // TODO: fix this to do AFTER wrapper char
         static bool IsWrapper(char c) {
             return c == ' ' || c == '-' || c == '/' || c == '\\';
         }
@@ -40,7 +40,7 @@ namespace MCGalaxy {
         public static List<string> Wordwrap(string message, bool supportsEmotes) {
             List<string> lines   = new List<string>();
             const int limit      = NetUtils.StringSize; // max characters on one line
-            const int maxLineLen = limit + 2; // +2 in case text is longer than one line
+            const int maxLineLen = limit + 1; // +1 because need to know if length of line overshot limit
             char[] line = new char[maxLineLen];
             
             bool firstLine   = true;
@@ -58,6 +58,13 @@ namespace MCGalaxy {
                     // Make sure split up lines have the right colour
                     if (prevColCode != '\0') {
                         line[2] = '&'; line[3] = prevColCode;
+                        length += 2;
+                    }
+                } else if (!supportsEmotes) {
+                    // If message starts with emote then prepend &f
+                    // (otherwise original minecraft classic trims it)
+                    if (message[0] < ' ' || message[0] > '~') {
+                        line[0] = '&'; line[1] = 'f';
                         length += 2;
                     }
                 }
