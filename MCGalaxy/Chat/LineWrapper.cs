@@ -103,7 +103,10 @@ namespace MCGalaxy {
                 // Check if need to add padding ' to line end
                 if (!supportsEmotes && EndsInEmote(line, length, lineLength)) {
                     lineLength--;
-                    emoteFix = true;
+                    // If last character on line was an emote, but second last
+                    // is NOT an emote, then don't add the trailing ' to line
+                    // TODO: avoid calling twice? probably doesn't even matter
+                    emoteFix = EndsInEmote(line, length, lineLength);
                 }
                 
                 // No need for any more linewrapping?
@@ -114,7 +117,7 @@ namespace MCGalaxy {
                 firstLine = false;
                 
                 // Try to split up this line nicely
-                for (int i = limit - 1; i > limit - 20; i--) {
+                for (int i = lineLength - 1; i > limit - 20; i--) {
                     if (!IsWrapper(line[i])) continue;
                     
                     trim = length - i;
