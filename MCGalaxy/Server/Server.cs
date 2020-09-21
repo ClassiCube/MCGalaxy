@@ -116,10 +116,6 @@ namespace MCGalaxy {
             Background.QueueOnce(InitTimers);
             Background.QueueOnce(InitRest);
             Background.QueueOnce(InitHeartbeat);
-            
-            Devs.Clear();
-            Mods.Clear();
-            Background.QueueOnce(InitTasks.UpdateStaffList);
 
             ServerTasks.QueueTasks();
             Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask,

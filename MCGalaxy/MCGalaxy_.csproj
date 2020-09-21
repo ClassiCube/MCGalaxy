@@ -633,7 +633,6 @@
     <Compile Include="Server\Server.Init.cs" />
     <Compile Include="Server\ServerConfig.cs" />
     <Compile Include="Server\ServerProperties.cs" />
-    <Compile Include="Server\Tasks\InitTasks.cs" />
     <Compile Include="Server\Tasks\ModerationTasks.cs" />
     <Compile Include="Server\Tasks\ServerTasks.cs" />
     <Compile Include="Server\Tasks\UpgradeTasks.cs" />
