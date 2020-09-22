@@ -19,6 +19,7 @@
  */
 using System;
 using BlockID = System.UInt16;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Commands.Fun {
     public sealed class CmdExplode : Command2 {
@@ -29,39 +30,37 @@ namespace MCGalaxy.Commands.Fun {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces();
-            if (!(args.Length == 1 || args.Length == 3)) { Help(p); return; }
-            if (message.CaselessEq("me")) args[0] = p.name;
+            if (message.CaselessEq("me")) message = p.name;
             
-            ushort x = 0, y = 0, z = 0;
+            string[] args = message.SplitSpaces();
+            Vec3S32 P     = p.Pos.BlockCoords;
             if (args.Length == 1) {
                 Player target = PlayerInfo.FindMatches(p, args[0]);
                 if (target == null) return;
                 
-                x = (ushort)target.Pos.BlockX;
-                y = (ushort)target.Pos.BlockY;
-                z = (ushort)target.Pos.BlockZ;
-                if (DoExplode(p, target.level, x, y, z)) 
+                P = target.Pos.BlockCoords;
+                if (DoExplode(p, target.level, ref P)) {
                     p.Message("{0} %Shas been exploded!", p.FormatNick(target));
+                }
             } else if (args.Length == 3) {
-                if (!CommandParser.GetUShort(p, args[0], "X", ref x)) return;
-                if (!CommandParser.GetUShort(p, args[1], "Y", ref y)) return;
-                if (!CommandParser.GetUShort(p, args[2], "Z", ref z)) return;
-
-                if (y >= p.level.Height) y = (ushort)(p.level.Height - 1);
-                if (DoExplode(p, p.level, x, y, z))
-                    p.Message("An explosion was made at {0}, {1}, {2}).", x, y, z);
+                if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
+                
+                if (DoExplode(p, p.level, ref P)) {
+                    p.Message("An explosion was made at ({0}, {1}, {2}).", P.X, P.Y, P.Z);
+                }
             } else {
                 Help(p);
             }
         }
         
-        static bool DoExplode(Player p, Level lvl, ushort x, ushort y, ushort z) {
+        static bool DoExplode(Player p, Level lvl, ref Vec3S32 pos) {
             if (lvl.physics < 3 || lvl.physics == 5) {
                 p.Message("The physics on this level are not sufficient for exploding!"); return false;
             }
-            
+            pos = lvl.ClampPos(pos);
+            ushort x = (ushort)pos.X, y = (ushort)pos.Y, z = (ushort)pos.Z;    
             BlockID old = lvl.GetBlock(x, y, z);
+            
             if (!lvl.CheckAffect(p, x, y, z, old, Block.TNT)) return false;
             lvl.MakeExplosion(x, y, z, 1);
             return true;
