@@ -21,29 +21,13 @@ using System.ComponentModel;
 using MCGalaxy.Games;
 
 namespace MCGalaxy.Gui {
-    public sealed class ZombieProperties {
-        
-        [Description("Comma separated list of levels to use for zombie survival. (e.g. map1,map2,map3)")]
-        [Category("Levels settings")]
-        [DisplayName("Maps")]
-        public string Maps { get; set; }       
+    public sealed class ZombieProperties {  
         
         [Description("Whether players are allowed to pillar in zombie survival. " +
                      "Note this can be overriden for specific maps using /ZS set.")]
         [Category("General settings")]
         [DisplayName("Pillaring allowed")]
         public bool Pillaring { get; set; }
-        
-        [Description("Whether the main/spawn level is always set to the current level of zombie survival. " +
-                     "You should set this to true if the server is purely for zombie survival. ")]
-        [Category("General settings")]
-        [DisplayName("Set main level")]
-        public bool SetMainLevel { get; set; }
-        
-        [Description("Whether zombie survival should start when the server starts.")]
-        [Category("General settings")]
-        [DisplayName("Start immediately")]
-        public bool StartImmediately { get; set; }    
         
         
         [Description("Max distance players are allowed to move between packets. (for speedhack detection)")]
@@ -117,12 +101,8 @@ namespace MCGalaxy.Gui {
         
         public void LoadFromServer() {
             ZSConfig cfg = ZSGame.Config;
-            Maps = cfg.Maps.Join(",");
             
-            Pillaring = !cfg.NoPillaring;
-            SetMainLevel = cfg.SetMainLevel;
-            StartImmediately = cfg.StartImmediately;
-            
+            Pillaring = !cfg.NoPillaring;          
             MaxMoveDistance = cfg.MaxMoveDist;
             HitboxPrecision = cfg.HitboxDist;
             IncludeMapInHeartbeat = cfg.MapInHeartbeat;
@@ -142,12 +122,8 @@ namespace MCGalaxy.Gui {
         
         public void ApplyToServer() {
             ZSConfig cfg = ZSGame.Config;
-            cfg.Maps = new List<string>(Maps.SplitComma());
-            
-            cfg.NoPillaring = !Pillaring;
-            cfg.SetMainLevel = SetMainLevel;
-            cfg.StartImmediately = StartImmediately;
-            
+
+            cfg.NoPillaring = !Pillaring;            
             cfg.MaxMoveDist = MaxMoveDistance;
             cfg.HitboxDist = HitboxPrecision;
             cfg.MapInHeartbeat = IncludeMapInHeartbeat;
