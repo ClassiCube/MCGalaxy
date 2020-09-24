@@ -28,6 +28,7 @@ namespace MCGalaxy.Games {
 
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
         internal int Votes1, Votes2, Votes3;
+        const int minMaps = 3;
         
         public void AddRecentMap(string map) {
             if (RecentMaps.Count >= 20)
@@ -70,14 +71,13 @@ namespace MCGalaxy.Games {
             // Try to avoid recently played levels, avoiding most recent
             List<string> recent = RecentMaps;
             for (int i = recent.Count - 1; i >= 0; i--) {
-                if (maps.Count > 3 && maps.CaselessContains(recent[i]))
-                    maps.CaselessRemove(recent[i]);
+                if (maps.Count > minMaps) maps.CaselessRemove(recent[i]);
             }
             
             // Try to avoid maps voted last round if possible
-            if (maps.Count > 3) maps.CaselessRemove(Candidate1);
-            if (maps.Count > 3) maps.CaselessRemove(Candidate2);
-            if (maps.Count > 3) maps.CaselessRemove(Candidate3);
+            if (maps.Count > minMaps) maps.CaselessRemove(Candidate1);
+            if (maps.Count > minMaps) maps.CaselessRemove(Candidate2);
+            if (maps.Count > minMaps) maps.CaselessRemove(Candidate3);
         }
         
         void DoLevelVote(IGame game) {
@@ -141,12 +141,8 @@ namespace MCGalaxy.Games {
         
         public virtual List<string> GetCandidateMaps(RoundsGame game) {
             List<string> maps = new List<string>(game.GetConfig().Maps);
-            // TODO: Should this instead be
-            // if (maps.Count < 3) {
-            //     Logger.Log(LogType.Warning, "You must have more than 3 maps to change levels in " + game.GameName);
-            
-            if (maps.Count == 0) {
-                Logger.Log(LogType.Warning, "You must have at least 1 level configured to play " + game.GameName);
+            if (maps.Count < minMaps) {
+                Logger.Log(LogType.Warning, "You must have 3 or more maps configured to change levels in " + game.GameName);
                 return null;
             }
             return maps;
