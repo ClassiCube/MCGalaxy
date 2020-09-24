@@ -70,6 +70,7 @@ namespace MCGalaxy.Drawing.Ops {
                 Level.BlockDB.FindChangesBy(ids, Start, End, out dims, UndoBlock);
             } finally {
                 if (BlockDBReadLock != null) BlockDBReadLock.Dispose();
+                BlockDBReadLock = null;
             }
             
             if (oldest == null) return;
