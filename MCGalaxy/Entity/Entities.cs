@@ -135,7 +135,7 @@ namespace MCGalaxy {
                              string skin, string name, string model) {
             // NOTE: Fix for standard clients
             if (id == Entities.SelfID) pos.Y -= 22;
-            name = LineWrapper.CleanupColors(name, dst.hasTextColors);
+            name = LineWrapper.CleanupColors(name, dst);
             
             if (dst.Supports(CpeExt.ExtPlayerList, 2)) {
                 dst.Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, dst.hasCP437, dst.hasExtPositions));

@@ -176,7 +176,7 @@ namespace MCGalaxy {
             if (cancelmessage) { cancelmessage = false; return; }
             
             try {
-                message = LineWrapper.CleanupColors(message, hasTextColors);
+                message = LineWrapper.CleanupColors(message, this);
                 SendLines(LineWrapper.Wordwrap(message, hasEmoteFix), type);
             } catch (Exception e) {
                 Logger.LogError(e);
@@ -198,7 +198,7 @@ namespace MCGalaxy {
             }
             
             message = Chat.Format(message, this);
-            message = LineWrapper.CleanupColors(message, hasTextColors);
+            message = LineWrapper.CleanupColors(message, this);
             Send(Packet.Message(message, type, hasCP437));
         }
 

@@ -169,9 +169,9 @@ namespace MCGalaxy {
         public static string ConvertMCToIRC(string input) {
             if (input == null) throw new ArgumentNullException("input");
             input = Escape(input);
-            StringBuilder sb = new StringBuilder(input);
-            Cleanup(sb, false);
+            input = LineWrapper.CleanupColors(input, true, false);
             
+            StringBuilder sb = new StringBuilder(input);
             for (int i = 0; i < ircColors.Length; i++) {
                 sb.Replace(ircReplacements[i], ircColors[i]);
             }
@@ -281,34 +281,6 @@ namespace MCGalaxy {
                 }
             }
             return new string(output, 0, usedChars);
-        }
-        
-        [Obsolete("LineWrapper.CleanupColors is a better alternative")]
-        public static string Cleanup(string value, bool supportsCustomCols) {
-            StringBuilder sb = new StringBuilder(value);
-            Cleanup(sb, supportsCustomCols);
-            return sb.ToString();
-        }
-        
-        /// <summary> Removes all non-existent color codes, and converts
-        /// custom colors to their fallback standard color codes if required. </summary>
-        public static void Cleanup(StringBuilder value, bool supportsCustomCols) {
-            for (int i = 0; i < value.Length; i++) {
-                char c = value[i];
-                if (c != '&' || i == value.Length - 1) continue;
-                // TODO: Not use for IRC
-                
-                char code = value[i + 1];
-                if (IsStandard(code)) {
-                    if (code >= 'A' && code <= 'F') {
-                        value[i + 1] += ' '; // WoM doesn't work with uppercase colors
-                    }
-                } else if (!IsDefined(code)) {
-                    value.Remove(i, 2); i--; // now need to check char at i again
-                } else if (!supportsCustomCols) {
-                    value[i + 1] = Get(code).Fallback;
-                }
-            }
         }
 
         

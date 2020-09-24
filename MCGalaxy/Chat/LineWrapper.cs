@@ -21,8 +21,8 @@ namespace MCGalaxy {
     public static class LineWrapper {
         
         static bool EndsInEmote(char[] line, int length, int lineLength) {
-			length = Math.Min(length, lineLength);
-			
+            length = Math.Min(length, lineLength);
+            
             // skip trailing spaces
             for (; length > 0 & line[length - 1] == ' '; length--) { }
             if (length == 0) return false;
@@ -40,11 +40,11 @@ namespace MCGalaxy {
             }
             return 'f';
         }
-		
-		static string MakeLine(char[] line, int length, bool emoteFix) {
-			if (emoteFix) line[length++] = '\'';
-			return new string(line, 0, length);
-		}
+        
+        static string MakeLine(char[] line, int length, bool emoteFix) {
+            if (emoteFix) line[length++] = '\'';
+            return new string(line, 0, length);
+        }
 
         static bool IsWrapper(char c) {
             return c == ' ' || c == '-' || c == '/' || c == '\\';
@@ -109,7 +109,7 @@ namespace MCGalaxy {
                 
                 // No need for any more linewrapping?
                 if (length < lineLength) {
-                	lines.Add(MakeLine(line, length, emoteFix));
+                    lines.Add(MakeLine(line, length, emoteFix));
                     break;
                 }
                 firstLine = false;
@@ -140,11 +140,20 @@ namespace MCGalaxy {
         }
         
         static bool ValidColor(char c) { return Colors.IsStandard(c) || Colors.IsDefined(c); }
+
+        public static string CleanupColors(string value, Player p) {
+            // Although ClassiCube in classic mode supports invalid colours,
+            //  the original vanilla client crashes with invalid colour codes
+            // Since it's impossible to identify which client is being used,
+            //  just remove the ampersands to be on the safe side
+            //  when text colours extension is not supported
+            return CleanupColors(value, p.hasTextColors, p.hasTextColors);
+        }
         
         /// <summary> Removes redundant colour codes and fixes some colour codes to behave correctly for older clients </summary>
-        /// <param name="supportsCustomCols">if false, fixes colour codes for compatibility 
-        /// (e.g. converts custom colour codes into fallback colour code) </param>
-        public static string CleanupColors(string value, bool supportsCustomCols) {
+        /// <param name="fullAmpersands"> if false, ampersands not followed by valid colour code are removed </param>
+        /// <param name="customCols"> if false, converts custom colour codes into fallback colour code </param>
+        public static string CleanupColors(string value, bool fullAmpersands, bool customCols) {
             if (value.IndexOf('&') == -1) return value;
             StringBuilder sb = new StringBuilder(value.Length);
             int lastIdx  = -1;
@@ -161,11 +170,8 @@ namespace MCGalaxy {
                 
                 // Maybe still not a colour code
                 if (i == value.Length - 1 || !ValidColor(value[i + 1])) {
-                    if (!supportsCustomCols) {
-                        // Although ClassiCube in classic mode supports invalid colours,
-                        //  the original vanilla client crashes with invalid colour codes
-                        // Since it's impossible to identify which client is being used,
-                        //  just remove the ampersands to be on the safe side
+                    if (!fullAmpersands) {
+                        // Client doesn't support standalone & 
                         i++;
                     } else {
                         // Treat the & like a normal character
@@ -178,7 +184,7 @@ namespace MCGalaxy {
                 char col = value[i + 1];
                 // A-F --> a-f
                 if (col >= 'A' && col <= 'F') col += ' ';
-                if (!supportsCustomCols) col = Colors.Get(col).Fallback;
+                if (!customCols) col = Colors.Get(col).Fallback;
                 
                 // Don't append duplicate colour codes
                 if (lastCol != col) {
