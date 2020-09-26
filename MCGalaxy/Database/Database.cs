@@ -24,17 +24,22 @@ namespace MCGalaxy.SQL {
     /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
     public delegate object ReaderCallback(IDataRecord record, object arg);
     
+    /// <summary> Abstracts a SQL database management engine. </summary>
     public static class Database {
         public static IDatabaseBackend Backend;
         public static bool TableExists(string table) { return Backend.TableExists(table); }
         public const string DateFormat = "yyyy-MM-dd HH:mm:ss";
         
         static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
+        /// <summary> Counts rows in the given table. </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are counted. </param>
         public static int CountRows(string table, string modifier = "", params object[] args) {
             return (int)Backend.ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
         }
         
         static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
+        /// <summary> Returns value of first column in last row read from the given table. </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are read. </param>
         public static string ReadString(string table, string column,
                                         string modifier = "", params object[] args) {
             return (string)Backend.ReadRows(table, column, null, ReadString, modifier, args);
@@ -56,6 +61,8 @@ namespace MCGalaxy.SQL {
             return arg;
         }
         
+        /// <summary> Returns all columns of all rows read from the given table. </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are read. </param>
         public static List<string[]> GetRows(string table, string columns,
                                              string modifier = "", params object[] args) {
             List<string[]> fields = new List<string[]>();
@@ -90,15 +97,13 @@ namespace MCGalaxy.SQL {
                     e = ex; // try yet again
                 }
             }
-            
-            try {
-                File.AppendAllText("MySQL_error.log", DateTime.Now + " " + sql + "\r\n");
-            } catch { }
-            Logger.LogError(e);
+
+            Logger.LogError("Error executing SQL statement: " + sql, e);
             return arg;
         }
-
-        
+    }
+    
+    internal static class DatabaseExts {
         internal static string GetText(this IDataRecord record, int col) {
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
@@ -127,6 +132,6 @@ namespace MCGalaxy.SQL {
                 return Database.Backend.RawGetDateTime(record, col);
             }
             return record.GetValue(col).ToString();
-        }
+        }        
     }
 }

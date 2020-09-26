@@ -57,13 +57,13 @@ namespace MCGalaxy {
             }
         }
         
-        public static string Format(string message, Player p, bool tokens = true, bool emotes = true) {
+        public static string Format(string message, Player dst, bool tokens = true, bool emotes = true) {
             message = Colors.Escape(message);
             StringBuilder sb = new StringBuilder(message);      
-            if (tokens) ChatTokens.Apply(sb, p);
+            if (tokens) ChatTokens.Apply(sb, dst);
             if (!emotes) return sb.ToString();
             
-            if (p.parseEmotes) {
+            if (dst.parseEmotes) {
                 sb.Replace(":)", "(darksmile)");
                 sb.Replace(":D", "(smile)");
                 sb.Replace("<3", "(heart)");
