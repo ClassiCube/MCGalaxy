@@ -60,9 +60,9 @@ namespace MCGalaxy.Commands.Maintenance {
             int tmpNum = new Random().Next(0, 10000000);
             string tmpName = "-tmp" + tmpNum + "-";
             
-            Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", dst, tmpName); // PLAYERS[dst] = tmp
-            Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", src, dst);     // PLAYERS[src] = dst
-            Database.Backend.UpdateRows("Players", "Name=@1", "WHERE Name=@0", tmpName, src); // PLAYERS[tmp] = src
+            Database.UpdateRows("Players", "Name=@1", "WHERE Name=@0", dst, tmpName); // PLAYERS[dst] = tmp
+            Database.UpdateRows("Players", "Name=@1", "WHERE Name=@0", src, dst);     // PLAYERS[src] = dst
+            Database.UpdateRows("Players", "Name=@1", "WHERE Name=@0", tmpName, src); // PLAYERS[tmp] = src
         }
         
         static void SwapGroups(string src, string dst, Group srcGroup, Group dstGroup) {

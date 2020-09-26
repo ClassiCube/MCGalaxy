@@ -42,11 +42,11 @@ namespace MCGalaxy.Eco {
         }
         
         public static void LoadDatabase() {
-            Database.Backend.CreateTable("Economy", createEconomy);
+            Database.CreateTable("Economy", createEconomy);
             
             // money used to be in the Economy table, move it back to the Players table
             List<EcoStats> outdated = new List<EcoStats>();
-            Database.Backend.ReadRows("Economy", "*", outdated, ListOld, "WHERE money > 0");
+            Database.ReadRows("Economy", "*", outdated, ListOld, "WHERE money > 0");
             
             if (outdated.Count == 0) return;            
             Logger.Log(LogType.SystemActivity, "Upgrading economy stats..");   
@@ -73,9 +73,9 @@ namespace MCGalaxy.Eco {
         }
         
         public static void UpdateStats(EcoStats stats) {
-            Database.Backend.AddOrReplaceRow("Economy", "player, money, total, purchase, payment, salary, fine",
-                                             stats.Player, 0, stats.TotalSpent, stats.Purchase,
-                                             stats.Payment, stats.Salary, stats.Fine);
+            Database.AddOrReplaceRow("Economy", "player, money, total, purchase, payment, salary, fine",
+			                         stats.Player, 0, stats.TotalSpent, stats.Purchase,
+			                         stats.Payment, stats.Salary, stats.Fine);
         }
         
         static EcoStats ParseStats(IDataRecord record) {
@@ -100,8 +100,8 @@ namespace MCGalaxy.Eco {
         public static EcoStats RetrieveStats(string name) {
             EcoStats stats = default(EcoStats);
             stats.Player   = name;
-            return (EcoStats)Database.Backend.ReadRows("Economy", "*", stats, ReadStats, 
-                                                       "WHERE player=@0", name);
+            return (EcoStats)Database.ReadRows("Economy", "*", stats, ReadStats,
+                                               "WHERE player=@0", name);
         }
     }
 }

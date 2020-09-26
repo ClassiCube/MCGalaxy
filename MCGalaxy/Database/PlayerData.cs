@@ -59,11 +59,11 @@ namespace MCGalaxy.DB {
             p.TimesVisited = 1;
             
             string now = DateTime.Now.ToString(Database.DateFormat);
-            Database.Backend.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
-                                    "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
-                                    p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
+            Database.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
+                            "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
+                            p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
             
-            object id = Database.Backend.ReadRows("Players", "ID", null, ReadID, "WHERE Name=@0", p.name);
+            object id = Database.ReadRows("Players", "ID", null, ReadID, "WHERE Name=@0", p.name);
             if (id != null) {
                 p.DatabaseID = (int)id;
             } else {

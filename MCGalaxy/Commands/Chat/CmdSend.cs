@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands.Chatting {
                 p.Message(message);
             }
             
-            Database.Backend.CreateTable("Inbox" + name, createInbox);
-            Database.Backend.AddRow("Inbox" + name, "PlayerFrom, TimeSent, Contents",
-                                    p.name, DateTime.Now.ToString(Database.DateFormat), message);
+            Database.CreateTable("Inbox" + name, createInbox);
+            Database.AddRow("Inbox" + name, "PlayerFrom, TimeSent, Contents",
+                            p.name, DateTime.Now.ToString(Database.DateFormat), message);
 
             Player target = PlayerInfo.FindExact(name);
             p.Message("Message sent to {0}%S.", p.FormatNick(name));

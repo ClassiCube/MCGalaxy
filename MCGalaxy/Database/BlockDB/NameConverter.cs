@@ -50,7 +50,7 @@ namespace MCGalaxy.DB {
             int i = Server.invalidIds.IndexOf(name);
             if (i >= 0) ids.Add(MaxPlayerID - i);
             
-            Database.Backend.ReadRows("Players", "ID", ids, ListIds, "WHERE Name=@0", name);
+            Database.ReadRows("Players", "ID", ids, ListIds, "WHERE Name=@0", name);
             return ids.ToArray();
         }
         

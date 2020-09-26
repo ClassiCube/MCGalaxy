@@ -62,8 +62,8 @@ namespace MCGalaxy {
                 return;
             }
 
-            Database.Backend.CreateTable("Opstats", createOpstats);
-            Database.Backend.CreateTable("Players", createPlayers);
+            Database.CreateTable("Opstats", createOpstats);
+            Database.CreateTable("Players", createPlayers);
             
             //since 5.5.11 we are cleaning up the table Playercmds
             //if Playercmds exists copy-filter to Opstats and remove Playercmds
@@ -72,26 +72,26 @@ namespace MCGalaxy {
                 foreach (string cmd in Server.Opstats)
                     Database.Execute(string.Format(sql, "cmd = '" + cmd + "'"));
                 Database.Execute(string.Format(sql, "cmd = 'review' AND cmdmsg = 'next'"));
-                Database.Backend.DeleteTable("Playercmds");
+                Database.DeleteTable("Playercmds");
             }
 
             List<string> columns = Database.Backend.ColumnNames("Players");
             if (columns.Count == 0) return;
             
             if (!columns.CaselessContains("Color")) {
-                Database.Backend.AddColumn("Players", new ColumnDesc("color", ColumnType.VarChar, 6), "totalKicked");
+                Database.AddColumn("Players", new ColumnDesc("color", ColumnType.VarChar, 6), "totalKicked");
             }
             if (!columns.CaselessContains("Title_Color")) {
-                Database.Backend.AddColumn("Players", new ColumnDesc("title_color", ColumnType.VarChar, 6), "color");
+                Database.AddColumn("Players", new ColumnDesc("title_color", ColumnType.VarChar, 6), "color");
             }
             if (!columns.CaselessContains("TimeSpent")) {
-                Database.Backend.AddColumn("Players", new ColumnDesc("TimeSpent", ColumnType.VarChar, 20), "totalKicked");
+                Database.AddColumn("Players", new ColumnDesc("TimeSpent", ColumnType.VarChar, 20), "totalKicked");
             }
             if (!columns.CaselessContains("TotalCuboided")) {
-                Database.Backend.AddColumn("Players", new ColumnDesc("totalCuboided", ColumnType.Int64), "totalBlocks");
+                Database.AddColumn("Players", new ColumnDesc("totalCuboided", ColumnType.Int64), "totalBlocks");
             }
             if (!columns.CaselessContains("Messages")) {
-                Database.Backend.AddColumn("Players", new ColumnDesc("Messages", ColumnType.UInt24), "title_color");
+                Database.AddColumn("Players", new ColumnDesc("Messages", ColumnType.UInt24), "title_color");
             }
         }
     }

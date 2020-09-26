@@ -113,7 +113,7 @@ namespace MCGalaxy.Games {
             Red.RespawnFlag(Map);
             ResetTeams();
 
-            Database.Backend.CreateTable("CTF", createSyntax);
+            Database.CreateTable("CTF", createSyntax);
         }
         
         protected override void EndGame() {

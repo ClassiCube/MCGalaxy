@@ -181,7 +181,7 @@ namespace MCGalaxy.Tasks {
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
-            Database.Backend.ReadRows("Players", "ID,TimeSpent", null, ReadTimeSpent);
+            Database.ReadRows("Players", "ID,TimeSpent", null, ReadTimeSpent);
         }
         
         static object ReadTimeSpent(IDataRecord record, object arg) {

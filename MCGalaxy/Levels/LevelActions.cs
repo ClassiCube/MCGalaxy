@@ -94,7 +94,7 @@ namespace MCGalaxy {
         
         static void RenameDatabaseTables(Player p, string src, string dst) {
             if (Database.TableExists("Block" + src)) {
-                Database.Backend.RenameTable("Block" + src, "Block" + dst);
+                Database.RenameTable("Block" + src, "Block" + dst);
             }
             object srcLocker = ThreadSafeCache.DBCache.GetLocker(src);
             object dstLocker = ThreadSafeCache.DBCache.GetLocker(dst);
@@ -106,7 +106,7 @@ namespace MCGalaxy {
             	MessageBlock.MoveAll(src, dst);
             	
                 if (Database.TableExists("Zone" + src)) {
-                    Database.Backend.RenameTable("Zone" + src, "Zone" + dst);
+                    Database.RenameTable("Zone" + src, "Zone" + dst);
                 }
             }
             
@@ -115,8 +115,8 @@ namespace MCGalaxy {
             foreach (string table in tables) {
                 if (!table.StartsWith("Portals")) continue;
                 
-                Database.Backend.UpdateRows(table, "ExitMap=@1",
-                                            "WHERE ExitMap=@0", src, dst);
+                Database.UpdateRows(table, "ExitMap=@1", 
+                                    "WHERE ExitMap=@0", src, dst);
             }
         }
         
@@ -176,7 +176,7 @@ namespace MCGalaxy {
         
         static void DeleteDatabaseTables(string map) {
             if (Database.TableExists("Block" + map)) {
-                Database.Backend.DeleteTable("Block" + map);
+                Database.DeleteTable("Block" + map);
             }
             
             object locker = ThreadSafeCache.DBCache.GetLocker(map);
@@ -185,7 +185,7 @@ namespace MCGalaxy {
             	MessageBlock.DeleteAll(map);
             	
                 if (Database.TableExists("Zone" + map)) {
-                    Database.Backend.DeleteTable("Zone" + map);
+                    Database.DeleteTable("Zone" + map);
                 }
             }
         }

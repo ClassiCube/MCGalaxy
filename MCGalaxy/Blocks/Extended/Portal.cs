@@ -90,7 +90,7 @@ namespace MCGalaxy.Blocks.Extended {
             List<Vec3U16> coords = new List<Vec3U16>();
             if (!ExistsInDB(map)) return coords;
             
-            Database.Backend.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
+            Database.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
             return coords;
         }
 
@@ -99,61 +99,60 @@ namespace MCGalaxy.Blocks.Extended {
             List<PortalExit> exits = new List<PortalExit>();
             if (!ExistsInDB(map)) return exits;
             
-            Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", exits, ReadAllExits);
+            Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", exits, ReadAllExits);
             return exits;
         }
         
         /// <summary> Deletes all portals for the given map. </summary>
         public static void DeleteAll(string map) {
             if (!ExistsInDB(map)) return;
-            Database.Backend.DeleteTable("Portals" + map);
+            Database.DeleteTable("Portals" + map);
         }
         
         /// <summary> Copies all portals from the given map to another map. </summary>
         public static void CopyAll(string src, string dst) {
             if (!ExistsInDB(src)) return;
-            Database.Backend.CreateTable("Portals" + dst, LevelDB.createPortals);
-            Database.Backend.CopyAllRows("Portals" + src, "Portals" + dst);
+            Database.CreateTable("Portals" + dst, LevelDB.createPortals);
+            Database.CopyAllRows("Portals" + src, "Portals" + dst);
             // Fixup portal exists that go to the same map
-            Database.Backend.UpdateRows("Portals" + dst, "ExitMap=@1", "WHERE ExitMap=@0", src, dst);
+            Database.UpdateRows("Portals" + dst, "ExitMap=@1", "WHERE ExitMap=@0", src, dst);
         }
         
         /// <summary> Moves all portals from the given map to another map. </summary>
         public static void MoveAll(string src, string dst) {
             if (!ExistsInDB(src)) return;
-            Database.Backend.RenameTable("Portals" + src, "Portals" + dst);
+            Database.RenameTable("Portals" + src, "Portals" + dst);
         }
         
         
         /// <summary> Returns the exit details for the given portal in the given map. </summary>
         /// <remarks> Returns null if the given portal does not actually exist. </remarks>
         public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
-            object raw = Database.Backend.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
-                                                   null, ReadExit,
-                                                   "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            object raw = Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", null, ReadExit,
+        	                               "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
             return (PortalExit)raw;
         }
         
         /// <summary> Deletes the given portal from the given map. </summary>
         public static void Delete(string map, ushort x, ushort y, ushort z) {
-            Database.Backend.DeleteRows("Portals" + map,
-                                        "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            Database.DeleteRows("Portals" + map,
+        	                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
         }
         
         /// <summary> Creates or updates the given portal in the given map. </summary>
         public static void Set(string map, ushort x, ushort y, ushort z,
                                ushort exitX, ushort exitY, ushort exitZ, string exitMap) {
-            Database.Backend.CreateTable("Portals" + map, LevelDB.createPortals);
+            Database.CreateTable("Portals" + map, LevelDB.createPortals);
             int count = Database.CountRows("Portals" + map,
                                            "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
             
             if (count == 0) {
-                Database.Backend.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
-                                        x, y, z, exitX, exitY, exitZ, exitMap);
+                Database.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
+            	                x, y, z, exitX, exitY, exitZ, exitMap);
             } else {
-                Database.Backend.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
-                                            "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z,
-                                            exitX, exitY, exitZ, exitMap);
+                Database.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
+            	                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z,
+            	                    exitX, exitY, exitZ, exitMap);
             }
             
             Level lvl = LevelInfo.FindExact(map);

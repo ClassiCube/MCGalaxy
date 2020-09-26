@@ -149,7 +149,7 @@ namespace MCGalaxy {
         
         public static bool ValidName(string map) {
             foreach (char c in map) {
-                if (!IDatabaseBackend.ValidNameChar(c)) return false;
+                if (!Database.ValidNameChar(c)) return false;
             }
             return true;
         }

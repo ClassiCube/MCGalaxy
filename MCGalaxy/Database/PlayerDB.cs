@@ -94,7 +94,7 @@ namespace MCGalaxy.DB {
         
         
         public static void Update(string name, string column, string value) {
-            Database.Backend.UpdateRows("Players", column + "=@1", "WHERE Name=@0", name, value);
+            Database.UpdateRows("Players", column + "=@1", "WHERE Name=@0", name, value);
         }
         
         public static string FindColor(Player p) {
@@ -138,9 +138,9 @@ namespace MCGalaxy.DB {
         
         static void MatchMulti(string name, string columns, object arg, ReaderCallback callback) {
             string suffix = Database.Backend.CaselessLikeSuffix;
-            Database.Backend.ReadRows("Players", columns, arg, callback,
-                                      "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
-                                      "%" + name.Replace("_", "#_") + "%");
+            Database.ReadRows("Players", columns, arg, callback,
+                              "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
+                              "%" + name.Replace("_", "#_") + "%");
         }
     }
 }

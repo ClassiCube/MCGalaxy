@@ -60,7 +60,7 @@ namespace MCGalaxy {
             if (!Database.TableExists("Zone" + map)) return;
             
             List<Zone> zones = new List<Zone>();
-            Database.Backend.ReadRows("Zone" + map, "*", zones, ListZones);
+            Database.ReadRows("Zone" + map, "*", zones, ListZones);
             
             bool changedPerbuild = false;
             for (int i = 0; i < zones.Count; i++) {
@@ -86,7 +86,7 @@ namespace MCGalaxy {
             if (changedPerbuild) level.SaveSettings();
             if (level.Zones.Count > 0 && !level.Save(true)) return;
             
-            Database.Backend.DeleteTable("Zone" + map);
+            Database.DeleteTable("Zone" + map);
             Logger.Log(LogType.SystemActivity, "Upgraded zones for map " + map);
         }
         

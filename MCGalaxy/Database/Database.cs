@@ -27,14 +27,13 @@ namespace MCGalaxy.SQL {
     /// <summary> Abstracts a SQL database management engine. </summary>
     public static class Database {
         public static IDatabaseBackend Backend;
-        public static bool TableExists(string table) { return Backend.TableExists(table); }
-        public const string DateFormat = "yyyy-MM-dd HH:mm:ss";
-        
+        public const string DateFormat = "yyyy-MM-dd HH:mm:ss";        
+
         static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
         /// <summary> Counts rows in the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are counted. </param>
         public static int CountRows(string table, string modifier = "", params object[] args) {
-            return (int)Backend.ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
+            return (int)ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
         }
         
         static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
@@ -42,16 +41,11 @@ namespace MCGalaxy.SQL {
         /// <param name="modifier"> Optional SQL to filter which rows are read. </param>
         public static string ReadString(string table, string column,
                                         string modifier = "", params object[] args) {
-            return (string)Backend.ReadRows(table, column, null, ReadString, modifier, args);
+            return (string)ReadRows(table, column, null, ReadString, modifier, args);
         }
         
         internal static object ReadList(IDataRecord record, object arg) {
             ((List<string>)arg).Add(record.GetText(0)); return arg;
-        }
-        internal static List<string> GetStrings(string sql, params object[] args) {
-            List<string> values = new List<string>();
-            Iterate(sql, values, ReadList, args);
-            return values;
         }
         
         internal static object ReadFields(IDataRecord record, object arg) {
@@ -66,10 +60,107 @@ namespace MCGalaxy.SQL {
         public static List<string[]> GetRows(string table, string columns,
                                              string modifier = "", params object[] args) {
             List<string[]> fields = new List<string[]>();
-            Backend.ReadRows(table, columns, fields, ReadFields, modifier, args);
+            ReadRows(table, columns, fields, ReadFields, modifier, args);
             return fields;
         }
         
+        
+        #region High level table management
+        
+        /// <summary> Returns whether a table (case sensitive) exists by that name. </summary>
+        public static bool TableExists(string table) {
+            ValidateName(table);
+            return Backend.TableExists(table); 
+        }
+        
+        /// <summary> Creates a new table in the database (unless it already exists). </summary>
+        public static void CreateTable(string table, ColumnDesc[] columns) {
+            ValidateName(table);
+            string sql = Backend.CreateTableSql(table, columns);
+            Execute(sql, null);
+        } 
+        
+        /// <summary> Renames the source table to the given name. </summary>
+        public static void RenameTable(string srcTable, string dstTable) {
+            ValidateName(srcTable);
+            ValidateName(dstTable);
+            string sql = Backend.RenameTableSql(srcTable, dstTable);
+            Execute(sql, null);
+        }
+        
+        /// <summary> Completely removes the given table. </summary>
+        public static void DeleteTable(string table) {
+            ValidateName(table);
+            string sql = Backend.DeleteTableSql(table);
+            Execute(sql, null);
+        }        
+        
+        /// <summary> Adds a new coloumn to the given table. </summary>
+        /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
+        public static void AddColumn(string table, ColumnDesc col, string colAfter) {
+            ValidateName(table);
+            string sql = Backend.AddColumnSql(table, col, colAfter);
+            Execute(sql, null);            
+        }
+        #endregion
+        
+        
+        #region High level functions
+        
+        /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
+        /// <remarks> May NOT work correctly if the tables have different schema. </remarks>
+        public static void CopyAllRows(string srcTable, string dstTable) {
+            ValidateName(srcTable);
+            ValidateName(dstTable);
+            string sql = Backend.CopyAllRowsSql(srcTable, dstTable);
+            Execute(sql, null);
+        }
+        
+        /// <summary> Iterates over read rows for the given table. </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are read,
+        /// return rows in a certain order, etc.</param>
+        public static object ReadRows(string table, string columns, object arg,
+                                      ReaderCallback callback, string modifier = "", params object[] args) {
+            ValidateName(table);
+            string sql = Backend.ReadRowsSql(table, columns, modifier);
+            return Iterate(sql, arg, callback, args);
+        }
+        
+        /// <summary> Updates rows for the given table. </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are updated. </param>
+        public static void UpdateRows(string table, string columns,
+                                       string modifier = "", params object[] args) {
+            ValidateName(table);
+            string sql = Backend.UpdateRowsSql(table, columns, modifier);
+            Execute(sql, args);
+        }
+        
+        /// <summary> Deletes rows for the given table. </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are deleted. </param>
+        public static void DeleteRows(string table, string modifier = "", params object[] args) {
+            ValidateName(table);
+            string sql = Backend.DeleteRowsSql(table, modifier);
+            Execute(sql, args);
+        }
+
+        /// <summary> Adds a row to the given table. </summary>
+        public static void AddRow(string table, string columns, params object[] args) {
+            ValidateName(table);
+            string sql = Backend.AddRowSql(table, columns, args);
+            Execute(sql, args);
+        }
+        
+        /// <summary> Adds or replaces a row (same primary key) in the given table. </summary>
+        public static void AddOrReplaceRow(string table, string columns, params object[] args) {
+            ValidateName(table);
+            string sql = Backend.AddOrReplaceRowSql(table, columns, args);
+            Execute(sql, args);
+        }
+        
+        #endregion
+        
+        
+        #region Low level functions
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, params object[] args) {
@@ -100,6 +191,22 @@ namespace MCGalaxy.SQL {
 
             Logger.LogError("Error executing SQL statement: " + sql, e);
             return arg;
+        }
+        #endregion
+        
+        internal static bool ValidNameChar(char c) {
+            return 
+                c > ' '   && c != '"' && c != '%' && c != '&'  &&
+                c != '\'' && c != '*' && c != '/' && c != ':'  &&
+                c != '<'  && c != '>' && c != '?' && c != '\\' &&
+                c != '`'  && c != '|' && c <= '~';
+        }
+        
+        internal static void ValidateName(string table) {
+            foreach (char c in table) {
+                if (ValidNameChar(c)) continue;
+                throw new ArgumentException("Invalid character in table name: " + c);
+            }
         }
     }
     
