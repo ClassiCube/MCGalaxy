@@ -54,9 +54,9 @@ namespace MCGalaxy {
         /// <summary> true if maps sees server-wide chat, false if maps have level-only/isolated chat </summary>
         [ConfigBool("world-chat", "Server", true)]
         public bool ServerWideChat = true;
-        [ConfigString("main-name", "General", "main", false, "._+")]
+        [ConfigString("main-name", "General", "main", false, "()._+,-")]
         public string MainLevel = "main";
-        [ConfigString("xjail-map-name", "Other", "(main)", false, "()._+")]
+        [ConfigString("xjail-map-name", "Other", "(main)", false, "()._+,-")]
         public string XJailLevel = "(main)";
         [ConfigString("default-texture-url", "General", "", true)]
         public string DefaultTerrain = "";
