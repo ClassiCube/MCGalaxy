@@ -109,13 +109,12 @@ namespace MCGalaxy.Generator {
         }
 
 
-        public void PerlinNoise( float[] map, int width, int length,
-                                int startOctave, int endOctave, float decay, int offsetX, int offsetY ) {
+        public void PerlinNoise( float[] map, int width, int length, int startOctave, int endOctave, float decay ) {
             float maxDim = 1f / Math.Max( width, length );
             for( int x = 0, i = 0; x < width; x++ )
                 for( int y = 0; y < length; y++ ) 
             {
-                map[i++] += PerlinNoise( x * maxDim + offsetX, y * maxDim + offsetY, startOctave, endOctave, decay );
+                map[i++] += PerlinNoise( x * maxDim, y * maxDim, startOctave, endOctave, decay );
             }
         }
 
@@ -202,7 +201,7 @@ namespace MCGalaxy.Generator {
                                  heightmap[i - X2 + Y2]     + heightmap[i - X1 + Y2] *  4 + heightmap[i + Y2] *  7 + heightmap[i + X1 + Y2] *  4 + heightmap[i + X2 + Y2]
                                 ) * GaussianBlurDivisor;
                 }
-            	i++;
+                i++;
             }
             return output;
         }
@@ -218,7 +217,7 @@ namespace MCGalaxy.Generator {
                 if( x == 0 || y == 0 || x == width - 1 || y == length - 1 ) {
                     output[i] = 0;
                 } else {
-            	    float origin = heightmap[i];
+                    float origin = heightmap[i];
                     output[i] = (Math.Abs( heightmap[i - X1]      - origin ) * 3 +
                                  Math.Abs( heightmap[i + Y1]      - origin ) * 3 +
                                  Math.Abs( heightmap[i - X1]      - origin ) * 3 +
@@ -228,7 +227,7 @@ namespace MCGalaxy.Generator {
                                  Math.Abs( heightmap[x - X1 + Y1] - origin ) * 2 +
                                  Math.Abs( heightmap[x + X1 + Y1] - origin ) * 2) / 20f;
                 }
-            	i++;
+                i++;
             }
 
             return output;
@@ -258,7 +257,7 @@ namespace MCGalaxy.Generator {
             int coveredVoxels = 0;
             
             for( int i = 0; i < data.Length; i++ ) {
-            	if( data[i] < threshold ) coveredVoxels++;
+                if( data[i] < threshold ) coveredVoxels++;
             }
             return coveredVoxels / (float)data.Length;
         }

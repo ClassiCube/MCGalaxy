@@ -59,7 +59,7 @@ namespace MCGalaxy.Generator {
             heightmap = new float[_width * _length];
 
             noise.PerlinNoise( heightmap, _width, _length, 
-                              args.FeatureScale, args.DetailScale, args.Roughness, 0, 0 );
+                              args.FeatureScale, args.DetailScale, args.Roughness );
 
             if( args.UseBias && !args.DelayBias ) {
                 ReportProgress( 2, "Heightmap: Biasing" );
@@ -147,7 +147,7 @@ namespace MCGalaxy.Generator {
                 int blendmapDetailSize = (int)Math.Log( Math.Max( _width, _length ), 2 ) - 2;
                 
                 new Noise( rand.Next(), NoiseInterpolationMode.Cosine )
-                    .PerlinNoise( altmap, _width, _length, 3, blendmapDetailSize, 0.5f, 0, 0 );
+                    .PerlinNoise( altmap, _width, _length, 3, blendmapDetailSize, 0.5f );
                 Noise.Normalize( altmap, -1, 1 );
             }
 
@@ -181,7 +181,7 @@ namespace MCGalaxy.Generator {
                 if( heightmap[i] < desiredWaterLevel ) {
                     float depth = args.MaxDepth;
                     if( altmap != null ) {
-                    	depth += altmap[i] * args.MaxDepthVariation;
+                        depth += altmap[i] * args.MaxDepthVariation;
                     }
                     slope = slopemap[i] * depth;
                     level = args.WaterLevel - (int)Math.Round( Math.Pow( 1 - heightmap[i] / desiredWaterLevel, args.BelowFuncExponent ) * depth );
@@ -331,15 +331,16 @@ namespace MCGalaxy.Generator {
 
             Random rn = new Random();
             short[,] shadows = ComputeHeightmap( map );
+            int width = _width, length = _length;
 
-            for( int x = 0; x < map.Width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
-                for( int z = 0; z < map.Length; z += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
+            for( int x = 0; x < width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
+                for( int z = 0; z < length; z += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
                     int nx = x + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
                     int nz = z + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
-                    if( nx < 0 || nx >= map.Width || nz < 0 || nz >= map.Length ) continue;
+                    if( nx < 0 || nx >= width || nz < 0 || nz >= length ) continue;
                     int ny = shadows[nx, nz];
 
-                    if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx * _length + nz] < .5 ) {
+                    if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx * length + nz] < .5 ) {
                         // Pick a random height for the tree between Min and Max,
                         // discarding this tree if it would breach the top of the map
                         int nh;
