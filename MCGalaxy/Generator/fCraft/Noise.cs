@@ -109,28 +109,29 @@ namespace MCGalaxy.Generator {
         }
 
 
-        public void PerlinNoise( float[,] map, int startOctave, int endOctave, float decay, int offsetX, int offsetY ) {
-            float maxDim = 1f / Math.Max( map.GetLength( 0 ), map.GetLength( 1 ) );
-            for( int x = map.GetLength( 0 ) - 1; x >= 0; x-- ) {
-                for( int y = map.GetLength( 1 ) - 1; y >= 0; y-- ) {
-                    map[x, y] += PerlinNoise( x * maxDim + offsetX, y * maxDim + offsetY, startOctave, endOctave, decay );
-                }
+        public void PerlinNoise( float[] map, int width, int length,
+                                int startOctave, int endOctave, float decay, int offsetX, int offsetY ) {
+            float maxDim = 1f / Math.Max( width, length );
+            for( int x = 0, i = 0; x < width; x++ )
+                for( int y = 0; y < length; y++ ) 
+            {
+                map[i++] += PerlinNoise( x * maxDim + offsetX, y * maxDim + offsetY, startOctave, endOctave, decay );
             }
         }
 
 
         #region Normalization
 
-        public static void Normalize( float[,] map ) { Normalize( map, 0, 1 ); }
+        public static void Normalize( float[] map ) { Normalize( map, 0, 1 ); }
 
 
-        public unsafe static void CalculateNormalizationParams( float* ptr, int length, float low, float high, out float multiplier, out float constant ) {
+        public static void CalculateNormalizationParams( float[] data, float low, float high, out float multiplier, out float constant ) {
             float min = float.MaxValue,
                   max = float.MinValue;
 
-            for( int i = 0; i < length; i++ ) {
-                min = Math.Min( min, ptr[i] );
-                max = Math.Max( max, ptr[i] );
+            for( int i = 0; i < data.Length; i++ ) {
+                min = Math.Min( min, data[i] );
+                max = Math.Max( max, data[i] );
             }
 
             multiplier = ( high - low ) / ( max - min );
@@ -138,13 +139,11 @@ namespace MCGalaxy.Generator {
         }
 
 
-        public unsafe static void Normalize( float[,] map, float low, float high ) {
-            fixed( float* ptr = map ) {
-                float multiplier, constant;
-                CalculateNormalizationParams( ptr, map.Length, low, high, out multiplier, out constant );
-                for( int i = 0; i < map.Length; i++ ) {
-                    ptr[i] = ptr[i] * multiplier + constant;
-                }
+        public static void Normalize( float[] map, float low, float high ) {
+            float multiplier, constant;
+            CalculateNormalizationParams( map, low, high, out multiplier, out constant );
+            for( int i = 0; i < map.Length; i++ ) {
+                map[i] = map[i] * multiplier + constant;
             }
         }
 
@@ -152,79 +151,84 @@ namespace MCGalaxy.Generator {
 
 
         // assumes normalized input
-        public unsafe static void Marble( float[,] map ) {
-            fixed( float* ptr = map ) {
-                for( int i = 0; i < map.Length; i++ ) {
-                    ptr[i] = Math.Abs( ptr[i] * 2 - 1 );
-                }
+        public static void Marble( float[] map ) {
+            for( int i = 0; i < map.Length; i++ ) {
+                map[i] = Math.Abs( map[i] * 2 - 1 );
             }
         }
 
 
-        public static void ApplyBias( float[,] data, float c00, float c01, float c10, float c11, float midpoint ) {
-            float maxX = 2f / data.GetLength( 0 );
-            float maxY = 2f / data.GetLength( 1 );
-            int offsetX = data.GetLength( 0 ) / 2;
-            int offsetY = data.GetLength( 1 ) / 2;
+        public static void ApplyBias( float[] data, int width, int length,
+                                     float c00, float c01, float c10, float c11, float midpoint ) {
+            float maxX = 2f / width;
+            float maxY = 2f / length;
+            int offsetX = width / 2;
+            int offsetY = length / 2;
+            int X1 = length;
 
             for( int x = offsetX - 1; x >= 0; x-- ) {
                 for( int y = offsetY - 1; y >= 0; y-- ) {
-                    data[x, y] += InterpolateCosine( c00, (c00 + c01) / 2, (c00 + c10) / 2, midpoint, x * maxX, y * maxY );
-                    data[x + offsetX, y] += InterpolateCosine( (c00 + c10) / 2, midpoint, c10, (c11 + c10) / 2, x * maxX, y * maxY );
-                    data[x, y + offsetY] += InterpolateCosine( (c00 + c01) / 2, c01, midpoint, (c01 + c11) / 2, x * maxX, y * maxY );
-                    data[x + offsetX, y + offsetY] += InterpolateCosine( midpoint, (c01 + c11) / 2, (c11 + c10) / 2, c11, x * maxX, y * maxY );
+                    data[x             * X1 + y          ] += InterpolateCosine( c00, (c00 + c01) / 2, (c00 + c10) / 2, midpoint, x * maxX, y * maxY );
+                    data[(x + offsetX) * X1 + y          ] += InterpolateCosine( (c00 + c10) / 2, midpoint, c10, (c11 + c10) / 2, x * maxX, y * maxY );
+                    data[x             * X1 + y + offsetY] += InterpolateCosine( (c00 + c01) / 2, c01, midpoint, (c01 + c11) / 2, x * maxX, y * maxY );
+                    data[(x + offsetX) * X1 + y + offsetY] += InterpolateCosine( midpoint, (c01 + c11) / 2, (c11 + c10) / 2, c11, x * maxX, y * maxY );
                 }
             }
         }
 
 
-        public unsafe static void Invert( float[,] data ) {
-            fixed( float* ptr = data ) {
-                for( int i = 0; i < data.Length; i++ ) {
-                    ptr[i] = 1 - ptr[i];
-                }
+        public static void Invert( float[] data ) {
+            for( int i = 0; i < data.Length; i++ ) {
+                data[i] = 1 - data[i];
             }
         }
 
         const float GaussianBlurDivisor = 1 / 273f;
-        public static float[,] GaussianBlur5X5( float[,] heightmap ) {
-            float[,] output = new float[heightmap.GetLength( 0 ), heightmap.GetLength( 1 )];
+        public static float[] GaussianBlur5X5( float[] heightmap, int width, int length ) {
+            float[] output = new float[width * length];
+            int X1 = length, Y1 = 1, X2 = length * 2, Y2 = 1 * 2;
             
-            for( int x = heightmap.GetLength( 0 ) - 1; x >= 0; x-- ) {
-                for( int y = heightmap.GetLength( 1 ) - 1; y >= 0; y-- ) {
-                    if( (x < 2) || (y < 2) || (x > heightmap.GetLength( 0 ) - 3) || (y > heightmap.GetLength( 1 ) - 3) ) {
-                        output[x, y] = heightmap[x, y];
-                    } else {
-                        output[x, y] = (heightmap[x - 2, y - 2] + heightmap[x - 1, y - 2] * 4 + heightmap[x, y - 2] * 7 + heightmap[x + 1, y - 2] * 4 + heightmap[x + 2, y - 2] +
-                                        heightmap[x - 1, y - 1] * 4 + heightmap[x - 1, y - 1] * 16 + heightmap[x, y - 1] * 26 + heightmap[x + 1, y - 1] * 16 + heightmap[x + 2, y - 1] * 4 +
-                                        heightmap[x - 2, y] * 7 + heightmap[x - 1, y] * 26 + heightmap[x, y] * 41 + heightmap[x + 1, y] * 26 + heightmap[x + 2, y] * 7 +
-                                        heightmap[x - 2, y + 1] * 4 + heightmap[x - 1, y + 1] * 16 + heightmap[x, y + 1] * 26 + heightmap[x + 1, y + 1] * 16 + heightmap[x + 2, y + 1] * 4 +
-                                        heightmap[x - 2, y + 2] + heightmap[x - 1, y + 2] * 4 + heightmap[x, y + 2] * 7 + heightmap[x + 1, y + 2] * 4 + heightmap[x + 2, y + 2]) * GaussianBlurDivisor;
-                    }
+            for( int x = 0, i = 0; x < width; x++ )
+                for( int y = 0; y < length; y++ ) 
+            {
+                if( x < 2 || y < 2 || x > width - 3 || y > length - 3 ) {
+                    output[i] = heightmap[i];
+                } else {
+                    // NOTE: the wrong -X1 here is for compatibility with original incorrect code
+                    output[i] = (heightmap[i - X2 - Y2]     + heightmap[i - X1 - Y2] *  4 + heightmap[i - Y2] *  7 + heightmap[i + X1 - Y2] *  4 + heightmap[i + X2 - Y2] +
+                                 heightmap[i - X1 - Y1] * 4 + heightmap[i - X1 - Y1] * 16 + heightmap[i - Y1] * 26 + heightmap[i + X1 - Y1] * 16 + heightmap[i + X2 - Y1] * 4 +
+                                 heightmap[i - X2     ] * 7 + heightmap[i - X1     ] * 26 + heightmap[i     ] * 41 + heightmap[i + X1     ] * 26 + heightmap[i + X2     ] * 7 +
+                                 heightmap[i - X2 + Y1] * 4 + heightmap[i - X1 + Y1] * 16 + heightmap[i + Y1] * 26 + heightmap[i + X1 + Y1] * 16 + heightmap[i + X2 + Y1] * 4 +
+                                 heightmap[i - X2 + Y2]     + heightmap[i - X1 + Y2] *  4 + heightmap[i + Y2] *  7 + heightmap[i + X1 + Y2] *  4 + heightmap[i + X2 + Y2]
+                                ) * GaussianBlurDivisor;
                 }
+            	i++;
             }
             return output;
         }
 
 
-        public static float[,] CalculateSlope( float[,] heightmap ) {
-            float[,] output = new float[heightmap.GetLength( 0 ), heightmap.GetLength( 1 )];
+        public static float[] CalculateSlope( float[] heightmap, int width, int length ) {
+            float[] output = new float[width * length];
+            int X1 = length, Y1 = 1; // e.g. map[index + X1] == map[x + 1, y]
 
-            for( int x = heightmap.GetLength( 0 ) - 1; x >= 0; x-- ) {
-                for( int y = heightmap.GetLength( 1 ) - 1; y >= 0; y-- ) {
-                    if( (x == 0) || (y == 0) || (x == heightmap.GetLength( 0 ) - 1) || (y == heightmap.GetLength( 1 ) - 1) ) {
-                        output[x, y] = 0;
-                    } else {
-                        output[x, y] = (Math.Abs( heightmap[x, y - 1] - heightmap[x, y] ) * 3 +
-                                        Math.Abs( heightmap[x, y + 1] - heightmap[x, y] ) * 3 +
-                                        Math.Abs( heightmap[x - 1, y] - heightmap[x, y] ) * 3 +
-                                        Math.Abs( heightmap[x + 1, y] - heightmap[x, y] ) * 3 +
-                                        Math.Abs( heightmap[x - 1, y - 1] - heightmap[x, y] ) * 2 +
-                                        Math.Abs( heightmap[x + 1, y - 1] - heightmap[x, y] ) * 2 +
-                                        Math.Abs( heightmap[x - 1, y + 1] - heightmap[x, y] ) * 2 +
-                                        Math.Abs( heightmap[x + 1, y + 1] - heightmap[x, y] ) * 2) / 20f;
-                    }
+            for( int x = 0, i = 0; x < width; x++ )
+                for( int y = 0; y < length; y++ ) 
+            {
+                if( x == 0 || y == 0 || x == width - 1 || y == length - 1 ) {
+                    output[i] = 0;
+                } else {
+            	    float origin = heightmap[i];
+                    output[i] = (Math.Abs( heightmap[i - X1]      - origin ) * 3 +
+                                 Math.Abs( heightmap[i + Y1]      - origin ) * 3 +
+                                 Math.Abs( heightmap[i - X1]      - origin ) * 3 +
+                                 Math.Abs( heightmap[i + X1]      - origin ) * 3 +
+                                 Math.Abs( heightmap[x - X1 - Y1] - origin ) * 2 +
+                                 Math.Abs( heightmap[x + Y1 - Y1] - origin ) * 2 +
+                                 Math.Abs( heightmap[x - X1 + Y1] - origin ) * 2 +
+                                 Math.Abs( heightmap[x + X1 + Y1] - origin ) * 2) / 20f;
                 }
+            	i++;
             }
 
             return output;
@@ -233,34 +237,30 @@ namespace MCGalaxy.Generator {
 
         const int ThresholdSearchPasses = 10;
 
-        public unsafe static float FindThreshold( float[,] data, float desiredCoverage ) {
+        public static float FindThreshold( float[] data, float desiredCoverage ) {
             if( desiredCoverage == 0 ) return 0;
             if( desiredCoverage == 1 ) return 1;
             float threshold = 0.5f;
             
-            fixed( float* ptr = data ) {
-                for( int i = 0; i < ThresholdSearchPasses; i++ ) {
-                    float coverage = CalculateCoverage( ptr, data.Length, threshold );
-                    if( coverage > desiredCoverage ) {
-                        threshold = threshold - 1 / (float)(4 << i);
-                    } else {
-                        threshold = threshold + 1 / (float)(4 << i);
-                    }
+            for( int i = 0; i < ThresholdSearchPasses; i++ ) {
+                float coverage = CalculateCoverage( data, threshold );
+                if( coverage > desiredCoverage ) {
+                    threshold = threshold - 1 / (float)(4 << i);
+                } else {
+                    threshold = threshold + 1 / (float)(4 << i);
                 }
             }
             return threshold;
         }
 
 
-        public unsafe static float CalculateCoverage( float* data, int length, float threshold ) {
-            if( data == null ) throw new ArgumentNullException( "data" );
+        public static float CalculateCoverage( float[] data, float threshold ) {
             int coveredVoxels = 0;
-            float* end = data + length;
-            while( data < end ) {
-                if( *data < threshold ) coveredVoxels++;
-                data++;
+            
+            for( int i = 0; i < data.Length; i++ ) {
+            	if( data[i] < threshold ) coveredVoxels++;
             }
-            return coveredVoxels / (float)length;
+            return coveredVoxels / (float)data.Length;
         }
     }
 }
