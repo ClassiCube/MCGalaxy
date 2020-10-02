@@ -81,7 +81,8 @@ namespace MCGalaxy {
     public delegate void LogHandler(LogType type, string message);
     
     
-    /// <summary> Logs message to file and/or console. </summary>
+    /// <summary> Centralised class for outputting log messages. </summary>
+    /// <remarks> Outputs can be a file on disc, GUI, the console, etc subscribed to the LogHandler delegate. </remarks>
     public static class Logger {
         
         public static LogHandler LogHandler;
@@ -112,16 +113,22 @@ namespace MCGalaxy {
         
         public static void LogError(string action, Exception ex) {
             Log(LogType.Warning, action);
-            LogError(ex);
+            Log(LogType.Error, FormatException(ex));
         }
         
+        /// <summary> Logs a LogType.Error message consisting of full details for the given Exception. </summary>
         public static void LogError(Exception ex) {
+            Log(LogType.Error, FormatException(ex));
+        }
+        
+        /// <summary> Returns a string fully describing the given Exception. </summary>
+        public static string FormatException(Exception ex) {
             StringBuilder sb = new StringBuilder();
             while (ex != null) {
                 DescribeError(ex, sb);
                 ex = ex.InnerException;
             }
-            Log(LogType.Error, sb.ToString());
+            return sb.ToString();
         }
 
         static void DescribeError(Exception ex, StringBuilder sb) {
