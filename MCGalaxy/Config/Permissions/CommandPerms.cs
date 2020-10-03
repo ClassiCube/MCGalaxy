@@ -56,17 +56,28 @@ namespace MCGalaxy.Commands {
         }
 
 
+        static CommandPerms Add(string cmd, LevelPermission min, 
+                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
+            CommandPerms perms = new CommandPerms(cmd, min, allowed, disallowed);
+            List.Add(perms);
+            return perms;
+        }
+        
         /// <summary> Sets the permissions for the given command. </summary>
-        public static void Set(string cmd, LevelPermission min,
+        public static void Set(string cmd, LevelPermission min, 
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             CommandPerms perms = Find(cmd);
             if (perms == null) {
-                perms = new CommandPerms(cmd, min, allowed, disallowed);
-                List.Add(perms);
+                Add(cmd, min, allowed, disallowed);
             } else {
                 perms.CmdName = cmd;
                 perms.Init(min, allowed, disallowed);
             }
+        }
+        
+        /// <summary> Gets or adds permissions for the given command. </summary>
+        public static CommandPerms GetOrAdd(string cmd, LevelPermission min) {
+            return Find(cmd) ?? Add(cmd, min, null, null);
         }
         
         public void MessageCannotUse(Player p) {

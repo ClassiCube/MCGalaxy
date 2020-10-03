@@ -73,11 +73,7 @@ namespace MCGalaxy {
         public static void Register(Command cmd) {
             allCmds.Add(cmd);
             
-            CommandPerms perms = CommandPerms.Find(cmd.name);
-            if (perms == null) {
-                perms = new CommandPerms(cmd.name, cmd.defaultRank, null, null);
-                CommandPerms.List.Add(perms);
-            }
+            CommandPerms perms = CommandPerms.GetOrAdd(cmd.name, cmd.defaultRank);
             foreach (Group grp in Group.GroupList) {
                 if (perms.UsableBy(grp.Permission)) grp.Commands.Add(cmd);
             }
@@ -85,8 +81,8 @@ namespace MCGalaxy {
             CommandPerm[] extra = cmd.ExtraPerms;
             if (extra != null) {
                 for (int i = 0; i < extra.Length; i++) {
-                    CommandExtraPerms.Set(cmd.name, i + 1, extra[i].Description, 
-                                          extra[i].Perm, null, null);
+                    CommandExtraPerms exPerms = CommandExtraPerms.GetOrAdd(cmd.name, i + 1, extra[i].Perm);
+                    exPerms.Desc = extra[i].Description;
                 }
             }           
             Alias.RegisterDefaults(cmd);
