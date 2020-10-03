@@ -188,7 +188,7 @@ namespace MCGalaxy.Generator {
             int X1 = length, Y1 = 1, X2 = length * 2, Y2 = 1 * 2;
             
             for( int x = 0, i = 0; x < width; x++ )
-                for( int y = 0; y < length; y++ ) 
+                for( int y = 0; y < length; y++, i++ ) 
             {
                 if( x < 2 || y < 2 || x > width - 3 || y > length - 3 ) {
                     output[i] = heightmap[i];
@@ -201,7 +201,6 @@ namespace MCGalaxy.Generator {
                                  heightmap[i - X2 + Y2]     + heightmap[i - X1 + Y2] *  4 + heightmap[i + Y2] *  7 + heightmap[i + X1 + Y2] *  4 + heightmap[i + X2 + Y2]
                                 ) * GaussianBlurDivisor;
                 }
-                i++;
             }
             return output;
         }
@@ -212,22 +211,21 @@ namespace MCGalaxy.Generator {
             int X1 = length, Y1 = 1; // e.g. map[index + X1] == map[x + 1, y]
 
             for( int x = 0, i = 0; x < width; x++ )
-                for( int y = 0; y < length; y++ ) 
+                for( int y = 0; y < length; y++, i++ ) 
             {
                 if( x == 0 || y == 0 || x == width - 1 || y == length - 1 ) {
                     output[i] = 0;
                 } else {
                     float origin = heightmap[i];
-                    output[i] = (Math.Abs( heightmap[i - X1]      - origin ) * 3 +
-                                 Math.Abs( heightmap[i + Y1]      - origin ) * 3 +
-                                 Math.Abs( heightmap[i - X1]      - origin ) * 3 +
-                                 Math.Abs( heightmap[i + X1]      - origin ) * 3 +
-                                 Math.Abs( heightmap[x - X1 - Y1] - origin ) * 2 +
-                                 Math.Abs( heightmap[x + Y1 - Y1] - origin ) * 2 +
-                                 Math.Abs( heightmap[x - X1 + Y1] - origin ) * 2 +
-                                 Math.Abs( heightmap[x + X1 + Y1] - origin ) * 2) / 20f;
+                    output[i] = (Math.Abs( heightmap[i      - Y1] - origin ) * 3 +
+                                 Math.Abs( heightmap[i      + Y1] - origin ) * 3 +
+                                 Math.Abs( heightmap[i - X1     ] - origin ) * 3 +
+                                 Math.Abs( heightmap[i + X1     ] - origin ) * 3 +
+                                 Math.Abs( heightmap[i - X1 - Y1] - origin ) * 2 +
+                                 Math.Abs( heightmap[i + X1 - Y1] - origin ) * 2 +
+                                 Math.Abs( heightmap[i - X1 + Y1] - origin ) * 2 +
+                                 Math.Abs( heightmap[i + X1 + Y1] - origin ) * 2) / 20f;
                 }
-                i++;
             }
 
             return output;

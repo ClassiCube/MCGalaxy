@@ -33,8 +33,8 @@ namespace MCGalaxy.Generator {
         const int SeaFloorThickness = 3;
 
         public fCraftMapGen( fCraftMapGenArgs generatorArgs ) {
-            args = generatorArgs;
-            rand = new Random( args.Seed );
+            args  = generatorArgs;
+            rand  = new Random( args.Seed );
             noise = new Noise( args.Seed, NoiseInterpolationMode.Bicubic );
             args.ApplyTheme( this );
         }
@@ -174,7 +174,7 @@ namespace MCGalaxy.Generator {
             int snowThreshold = args.SnowAltitude;
             
             for( int x = 0, i = 0; x < width; x++ )
-                for( int z = 0; z < length; z++ )
+                for( int z = 0; z < length; z++, i++ )
             {
                 int level;
                 float slope;
