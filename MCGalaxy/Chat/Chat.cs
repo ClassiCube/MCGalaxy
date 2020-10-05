@@ -222,5 +222,16 @@ namespace MCGalaxy {
                 return msg.Replace("λFULL", src.FullName);
             }
         }
+        
+        internal static string ParseInput(string text, out bool isCommand) {
+            isCommand = false;
+            // Typing //Command appears in chat as /command
+            // Suggested by McMrCat
+            if (text.StartsWith("//")) return text.Substring(1);
+            if (text[0] != '/') return text;
+            
+            isCommand = true;
+            return text.Substring(1);
+        }
     }
 }

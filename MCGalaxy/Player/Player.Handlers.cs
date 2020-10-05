@@ -427,13 +427,9 @@ namespace MCGalaxy {
             if (text != "/afk" && IsAfk)
                 CmdAfk.ToggleAfk(this, "");
             
-            // Typing //Command appears in chat as /command
-            // Suggested by McMrCat
-            if (text.StartsWith("//")) {
-                text = text.Remove(0, 1);
-            } else if (DoCommand(text)) {
-                return;
-            }
+            bool isCommand;
+            text = Chat.ParseInput(text, out isCommand);
+            if (isCommand) { DoCommand(text); return; }
 
             // People who are muted can't speak or vote
             if (muted) { Message("You are muted."); return; } //Muted: Only allow commands
@@ -507,25 +503,19 @@ namespace MCGalaxy {
             return text.EndsWith(" <") || text.EndsWith(" \\");
         }
         
-        bool DoCommand(string text) {
+        void DoCommand(string text) {
             // Typing / repeats last command executed
-            if (text == "/") {
-                if (lastCMD.Length == 0) {
-                    Message("Cannot repeat command - no commands used yet.");
-                    return true;
-                }
+            if (text.Length == 0) {
                 text = lastCMD;
-                Message("Repeating %T/" + lastCMD);
-            } else if (text[0] == '/') {
-                text = text.Remove(0, 1);
-            } else {
-                return false;
+                if (text.Length == 0) {
+                    Message("Cannot repeat command - no commands used yet."); return;
+                }
+                Message("Repeating %T/" + text);
             }
             
             string cmd, args;            
             text.Separate(out cmd, out args);
             HandleCommand(cmd, args, DefaultCmdData);
-            return true;
         }
         
         string HandleJoker(string text) {

@@ -96,8 +96,11 @@ namespace MCGalaxy.Blocks.Extended {
         }
         
         static List<string> ParseSingle(string message, out string text) {
-            if (message[0] == '/') {
-                text = null; return new List<string>(){ message.Substring(1) };
+            bool isCommand;
+            message = Chat.ParseInput(message, out isCommand);
+            
+            if (isCommand) {
+                text = null; return new List<string>(){ message };
             } else {
                 text = message; return empty;
             }
