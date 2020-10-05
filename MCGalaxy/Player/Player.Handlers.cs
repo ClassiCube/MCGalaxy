@@ -516,7 +516,7 @@ namespace MCGalaxy {
                 }
                 text = lastCMD;
                 Message("Repeating %T/" + lastCMD);
-            } else if (text[0] == '/' || text[0] == '!') {
+            } else if (text[0] == '/') {
                 text = text.Remove(0, 1);
             } else {
                 return false;
