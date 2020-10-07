@@ -96,6 +96,35 @@ namespace MCGalaxy.Network {
             url = url.Replace("dl.dropboxusercontent.com", "dl.dropbox.com");
         }
         
+        static string CheckHttpOrHttps(string url) {
+            Uri uri;
+            // only check valid URLs here
+            if (!url.Contains("://")) return null;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) return null;
+            
+            string scheme = uri.Scheme;
+            if (scheme.CaselessEq("http") || scheme.CaselessEq("https")) return null;
+            return scheme;
+        }
+        
+        /// <summary> Prefixes a URL by http:// if needed, and converts dropbox webpages to direct links. </summary>
+        /// <remarks> Ensures URL is a valid http/https URI. </remarks>
+        public static Uri GetUrl(Player p, ref string url) {
+            Uri uri;
+            string scheme = CheckHttpOrHttps(url);
+            if (scheme != null) {
+            	p.Message("%WOnly http:// or https:// urls are supported, " +
+            	          "{0} is a {1}:// url", url, scheme);
+            	return null;
+            }
+                    
+            FilterURL(ref url);
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
+                p.Message("%W{0} is not a valid URL.", url); return null;
+            }
+            return uri;
+        }
+        
         static int GetHttpStatus(Exception ex) {
             try {
                 WebException webEx = (WebException)ex;
@@ -107,11 +136,8 @@ namespace MCGalaxy.Network {
         }
         
         public static byte[] DownloadData(string url, Player p) {
-            FilterURL(ref url);
-            Uri uri;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
-                p.Message("%W{0} is not a valid URL.", url); return null;
-            }
+            Uri uri = GetUrl(p, ref url);
+            if (uri == null) return null;
             
             byte[] data = null;
             try {
