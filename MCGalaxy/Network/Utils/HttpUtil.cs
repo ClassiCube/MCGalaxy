@@ -11,7 +11,7 @@ software distributed under the Licenses are distributed on an "AS IS"
 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.Net;
 
@@ -96,49 +96,55 @@ namespace MCGalaxy.Network {
             url = url.Replace("dl.dropboxusercontent.com", "dl.dropbox.com");
         }
         
-        static string CheckHttpOrHttps(string url) {
+        static bool CheckHttpOrHttps(Player p, string url) {
             Uri uri;
             // only check valid URLs here
-            if (!url.Contains("://")) return null;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) return null;
+            if (!url.Contains("://")) return true;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) return true;
             
             string scheme = uri.Scheme;
-            if (scheme.CaselessEq("http") || scheme.CaselessEq("https")) return null;
-            return scheme;
+            if (scheme.CaselessEq("http") || scheme.CaselessEq("https")) return true;
+            
+            p.Message("%WOnly http:// or https:// urls are supported, " +
+                      "{0} is a {1}:// url", url, scheme);
+            return false;
         }
         
         /// <summary> Prefixes a URL by http:// if needed, and converts dropbox webpages to direct links. </summary>
         /// <remarks> Ensures URL is a valid http/https URI. </remarks>
         public static Uri GetUrl(Player p, ref string url) {
             Uri uri;
-            string scheme = CheckHttpOrHttps(url);
-            if (scheme != null) {
-            	p.Message("%WOnly http:// or https:// urls are supported, " +
-            	          "{0} is a {1}:// url", url, scheme);
-            	return null;
-            }
-                    
+            if (!CheckHttpOrHttps(p, url)) return null;
             FilterURL(ref url);
+            
             if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
                 p.Message("%W{0} is not a valid URL.", url); return null;
             }
             return uri;
         }
         
-        static int GetHttpStatus(Exception ex) {
+        static string DescribeError(Exception ex) {
             try {
                 WebException webEx = (WebException)ex;
-                return (int)((HttpWebResponse)webEx.Response).StatusCode;
+                // prefer explicit http status error codes if possible
+                try {
+                    int status = (int)((HttpWebResponse)webEx.Response).StatusCode;
+                    return "(" + status + " error) from &f{0}";
+                } catch {
+                    return "(" + webEx.Status + ") from &f{0}";
+                }
             } catch {
-                // exception was not webexception, or couldn't get status code
-                return -1; 
+                return "from &f{0}";
             }
         }
         
         public static byte[] DownloadData(string url, Player p) {
             Uri uri = GetUrl(p, ref url);
             if (uri == null) return null;
-            
+            return DownloadData(p, url, uri);
+        }
+        
+        static byte[] DownloadData(Player p, string url, Uri uri) {
             byte[] data = null;
             try {
                 using (WebClient client = CreateWebClient()) {
@@ -147,18 +153,20 @@ namespace MCGalaxy.Network {
                 }
                 p.Message("Finished downloading.");
             } catch (Exception ex) {
-                int status = GetHttpStatus(ex);
                 Logger.LogError("Error downloading " + url, ex);
+                string msg = DescribeError(ex);
                 
-                string msg = status == -1 ? "from &f{0}" : "({1} error) from &f{0}";
-                p.Message("%WFailed to download " + msg, url, status);
+                p.Message("%WFailed to download " + msg, url);
                 return null;
             }
             return data;
         }
         
         public static byte[] DownloadImage(string url, Player p) {
-            byte[] data = DownloadData(url, p);
+            Uri uri = GetUrl(p, ref url);
+            if (uri == null) return null;
+            
+            byte[] data = DownloadData(p, url, uri);
             if (data == null) p.Message("%WThe url may need to end with its extension (such as .jpg).");
             return data;
         }
