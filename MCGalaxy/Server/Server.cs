@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading;
 using MCGalaxy.Commands;
-using MCGalaxy.Commands.World;
 using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
 using MCGalaxy.Events.ServerEvents;
@@ -75,8 +75,8 @@ namespace MCGalaxy {
         internal static ConfigElement[] serverConfig, levelConfig, zoneConfig;
         public static void Start() {
             serverConfig = ConfigElement.GetAll(typeof(ServerConfig));
-            levelConfig = ConfigElement.GetAll(typeof(LevelConfig));
-            zoneConfig = ConfigElement.GetAll(typeof(ZoneConfig));
+            levelConfig  = ConfigElement.GetAll(typeof(LevelConfig));
+            zoneConfig   = ConfigElement.GetAll(typeof(ZoneConfig));
             
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
@@ -96,9 +96,8 @@ namespace MCGalaxy {
             MoveSqliteDll();
             MoveOutdatedFiles();
 
+            GenerateSalt();
             LoadAllSettings();
-            SrvProperties.GenerateSalt();
-
             InitDatabase();
             Economy.LoadDatabase();
 
@@ -315,6 +314,39 @@ namespace MCGalaxy {
                 string delta = deltaKB.ToString("F2");
                 Logger.Log(LogType.BackgroundActivity, "GC performed (tracking {0} KB, freed {1} KB)", track, delta);
             }
+        }
+        
+        
+        // only want ASCII alphanumerical characters for salt
+        static bool AcceptableSaltChar(char c) {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') 
+                || (c >= '0' && c <= '9');
+        }
+        
+        /// <summary> Generates a random salt that is used for calculating mppasses. </summary>
+        public static void GenerateSalt() {
+            RandomNumberGenerator rng = RandomNumberGenerator.Create();
+            char[] str = new char[32];
+            byte[] one = new byte[1];
+            
+            for (int i = 0; i < str.Length; ) {
+                rng.GetBytes(one);
+                if (!AcceptableSaltChar((char)one[0])) continue;
+                
+                str[i] = (char)one[0]; i++;
+            }
+            salt = new string(str);
+        }
+        
+        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+        static MD5CryptoServiceProvider md5  = new MD5CryptoServiceProvider();
+        static object md5Lock = new object();
+        
+        /// <summary> Calculates mppass (verification token) for the given username. </summary>
+        public static string CalcMppass(string name) {
+            byte[] hash = null;
+            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
+            return BitConverter.ToString(hash).Replace("-", "");
         }
     }
 }

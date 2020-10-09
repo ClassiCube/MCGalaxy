@@ -13,7 +13,6 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
-using System.Security.Cryptography;
 using MCGalaxy.Events;
 using MCGalaxy.Network;
 
@@ -48,20 +47,12 @@ namespace MCGalaxy.Core {
             if (!CheckPlayersCount(p)) return false;
             return true;
         }
-        
-        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-        static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-        static object md5Lock = new object();
-        
+
         static bool VerifyName(Player p, string mppass) {
             if (!Server.Config.VerifyNames) return true;
+            string calculated = Server.CalcMppass(p.truename);
             
-            byte[] hash = null;
-            lock (md5Lock)
-                hash = md5.ComputeHash(enc.GetBytes(Server.salt + p.truename));
-            
-            string hashHex = BitConverter.ToString(hash);
-            if (!mppass.CaselessEq(hashHex.Replace("-", ""))) {
+            if (!mppass.CaselessEq(calculated)) {
                 if (!HttpUtil.IsPrivateIP(p.ip)) {
                     p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
                 }

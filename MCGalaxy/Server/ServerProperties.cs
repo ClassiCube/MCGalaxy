@@ -17,7 +17,6 @@
  */
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using MCGalaxy.Commands;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
@@ -25,26 +24,6 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     
     public static class SrvProperties {
-        
-        // only want ASCII alphanumerical characters for salt
-        static bool AcceptableSaltChar(char c) {
-            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') 
-                || (c >= '0' && c <= '9');
-        }
-        
-        public static void GenerateSalt() {
-            RandomNumberGenerator rng = RandomNumberGenerator.Create();
-            char[] str = new char[32];
-            byte[] one = new byte[1];
-            
-            for (int i = 0; i < str.Length; ) {
-                rng.GetBytes(one);
-                if (!AcceptableSaltChar((char)one[0])) continue;
-                
-                str[i] = (char)one[0]; i++;
-            }
-            Server.salt = new string(str);
-        }
         
         public static void Load() {
             old = new OldPerms();
