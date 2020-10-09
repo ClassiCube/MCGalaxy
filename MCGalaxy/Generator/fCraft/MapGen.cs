@@ -14,7 +14,8 @@ namespace MCGalaxy.Generator {
     /// <summary> Map generator template. Templates define landscape shapes and features. </summary>
     public enum MapGenTheme {
         Archipelago, Atoll, Bay, Dunes, Hills, Ice, Island2,
-        Lake, Mountains2, Peninsula, Random, River, Streams
+        Lake, Mountains2, Peninsula, Random, River, Streams,
+        Count
     }
 
 
@@ -409,7 +410,7 @@ namespace MCGalaxy.Generator {
             string desc = "%HSeed specifies biome of the map. " +
                  "It must be one of the following: &f" + names.Join();
                                                                                    
-            foreach (MapGenTheme theme in Enum.GetValues(typeof(MapGenTheme))) {
+            for (MapGenTheme theme = 0; theme < MapGenTheme.Count; theme++) {
                 MapGen.Register(theme.ToString(), GenType.fCraft,
                                 (p, lvl, seed) => Gen(p, lvl, seed, theme), desc);
             }
