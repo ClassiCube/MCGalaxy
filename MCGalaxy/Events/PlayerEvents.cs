@@ -130,14 +130,29 @@ namespace MCGalaxy.Events.PlayerEvents {
     }
 
     public delegate void SelectionBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block);
-    public delegate void OnBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing);
-    /// <summary> Called whenever a player places or deletes a block. </summary>
-    public sealed class OnBlockChangeEvent : IEvent<OnBlockChange> {
+    public delegate void OnBlockChanging(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel);
+    /// <summary> Called whenever a player is manually placing or deleting a block. </summary>
+    /// <remarks> The client always assumes a block change succeeds. 
+    /// So if you cancel this event, make sure you have sent a block change or reverted it using p.RevertBlock </remarks>
+    public sealed class OnBlockChangingEvent : IEvent<OnBlockChanging> {
         
-        public static void Call(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
-            IEvent<OnBlockChange>[] items = handlers.Items;
+        public static void Call(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {
+            IEvent<OnBlockChanging>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(p, x, y, z, block, placing); } 
+                try { items[i].method(p, x, y, z, block, placing, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+    
+    public delegate void OnBlockChanged(Player p, ushort x, ushort y, ushort z, ChangeResult result);
+    /// <summary> Called whenever a player has manually placed or deleted a block. </summary>
+    public sealed class OnBlockChangedEvent : IEvent<OnBlockChanged> {
+        
+        public static void Call(Player p, ushort x, ushort y, ushort z, ChangeResult result) {
+            IEvent<OnBlockChanged>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, x, y, z, result); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }

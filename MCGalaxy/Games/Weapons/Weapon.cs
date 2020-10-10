@@ -38,7 +38,7 @@ namespace MCGalaxy.Games {
         public void Enable(Player p) {
             if (!hookedEvents) {
                 OnPlayerClickEvent.Register(PlayerClickCallback, Priority.Low);
-                OnBlockChangeEvent.Register(BlockChangeCallback, Priority.Low);
+                OnBlockChangingEvent.Register(BlockChangingCallback, Priority.Low);
                 hookedEvents = true;
             }
             
@@ -64,13 +64,13 @@ namespace MCGalaxy.Games {
         protected abstract void OnActivated(Vec3F32 dir, BlockID block);
 
         
-        static void BlockChangeCallback(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
+        static void BlockChangingCallback(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {
             Weapon weapon = p.weapon;
             if (weapon == null) return;
             
             // revert block back since client assumes changes always succeeds
             p.RevertBlock(x, y, z);
-            p.cancelBlock = true;
+            cancel = true;
             
             // defer to player click handler if used
             if (weapon.aimer == null) return;

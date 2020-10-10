@@ -34,7 +34,7 @@ namespace MCGalaxy.Games {
             OnEntitySpawnedEvent.Register(HandleEntitySpawned, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
-            OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
+            OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
             OnSendingModelEvent.Register(HandleSendingModel, Priority.High);
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Games {
             OnEntitySpawnedEvent.Unregister(HandleEntitySpawned);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
-            OnBlockChangeEvent.Unregister(HandleBlockChange);
+            OnBlockChangingEvent.Unregister(HandleBlockChanging);
             OnSendingModelEvent.Unregister(HandleSendingModel);
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
@@ -182,11 +182,12 @@ namespace MCGalaxy.Games {
         }
         
         
-        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
+        void HandleBlockChanging(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {
             if (p.level != Map) return;
             BlockID old = Map.GetBlock(x, y, z);
             ZSData data = Get(p);
-            bool nonReplacable = Map.Config.BuildType == BuildType.NoModify || Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock;
+            bool nonReplacable = Map.Config.BuildType == BuildType.NoModify || 
+                                 Map.Config.BuildType == BuildType.ModifyOnly && Map.Props[old].OPBlock;
             
             // Check pillaring
             if (placing && !Map.Config.Pillaring && !p.Game.Referee) {
@@ -197,12 +198,12 @@ namespace MCGalaxy.Games {
                 } else {
                     data.BlocksStacked = 0;
                 }
-                if (WarnPillaring(p, data, x, y, z, nonReplacable)) { p.cancelBlock = true; return; }
+                if (WarnPillaring(p, data, x, y, z, nonReplacable)) { cancel = true; return; }
             }
             data.LastX = x; data.LastY = y; data.LastZ = z;
             
             if (nonReplacable) {
-                p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+                p.RevertBlock(x, y, z); cancel = true; return;
             }
             
             if (p.Game.Referee) return;
@@ -210,7 +211,7 @@ namespace MCGalaxy.Games {
             if (placing || (!placing && p.painting)) {
                 if (data.BlocksLeft <= 0) {
                     p.Message("You have no blocks left.");
-                    p.RevertBlock(x, y, z); p.cancelBlock = true; return;
+                    p.RevertBlock(x, y, z); cancel = true; return;
                 }
 
                 data.BlocksLeft--;

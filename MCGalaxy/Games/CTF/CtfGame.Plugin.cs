@@ -31,7 +31,7 @@ namespace MCGalaxy.Games {
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);            
-            OnBlockChangeEvent.Register(HandleBlockChange, Priority.High);
+            OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
             
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);
@@ -45,7 +45,7 @@ namespace MCGalaxy.Games {
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnPlayerCommandEvent.Unregister(HandlePlayerCommand);           
-            OnBlockChangeEvent.Unregister(HandleBlockChange);
+            OnBlockChangingEvent.Unregister(HandleBlockChanging);
             
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnTabListEntryAddedEvent.Unregister(HandleTabListEntryAdded);
@@ -89,13 +89,13 @@ namespace MCGalaxy.Games {
             p.cancelcommand = true;
         }
         
-        void HandleBlockChange(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing) {
+        void HandleBlockChanging(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {
             if (p.level != Map) return;
             CtfTeam team = TeamOf(p);
             if (team == null) {
                 p.RevertBlock(x, y, z);
+                cancel = true;
                 p.Message("You are not on a team!");
-                p.cancelBlock = true;
                 return;
             }
             
@@ -105,6 +105,7 @@ namespace MCGalaxy.Games {
             }
             if (pos == team.FlagPos && !Map.IsAirAt(x, y, z)) {
                 ReturnFlag(p, team);
+                cancel = true;
             }
         }
         

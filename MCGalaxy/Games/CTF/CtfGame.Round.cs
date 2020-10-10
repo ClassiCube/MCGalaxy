@@ -127,7 +127,6 @@ namespace MCGalaxy.Games {
         void ReturnFlag(Player p, CtfTeam team) {
             Vec3U16 flagPos = team.FlagPos;
             p.RevertBlock(flagPos.X, flagPos.Y, flagPos.Z);
-            p.cancelBlock = true;
             
             CtfData data = Get(p);
             if (data.HasFlag) {

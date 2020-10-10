@@ -72,8 +72,9 @@ namespace MCGalaxy {
 
             if (ClickToMark && DoBlockchangeCallback(x, y, z, block)) return;
             
-            OnBlockChangeEvent.Call(this, x, y, z, block, placing);
-            if (cancelBlock) { cancelBlock = false; return; }
+            bool cancel = false;
+            OnBlockChangingEvent.Call(this, x, y, z, block, placing, ref cancel);
+            if (cancel) return;
 
             if (old >= Block.Air_Flood && old <= Block.Door_Air_air) {
                 Message("Block is active, you cannot disturb it.");
@@ -120,10 +121,12 @@ namespace MCGalaxy {
                 result = PlaceBlock(old, x, y, z, block);
             }
             
-            if (result == ChangeResult.Modified) return;
-            // Client always assumes that the place/delete succeeds
-            // So if actually didn't, need to revert to the actual block
-            if (!Block.VisuallyEquals(raw, old)) RevertBlock(x, y, z);
+            if (result != ChangeResult.Modified) {
+                // Client always assumes that the place/delete succeeds
+                // So if actually didn't, need to revert to the actual block
+                if (!Block.VisuallyEquals(raw, old)) RevertBlock(x, y, z);
+            }
+            OnBlockChangedEvent.Call(this, x, y, z, result);
         }
         
         internal bool CheckManualChange(BlockID old, bool deleteMode) {
