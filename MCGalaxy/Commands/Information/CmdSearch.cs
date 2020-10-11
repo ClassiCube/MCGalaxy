@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Info {
             OutputList(p, keyword, "search levels", "maps", modifier, maps);
         }
         
-        internal static List<string> FilterList<T>(IList<T> input, string keyword, StringFormatter<T> formatter,
+        internal static List<string> FilterList<T>(IList<T> input, string keyword, StringFormatter<T> nameGetter,
                                           Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
             List<string> matches = new List<string>();
             Regex regex = null;
@@ -114,10 +114,10 @@ namespace MCGalaxy.Commands.Info {
             
             foreach (T item in input) {
                 if (filter != null && !filter(item)) continue;
-                string name = formatter(item);
+                string name = nameGetter(item);
                 
-                if (regex != null) { if (!regex.IsMatch(name))  continue; }
-                else { if (!name.CaselessContains(keyword))     continue; }
+                if (regex != null) { if (!regex.IsMatch(name)) continue; }
+                else { if (!name.CaselessContains(keyword))    continue; }
                 
                 // format this item for display
                 if (listFormatter != null) name = listFormatter(item);

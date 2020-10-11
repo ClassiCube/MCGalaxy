@@ -82,8 +82,8 @@ namespace MCGalaxy.Gui {
         
         static void RunGUI() {
             if (!File.Exists("MCGalaxy_.dll")) {
-                Popup.Error("Cannot start server as MCGalaxy_.dll is missing\r\n" +
-                            "Download it from https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads");
+                Popup.Error("Cannot start server as MCGalaxy_.dll is missing from " + Environment.CurrentDirectory 
+        		            + "\r\nDownload it from " + Updater.UploadsURL);
                 return;
             }
             // separate method, in case MCGalaxy_.dll is missing
