@@ -95,9 +95,8 @@ namespace MCGalaxy {
         
         public static PlayerData FindData(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
-            object raw = Database.Backend.ReadRows("Players", "*",
-                                                   null, PlayerData.Read,
-                                                   "WHERE Name=@0" + suffix, name);
+            object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
+                                           "WHERE Name=@0" + suffix, name);
             return (PlayerData)raw;
         }
 
@@ -130,7 +129,7 @@ namespace MCGalaxy {
         /// <remarks> This is current IP for online players, last IP for offline players from the database. </remarks>
         public static List<string> FindAccounts(string ip) {
             List<string> names = new List<string>();
-            Database.Backend.ReadRows("Players", "Name", names, ReadAccounts, "WHERE IP=@0", ip);
+            Database.ReadRows("Players", "Name", names, ReadAccounts, "WHERE IP=@0", ip);
             
             // TODO: should we instead do save() when the player logs in
             // by checking online players we avoid a DB write though

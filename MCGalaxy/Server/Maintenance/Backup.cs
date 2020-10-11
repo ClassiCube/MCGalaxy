@@ -199,7 +199,7 @@ namespace MCGalaxy {
 
             List<string> tables = Database.Backend.AllTables();
             foreach (string table in tables) {
-                Database.Backend.DeleteTable(table);
+                Database.DeleteTable(table);
             }
             ImportSql(sql);
         }

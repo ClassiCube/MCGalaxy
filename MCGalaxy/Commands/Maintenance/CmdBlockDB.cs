@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (args[0].CaselessEq("clear")) {
                 p.Message("Clearing &cALL %Sblock changes for {0}%S...", lvl.ColoredName);
                 if (Database.TableExists("Block" + lvl.name))
-                    Database.Backend.DeleteTable("Block" + lvl.name);
+                    Database.DeleteTable("Block" + lvl.name);
                 lvl.BlockDB.DeleteBackingFile();
                 p.Message("Cleared &cALL %Sblock changes for " + lvl.ColoredName);
             } else if (args[0].CaselessEq("disable")) {

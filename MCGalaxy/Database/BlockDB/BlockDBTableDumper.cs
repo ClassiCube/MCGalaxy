@@ -45,7 +45,7 @@ namespace MCGalaxy.DB {
             mapName = table.Substring("Block".Length);
             
             try {
-                Database.Backend.ReadRows(table, "*", null, DumpRow);
+                Database.ReadRows(table, "*", null, DumpRow);
                 WriteBuffer(true);
                 AppendCbdbFile();
                 SaveCbdbFile();
@@ -55,7 +55,7 @@ namespace MCGalaxy.DB {
             }
             
             if (errorOccurred) return;
-            Database.Backend.DeleteTable(table);
+            Database.DeleteTable(table);
         }
         
         object DumpRow(IDataRecord record, object arg) {

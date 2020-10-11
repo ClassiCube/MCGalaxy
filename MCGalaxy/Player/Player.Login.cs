@@ -209,9 +209,8 @@ namespace MCGalaxy {
         }
         
         void GetPlayerStats() {
-            object raw = Database.Backend.ReadRows("Players", "*",
-                                                   null, PlayerData.Read,
-                                                   "WHERE Name=@0", name);
+            object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
+			                               "WHERE Name=@0", name);
             if (raw == null) {
                 PlayerData.Create(this);
                 Chat.MessageFrom(this, "λNICK %Shas connected for the first time!");

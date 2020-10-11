@@ -126,7 +126,7 @@ namespace MCGalaxy.Games {
         }
         
         protected override void StartGame() {
-            Database.Backend.CreateTable("ZombieStats", createSyntax);
+            Database.CreateTable("ZombieStats", createSyntax);
             HookStats(); 
         }
 

@@ -31,7 +31,7 @@ namespace MCGalaxy.SQL {
             gottenRows = false;
             this.sql = sql;
             this.table = table;
-            Database.Backend.ReadRows(table, "*", null, DumpRow);
+            Database.ReadRows(table, "*", null, DumpRow);
             
             if (!gottenRows) {
                 sql.WriteLine("-- No data in table `{0}`!", table);

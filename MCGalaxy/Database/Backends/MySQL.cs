@@ -84,25 +84,21 @@ namespace MCGalaxy.SQL {
 
         static object IterateExists(IDataRecord record, object arg) { return ""; }
         public override bool TableExists(string table) {
-            ValidateTable(table);
             return Database.Iterate("SHOW TABLES LIKE '" + table + "'",
                                     null, IterateExists) != null;
         }
         
         public override List<string> AllTables() {
-            return Database.GetStrings("SHOW TABLES");
+            return GetStrings("SHOW TABLES");
         }
         
         public override List<string> ColumnNames(string table) {
-            ValidateTable(table);
-            return Database.GetStrings("DESCRIBE `" + table + "`");
+            Database.ValidateName(table);
+            return GetStrings("DESCRIBE `" + table + "`");
         }
         
-        public override void RenameTable(string srcTable, string dstTable) {
-            ValidateTable(srcTable);
-            ValidateTable(dstTable);
-            string sql = "RENAME TABLE `" + srcTable + "` TO `" + dstTable + "`";
-            Database.Execute(sql, null);
+        public override string RenameTableSql(string srcTable, string dstTable) {
+            return "RENAME TABLE `" + srcTable + "` TO `" + dstTable + "`";
         }
         
         protected override void CreateTableColumns(StringBuilder sql, ColumnDesc[] columns) {
@@ -148,16 +144,14 @@ namespace MCGalaxy.SQL {
             w.WriteLine(");");
         }
         
-        public override void AddColumn(string table, ColumnDesc col, string colAfter) {
-            ValidateTable(table);
+        public override string AddColumnSql(string table, ColumnDesc col, string colAfter) {
             string sql = "ALTER TABLE `" + table + "` ADD COLUMN " + col.Column + " " + col.FormatType();
             if (colAfter.Length > 0) sql += " AFTER " + colAfter;
-            Database.Execute(sql, null);
+            return sql;
         }
         
-        public override void AddOrReplaceRow(string table, string columns, params object[] args) {
-            ValidateTable(table);
-            DoInsert("REPLACE INTO", table, columns, args);
+        public override string AddOrReplaceRowSql(string table, string columns, object[] args) {
+            return InsertSql("REPLACE INTO", table, columns, args);
         }
     }
 }
