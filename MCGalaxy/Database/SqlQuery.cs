@@ -59,7 +59,8 @@ namespace MCGalaxy.SQL {
         }
         
         
-        internal static void FillParams(IDbCommand cmd, object[] parameters) {
+        /// <summary> Adds IDbDataParameter for each argument to the given command. </summary>
+        public static void FillParams(IDbCommand cmd, object[] parameters) {
             if (parameters == null || parameters.Length == 0) return;
             IDatabaseBackend db = Database.Backend;
             

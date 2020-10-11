@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdDeleteLvl : Command2 {

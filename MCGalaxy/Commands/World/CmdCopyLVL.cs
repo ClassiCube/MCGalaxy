@@ -18,7 +18,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.IO;
 
 namespace MCGalaxy.Commands.World {   
     public class CmdCopyLVL : Command2 {        

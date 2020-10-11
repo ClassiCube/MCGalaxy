@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdRenameLvl : Command2 {
