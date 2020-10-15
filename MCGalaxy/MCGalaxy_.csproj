@@ -668,7 +668,6 @@
     <Compile Include="sharkbite.thresher\Rfc2812Util.cs" />
     <Compile Include="sharkbite.thresher\Sender.cs" />
     <Compile Include="sharkbite.thresher\ServerProperties.cs" />
-    <Compile Include="sharkbite.thresher\TextColor.cs" />
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
     <Compile Include="sharkbite.thresher\WhoisInfo.cs" />
     <Compile Include="util\ExtrasCollection.cs" />

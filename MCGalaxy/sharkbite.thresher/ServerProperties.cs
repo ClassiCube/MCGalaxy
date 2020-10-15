@@ -56,31 +56,5 @@ namespace Sharkbite.Irc
 			properties[key] = propertyValue;
 		}
 
-		/// <summary>
-		/// Get a read-only enumeration of all the elements
-		/// in this object.
-		/// </summary>
-		/// <returns>An IDictionaryEnumerator type enumeration.</returns>
-		/// <example><code>
-		/// //To loop over all the values	
-		/// foreach( DictionaryEntry entry in connection.ServerProperties ) 
-		/// {
-		/// Console.WriteLine("Key:" + entry.Key + " Value:" + entry.Value );
-		/// }
-		/// </code></example>
-		public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-		{
-			return properties.GetEnumerator();
-		}
-		/// <summary>
-		/// Test if this instance contains a given key.
-		/// </summary>
-		/// <param name="key">The server properties key to test.</param>
-		/// <returns>True if it is present.</returns>
-		public bool ContainsKey( string key ) 
-		{
-			return properties.ContainsKey( key );
-		}
-
 	}
 }

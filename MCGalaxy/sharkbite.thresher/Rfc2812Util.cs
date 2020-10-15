@@ -244,13 +244,6 @@ namespace Sharkbite.Irc
 			return (char)((byte)mode);
 		}
 
-		/// <summary> Converts a StatQuery enum value to its RFC2812 character. </summary>
-		/// <param name="query">The query enum.</param>
-		/// <returns>The corresponding char.</returns>
-		public static char StatsQueryToChar( StatsQuery query ) {
-			return (char)((byte)query);
-		}
-
 		/// <summary> Converts the char recived from the IRC server into its enum equivalent. </summary>
 		/// <param name="queryType">One of the IRC stats query characters, e.g. 'u','l', etc...</param>
 		/// <returns>An StatsQuery enum.</returns>
