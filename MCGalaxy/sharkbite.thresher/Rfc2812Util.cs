@@ -237,32 +237,11 @@ namespace Sharkbite.Irc
 			return (UserMode) Enum.Parse( typeof( UserMode), b.ToString(CultureInfo.InvariantCulture), false );
 		}
 
-		/// <summary> Convert a string of ChannelModes characters to an array of ChannelMode enums. </summary>
-		/// <param name="modes">A string of ChannelMode chars from the IRC server.</param>
-		/// <returns>An array of ChannelMode enums. Charactres that are not from RFC2812 will be droppped.</returns>
-		public static ChannelMode[] ChannelModesToArray( string modes ) {
-			List<ChannelMode> list = new List<ChannelMode>();
-			for( int i = 0; i < modes.Length; i++ ) {
-				if( IsValidModeChar( modes[i], ChannelModes ) ) {
-					list.Add( CharToChannelMode( modes[i] ));
-				}
-			}
-			return list.ToArray();
-		}
-
 		/// <summary> Converts a ChannelMode into its RFC2812 character. </summary>
 		/// <param name="mode">The mode enum.</param>
 		/// <returns>The corresponding char.</returns>
 		public static char ChannelModeToChar( ChannelMode mode ) {
 			return (char)((byte)mode);
-		}
-		
-		/// <summary> Converts the char recived from the IRC server into its enum equivalent. </summary>
-		/// <param name="mode">One of the IRC mode characters, e.g. 'O','i', etc...</param>
-		/// <returns>An mode enum.</returns>
-		public static ChannelMode CharToChannelMode( char mode )  {
-			byte b = (byte)mode;
-			return (ChannelMode) Enum.Parse( typeof( ChannelMode ), b.ToString(CultureInfo.InvariantCulture), false );
 		}
 
 		/// <summary> Converts a StatQuery enum value to its RFC2812 character. </summary>

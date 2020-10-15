@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -223,7 +224,6 @@ namespace Sharkbite.Irc
 		private const string KILL = "KILL";
 		private const string ACTION = "\u0001ACTION";
 		private readonly char[] Separator = new char[] { ' ' };
-		private readonly Regex userPattern; 
 		private readonly Regex channelPattern;
 		private readonly Regex replyRegex;
 		/// <summary>
@@ -238,7 +238,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public Listener() 
 		{
-			userPattern = new Regex( "([\\w\\-" + Rfc2812Util.Special + "]+![\\~\\w]+@[\\w\\.\\-]+)", RegexOptions.Compiled | RegexOptions.Singleline);
 			channelPattern = new Regex( "([#!+&]\\w+)", RegexOptions.Compiled | RegexOptions.Singleline);
 			replyRegex = new Regex("^:([^\\s]*) ([\\d]{3}) ([^\\s]*) (.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 		}
@@ -440,18 +439,8 @@ namespace Sharkbite.Irc
 						if( OnChannelModeChange != null ) 
 						{
 							UserInfo who = Rfc2812Util.UserInfoFromString( tokens[0] );							
-							try 
-							{
-								ChannelModeInfo[] modes = ChannelModeInfo.ParseModes( tokens, 3);
-								OnChannelModeChange( who, tokens[2], modes );
-							}
-							catch( Exception ) 
-							{
-								if( OnError != null ) 
-								{
-									OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
-								}
-							}
+							string[] modes = ParseModes( tokens, 3);
+							OnChannelModeChange( who, tokens[2], modes );
 						}
 					}
 					else 
@@ -669,18 +658,8 @@ namespace Sharkbite.Irc
 				case ReplyCode.RPL_CHANNELMODEIS:
 					if( OnChannelModeRequest != null )
 					{
-						try
-						{
-							ChannelModeInfo[] modes = ChannelModeInfo.ParseModes( tokens, 4);
-							OnChannelModeRequest( tokens[3], modes);
-						}
-						catch( Exception ) 
-						{
-							if( OnError != null ) 
-							{
-								OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
-							}
-						}
+						string[] modes = ParseModes( tokens, 4);
+						OnChannelModeRequest( tokens[3], modes);
 					}
 					break;
 				case ReplyCode.RPL_BANLIST:
@@ -892,6 +871,16 @@ namespace Sharkbite.Irc
 				default:
 					return StatsQuery.CommandUsage;
 			}
+		}
+		
+		static string[] ParseModes( string[] tokens, int start)
+		{	
+			List<string> modeArgs = new List<string>();
+			for( int i = start; i < tokens.Length; i++ )
+			{
+				modeArgs.Add(tokens[i]);
+			}
+			return modeArgs.ToArray();
 		}
 	
 	}
