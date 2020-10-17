@@ -1,3 +1,28 @@
+v 1.9.2.6
+Fixed: Awards player has but don't exist anymore still counting towards player's awards count in /i 
+Fixed: Doing /b on map that had portal/MB block ids but the tables not existing in DB causing error to get logged
+Fixed: Being able to /possess yourself
+Improved: More descriptive error messages when downloading image for /imgprint fails
+Improved: (ZS) Make pillaring detection stricter for maps without building
+Improved: For custom commands/plugins, also load .pdb if it exists
+Fixed: Placing air_switch/checkpoint will revert to air, instead of leaving behind the block you were holding
+Fixed: If you're holding a block you're not allowed to place in your hand, you should still be able to delete blocks
+Improved: /send should not prioritise online players
+Improved: Add support for relative coords in /explode
+Fixed: Rare case where doing /undo [timespan] would throw a NullReferenceException
+Fixed: Error appearing in logs when voting for next map in rounds based games and less than 3 maps configured
+Fixed: Changing list of ZS maps in GUI not saving
+Improved: & not followed by colour code behaves more consistently
+Fixed: main-name from server.properties being more restrictive than /main
+Fixed: Custom commands in custom plugins losting custom set extra permissions on server restart
+Improved: fCraft map generator performance by a little bit
+Removed: '![command]' acting as '/[command]'
+Improved: //[command] in MBs acts like regular chat and just messages '/[command]' back to the user
+Improved: Order of properties in server.properties
+Improved: SQL transaction error message logging
+Improved: 'Failed to start due to missing MCGalaxy_.dll' message now includes folder
+Fixed: Some IRC mode changes wrongly showing as an IRC error in logs
+
 v 1.9.2.5
 Improved: Make Y in /write 3 blocks wide instead of 5
 Fixed: Being able to use /team to spam (X was muted) messages
