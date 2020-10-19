@@ -325,26 +325,26 @@ namespace MCGalaxy {
             }
         }
         
-        unsafe static void UpdatePosition(Player p) {
+        unsafe static void UpdatePosition(Player dst) {
             Player[] players = PlayerInfo.Online.Items;
             byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
             byte* ptr = src;
             
-            foreach (Player pl in players) {
-                if (p == pl || p.level != pl.level || !p.CanSeeEntity(pl)) continue;
+            foreach (Player p in players) {
+                if (dst == p || dst.level != p.level || !dst.CanSeeEntity(p)) continue;
                 
-                Orientation rot = pl.Rot; byte pitch = rot.HeadX;
+                Orientation rot = p.Rot; byte pitch = rot.HeadX;
                 if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
                 
                 // flip head when infected, but doesn't support model
-                if (!p.hasChangeModel) {
+                if (!dst.hasChangeModel) {
                     ZSData data = ZSGame.TryGet(p);
                     if (data != null && data.Infected) pitch = FlippedPitch(pitch);
                 }
             
                 rot.HeadX = pitch;
-                Entities.GetPositionPacket(ref ptr, pl.id, pl.hasExtPositions, p.hasExtPositions,
-                                           pl.tempPos, pl.lastPos, rot, pl.lastRot);
+                Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
+                                           p.tempPos, p.lastPos, rot, p.lastRot);
             }
             
             int count = (int)(ptr - src);
@@ -352,7 +352,7 @@ namespace MCGalaxy {
             
             byte[] packet = new byte[count];
             for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
-            p.Send(packet);
+            dst.Send(packet);
         }
         
         static byte FlippedPitch(byte pitch) {
