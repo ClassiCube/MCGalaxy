@@ -411,8 +411,15 @@ namespace MCGalaxy.Generator {
                  "It must be one of the following: &f" + names.Join();
                                                                                    
             for (MapGenTheme theme = 0; theme < MapGenTheme.Count; theme++) {
-                MapGen.Register(theme.ToString(), GenType.fCraft,
-                                (p, lvl, seed) => Gen(p, lvl, seed, theme), desc);
+                // Because of the way C# implements for loop closures, '=> Gen(p, lvl, seed, theme_)'
+                //  captures the variable from the LAST iteration, not the current one
+                // Hence this causes an error to get thrown later, because 'Gen' is always executed 
+                //  with 'MapGenTheme.Count' theme instead of the expected theme
+                // Using a local variable copy fixes this
+                MapGenTheme theme_ = theme;
+            	
+                MapGen.Register(theme_.ToString(), GenType.fCraft,
+                                (p, lvl, seed) => Gen(p, lvl, seed, theme_), desc);
             }
         }
         
