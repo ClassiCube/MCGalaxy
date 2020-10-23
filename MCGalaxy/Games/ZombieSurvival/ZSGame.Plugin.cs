@@ -67,7 +67,7 @@ namespace MCGalaxy.Games {
         
         void HandleCanSeeEntity(Player p, ref bool canSee, Entity other) {
             Player target = other as Player;
-            if (!canSee || p.Game.Referee) return;
+            if (!canSee || p.Game.Referee || target == null) return;
             
             ZSData data = TryGet(target);
             if (data == null) return;
