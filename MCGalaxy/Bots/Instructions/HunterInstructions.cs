@@ -42,7 +42,7 @@ namespace MCGalaxy.Bots {
             Player closest = null;
             
             foreach (Player p in players) {
-                if (p.level != bot.level || p.invincible || p.hidden) continue;
+                if (!CanHunt(bot, p)) continue;
                 
                 int dx = p.Pos.X - bot.Pos.X, dy = p.Pos.Y - bot.Pos.Y, dz = p.Pos.Z - bot.Pos.Z;
                 int playerDist = Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz);
@@ -52,6 +52,10 @@ namespace MCGalaxy.Bots {
                 maxDist = playerDist;
             }
             return closest;
+        }
+        
+        internal static bool CanHunt(PlayerBot bot, Player p) {
+            return p.level == bot.level && !p.invincible && !p.hidden;
         }
         
         static bool MoveTowards(PlayerBot bot, Player p) {
@@ -106,6 +110,8 @@ namespace MCGalaxy.Bots {
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
+                if (!HuntInstruction.CanHunt(bot, p)) continue;
+                
                 int dx = Math.Abs(bot.Pos.X - p.Pos.X);
                 int dy = Math.Abs(bot.Pos.Y - p.Pos.Y);
                 int dz = Math.Abs(bot.Pos.Z - p.Pos.Z);
