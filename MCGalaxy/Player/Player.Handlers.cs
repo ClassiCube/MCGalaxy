@@ -380,9 +380,14 @@ namespace MCGalaxy {
         
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
         
+        void AnnounceDeath(string msg) {
+            Chat.MessageFrom(ChatScope.Level, this, msg.Replace("@p", "λNICK"), 
+        	                 level, Chat.FilterVisible(this));
+        }
+        
         public bool HandleDeath(BlockID block, string customMsg = "", bool explode = false, bool immediate = false) {
             if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return false;
-            if (invincible || hidden) return false;
+            if (invincible) return false;
             
             cancelDeath = false;
             OnPlayerDeathEvent.Call(this, block);
@@ -392,9 +397,7 @@ namespace MCGalaxy {
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
             
             string deathMsg = level.Props[block].DeathMessage;
-            if (deathMsg != null) {
-                Chat.MessageFromLevel(this, deathMsg.Replace("@p", "λNICK"));
-            }
+            if (deathMsg != null) AnnounceDeath(deathMsg);
             
             if (block == Block.RocketHead) level.MakeExplosion(x, y, z, 0);
             if (block == Block.Creeper) level.MakeExplosion(x, y, z, 1);
@@ -404,7 +407,7 @@ namespace MCGalaxy {
                 if (block == Block.Stone) {
                     Chat.MessageFrom(this, customMsg.Replace("@p", "λNICK"));
                 } else {
-                    Chat.MessageFromLevel(this, customMsg.Replace("@p", "λNICK"));
+                    AnnounceDeath(customMsg);
                 }
             }
             
@@ -414,7 +417,7 @@ namespace MCGalaxy {
             if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
 
             if (Server.Config.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
-                Chat.MessageFromLevel(this, "λNICK %Shas died &3" + TimesDied + " times");
+                AnnounceDeath("@p %Shas died &3" + TimesDied + " times");
             }
             lastDeath = DateTime.UtcNow;
             return true;
@@ -671,7 +674,7 @@ namespace MCGalaxy {
             try { //opstats patch (since 5.5.11)
                 if (Server.Opstats.CaselessContains(cmd) || (cmd.CaselessEq("review") && message.CaselessEq("next") && Server.reviewlist.Count > 0)) {
                     Database.AddRow("Opstats", "Time, Name, Cmd, Cmdmsg",
-            		                DateTime.Now.ToString(Database.DateFormat), name, cmd, message);
+                                    DateTime.Now.ToString(Database.DateFormat), name, cmd, message);
                 }
             } catch { }
             
