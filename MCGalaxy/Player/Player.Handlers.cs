@@ -381,8 +381,13 @@ namespace MCGalaxy {
         bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
         
         void AnnounceDeath(string msg) {
-            Chat.MessageFrom(ChatScope.Level, this, msg.Replace("@p", "λNICK"), 
-        	                 level, Chat.FilterVisible(this));
+            //Chat.MessageFrom(ChatScope.Level, this, msg.Replace("@p", "λNICK"), level, Chat.FilterVisible(this));
+            if (hidden) {
+                // Don't show usual death message to avoid confusion about whether others see your death
+                Message(msg.Replace("@p", "You").Replace("was", "were"));
+            } else {
+                Chat.MessageFromLevel(this, msg.Replace("@p", "λNICK"));
+            }
         }
         
         public bool HandleDeath(BlockID block, string customMsg = "", bool explode = false, bool immediate = false) {
