@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
         protected Player p;
         AimBox aimer;
         
-        public void Enable(Player p) {
+        public virtual void Enable(Player p) {
             if (!hookedEvents) {
                 OnPlayerClickEvent.Register(PlayerClickCallback, Priority.Low);
                 OnBlockChangingEvent.Register(BlockChangingCallback, Priority.Low);
@@ -50,12 +50,13 @@ namespace MCGalaxy.Games {
                 p.Message(Name + " engaged, click to fire at will");
             } else {                
                 p.Message(Name + " engaged, fire at will");
+                p.aiming = true;
                 aimer = new AimBox();
                 aimer.Hook(p);
             }
         }
 
-        public void Disable() {
+        public virtual void Disable() {
             p.aiming = false;
             p.Message(Name + " disabled");
             p.weapon = null;

@@ -29,6 +29,11 @@ namespace MCGalaxy.Games {
     public class Missile : Weapon {
         public override string Name { get { return "Missile"; } }
         public WeaponType type;
+        
+        public override void Disable() {
+            p.aiming = false;
+            p.weapon = null;
+        }
 
         protected override void OnActivated(Vec3F32 dir, BlockID block) {
             MissileData args = new MissileData();
@@ -59,11 +64,11 @@ namespace MCGalaxy.Games {
             
             if (ending == WeaponType.Destroy) {
                 bool fireKills = block != Block.Air && p.level.Props[block].LavaKills;
-                if ((!fireKills && !Block.NeedRestart(block)) && block != Block.Glass) {
+                if ((!fireKills && !Block.NeedRestart(block))) {
                     return true;
                 }
             } else if (p.level.physics >= 3) {
-                if (block != Block.Glass && doExplode) {
+                if (doExplode) {
                     p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
                     return true;
                 }

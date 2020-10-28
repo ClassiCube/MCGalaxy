@@ -105,7 +105,7 @@ namespace MCGalaxy.Games {
         public override string Name { get { return "Penetrative gun"; } }
         
         protected override bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
-            if (p.level.physics < 2 || block == Block.Glass) return true;
+            if (p.level.physics < 2) return true;
             
             if (!p.level.Props[block].LavaKills) return true;
             // Penetrative gun goes through blocks lava can go through
@@ -118,9 +118,7 @@ namespace MCGalaxy.Games {
         public override string Name { get { return "Explosive gun"; } }
         
         protected override bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
-            if (p.level.physics >= 3 && block != Block.Glass) {
-                p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
-            }
+        	if (p.level.physics >= 3) p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
             return true;
         }
         
