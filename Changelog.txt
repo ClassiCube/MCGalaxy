@@ -1,4 +1,4 @@
-v 1.9.2.6
+v 1.9.2.7
 Fixed: Awards player has but don't exist anymore still counting towards player's awards count in /i 
 Fixed: Doing /b on map that had portal/MB block ids but the tables not existing in DB causing error to get logged
 Fixed: Being able to /possess yourself

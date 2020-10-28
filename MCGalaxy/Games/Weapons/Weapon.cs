@@ -42,7 +42,7 @@ namespace MCGalaxy.Games {
                 hookedEvents = true;
             }
             
-            this.p = p;
+            this.p   = p;
             p.ClearBlockchange();
             p.weapon = this;
             
@@ -115,6 +115,8 @@ namespace MCGalaxy.Games {
         }
     }
     
+    public enum WeaponType { Invalid, Normal, Destroy, Teleport, Explode, Laser };
+    
     public class AmmunitionData {
         public BlockID block;
         public Vec3U16 start;
@@ -133,6 +135,15 @@ namespace MCGalaxy.Games {
             target.Y = (ushort)Math.Round(start.Y + (double)(dir.Y * i));
             target.Z = (ushort)Math.Round(start.Z + (double)(dir.Z * i));
             return target;
+        }
+        
+        public void DoTeleport(Player p) {
+            int i = visible.Count - 3;
+            if (i >= 0 && i < visible.Count) {
+                Vec3U16 coords = visible[i];
+                Position pos   = new Position(coords.X * 32, coords.Y * 32 + 32, coords.Z * 32);
+                p.SendPos(Entities.SelfID, pos, p.Rot);
+            }
         }
     }
     

@@ -226,7 +226,6 @@
     <Compile Include="Commands\Fun\CTF\CmdCtf.cs" />
     <Compile Include="Commands\Fun\RateMapCmds.cs" />
     <Compile Include="Commands\Fun\RoundsGameCmd.cs" />
-    <Compile Include="Commands\Fun\WeaponCmd.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdAka.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdAlive.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounties.cs" />
@@ -508,6 +507,7 @@
     <Compile Include="Games\TntWars\TWGame.Round.cs" />
     <Compile Include="Games\TntWars\TWGame.cs" />
     <Compile Include="Games\TntWars\TWConfig.cs" />
+    <Compile Include="Games\Weapons\Missile.cs" />
     <Compile Include="Games\Weapons\Weapon.cs" />
     <Compile Include="Games\Weapons\Guns.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.DB.cs" />

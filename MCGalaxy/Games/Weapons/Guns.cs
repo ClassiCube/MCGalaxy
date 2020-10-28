@@ -161,21 +161,12 @@ namespace MCGalaxy.Games {
     public class TeleportGun : Gun {
         public override string Name { get { return "Teleporter gun"; } }
         
-        void DoTeleport(AmmunitionData args) {
-            int i = args.visible.Count - 3;
-            if (i >= 0 && i < args.visible.Count) {
-                Vec3U16 coords = args.visible[i];
-                Position pos = new Position(coords.X * 32, coords.Y * 32 + 32, coords.Z * 32);
-                p.SendPos(Entities.SelfID, pos, p.Rot);
-            }
-        }
-        
         protected override void OnHitPlayer(AmmunitionData args, Player pl) {
-            DoTeleport(args);
+            args.DoTeleport(p);
         }
         
         protected override bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
-            DoTeleport(args);
+            args.DoTeleport(p);
             return true;
         }
     }
