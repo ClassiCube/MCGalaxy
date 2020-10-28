@@ -22,8 +22,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
 
-    /// <summary> Represents a gun weapon which dies when it hits a block or a player. </summary>
-    /// <remarks> Fires in a straight line from where playing is looking. </remarks>
+    /// <summary> Represents a gun weapon that fires in a straight line from where player is looking. </remarks>
     public class Gun : Weapon {
         public override string Name { get { return "Gun"; } }
 
@@ -43,10 +42,13 @@ namespace MCGalaxy.Games {
             return args;
         }
 
+        /// <summary> Called when a bullet has collided with a block. </summary>
+        /// <returns> true if this block stops the bullet, false if it should continue moving. </returns>
         protected virtual bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
             return true;
         }
         
+        /// <summary> Called when a bullet has collided with a player. </summary>
         protected virtual void OnHitPlayer(AmmunitionData args, Player pl) {
             pl.HandleDeath(Block.Cobblestone, "@p %Swas shot by " + p.ColoredName);
         }

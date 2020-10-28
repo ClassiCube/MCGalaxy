@@ -36,9 +36,16 @@ namespace MCGalaxy.Commands.Fun {
             WeaponType type = Weapon.ParseType(message);
             if (type == WeaponType.Invalid) { Help(p); return; }
             
-            Missile missile = new Missile();
+            Missile missile = GetMissile(type);
             missile.type = type;
             missile.Enable(p);
+        }
+                
+        static Missile GetMissile(WeaponType type) {
+            if (type == WeaponType.Destroy)  return new PenetrativeMissile();
+            if (type == WeaponType.Teleport) return new TeleportMissile();
+            if (type == WeaponType.Explode)  return new ExplosiveMissile();
+            return new Missile();
         }
         
         public override void Help(Player p) {
