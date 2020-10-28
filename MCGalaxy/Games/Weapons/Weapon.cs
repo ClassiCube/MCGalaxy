@@ -26,7 +26,6 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
 
     /// <summary> Represents a weapon which can interact with blocks or players until it dies. </summary>
-    /// <remarks> Activated by clicking through either PlayerClick or on a glass box around the player. </remarks>
     public abstract class Weapon {
 
         public abstract string Name { get; }
@@ -35,6 +34,7 @@ namespace MCGalaxy.Games {
         protected Player p;
         AimBox aimer;
         
+        /// <summary> Applies this weapon to the given player, and sets up necessary state. </summary>
         public virtual void Enable(Player p) {
             if (!hookedEvents) {
                 OnPlayerClickEvent.Register(PlayerClickCallback, Priority.Low);
@@ -62,6 +62,8 @@ namespace MCGalaxy.Games {
             p.weapon = null;
         }
         
+        /// <summary> Called when the player fires this weapon. </summary>
+        /// <remarks> Activated by clicking through either PlayerClick or on a glass box around the player. </remarks>
         protected abstract void OnActivated(Vec3F32 dir, BlockID block);
 
         
@@ -69,11 +71,11 @@ namespace MCGalaxy.Games {
             Weapon weapon = p.weapon;
             if (weapon == null) return;
             
-            // revert block back since client assumes changes always succeeds
+            // Revert block back since client assumes changes always succeeds
             p.RevertBlock(x, y, z);
             cancel = true;
             
-            // defer to player click handler if used
+            // Defer to player click handler if PlayerClick supported
             if (weapon.aimer == null) return;
             
             if (!p.level.Config.Guns) { weapon.Disable(); return; }
@@ -113,6 +115,15 @@ namespace MCGalaxy.Games {
                 }
             }
             return null;
+        }
+        
+        public static WeaponType ParseType(string type) {
+            if (type.Length == 0) return WeaponType.Normal;
+            if (type.CaselessEq("destroy")) return WeaponType.Destroy;
+            if (type.CaselessEq("tp") || type.CaselessEq("teleport")) return WeaponType.Teleport;
+            if (type.CaselessEq("explode")) return WeaponType.Explode;
+            if (type.CaselessEq("laser"))   return WeaponType.Laser;
+            return WeaponType.Invalid;
         }
     }
     

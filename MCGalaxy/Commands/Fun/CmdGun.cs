@@ -32,18 +32,18 @@ namespace MCGalaxy.Commands.Fun {
             if (p.weapon != null && message.Length == 0) {
                 p.weapon.Disable(); return;
             }
-
-            Gun gun = GetGun(p, message);
-            if (gun == null) { Help(p); return; }
-            gun.Enable(p);
+                    
+            WeaponType type = Weapon.ParseType(message);
+            if (type == WeaponType.Invalid) { Help(p); return; }
+            GetGun(type).Enable(p);
         }
         
-        static Gun GetGun(Player p, string mode) {
-            if (mode.Length == 0) return new Gun();
-            if (mode.CaselessEq("destroy")) return new PenetrativeGun();
-            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return new TeleportGun();
-            if (mode.CaselessEq("explode")) return new ExplosiveGun();
-            if (mode.CaselessEq("laser")) return new LaserGun();
+        static Gun GetGun(WeaponType type) {
+            if (type == WeaponType.Normal)   return new Gun();
+            if (type == WeaponType.Destroy)  return new PenetrativeGun();
+            if (type == WeaponType.Teleport) return new TeleportGun();
+            if (type == WeaponType.Explode)  return new ExplosiveGun();
+            if (type == WeaponType.Laser)    return new LaserGun();
             return null;
         }
         

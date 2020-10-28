@@ -33,21 +33,12 @@ namespace MCGalaxy.Commands.Fun {
                 p.weapon.Disable(); return;
             }
 
-            WeaponType weaponType = GetWeaponType(p, message);
-            if (weaponType == WeaponType.Invalid) { Help(p); return; }
+            WeaponType type = Weapon.ParseType(message);
+            if (type == WeaponType.Invalid) { Help(p); return; }
             
             Missile missile = new Missile();
-            missile.type = weaponType;
+            missile.type = type;
             missile.Enable(p);
-        }
-        
-        WeaponType GetWeaponType(Player p, string mode) {
-            if (mode.Length == 0) return WeaponType.Normal;
-            if (mode.CaselessEq("destroy")) return WeaponType.Destroy;
-            if (mode.CaselessEq("tp") || mode.CaselessEq("teleport")) return WeaponType.Teleport;
-            if (mode.CaselessEq("explode")) return WeaponType.Explode;
-            if (mode.CaselessEq("laser")) return WeaponType.Laser;
-            return WeaponType.Invalid;
         }
         
         public override void Help(Player p) {

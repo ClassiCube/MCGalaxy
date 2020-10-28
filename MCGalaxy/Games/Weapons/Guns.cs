@@ -37,12 +37,12 @@ namespace MCGalaxy.Games {
             AmmunitionData args = new AmmunitionData();
             args.block  = block;
             
-            args.start = (Vec3U16)p.Pos.BlockCoords;
-            args.dir   = dir;
+            args.start  = (Vec3U16)p.Pos.BlockCoords;
+            args.dir    = dir;
             args.iterations = 4;
             return args;
         }
-        
+
         protected virtual bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
             return true;
         }
