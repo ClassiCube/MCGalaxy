@@ -451,7 +451,7 @@ namespace MCGalaxy {
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
             int index;
             BlockID old = GetBlock(x, y, z, out index);
-            bool drawn = (flags & BlockDBFlags.ManualPlace) != 0;
+            bool drawn = (flags & BlockDBFlags.ManualPlace) == 0;
             
             ChangeResult result = TryChangeBlock(p, x, y, z, block, drawn);
             if (result == ChangeResult.Unchanged) return;
