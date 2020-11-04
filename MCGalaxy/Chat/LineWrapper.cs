@@ -46,8 +46,14 @@ namespace MCGalaxy {
             return new string(line, 0, length);
         }
 
-        static bool IsWrapper(char c) {
-            return c == ' ' || c == '-' || c == '/' || c == '\\';
+        static bool IsWrapper(char[] line, int i) {
+            char c = line[i];
+            if (c == ' ') return true;
+            
+            // For e.g. "item1/item2/item3", want to wordwrap on the '/'
+            // However for "item1 /command", want to wordwrap BEFORE '/'
+            // TODO: This probably needs to account for colour codes
+            return (c == '-' || c == '/' || c == '\\') && line[i - 1] != ' ';
         }
         
         // TODO: Add outputLine argument, instead of returning string list
@@ -116,7 +122,7 @@ namespace MCGalaxy {
                 
                 // Try to split up this line nicely
                 for (int i = lineLength - 1; i > limit - 20; i--) {
-                    if (!IsWrapper(line[i])) continue;
+                    if (!IsWrapper(line, i)) continue;
                     
                     i++; // include line wrapper character on this line
                     offset -= length - i;
