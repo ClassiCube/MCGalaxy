@@ -83,6 +83,13 @@ namespace MCGalaxy.Drawing.Ops {
         
         public abstract void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output);
         
+        
+        public void Setup(Player p, Level lvl, Vec3S32[] marks) {
+            Player = p;
+            SetMarks(marks);
+            SetLevel(lvl);
+        }
+        
         public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
             if (affected <= p.group.DrawLimit) return true;
             p.Message("You tried to draw " + affected + " blocks.");
@@ -103,6 +110,7 @@ namespace MCGalaxy.Drawing.Ops {
             Level = lvl;
             clip = new Vec3S32(lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
         }
+        
         
         protected DrawOpBlock Place(ushort x, ushort y, ushort z, Brush brush) {
             Coords.X = x; Coords.Y = y; Coords.Z = z;

@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Building {
             Vec3S32[] marks = new Vec3S32[] { Vec3S32.Zero, max };
             
             MeasureDrawOp measure = new MeasureDrawOp();
-            DrawOpPerformer.Setup(measure, p, marks);
+            measure.Setup(p, p.level, marks);
             measure.Perform(marks, brush, null);
             
             if (measure.Total > p.group.DrawLimit) {

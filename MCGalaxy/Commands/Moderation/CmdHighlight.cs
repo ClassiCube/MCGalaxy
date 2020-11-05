@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Moderation {
             HighlightDrawOp op = new HighlightDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = who; op.ids = ids;
-            DrawOpPerformer.Setup(op, p, marks);
+            op.Setup(p, p.level, marks);
             
             BufferedBlockSender buffer = new BufferedBlockSender(p);
             op.Perform(marks, null,

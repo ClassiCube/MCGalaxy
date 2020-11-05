@@ -39,14 +39,6 @@ namespace MCGalaxy.Drawing.Ops {
     
     public static class DrawOpPerformer {
         
-        public static Level Setup(DrawOp op, Player p, Vec3S32[] marks) {
-            op.SetMarks(marks);
-            Level lvl = p.level;
-            op.SetLevel(lvl);
-            op.Player = p;
-            return lvl;
-        }
-        
         static bool CannotBuildIn(Player p, Level lvl) {
             Zone[] zones = lvl.Zones.Items;
             for (int i = 0; i < zones.Length; i++) {
@@ -58,7 +50,9 @@ namespace MCGalaxy.Drawing.Ops {
         
         public static bool Do(DrawOp op, Brush brush, Player p,
                               Vec3S32[] marks, bool checkLimit = true) {
-            Level lvl = Setup(op, p, marks);
+            Level lvl = p.level;
+            op.Setup(p, lvl, marks);
+            
             if (lvl != null && !lvl.Config.Drawing) {
                 p.Message("Drawing commands are turned off on this map.");
                 return false;

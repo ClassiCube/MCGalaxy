@@ -80,9 +80,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Level[] levels = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in levels) {
-                    op.SetMarks(marks);
-                    op.SetLevel(lvl);
-                    op.Player = p;
+                    op.Setup(p, lvl, marks);
                     DrawOpPerformer.Execute(p, op, null, marks);
                 }
                 p.level = null;
