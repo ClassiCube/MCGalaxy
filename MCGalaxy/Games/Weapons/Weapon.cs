@@ -94,7 +94,7 @@ namespace MCGalaxy.Games {
             if (!(btn == MouseButton.Left || btn == MouseButton.Right)) return;
             if (!p.level.Config.Guns) { weapon.Disable(); return; }
             
-            BlockID held = p.RawHeldBlock;
+            BlockID held = p.ClientHeldBlock;
             if (!CommandParser.IsBlockAllowed(p, "use", held)) return;
             
             Vec3F32 dir = DirUtils.GetDirVectorExt(yaw, pitch);

@@ -93,7 +93,7 @@ namespace MCGalaxy {
         
         public BlockID GetHeldBlock() {
             if (ModeBlock != Block.Invalid) return ModeBlock;
-            return BlockBindings[RawHeldBlock];
+            return BlockBindings[ClientHeldBlock];
         }
         
         public string GetMotd() {

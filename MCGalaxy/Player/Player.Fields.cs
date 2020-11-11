@@ -38,7 +38,6 @@ namespace MCGalaxy {
         internal string currentTpa = "";
 
         public string truename;
-        internal bool nonPlayerClient = false;
         public INetSocket Socket;
         public PingList Ping = new PingList();
         public BlockID MaxRawBlock = Block.OriginalMaxBlock;
@@ -77,7 +76,9 @@ namespace MCGalaxy {
         public bool hackrank;
               
         public string SuperName;
+        /// <summary> Whether this player is a 'Super' player (Console, IRC, etc) </summary>
         public bool IsSuper;
+        /// <summary> Whether this player is the console player instance. </summary>
         public bool IsConsole { get { return this == Player.Console; } }
         
         public virtual string FullName { get { return color + prefix + DisplayName; } }  
@@ -104,7 +105,7 @@ namespace MCGalaxy {
         //Using for anything else can cause unintended effects!
         public bool possessed;
         
-        /// <summary> Whether the player has build permission in the current world. </summary>
+        /// <summary> Whether the player has permission to build in the current level. </summary>
         public bool AllowBuild = true;
 
         public int money;
@@ -184,7 +185,9 @@ namespace MCGalaxy {
         public DateTime lastDeath = DateTime.UtcNow;
 
         public BlockID ModeBlock = Block.Invalid;
-        public BlockID RawHeldBlock = Block.Stone;
+        /// <summary> The block ID the client specifies it is currently holding in hand. </summary>
+        /// <remarks> This ignores /bind and /mode. GetHeldBlock() is usually preferred. </remarks>
+        public BlockID ClientHeldBlock = Block.Stone;
         public BlockID[] BlockBindings = new BlockID[Block.ExtendedCount];        
         public string[] CmdBindings = new string[10];
         
@@ -214,6 +217,7 @@ namespace MCGalaxy {
         public DateTime LastPatrol;
         public LevelPermission Rank { get { return group.Permission; } }
 
+        /// <summary> Whether player has completed login process and been sent initial map. </summary>
         public bool loggedIn;
         public bool verifiedName;
         bool gotSQLData;
@@ -234,7 +238,7 @@ namespace MCGalaxy {
         public delegate bool SelectionHandler(Player p, Vec3S32[] marks, object state, BlockID block);
         
         /// <summary> Called when the player has provided a mark for a selection. </summary>
-        /// <remarks> i is the index of the mark, so the 'first' mark has i of 0. </remarks>
+        /// <remarks> i is the index of the mark, so the 'first' mark has 0 for i. </remarks>
         public delegate void SelectionMarkHandler(Player p, Vec3S32[] marks, int i, object state, BlockID block);
     }
 }

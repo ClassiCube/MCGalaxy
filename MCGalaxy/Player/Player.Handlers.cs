@@ -201,8 +201,8 @@ namespace MCGalaxy {
                 LastAction = DateTime.UtcNow;
                 if (IsAfk) CmdAfk.ToggleAfk(this, "");
                 
-                BlockID held = ReadBlock(buffer, offset + 8);
-                RawHeldBlock = held;
+                BlockID held    = ReadBlock(buffer, offset + 8);
+                ClientHeldBlock = held;
                 
                 if ((action == 0 || held == Block.Air) && !level.Config.Deletable) {
                     Message("Deleting blocks is disabled in this level.");
@@ -231,7 +231,7 @@ namespace MCGalaxy {
             if (!loggedIn) return;
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             if (Supports(CpeExt.HeldBlock)) {
-                RawHeldBlock = ReadBlock(buffer, offset + 1);
+                ClientHeldBlock = ReadBlock(buffer, offset + 1);
                 if (hasExtBlocks) offset++; // corret offset for position later
             }
             
