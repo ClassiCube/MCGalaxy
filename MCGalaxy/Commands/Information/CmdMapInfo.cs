@@ -90,6 +90,8 @@ namespace MCGalaxy.Commands.Info {
             ShowPermissions(p, data, cfg);
             p.Message("Use %T/mi env {0} %Sto see environment settings.", data.MapName);
             ShowZombieSurvival(p, data, cfg);
+            p.Message("This map has &a{0} likes %Sand &c{1} dislikes",
+                           cfg.Likes, cfg.Dislikes);
         }
         
         void ShowPermissions(Player p, MapInfo data, LevelConfig cfg) {
@@ -103,7 +105,8 @@ namespace MCGalaxy.Commands.Info {
             if (String.IsNullOrEmpty(realmOwner)) return;
             
             string[] owners = realmOwner.SplitComma();
-            p.Message("  This map is a personal realm of {0}", owners.Join(n => p.FormatNick(n)));
+            p.Message("  This map is a personal realm of {0}",
+                           owners.Join(n => PlayerInfo.GetColoredName(p, n)));
         }
         
         static void PrintRanks(Player p, AccessController access, string initial) {
@@ -116,12 +119,11 @@ namespace MCGalaxy.Commands.Info {
             if (!ZSGame.Instance.HasMap(data.MapName)) return;
             
             string[] authors = cfg.Authors.SplitComma();
-            p.Message("Map authors: {0}", authors.Join(n => p.FormatNick(n)));
+            p.Message("Map authors: {0}",
+                           authors.Join(n => PlayerInfo.GetColoredName(p, n)));
             int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;
             p.Message("&a{0} %Srounds played total, &a{1}% %Swin chance for humans.",
                            cfg.RoundsPlayed, winChance);
-            p.Message("This map has &a{0} likes %Sand &c{1} dislikes",
-                           cfg.Likes, cfg.Dislikes);
         }
         
         static string DefaultRealmOwner(string map) {
@@ -229,10 +231,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p)  {
-            p.Message("%T/MapInfo [level]");
-            p.Message("%HDisplay details of [level]");
-            p.Message("%T/MapInfo env [level]");
-            p.Message("%HDisplay environment details of [level]");
+            p.Message("%T/MapInfo [map]");
+            p.Message("%HDisplay details of [map]");
+            p.Message("%T/MapInfo env [map]");
+            p.Message("%HDisplay environment details of [map]");
         }
     }
 }
