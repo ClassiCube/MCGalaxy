@@ -22,7 +22,6 @@ namespace MCGalaxy.Commands.Fun {
     public class CmdLike : Command2 {
         public override string name { get { return "Like"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) { RateMap(p, true); }
