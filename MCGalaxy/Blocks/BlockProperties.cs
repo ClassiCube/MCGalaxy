@@ -132,7 +132,7 @@ namespace MCGalaxy.Blocks {
             string[] lines = File.ReadAllLines(path);
             for (int i = 0; i < lines.Length; i++) {
                 string line = lines[i].Trim();
-                if (line.Length == 0 || line[0] == '#') continue;
+                if (line.IsCommentLine()) continue;
                 
                 string[] parts = line.Split(':');
                 if (parts.Length < 10) {

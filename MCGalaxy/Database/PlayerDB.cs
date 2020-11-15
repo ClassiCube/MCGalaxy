@@ -35,7 +35,7 @@ namespace MCGalaxy.DB {
             
             string[] lines = File.ReadAllLines("players/" + p.name + "DB.txt");
             foreach (string line in lines) {
-                if (line.Length == 0 || line[0] == '#') continue;
+                if (line.IsCommentLine()) continue;
                 string[] parts = line.Split(trimChars, 2);
                 if (parts.Length < 2) continue;
                 string key = parts[0].Trim(), value = parts[1].Trim();

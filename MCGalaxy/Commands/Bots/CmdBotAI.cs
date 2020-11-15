@@ -116,9 +116,7 @@ namespace MCGalaxy.Commands.Bots{
             string[] lines = File.ReadAllLines("bots/" + ai);
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
                 for (int i = lines.Length - 1; i > 0; i--) {
-                    if (lines[i].Length > 0 && lines[i][0] != '#') {
-                        w.WriteLine(lines[i]);
-                    }
+                    if (!lines[i].IsCommentLine()) w.WriteLine(lines[i]);
                 }
             }
             p.Message("Appended all instructions in reverse order to bot AI &b" + ai);
@@ -135,9 +133,9 @@ namespace MCGalaxy.Commands.Bots{
                 p.Message("There is no bot AI with that name."); return;
             }
             string[] lines = File.ReadAllLines("bots/" + ai);
-            foreach (string l in lines) {
-                if (l.Length == 0 || l[0] == '#') continue;
-                p.Message(l);
+            foreach (string line in lines) {
+                if (line.IsCommentLine()) continue;
+                p.Message(line);
             }
         }
         

@@ -38,7 +38,7 @@ namespace MCGalaxy.Bots {
             bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
 
             foreach (string line in instructions) {
-                if (line.Length == 0 || line[0] == '#') continue;
+                if (line.IsCommentLine()) continue;
                 string[] args = line.SplitSpaces();
 
                 try {

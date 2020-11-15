@@ -37,6 +37,10 @@ namespace MCGalaxy {
             if (str[str.Length - 1] != '+') return str;
             return str.Substring(0, str.Length - 1);
         }
+
+        public static bool IsCommentLine(this string line) {
+            return line.Length == 0 || line[0] == '#';
+        }
         
         
         /// <summary> Converts a string consisting of code page 437 indices into unicode. </summary>

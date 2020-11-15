@@ -166,7 +166,7 @@ namespace MCGalaxy.Scripting {
             string[] list = File.ReadAllLines(AutoloadFile);
             
             foreach (string cmdName in list) {
-                if (cmdName.Length == 0) continue;
+                if (cmdName.IsCommentLine()) continue;
                 string path = DllPath(cmdName);
                 string error = IScripting.Load(path);
                 

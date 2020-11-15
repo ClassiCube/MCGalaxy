@@ -162,7 +162,7 @@ namespace MCGalaxy {
                                            "#Here you can put commands that cannot be used from the IRC bot.",
                                            "#Lines starting with \"#\" are ignored." });
                 foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
-                    if (line.Length > 0 && line[0] != '#') BannedCommands.Add(line);
+                    if (!line.IsCommentLine()) BannedCommands.Add(line);
                 }
             }
         }

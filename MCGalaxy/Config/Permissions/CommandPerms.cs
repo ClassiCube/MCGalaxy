@@ -135,7 +135,7 @@ namespace MCGalaxy.Commands {
             string line;
             
             while ((line = r.ReadLine()) != null) {
-                if (line.Length == 0 || line[0] == '#') continue;
+                if (line.IsCommentLine()) continue;
                 // Format - Name : Lowest : Disallow : Allow
                 line.Replace(" ", "").FixedSplit(args, ':');
                 

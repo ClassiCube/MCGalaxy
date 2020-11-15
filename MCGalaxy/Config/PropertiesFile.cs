@@ -58,7 +58,7 @@ namespace MCGalaxy {
         
         internal static void ParseLine(string line, char separator, out string key, out string value) {
             key = null; value = null;
-            if (line.Length == 0 || line[0] == '#') return;
+            if (line.IsCommentLine()) return;
             
             int index = line.IndexOf(separator);
             if (index == -1) return;
