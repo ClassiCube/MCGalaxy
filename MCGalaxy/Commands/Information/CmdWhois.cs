@@ -33,12 +33,13 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) message = p.name;
+            if (!Formatter.ValidName(p, message, "player")) return;
+            
             int matches;
             Player who = PlayerInfo.FindMatches(p, message, out matches);
             if (matches > 1) return;
             
             if (matches == 0) {
-                if (!Formatter.ValidName(p, message, "player")) return;
                 p.Message("Searching database for the player..");
                 PlayerData target = PlayerDB.Match(p, message);
                 if (target == null) return;
