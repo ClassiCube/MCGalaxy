@@ -26,7 +26,15 @@ namespace MCGalaxy.Commands {
                 UseOnline(p, data, message, type);
             }
         }
-
+        
+        protected void UseBotOrPlayer(Player p, CommandData data, string message, string type) {
+            if (message.CaselessStarts("bot ")) {
+                UseBot(p,    data, message, type);
+            } else {
+                UsePlayer(p, data, message, type);
+            }
+        }
+		
         void UseBot(Player p, CommandData data, string message, string type) {
             string[] args = message.SplitSpaces(3);
             PlayerBot bot = Matcher.FindBots(p, args[1]);

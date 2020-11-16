@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("Colour"), new CommandAlias("XColor", "-own") }; }
         }        
         public override void Use(Player p, string message, CommandData data) { 
-            UseBotOrOnline(p, data, message, "color"); 
+            UseBotOrPlayer(p, data, message, "color"); 
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string colName) {
@@ -47,20 +47,21 @@ namespace MCGalaxy.Commands.Chatting {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetOnlineData(Player p, Player target, string colName) {
+        protected override void SetPlayerData(Player p, string target, string colName) {
             string col = "";
+            Player who = PlayerInfo.FindExact(target);
+            
             if (colName.Length == 0) {
-                Chat.MessageFrom(target, "λNICK %Shad their color removed");
-                target.UpdateColor(target.group.Color);
+                col = Group.GroupIn(target).Color;
+                MessageFrom(target, who, "had their color removed");
             } else {
                 col = Matcher.FindColor(p, colName);
                 if (col == null) return;
-                if (col == target.color) { p.Message("{0} %Salready has that color.", p.FormatNick(target)); return; }
-                
-                Chat.MessageFrom(target, "λNICK %Shad their color changed to " + col + Colors.Name(col));
-                target.UpdateColor(col);
+                MessageFrom(target, who, "had their color changed to " + col + Colors.Name(col));
             }
-            PlayerDB.Update(target.name, PlayerData.ColumnColor, col);
+            
+            if (who != null) who.UpdateColor(col);
+            PlayerDB.Update(target, PlayerData.ColumnColor, col);
         }
         
         public override void Help(Player p) {
