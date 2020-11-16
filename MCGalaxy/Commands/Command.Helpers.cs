@@ -83,11 +83,19 @@ namespace MCGalaxy {
             return false;
         }
         
+        protected string CheckOwn(Player p, string name, string type) {
+            if (name.CaselessEq("-own")) {
+                if (p.IsSuper) { SuperRequiresArgs(p, type); return null; }
+                return p.name;
+            }
+            return name;
+        }
+        
+        
         protected static bool IsListModifier(string str) {
             int ignored;
             return str.CaselessEq("all") || int.TryParse(str, out ignored);
-        }
-        
+        }      
         
         protected internal static bool IsCreateCommand(string str) {
             return str.CaselessEq("create") || str.CaselessEq("add") || str.CaselessEq("new");

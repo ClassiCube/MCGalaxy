@@ -116,8 +116,8 @@ namespace MCGalaxy.DB {
             
             data.Title = record.GetText(ColumnTitle);
             data.Title = data.Title.Cp437ToUnicode();
-            data.TitleColor = ParseCol(record.GetText(ColumnTColor));
-            data.Color = ParseCol(record.GetText(ColumnColor));
+            data.TitleColor = ParseColor(record.GetText(ColumnTColor));
+            data.Color = ParseColor(record.GetText(ColumnColor));
             
             data.Money    = record.GetInt(ColumnMoney);
             data.Deaths   = record.GetInt(ColumnDeaths);
@@ -143,7 +143,7 @@ namespace MCGalaxy.DB {
             return (value.Length == 0 || value.CaselessEq("null")) ? 0 : int.Parse(value);
         }
         
-        internal static string ParseCol(string raw) {
+        internal static string ParseColor(string raw) {
             if (raw.Length == 0) return raw;
             
             // Try parse color name, then color code

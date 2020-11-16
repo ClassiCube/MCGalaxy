@@ -31,6 +31,7 @@ namespace MCGalaxy {
             return target != null ? target.group : Group.GroupIn(name);
         }
         
+        [Obsolete("Use p.FormatNick instead")]
         public static string GetColoredName(Player p, string name) { return p.FormatNick(name); }
         
         /// <summary> Calculates default color for the given player. </summary>

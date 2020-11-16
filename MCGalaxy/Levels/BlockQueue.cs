@@ -92,7 +92,7 @@ namespace MCGalaxy {
                 RemoveRange(0, count);
             } catch (Exception e)  {
                 Logger.LogError(e);
-                Logger.Log(LogType.Warning, "Block cache failed for map: {0}. {1} lost.", lvl.name, Count);
+                Logger.Log(LogType.Warning, "Failed to flush block queue on {0}. {1} lost.", lvl.name, Count);
                 Clear();
             }
         }

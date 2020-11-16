@@ -100,7 +100,7 @@ namespace MCGalaxy.DB {
         public static string FindColor(Player p) {
             string raw = Database.ReadString("Players", "Color", "WHERE ID=@0", p.DatabaseID);
             if (raw == null) return "";
-            return PlayerData.ParseCol(raw);
+            return PlayerData.ParseColor(raw);
         }
         
         

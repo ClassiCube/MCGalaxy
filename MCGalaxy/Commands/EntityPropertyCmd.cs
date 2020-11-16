@@ -21,14 +21,15 @@ namespace MCGalaxy.Commands {
         
         protected void UseBotOrPlayer(Player p, CommandData data, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
-            bool isBot = message.CaselessStarts("bot ");
+            bool isBot    = message.CaselessStarts("bot ");
             string[] args = message.SplitSpaces(isBot ? 3 : 2);
-            if (!CheckOwn(p, args, "player or bot name")) return;
+            string name   = CheckOwn(p, args[0], "player or bot name");
+            if (name == null) return;
             
             Player who = null;
             PlayerBot bot = null;
             if (isBot) bot = Matcher.FindBots(p, args[1]);
-            else who = PlayerInfo.FindMatches(p, args[0]);
+            else who = PlayerInfo.FindMatches(p, name);
             if (bot == null && who == null) return;
 
             if (isBot) {
@@ -48,22 +49,15 @@ namespace MCGalaxy.Commands {
         protected void UsePlayer(Player p, CommandData data, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
-            if (!CheckOwn(p, args, "player name")) return;
+            string name   = CheckOwn(p, args[0], "player name");
+            if (name == null) return;
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
+            Player who = PlayerInfo.FindMatches(p, name);
             if (who == null) return;
             
             if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
             if (p != who && !CheckExtraPerm(p, data, 1)) return;
             SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
-        }
-        
-        bool CheckOwn(Player p, string[] args, string type) {
-            if (args[0].CaselessEq("-own")) {
-                if (p.IsSuper) { SuperRequiresArgs(p, type); return false; }
-                args[0] = p.name;
-            }
-            return true;
         }
 
         protected virtual void SetBotData(Player p, PlayerBot bot, string args) { }
