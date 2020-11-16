@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands {
             if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
             SetOnlineData(p, who, args.Length > 1 ? args[1] : "");
         }
-		
+        
         protected void UsePlayer(Player p, CommandData data, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
@@ -71,5 +71,14 @@ namespace MCGalaxy.Commands {
         protected virtual void SetBotData(Player p, PlayerBot bot,    string args) { }      
         protected virtual void SetOnlineData(Player p, Player who,    string args) { }       
         protected virtual void SetPlayerData(Player p, string target, string args) { }
+        
+        protected void MessageFrom(string target, Player who, string message) {
+            if (who == null) {
+                string nick = Player.Console.FormatNick(target);
+                Chat.MessageGlobal(nick + " %S" + message);
+            } else {
+                Chat.MessageFrom(who, "λNICK %S" + message);
+            }
+        }
     }
 }

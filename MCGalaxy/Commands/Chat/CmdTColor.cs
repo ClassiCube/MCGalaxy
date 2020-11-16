@@ -29,24 +29,24 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }
         }
         public override void Use(Player p, string message, CommandData data) { 
-            UseOnline(p, data, message, "title color"); 
+            UsePlayer(p, data, message, "title color"); 
         }
         
-        protected override void SetOnlineData(Player p, Player target, string colName) {
+        protected override void SetPlayerData(Player p, string target, string colName) {
             string col = "";
+            Player who = PlayerInfo.FindExact(target);
+            
             if (colName.Length == 0) {
-                Chat.MessageFrom(target, "λNICK %Shad their title color removed");
+                MessageFrom(target, who, "had their title color removed");
             } else  {
                 col = Matcher.FindColor(p, colName);
                 if (col == null) return;
-                if (col == target.titlecolor) { p.Message("{0} %Salready has that title color.", p.FormatNick(target)); return; }
-                
-                Chat.MessageFrom(target, "λNICK %Shad their title color changed to " + col + Colors.Name(col));
+                MessageFrom(target, who, "had their title color changed to " + col + Colors.Name(col));
             }
             
-            target.titlecolor = col;
-            target.SetPrefix();
-            PlayerDB.Update(target.name, PlayerData.ColumnTColor, col);
+            if (who != null) who.titlecolor = col;
+            if (who != null) who.SetPrefix();
+            PlayerDB.Update(target, PlayerData.ColumnTColor, col);
         }
 
         public override void Help(Player p) {
