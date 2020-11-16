@@ -59,7 +59,6 @@ namespace MCGalaxy {
             get { return Math.Max(10000, (int)(Server.Config.DrawReloadThreshold * Width * Height * Length)); }
         }
         
-        public static bool cancelload;
         public bool cancelsave;
         public bool cancelunload;
         public bool Changed;

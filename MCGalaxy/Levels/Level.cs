@@ -267,8 +267,9 @@ namespace MCGalaxy {
         public static Level Load(string name) { return Load(name, LevelInfo.MapPath(name)); }
 
         public static Level Load(string name, string path) {
-            OnLevelLoadEvent.Call(name);
-            if (cancelload) { cancelload = false; return null; }
+            bool cancel = false;
+            OnLevelLoadEvent.Call(name, path, ref cancel);
+            if (cancel) return null;
 
             if (!File.Exists(path)) {
                 Logger.Log(LogType.Warning, "Attempted to load level {0}, but {1} does not exist.", name, path);

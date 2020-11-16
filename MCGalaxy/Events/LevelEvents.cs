@@ -29,12 +29,15 @@ namespace MCGalaxy.Events.LevelEvents {
         }
     }
     
-    public delegate void OnLevelLoad(string level);
+    public delegate void OnLevelLoad(string name, string path, ref bool cancel);
     public sealed class OnLevelLoadEvent : IEvent<OnLevelLoad> {
         
-        public static void Call(string name) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(name));
+        public static void Call(string name, string path, ref bool cancel) {
+            IEvent<OnLevelLoad>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(name, path, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
     
