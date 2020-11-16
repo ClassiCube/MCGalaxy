@@ -31,10 +31,10 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
-            UsePlayer(p, data, message, "title");
+            UseOnline(p, data, message, "title");
         }
         
-        protected override void SetPlayerData(Player p, Player who, string title) {
+        protected override void SetOnlineData(Player p, Player who, string title) {
             if (title.Length >= 20) { p.Message("Title must be under 20 letters."); return; }
 
             if (title.Length == 0) {

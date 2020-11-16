@@ -29,10 +29,10 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
-            UsePlayer(p, data, message, "login message");
+            UseOnline(p, data, message, "login message");
         }
         
-        protected override void SetPlayerData(Player p, Player target, string msg) {
+        protected override void SetOnlineData(Player p, Player target, string msg) {
             PlayerDB.SetLoginMessage(target.name, msg);
             if (msg.Length == 0) {
                 p.Message("Login message of {0} %Swas removed.", p.FormatNick(target));

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {
             if (!MessageCmd.CanSpeak(p, name)) return;
-            UseBotOrPlayer(p, data, message, "nick");
+            UseBotOrOnline(p, data, message, "nick");
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string nick) {
@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Chatting {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string nick) {
+        protected override void SetOnlineData(Player p, Player who, string nick) {
             if (nick.Length == 0) {
                 Chat.MessageFrom(who, "λNICK %Shad their custom nick reset");
                 who.DisplayName = who.truename;

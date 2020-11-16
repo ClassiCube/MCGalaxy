@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("Colour"), new CommandAlias("XColor", "-own") }; }
         }        
         public override void Use(Player p, string message, CommandData data) { 
-            UseBotOrPlayer(p, data, message, "color"); 
+            UseBotOrOnline(p, data, message, "color"); 
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string colName) {
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, Player target, string colName) {
+        protected override void SetOnlineData(Player p, Player target, string colName) {
             string col = "";
             if (colName.Length == 0) {
                 Chat.MessageFrom(target, "λNICK %Shad their color removed");

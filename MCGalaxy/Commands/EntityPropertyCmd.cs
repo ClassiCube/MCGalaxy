@@ -19,34 +19,27 @@
 namespace MCGalaxy.Commands {
     public abstract class EntityPropertyCmd : Command2 {
         
-        protected void UseBotOrPlayer(Player p, CommandData data, string message, string type) {
-            if (message.Length == 0) { Help(p); return; }
-            bool isBot    = message.CaselessStarts("bot ");
-            string[] args = message.SplitSpaces(isBot ? 3 : 2);
-            string name   = CheckOwn(p, args[0], "player or bot name");
-            if (name == null) return;
-            
-            Player who = null;
-            PlayerBot bot = null;
-            if (isBot) bot = Matcher.FindBots(p, args[1]);
-            else who = PlayerInfo.FindMatches(p, name);
-            if (bot == null && who == null) return;
-
-            if (isBot) {
-                if (!CheckExtraPerm(p, data, 2)) return;
-                
-                if (!LevelInfo.Check(p, data.Rank, p.level, "change the " + type + " of that bot")) return;
-                if (!bot.EditableBy(p, "change the " + type + " of")) { return; }
-                SetBotData(p, bot, args.Length > 2 ? args[2] : "");
+        protected void UseBotOrOnline(Player p, CommandData data, string message, string type) {
+            if (message.CaselessStarts("bot ")) {
+                UseBot(p,    data, message, type);
             } else {
-                if (p != who && !CheckExtraPerm(p, data, 1)) return;
-                
-                if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
-                SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
+                UseOnline(p, data, message, type);
             }
         }
+
+        void UseBot(Player p, CommandData data, string message, string type) {
+            string[] args = message.SplitSpaces(3);
+            PlayerBot bot = Matcher.FindBots(p, args[1]);
+            
+            if (bot == null) return;
+            if (!CheckExtraPerm(p, data, 2)) return;
+            
+            if (!LevelInfo.Check(p, data.Rank, p.level, "change the " + type + " of that bot")) return;
+            if (!bot.EditableBy(p, "change the " + type + " of")) { return; }
+            SetBotData(p, bot, args.Length > 2 ? args[2] : "");
+        }
         
-        protected void UsePlayer(Player p, CommandData data, string message, string type) {
+        protected void UseOnline(Player p, CommandData data, string message, string type) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             string name   = CheckOwn(p, args[0], "player name");
@@ -55,13 +48,28 @@ namespace MCGalaxy.Commands {
             Player who = PlayerInfo.FindMatches(p, name);
             if (who == null) return;
             
-            if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
             if (p != who && !CheckExtraPerm(p, data, 1)) return;
-            SetPlayerData(p, who, args.Length > 1 ? args[1] : "");
+            if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
+            SetOnlineData(p, who, args.Length > 1 ? args[1] : "");
+        }
+		
+        protected void UsePlayer(Player p, CommandData data, string message, string type) {
+            if (message.Length == 0) { Help(p); return; }
+            string[] args = message.SplitSpaces(2);
+            string target = CheckOwn(p, args[0], "player name");
+            if (target == null) return;
+            
+            target = PlayerInfo.FindMatchesPreferOnline(p, target);
+            if (target == null) return;            
+            if (p.name != target && !CheckExtraPerm(p, data, 1)) return;
+            
+            LevelPermission rank = Group.GroupIn(target).Permission;
+            if (!CheckRank(p, data, target, rank, "change the " + type + " of", true)) return;
+            SetPlayerData(p, target, args.Length > 1 ? args[1] : "");
         }
 
-        protected virtual void SetBotData(Player p, PlayerBot bot, string args) { }
-        
-        protected virtual void SetPlayerData(Player p, Player who, string args) { }
+        protected virtual void SetBotData(Player p, PlayerBot bot,    string args) { }      
+        protected virtual void SetOnlineData(Player p, Player who,    string args) { }       
+        protected virtual void SetPlayerData(Player p, string target, string args) { }
     }
 }

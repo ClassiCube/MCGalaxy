@@ -29,10 +29,10 @@ namespace MCGalaxy.Commands.Chatting {
             get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }
         }
         public override void Use(Player p, string message, CommandData data) { 
-            UsePlayer(p, data, message, "title color"); 
+            UseOnline(p, data, message, "title color"); 
         }
         
-        protected override void SetPlayerData(Player p, Player target, string colName) {
+        protected override void SetOnlineData(Player p, Player target, string colName) {
             string col = "";
             if (colName.Length == 0) {
                 Chat.MessageFrom(target, "λNICK %Shad their title color removed");

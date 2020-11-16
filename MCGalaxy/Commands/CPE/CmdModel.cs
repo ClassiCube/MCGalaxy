@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrPlayer(p, data, message, "model");
+            UseBotOrOnline(p, data, message, "model");
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string model) {
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.CPE {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string model) {
+        protected override void SetOnlineData(Player p, Player who, string model) {
             bool changedAxisScale;
             model = ParseModel(p, who, model, out changedAxisScale);
             if (model == null) return;

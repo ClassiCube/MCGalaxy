@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrPlayer(p, data, message, "skin");
+            UseBotOrOnline(p, data, message, "skin");
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string skin) {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.CPE {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string skin) {
+        protected override void SetOnlineData(Player p, Player who, string skin) {
             skin = GetSkin(skin, who.truename);
             if (skin.Length > NetUtils.StringSize) {
                 p.Message("The skin must be " + NetUtils.StringSize + " characters or less."); return;

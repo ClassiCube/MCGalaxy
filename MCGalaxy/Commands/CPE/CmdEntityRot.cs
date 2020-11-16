@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrPlayer(p, data, message, "rotation");
+            UseBotOrOnline(p, data, message, "rotation");
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string args) {
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.CPE {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, Player who, string args) {
+        protected override void SetOnlineData(Player p, Player who, string args) {
             if (!ParseArgs(p, args, who)) return;
             Server.rotations.Update(who.name, who.Rot.RotX + " " + who.Rot.RotZ);
             Server.rotations.Save();
