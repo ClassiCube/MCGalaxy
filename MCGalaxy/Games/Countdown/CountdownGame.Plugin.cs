@@ -27,6 +27,7 @@ namespace MCGalaxy.Games {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
+            OnGettingMotdEvent.Register(HandleGettingMotd, Priority.High);
             
             base.HookEventHandlers();
         }
@@ -35,6 +36,7 @@ namespace MCGalaxy.Games {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
+            OnGettingMotdEvent.Unregister(HandleGettingMotd);
             
             base.UnhookEventHandlers();
         }       
@@ -63,6 +65,11 @@ namespace MCGalaxy.Games {
         
         void HandleOnJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
+        }
+        
+        void HandleGettingMotd(Player p, ref string motd) {
+            if (p.level != Map || !FreezeMode || !RoundInProgress) return;
+            motd += " horspeed=0";
         }
     }
 }

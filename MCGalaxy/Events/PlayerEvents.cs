@@ -242,7 +242,7 @@ namespace MCGalaxy.Events.PlayerEvents {
 
     public delegate void OnSettingColor(Player p, ref string color);
     /// <summary> Called when color is being updated for a player. </summary>
-    /// <remarks> e.g. You can use this to ensure player's color remains fixed to red while in a game. </remarks>
+    /// <example> You can use this to ensure player's color remains fixed to red while in a game. </example>
     public sealed class OnSettingColorEvent : IEvent<OnSettingColor> {
         
         public static void Call(Player p, ref string color) {

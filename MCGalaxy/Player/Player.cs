@@ -191,7 +191,7 @@ namespace MCGalaxy {
 
         #region == DISCONNECTING ==
         
-        /// <summary> Disconnects the players from the server, 
+        /// <summary> Disconnects the player from the server, 
         /// with their default logout message shown in chat. </summary>
         public void Disconnect() { LeaveServer(PlayerDB.GetLogoutMessage(this), "disconnected", false); }
         

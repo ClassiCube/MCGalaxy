@@ -49,6 +49,7 @@ namespace MCGalaxy.Games {
             if (!Running) return;
             
             RoundInProgress = true;
+            if (FreezeMode) UpdateAllMotd();
             UpdateAllStatus();
             RemoveSquares();
         }
@@ -221,6 +222,7 @@ namespace MCGalaxy.Games {
             Remaining.Clear();
             squaresLeft.Clear();
             UpdateAllStatus();
+            if (FreezeMode) UpdateAllMotd();
             
             if (winner != null) {
                 winner.Message("Congratulations, you won this round of countdown!");

@@ -263,5 +263,12 @@ namespace MCGalaxy.Games {
             if (Map != null) Map.AutoUnload();
             Map = null;
         }
+        
+        protected void UpdateAllMotd() {
+            List<Player> players = GetPlayers();
+            foreach (Player p in players) {
+                if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
+            }
+        }
     }
 }
