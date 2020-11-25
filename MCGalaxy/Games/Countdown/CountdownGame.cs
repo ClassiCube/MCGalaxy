@@ -110,9 +110,6 @@ namespace MCGalaxy.Games {
             const string format = "Generated map ({0}x{1}x{2}), sending you to it..";
             p.Message(format, width, height, length);
             PlayerActions.ChangeMap(p, "countdown");
-            
-            Position pos = Position.FromFeetBlockCoords(8, 23, 17);
-            p.SendPos(Entities.SelfID, pos, p.Rot);
         }
         
         void ResetBoard() {

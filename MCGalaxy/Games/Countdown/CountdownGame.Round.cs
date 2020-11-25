@@ -32,20 +32,22 @@ namespace MCGalaxy.Games {
         BufferedBlockSender bulk = new BufferedBlockSender();
         
         protected override void DoRound() {
+            SetBoardOpening(Block.Glass);
             ResetBoard();
             if (!Running) return;
             DoRoundCountdown(10);
-            if (!Running) return;
-            
-            SpawnPlayers();
             if (!Running) return;
             
             SetBoardOpening(Block.Air);
             bulk.Flush();
             if (!Running) return;
             
+            SpawnPlayers();
+            if (!Running) return;
+            
             BeginRound();
-            CloseOffBoard();
+            SetBoardOpening(Block.Glass);
+            RemveBoardBorders();
             if (!Running) return;
             
             RoundInProgress = true;
@@ -91,7 +93,8 @@ namespace MCGalaxy.Games {
         void SpawnPlayers() {
             Player[] players = Players.Items;
             int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
-            Position pos = Position.FromFeetBlockCoords(midX, midY + 1, midZ);
+            Position pos = Position.FromFeetBlockCoords(midX, midY, midZ);
+            pos.X -= 16; pos.Z -= 16;
             
             foreach (Player pl in players) {
                 if (pl.level != Map) {
@@ -104,8 +107,7 @@ namespace MCGalaxy.Games {
             }
         }
 
-        void CloseOffBoard() {
-            SetBoardOpening(Block.Glass);
+        void RemveBoardBorders() {
             int minX1 = 4, maxX2 = (Map.Width  - 1) - 4;
             int minZ1 = 4, maxZ2 = (Map.Length - 1) - 4;
             
