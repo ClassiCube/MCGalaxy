@@ -157,7 +157,7 @@ namespace MCGalaxy {
             }
             MovePlayersToMain();
 
-            if (save && SaveChanges && Changed) Save(false, true);
+            if (save && SaveChanges && Changed) Save(false);
             if (save && SaveChanges) SaveBlockDBChanges();
             
             MovePlayersToMain();
@@ -197,7 +197,7 @@ namespace MCGalaxy {
             return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
         }
 
-        public bool Save(bool force = false, bool clearPhysics = false) {
+        public bool Save(bool force = false) {
             if (blocks == null || IsMuseum) return false; // museums do not save properties
             
             string path = LevelInfo.MapPath(MapName);
@@ -209,9 +209,8 @@ namespace MCGalaxy {
                 if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
                 if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
                 
-                if (Changed || !File.Exists(path) || force || (physicschanged && clearPhysics)) {
+                if (Changed || force || !File.Exists(path)) {
                     lock (saveLock) SaveCore(path);
-                    if (clearPhysics) ClearPhysics();
                 } else {
                     Logger.Log(LogType.SystemActivity, "Skipping level save for " + name + ".");
                 }
