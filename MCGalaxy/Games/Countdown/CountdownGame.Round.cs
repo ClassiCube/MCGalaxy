@@ -106,13 +106,20 @@ namespace MCGalaxy.Games {
 
         void CloseOffBoard() {
             SetBoardOpening(Block.Glass);
-            int maxX = Map.Width - 1, maxZ = Map.Length - 1;
+            int minX1 = 4, maxX2 = (Map.Width  - 1) - 4;
+            int minZ1 = 4, maxZ2 = (Map.Length - 1) - 4;
+            
+            int maxX1, minX2, maxZ1, minZ2;
+            CountdownMap.CalcBoardExtents(Map.Width,  out maxX1, out minX2);
+            CountdownMap.CalcBoardExtents(Map.Length, out maxZ1, out minZ2);
+            // Adjust coordinates to the borders around the board
+            maxX1 -= 2; maxZ1 -= 2; minX2 += 3; minZ2 += 3;
             
             // Cuboid the borders around game board with air
-            Cuboid(4, 4, 4, maxX - 4, 4, 4, Block.Air);
-            Cuboid(4, 4, maxZ - 4, maxX - 4, 4, maxZ - 4, Block.Air);
-            Cuboid(4, 4, 4, 4, 4, maxZ - 4, Block.Air);
-            Cuboid(maxX - 4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Air);
+            Cuboid(minX1, 4, minZ1, maxX2, 4, maxZ1, Block.Air);
+            Cuboid(minX1, 4, minZ2, maxX2, 4, maxZ2, Block.Air);           
+            Cuboid(minX1, 4, minZ1, maxX1, 4, maxZ2, Block.Air);
+            Cuboid(minX2, 4, minZ1, maxX2, 4, maxZ2, Block.Air);
             bulk.Flush();
         }
         

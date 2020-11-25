@@ -31,8 +31,8 @@ namespace MCGalaxy.Games {
             MakeChutesAndElevators(lvl);
             MakeSquares(lvl);
             
-            lvl.VisitAccess.Min = LevelPermission.Guest;
-            lvl.BuildAccess.Min = LevelPermission.Nobody;
+            lvl.VisitAccess.Min  = LevelPermission.Guest;
+            lvl.BuildAccess.Min  = LevelPermission.Nobody;
             lvl.Config.Deletable = false;
             lvl.Config.Buildable = false;
             lvl.Config.MOTD = "Welcome to the Countdown map! -hax";
@@ -107,10 +107,17 @@ namespace MCGalaxy.Games {
         
         static void MakeSquares(Level lvl) {
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
-            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass, lvl);        
-            for(int zz = 6; zz < lvl.Length - 6; zz += 3)
-                for (int xx = 6; xx < lvl.Width - 6; xx += 3)
-                    Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green, lvl);
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass, lvl);
+            
+            int begX, endX, begZ, endZ;
+            CountdownMap.CalcBoardExtents(lvl.Width,  out begX, out endX);
+            CountdownMap.CalcBoardExtents(lvl.Length, out begZ, out endZ);
+            
+            for (int z = begZ; z <= endZ; z += 3)
+                for (int x = begX; x <= endX; x += 3)
+            {
+                Cuboid(x, 4, z, x + 1, 4, z + 1, Block.Green, lvl);
+            }
         }
         
         static void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, byte block, Level lvl) {
@@ -120,6 +127,20 @@ namespace MCGalaxy.Games {
             {
                 lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
             }
+        }
+    }
+    
+    public static class CountdownMap {
+        
+        public static void CalcBoardExtents(int len, out int beg, out int end) {
+            // Diagram of the extents of the board (looking horizontally)
+            // let @ = stone, # = glass, G = green
+            //   @                     @
+            //   @                     @  
+            //@@@@##GG#GG#GG#GG#GG#GG##@@@@
+            //      ^--beg         ^--end             
+            beg = 6; end = -1;
+            for (int i = beg; i < len - 6; i += 3) end = i;
         }
     }
 }

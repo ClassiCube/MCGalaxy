@@ -121,11 +121,15 @@ namespace MCGalaxy.Games {
             Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass);          
             squaresLeft.Clear();
             
-            for (int zz = 6; zz < Map.Length - 6; zz += 3)
-                for (int xx = 6; xx < Map.Width - 6; xx += 3)
+            int begX, endX, begZ, endZ;
+            CountdownMap.CalcBoardExtents(Map.Width,  out begX, out endX);
+            CountdownMap.CalcBoardExtents(Map.Length, out begZ, out endZ);
+            
+            for (int z = begZ; z <= endZ; z += 3)
+                for (int x = begX; x <= endX; x += 3)
             {
-                Cuboid(xx, 4, zz, xx + 1, 4, zz + 1, Block.Green);
-                squaresLeft.Add(new SquarePos(xx, zz));
+                Cuboid(x, 4, z, x + 1, 4, z + 1, Block.Green);
+                squaresLeft.Add(new SquarePos(x, z));
             }
             
             bulk.Flush();

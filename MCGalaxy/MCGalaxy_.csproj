@@ -486,7 +486,7 @@
     <Compile Include="Games\Countdown\CountdownGame.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Plugin.cs" />
     <Compile Include="Games\Countdown\CountdownGame.Round.cs" />
-    <Compile Include="Games\Countdown\CountdownMapGen.cs" />
+    <Compile Include="Games\Countdown\CountdownMap.cs" />
     <Compile Include="Games\CTF\CtfConfig.cs" />
     <Compile Include="Games\CTF\CtfGame.DB.cs" />
     <Compile Include="Games\CTF\CtfGame.Plugin.cs" />
