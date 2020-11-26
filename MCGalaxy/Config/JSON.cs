@@ -162,7 +162,7 @@ namespace MCGalaxy.Config {
             return (char)(x <= 9 ? ('0' + x) : ('a' + (x - 10)));
         }
         
-        static void WriteString(StreamWriter w, string value) {
+        static void WriteString(TextWriter w, string value) {
             w.Write('"');
             foreach (char c in value) {
                 if (c == '/')         { w.Write("\\/");
@@ -178,7 +178,7 @@ namespace MCGalaxy.Config {
             w.Write('"');
         }
         
-        static void WriteValue(StreamWriter w, ConfigAttribute a, string value) {
+        static void WriteValue(TextWriter w, ConfigAttribute a, string value) {
             if (String.IsNullOrEmpty(value)) {
                 w.Write("null");
             } else if (a is ConfigBoolAttribute || a is ConfigIntegerAttribute || a is ConfigRealAttribute) {
@@ -188,7 +188,7 @@ namespace MCGalaxy.Config {
             }
         }
         
-        public static void Serialise(StreamWriter w, ConfigElement[] elems, object instance) {
+        public static void Serialise(TextWriter w, ConfigElement[] elems, object instance) {
             w.Write("{\r\n");
             string separator = null;
             

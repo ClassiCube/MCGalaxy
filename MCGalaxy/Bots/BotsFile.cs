@@ -92,7 +92,7 @@ namespace MCGalaxy.Bots {
             }
         }
         
-        internal static void WriteAll(StreamWriter w, List<BotProperties> props) {
+        internal static void WriteAll(TextWriter w, List<BotProperties> props) {
             w.WriteLine("[");
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
             string separator = null;

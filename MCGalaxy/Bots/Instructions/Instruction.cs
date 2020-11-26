@@ -38,7 +38,7 @@ namespace MCGalaxy.Bots {
         }
         
         /// <summary> Writes the data for this instruction to the given AI file. </summary>
-        public virtual void Output(Player p, string[] args, StreamWriter w) {
+        public virtual void Output(Player p, string[] args, TextWriter w) {
             w.WriteLine(Name);
         }
         

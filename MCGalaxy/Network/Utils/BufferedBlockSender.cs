@@ -20,8 +20,9 @@ using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Network {
-    /// <summary> Combines block changes and sends them as either a single CPE BulkBlockUpdate packet,
-    /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </summary>
+    /// <summary> Helper class for efficiently sending many block changes. </summary>
+    /// <remarks> Sends block changes as either a single CPE BulkBlockUpdate packet,
+    /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </remarks>
     public sealed class BufferedBlockSender {
         
         int[] indices = new int[256];
@@ -56,7 +57,7 @@ namespace MCGalaxy.Network {
             if (count == 256) Flush();
         }
         
-        /// <summary> Sends buffered block change packets to target player(s). </summary>
+        /// <summary> Sends buffered block changes to target player(s). </summary>
         public void Flush() {
             if (count == 0) return;
             

@@ -157,7 +157,7 @@ namespace MCGalaxy {
             }
             MovePlayersToMain();
 
-            if (save && SaveChanges && Changed) Save(false);
+            if (save && SaveChanges && Changed) Save();
             if (save && SaveChanges) SaveBlockDBChanges();
             
             MovePlayersToMain();

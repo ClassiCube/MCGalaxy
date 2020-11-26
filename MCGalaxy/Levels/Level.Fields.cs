@@ -88,7 +88,6 @@ namespace MCGalaxy {
             }
         }
         int Physicsint;
-        public bool physicschanged { get { return ListCheck.Count > 0; } }
         public int currentUndo;
         
         public int lastCheck, lastUpdate;

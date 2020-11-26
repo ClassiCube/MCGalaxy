@@ -250,7 +250,7 @@ namespace MCGalaxy {
                     if (!lvl.SaveChanges) continue;
                     
                     autoload = autoload + lvl.name + "=" + lvl.physics + Environment.NewLine;
-                    lvl.Save(false);
+                    lvl.Save();
                     lvl.SaveBlockDBChanges();
                 }
                 

@@ -46,7 +46,7 @@ namespace MCGalaxy.Bots {
             return data;
         }
         
-        public override void Output(Player p, string[] args, StreamWriter w) {
+        public override void Output(Player p, string[] args, TextWriter w) {
             w.WriteLine(Name + " " + p.Pos.X + " " + p.Pos.Y + " " + p.Pos.Z + " " + p.Rot.RotY + " " + p.Rot.HeadX);
         }
         
@@ -123,7 +123,7 @@ namespace MCGalaxy.Bots {
             return data;
         }
         
-        public override void Output(Player p, string[] args, StreamWriter w) {
+        public override void Output(Player p, string[] args, TextWriter w) {
             string time = args.Length > 3 ? args[3] : "10";
             w.WriteLine(Name + " " + short.Parse(time));
         }

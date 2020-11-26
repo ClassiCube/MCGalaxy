@@ -69,7 +69,7 @@ namespace MCGalaxy.Bots {
             return data;
         }
         
-        public override void Output(Player p, string[] args, StreamWriter w) {
+        public override void Output(Player p, string[] args, TextWriter w) {
             string script = args.Length > 3 ? args[3] : "";
             if (script.Length == 0) {
                 p.Message("LinkScript requires a script name as a parameter");
@@ -106,7 +106,7 @@ namespace MCGalaxy.Bots {
             return data;
         }
         
-        public override void Output(Player p, string[] args, StreamWriter w) {
+        public override void Output(Player p, string[] args, TextWriter w) {
             string time = args.Length > 3 ? args[3] : "10";
             w.WriteLine(Name + " " + short.Parse(time));
         }
