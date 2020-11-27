@@ -97,9 +97,9 @@ namespace MCGalaxy {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             
             try {
-                JsonContext ctx = new JsonContext();
-                ctx.Val = File.ReadAllText(path);
-                JsonArray array = (JsonArray)Json.ParseStream(ctx);
+                bool success;
+                string json = File.ReadAllText(path);
+                JsonArray array = (JsonArray)Json.Parse(json, out success);
                 if (array == null) return defs;
                 
                 foreach (object raw in array) {

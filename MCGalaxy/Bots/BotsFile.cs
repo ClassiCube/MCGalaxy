@@ -55,8 +55,8 @@ namespace MCGalaxy.Bots {
             List<BotProperties> props = new List<BotProperties>();
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
             
-            JsonContext ctx = new JsonContext(); ctx.Val = json;
-            JsonArray array = (JsonArray)Json.ParseStream(ctx);
+            bool success;
+            JsonArray array = (JsonArray)Json.Parse(json, out success);
             if (array == null) return props;
             
             foreach (object raw in array) {

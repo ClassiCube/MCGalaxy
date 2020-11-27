@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Building {
             p.staticCommands = false;
             p.deleteMode = false;
             p.ModeBlock = Block.Invalid;
-            p.onTrain = false;
-            p.isFlying = false;
+            p.onTrain   = false;
+            p.isFlying  = false;
             p.BrushName = "normal";
             p.DefaultBrushArgs = "";
             p.Transform = NoTransform.Instance;

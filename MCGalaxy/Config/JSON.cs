@@ -5,12 +5,6 @@ using System.IO;
 using System.Text;
 
 namespace MCGalaxy.Config {
-
-    public class JsonContext {
-        public string Val; public int Idx; public bool Success = true;
-        public char Cur { get { return Val[Idx]; } }
-        internal StringBuilder strBuffer = new StringBuilder(96);
-    }
     
     public sealed class JsonArray : List<object> { }
     
@@ -28,6 +22,12 @@ namespace MCGalaxy.Config {
     
     public static class Json {
         const int T_NONE = 0, T_NUM = 1, T_TRUE = 2, T_FALSE = 3, T_NULL = 4;
+        
+        sealed class JsonContext {
+            public string Val; public int Idx; public bool Success;
+            public char Cur { get { return Val[Idx]; } }
+            internal StringBuilder strBuffer = new StringBuilder(96);
+        }
         
         static bool IsWhitespace(char c) {
             return c == '\r' || c == '\n' || c == '\t' || c == ' ';
@@ -63,8 +63,18 @@ namespace MCGalaxy.Config {
             ctx.Idx++; return T_NONE;
         }
         
-        public static object ParseStream(JsonContext ctx) {
+        static object ParseStream(JsonContext ctx) {
             return ParseValue(NextToken(ctx), ctx);
+        }
+        
+        public static object Parse(string s, out bool success) {
+        	JsonContext ctx = new JsonContext();
+            ctx.Val     = s;
+            ctx.Success = true;
+            
+            object obj  = ParseStream(ctx);    
+            success     = ctx.Success;
+            return obj;
         }
         
         static object ParseValue(int token, JsonContext ctx) {

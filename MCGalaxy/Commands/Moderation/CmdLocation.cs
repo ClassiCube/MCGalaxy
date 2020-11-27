@@ -49,14 +49,15 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("%WPlayer has an internal IP, cannot trace"); return;
             }
 
-            JsonContext ctx = new JsonContext();
+            bool success;
+            string ipInfo;
             using (WebClient client = HttpUtil.CreateWebClient()) {
-                ctx.Val = client.DownloadString("http://ipinfo.io/" + ip + "/geo");
+                ipInfo = client.DownloadString("http://ipinfo.io/" + ip + "/geo");
             }
             
-            JsonObject obj = (JsonObject)Json.ParseStream(ctx);
+            JsonObject obj = (JsonObject)Json.Parse(ipInfo, out success);
             GeoInfo info = new GeoInfo();
-            if (obj == null || !ctx.Success) {
+            if (obj == null || !success) {
                 p.Message("%WError parsing GeoIP info"); return;
             }
             

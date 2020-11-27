@@ -108,8 +108,8 @@ namespace MCGalaxy.Network {
         }
         
         static string GetError(string json) {
-            JsonContext ctx = new JsonContext(); ctx.Val = json;
-            JsonObject obj = (JsonObject)Json.ParseStream(ctx);
+            bool success;
+            JsonObject obj = (JsonObject)Json.Parse(json, out success);
             if (obj == null) return null;
             
             for (int i = 0; i < obj.Keys.Count; i++) {
