@@ -78,7 +78,7 @@ namespace MCGalaxy.Gui.Popups {
                 CompilerResults result  = engine.Compile(fileName, args, p);
 
                 if (result.Errors.HasErrors) {
-                    string body = "\r\n\r\n" + Colors.Strip(p.Messages);
+                    string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
                     Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
                     return;
                 }

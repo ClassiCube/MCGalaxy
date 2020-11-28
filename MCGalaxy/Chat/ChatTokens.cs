@@ -118,7 +118,7 @@ namespace MCGalaxy {
             return count.ToString();
         }
         
-        static string TokenName(Player p) { return (Server.Config.DollarNames ? "$" : "") + Colors.Strip(p.DisplayName); }
+        static string TokenName(Player p) { return (Server.Config.DollarNames ? "$" : "") + Colors.StripUsed(p.DisplayName); }
         static string TokenTrueName(Player p) { return (Server.Config.DollarNames ? "$" : "") + p.truename; }
         static string TokenColor(Player p) { return p.color; }
         static string TokenRank(Player p) { return p.group.Name; }

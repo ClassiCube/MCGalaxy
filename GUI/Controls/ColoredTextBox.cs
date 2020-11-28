@@ -98,7 +98,7 @@ namespace MCGalaxy.Gui.Components {
             if (dateStamp) AppendColoredText(CurrentDate, Color.Gray);
             
             if (!Colorize) {
-                AppendText(Colors.Strip(text));
+                AppendText(Colors.StripUsed(text));
             } else {
                 AppendFormatted(text, color);
             }

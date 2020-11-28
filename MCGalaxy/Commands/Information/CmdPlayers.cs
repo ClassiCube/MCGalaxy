@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Info {
             StringBuilder data = list.builder;
             data.Append(' ');
             if (p.voice) { data.Append("&f+").Append(list.group.Color); }
-            data.Append(Colors.Strip(target.FormatNick(p)));
+            data.Append(Colors.StripUsed(target.FormatNick(p)));
             
             if (p.hidden)       data.Append("-hidden");
             if (p.muted)        data.Append("-muted");

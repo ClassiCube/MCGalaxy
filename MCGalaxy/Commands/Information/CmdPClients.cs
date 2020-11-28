@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Info {
                 List<Player> players  = kvp.Value;
                 
                 for (int i = 0; i < players.Count; i++) {
-                	string nick = Colors.Strip(p.FormatNick(players[i]));
+                    string nick = Colors.StripUsed(p.FormatNick(players[i]));
                     builder.Append(nick);
                     if (i < players.Count - 1) builder.Append(", ");
                 }
