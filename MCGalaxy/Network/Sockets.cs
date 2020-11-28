@@ -27,13 +27,12 @@ namespace MCGalaxy.Network {
     
     /// <summary> Abstracts sending to/receiving from a network socket. </summary>
     public abstract class INetSocket {
-        protected INetProtocol protocol;
-        
+        protected INetProtocol protocol;        
         /// <summary> Whether the socket has been closed/disconnected. </summary>
         public bool Disconnected;
-        /// <summary> The IP address of the remote end (i.e. client) of the socket. </summary>
-        public string IP;
         
+        /// <summary> Gets the IP address of the remote end (i.e. client) of the socket. </summary>
+        public abstract string IP { get; }      
         /// <summary> Sets whether this socket operates in low-latency mode (e.g. for TCP, disabes nagle's algorithm). </summary>
         public abstract bool LowLatency { set; }
         
@@ -129,8 +128,6 @@ namespace MCGalaxy.Network {
         
         public TcpSocket(Socket s) {
             socket = s;
-            IP = ((IPEndPoint)s.RemoteEndPoint).Address.ToString();
-            
             recvArgs.UserToken = this;
             recvArgs.SetBuffer(recvBuffer, 0, recvBuffer.Length);
             sendArgs.UserToken = this;
@@ -143,6 +140,9 @@ namespace MCGalaxy.Network {
             ReceiveNextAsync();
         }
         
+        public override string IP {
+            get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
+        }        
         public override bool LowLatency { set { socket.NoDelay = value; } }
         
         
@@ -266,13 +266,11 @@ namespace MCGalaxy.Network {
     public sealed class WebSocket : INetSocket, INetProtocol {
         readonly INetSocket s;
         
-        public WebSocket(INetSocket socket) {
-            IP = socket.IP;
-            s  = socket;
-        }
+        public WebSocket(INetSocket socket) { s  = socket; }
         
         // Init taken care by underlying socket
         public override void Init() { }
+        public override string IP { get { return s.IP; } }
         public override bool LowLatency { set { s.LowLatency = value; } }
         
         bool readingHeaders = true;
@@ -501,7 +499,6 @@ namespace MCGalaxy.Network {
         SslStream ssl;
         
         public SecureSocket(INetSocket socket) {
-            IP  = socket.IP;
             raw = socket;
             
             wrapper = new WrapperStream();
@@ -512,7 +509,8 @@ namespace MCGalaxy.Network {
         }
         
         // Init taken care by underlying socket
-        public override void Init() { }
+        public override void Init() { }        
+        public override string IP { get { return raw.IP; } }
         public override bool LowLatency { set { raw.LowLatency = value; } }
         public override void Close() { raw.Close(); }
         public void Disconnect() { Close(); }

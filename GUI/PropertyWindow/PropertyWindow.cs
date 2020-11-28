@@ -112,7 +112,7 @@ namespace MCGalaxy.Gui {
         void GetHelp(string toHelp) {
             ConsoleHelpPlayer p = new ConsoleHelpPlayer();
             Command.Find("Help").Use(p, toHelp);
-            Popup.Message(Colors.Strip(p.Messages), "Help for /" + toHelp);
+            Popup.Message(Colors.StripUsed(p.Messages), "Help for /" + toHelp);
         }
     }
 	
@@ -125,6 +125,7 @@ namespace MCGalaxy.Gui {
         }
             
         public override void Message(byte type, string message) {
+            message = Chat.Format(message, this);
             Messages += message + "\r\n";
         }
     }

@@ -245,8 +245,8 @@ namespace MCGalaxy {
             }
         }
         
-        /// <summary> Removes all instances of % or &amp; and the character that follows.
-        /// Does *not* check if the character pair makes a real color </summary>
+        /// <summary> Removes all occurrences of % or &amp; and the following character. </summary>
+        /// <remarks> Does NOT check if the following character is actually a valid color code. </remarks>
         public static string Strip(string value) {
             if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1) return value;
             char[] output = new char[value.Length];
@@ -255,7 +255,7 @@ namespace MCGalaxy {
             for (int i = 0; i < value.Length; i++) {
                 char token = value[i];
                 if (token == '%' || token == '&') {
-                    i++; // Skip over the following color code.
+                    i++; // Skip over the following color code
                 } else {
                     output[usedChars++] = token;
                 }
@@ -263,8 +263,7 @@ namespace MCGalaxy {
             return new string(output, 0, usedChars);
         }
         
-        /// <summary> Removes all colors that are currently used.
-        /// This means % or &amp; may be kept if they are not followed a used color code </summary>
+        /// <summary> Removes all occurrences of % and &amp; that are followed by a used color code. </summary>
         public static string StripUsed(string message) {
             if (message.IndexOf('%') == -1 && message.IndexOf('&') == -1) return message;
             char[] output = new char[message.Length];
@@ -272,10 +271,9 @@ namespace MCGalaxy {
             
             for (int i = 0; i < message.Length; i++) {
                 char c = message[i];
-                if ( (i < message.Length-1) &&
-                     (c == '%' || c == '&') &&
-                     (IsStandard(message[i+1]) || IsDefined(message[i+1])) ) {
-                    i++; // Skip over the following color code.
+                if ((c == '%' || c == '&') && (i < message.Length - 1) &&
+                     (IsStandard(message[i+1]) || IsDefined(message[i+1]))) {
+                    i++; // Skip over the following color code
                 } else {
                     output[usedChars++] = c;
                 }
