@@ -68,7 +68,7 @@ namespace MCGalaxy.Blocks.Extended {
         static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
         static PortalExit ParseExit(IDataRecord record) {
             PortalExit data = new PortalExit();
-            data.Map = record.GetText(0).Cp437ToUnicode();
+            data.Map = record.GetText(0);
             
             data.X = (ushort)record.GetInt32(1);
             data.Y = (ushort)record.GetInt32(2);
