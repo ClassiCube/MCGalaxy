@@ -45,6 +45,7 @@ namespace MCGalaxy {
         public virtual bool MessageBlockRestricted { get { return false; } }
         public virtual bool UseableWhenFrozen { get { return false; } }
         public virtual bool LogUsage { get { return true; } }
+        public virtual bool UpdatesLastCmd { get { return true; } }
         
         public static CommandList all = new CommandList();
         public static List<Command> allCmds  = new List<Command>();

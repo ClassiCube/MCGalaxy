@@ -668,23 +668,23 @@ namespace MCGalaxy {
             return command;
         }
         
-        bool UseCommand(Command command, string message, CommandData data) {
+        bool UseCommand(Command command, string args, CommandData data) {
             string cmd = command.name;
-            if (command.LogUsage) {
-                lastCMD = message.Length == 0 ? cmd : cmd + " " + message;
+            if (command.UpdatesLastCmd) {
+                lastCMD = args.Length == 0 ? cmd : cmd + " " + args;
                 lastCmdTime = DateTime.UtcNow;
-                Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, message);
             }
-
+            if (command.LogUsage) Logger.Log(LogType.CommandUsage, "{0} used /{1} {2}", name, cmd, args);
+            
             try { //opstats patch (since 5.5.11)
-                if (Server.Opstats.CaselessContains(cmd) || (cmd.CaselessEq("review") && message.CaselessEq("next") && Server.reviewlist.Count > 0)) {
+                if (Server.Opstats.CaselessContains(cmd) || (cmd.CaselessEq("review") && args.CaselessEq("next") && Server.reviewlist.Count > 0)) {
                     Database.AddRow("Opstats", "Time, Name, Cmd, Cmdmsg",
-                                    DateTime.Now.ToString(Database.DateFormat), name, cmd, message);
+                                    DateTime.Now.ToString(Database.DateFormat), name, cmd, args);
                 }
             } catch { }
             
             try {
-                command.Use(this, message, data);
+                command.Use(this, args, data);
             } catch (Exception e) {
                 Logger.LogError(e);
                 Message("%WAn error occured when using the command!");

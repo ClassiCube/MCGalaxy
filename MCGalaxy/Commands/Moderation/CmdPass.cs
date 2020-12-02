@@ -28,6 +28,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool LogUsage { get { return false; } }
+        public override bool UpdatesLastCmd { get { return false; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("SetPass", "set"), new CommandAlias("ResetPass", "reset") }; }
         }
@@ -39,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", Server.Config.VerifyAdminsRank); return;
             }
             
-            if (!Server.Config.verifyadmins) { p.Message("Admin verficiation is not currently enabled."); return; }
+            if (!Server.Config.verifyadmins) { p.Message("Admin verification is not currently enabled."); return; }
             if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);

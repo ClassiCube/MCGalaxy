@@ -21,6 +21,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string shortcut { get { return "Op"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool UseableWhenFrozen { get { return true; } }
+        public override bool UpdatesLastCmd { get { return false; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can read opchat messages") }; }
         }
