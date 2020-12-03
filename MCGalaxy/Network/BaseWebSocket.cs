@@ -24,7 +24,7 @@ namespace MCGalaxy.Network {
     /// <summary> Abstracts WebSocket handling. </summary>
     public abstract class BaseWebSocket : INetSocket, INetProtocol {        
         bool readingHeaders = true;
-        bool conn, upgrade, version, proto;
+        bool conn, upgrade, version;
         string verKey;
         
         void AcceptConnection() {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Network {
         void ProcessHeader(string raw) {
             // end of headers
             if (raw.Length == 0) {
-                if (conn && upgrade && version && proto && verKey != null) {
+                if (conn && upgrade && version && verKey != null) {
                     AcceptConnection();
                 } else {
                     // don't pretend to be a http server (so IP:port isn't marked as one by bots)
@@ -69,8 +69,6 @@ namespace MCGalaxy.Network {
                 version = val.CaselessEq("13");
             } else if (key.CaselessEq("Sec-WebSocket-Key")) {
                 verKey  = val;
-            } else if (key.CaselessEq("Sec-WebSocket-Protocol")) {
-                proto   = val.CaselessEq("ClassiCube");
             }
         }
         
@@ -168,7 +166,8 @@ namespace MCGalaxy.Network {
                         mask[maskRead] = data[offset++];
                     }
                     
-                    state = state_data;
+                    maskRead = 0;
+                    state    = state_data;
                     goto case state_data;
                     
                 case state_data:
@@ -180,7 +179,7 @@ namespace MCGalaxy.Network {
                     
                     if (frameRead == frameLen) {
                         DecodeFrame();
-                        maskRead  = 0;
+                         // TODO: move to case state_mask
                         frameRead = 0;
                         state     = state_header1;
                     }
@@ -202,6 +201,7 @@ namespace MCGalaxy.Network {
             return offset;
         }
         
+        /// <summary> Wraps the given data in a websocket frame </summary>
         protected static byte[] WrapData(byte[] data) {
             int headerLen = 2 + (data.Length >= 126 ? 2 : 0);
             byte[] packet = new byte[headerLen + data.Length];
