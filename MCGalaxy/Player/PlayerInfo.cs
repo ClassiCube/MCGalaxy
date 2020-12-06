@@ -66,6 +66,10 @@ namespace MCGalaxy {
             matches = 0;
             if (!Formatter.ValidName(pl, name, "player")) return null;
             
+            // Try to exactly match name first (because names have + at end)
+            Player exact = FindExact(name);
+            if (exact != null) { matches = 1; return exact; }
+            
             return Matcher.Find(pl, name, out matches, Online.Items,
                                 p => pl.CanSee(p) || !onlyCanSee,
                                 p => p.name, "online players");
@@ -86,9 +90,10 @@ namespace MCGalaxy {
         /// <returns> Player instance if an exact match is found, null if not. </returns>
         public static Player FindExact(string name) {
             Player[] players = PlayerInfo.Online.Items;
-
+            name = name.RemoveLastPlus();
+            
             foreach (Player p in players) {
-                if (p.name.CaselessEq(name)) return p;
+                if (p.truename.CaselessEq(name)) return p;
             }
             return null;
         }

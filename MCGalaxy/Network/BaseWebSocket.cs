@@ -179,7 +179,6 @@ namespace MCGalaxy.Network {
                     
                     if (frameRead == frameLen) {
                         DecodeFrame();
-                         // TODO: move to case state_mask
                         frameRead = 0;
                         state     = state_header1;
                     }
