@@ -39,8 +39,7 @@ namespace MCGalaxy.Drawing.Transforms {
             sinZ = Math.Sin(zDeg * Math.PI / 180.0);            
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, DrawOpOutput output) {
+        public override void Perform(Vec3S32[] marks, DrawOp op, Brush brush, DrawOpOutput output) {
             P = (op.Min + op.Max) / 2;
             if (!CentreOrigin) P = op.Origin;
             op.Perform(marks, brush, b => OutputBlock(b, output));

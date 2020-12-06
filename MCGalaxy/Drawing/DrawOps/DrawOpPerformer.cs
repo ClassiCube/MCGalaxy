@@ -116,11 +116,10 @@ namespace MCGalaxy.Drawing.Ops {
             entry.Init(op.Name, op.Level.name);
             
             if (brush != null) brush.Configure(op, p);
-            Level lvl = op.Level;
             DrawOpOutputter outputter = new DrawOpOutputter(op);
             
             if (op.AffectedByTransform) {
-                p.Transform.Perform(marks, p, lvl, op, brush, outputter.Output);
+                p.Transform.Perform(marks, op, brush, outputter.Output);
             } else {
                 op.Perform(marks, brush, outputter.Output);
             }

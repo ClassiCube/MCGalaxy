@@ -29,7 +29,6 @@ namespace MCGalaxy.Drawing.Transforms {
         /// after this transformation (e.g. scaling) has been applied to it. </summary>
         public virtual void GetBlocksAffected(ref long affected) { }
         
-        public abstract void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, DrawOpOutput output);
+        public abstract void Perform(Vec3S32[] marks, DrawOp op, Brush brush, DrawOpOutput output);
     }
 }

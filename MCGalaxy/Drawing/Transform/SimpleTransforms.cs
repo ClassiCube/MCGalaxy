@@ -27,8 +27,7 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string Name { get { return "None"; } }
         public static NoTransform Instance = new NoTransform();
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, DrawOpOutput output) {
+        public override void Perform(Vec3S32[] marks, DrawOp op, Brush brush, DrawOpOutput output) {
             op.Perform(marks, brush, output);
         }
     }
@@ -60,10 +59,11 @@ namespace MCGalaxy.Drawing.Transforms {
             affected = Math.Max(x, Math.Max(y, z));
         }
         
-        public override void Perform(Vec3S32[] marks, Player p, Level lvl, 
-                                     DrawOp op, Brush brush, DrawOpOutput output) {
+        public override void Perform(Vec3S32[] marks, DrawOp op, Brush brush, DrawOpOutput output) {
             P = (op.Min + op.Max) / 2;
             dirX = 1; dirY = 1; dirZ = 1;
+            
+            Level lvl = op.Level;
             width = lvl.Width; height = lvl.Height; length = lvl.Length;
             
             if (!CentreOrigin) {
