@@ -195,6 +195,7 @@
     <Compile Include="Commands\CPE\CmdEnvironment.cs" />
     <Compile Include="Commands\CPE\CmdHold.cs" />
     <Compile Include="Commands\CPE\CmdModel.cs" />
+    <Compile Include="Commands\CPE\CmdModelScale.cs" />
     <Compile Include="Commands\CPE\CmdPing.cs" />
     <Compile Include="Commands\CPE\CmdReachDistance.cs" />
     <Compile Include="Commands\CPE\CmdSkin.cs" />
