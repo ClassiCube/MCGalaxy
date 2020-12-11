@@ -81,13 +81,12 @@ namespace MCGalaxy.Blocks {
         }
         
         internal static ChangeResult Door(Player p, BlockID old, ushort x, ushort y, ushort z) {
-            if (p.level.physics != 0) {             
-                BlockID physForm;
-                PhysicsArgs args = ActivateablePhysics.GetDoorArgs(old, out physForm);
-                p.level.Blockchange(x, y, z, physForm, false, args);
-                return ChangeResult.Modified;
-            }
-            return ChangeResult.Unchanged;
+            if (p.level.physics == 0) return p.ChangeBlock(x, y, z, Block.Air);
+            
+            BlockID physForm;
+            PhysicsArgs args = ActivateablePhysics.GetDoorArgs(old, out physForm);
+            p.level.Blockchange(x, y, z, physForm, false, args);
+            return ChangeResult.Modified;
         }
         
         internal static ChangeResult oDoor(Player p, BlockID old, ushort x, ushort y, ushort z) {
