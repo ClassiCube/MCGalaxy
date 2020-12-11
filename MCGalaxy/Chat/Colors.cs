@@ -263,6 +263,14 @@ namespace MCGalaxy {
             return new string(output, 0, usedChars);
         }
         
+        static bool UsedColor(string message, int i) {
+            // handle & being last character in string
+            if (i >= message.Length - 1) return false;
+            
+            char c = message[i + 1];
+            return Map(ref c);
+        }
+        
         /// <summary> Removes all occurrences of % and &amp; that are followed by a used color code. </summary>
         public static string StripUsed(string message) {
             if (message.IndexOf('%') == -1 && message.IndexOf('&') == -1) return message;
@@ -271,8 +279,7 @@ namespace MCGalaxy {
             
             for (int i = 0; i < message.Length; i++) {
                 char c = message[i];
-                if ((c == '%' || c == '&') && (i < message.Length - 1) &&
-                     (IsStandard(message[i+1]) || IsDefined(message[i+1]))) {
+                if ((c == '%' || c == '&') && UsedColor(message, i)) {
                     i++; // Skip over the following color code
                 } else {
                     output[usedChars++] = c;
