@@ -42,15 +42,6 @@ namespace Sharkbite.Irc
 	public delegate void ErrorMessageEventHandler( ReplyCode code, string message );
 	
 	/// <summary>
-	/// A Notice or Private message was sent to someone
-	/// whose status is away.
-	/// </summary>
-	/// <param name="nick">The nick of the user who is away.</param>
-	/// <param name="awayMessage">An away message, if any, set by the user. </param>
-	/// <seealso cref="Listener.OnAway"/>
-	public delegate void AwayEventHandler( string nick, string awayMessage );
-	
-	/// <summary>
 	/// An Invite message was successfully sent to another user. 
 	/// </summary>
 	/// <param name="nick">The nick of the user who was invited</param>
@@ -166,23 +157,6 @@ namespace Sharkbite.Irc
 	/// <param name="message">The message.</param>
 	/// <seealso cref="Listener.OnPrivate"/>
 	public delegate void PrivateMessageEventHandler( UserInfo user, string message );
-	
-	/// <summary>
-	/// A channel's topic has changed.
-	/// </summary>
-	/// <param name="user">Who changed the topic.</param>
-	/// <param name="channel">Which channel had its topic changed.</param>
-	/// <param name="newTopic">The new topic.</param>
-	/// <seealso cref="Listener.OnTopicChanged"/>
-	public delegate void TopicEventHandler( UserInfo user, string channel, string newTopic);
-	
-	/// <summary>
-	/// The response to a <see cref="Sender.RequestTopic"/> command.
-	/// </summary>
-	/// <param name="channel">The channel who topic was requested.</param>
-	/// <param name="topic">The topic.</param>
-	/// <seealso cref="Listener.OnTopicRequest"/>
-	public delegate void TopicRequestEventHandler( string channel, string topic);
 
 	/// <summary>
 	/// Someone has left a channel. 
@@ -231,77 +205,6 @@ namespace Sharkbite.Irc
 	/// <param name="last">True if this is the last names reply.</param>
 	/// <seealso cref="Listener.OnNames"/>
 	public delegate void NamesEventHandler( string channel, string[] nicks, bool last );
-	
-	/// <summary>
-	/// The response to a <see cref="Sender.List"/> request.
-	/// </summary>
-	/// <param name="channel">The channel name.</param>
-	/// <param name="visibleNickCount">The number of visible users on that channel.</param>
-	/// <param name="topic">The channel's topic.</param>
-	/// <param name="last">True if this is the last reply.</param>
-	/// <seealso cref="Listener.OnList"/>
-	public delegate void ListEventHandler( string channel, int visibleNickCount, string topic, bool last );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Ison"/> request.
-	/// </summary>
-	/// <param name="nicks">If someone with this nick is on the same IRC network their nick
-	/// will be returned here. Otherwise nick will be an empty string.</param>
-	/// <seealso cref="Listener.OnIson"/>
-	public delegate void IsonEventHandler( string nicks );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Who"/> request.
-	/// </summary>
-	/// <param name="user">The subject of the query</param>
-	/// <param name="channel">The channel the user is on</param>
-	/// <param name="ircServer">The name of the user's IRC server</param>
-	/// <param name="mask">The user's mode mask</param>
-	/// <param name="hopCount">Number of network hops to the user</param>
-	/// <param name="realName">The user's real name</param>
-	/// <param name="last">True if this is the last response</param>
-	/// <seealso cref="Listener.OnWho"/>
-	public delegate void WhoEventHandler( UserInfo user, string channel, string ircServer, string mask, 
-	int hopCount, string realName, bool last );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Whois"/> request.
-	/// </summary>
-	/// <param name="whoisInfo">The data associated with the nick queried.</param>
-	/// <seealso cref="Listener.OnWho"/>
-	public delegate void WhoisEventHandler( WhoisInfo whoisInfo );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Whowas"/> request.
-	/// </summary>
-	/// <param name="user">Information on the user.</param>
-	/// <param name="realName">The user's real name.</param>
-	/// <param name="last">True if this is the final reply.</param>
-	/// <seealso cref="Listener.OnWhowas"/>
-	public delegate void WhowasEventHandler( UserInfo user, string realName, bool last );
-
-	/// <summary>
-	/// This user's mode has changed.
-	/// </summary>
-	/// <param name="action">Whether a mode was added or removed.</param>
-	/// <param name="mode">The mode that was changed.</param>
-	/// <seealso cref="Listener.OnUserModeChange"/>
-	public delegate void UserModeChangeEventHandler( ModeAction action, UserMode mode );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.RequestUserModes"/> command for this user.
-	/// </summary>
-	/// <param name="modes">The complete list of user modes as an array.</param>
-	/// <seealso cref="Listener.OnUserModeRequest"/>
-	public delegate void UserModeRequestEventHandler( UserMode[] modes );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.RequestChannelModes"/> command.
-	/// </summary>
-	/// <param name="channel">The name of the channel.</param>
-	/// <param name="modes">Objects which hold all the information about a channel's modes.</param>
-	/// <seealso cref="Listener.OnChannelModeRequest"/>
-	public delegate void ChannelModeRequestEventHandler( string channel, string[] modes );
 
 	/// <summary>
 	/// A channel's mode has changed.
@@ -312,20 +215,7 @@ namespace Sharkbite.Irc
 	/// <seealso cref="Listener.OnChannelModeChange"/>
 	public delegate void ChannelModeChangeEventHandler( UserInfo who, string channel, string[] modes );
 
-
-	/// <summary>
-	/// Response to a <see cref="Sender.RequestChannelList"/> command.
-	/// </summary>
-	/// <param name="channel">The channel name.</param>
-	/// <param name="mode">What type is this a list? For example bans, invitation masks, etc..</param>
-	/// <param name="item">A mask or nick (in the case of ChannelCreator).</param>
-	/// <param name="last">Is this the last item. If its the last then the item paramter
-	/// will be empty unless the mode is ChannelCreator.</param>
-	/// <param name="who">Who set the mask (not for ChannelCreator).</param>
-	/// <param name="whenSet">When was it set (not for ChannelCreator).</param>
-	/// <seealso cref="Listener.OnChannelList"/>
-	public delegate void ChannelListEventHandler( string channel, ChannelMode mode, string item, UserInfo who, long whenSet, bool last );
-
+	
 	/// <summary>
 	/// The full unparsed text messages received from the IRC server. It
 	/// includes all messages received except for those exchanged during a DCC chat.
@@ -341,73 +231,6 @@ namespace Sharkbite.Irc
 	/// <param name="message">The text sent.</param>
 	/// <see cref="Connection.OnRawMessageSent"/>
 	public delegate void RawMessageSentEventHandler( string message );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Version"/> request.
-	/// </summary>
-	/// <param name="versionInfo">The information string in the form 
-	/// IRC: [version].[debuglevel] [server] :[comments]</param>
-	/// <seealso cref="Listener.OnVersion"/>
-	public delegate void VersionEventHandler( string versionInfo );
-
-	/// <summary>
-	/// The server's "Message of the Day" if any.
-	/// </summary>
-	/// <param name="message">An information string.</param>
-	/// <param name="last">True if this is the last in the set of messages.</param>
-	/// <seealso cref="Listener.OnMotd"/>
-	public delegate void MotdEventHandler( string message, bool last );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Time"/> request.
-	/// </summary>
-	/// <param name="time">The name of the server and
-	/// its local time</param>
-	/// <seealso cref="Listener.OnTime"/>
-	public delegate void TimeEventHandler( string time );
-
-	/// <summary>
-	/// The response to an <see cref="Sender.Info"/> request.
-	/// </summary>
-	/// <param name="message">An information string.</param>
-	/// <param name="last">True if this is the last in the set of messages.</param>
-	/// <seealso cref="Listener.OnInfo"/>
-	public delegate void InfoEventHandler( string message, bool last );
-
-	/// <summary>
-	/// The response to an <see cref="Sender.Admin"/> request.
-	/// </summary>
-	/// <param name="message">An information string.</param>
-	/// <seealso cref="Listener.OnAdmin"/>
-	public delegate void AdminEventHandler( string message );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Lusers"/> request.
-	/// </summary>
-	/// <param name="message">An information string.</param>
-	/// <seealso cref="Listener.OnLusers"/>
-	public delegate void LusersEventHandler( string message );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Links"/> request.
-	/// </summary>
-	/// <param name="mask">The hostname as it appears in IRC queries.</param>
-	/// <param name="hostname">The actual hostname.</param>
-	/// <param name="hopCount">The number of hops from this server to the target server.</param>
-	/// <param name="serverInfo">Information about the server, usually the network name.</param>
-	/// <param name="done">True if this is the last message in the series. If it is the
-	/// last it will not contain any server information.</param>
-	/// <seealso cref="Listener.OnLinks"/>
-	public delegate void LinksEventHandler( string mask, string hostname, int hopCount, string serverInfo, bool done );
-
-	/// <summary>
-	/// The response to a <see cref="Sender.Stats"/> request.
-	/// </summary>
-	/// <param name="queryType">What kind of query this is in response to.</param>
-	/// <param name="message">The actual response.</param>
-	/// <param name="done">True if this is the last message in the series.</param>
-	/// <seealso cref="Listener.OnStats"/>
-	public delegate void StatsEventHandler( StatsQuery queryType, string message, bool done );
 
 	/// <summary>
 	/// Someone was disconnected from the server via a Kill.

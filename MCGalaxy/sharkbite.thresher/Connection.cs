@@ -71,7 +71,6 @@ namespace Sharkbite.Irc
 		//TCP/IP connection established with IRC server
 		private bool connected;
 		private bool handleNickFailure;
-		private ServerProperties properties;
 		private Encoding encoding;
 
 		internal StreamWriter writer; //Access is internal for testing
@@ -178,15 +177,7 @@ namespace Sharkbite.Irc
 		/// The collection of data used to establish this connection.
 		/// </summary>
 		/// <value>Read only ConnectionArgs.</value>
-		public ConnectionArgs ConnectionData { get { return connectionArgs; } }
-		
-		/// <summary>
-		/// A read-only collection of string key/value pairs
-		/// representing IRC server proprties.
-		/// </summary>
-		/// <value>This connection's ServerProperties obejct or null if it
-		/// has not been created.</value>
-		public ServerProperties ServerProperties { get { return properties; } }
+		public ConnectionArgs ConnectionData { get { return connectionArgs; } }		
 
 		/// <summary>
 		/// Respond to IRC keep-alives.
@@ -235,57 +226,11 @@ namespace Sharkbite.Irc
 				Sender.Register(nick);
 			}
 		}
-		/// <summary>
-		/// Listen for the 005 info messages sent during registration so that the maximum lengths
-		/// of certain items (Nick, Away, Topic) can be determined dynamically.
-		/// </summary>
-		/// <param name="code">Reply code enum</param>
-		/// <param name="info">An info line</param>
-		private void OnReply( ReplyCode code, string info)
-		{
-			if( code == ReplyCode.RPL_BOUNCE ) //Code 005
-			{
-				//Lazy instantiation
-				if( properties == null )
-				{
-					properties = new ServerProperties();
-				}
-				//Populate properties from name/value matches
-				MatchCollection matches = propertiesRegex.Matches( info );
-				if( matches.Count > 0 )
-				{
-					foreach( Match match in matches )
-					{
-						properties.SetProperty(match.Groups[1].ToString(), match.Groups[2].ToString() );
-					}
-				}
-				//Extract ones we are interested in
-				ExtractProperties();
-			}
-		}
-		private void ExtractProperties()
-		{
-			//For the moment the only one we care about is NickLen
-			//In fact we don't cae about any but keep here as an example
-			/*
-			if( properties.ContainsKey("NICKLEN") )
-			{
-				try
-				{
-					maxNickLength = int.Parse( properties[ "NICKLEN" ] );
-				}
-				catch( Exception e )
-				{
-				}
-			}
-			 */
-		}
 		private void RegisterDelegates()
 		{
 			listener.OnPing += new PingEventHandler( KeepAlive );
 			listener.OnNick += new NickEventHandler( MyNickChanged );
 			listener.OnNickError += new NickErrorEventHandler( OnNickError );
-			listener.OnReply += new ReplyEventHandler( OnReply );
 			listener.OnRegistered += new RegisteredEventHandler( OnRegistered );
 		}
 

@@ -45,10 +45,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event ErrorMessageEventHandler OnError;
 		/// <summary>
-		///A <see cref="Sender.PrivateNotice"/> or <see cref="Sender.PrivateMessage"/> message was sent to someone who is away.
-		/// </summary>
-		public event AwayEventHandler OnAway;
-		/// <summary>
 		/// An <see cref="Sender.Invite"/> message was successfully sent to another user. 
 		/// </summary>
 		public event InviteSentEventHandler OnInviteSent;
@@ -105,14 +101,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event PrivateMessageEventHandler OnPrivate;
 		/// <summary>
-		/// A channel's topic has changed.
-		/// </summary>
-		public event TopicEventHandler OnTopicChanged;
-		/// <summary>
-		/// The response to a <see cref="Sender.RequestTopic"/> command.
-		/// </summary>
-		public event TopicRequestEventHandler OnTopicRequest;
-		/// <summary>
 		/// Someone has left a channel. 
 		/// </summary>
 		public event PartEventHandler OnPart;
@@ -133,77 +121,9 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event NamesEventHandler OnNames;
 		/// <summary>
-		/// The response to a <see cref="Sender.List"/> request.
-		/// </summary>
-		public event ListEventHandler OnList;
-		/// <summary>
-		/// The response to a <see cref="Sender.Ison"/> request.
-		/// </summary>
-		public event IsonEventHandler OnIson;
-		/// <summary>
-		/// The response to a <see cref="Sender.Who"/> request.
-		/// </summary>
-		public event WhoEventHandler OnWho;
-		/// <summary>
-		/// The response to a <see cref="Sender.Whois"/> request.
-		/// </summary>
-		public event WhoisEventHandler OnWhois;
-		/// <summary>
-		/// The response to a <see cref="Sender.Whowas"/> request.
-		/// </summary>
-		public event WhowasEventHandler OnWhowas;
-		/// <summary>
-		/// Someone's user mode has changed.
-		/// </summary>
-		public event UserModeChangeEventHandler OnUserModeChange;
-		/// <summary>
-		/// The response to a <see cref="Sender.RequestUserModes"/> command for this user.
-		/// </summary>
-		public event UserModeRequestEventHandler OnUserModeRequest;
-		/// <summary>
-		/// The response to a <see cref="Sender.RequestChannelModes"/> command.
-		/// </summary>
-		public event ChannelModeRequestEventHandler OnChannelModeRequest;
-		/// <summary>
 		/// A channel's mode has changed.
 		/// </summary>
 		public event ChannelModeChangeEventHandler OnChannelModeChange;
-		/// <summary>
-		/// Response to a <see cref="Sender.RequestChannelList"/> command.
-		/// </summary>
-		public event ChannelListEventHandler OnChannelList;
-		/// <summary>
-		/// The response to a <see cref="Sender.Version"/> request.
-		/// </summary>
-		public event VersionEventHandler OnVersion;
-		/// <summary>
-		/// A server's 'Message of the Day'
-		/// </summary>
-		public event MotdEventHandler OnMotd;
-		/// <summary>
-		/// The response to a <see cref="Sender.Time"/> request.
-		/// </summary>
-		public event TimeEventHandler OnTime;
-		/// <summary>
-		/// The response to an <see cref="Sender.Info"/> request.
-		/// </summary>
-		public event InfoEventHandler OnInfo;
-		/// <summary>
-		/// The response to an <see cref="Sender.Admin"/> request.
-		/// </summary>
-		public event AdminEventHandler OnAdmin;
-		/// <summary>
-		/// The response to a <see cref="Sender.Lusers"/> request.
-		/// </summary>
-		public event LusersEventHandler OnLusers;
-		/// <summary>
-		/// The response to a <see cref="Sender.Links"/> request.
-		/// </summary>
-		public event LinksEventHandler OnLinks;
-		/// <summary>
-		/// The response to a <see cref="Sender.Stats"/> request.
-		/// </summary>
-		public event StatsEventHandler OnStats;
 		/// <summary>
 		/// A User has been disconnected via a Kill message.
 		/// </summary>
@@ -226,11 +146,6 @@ namespace Sharkbite.Irc
 		private readonly char[] Separator = new char[] { ' ' };
 		private readonly Regex channelPattern;
 		private readonly Regex replyRegex;
-		/// <summary>
-		/// Table to hold WhoIsInfos while they are being created. The key is the
-		/// nick and the value if the WhoisInfo struct.
-		/// </summary>
-		private Hashtable whoisInfos;
 
 		/// <summary>
 		/// Create an instance ready to parse
@@ -395,14 +310,6 @@ namespace Sharkbite.Irc
 						OnNick(	Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
 					}
 					break;
-				case TOPIC:
-					if( OnTopicChanged != null ) 
-					{
-						tokens[3] = RemoveLeadingColon( tokens[3] );
-						OnTopicChanged(
-							Rfc2812Util.UserInfoFromString( tokens[0] ), tokens[2], CondenseStrings( tokens, 3) );
-					}
-					break;
 				case PART:
 					if( OnPart != null )					
 					{
@@ -443,15 +350,6 @@ namespace Sharkbite.Irc
 							OnChannelModeChange( who, tokens[2], modes );
 						}
 					}
-					else 
-					{
-						if( OnUserModeChange != null )
-						{	
-							tokens[3] = RemoveLeadingColon( tokens[3] );
-							OnUserModeChange( Rfc2812Util.CharToModeAction( tokens[3][0] ), 
-								Rfc2812Util.CharToUserMode( tokens[3][1] ) );
-						}
-					}
 					break;
 				case KILL:
 					if( OnKill != null )
@@ -487,25 +385,6 @@ namespace Sharkbite.Irc
 						OnRegistered();
 					}
 					break;	
-				case ReplyCode.RPL_MOTDSTART:
-				case ReplyCode.RPL_MOTD: 
-					if( OnMotd != null ) 
-					{
-						OnMotd( CondenseStrings( tokens, 3), false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFMOTD:
-					if( OnMotd != null ) 
-					{
-						OnMotd( CondenseStrings( tokens, 3), true );
-					}
-					break;
-				case ReplyCode.RPL_ISON:
-					if ( OnIson != null ) 
-					{
-						OnIson( tokens[3] );
-					}
-					break;
 				case ReplyCode.RPL_NAMREPLY:
 					if ( OnNames != null ) 
 					{
@@ -524,23 +403,6 @@ namespace Sharkbite.Irc
 						OnNames( tokens[3], new string[0], true );
 					}
 					break;
-				case ReplyCode.RPL_LIST:
-					if ( OnList != null ) 
-					{
-						tokens[5] = RemoveLeadingColon( tokens[5] );
-						OnList(
-							tokens[3],
-							int.Parse( tokens[4] , CultureInfo.InvariantCulture),
-							CondenseStrings( tokens, 5),
-							false);
-					}
-					break;
-				case ReplyCode.RPL_LISTEND:
-					if( OnList != null ) 
-					{
-						OnList( "",0,"", true );
-					}
-					break;
 				case ReplyCode.ERR_NICKNAMEINUSE:
 				case ReplyCode.ERR_NICKCOLLISION:
 					if ( OnNickError != null ) 
@@ -555,226 +417,10 @@ namespace Sharkbite.Irc
 						OnError(code, CondenseStrings( tokens, 3) );
 					}
 					break;
-				case ReplyCode.RPL_TOPIC:
-					if( OnTopicRequest != null )
-					{
-						tokens[4] = RemoveLeadingColon( tokens[4] );
-						OnTopicRequest(	tokens[3], CondenseStrings(tokens, 4 ) );
-					}
-					break;
 				case ReplyCode.RPL_INVITING:
 					if( OnInviteSent != null )
 					{
 						OnInviteSent(tokens[3], tokens[4] );
-					}
-					break;
-				case ReplyCode.RPL_AWAY:
-					if( OnAway != null )
-					{
-						OnAway(tokens[3], RemoveLeadingColon( CondenseStrings( tokens, 4) ) );
-					}
-					break;
-				case ReplyCode.RPL_WHOREPLY:
-					if( OnWho != null ) 
-					{
-						UserInfo user = new UserInfo( tokens[7],tokens[4],tokens[5]);
-						OnWho(
-							user,
-							tokens[3],
-							tokens[6],
-							tokens[8],
-							int.Parse( RemoveLeadingColon( tokens[9] ), CultureInfo.InvariantCulture),
-							tokens[10],
-							false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFWHO:
-					if( OnWho != null )
-					{
-						OnWho( UserInfo.Empty , "","","",0,"",true);
-					}
-					break;
-				case ReplyCode.RPL_WHOISUSER:
-					UserInfo whoUser = new UserInfo( tokens[3], tokens[4], tokens[5]);
-					WhoisInfo whoisInfo = LookupInfo( whoUser.Nick );
-					whoisInfo.userInfo = whoUser;
-					tokens[7] = RemoveLeadingColon( tokens[7] );
-					whoisInfo.realName = CondenseStrings( tokens, 7) ;
-					break;
-				case ReplyCode.RPL_WHOISCHANNELS:
-					WhoisInfo whoisChannelInfo = LookupInfo( tokens[3] );
-					tokens[4] = RemoveLeadingColon( tokens[4] );
-					int numberOfChannels = tokens.Length - 4;
-					string[] channels = new String[ numberOfChannels ];
-					Array.Copy( tokens, 4, channels, 0 , numberOfChannels);
-					whoisChannelInfo.SetChannels( channels );
-					break;
-				case ReplyCode.RPL_WHOISSERVER:
-					WhoisInfo whoisServerInfo = LookupInfo( tokens[3] );
-					whoisServerInfo.ircServer = tokens[4];
-					tokens[5] = RemoveLeadingColon( tokens[5] );
-					whoisServerInfo.serverDescription = CondenseStrings( tokens, 5) ;
-					break;
-				case ReplyCode.RPL_WHOISOPERATOR:
-					WhoisInfo whoisOpInfo = LookupInfo( tokens[3] );
-					whoisOpInfo.isOperator = true;
-					break;
-				case ReplyCode.RPL_WHOISIDLE:
-					WhoisInfo whoisIdleInfo = LookupInfo( tokens[3] );
-					whoisIdleInfo.idleTime = long.Parse( tokens[5], CultureInfo.InvariantCulture );			
-					break;
-				case ReplyCode.RPL_ENDOFWHOIS:
-					string nick = tokens[3];
-					WhoisInfo whoisEndInfo = LookupInfo( nick );
-					if( OnWhois != null )
-					{
-						OnWhois( whoisEndInfo );
-					}
-					whoisInfos.Remove( nick );
-					break;
-				case ReplyCode.RPL_WHOWASUSER:
-					if( OnWhowas != null )
-					{
-						UserInfo whoWasUser = new UserInfo( tokens[3], tokens[4], tokens[5]);
-						tokens[7] = RemoveLeadingColon( tokens[7] );
-						OnWhowas( whoWasUser, CondenseStrings( tokens, 7) , false);
-					}
-					break;
-				case ReplyCode.RPL_ENDOFWHOWAS:
-					if( OnWhowas != null )
-					{
-						OnWhowas( UserInfo.Empty, "", true);
-					}
-					break;
-				case ReplyCode.RPL_UMODEIS:
-					if( OnUserModeRequest != null ) 
-					{
-						//First drop the '+'
-						string chars = tokens[3].Substring(1);
-						UserMode[] modes = Rfc2812Util.UserModesToArray( chars );
-						OnUserModeRequest( modes );
-					}
-					break;
-				case ReplyCode.RPL_CHANNELMODEIS:
-					if( OnChannelModeRequest != null )
-					{
-						string[] modes = ParseModes( tokens, 4);
-						OnChannelModeRequest( tokens[3], modes);
-					}
-					break;
-				case ReplyCode.RPL_BANLIST:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.Ban, tokens[4], Rfc2812Util.UserInfoFromString(tokens[5]), Convert.ToInt64(tokens[6], CultureInfo.InvariantCulture), false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFBANLIST:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.Ban, "", UserInfo.Empty, 0, true );
-					}
-					break;
-				case ReplyCode.RPL_INVITELIST:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.Invitation, tokens[4], Rfc2812Util.UserInfoFromString(tokens[5]), Convert.ToInt64(tokens[6]),false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFINVITELIST:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.Invitation, "",UserInfo.Empty,0, true );
-					}
-					break;
-				case ReplyCode.RPL_EXCEPTLIST:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.Exception, tokens[4], Rfc2812Util.UserInfoFromString(tokens[5]), Convert.ToInt64(tokens[6]),false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFEXCEPTLIST:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.Exception, "", UserInfo.Empty,0,true );
-					}
-					break;
-				case ReplyCode.RPL_UNIQOPIS:
-					if( OnChannelList != null ) 
-					{
-						OnChannelList( tokens[3], ChannelMode.ChannelCreator, tokens[4], UserInfo.Empty,0, true );
-					}
-					break;
-				case ReplyCode.RPL_VERSION:
-					if ( OnVersion != null ) 
-					{
-						OnVersion( CondenseStrings(tokens,3) );
-					}
-					break;
-				case ReplyCode.RPL_TIME:
-					if ( OnTime != null ) 
-					{
-						OnTime( CondenseStrings(tokens,3) );
-					}
-					break;
-				case ReplyCode.RPL_INFO:
-					if ( OnInfo != null ) 
-					{
-						OnInfo( CondenseStrings(tokens,3), false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFINFO:
-					if ( OnInfo != null ) 
-					{
-						OnInfo( CondenseStrings(tokens,3), true);
-					}
-					break;
-				case ReplyCode.RPL_ADMINME:
-				case ReplyCode.RPL_ADMINLOC1:
-				case ReplyCode.RPL_ADMINLOC2:
-				case ReplyCode.RPL_ADMINEMAIL:
-					if ( OnAdmin != null ) 
-					{
-						OnAdmin( RemoveLeadingColon( CondenseStrings(tokens,3) ) );
-					}
-					break;
-				case ReplyCode.RPL_LUSERCLIENT:
-				case ReplyCode.RPL_LUSEROP:
-				case ReplyCode.RPL_LUSERUNKNOWN:
-				case ReplyCode.RPL_LUSERCHANNELS:
-				case ReplyCode.RPL_LUSERME:
-					if ( OnLusers != null ) 
-					{
-						OnLusers( RemoveLeadingColon( CondenseStrings(tokens,3) ) );
-					}
-					break;
-				case ReplyCode.RPL_LINKS:
-					if ( OnLinks != null ) 
-					{  
-						OnLinks( tokens[3], //mask
-									tokens[4], //hostname
-									int.Parse( RemoveLeadingColon( tokens[5] ), CultureInfo.InvariantCulture), //hopcount
-							        CondenseStrings(tokens,6), false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFLINKS:
-					if ( OnLinks != null ) 
-					{
-						OnLinks( String.Empty, String.Empty,-1, String.Empty, true);
-					}
-					break;
-				case ReplyCode.RPL_STATSLINKINFO:
-				case ReplyCode.RPL_STATSCOMMANDS:
-				case ReplyCode.RPL_STATSUPTIME:
-				case ReplyCode.RPL_STATSOLINE:
-					if ( OnStats != null ) 
-					{
-						OnStats( GetQueryType(code), RemoveLeadingColon( CondenseStrings(tokens,3) ), false);
-					}
-					break;
-				case ReplyCode.RPL_ENDOFSTATS:
-					if ( OnStats != null ) 
-					{
-						OnStats( Rfc2812Util.CharToStatsQuery( tokens[3][0] ), RemoveLeadingColon( CondenseStrings(tokens,4) ), true);
 					}
 					break;
 				default:
@@ -800,25 +446,6 @@ namespace Sharkbite.Irc
 			{
 				OnReply(code, CondenseStrings( tokens, 3) );
 			}
-		}
-		/// <summary>
-		/// Find the correct WhoIs object based on the nick name.
-		/// </summary>
-		/// <param name="nick"></param>
-		/// <returns></returns>
-		private WhoisInfo LookupInfo( string nick )
-		{
-			if( whoisInfos == null ) 
-			{
-				whoisInfos = new Hashtable();
-			}
-			WhoisInfo info = (WhoisInfo) whoisInfos[nick] ;
-			if( info == null ) 
-			{
-				info = new WhoisInfo();
-				whoisInfos[ nick ] = info;
-			}
-			return info;
 		}
 		/// <summary>
 		/// Turn an array of strings back into a single string.
@@ -853,24 +480,6 @@ namespace Sharkbite.Irc
 		private string RemoveTrailingQuote( string text ) 
 		{
 			return text.Substring(0, text.Length -1 );		
-		}
-
-		private StatsQuery GetQueryType( ReplyCode code ) 
-		{
-			switch( code ) 
-			{
-				case ReplyCode.RPL_STATSLINKINFO:
-					return StatsQuery.Connections;
-				case ReplyCode.RPL_STATSCOMMANDS:
-					return StatsQuery.CommandUsage;
-				case ReplyCode.RPL_STATSUPTIME:
-					return StatsQuery.Uptime;
-				case ReplyCode.RPL_STATSOLINE:
-					return StatsQuery.Operators;
-				//Should never get here
-				default:
-					return StatsQuery.CommandUsage;
-			}
 		}
 		
 		static string[] ParseModes( string[] tokens, int start)

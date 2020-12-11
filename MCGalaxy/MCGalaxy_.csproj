@@ -663,15 +663,12 @@
     <Compile Include="sharkbite.thresher\Connection.cs" />
     <Compile Include="sharkbite.thresher\ConnectionArgs.cs" />
     <Compile Include="sharkbite.thresher\Delegates.cs" />
-    <Compile Include="sharkbite.thresher\Enums.cs" />
     <Compile Include="sharkbite.thresher\Listener.cs" />
     <Compile Include="sharkbite.thresher\NameGenerator.cs" />
     <Compile Include="sharkbite.thresher\ReplyCode.cs" />
     <Compile Include="sharkbite.thresher\Rfc2812Util.cs" />
     <Compile Include="sharkbite.thresher\Sender.cs" />
-    <Compile Include="sharkbite.thresher\ServerProperties.cs" />
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
-    <Compile Include="sharkbite.thresher\WhoisInfo.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="Player\Player.CPE.cs" />
