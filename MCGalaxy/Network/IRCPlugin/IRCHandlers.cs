@@ -417,7 +417,7 @@ namespace MCGalaxy.Network {
                 UpdateNick(n, chanNicks);
         }
         
-        void Listener_OnChannelModeChange(UserInfo who, string channel, string[] modes) {
+        void Listener_OnChannelModeChange(UserInfo who, string channel) {
             bot.connection.Sender.Names(channel);
         }
         

@@ -21,9 +21,7 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -44,10 +42,6 @@ namespace Sharkbite.Irc
 		/// Error messages from the IRC server.
 		/// </summary>
 		public event ErrorMessageEventHandler OnError;
-		/// <summary>
-		/// An <see cref="Sender.Invite"/> message was successfully sent to another user. 
-		/// </summary>
-		public event InviteSentEventHandler OnInviteSent;
 		/// <summary>
 		/// The user tried to change his nick but it failed.
 		/// </summary>
@@ -340,14 +334,13 @@ namespace Sharkbite.Irc
 						OnKick(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],tokens[3], CondenseStrings( tokens, 4) );
 					}
 					break;
-				case MODE:				
+				case MODE:
 					if( channelPattern.IsMatch( tokens[2] ) )
 					{
 						if( OnChannelModeChange != null ) 
 						{
-							UserInfo who = Rfc2812Util.UserInfoFromString( tokens[0] );							
-							string[] modes = ParseModes( tokens, 3);
-							OnChannelModeChange( who, tokens[2], modes );
+							UserInfo who = Rfc2812Util.UserInfoFromString( tokens[0] );
+							OnChannelModeChange( who, tokens[2] );
 						}
 					}
 					break;
@@ -411,18 +404,6 @@ namespace Sharkbite.Irc
 						OnNickError( tokens[3], CondenseStrings( tokens, 4) );
 					}
 					break;
-				case ReplyCode.RPL_NOTOPIC:
-					if( OnError != null ) 
-					{
-						OnError(code, CondenseStrings( tokens, 3) );
-					}
-					break;
-				case ReplyCode.RPL_INVITING:
-					if( OnInviteSent != null )
-					{
-						OnInviteSent(tokens[3], tokens[4] );
-					}
-					break;
 				default:
 					HandleDefaultReply( code, tokens );
 					break;
@@ -481,16 +462,5 @@ namespace Sharkbite.Irc
 		{
 			return text.Substring(0, text.Length -1 );		
 		}
-		
-		static string[] ParseModes( string[] tokens, int start)
-		{	
-			List<string> modeArgs = new List<string>();
-			for( int i = start; i < tokens.Length; i++ )
-			{
-				modeArgs.Add(tokens[i]);
-			}
-			return modeArgs.ToArray();
-		}
-	
 	}
 }

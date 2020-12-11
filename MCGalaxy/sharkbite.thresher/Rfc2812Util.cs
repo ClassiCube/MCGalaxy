@@ -21,8 +21,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Sharkbite.Irc
@@ -33,28 +31,21 @@ namespace Sharkbite.Irc
 	/// </summary>
 	public sealed class Rfc2812Util 
 	{
-		// Regex that matches the standard IRC 'nick!user@host' 
-		private static readonly Regex userRegex;
 		// Regex that matches a legal IRC nick 
 		private static readonly Regex nickRegex;
 		//Regex to create a UserInfo from a string
 		private static readonly Regex nameSplitterRegex;
 		private const string ChannelPrefix = "#!+&";
-		private const string ActionModes = "+-";
-		private const string UserModes = "awiorOs";
-		private const string ChannelModes = "OohvaimnqpsrtklbeI";
 
 		// Odd chars that IRC allows in nicknames 
 		internal const string Special = "\\[\\]\\`_\\^\\{\\|\\}";
 		internal const string Nick = "[" + Special + "a-zA-Z][\\w\\-" + Special + "]{0,8}";
-		internal const string User = "(" + Nick+ ")!([\\~\\w]+)@([\\w\\.\\-]+)";
 
 		/// <summary>
 		/// Static initializer 
 		/// </summary>
 		static Rfc2812Util() 
 		{
-			userRegex = new Regex( User );
 			nickRegex = new Regex( Nick ); 
 			nameSplitterRegex = new Regex("[!@]",RegexOptions.Compiled | RegexOptions.Singleline );
 		}

@@ -59,13 +59,11 @@ namespace Sharkbite.Irc
 		#else
 		private TcpClient client;
 		#endif
-		
-		private readonly Regex propertiesRegex;
+
 		private Listener listener;
 		private Sender sender;
 		private Thread socketListenThread;
 		private StreamReader reader;
-		private DateTime timeLastSent;
 		//Connected and registered with IRC server
 		private bool registered;
 		//TCP/IP connection established with IRC server
@@ -80,9 +78,9 @@ namespace Sharkbite.Irc
 		/// Prepare a connection to an IRC server but do not open it. This sets the text Encoding to Default.
 		/// </summary>
 		/// <param name="args">The set of information need to connect to an IRC server</param>
-		public Connection( ConnectionArgs args )
+		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
+		public Connection( Encoding textEncoding, ConnectionArgs args )
 		{
-			propertiesRegex = new Regex("([A-Z]+)=([^\\s]+)", RegexOptions.Compiled | RegexOptions.Singleline);
 			registered = false;
 			connected = false;
 			handleNickFailure = true;
@@ -90,18 +88,6 @@ namespace Sharkbite.Irc
 			sender = new Sender( this );
 			listener = new Listener( );
 			RegisterDelegates();
-			timeLastSent = DateTime.UtcNow;
-			TextEncoding = Encoding.Default;
-		}
-
-		
-		/// <summary>
-		/// Prepare a connection to an IRC server but do not open it.
-		/// </summary>
-		/// <param name="args">The set of information need to connect to an IRC server</param>
-		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
-		public Connection( Encoding textEncoding, ConnectionArgs args ) : this( args )
-		{
 			TextEncoding = textEncoding;
 		}
 
@@ -156,12 +142,6 @@ namespace Sharkbite.Irc
 			get { return connectionArgs.Nick + "@" + connectionArgs.Hostname; }
 		}
 
-		/// <summary>
-		/// The amount of time that has passed since the client
-		/// sent a command to the IRC server.
-		/// </summary>
-		/// <value>Read only TimeSpan</value>
-		public TimeSpan IdleTime { get { return DateTime.UtcNow - timeLastSent; } }
 		/// <summary>
 		/// The object used to send commands to the IRC server.
 		/// </summary>
@@ -243,7 +223,6 @@ namespace Sharkbite.Irc
 				{
 					throw new Exception("Connection with IRC server already opened.");
 				}
-				Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"[" + Thread.CurrentThread.Name +"] Connection::Connect()");
 				
 				SecurityOptions options = new SecurityOptions( protocol );
 				options.Certificate = null;
@@ -323,7 +302,6 @@ namespace Sharkbite.Irc
 			try
 			{
 				writer.WriteLine( command.ToString() );
-				timeLastSent = DateTime.UtcNow;
 			}
 			catch( Exception )
 			{

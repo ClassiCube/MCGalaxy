@@ -42,14 +42,6 @@ namespace Sharkbite.Irc
 	public delegate void ErrorMessageEventHandler( ReplyCode code, string message );
 	
 	/// <summary>
-	/// An Invite message was successfully sent to another user. 
-	/// </summary>
-	/// <param name="nick">The nick of the user who was invited</param>
-	/// <param name="channel">The name of the channel the user was invited to join</param>
-	/// <seealso cref="Listener.OnInviteSent"/>
-	public delegate void InviteSentEventHandler( string nick, string channel );
-	
-	/// <summary>
 	/// Called when a nick change fails.
 	/// </summary>
 	/// <remarks>
@@ -211,9 +203,8 @@ namespace Sharkbite.Irc
 	/// </summary>
 	/// <param name="who">Who changed the mode.</param>
 	/// <param name="channel">The name of the channel.</param>
-	/// <param name="modes">Objects which hold all the information about 1 or more mode changes.</param>
 	/// <seealso cref="Listener.OnChannelModeChange"/>
-	public delegate void ChannelModeChangeEventHandler( UserInfo who, string channel, string[] modes );
+	public delegate void ChannelModeChangeEventHandler( UserInfo who, string channel );
 
 	
 	/// <summary>
