@@ -29,20 +29,28 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.SplitSpaces().Length < 3) { Help(p); return; }
             UseBotOrOnline(p, data, message, "model scale");
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string args) {
-            if (!ParseArgs(p, bot, args)) return;
+            string axis;
+            if (!ParseArgs(p, bot, args, out axis)) return;
             bot.UpdateModel(bot.Model);
             
+            p.Message("You changed the {1} scale of bot {0} %S", bot.ColoredName, axis);
             BotsFile.Save(p.level);
         }
         
         protected override void SetOnlineData(Player p, Player who, string args) {
-            if (!ParseArgs(p, who, args)) return;
+            string axis;
+            if (!ParseArgs(p, who, args, out axis)) return;
             who.UpdateModel(who.Model);
+
+            if (p != who) {
+                Chat.MessageFrom(who, "λNICK %Shad their " + axis + " scale changed");
+            } else {
+                who.Message("Changed your own {0} scale", axis);
+            }
             
             UpdateSavedScale(who);
             Server.modelScales.Save();
@@ -57,21 +65,22 @@ namespace MCGalaxy.Commands.CPE {
             Server.modelScales.Save();
         }
         
-        static bool ParseArgs(Player dst, Entity e, string args) {
-            if (args.CaselessStarts("x ")) {
-                return ParseScale(dst, e, args, "X scale", ref e.ScaleX);
-            } else if (args.CaselessStarts("y ")) {
-                return ParseScale(dst, e, args, "Y scale", ref e.ScaleY);
-            } else if (args.CaselessStarts("z ")) {
-                return ParseScale(dst, e, args, "Z scale", ref e.ScaleZ);
-            }
+        bool ParseArgs(Player dst, Entity e, string args, out string axis) {
+            string[] bits = args.SplitSpaces(2);
+            if (bits.Length < 2) { Help(dst); axis = null; return false; }
+            
+            axis = bits[0].ToUpper();
+            string scale = bits[1];
+            
+            if (axis == "X") return ParseScale(dst, e, axis, scale, ref e.ScaleX);
+            if (axis == "Y") return ParseScale(dst, e, axis, scale, ref e.ScaleY);
+            if (axis == "Z") return ParseScale(dst, e, axis, scale, ref e.ScaleZ);
             return false;
         }
         
-        static bool ParseScale(Player dst, Entity e, string args, string axis, ref float value) {
-            string[] bits = args.SplitSpaces();
-            float max     = ModelInfo.MaxScale(e, e.Model);
-            return CommandParser.GetReal(dst, bits[1], axis, ref value, 0, max);
+        static bool ParseScale(Player dst, Entity e, string axis, string scale, ref float value) {
+            float max = ModelInfo.MaxScale(e, e.Model);
+            return CommandParser.GetReal(dst, scale, axis + " scale", ref value, 0, max);
         }
 
         public override void Help(Player p) {
