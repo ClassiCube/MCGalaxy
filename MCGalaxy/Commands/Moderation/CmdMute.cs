@@ -29,14 +29,11 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) {
-                if (Server.muted.Contains(args[0])) Unmute(p, args[0], args);
-                return;
-            }
-            if (who.muted) { Unmute(p, who.name, args); return; }
-            
-            Group group = ModActionCmd.CheckTarget(p, data, "mute", who.name);
+            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            if (target == null) return;            
+            if (Server.muted.Contains(target)) { Unmute(p, target, args); return; }
+                
+            Group group = ModActionCmd.CheckTarget(p, data, "mute", target);
             if (group == null) return;
             
             // unmute has second argument as reason, mute has third argument instead
@@ -51,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
             
-            ModAction action = new ModAction(who.name, p, ModActionType.Muted, reason, duration);
+            ModAction action = new ModAction(target, p, ModActionType.Muted, reason, duration);
             OnModActionEvent.Call(action);
         }
         
