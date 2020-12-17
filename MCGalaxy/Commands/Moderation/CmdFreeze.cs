@@ -27,33 +27,42 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces(3);
+            string[] args = message.SplitSpaces(2);
             
-            Player who = PlayerInfo.FindMatches(p, args[0]);
-            if (who == null) return;
+            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            if (target == null) return;
             
-            Group group = ModActionCmd.CheckTarget(p, data, "freeze", who.name);
+            Group group = ModActionCmd.CheckTarget(p, data, "freeze", target);
             if (group == null) return;
             
-            if (who.frozen) {
-                string reason = args.Length > 1 ? args[1] : "";
-                reason = ModActionCmd.ExpandReason(p, reason);
-                if (reason == null) return;
-                
-                ModAction action = new ModAction(who.name, p, ModActionType.Unfrozen, reason);
-                OnModActionEvent.Call(action);
+            if (Server.frozen.Contains(target)) {
+                DoUnfreeze(p, target, args);
             } else {
-                if (args.Length < 2) { Help(p); return; }
-                TimeSpan duration = TimeSpan.Zero;
-                if (!CommandParser.GetTimespan(p, args[1], ref duration, "freeze for", "m")) return;
-                
-                string reason = args.Length > 2 ? args[2] : "";
-                reason = ModActionCmd.ExpandReason(p, reason);
-                if (reason == null) return;
-                
-                ModAction action = new ModAction(who.name, p, ModActionType.Frozen, reason, duration);
-                OnModActionEvent.Call(action);
+                // unmute has second argument as reason, mute has third argument instead
+                DoFreeze(p, target, message.SplitSpaces(3));
             }
+        }
+        
+        void DoFreeze(Player p, string target, string[] args) {
+            if (args.Length < 2) { Help(p); return; }
+            TimeSpan duration = TimeSpan.Zero;
+            if (!CommandParser.GetTimespan(p, args[1], ref duration, "freeze for", "m")) return;
+            
+            string reason = args.Length > 2 ? args[2] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+            
+            ModAction action = new ModAction(target, p, ModActionType.Frozen, reason, duration);
+            OnModActionEvent.Call(action);
+        }
+        
+        void DoUnfreeze(Player p, string target, string[] args) {
+            string reason = args.Length > 1 ? args[1] : "";
+            reason = ModActionCmd.ExpandReason(p, reason);
+            if (reason == null) return;
+            
+            ModAction action = new ModAction(target, p, ModActionType.Unfrozen, reason);
+            OnModActionEvent.Call(action);
         }
         
         public override void Help(Player p) {
