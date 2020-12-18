@@ -128,14 +128,14 @@ namespace MCGalaxy.Tasks {
             File.WriteAllLines(Paths.TempRanksFile, lines);
         }
         
+		const string oldBotsFile = "extra/bots.json";
         internal static void UpgradeBots(SchedulerTask task) {
-            if (!File.Exists(Paths.BotsFile)) return;
-            string json = File.ReadAllText(Paths.BotsFile);
-            File.WriteAllText(Paths.BotsFile + ".bak", json);
+            if (!File.Exists(oldBotsFile)) return;
+            File.Copy(oldBotsFile, oldBotsFile + ".bak", true);
             Logger.Log(LogType.SystemActivity, "Making bots file per-level.. " +
                        "saved backup of global bots file to extra/bots.json.bak");
             
-            List<BotProperties> bots = BotsFile.ReadAll(json);
+            List<BotProperties> bots = BotsFile.ReadAll(oldBotsFile);
             Dictionary<string, List<BotProperties>> botsByLevel = new Dictionary<string, List<BotProperties>>();
             
             foreach (BotProperties bot in bots) {
@@ -150,7 +150,7 @@ namespace MCGalaxy.Tasks {
             }
             
             foreach (var kvp in botsByLevel) {
-                string path = BotsFile.BotsPath(kvp.Key);
+                string path = Paths.BotsPath(kvp.Key);
                 using (StreamWriter w = new StreamWriter(path)) {
                     BotsFile.WriteAll(w, kvp.Value);
                 }
@@ -159,7 +159,7 @@ namespace MCGalaxy.Tasks {
             if (Server.mainLevel.Bots.Count == 0) {
                 BotsFile.Load(Server.mainLevel);
             }
-            File.Delete(Paths.BotsFile);
+            File.Delete(oldBotsFile);
         }
 
         

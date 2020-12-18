@@ -24,19 +24,16 @@ namespace MCGalaxy.Bots {
 
     /// <summary> Maintains persistent data for in-game bots. </summary>
     public static class BotsFile {
-
-        public static string BotsPath(string map) { return "extra/bots/" + map + ".json"; }
         static ConfigElement[] elems;
         
         public static void Load(Level lvl) { lock (lvl.botsIOLock) { LoadCore(lvl); } }
         static void LoadCore(Level lvl) {
-            string path = BotsPath(lvl.MapName);
+            string path = Paths.BotsPath(lvl.MapName);
             if (!File.Exists(path)) return;
-            string json = File.ReadAllText(path);
             List<BotProperties> props = null;
             
             try {
-                props = ReadAll(json);
+                props = ReadAll(path);
             } catch (Exception ex) {
                 Logger.LogError("Reading bots file", ex); return;
             }
@@ -51,9 +48,10 @@ namespace MCGalaxy.Bots {
             }
         }
         
-        internal static List<BotProperties> ReadAll(string json) {
+        internal static List<BotProperties> ReadAll(string path) {
             List<BotProperties> props = new List<BotProperties>();
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
+            string json = File.ReadAllText(path);
             
             bool success;
             JsonArray array = (JsonArray)Json.Parse(json, out success);
@@ -75,7 +73,7 @@ namespace MCGalaxy.Bots {
         public static void Save(Level lvl) { lock (lvl.botsIOLock) { SaveCore(lvl); } }
         static void SaveCore(Level lvl) {
             PlayerBot[] bots = lvl.Bots.Items;
-            string path = BotsPath(lvl.MapName);
+            string path = Paths.BotsPath(lvl.MapName);
             if (!File.Exists(path) && bots.Length == 0) return;
             
             List<BotProperties> props = new List<BotProperties>(bots.Length);

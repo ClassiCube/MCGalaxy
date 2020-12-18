@@ -77,7 +77,6 @@ namespace MCGalaxy {
         public static string DefaultColor;
         [Obsolete("Use Server.Config.Currency")]
         public static string moneys;
-        public static string IP;
         public static string RestartPath;
 
         // Extra storage for custom commands
