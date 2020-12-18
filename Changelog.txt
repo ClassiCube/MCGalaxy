@@ -1,3 +1,29 @@
+v 1.9.2.8
+Improved: When matching player names, prefer exactly matching a player's name (without +) first
+Improved: Hidden players die to bots/deadly blocks now (death message only shows to yourself though)
+Improved: You can delete door blocks now when physics level is 0
+Improved: Allow changing login/logout messages of offline players
+Improved: Allow using /title, /tcolor, /color on offline players
+Improved: Allow muting and freezing offline players
+Improved: Split up /Model into /Model and /ModelScale
+Improved: Allow using \: in custom chat tokens to specify a : should be part of trigger word
+Fixed: Changing model scale show a proper message now
+Fixed: Gun aimbox not appearing in classic mode
+Fixed: Still trying to load # comment lines in text/cmdautoload.txt as commands
+Fixed: Killer bots would kill all players at same position, regardless if on a different level or not
+Fixed: Explode mode of gun not exploding when it hits a glass block
+Fixed: Make /missile destroy actually destroy blocks
+Fixed: Colors.StripUsed not stripping system colour codes
+Fixed: Doing /i on an invalid name showing the 'invalid player name' message twice
+Fixed: Glass borders surrounding the Countdown board not disappearing on some oddly sized maps
+Fixed: Make it much more difficult to avoid falling down the glass chute in countdownj
+Help in GUI should also use Chat.Format and should still show ampersa… …
+Fixed: If you do /lb edit 65-67 whatever, it ends up editing a lot of unrelated blocks too
+Fixed: /Last doesn't show /Opchat or /AdminChat use now
+Improved: Linewrapper produces nicer lines when a line ends on the form of 'word /command'
+Improved: Use horspeed=0 in Countdown freeze mode to stop players moving horizontally
+Improved: Don't show + in names in connect/disconnect logs
+
 v 1.9.2.7
 Fixed: Awards player has but don't exist anymore still counting towards player's awards count in /i 
 Fixed: Doing /b on map that had portal/MB block ids but the tables not existing in DB causing error to get logged
