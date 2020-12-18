@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrOnline(p, data, message, "model");
+            UseBotOrPlayer(p, data, message, "model");
         }
         
         protected override void SetBotData(Player p, PlayerBot bot, string model) {
@@ -48,27 +48,29 @@ namespace MCGalaxy.Commands.CPE {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetOnlineData(Player p, Player who, string model) {
+        protected override void SetPlayerData(Player p, string target, string model) {
             string orig = model;
-            model = ParseModel(p, who, model);
+            model = ParseModel(p, null, model);
             if (model == null) return;
-            who.UpdateModel(model);
+            
+            Player who = PlayerInfo.FindExact(target);
+            if (who != null) who.UpdateModel(model);
             
             if (p != who) {
-                Chat.MessageFrom(who, "λNICK %Shad their model changed to a &c" + model);
+                MessageFrom(target, who, "had their model changed to a &c" + model);
             } else {
-                who.Message("Changed your own model to a &c" + model);
+                p.Message("Changed your own model to a &c" + model);
             }
             
             if (!model.CaselessEq("humanoid")) {
-                Server.models.Update(who.name, model);
+                Server.models.Update(target, model);
             } else {
-                Server.models.Remove(who.name);
+                Server.models.Remove(target);
             }
             Server.models.Save();
             
             // Remove model scale too when resetting model
-            if (orig.Length == 0) CmdModelScale.UpdateSavedScale(who);
+            if (orig.Length == 0 && Server.modelScales.Remove(target)) Server.modelScales.Save();
         }
         
         static string ParseModel(Player dst, Entity e, string model) {

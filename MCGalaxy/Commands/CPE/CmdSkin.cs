@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.CPE {
                 message = "-own " + message;
                 message = message.TrimEnd();
             }
-            UseBotOrOnline(p, data, message, "skin");
+            UseBotOrPlayer(p, data, message, "skin");
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string skin) {
@@ -51,25 +51,29 @@ namespace MCGalaxy.Commands.CPE {
             BotsFile.Save(p.level);
         }
         
-        protected override void SetOnlineData(Player p, Player who, string skin) {
-            skin = GetSkin(skin, who.truename);
+        protected override void SetPlayerData(Player p, string target, string skin) {
+            string defaultSkin = target.RemoveLastPlus();
+            skin = GetSkin(skin, defaultSkin);            
             if (skin.Length > NetUtils.StringSize) {
-                p.Message("The skin must be " + NetUtils.StringSize + " characters or less."); return;
+                p.Message("%WSkins must be " + NetUtils.StringSize + " characters or less."); return;
             }
             
-            who.SkinName = skin;
-            Entities.GlobalRespawn(who);
+            Player who = PlayerInfo.FindExact(target);
+            if (who != null) {
+                who.SkinName = skin;
+                Entities.GlobalRespawn(who);
+            }
             
             if (p != who) {
-                Chat.MessageFrom(who,"λNICK %Shad their skin changed to &c" + skin);
+                MessageFrom(target, who, "had their skin changed to &c" + skin);
             } else {
-                who.Message("Changed your own skin to &c" + skin);
+                p.Message("Changed your own skin to &c" + skin);
             }
             
-            if (skin == who.truename) {
-                Server.skins.Remove(who.name);
+            if (skin == defaultSkin) {
+                Server.skins.Remove(target);
             } else {
-                Server.skins.Update(who.name, skin);
+                Server.skins.Update(target, skin);
             }
             Server.skins.Save();
         }
