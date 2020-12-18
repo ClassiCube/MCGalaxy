@@ -263,7 +263,7 @@ namespace MCGalaxy {
                 
                 if (!loggedIn) {
                     PlayerInfo.Online.Remove(this);
-                    string user = name + " (" + ip + ")";
+                    string user = truename + " (" + ip + ")";
                     Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
                     return;
                 }
@@ -292,11 +292,11 @@ namespace MCGalaxy {
                 if (Server.Config.GuestLeavesNotify || Rank > LevelPermission.Guest) {
                     Chat.MessageFrom(ChatScope.All, this, leaveMsg, null, Chat.FilterVisible(this), !hidden);
                 }
-                Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", name, chatMsg);
+                Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", truename, chatMsg);
             } else {
                 string leaveMsg = "&c- λFULL %Skicked %S" + chatMsg;
                 Chat.MessageFrom(ChatScope.All, this, leaveMsg, null, null, true);
-                Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", name, chatMsg);
+                Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", truename, chatMsg);
             }
         }
 

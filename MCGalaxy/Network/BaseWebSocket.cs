@@ -222,12 +222,13 @@ namespace MCGalaxy.Network {
             packet[0] = 0x88; // FIN BIT, close opcode
             packet[1] = 2;
             packet[2] = (byte)(reason >> 8);
-            packet[3] = (byte)reason;           
+            packet[3] = (byte)reason;
             SendRaw(packet, true);
         }
         
         protected abstract void HandleData(byte[] data, int len);
         
+        /// <summary> Sends data to the underlying socket without wrapping the data in a websocket frame </summary>
         protected abstract void SendRaw(byte[] data, bool sync);
         
         public void Disconnect() { Disconnect(1000); }

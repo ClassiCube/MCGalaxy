@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (Server.frozen.Contains(target)) {
                 DoUnfreeze(p, target, args);
             } else {
-                // unmute has second argument as reason, mute has third argument instead
+                // unfreeze has second argument as reason, freeze has third argument instead
                 DoFreeze(p, target, message.SplitSpaces(3));
             }
         }

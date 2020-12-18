@@ -145,9 +145,9 @@ namespace MCGalaxy {
                 Message("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
-                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", name, ip);
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", truename, ip);
             } else {
-                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", name, ip, appName);
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", truename, ip, appName);
             }
             
             PlayerActions.PostSentMap(this, null, level, false);
