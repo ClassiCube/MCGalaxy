@@ -36,8 +36,8 @@ namespace MCGalaxy.Scripting {
 //\tFile and class should be named a specific way. For example, /update is named 'CmdUpdate.cs' for the file, and 'CmdUpdate' for the class.
 // As a note, MCGalaxy is designed for .NET 4.0
 
-// To reference other assemblies, put a ""Reference [assembly filename]"" at the top of the file
-//   e.g. to reference the System.Data assembly, put ""Reference System.Data.dll""
+// To reference other assemblies, put a ""//reference [assembly filename]"" at the top of the file
+//   e.g. to reference the System.Data assembly, put ""//reference System.Data.dll""
 
 // Add any other using statements you need after this
 using System;
@@ -94,8 +94,8 @@ namespace MCGalaxy
 '\tFile and class should be named a specific way.  For example, /update is named 'CmdUpdate.vb' for the file, and 'CmdUpdate' for the class.
 ' As a note, MCGalaxy is designed for .NET 4.0.
 
-' To reference other assemblies, put a ""Reference [assembly filename]"" at the top of the file
-'   e.g. to reference the System.Data assembly, put ""Reference System.Data.dll""
+' To reference other assemblies, put a ""//reference [assembly filename]"" at the top of the file
+'   e.g. to reference the System.Data assembly, put ""//reference System.Data.dll""
 
 ' Add any other Imports statements you need after this
 Imports System

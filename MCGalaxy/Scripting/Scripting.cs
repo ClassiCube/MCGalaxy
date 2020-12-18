@@ -88,8 +88,7 @@ namespace MCGalaxy.Scripting {
         /// <summary> Attempts to compile source code from the given file. </summary>
         /// <remarks> Logs errors to player (summarised) and to IScripting.ErrorPath. </remarks>        
         public CompilerResults Compile(string srcPath, CompilerParameters args, Player p) {
-            int offset = 0;
-            List<string> source = ReadSource(srcPath, args, ref offset);
+            List<string> source = ReadSource(srcPath, args);
             CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
             if (!results.Errors.HasErrors) return results;
             
@@ -101,7 +100,7 @@ namespace MCGalaxy.Scripting {
             
             foreach (CompilerError err in results.Errors) {
                 string type = err.IsWarning ? "Warning" : "Error";                
-                sb.AppendLine(type + " on line " + (err.Line + offset) + ":");
+                sb.AppendLine(type + " on line " + err.Line + ":");
                 
                 if (err.Line > 0) sb.AppendLine(source[err.Line - 1]);
                 if (err.Column > 0) sb.Append(' ', err.Column - 1);
@@ -115,7 +114,7 @@ namespace MCGalaxy.Scripting {
             int logged = 0;
             foreach (CompilerError err in results.Errors) {
                 string type = err.IsWarning ? "Warning" : "Error";
-                p.Message("%W{0} #{1} on line {2} - {3}", type, err.ErrorNumber, err.Line + offset, err.ErrorText);
+                p.Message("%W{0} #{1} on line {2} - {3}", type, err.ErrorNumber, err.Line, err.ErrorText);
                 
                 logged++;
                 if (logged >= maxLog) break;
@@ -128,25 +127,18 @@ namespace MCGalaxy.Scripting {
             return results;
         }
         
-        static bool IsReferenceLine(string line) {
-            // Originally only 'Reference X.dll' syntax was supported
-            // Later '//Reference X.dll' was added, and is preferred
-            return line.CaselessStarts("reference ") || line.CaselessStarts("//reference ");
-        }
-        
-        static List<string> ReadSource(string path, CompilerParameters args, ref int offset) {
+        static List<string> ReadSource(string path, CompilerParameters args) {
             List<string> lines = Utils.ReadAllLinesList(path);
-            // Allow referencing other assemblies using 'Reference [assembly name]' at top of the file
+            // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
             for (int i = 0; i < lines.Count; i++) {
-                if (!IsReferenceLine(lines[i])) break;
+                string line = lines[i];
+                if (!line.CaselessStarts("//reference ")) break;
                 
-                int index = lines[i].IndexOf(' ') + 1;
-                // For consistency with C#, treat 'Reference X.dll;' as 'Reference X.dll'
-                string assem = lines[i].Substring(index).Replace(";", "");
+                int index = line.IndexOf(' ') + 1;
+                // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
+                string assem = line.Substring(index).Replace(";", "");
                 
                 args.ReferencedAssemblies.Add(assem);
-                lines.RemoveAt(i);
-                offset++; i--;
             }
             return lines;
         }
