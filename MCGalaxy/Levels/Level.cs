@@ -150,10 +150,11 @@ namespace MCGalaxy {
             // Still cleanup resources, even if this is not a true level
             if (IsMuseum) { Cleanup(); return true; }
             
-            OnLevelUnloadEvent.Call(this);
-            if (cancelunload) {
+            bool cancel = false;
+            OnLevelUnloadEvent.Call(this, ref cancel);
+            if (cancel) {
                 Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);
-                cancelunload = false; return false;
+                return false;
             }
             MovePlayersToMain();
 
@@ -201,8 +202,9 @@ namespace MCGalaxy {
             if (blocks == null || IsMuseum) return false; // museums do not save properties
             
             string path = LevelInfo.MapPath(MapName);
-            OnLevelSaveEvent.Call(this);
-            if (cancelsave) { cancelsave = false; return false; }
+            bool cancel = false;
+            OnLevelSaveEvent.Call(this, ref cancel);
+            if (cancel) return false;
             
             try {
                 if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");

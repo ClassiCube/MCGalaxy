@@ -41,21 +41,27 @@ namespace MCGalaxy.Events.LevelEvents {
         }
     }
     
-    public delegate void OnLevelSave(Level lvl);
+    public delegate void OnLevelSave(Level lvl, ref bool cancel);
     public sealed class OnLevelSaveEvent : IEvent<OnLevelSave> {
         
-        public static void Call(Level lvl) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(lvl));
+        public static void Call(Level lvl, ref bool cancel) {
+            IEvent<OnLevelSave>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(lvl, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
     
-    public delegate void OnLevelUnload(Level lvl);
+    public delegate void OnLevelUnload(Level lvl, ref bool cancel);
     public sealed class OnLevelUnloadEvent : IEvent<OnLevelUnload> {
         
-        public static void Call(Level lvl) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(lvl));
+    	public static void Call(Level lvl, ref bool cancel) {
+            IEvent<OnLevelUnload>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(lvl, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
     

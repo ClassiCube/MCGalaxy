@@ -50,13 +50,16 @@ namespace MCGalaxy.Events.GroupEvents {
         }
     }
     
-    public delegate void OnChangingGroup(string player, Group curRank, Group newRank);
+    public delegate void OnChangingGroup(string player, Group curRank, Group newRank, ref bool cancel);
     /// <summary> Raised when a player is about to have their rank changed. Cancelable. </summary>
     public sealed class OnChangingGroupEvent : IEvent<OnChangingGroup> {
         
-        public static void Call(string player, Group curRank, Group newRank) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(player, curRank, newRank));
+        public static void Call(string player, Group curRank, Group newRank, ref bool cancel) {
+            IEvent<OnChangingGroup>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(player, curRank, newRank, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
 }

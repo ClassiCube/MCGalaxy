@@ -82,10 +82,10 @@ namespace MCGalaxy.Games {
             p.Message("It was created by {0}", authors.Join(n => p.FormatNick(n)));
         }
         
-        protected void HandleLevelUnload(Level lvl) {
+        protected void HandleLevelUnload(Level lvl, ref bool cancel) {
             if (lvl != Map) return;
             Logger.Log(LogType.GameActivity, "Unload cancelled! A {0} game is currently going on!", GameName);
-            lvl.cancelunload = true;
+            cancel = true;
         }
         
         protected void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {

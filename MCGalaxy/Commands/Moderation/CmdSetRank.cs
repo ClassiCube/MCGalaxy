@@ -97,9 +97,9 @@ namespace MCGalaxy.Commands.Moderation {
                           p.FormatNick(name), curRank.ColoredName); return false;
             }
             
-            OnChangingGroupEvent.Call(name, curRank, newRank);
-            if (Group.cancelrank) { Group.cancelrank = false; return false; }
-            return true;
+            bool cancel = false;
+            OnChangingGroupEvent.Call(name, curRank, newRank, ref cancel);
+            return cancel;
         }
         
         static Group TargetRank(Player p, string name, Group curRank) {

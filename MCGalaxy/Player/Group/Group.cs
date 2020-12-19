@@ -38,7 +38,6 @@ namespace MCGalaxy {
         
         const int mapGenLimitAdmin = 225 * 1000 * 1000;
         const int mapGenLimit = 30 * 1000 * 1000;
-        public static bool cancelrank = false;
         
         public string Name;
         [ConfigPerm("Permission", null, LevelPermission.Null)]
