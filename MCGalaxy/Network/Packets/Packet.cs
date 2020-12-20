@@ -68,7 +68,7 @@ namespace MCGalaxy.Network {
             byte[] buffer = new byte[74 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.AddEntity;
             buffer[1] = entityID;
-            NetUtils.Write(name.RemoveLastPlus(), buffer, 2, hasCP437);
+            NetUtils.Write(name, buffer, 2, hasCP437);
             
             int offset = NetUtils.WritePos(pos, buffer, 66, extPos);
             buffer[66 + offset] = rot.RotY;
@@ -170,12 +170,12 @@ namespace MCGalaxy.Network {
             return buffer;
         }
         
-        public static byte[] ExtAddEntity(byte entityID, string name, string displayname, bool hasCP437) {
+        public static byte[] ExtAddEntity(byte entityID, string skin, string name, bool hasCP437) {
             byte[] buffer = new byte[130];
             buffer[0] = Opcode.CpeExtAddEntity;
             buffer[1] = entityID;
-            NetUtils.Write(name, buffer, 2, hasCP437);
-            NetUtils.Write(displayname, buffer, 66, hasCP437);
+            NetUtils.Write(skin, buffer, 2, hasCP437);
+            NetUtils.Write(name, buffer, 66, hasCP437);
             return buffer;
         }
         
@@ -309,8 +309,8 @@ namespace MCGalaxy.Network {
             byte[] buffer = new byte[138 + (extPos ? 6 : 0)];
             buffer[0] = Opcode.CpeExtAddEntity2;
             buffer[1] = entityID;
-            NetUtils.Write(displayName.RemoveLastPlus(), buffer, 2, hasCP437);
-            NetUtils.Write(skinName.RemoveLastPlus(), buffer, 66, hasCP437);
+            NetUtils.Write(displayName, buffer,  2, hasCP437);
+            NetUtils.Write(skinName,    buffer, 66, hasCP437);
             
             int offset = NetUtils.WritePos(pos, buffer, 130, extPos);
             buffer[130 + offset] = rot.RotY;
