@@ -59,6 +59,7 @@ namespace MCGalaxy {
         public override void Close() { stream = null; }
     }
 
+    /// <summary> Reads entries from a ZIP archive. </summary>
     public sealed class ZipReader {
         BinaryReader reader;
         Stream stream;

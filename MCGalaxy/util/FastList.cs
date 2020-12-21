@@ -18,6 +18,8 @@
 using System;
 
 namespace MCGalaxy.Util {
+	
+    /// <summary> A faster alternative to List&lt;T&gt; that does no error checking </summary>
     public class FastList<T> {
         
         public T[] Items;

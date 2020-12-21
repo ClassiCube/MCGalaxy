@@ -18,6 +18,8 @@
 using System;
 
 namespace MCGalaxy {
+
+    /// <summary> Extension methods relating to timespans. </summary>
     public static class TimeExts {
         
         public static string Shorten(this TimeSpan value, 

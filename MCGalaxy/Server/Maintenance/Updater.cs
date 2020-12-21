@@ -24,6 +24,7 @@ using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
+    /// <summary> Checks for and applies software updates. </summary>
     public static class Updater {
         
         static string exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);

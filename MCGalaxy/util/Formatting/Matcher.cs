@@ -24,7 +24,7 @@ using MCGalaxy.Eco;
 
 namespace MCGalaxy {
     
-    /// <summary> Finds partial matches of a 'name' against the names of the items an enumerable. </summary>
+    /// <summary> Finds partial matches of a 'name' against the names of the items in an enumerable. </summary>
     /// <remarks> returns number of matches found, and the matching item if only 1 match is found. </remarks>
     public static class Matcher {
 

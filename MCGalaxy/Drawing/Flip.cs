@@ -20,6 +20,7 @@ using System.IO;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing {
+    /// <summary> Utility methods for rotating and mirroring a CopyState. </summary>
     public static class Flip {
 
         static string[] rotX_90_270 = new string[] { "NS", "UD" };

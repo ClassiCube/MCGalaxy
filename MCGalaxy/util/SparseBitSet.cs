@@ -18,8 +18,8 @@
 using System;
 
 namespace MCGalaxy.Util {
-    /// <summary> Sparsely represents 1 bit of data per voxel in a 3D volume. </summary>
-    /// <remarks> Typically this means 1 bit per block in a level. </remarks>
+    /// <summary> Sparsely represents 1 bit of data per voxel for a 3D volume. </summary>
+    /// <remarks> Typically this means 1 bit per block for a level. </remarks>
     /// <remarks> Does NOT perform any bounds checking. </remarks>
     public sealed class SparseBitSet {
         

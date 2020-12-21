@@ -20,7 +20,7 @@ using System.Data;
 
 namespace MCGalaxy.SQL {
     
-    /// <summary> Executes an SQL command or query, that takes named parameters/arguments. </summary>
+    /// <summary> Executes an SQL command or query using the given parameters/arguments. </summary>
     public static class SqlQuery {
 
         /// <summary> Executes an SQL command that does not return any results. </summary>

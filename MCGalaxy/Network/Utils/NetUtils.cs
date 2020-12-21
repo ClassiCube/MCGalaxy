@@ -23,14 +23,17 @@ namespace MCGalaxy {
     public static class NetUtils {
         public const int StringSize = 64;        
 
+        /// <summary> Reads a signed 16 bit big endian integer. </summary>
         public static short ReadI16(byte[] array, int offset) {
             return (short)(array[offset] << 8 | array[offset + 1]);
         }
 
+        /// <summary> Reads an unsigned 16 bit big endian integer. </summary>
         public static ushort ReadU16(byte[] array, int offset) {
             return (ushort)(array[offset] << 8 | array[offset + 1]);
         }
 
+        /// <summary> Reads a signed 32 bit big endian integer. </summary>
         public static int ReadI32(byte[] array, int offset) {
             return array[offset] << 24 | array[offset + 1] << 16
                 | array[offset + 2] << 8 | array[offset + 3];

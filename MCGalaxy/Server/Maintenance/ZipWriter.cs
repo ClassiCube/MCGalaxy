@@ -111,6 +111,7 @@ namespace MCGalaxy {
         }
     }
 
+    /// <summary> Writes entries into a ZIP archive. </summary>
     public sealed class ZipWriter {
         BinaryWriter writer;
         Stream stream;

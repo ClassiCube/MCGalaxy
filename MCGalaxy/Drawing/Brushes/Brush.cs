@@ -26,6 +26,7 @@ namespace MCGalaxy.Drawing.Brushes {
         
         /// <summary> Returns the next block that should be placed in the world, 
         /// based on the draw operation's current state. </summary>
+        /// <remarks> Returns Block.Invalid if no block should be placed. </remarks>
         public abstract BlockID NextBlock(DrawOp op);
     }
 }

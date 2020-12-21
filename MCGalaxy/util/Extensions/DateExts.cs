@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy {
+
+    /// <summary> Extension methods relating to dates. </summary>
     public static class DateExts {
         
         public static TimeSpan ParseOldDBTimeSpent(this string value) {

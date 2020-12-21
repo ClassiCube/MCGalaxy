@@ -22,7 +22,7 @@ using System.Threading;
 namespace MCGalaxy.Tasks {
     public delegate void SchedulerCallback(SchedulerTask task);
     
-    public sealed partial class Scheduler {
+    public sealed class Scheduler {
 
         readonly List<SchedulerTask> tasks = new List<SchedulerTask>();
         readonly AutoResetEvent handle = new AutoResetEvent(false);
@@ -59,8 +59,8 @@ namespace MCGalaxy.Tasks {
             }
         }
         
-        /// <summary> Rechecks minimum delay for next task. 
-        /// Useful for when external code changes the delay of a scheduled task. </summary>
+        /// <summary> Recalculates the delay until there is a task to execute. </summary>
+        /// <remarks> Useful for when external code changes the delay of a scheduled task. </remarks>
         public void Recheck() {
             lock (taskLock) {
                 handle.Set();

@@ -19,7 +19,8 @@ using System;
 
 namespace MCGalaxy {
 
-    /// <summary> Importance. Higher priority plugins have their handlers called before lower priority plugins. </summary>
+    /// <summary> Importance of a plugin event handler (See IPluginEvent). </summary>
+    /// <remarks> Higher priority handlers are called before lower priority handlers. </remarks>
     public enum Priority : byte {
         Low = 0,
         Normal = 1,
@@ -49,11 +50,11 @@ namespace MCGalaxy {
         public abstract string name { get; }
         /// <summary> Your website. </summary>
         public virtual string website { get { return ""; } }
-        /// <summary> Oldest version of MCGalaxy the plugin is compatible with. </summary>
+        /// <summary> Oldest version of MCGalaxy this plugin is compatible with. </summary>
         public abstract string MCGalaxy_Version { get; }
-        /// <summary> Version of your plugin. </summary>
+        /// <summary> Version of this plugin. </summary>
         public virtual int build { get { return 0; } }
-        /// <summary> Message to display once plugin is loaded. </summary>
+        /// <summary> Message to display once this plugin is loaded. </summary>
         public virtual string welcome { get { return ""; } }
         /// <summary> The creator/author of this plugin. (Your name) </summary>
         public virtual string creator { get { return ""; } }

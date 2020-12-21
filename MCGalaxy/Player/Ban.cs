@@ -21,8 +21,8 @@ using System.Text;
 
 namespace MCGalaxy {
     
-    /// <summary> Can check the info about someone's ban, find out if there's info about someone,
-    /// and add / remove someone to the baninfo (NOT THE BANNED.TXT !) </summary>
+    /// <summary> Retrieves or updates a user's ban/unban information. </summary>
+    /// <remarks> This is NOT the list of banned players (ranks/banned.txt) </remarks>
     public static class Ban {
         
         static PlayerMetaList bans = new PlayerMetaList("text/bans.txt");
