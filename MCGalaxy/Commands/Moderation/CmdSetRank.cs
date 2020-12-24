@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             bool cancel = false;
             OnChangingGroupEvent.Call(name, curRank, newRank, ref cancel);
-            return cancel;
+            return !cancel;
         }
         
         static Group TargetRank(Player p, string name, Group curRank) {
