@@ -54,7 +54,7 @@ namespace MCGalaxy.Blocks.Physics {
                         break;
                 }
                 if (hitBlock || lvl.physics > 1) break;
-            } while (true);
+            } while (true);            
 
             if (movedDown) {
                 lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));

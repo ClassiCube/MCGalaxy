@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands {
         }
         
         static bool GetCoord(Player p, string arg, string axis, ref int value) {
-            bool relative = arg[0] == '~';
+            bool relative = arg.Length > 0 && arg[0] == '~';
             if (relative) arg = arg.Substring(1);
             // ~ should work as ~0
             if (relative && arg.Length == 0) return true;
