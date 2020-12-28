@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     reason = args.Length > 1 ? args[1] : "";
                 } catch {
                     delay  = TimeSpan.FromSeconds(10);
-                    reason = args[0];
+                    reason = message;
                 }
                 
                 int delaySec = (int)delay.TotalSeconds;
