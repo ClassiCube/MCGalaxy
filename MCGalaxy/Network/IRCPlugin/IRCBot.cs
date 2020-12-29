@@ -72,7 +72,12 @@ namespace MCGalaxy {
             if (String.IsNullOrEmpty(channel)) return;
             connection.Sender.Join(channel);
         }
-
+        
+        public void Raw(string message) {
+            if (!Enabled) return;
+            connection.Sender.Raw(message);
+        }
+        
         
         public void Connect() {
             if (!Server.Config.UseIRC || Connected || Server.shuttingDown) return;
