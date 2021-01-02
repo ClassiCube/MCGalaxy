@@ -122,7 +122,8 @@ namespace MCGalaxy.Network {
         }
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (!p.level.SeesServerWideChat || action != PlayerAction.Me) return;
+            if (action  != PlayerAction.Me) return;
+            if (p.level != null && p.level.SeesServerWideChat) return;
             bot.Say("*" + p.DisplayName + " " + message, stealth);
         }
         
