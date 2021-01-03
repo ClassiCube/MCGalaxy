@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.DB;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {
@@ -38,6 +39,7 @@ namespace MCGalaxy.Commands.Maintenance {
                         
             SwapStats(src, dst);
             SwapGroups(src, dst, srcGroup, dstGroup);
+            OnInfoSwapEvent.Call(src, dst);
             
             p.Message("Successfully infoswapped {0} %Sand {1}",
                       p.FormatNick(src), p.FormatNick(dst));
