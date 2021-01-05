@@ -63,26 +63,6 @@ namespace MCGalaxy.Tasks {
             }
         }
         
-        internal static void CombineEnvFiles(SchedulerTask task) {
-            if (!Directory.Exists("levels/level properties")) return;
-            try {
-                string[] files = Directory.GetFiles("levels/level properties", "*.env");
-                if (files.Length == 0) return;
-                
-                Logger.Log(LogType.SystemActivity, "Combining {0} .env and .properties files..", files.Length);
-                foreach (string envFile in files) {
-                    try {
-                        Combine(envFile);
-                    } catch (Exception ex) {
-                        Logger.LogError("Error combining .env and .properties file", ex);
-                    }
-                }
-                Logger.Log(LogType.SystemActivity, "Finished combining .env and .properties files.");
-            } catch (Exception ex) {
-                Logger.LogError("Error combining .env and .properties files", ex);
-            }
-        }
-        
         static void Combine(string envPath) {
             string map = Path.GetFileNameWithoutExtension(envPath);
             string propsPath = LevelInfo.PropsPath(map);

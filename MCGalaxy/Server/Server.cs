@@ -101,7 +101,6 @@ namespace MCGalaxy {
             InitDatabase();
             Economy.LoadDatabase();
 
-            Background.QueueOnce(UpgradeTasks.CombineEnvFiles);
             Background.QueueOnce(LoadMainLevel);
             Plugin.LoadAll();
             Background.QueueOnce(LoadAutoloadMaps);
