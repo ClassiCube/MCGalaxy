@@ -56,6 +56,17 @@ Click **Settings** in the MCGalaxy window, then tick the **Public** checkbox. Th
 
 This makes your server appear in the server list on classicube.net and in the desktop client.
 
+Compiling
+-----------------
+**With an IDE:**
+* Visual Studio : Open `MCGalaxy.sln`, click `Build` in the menubar, then click `Build Solution`. (Or press F6)
+* SharpDevelop: Open `MCGalaxy.sln`, click `Build` in the menubar, then click `Build Solution`. (Or press F8)
+
+**Command line:**
+* For Windows: Run `MSBuild command prompt for VS`, then type `msbuild MCGalaxy.sln` into command prompt
+* Modern mono: Type `msbuild MCGalaxy.sln` into Terminal
+* Older mono: Type `xbuild MCGalaxy.sln` into Terminal
+
 Copyright/License
 -----------------
 See LICENSE for MCGalaxy license, and license.txt for code used from other software.

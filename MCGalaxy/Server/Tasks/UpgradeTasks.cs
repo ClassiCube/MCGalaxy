@@ -63,20 +63,6 @@ namespace MCGalaxy.Tasks {
             }
         }
         
-        static void Combine(string envPath) {
-            string map = Path.GetFileNameWithoutExtension(envPath);
-            string propsPath = LevelInfo.PropsPath(map);
-            
-            List<string> lines = new List<string>();
-            if (File.Exists(propsPath)) lines = Utils.ReadAllLinesList(propsPath);
-            
-            List<string> envLines = Utils.ReadAllLinesList(envPath);
-            lines.AddRange(envLines);
-            
-            File.WriteAllLines(propsPath, lines.ToArray());
-            File.Delete(envPath);
-        }
-        
         internal static void UpgradeOldTempranks(SchedulerTask task) {
             if (!File.Exists(Paths.TempRanksFile)) return;
 
