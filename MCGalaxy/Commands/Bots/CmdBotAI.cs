@@ -102,24 +102,10 @@ namespace MCGalaxy.Commands.Bots{
             }
 
             string action = args.Length > 2 ? args[2] : "";
-            if (action.CaselessEq("reverse")) {
-                HandleReverse(p, ai);
-            } else {
-                string instruction = ScriptFile.Append(p, ai, action, args);
-                if (instruction != null) {
-                    p.Message("Appended " + instruction + " instruction to bot AI &b" + ai);
-                }
+            string instruction = ScriptFile.Append(p, ai, action, args);
+            if (instruction != null) {
+                p.Message("Appended " + instruction + " instruction to bot AI &b" + ai);
             }
-        }
-        
-        void HandleReverse(Player p, string ai) {
-            string[] lines = File.ReadAllLines("bots/" + ai);
-            using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                for (int i = lines.Length - 1; i > 0; i--) {
-                    if (!lines[i].IsCommentLine()) w.WriteLine(lines[i]);
-                }
-            }
-            p.Message("Appended all instructions in reverse order to bot AI &b" + ai);
         }
         
         void HandleList(Player p, string modifier) {
@@ -146,8 +132,8 @@ namespace MCGalaxy.Commands.Bots{
             p.Message("%T/BotAI list %H- lists all current AIs");
             p.Message("%T/BotAI add [name] [instruction] <args>");
             
-            p.Message("%HInstructions: %S{0}, reverse",
-                           BotInstruction.Instructions.Join(ins => ins.Name));
+            p.Message("%HInstructions: %S{0}",
+                      BotInstruction.Instructions.Join(ins => ins.Name));
             p.Message("%HTo see detailed help, type %T/Help BotAI [instruction]");
         }
         
