@@ -165,7 +165,7 @@ namespace MCGalaxy.Cli {
             Colors.Map(ref c);
             
             switch (c) {
-                    case '0': return ConsoleColor.Black;
+                    case '0': return ConsoleColor.DarkGray; // black text on black background is unreadable
                     case '1': return ConsoleColor.DarkBlue;
                     case '2': return ConsoleColor.DarkGreen;
                     case '3': return ConsoleColor.DarkCyan;
