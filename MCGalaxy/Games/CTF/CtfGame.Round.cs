@@ -42,7 +42,9 @@ namespace MCGalaxy.Games {
         }
         
         void Tick() {
+            int dist = (int)(Config.TagDistance * 32);
             Player[] online = PlayerInfo.Online.Items;
+            
             foreach (Player p in online) {
                 if (p.level != Map) continue;
                 CtfTeam team = TeamOf(p);
@@ -57,7 +59,7 @@ namespace MCGalaxy.Games {
                 
                 Player[] opponents = opposing.Members.Items;
                 foreach (Player other in opponents) {
-                    if (!MovementCheck.InRange(p, other, 2 * 32)) continue;
+                    if (!MovementCheck.InRange(p, other, dist)) continue;
                     CtfData otherData = Get(other);
 
                     otherData.TagCooldown = true;

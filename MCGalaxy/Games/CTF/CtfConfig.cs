@@ -29,6 +29,9 @@ namespace MCGalaxy.Games {
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "CTF"; } }
         protected override string PropsPath { get { return "properties/ctf.properties"; } }
+        
+        [ConfigFloat("tag-distance", "Player", 1f)]
+        public float TagDistance = 1f;
     }
     
     public sealed class CTFMapConfig : RoundsGameMapConfig {
