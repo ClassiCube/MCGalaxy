@@ -186,6 +186,7 @@ namespace MCGalaxy {
             w.WriteLine("#   guest-limit-notify            = Show -Too Many Guests- message in chat when maxGuests has been reached. Default false");
             w.WriteLine("#   guest-join-notify             = Shows when guests and lower ranks join server in chat and IRC. Default true");
             w.WriteLine("#   guest-leave-notify            = Shows when guests and lower ranks leave server in chat and IRC. Default true");
+            w.WriteLine("#   announcement-interval         = The delay in between server announcements in minutes. Default 5");
             w.WriteLine();
             w.WriteLine("#   UseMySQL                      = Use MySQL (true) or use SQLite (false)");
             w.WriteLine("#   Host                          = The host name for the database (usually 127.0.0.1)");

@@ -118,7 +118,7 @@ namespace MCGalaxy {
         
         static void InitTimers(SchedulerTask task) {
             MainScheduler.QueueRepeat(RandomMessage, null, 
-                                      TimeSpan.FromMinutes(5));
+                                      TimeSpan.FromMinutes(Server.Config.AnnouncementInterval));
             Critical.QueueRepeat(ServerTasks.UpdateEntityPositions, null,
                                  TimeSpan.FromMilliseconds(Server.Config.PositionUpdateInterval));
         }
