@@ -63,12 +63,13 @@ namespace MCGalaxy.Gui {
             pl_txtImpersonate.Text = "";
         }
 
-        void pl_BtnSlap_Click(object sender, EventArgs e) {  DoCmd("slap", "Slapped"); }
+        void pl_BtnMute_Click(object sender, EventArgs e) {  DoCmd("mute", "Muted"); }
         void pl_BtnKill_Click(object sender, EventArgs e) {  DoCmd("kill", "Killed"); }
         void pl_BtnWarn_Click(object sender, EventArgs e) {  DoCmd("warn", "Warned"); }
         void pl_BtnKick_Click(object sender, EventArgs e) {  DoCmd("kick", "Kicked"); }
-        void pl_BtnBan_Click(object sender, EventArgs e) {   DoCmd("ban", "Banned"); }
+        void pl_BtnBan_Click(object sender, EventArgs e)  {  DoCmd("ban", "Banned"); }
         void pl_BtnIPBan_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned"); }
+        void pl_BtnSlap_Click(object sender, EventArgs e) {  DoCmd("slap", "Slapped"); }
         
         void DoCmd(string cmdName, string action) {
             if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
@@ -80,12 +81,6 @@ namespace MCGalaxy.Gui {
             if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             UIHelpers.HandleCommand("Rules " + curPlayer.name);
             Players_AppendStatus("Sent rules to player");
-        }
-
-        void pl_BtnSpawn_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
-            curPlayer.HandleCommand("Spawn", "", curPlayer.DefaultCmdData);
-            Players_AppendStatus("Sent player to spawn");
         }
 
         void pl_listBox_Click(object sender, EventArgs e) {

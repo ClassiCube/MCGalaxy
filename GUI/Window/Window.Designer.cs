@@ -141,18 +141,19 @@ namespace MCGalaxy.Gui
             this.pl_txtMessage = new System.Windows.Forms.TextBox();
             this.pl_btnMessage = new System.Windows.Forms.Button();
             this.pl_gbActions = new System.Windows.Forms.GroupBox();
-            this.pl_btnSpawn = new System.Windows.Forms.Button();
+            this.pl_btnSlap = new System.Windows.Forms.Button();
             this.pl_txtUndo = new System.Windows.Forms.TextBox();
             this.pl_btnWarn = new System.Windows.Forms.Button();
             this.pl_btnRules = new System.Windows.Forms.Button();
             this.pl_btnKick = new System.Windows.Forms.Button();
             this.pl_btnBanIP = new System.Windows.Forms.Button();
             this.pl_btnUndo = new System.Windows.Forms.Button();
-            this.pl_btnSlap = new System.Windows.Forms.Button();
+            this.pl_btnMute = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
             this.pl_btnKill = new System.Windows.Forms.Button();
             this.pl_statusBox = new System.Windows.Forms.TextBox();
             this.pl_listBox = new System.Windows.Forms.ListBox();
+            this.pl_lblOnline = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tsMap.SuspendLayout();
             this.tsPlayer.SuspendLayout();
@@ -990,6 +991,7 @@ namespace MCGalaxy.Gui
             // 
             // tp_Players
             // 
+            this.tp_Players.Controls.Add(this.pl_lblOnline);
             this.tp_Players.Controls.Add(this.pl_gbProps);
             this.tp_Players.Controls.Add(this.pl_gbOther);
             this.tp_Players.Controls.Add(this.pl_gbActions);
@@ -1001,6 +1003,15 @@ namespace MCGalaxy.Gui
             this.tp_Players.Size = new System.Drawing.Size(767, 488);
             this.tp_Players.TabIndex = 7;
             this.tp_Players.Text = "Players";
+            // 
+            // pl_lblOnline
+            // 
+            this.pl_lblOnline.AutoSize = true;
+            this.pl_lblOnline.Location = new System.Drawing.Point(8, 9);
+            this.pl_lblOnline.Name = "pl_lblOnline";
+            this.pl_lblOnline.Size = new System.Drawing.Size(78, 13);
+            this.pl_lblOnline.TabIndex = 68;
+            this.pl_lblOnline.Text = "Online players:";
             // 
             // pl_gbProps
             // 
@@ -1072,14 +1083,14 @@ namespace MCGalaxy.Gui
             // 
             // pl_gbActions
             // 
-            this.pl_gbActions.Controls.Add(this.pl_btnSpawn);
+            this.pl_gbActions.Controls.Add(this.pl_btnSlap);
             this.pl_gbActions.Controls.Add(this.pl_txtUndo);
             this.pl_gbActions.Controls.Add(this.pl_btnWarn);
             this.pl_gbActions.Controls.Add(this.pl_btnRules);
             this.pl_gbActions.Controls.Add(this.pl_btnKick);
             this.pl_gbActions.Controls.Add(this.pl_btnBanIP);
             this.pl_gbActions.Controls.Add(this.pl_btnUndo);
-            this.pl_gbActions.Controls.Add(this.pl_btnSlap);
+            this.pl_gbActions.Controls.Add(this.pl_btnMute);
             this.pl_gbActions.Controls.Add(this.pl_btnBan);
             this.pl_gbActions.Controls.Add(this.pl_btnKill);
             this.pl_gbActions.Location = new System.Drawing.Point(529, 9);
@@ -1089,15 +1100,15 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.TabStop = false;
             this.pl_gbActions.Text = "Actions";
             // 
-            // pl_btnSpawn
+            // pl_btnSlap
             // 
-            this.pl_btnSpawn.Location = new System.Drawing.Point(8, 105);
-            this.pl_btnSpawn.Name = "pl_btnSpawn";
-            this.pl_btnSpawn.Size = new System.Drawing.Size(98, 23);
-            this.pl_btnSpawn.TabIndex = 43;
-            this.pl_btnSpawn.Text = "Spawn";
-            this.pl_btnSpawn.UseVisualStyleBackColor = true;
-            this.pl_btnSpawn.Click += new System.EventHandler(this.pl_BtnSpawn_Click);
+            this.pl_btnSlap.Location = new System.Drawing.Point(8, 105);
+            this.pl_btnSlap.Name = "pl_btnSlap";
+            this.pl_btnSlap.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnSlap.TabIndex = 43;
+            this.pl_btnSlap.Text = "Slap";
+            this.pl_btnSlap.UseVisualStyleBackColor = true;
+            this.pl_btnSlap.Click += new System.EventHandler(this.pl_BtnSlap_Click);
             // 
             // pl_txtUndo
             // 
@@ -1157,15 +1168,15 @@ namespace MCGalaxy.Gui
             this.pl_btnUndo.UseVisualStyleBackColor = true;
             this.pl_btnUndo.Click += new System.EventHandler(this.pl_BtnUndo_Click);
             // 
-            // pl_btnSlap
+            // pl_btnMute
             // 
-            this.pl_btnSlap.Location = new System.Drawing.Point(8, 76);
-            this.pl_btnSlap.Name = "pl_btnSlap";
-            this.pl_btnSlap.Size = new System.Drawing.Size(98, 23);
-            this.pl_btnSlap.TabIndex = 40;
-            this.pl_btnSlap.Text = "Slap";
-            this.pl_btnSlap.UseVisualStyleBackColor = true;
-            this.pl_btnSlap.Click += new System.EventHandler(this.pl_BtnSlap_Click);
+            this.pl_btnMute.Location = new System.Drawing.Point(8, 76);
+            this.pl_btnMute.Name = "pl_btnMute";
+            this.pl_btnMute.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnMute.TabIndex = 40;
+            this.pl_btnMute.Text = "Mute";
+            this.pl_btnMute.UseVisualStyleBackColor = true;
+            this.pl_btnMute.Click += new System.EventHandler(this.pl_BtnMute_Click);
             // 
             // pl_btnBan
             // 
@@ -1203,9 +1214,9 @@ namespace MCGalaxy.Gui
             // pl_listBox
             // 
             this.pl_listBox.FormattingEnabled = true;
-            this.pl_listBox.Location = new System.Drawing.Point(8, 14);
+            this.pl_listBox.Location = new System.Drawing.Point(8, 27);
             this.pl_listBox.Name = "pl_listBox";
-            this.pl_listBox.Size = new System.Drawing.Size(123, 459);
+            this.pl_listBox.Size = new System.Drawing.Size(123, 446);
             this.pl_listBox.TabIndex = 62;
             this.pl_listBox.Click += new System.EventHandler(this.pl_listBox_Click);
             // 
@@ -1266,6 +1277,7 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.Label pl_lblOnline;
         private System.Windows.Forms.GroupBox pl_gbProps;
         private System.Windows.Forms.GroupBox pl_gbActions;
         private System.Windows.Forms.GroupBox pl_gbOther;
@@ -1336,10 +1348,10 @@ namespace MCGalaxy.Gui
         private Button pl_btnKill;
         private TextBox pl_txtImpersonate;
         private Button pl_btnSendCommand;
-        private Button pl_btnSpawn;
+        private Button pl_btnSlap;
         private TextBox pl_txtUndo;
         private Button pl_btnUndo;
-        private Button pl_btnSlap;
+        private Button pl_btnMute;
         private Button pl_btnRules;
         private TextBox pl_statusBox;
         private ListBox pl_listBox;
