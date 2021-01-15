@@ -56,6 +56,7 @@
     <Compile Include="Controls\ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\HackyPropertyGrid.cs" />
     <Compile Include="Controls\TimespanUpDown.cs" />
     <Compile Include="Descriptors.cs" />
     <Compile Include="GuiPerms.cs" />

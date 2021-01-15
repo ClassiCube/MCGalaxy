@@ -364,7 +364,7 @@ namespace MCGalaxy.Gui
             this.zs_lstNotUsed = new System.Windows.Forms.ListBox();
             this.zs_lstUsed = new System.Windows.Forms.ListBox();
             this.tabZS_old = new System.Windows.Forms.TabPage();
-            this.propsZG = new System.Windows.Forms.PropertyGrid();
+            this.propsZG = new MCGalaxy.Gui.HackyPropertyGrid();
             this.tabCTF = new System.Windows.Forms.TabPage();
             this.ctf_grpControls = new System.Windows.Forms.GroupBox();
             this.ctf_btnEnd = new System.Windows.Forms.Button();

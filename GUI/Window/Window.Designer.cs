@@ -112,7 +112,7 @@ namespace MCGalaxy.Gui
             this.tabs = new System.Windows.Forms.TabControl();
             this.tp_Maps = new System.Windows.Forms.TabPage();
             this.map_gbProps = new System.Windows.Forms.GroupBox();
-            this.map_pgProps = new System.Windows.Forms.PropertyGrid();
+            this.map_pgProps = new MCGalaxy.Gui.HackyPropertyGrid();
             this.map_gbLoaded = new System.Windows.Forms.GroupBox();
             this.map_lbLoaded = new System.Windows.Forms.ListBox();
             this.map_gbUnloaded = new System.Windows.Forms.GroupBox();
@@ -134,7 +134,7 @@ namespace MCGalaxy.Gui
             this.map_txtName = new System.Windows.Forms.TextBox();
             this.tp_Players = new System.Windows.Forms.TabPage();
             this.pl_gbProps = new System.Windows.Forms.GroupBox();
-            this.pl_pgProps = new System.Windows.Forms.PropertyGrid();
+            this.pl_pgProps = new MCGalaxy.Gui.HackyPropertyGrid();
             this.pl_gbOther = new System.Windows.Forms.GroupBox();
             this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
             this.pl_btnSendCommand = new System.Windows.Forms.Button();
