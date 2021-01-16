@@ -113,6 +113,8 @@ namespace MCGalaxy {
         public bool WhitelistedOnly = false;
         [ConfigBool("repeat-messages", "Other", false)]
         public bool RepeatMBs = false;
+        [ConfigTimespan("announcement-interval", "Other", 5, true)]
+        public TimeSpan AnnouncementInterval = TimeSpan.FromMinutes(5);
         [ConfigString("money-name", "Other", "moneys")]
         public string Currency = "moneys";        
         [ConfigString("server-owner", "Other", "the owner")]
