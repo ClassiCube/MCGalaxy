@@ -132,6 +132,7 @@ namespace MCGalaxy.Bots {
         [ConfigBool] public bool Hunt;
         [ConfigInt] public int CurInstruction;
         [ConfigInt] public int CurJump;
+        [ConfigInt] public int CurSpeed;
         
         [ConfigInt] public int X;
         [ConfigInt] public int Y;
@@ -152,7 +153,7 @@ namespace MCGalaxy.Bots {
             Model = bot.Model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;
             DisplayName = bot.DisplayName;
-            CurInstruction = bot.cur; CurJump = bot.curJump;
+            CurInstruction = bot.cur; CurJump = bot.curJump; CurSpeed = bot.movementSpeed;
             ClickedOnText = bot.ClickedOnText; DeathMessage = bot.DeathMessage;
             
             X = bot.Pos.X; Y = bot.Pos.Y; Z = bot.Pos.Z;
@@ -174,6 +175,8 @@ namespace MCGalaxy.Bots {
             bot.DisplayName = DisplayName;
             
             bot.cur = CurInstruction; bot.curJump = CurJump;
+            // NOTE: This field wasn't in old json 
+            if (CurSpeed != 0) bot.movementSpeed = CurSpeed;
             bot.ClickedOnText = ClickedOnText; bot.DeathMessage = DeathMessage;
             bot.ScaleX = ScaleX; bot.ScaleY = ScaleY; bot.ScaleZ = ScaleZ;
         }
