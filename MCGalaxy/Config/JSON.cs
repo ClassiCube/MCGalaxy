@@ -20,12 +20,25 @@ namespace MCGalaxy.Config {
         }
     }
     
+    public delegate void JsonOnMember(JsonObject obj, string key, object value);
     public sealed class JsonContext {
         public string Val; public bool Success;
+        public JsonOnMember OnMember;
         
         internal int Idx;
         internal char Cur { get { return Val[Idx]; } }
         internal StringBuilder strBuffer = new StringBuilder(96);
+        
+        public JsonContext(string value) {
+            Val      = value;
+            Success  = true;
+            OnMember = DefaultOnMember;
+        }
+        
+        static void DefaultOnMember(JsonObject obj, string key, object value) {
+            obj.Keys.Add(key);
+            obj.Values.Add(value);
+        }
     }
     
     public static class Json {
@@ -64,19 +77,16 @@ namespace MCGalaxy.Config {
             // invalid token
             ctx.Idx++; return T_NONE;
         }
-        
-        static object ParseStream(JsonContext ctx) {
-            return ParseValue(NextToken(ctx), ctx);
+
+        public static object Parse(string s, out bool success) {
+            JsonContext ctx = new JsonContext(s);
+            object obj = Parse(ctx);    
+            success    = ctx.Success;
+            return obj;
         }
         
-        public static object Parse(string s, out bool success) {
-        	JsonContext ctx = new JsonContext();
-            ctx.Val     = s;
-            ctx.Success = true;
-            
-            object obj  = ParseStream(ctx);    
-            success     = ctx.Success;
-            return obj;
+        public static object Parse(JsonContext ctx) {
+            return ParseValue(NextToken(ctx), ctx);
         }
         
         static object ParseValue(int token, JsonContext ctx) {
@@ -95,11 +105,11 @@ namespace MCGalaxy.Config {
         }
         
         static JsonObject ParseObject(JsonContext ctx) {
-            JsonObject members = new JsonObject();
+            JsonObject obj = new JsonObject();
             while (true) {
                 int token = NextToken(ctx);
                 if (token == ',') continue;
-                if (token == '}') return members;
+                if (token == '}') return obj;
                 
                 if (token != '"') { ctx.Success = false; return null; }
                 string key = ParseString(ctx);
@@ -111,20 +121,19 @@ namespace MCGalaxy.Config {
                 if (token == T_NONE) { ctx.Success = false; return null; }
                 
                 object value = ParseValue(token, ctx);
-                members.Keys.Add(key);
-                members.Values.Add(value);
+                ctx.OnMember(obj, key, value);
             }
         }
         
         static JsonArray ParseArray(JsonContext ctx) {
-            JsonArray elements = new JsonArray();
+            JsonArray arr = new JsonArray();
             while (true) {
                 int token = NextToken(ctx);
                 if (token == ',') continue;
-                if (token == ']') return elements;
+                if (token == ']') return arr;
                 
                 if (token == T_NONE) { ctx.Success = false; return null; }
-                elements.Add(ParseValue(token, ctx));
+                arr.Add(ParseValue(token, ctx));
             }
         }
         
