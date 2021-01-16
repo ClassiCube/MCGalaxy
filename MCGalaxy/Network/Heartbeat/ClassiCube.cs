@@ -93,7 +93,7 @@ namespace MCGalaxy.Network {
             Server.Hash = hash;
             Server.URL = response;
             
-            if (!response.Contains("\"errors\": [")) {
+            if (!response.Contains("\"errors\":")) {
                 Server.UpdateUrl(Server.URL);
                 File.WriteAllText("text/externalurl.txt", Server.URL);
                 Logger.Log(LogType.SystemActivity, "ClassiCube URL found: " + Server.URL);
