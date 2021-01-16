@@ -87,6 +87,7 @@ namespace MCGalaxy {
             shuttingDown = false;
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;
+            ForceEnableTLS();
             
             CheckFile("MySql.Data.dll");
             CheckFile("sqlite3_x32.dll");
@@ -118,6 +119,12 @@ namespace MCGalaxy {
             ServerTasks.QueueTasks();
             Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask,
                                    null, TimeSpan.FromMinutes(5));
+        }
+        
+        static void ForceEnableTLS() {
+            // Force enable TLS 1.1/1.2, otherwise checking for updates on Github doesn't work
+            try { ServicePointManager.SecurityProtocol |= (SecurityProtocolType)0x300; } catch { }
+            try { ServicePointManager.SecurityProtocol |= (SecurityProtocolType)0xC00; } catch { }
         }
         
         static void MoveSqliteDll() {
