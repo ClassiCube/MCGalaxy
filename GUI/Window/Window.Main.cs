@@ -25,10 +25,8 @@ namespace MCGalaxy.Gui {
     public partial class Window : Form {
         
         Player GetSelectedPlayer() {
-            var rows = main_Players.SelectedRows;
-            if (rows.Count <= 0) return null;
-            
-            string name = (string)rows[0].Cells[0].Value;
+            string name = GetSelected(main_Players);
+            if (name == null) return null;
             return PlayerInfo.FindExact(name);
         }
         
@@ -55,10 +53,8 @@ namespace MCGalaxy.Gui {
 
         
         Level GetSelectedLevel() {
-            var rows = main_Maps.SelectedRows;
-            if (rows.Count <= 0) return null;
-            
-            string name = (string)rows[0].Cells[0].Value;
+            string name = GetSelected(main_Maps);
+            if (name == null) return null;
             return LevelInfo.FindExact(name);
         }
         
@@ -232,7 +228,7 @@ namespace MCGalaxy.Gui {
 
             main_Players.Rows.Clear();
             foreach (Player pl in players) { 
-                main_Players.Rows.Add(pl.name, pl.level.name, pl.group.Name);
+                main_Players.Rows.Add(pl.truename, pl.level.name, pl.group.Name);
             }
             
             Reselect(main_Players, selected);
@@ -241,7 +237,7 @@ namespace MCGalaxy.Gui {
         
         static string GetSelected(DataGridView view) {
             DataGridViewSelectedRowCollection selected = view.SelectedRows;
-            if (selected.Count == 0) return null;
+            if (selected.Count <= 0) return null;
             return (string)selected[0].Cells[0].Value;
         }
         
