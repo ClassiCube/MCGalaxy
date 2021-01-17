@@ -111,6 +111,9 @@ namespace MCGalaxy.Gui
             this.tsLog_clear = new System.Windows.Forms.ToolStripMenuItem();
             this.main_txtInput = new System.Windows.Forms.TextBox();
             this.main_txtUrl = new System.Windows.Forms.TextBox();
+            this.main_colPlName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.main_colPlMap = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.main_colPlRank = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.main_Players = new System.Windows.Forms.DataGridView();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tp_Maps = new System.Windows.Forms.TabPage();
@@ -747,6 +750,24 @@ namespace MCGalaxy.Gui
             this.main_txtUrl.Text = "Finding classicube.net url..";
             this.main_txtUrl.DoubleClick += new System.EventHandler(this.main_TxtUrl_DoubleClick);
             // 
+            // main_colPlName
+            // 
+            this.main_colPlName.HeaderText = "Name";
+            this.main_colPlName.Name = "main_colPlName";
+            this.main_colPlName.ReadOnly = true;
+            // 
+            // main_colPlMap
+            // 
+            this.main_colPlMap.HeaderText = "Map";
+            this.main_colPlMap.Name = "main_colPlMap";
+            this.main_colPlMap.ReadOnly = true;
+            // 
+            // main_colPlRank
+            // 
+            this.main_colPlRank.HeaderText = "Rank";
+            this.main_colPlRank.Name = "main_colPlRank";
+            this.main_colPlRank.ReadOnly = true;
+            // 
             // main_Players
             // 
             this.main_Players.AllowUserToAddRows = false;
@@ -754,6 +775,10 @@ namespace MCGalaxy.Gui
             this.main_Players.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.main_Players.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.main_Players.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.main_Players.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+        	        	        	this.main_colPlName,
+        	        	        	this.main_colPlMap,
+        	        	        	this.main_colPlRank});
             this.main_Players.ContextMenuStrip = this.tsPlayer;
             this.main_Players.Location = new System.Drawing.Point(512, 7);
             this.main_Players.MultiSelect = false;
@@ -1305,6 +1330,9 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.DataGridViewTextBoxColumn main_colPlName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn main_colPlMap;
+        private System.Windows.Forms.DataGridViewTextBoxColumn main_colPlRank;
         private System.Windows.Forms.DataGridViewTextBoxColumn main_colLvlPhysics;
         private System.Windows.Forms.DataGridViewTextBoxColumn main_colLvlPlayers;
         private System.Windows.Forms.DataGridViewTextBoxColumn main_colLvlName;

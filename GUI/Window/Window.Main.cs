@@ -224,9 +224,10 @@ namespace MCGalaxy.Gui {
             Player[] players = PlayerInfo.Online.Items;
             string selected = GetSelected(main_Players);
 
-            PlayerCollection pc = new PlayerCollection();
-            foreach (Player pl in players) { pc.Add(pl); }
-            main_Players.DataSource = pc;
+            main_Players.Rows.Clear();
+            foreach (Player pl in players) { 
+                main_Players.Rows.Add(pl.name, pl.level.name, pl.group.Name);
+            }
             
             Reselect(main_Players, selected);
             main_Players.Refresh();

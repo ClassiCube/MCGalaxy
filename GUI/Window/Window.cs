@@ -57,7 +57,6 @@ namespace MCGalaxy.Gui {
             Text = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
             MakeNotifyIcon();
             
-            main_Players.DataSource = new PlayerCollection();
             main_Players.Font = new Font("Calibri", 8.25f);
             main_Maps.Font = new Font("Calibri", 8.25f);
         }
