@@ -141,7 +141,7 @@ namespace MCGalaxy.Gui
             this.pl_txtMessage = new System.Windows.Forms.TextBox();
             this.pl_btnMessage = new System.Windows.Forms.Button();
             this.pl_gbActions = new System.Windows.Forms.GroupBox();
-            this.pl_btnSlap = new System.Windows.Forms.Button();
+            this.pl_btnKill = new System.Windows.Forms.Button();
             this.pl_txtUndo = new System.Windows.Forms.TextBox();
             this.pl_btnWarn = new System.Windows.Forms.Button();
             this.pl_btnRules = new System.Windows.Forms.Button();
@@ -150,7 +150,7 @@ namespace MCGalaxy.Gui
             this.pl_btnUndo = new System.Windows.Forms.Button();
             this.pl_btnMute = new System.Windows.Forms.Button();
             this.pl_btnBan = new System.Windows.Forms.Button();
-            this.pl_btnKill = new System.Windows.Forms.Button();
+            this.pl_btnFreeze = new System.Windows.Forms.Button();
             this.pl_statusBox = new System.Windows.Forms.TextBox();
             this.pl_listBox = new System.Windows.Forms.ListBox();
             this.pl_lblOnline = new System.Windows.Forms.Label();
@@ -1083,7 +1083,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_gbActions
             // 
-            this.pl_gbActions.Controls.Add(this.pl_btnSlap);
+            this.pl_gbActions.Controls.Add(this.pl_btnKill);
             this.pl_gbActions.Controls.Add(this.pl_txtUndo);
             this.pl_gbActions.Controls.Add(this.pl_btnWarn);
             this.pl_gbActions.Controls.Add(this.pl_btnRules);
@@ -1092,7 +1092,7 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.Controls.Add(this.pl_btnUndo);
             this.pl_gbActions.Controls.Add(this.pl_btnMute);
             this.pl_gbActions.Controls.Add(this.pl_btnBan);
-            this.pl_gbActions.Controls.Add(this.pl_btnKill);
+            this.pl_gbActions.Controls.Add(this.pl_btnFreeze);
             this.pl_gbActions.Location = new System.Drawing.Point(529, 9);
             this.pl_gbActions.Name = "pl_gbActions";
             this.pl_gbActions.Size = new System.Drawing.Size(228, 186);
@@ -1100,15 +1100,15 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.TabStop = false;
             this.pl_gbActions.Text = "Actions";
             // 
-            // pl_btnSlap
+            // pl_btnKill
             // 
-            this.pl_btnSlap.Location = new System.Drawing.Point(8, 105);
-            this.pl_btnSlap.Name = "pl_btnSlap";
-            this.pl_btnSlap.Size = new System.Drawing.Size(98, 23);
-            this.pl_btnSlap.TabIndex = 43;
-            this.pl_btnSlap.Text = "Slap";
-            this.pl_btnSlap.UseVisualStyleBackColor = true;
-            this.pl_btnSlap.Click += new System.EventHandler(this.pl_BtnSlap_Click);
+            this.pl_btnKill.Location = new System.Drawing.Point(8, 105);
+            this.pl_btnKill.Name = "pl_btnKill";
+            this.pl_btnKill.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnKill.TabIndex = 43;
+            this.pl_btnKill.Text = "Kill";
+            this.pl_btnKill.UseVisualStyleBackColor = true;
+            this.pl_btnKill.Click += new System.EventHandler(this.pl_BtnKill_Click);
             // 
             // pl_txtUndo
             // 
@@ -1188,15 +1188,15 @@ namespace MCGalaxy.Gui
             this.pl_btnBan.UseVisualStyleBackColor = true;
             this.pl_btnBan.Click += new System.EventHandler(this.pl_BtnBan_Click);
             // 
-            // pl_btnKill
+            // pl_btnFreeze
             // 
-            this.pl_btnKill.Location = new System.Drawing.Point(122, 76);
-            this.pl_btnKill.Name = "pl_btnKill";
-            this.pl_btnKill.Size = new System.Drawing.Size(98, 23);
-            this.pl_btnKill.TabIndex = 36;
-            this.pl_btnKill.Text = "Kill";
-            this.pl_btnKill.UseVisualStyleBackColor = true;
-            this.pl_btnKill.Click += new System.EventHandler(this.pl_BtnKill_Click);
+            this.pl_btnFreeze.Location = new System.Drawing.Point(122, 76);
+            this.pl_btnFreeze.Name = "pl_btnFreeze";
+            this.pl_btnFreeze.Size = new System.Drawing.Size(98, 23);
+            this.pl_btnFreeze.TabIndex = 36;
+            this.pl_btnFreeze.Text = "Freeze";
+            this.pl_btnFreeze.UseVisualStyleBackColor = true;
+            this.pl_btnFreeze.Click += new System.EventHandler(this.pl_BtnFreeze_Click);
             // 
             // pl_statusBox
             // 
@@ -1345,10 +1345,10 @@ namespace MCGalaxy.Gui
         private Button pl_btnMessage;
         private TextBox pl_txtMessage;
         private Button pl_btnWarn;
-        private Button pl_btnKill;
+        private Button pl_btnFreeze;
         private TextBox pl_txtImpersonate;
         private Button pl_btnSendCommand;
-        private Button pl_btnSlap;
+        private Button pl_btnKill;
         private TextBox pl_txtUndo;
         private Button pl_btnUndo;
         private Button pl_btnMute;

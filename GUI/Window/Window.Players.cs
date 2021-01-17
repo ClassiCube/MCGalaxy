@@ -63,19 +63,21 @@ namespace MCGalaxy.Gui {
             pl_txtImpersonate.Text = "";
         }
 
-        void pl_BtnMute_Click(object sender, EventArgs e) {  DoCmd("mute", "Muted @p"); }
-        void pl_BtnKill_Click(object sender, EventArgs e) {  DoCmd("kill", "Killed @p"); }
-        void pl_BtnWarn_Click(object sender, EventArgs e) {  DoCmd("warn", "Warned @p"); }
-        void pl_BtnKick_Click(object sender, EventArgs e) {  DoCmd("kick", "Kicked @p"); }
-        void pl_BtnBan_Click(object sender, EventArgs e)  {  DoCmd("ban", "Banned @p"); }
+        void pl_BtnMute_Click(object sender, EventArgs e)  { DoCmd("mute", "Muted @p"); }
+        void pl_BtnFreeze_Click(object sender, EventArgs e){ DoCmd("freeze", "Froze @p"); }
+        void pl_BtnWarn_Click(object sender, EventArgs e)  { DoCmd("warn", "Warned @p"); }
+        void pl_BtnKick_Click(object sender, EventArgs e)  { DoCmd("kick", "Kicked @p"); }
+        void pl_BtnBan_Click(object sender, EventArgs e)   { DoCmd("ban", "Banned @p"); }
         void pl_BtnIPBan_Click(object sender, EventArgs e) { DoCmd("banip", "IP-Banned @p"); }
-        void pl_BtnSlap_Click(object sender, EventArgs e)  { DoCmd("slap", "Slapped @p"); }
+        void pl_BtnKill_Click(object sender, EventArgs e)  { DoCmd("kill", "Killed @p"); }
         void pl_BtnRules_Click(object sender, EventArgs e) { DoCmd("Rules", "Sent rules to @p"); }
         
         void DoCmd(string cmdName, string action) {
             if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
             UIHelpers.HandleCommand(cmdName + " " + curPlayer.name);
+            
             Players_AppendStatus(action.Replace("@p", curPlayer.truename));
+            Players_UpdateButtons();
         }
 
         void pl_listBox_Click(object sender, EventArgs e) {
@@ -84,11 +86,9 @@ namespace MCGalaxy.Gui {
             
             pl_statusBox.Text = "";
             Players_AppendStatus("==" + p.truename + "==");
-            playerProps = new PlayerProperties(p);
-            pl_gbProps.Text = "Properties for " + p.truename;
-            pl_pgProps.SelectedObject = playerProps;
             curPlayer = p;
             
+            Players_SetSelected(p.truename, new PlayerProperties(p));
             Players_UpdateSelected();
         }
 
@@ -122,9 +122,22 @@ namespace MCGalaxy.Gui {
             if (PlayerInfo.FindExact(curPlayer.name) != null) return;
             
             curPlayer = null;
-            playerProps = null;
-            pl_gbProps.Text = "Properties for (none selected)";
-            pl_pgProps.SelectedObject = null;
+            Players_SetSelected("(none selected)", null);
+        }
+        
+        void Players_SetSelected(string name, PlayerProperties props) {
+            playerProps     = props;
+            pl_gbProps.Text = "Properties for " + name;
+            
+            pl_pgProps.SelectedObject = props;
+            Players_UpdateButtons();
+        }
+        
+        void Players_UpdateButtons() {
+            Player p = curPlayer;  
+            pl_btnMute.Text   = p != null && p.muted  ? "Unmute"   : "Mute";
+            pl_btnFreeze.Text = p != null && p.frozen ? "Unfreeze" : "Freeze";
+            // TODO: Automatically update when player is muted/frozen in-game
         }
     }
 }

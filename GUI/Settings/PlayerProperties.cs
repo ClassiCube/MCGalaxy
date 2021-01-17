@@ -85,10 +85,6 @@ namespace MCGalaxy.Gui {
         public bool AFK { get { return p.IsAfk; } set { DoCmd("SendCmd", "afk"); } }
         
         [Category("Status")]
-        [DisplayName("Frozen")]
-        public bool Frozen { get { return p.frozen; } set { DoCmd("Freeze"); } }
-        
-        [Category("Status")]
         [DisplayName("Hidden")]
         public bool Hidden { get { return p.hidden; } set { DoCmd("oHide"); } }
         
@@ -100,10 +96,6 @@ namespace MCGalaxy.Gui {
         [DisplayName("Map")]
         [TypeConverter(typeof(LevelConverter))]
         public string Map { get { return p.level.name; } set { DoCmd("SendCmd", "goto " + value); } }
-        
-        [Category("Status")]
-        [DisplayName("Muted")]
-        public bool Muted { get { return p.muted; } set { DoCmd("Mute"); } }
         
         [Category("Status")]
         [DisplayName("Voiced")]
