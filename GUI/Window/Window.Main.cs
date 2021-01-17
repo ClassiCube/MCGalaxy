@@ -25,8 +25,11 @@ namespace MCGalaxy.Gui {
     public partial class Window : Form {
         
         Player GetSelectedPlayer() {
-            if (main_Players.SelectedRows.Count <= 0) return null;
-            return (Player)(main_Players.SelectedRows[0].DataBoundItem);
+            var rows = main_Players.SelectedRows;
+            if (rows.Count <= 0) return null;
+            
+            string name = (string)rows[0].Cells[0].Value;
+            return PlayerInfo.FindExact(name);
         }
         
         void PlayerCmd(string command) {
@@ -52,8 +55,11 @@ namespace MCGalaxy.Gui {
 
         
         Level GetSelectedLevel() {
-            if (main_Maps.SelectedRows.Count <= 0) return null;
-            return (Level)(main_Maps.SelectedRows[0].DataBoundItem);
+            var rows = main_Maps.SelectedRows;
+            if (rows.Count <= 0) return null;
+            
+            string name = (string)rows[0].Cells[0].Value;
+            return LevelInfo.FindExact(name);
         }
         
         void LevelCmd(string command) {
