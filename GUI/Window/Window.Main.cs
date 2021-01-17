@@ -202,16 +202,18 @@ namespace MCGalaxy.Gui {
             // https://stackoverflow.com/questions/20688408/how-do-you-change-the-text-color-of-a-readonly-textbox
             main_txtUrl.BackColor = main_txtUrl.BackColor;
             main_txtUrl.ForeColor = isUrl ? linkCol : Color.FromKnownColor(KnownColor.WindowText);
+            main_txtUrl.Font      = new Font(main_txtUrl.Font, 
+                                             isUrl ? FontStyle.Underline : FontStyle.Regular);
         }
         
         void Main_UpdateMapList() {
             Level[] loaded = LevelInfo.Loaded.Items;
             string selected = GetSelected(main_Maps);
             
-            // Always new data source, avoids "-1 does not have a value" when clicking a row
-            LevelCollection lc = new LevelCollection();
-            foreach (Level lvl in loaded) { lc.Add(lvl); }
-            main_Maps.DataSource = lc;
+            main_Maps.Rows.Clear();
+            foreach (Level lvl in loaded) {
+                main_Maps.Rows.Add(lvl.name, lvl.players.Count, lvl.physics);
+            }
             
             Reselect(main_Maps, selected);
             main_Maps.Refresh();

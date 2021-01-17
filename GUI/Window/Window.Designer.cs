@@ -94,6 +94,9 @@ namespace MCGalaxy.Gui
             this.main_btnUnloadEmpty = new System.Windows.Forms.Button();
             this.main_btnKillPhysics = new System.Windows.Forms.Button();
             this.main_btnSaveAll = new System.Windows.Forms.Button();
+            this.main_colLvlName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.main_colLvlPlayers = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.main_colLvlPhysics = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.main_Maps = new System.Windows.Forms.DataGridView();
             this.main_txtLog = new MCGalaxy.Gui.Components.ColoredTextBox();
             this.tsLog_Menu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -586,13 +589,38 @@ namespace MCGalaxy.Gui
             this.main_btnSaveAll.UseVisualStyleBackColor = true;
             this.main_btnSaveAll.Click += new System.EventHandler(this.main_BtnSaveAll_Click);
             // 
+            // main_colLvlName
+            // 
+            this.main_colLvlName.HeaderText = "Name";
+            this.main_colLvlName.Name = "main_colLvlName";
+            this.main_colLvlName.ReadOnly = true;
+            // 
+            // main_colLvlPlayers
+            // 
+            this.main_colLvlPlayers.FillWeight = 70F;
+            this.main_colLvlPlayers.HeaderText = "Players";
+            this.main_colLvlPlayers.Name = "main_colLvlPlayers";
+            this.main_colLvlPlayers.ReadOnly = true;
+            // 
+            // main_colLvlPhysics
+            // 
+            this.main_colLvlPhysics.FillWeight = 70F;
+            this.main_colLvlPhysics.HeaderText = "Physics";
+            this.main_colLvlPhysics.Name = "main_colLvlPhysics";
+            this.main_colLvlPhysics.ReadOnly = true;
+            // 
             // main_Maps
             // 
             this.main_Maps.AllowUserToAddRows = false;
             this.main_Maps.AllowUserToDeleteRows = false;
+            this.main_Maps.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.main_Maps.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.main_Maps.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.main_Maps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.main_Maps.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+        	        	        	this.main_colLvlName,
+        	        	        	this.main_colLvlPlayers,
+        	        	        	this.main_colLvlPhysics});
             this.main_Maps.ContextMenuStrip = this.tsMap;
             this.main_Maps.Location = new System.Drawing.Point(512, 292);
             this.main_Maps.MultiSelect = false;
@@ -1277,6 +1305,9 @@ namespace MCGalaxy.Gui
             this.pl_gbActions.PerformLayout();
             this.ResumeLayout(false);
         }
+        private System.Windows.Forms.DataGridViewTextBoxColumn main_colLvlPhysics;
+        private System.Windows.Forms.DataGridViewTextBoxColumn main_colLvlPlayers;
+        private System.Windows.Forms.DataGridViewTextBoxColumn main_colLvlName;
         private System.Windows.Forms.Label pl_lblOnline;
         private System.Windows.Forms.GroupBox pl_gbProps;
         private System.Windows.Forms.GroupBox pl_gbActions;

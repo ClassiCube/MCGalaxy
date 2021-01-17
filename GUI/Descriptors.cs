@@ -42,28 +42,6 @@ namespace MCGalaxy.Gui {
         }
     }
     
-    public sealed class LevelCollection : List<Level>, ITypedList {
-        PropertyDescriptorCollection _props;
-
-        public PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors) {
-            if (_props == null)
-                _props = new PropertyDescriptorCollection(MakeProperties());
-            return _props;
-        }
-
-        public string GetListName(PropertyDescriptor[] listAccessors) {
-            return ""; // was used by 1.1 datagrid
-        }
-        
-        PropertyDescriptor[] MakeProperties() {
-            return new PropertyDescriptor[] {
-                new MethodDescriptor<Level>("Name",    l => l.name,          typeof(string)),
-                new MethodDescriptor<Level>("Players", l => l.players.Count, typeof(int)),
-                new MethodDescriptor<Level>("Physics", l => l.physics,       typeof(int)),
-            };
-        }
-    }
-    
 	public delegate object ValueGetter<T>(T instance);
     public class MethodDescriptor<T> : PropertyDescriptor {
         ValueGetter<T> getter;

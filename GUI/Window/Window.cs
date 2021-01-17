@@ -58,8 +58,7 @@ namespace MCGalaxy.Gui {
             MakeNotifyIcon();
             
             main_Players.DataSource = new PlayerCollection();
-            main_Players.Font = new Font("Calibri", 8.25f);            
-            main_Maps.DataSource = new LevelCollection();
+            main_Players.Font = new Font("Calibri", 8.25f);
             main_Maps.Font = new Font("Calibri", 8.25f);
         }
         
