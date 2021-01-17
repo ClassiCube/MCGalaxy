@@ -203,7 +203,7 @@ namespace MCGalaxy.Gui {
             
             // https://stackoverflow.com/questions/20688408/how-do-you-change-the-text-color-of-a-readonly-textbox
             main_txtUrl.BackColor = main_txtUrl.BackColor;
-            main_txtUrl.ForeColor = isUrl ? linkCol : Color.FromKnownColor(KnownColor.WindowText);
+            main_txtUrl.ForeColor = isUrl ? linkCol : SystemColors.WindowText;
             main_txtUrl.Font      = new Font(main_txtUrl.Font, 
                                              isUrl ? FontStyle.Underline : FontStyle.Regular);
         }

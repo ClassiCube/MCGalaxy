@@ -464,7 +464,7 @@ namespace MCGalaxy.Gui
             // 
             // logs_txtError
             // 
-            this.logs_txtError.BackColor = System.Drawing.Color.White;
+            this.logs_txtError.BackColor = System.Drawing.SystemColors.Window;
             this.logs_txtError.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.logs_txtError.Location = new System.Drawing.Point(-2, 0);
             this.logs_txtError.Multiline = true;
@@ -528,7 +528,7 @@ namespace MCGalaxy.Gui
             // 
             // logs_txtSystem
             // 
-            this.logs_txtSystem.BackColor = System.Drawing.Color.White;
+            this.logs_txtSystem.BackColor = System.Drawing.SystemColors.Window;
             this.logs_txtSystem.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.logs_txtSystem.Location = new System.Drawing.Point(-2, 0);
             this.logs_txtSystem.Multiline = true;
@@ -729,6 +729,7 @@ namespace MCGalaxy.Gui
             // 
             // main_txtInput
             // 
+            this.main_txtInput.BackColor = System.Drawing.SystemColors.Window;
             this.main_txtInput.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.main_txtInput.Location = new System.Drawing.Point(8, 454);
             this.main_txtInput.Name = "main_txtInput";
@@ -848,6 +849,7 @@ namespace MCGalaxy.Gui
             // 
             // map_lbLoaded
             // 
+            this.map_lbLoaded.BackColor = System.Drawing.SystemColors.Window;
             this.map_lbLoaded.FormattingEnabled = true;
             this.map_lbLoaded.Location = new System.Drawing.Point(5, 15);
             this.map_lbLoaded.MultiColumn = true;
@@ -879,6 +881,7 @@ namespace MCGalaxy.Gui
             // 
             // map_lbUnloaded
             // 
+            this.map_lbUnloaded.BackColor = System.Drawing.SystemColors.Window;
             this.map_lbUnloaded.FormattingEnabled = true;
             this.map_lbUnloaded.Location = new System.Drawing.Point(5, 15);
             this.map_lbUnloaded.MultiColumn = true;
@@ -965,6 +968,7 @@ namespace MCGalaxy.Gui
             // 
             // map_txtSeed
             // 
+            this.map_txtSeed.BackColor = System.Drawing.SystemColors.Window;
             this.map_txtSeed.Location = new System.Drawing.Point(231, 75);
             this.map_txtSeed.Name = "map_txtSeed";
             this.map_txtSeed.Size = new System.Drawing.Size(107, 21);
@@ -972,6 +976,7 @@ namespace MCGalaxy.Gui
             // 
             // map_cmbType
             // 
+            this.map_cmbType.BackColor = System.Drawing.SystemColors.Window;
             this.map_cmbType.FormattingEnabled = true;
             this.map_cmbType.Location = new System.Drawing.Point(51, 75);
             this.map_cmbType.Name = "map_cmbType";
@@ -980,6 +985,7 @@ namespace MCGalaxy.Gui
             // 
             // map_cmbZ
             // 
+            this.map_cmbZ.BackColor = System.Drawing.SystemColors.Window;
             this.map_cmbZ.FormattingEnabled = true;
             this.map_cmbZ.Items.AddRange(new object[] {
                                     "16",
@@ -996,6 +1002,7 @@ namespace MCGalaxy.Gui
             // 
             // map_cmbY
             // 
+            this.map_cmbY.BackColor = System.Drawing.SystemColors.Window;
             this.map_cmbY.FormattingEnabled = true;
             this.map_cmbY.Items.AddRange(new object[] {
                                     "16",
@@ -1012,6 +1019,7 @@ namespace MCGalaxy.Gui
             // 
             // map_cmbX
             // 
+            this.map_cmbX.BackColor = System.Drawing.SystemColors.Window;
             this.map_cmbX.FormattingEnabled = true;
             this.map_cmbX.Items.AddRange(new object[] {
                                     "16",
@@ -1037,6 +1045,7 @@ namespace MCGalaxy.Gui
             // 
             // map_txtName
             // 
+            this.map_txtName.BackColor = System.Drawing.SystemColors.Window;
             this.map_txtName.Location = new System.Drawing.Point(51, 21);
             this.map_txtName.Name = "map_txtName";
             this.map_txtName.Size = new System.Drawing.Size(287, 21);
@@ -1100,6 +1109,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_txtImpersonate
             // 
+            this.pl_txtImpersonate.BackColor = System.Drawing.SystemColors.Window;
             this.pl_txtImpersonate.Location = new System.Drawing.Point(115, 50);
             this.pl_txtImpersonate.Name = "pl_txtImpersonate";
             this.pl_txtImpersonate.Size = new System.Drawing.Size(485, 21);
@@ -1118,6 +1128,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_txtMessage
             // 
+            this.pl_txtMessage.BackColor = System.Drawing.SystemColors.Window;
             this.pl_txtMessage.Location = new System.Drawing.Point(115, 18);
             this.pl_txtMessage.Name = "pl_txtMessage";
             this.pl_txtMessage.Size = new System.Drawing.Size(485, 21);
@@ -1165,6 +1176,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_txtUndo
             // 
+            this.pl_txtUndo.BackColor = System.Drawing.SystemColors.Window;
             this.pl_txtUndo.Location = new System.Drawing.Point(122, 150);
             this.pl_txtUndo.Name = "pl_txtUndo";
             this.pl_txtUndo.Size = new System.Drawing.Size(98, 21);
@@ -1266,6 +1278,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_listBox
             // 
+            this.pl_listBox.BackColor = System.Drawing.SystemColors.Window;
             this.pl_listBox.FormattingEnabled = true;
             this.pl_listBox.Location = new System.Drawing.Point(8, 27);
             this.pl_listBox.Name = "pl_listBox";

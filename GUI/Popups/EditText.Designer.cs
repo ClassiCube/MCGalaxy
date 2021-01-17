@@ -37,6 +37,7 @@ namespace MCGalaxy.Gui.Popups
         	// 
         	// cmbList
         	// 
+        	this.cmbList.BackColor = System.Drawing.SystemColors.Window;
         	this.cmbList.FormattingEnabled = true;
         	this.cmbList.Location = new System.Drawing.Point(392, 10);
         	this.cmbList.Name = "cmbList";
@@ -46,6 +47,7 @@ namespace MCGalaxy.Gui.Popups
         	// 
         	// txtEdit
         	// 
+        	this.txtEdit.BackColor = System.Drawing.SystemColors.Window;
         	this.txtEdit.Location = new System.Drawing.Point(7, 39);
         	this.txtEdit.Multiline = true;
         	this.txtEdit.Name = "txtEdit";

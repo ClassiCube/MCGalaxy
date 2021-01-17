@@ -48,6 +48,7 @@
         	// 
         	// lstCommands
         	// 
+        	this.lstCommands.BackColor = System.Drawing.SystemColors.Window;
         	this.lstCommands.FormattingEnabled = true;
         	this.lstCommands.Location = new System.Drawing.Point(12, 127);
         	this.lstCommands.MultiColumn = true;
@@ -120,6 +121,7 @@
         	// 
         	// txtCmdName
         	// 
+        	this.txtCmdName.BackColor = System.Drawing.SystemColors.Window;
         	this.txtCmdName.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.txtCmdName.Location = new System.Drawing.Point(93, 20);
         	this.txtCmdName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
