@@ -48,14 +48,14 @@ namespace MCGalaxy.Commands.Moderation {
                 json = client.DownloadString("http://ipinfo.io/" + ip + "/geo");
             }
             
-            JsonContext ctx = new JsonContext(json);
-            ctx.OnMember    = (obj, key, value) => {
+            JsonReader reader = new JsonReader(json);
+            reader.OnMember    = (obj, key, value) => {
             	if (key == "region")  region  = (string)value;
             	if (key == "country") country = (string)value;
             };
             
-            Json.Parse(ctx);
-            if (!ctx.Success) { p.Message("%WError parsing GeoIP info"); return; }           
+            reader.Parse();
+            if (reader.Failed) { p.Message("%WError parsing GeoIP info"); return; }           
             
             string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}%S/&b{2}" : "&b{2}";
             string nick   = name == null ? ip : "of " + p.FormatNick(name);

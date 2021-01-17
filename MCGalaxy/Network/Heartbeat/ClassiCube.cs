@@ -108,11 +108,11 @@ namespace MCGalaxy.Network {
         }
         
         static string GetError(string json) {
-            JsonContext ctx = new JsonContext(json);
-            string error    = null;
+            JsonReader reader = new JsonReader(json);
+            string error = null;
             
             // silly design, but form of json is: "errors": [ ["Error1"], ["Error2"] ]
-            ctx.OnMember = (obj, key, value) => {
+            reader.OnMember = (obj, key, value) => {
                 if (key != "errors") return;                
                 JsonArray errors = value as JsonArray;
                 if (errors == null) return;
@@ -123,7 +123,7 @@ namespace MCGalaxy.Network {
                 }                
             };
             
-            Json.Parse(ctx);
+            reader.Parse();
             return error;
         }
     }

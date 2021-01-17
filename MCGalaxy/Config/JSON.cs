@@ -21,17 +21,21 @@ namespace MCGalaxy.Config {
     }
     
     public delegate void JsonOnMember(JsonObject obj, string key, object value);
-    public sealed class JsonContext {
-        public string Val; public bool Success;
+    
+    /// <summary> Implements a simple JSON parser. </summary>
+    public sealed class JsonReader {
+        public readonly string Value;
+        /// <summary> Whether an error occurred while parsing the given JSON. </summary>
+        public bool Failed;
+        /// <summary> Callback invoked when a member of an object has been parsed. </summary>
         public JsonOnMember OnMember;
         
-        internal int Idx;
-        internal char Cur { get { return Val[Idx]; } }
-        internal StringBuilder strBuffer = new StringBuilder(96);
+        int offset;
+        char Cur { get { return Value[offset]; } }
+        StringBuilder strBuffer = new StringBuilder(96);
         
-        public JsonContext(string value) {
-            Val      = value;
-            Success  = true;
+        public JsonReader(string value) {
+            Value    = value;
             OnMember = DefaultOnMember;
         }
         
@@ -39,63 +43,54 @@ namespace MCGalaxy.Config {
             obj.Keys.Add(key);
             obj.Values.Add(value);
         }
-    }
-    
-    public static class Json {
-        const int T_NONE = 0, T_NUM = 1, T_TRUE = 2, T_FALSE = 3, T_NULL = 4;
         
+        
+        const int T_NONE = 0, T_NUM = 1, T_TRUE = 2, T_FALSE = 3, T_NULL = 4;        
         static bool IsWhitespace(char c) {
             return c == '\r' || c == '\n' || c == '\t' || c == ' ';
         }
         
-        static bool NextConstant(JsonContext ctx, string value) {
-            if (ctx.Idx + value.Length > ctx.Val.Length) return false;
+        bool NextConstant(string value) {
+            if (offset + value.Length > Value.Length) return false;
             
             for (int i = 0; i < value.Length; i++) {
-                if (ctx.Val[ctx.Idx + i] != value[i]) return false;
+                if (Value[offset + i] != value[i]) return false;
             }
             
-            ctx.Idx += value.Length; return true;
+            offset += value.Length; return true;
         }
         
-        static int NextToken(JsonContext ctx) {
-            for (; ctx.Idx < ctx.Val.Length && IsWhitespace(ctx.Cur); ctx.Idx++);
-            if (ctx.Idx >= ctx.Val.Length) return T_NONE;
+        int NextToken() {
+            for (; offset < Value.Length && IsWhitespace(Cur); offset++);
+            if (offset >= Value.Length) return T_NONE;
             
-            char c = ctx.Cur; ctx.Idx++;
+            char c = Cur; offset++;
             if (c == '{' || c == '}') return c;
             if (c == '[' || c == ']') return c;
             if (c == ',' || c == '"' || c == ':') return c;
             
             if (IsNumber(c)) return T_NUM;
-            ctx.Idx--;
+            offset--;
             
-            if (NextConstant(ctx, "true"))  return T_TRUE;
-            if (NextConstant(ctx, "false")) return T_FALSE;
-            if (NextConstant(ctx, "null"))  return T_NULL;
+            if (NextConstant("true"))  return T_TRUE;
+            if (NextConstant("false")) return T_FALSE;
+            if (NextConstant("null"))  return T_NULL;
             
             // invalid token
-            ctx.Idx++; return T_NONE;
-        }
-
-        public static object Parse(string s, out bool success) {
-            JsonContext ctx = new JsonContext(s);
-            object obj = Parse(ctx);    
-            success    = ctx.Success;
-            return obj;
+            offset++; return T_NONE;
         }
         
-        public static object Parse(JsonContext ctx) {
-            return ParseValue(NextToken(ctx), ctx);
-        }
+        /// <summary> Parses the given JSON and then returns the root element. </summary>
+        /// <returns> Either a JsonObject, a JsonArray, a string, or null </returns>
+        public object Parse() { return ParseValue(NextToken()); }
         
-        static object ParseValue(int token, JsonContext ctx) {
+        object ParseValue(int token) {
             switch (token) {
-                case '{': return ParseObject(ctx);
-                case '[': return ParseArray(ctx);
-                case '"': return ParseString(ctx);
+                case '{': return ParseObject();
+                case '[': return ParseArray();
+                case '"': return ParseString();
                     
-                case T_NUM:   return ParseNumber(ctx);
+                case T_NUM:   return ParseNumber();
                 case T_TRUE:  return "true";
                 case T_FALSE: return "false";
                 case T_NULL:  return null;
@@ -104,79 +99,88 @@ namespace MCGalaxy.Config {
             }
         }
         
-        static JsonObject ParseObject(JsonContext ctx) {
+        JsonObject ParseObject() {
             JsonObject obj = new JsonObject();
             while (true) {
-                int token = NextToken(ctx);
+                int token = NextToken();
                 if (token == ',') continue;
                 if (token == '}') return obj;
                 
-                if (token != '"') { ctx.Success = false; return null; }
-                string key = ParseString(ctx);
+                if (token != '"') { Failed = true; return null; }
+                string key = ParseString();
                 
-                token = NextToken(ctx);
-                if (token != ':') { ctx.Success = false; return null; }
+                token = NextToken();
+                if (token != ':') { Failed = true; return null; }
                 
-                token = NextToken(ctx);
-                if (token == T_NONE) { ctx.Success = false; return null; }
+                token = NextToken();
+                if (token == T_NONE) { Failed = true; return null; }
                 
-                object value = ParseValue(token, ctx);
-                ctx.OnMember(obj, key, value);
+                object value = ParseValue(token);
+                OnMember(obj, key, value);
             }
         }
         
-        static JsonArray ParseArray(JsonContext ctx) {
+        JsonArray ParseArray() {
             JsonArray arr = new JsonArray();
             while (true) {
-                int token = NextToken(ctx);
+                int token = NextToken();
                 if (token == ',') continue;
                 if (token == ']') return arr;
                 
-                if (token == T_NONE) { ctx.Success = false; return null; }
-                arr.Add(ParseValue(token, ctx));
+                if (token == T_NONE) { Failed = true; return null; }
+                arr.Add(ParseValue(token));
             }
         }
         
-        static string ParseString(JsonContext ctx) {
-            StringBuilder s = ctx.strBuffer; s.Length = 0;
+        string ParseString() {
+            StringBuilder s = strBuffer; s.Length = 0;
             
-            for (; ctx.Idx < ctx.Val.Length;) {
-                char c = ctx.Cur; ctx.Idx++;
+            for (; offset < Value.Length;) {
+                char c = Cur; offset++;
                 if (c == '"') return s.ToString();
                 if (c != '\\') { s.Append(c); continue; }
                 
-                if (ctx.Idx >= ctx.Val.Length) break;
-                c = ctx.Cur; ctx.Idx++;
+                if (offset >= Value.Length) break;
+                c = Cur; offset++;
                 if (c == '/' || c == '\\' || c == '"') { s.Append(c); continue; }
                 
                 if (c != 'u') break;
-                if (ctx.Idx + 4 > ctx.Val.Length) break;
+                if (offset + 4 > Value.Length) break;
                 
                 // form of \uYYYY
-                int aH = Colors.UnHex(ctx.Val[ctx.Idx + 0]);
-                int aL = Colors.UnHex(ctx.Val[ctx.Idx + 1]);
-                int bH = Colors.UnHex(ctx.Val[ctx.Idx + 2]);
-                int bL = Colors.UnHex(ctx.Val[ctx.Idx + 3]);
+                int aH = Colors.UnHex(Value[offset + 0]);
+                int aL = Colors.UnHex(Value[offset + 1]);
+                int bH = Colors.UnHex(Value[offset + 2]);
+                int bL = Colors.UnHex(Value[offset + 3]);
                 
                 if (aH == -1 || aL == -1 || bH == -1 || bL == -1) break;
                 int codePoint = (aH << 12) | (aL << 8) | (bH << 4) | bL;
                 s.Append((char)codePoint);
-                ctx.Idx += 4;
+                offset += 4;
             }
             
-            ctx.Success = false; return null;
+            Failed = true; return null;
         }
         
         static bool IsNumber(char c) {
             return c == '-' || c == '.' || (c >= '0' && c <= '9');
         }
         
-        static string ParseNumber(JsonContext ctx) {
-            int start = ctx.Idx - 1;
-            for (; ctx.Idx < ctx.Val.Length && IsNumber(ctx.Cur); ctx.Idx++);
-            return ctx.Val.Substring(start, ctx.Idx - start);
+        string ParseNumber() {
+            int start = offset - 1;
+            for (; offset < Value.Length && IsNumber(Cur); offset++);
+            return Value.Substring(start, offset - start);
         }
+    }
+    
+    public static class Json {
         
+        public static object Parse(string s, out bool success) {
+            JsonReader reader = new JsonReader(s);
+            object obj = reader.Parse();    
+            success    = !reader.Failed;
+            return obj;
+        }
         
         static char Hex(char c, int shift) {
             int x = (c >> shift) & 0x0F;
