@@ -225,7 +225,7 @@ namespace MCGalaxy.Gui {
         }
 
         void UpdateUrl(string s) {
-            RunOnUI_Async(() => { main_txtUrl.Text = s; });
+            RunOnUI_Async(() => { Main_UpdateUrl(s); });
         }
 
         void Window_FormClosing(object sender, FormClosingEventArgs e) {

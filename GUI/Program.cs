@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -83,7 +84,7 @@ namespace MCGalaxy.Gui {
         static void RunGUI() {
             if (!File.Exists("MCGalaxy_.dll")) {
                 Popup.Error("Cannot start server as MCGalaxy_.dll is missing from " + Environment.CurrentDirectory 
-        		            + "\r\nDownload it from " + Updater.UploadsURL);
+                            + "\r\nDownload it from " + Updater.UploadsURL);
                 return;
             }
             // separate method, in case MCGalaxy_.dll is missing
@@ -111,6 +112,14 @@ namespace MCGalaxy.Gui {
 
         static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
             CLI.LogAndRestart(e.Exception);
+        }
+        
+        public static void OpenBrowser(string url) {
+            try { 
+                Process.Start(url);
+            } catch (Exception ex) {
+                Logger.LogError("Opening url in browser", ex);
+            }
         }
     }
 }

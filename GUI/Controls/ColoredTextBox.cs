@@ -16,7 +16,6 @@ http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -130,8 +129,7 @@ namespace MCGalaxy.Gui.Components {
 
         void HandleLinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
             if (!Popup.OKCancel("Never open links from people that you don't trust!", "Warning!!")) return;
-            try { Process.Start(e.LinkText); }
-            catch { }
+            Program.OpenBrowser(e.LinkText);
         }
 
         /// <summary> Scrolls to the end of the log </summary>

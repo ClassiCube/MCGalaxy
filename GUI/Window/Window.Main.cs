@@ -17,6 +17,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using MCGalaxy.UI;
 
@@ -134,7 +135,8 @@ namespace MCGalaxy.Gui {
         }
         
         void main_TxtUrl_DoubleClick(object sender, EventArgs e) {
-            main_txtUrl.SelectAll();
+            if (!Main_IsUsingUrl()) return;
+            Program.OpenBrowser(main_txtUrl.Text);
         }
         
         void main_BtnSaveAll_Click(object sender, EventArgs e) {
@@ -187,6 +189,21 @@ namespace MCGalaxy.Gui {
         }
         
         
+        bool Main_IsUsingUrl() {
+            Uri uri;
+            return Uri.TryCreate(main_txtUrl.Text, UriKind.Absolute, out uri);
+        }
+        
+        void Main_UpdateUrl(string s) {
+            main_txtUrl.Text = s;
+            bool isUrl = Main_IsUsingUrl();
+            Color linkCol = Color.FromArgb(255, 0, 102, 204);
+            
+            // https://stackoverflow.com/questions/20688408/how-do-you-change-the-text-color-of-a-readonly-textbox
+            main_txtUrl.BackColor = main_txtUrl.BackColor;
+            main_txtUrl.ForeColor = isUrl ? linkCol : Color.FromKnownColor(KnownColor.WindowText);
+        }
+        
         void Main_UpdateMapList() {
             Level[] loaded = LevelInfo.Loaded.Items;
             string selected = GetSelected(main_Maps);
@@ -220,9 +237,9 @@ namespace MCGalaxy.Gui {
         }
         
         static void Reselect(DataGridView view, string selected) {
-        	if (selected == null) return;
-        	
-        	foreach (DataGridViewRow row in view.Rows) {
+            if (selected == null) return;
+            
+            foreach (DataGridViewRow row in view.Rows) {
                 string name = (string)row.Cells[0].Value;
                 if (name.CaselessEq(selected)) row.Selected = true;
             }
