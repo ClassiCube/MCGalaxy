@@ -33,7 +33,8 @@ namespace MCGalaxy.SQL {
         /// <summary> Counts rows in the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are counted. </param>
         public static int CountRows(string table, string modifier = "", params object[] args) {
-            return (int)ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
+            object raw = ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
+            return raw == null ? 0 : (int)raw;
         }
         
         static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
