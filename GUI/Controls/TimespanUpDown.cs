@@ -25,13 +25,9 @@ namespace MCGalaxy.Gui {
     [DefaultBindingProperty("Seconds"), DefaultEvent("ValueChanged"), DefaultProperty("Seconds")]
     public class TimespanUpDown : UpDownBase, ISupportInitialize {
         long totalSecs;
-        EventHandler onValueChanged;
-        bool initializing;
+        bool initialising;
 
-        public event EventHandler ValueChanged {
-            add { onValueChanged = (EventHandler)Delegate.Combine(onValueChanged, value); }
-            remove { onValueChanged = (EventHandler)Delegate.Remove(onValueChanged, value); }
-        }
+        public event EventHandler ValueChanged;
         
         [Bindable(true)]
         public long Seconds {
@@ -44,7 +40,7 @@ namespace MCGalaxy.Gui {
                 if (value < 0) value = 0;
                 
                 totalSecs = value;
-                if (onValueChanged != null) onValueChanged(this, EventArgs.Empty);
+                if (ValueChanged != null) ValueChanged(this, EventArgs.Empty);
                 UpdateEditText();
             }
         }
@@ -55,10 +51,10 @@ namespace MCGalaxy.Gui {
         }
         
         public TimespanUpDown() { Text = "0s"; }
-        public void BeginInit() { initializing = true; }
+        public void BeginInit() { initialising = true; }
         
         public void EndInit() {
-            initializing = false;
+            initialising = false;
             Seconds = totalSecs;
             UpdateEditText();
         }
@@ -105,7 +101,7 @@ namespace MCGalaxy.Gui {
         }
         
         protected override void UpdateEditText() {
-            if (initializing) return;
+            if (initialising) return;
             if (UserEdit) ParseEditText();
             Text = TimeSpan.FromSeconds(totalSecs).Shorten(true, true);
         }

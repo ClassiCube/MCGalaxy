@@ -117,7 +117,7 @@ namespace MCGalaxy.Gui
             this.rank_numGen = new System.Windows.Forms.NumericUpDown();
             this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
-            this.eco_cbItemRank = new System.Windows.Forms.ComboBox();
+            this.eco_cmbItemRank = new System.Windows.Forms.ComboBox();
             this.rank_numUndo = new MCGalaxy.Gui.TimespanUpDown();
             this.chkPhysRestart = new System.Windows.Forms.CheckBox();
             this.ls_numMax = new System.Windows.Forms.NumericUpDown();
@@ -205,9 +205,9 @@ namespace MCGalaxy.Gui
             this.gb_ircSettings = new System.Windows.Forms.GroupBox();
             this.irc_txtPrefix = new System.Windows.Forms.TextBox();
             this.irc_lblPrefix = new System.Windows.Forms.Label();
-            this.irc_cbVerify = new System.Windows.Forms.ComboBox();
+            this.irc_cmbVerify = new System.Windows.Forms.ComboBox();
             this.irc_lblVerify = new System.Windows.Forms.Label();
-            this.irc_cbRank = new System.Windows.Forms.ComboBox();
+            this.irc_cmbRank = new System.Windows.Forms.ComboBox();
             this.irc_lblRank = new System.Windows.Forms.Label();
             this.irc_cbAFK = new System.Windows.Forms.CheckBox();
             this.irc_cbWorldChanges = new System.Windows.Forms.CheckBox();
@@ -277,7 +277,7 @@ namespace MCGalaxy.Gui
             this.eco_lblItemPrice = new System.Windows.Forms.Label();
             this.eco_cbItem = new System.Windows.Forms.CheckBox();
             this.eco_gb = new System.Windows.Forms.GroupBox();
-            this.eco_cbCfg = new System.Windows.Forms.ComboBox();
+            this.eco_cmbCfg = new System.Windows.Forms.ComboBox();
             this.eco_lblCfg = new System.Windows.Forms.Label();
             this.eco_cbEnabled = new System.Windows.Forms.CheckBox();
             this.eco_txtCurrency = new System.Windows.Forms.TextBox();
@@ -1401,17 +1401,17 @@ namespace MCGalaxy.Gui
             this.toolTip.SetToolTip(this.adv_chkCPE, "Enables custom blocks, multiline chat, changing env settings, etc");
             this.adv_chkCPE.UseVisualStyleBackColor = true;
             // 
-            // eco_cbItemRank
+            // eco_cmbItemRank
             // 
-            this.eco_cbItemRank.BackColor = System.Drawing.SystemColors.Window;
-            this.eco_cbItemRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.eco_cbItemRank.FormattingEnabled = true;
-            this.eco_cbItemRank.Location = new System.Drawing.Point(368, 43);
-            this.eco_cbItemRank.Name = "eco_cbItemRank";
-            this.eco_cbItemRank.Size = new System.Drawing.Size(110, 21);
-            this.eco_cbItemRank.TabIndex = 23;
-            this.toolTip.SetToolTip(this.eco_cbItemRank, "Minimum rank a player must have to purchase this item.");
-            this.eco_cbItemRank.SelectedIndexChanged += new System.EventHandler(this.eco_cbItemRank_SelectedIndexChanged);
+            this.eco_cmbItemRank.BackColor = System.Drawing.SystemColors.Window;
+            this.eco_cmbItemRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.eco_cmbItemRank.FormattingEnabled = true;
+            this.eco_cmbItemRank.Location = new System.Drawing.Point(368, 43);
+            this.eco_cmbItemRank.Name = "eco_cmbItemRank";
+            this.eco_cmbItemRank.Size = new System.Drawing.Size(110, 21);
+            this.eco_cmbItemRank.TabIndex = 23;
+            this.toolTip.SetToolTip(this.eco_cmbItemRank, "Minimum rank a player must have to purchase this item.");
+            this.eco_cmbItemRank.SelectedIndexChanged += new System.EventHandler(this.eco_cmbItemRank_SelectedIndexChanged);
             // 
             // rank_numUndo
             // 
@@ -2349,9 +2349,9 @@ namespace MCGalaxy.Gui
             // 
             this.gb_ircSettings.Controls.Add(this.irc_txtPrefix);
             this.gb_ircSettings.Controls.Add(this.irc_lblPrefix);
-            this.gb_ircSettings.Controls.Add(this.irc_cbVerify);
+            this.gb_ircSettings.Controls.Add(this.irc_cmbVerify);
             this.gb_ircSettings.Controls.Add(this.irc_lblVerify);
-            this.gb_ircSettings.Controls.Add(this.irc_cbRank);
+            this.gb_ircSettings.Controls.Add(this.irc_cmbRank);
             this.gb_ircSettings.Controls.Add(this.irc_lblRank);
             this.gb_ircSettings.Controls.Add(this.irc_cbAFK);
             this.gb_ircSettings.Controls.Add(this.irc_cbWorldChanges);
@@ -2380,15 +2380,15 @@ namespace MCGalaxy.Gui
             this.irc_lblPrefix.TabIndex = 39;
             this.irc_lblPrefix.Text = "Command prefix:";
             // 
-            // irc_cbVerify
+            // irc_cmbVerify
             // 
-            this.irc_cbVerify.BackColor = System.Drawing.SystemColors.Window;
-            this.irc_cbVerify.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.irc_cbVerify.FormattingEnabled = true;
-            this.irc_cbVerify.Location = new System.Drawing.Point(387, 42);
-            this.irc_cbVerify.Name = "irc_cbVerify";
-            this.irc_cbVerify.Size = new System.Drawing.Size(80, 21);
-            this.irc_cbVerify.TabIndex = 38;
+            this.irc_cmbVerify.BackColor = System.Drawing.SystemColors.Window;
+            this.irc_cmbVerify.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.irc_cmbVerify.FormattingEnabled = true;
+            this.irc_cmbVerify.Location = new System.Drawing.Point(387, 42);
+            this.irc_cmbVerify.Name = "irc_cmbVerify";
+            this.irc_cmbVerify.Size = new System.Drawing.Size(80, 21);
+            this.irc_cmbVerify.TabIndex = 38;
             // 
             // irc_lblVerify
             // 
@@ -2399,14 +2399,14 @@ namespace MCGalaxy.Gui
             this.irc_lblVerify.TabIndex = 37;
             this.irc_lblVerify.Text = "Verification method:";
             // 
-            // irc_cbRank
+            // irc_cmbRank
             // 
-            this.irc_cbRank.BackColor = System.Drawing.SystemColors.Window;
-            this.irc_cbRank.FormattingEnabled = true;
-            this.irc_cbRank.Location = new System.Drawing.Point(367, 17);
-            this.irc_cbRank.Name = "irc_cbRank";
-            this.irc_cbRank.Size = new System.Drawing.Size(100, 21);
-            this.irc_cbRank.TabIndex = 36;
+            this.irc_cmbRank.BackColor = System.Drawing.SystemColors.Window;
+            this.irc_cmbRank.FormattingEnabled = true;
+            this.irc_cmbRank.Location = new System.Drawing.Point(367, 17);
+            this.irc_cmbRank.Name = "irc_cmbRank";
+            this.irc_cmbRank.Size = new System.Drawing.Size(100, 21);
+            this.irc_cmbRank.TabIndex = 36;
             // 
             // irc_lblRank
             // 
@@ -3117,7 +3117,7 @@ namespace MCGalaxy.Gui
             // eco_gbItem
             // 
             this.eco_gbItem.Controls.Add(this.eco_lblItemRank);
-            this.eco_gbItem.Controls.Add(this.eco_cbItemRank);
+            this.eco_gbItem.Controls.Add(this.eco_cmbItemRank);
             this.eco_gbItem.Controls.Add(this.eco_numItemPrice);
             this.eco_gbItem.Controls.Add(this.eco_lblItemPrice);
             this.eco_gbItem.Controls.Add(this.eco_cbItem);
@@ -3186,7 +3186,7 @@ namespace MCGalaxy.Gui
             // eco_gb
             // 
             this.eco_gb.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.eco_gb.Controls.Add(this.eco_cbCfg);
+            this.eco_gb.Controls.Add(this.eco_cmbCfg);
             this.eco_gb.Controls.Add(this.eco_lblCfg);
             this.eco_gb.Controls.Add(this.eco_cbEnabled);
             this.eco_gb.Controls.Add(this.eco_txtCurrency);
@@ -3198,15 +3198,15 @@ namespace MCGalaxy.Gui
             this.eco_gb.TabStop = false;
             this.eco_gb.Text = "Economy";
             // 
-            // eco_cbCfg
+            // eco_cmbCfg
             // 
-            this.eco_cbCfg.BackColor = System.Drawing.SystemColors.Window;
-            this.eco_cbCfg.FormattingEnabled = true;
-            this.eco_cbCfg.Location = new System.Drawing.Point(368, 42);
-            this.eco_cbCfg.Name = "eco_cbCfg";
-            this.eco_cbCfg.Size = new System.Drawing.Size(110, 21);
-            this.eco_cbCfg.TabIndex = 23;
-            this.eco_cbCfg.SelectedIndexChanged += new System.EventHandler(this.Eco_cbCfg_SelectedIndexChanged);
+            this.eco_cmbCfg.BackColor = System.Drawing.SystemColors.Window;
+            this.eco_cmbCfg.FormattingEnabled = true;
+            this.eco_cmbCfg.Location = new System.Drawing.Point(368, 42);
+            this.eco_cmbCfg.Name = "eco_cmbCfg";
+            this.eco_cmbCfg.Size = new System.Drawing.Size(110, 21);
+            this.eco_cmbCfg.TabIndex = 23;
+            this.eco_cmbCfg.SelectedIndexChanged += new System.EventHandler(this.Eco_cmbCfg_SelectedIndexChanged);
             // 
             // eco_lblCfg
             // 
@@ -5749,9 +5749,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.DataGridView eco_dgvRanks;
 
         private System.Windows.Forms.Label eco_lblItemRank;
-        private System.Windows.Forms.ComboBox eco_cbItemRank;
+        private System.Windows.Forms.ComboBox eco_cmbItemRank;
         private System.Windows.Forms.Label eco_lblCfg;
-        private System.Windows.Forms.ComboBox eco_cbCfg;
+        private System.Windows.Forms.ComboBox eco_cmbCfg;
         private System.Windows.Forms.CheckBox eco_cbItem;
         private System.Windows.Forms.Label eco_lblItemPrice;
         private System.Windows.Forms.NumericUpDown eco_numItemPrice;
@@ -5789,9 +5789,9 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label rank_lblGen;
         private System.Windows.Forms.GroupBox rank_grpLimits;
         private System.Windows.Forms.Label irc_lblRank;
-        private System.Windows.Forms.ComboBox irc_cbRank;
+        private System.Windows.Forms.ComboBox irc_cmbRank;
         private System.Windows.Forms.Label irc_lblVerify;
-        private System.Windows.Forms.ComboBox irc_cbVerify;
+        private System.Windows.Forms.ComboBox irc_cmbVerify;
         private System.Windows.Forms.Label irc_lblPrefix;
         private System.Windows.Forms.TextBox irc_txtPrefix;
         private System.Windows.Forms.CheckBox irc_cbAFK;

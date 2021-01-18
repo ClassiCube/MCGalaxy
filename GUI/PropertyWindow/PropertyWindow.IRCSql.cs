@@ -35,10 +35,10 @@ namespace MCGalaxy.Gui {
             irc_cbAFK.Checked = Server.Config.IRCShowAFK;
             ToggleIrcSettings(Server.Config.UseIRC);            
 
-            irc_cbRank.Items.AddRange(GuiPerms.RankNames);            
-            GuiPerms.SetDefaultIndex(irc_cbRank, Server.Config.IRCControllerRank);
-            irc_cbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
-            irc_cbVerify.SelectedIndex = (int)Server.Config.IRCVerify;
+            irc_cmbRank.Items.AddRange(GuiPerms.RankNames);            
+            GuiPerms.SetDefaultIndex(irc_cmbRank, Server.Config.IRCControllerRank);
+            irc_cmbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
+            irc_cmbVerify.SelectedIndex = (int)Server.Config.IRCVerify;
             irc_txtPrefix.Text = Server.Config.IRCCommandPrefix;
             
             sql_chkUseSQL.Checked = Server.Config.UseMySQL;
@@ -64,8 +64,8 @@ namespace MCGalaxy.Gui {
             Server.Config.IRCShowWorldChanges = irc_cbWorldChanges.Checked;
             Server.Config.IRCShowAFK = irc_cbAFK.Checked;
             
-            Server.Config.IRCControllerRank = GuiPerms.GetPermission(irc_cbRank, LevelPermission.Nobody);
-            Server.Config.IRCVerify = (IRCControllerVerify)irc_cbVerify.SelectedIndex;
+            Server.Config.IRCControllerRank = GuiPerms.GetPermission(irc_cmbRank, LevelPermission.Nobody);
+            Server.Config.IRCVerify = (IRCControllerVerify)irc_cmbVerify.SelectedIndex;
             Server.Config.IRCCommandPrefix = irc_txtPrefix.Text;
             
             Server.Config.UseMySQL = sql_chkUseSQL.Checked;
@@ -92,8 +92,8 @@ namespace MCGalaxy.Gui {
             irc_cbTitles.Enabled = enabled;
             irc_cbWorldChanges.Enabled = enabled;
             irc_cbAFK.Enabled = enabled;           
-            irc_lblRank.Enabled = enabled; irc_cbRank.Enabled = enabled;
-            irc_lblVerify.Enabled = enabled; irc_cbVerify.Enabled = enabled;
+            irc_lblRank.Enabled = enabled; irc_cmbRank.Enabled = enabled;
+            irc_lblVerify.Enabled = enabled; irc_cmbVerify.Enabled = enabled;
             irc_lblPrefix.Enabled = enabled; irc_txtPrefix.Enabled = enabled;
         }
 

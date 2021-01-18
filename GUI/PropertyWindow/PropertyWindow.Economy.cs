@@ -32,12 +32,12 @@ namespace MCGalaxy.Gui {
             Eco_UpdateEnables();
             
             foreach (Item item in Economy.Items) {
-                eco_cbCfg.Items.Add(item.Name);
+                eco_cmbCfg.Items.Add(item.Name);
             }
-            eco_cbCfg.Items.Add("(none)");
-            eco_cbCfg.SelectedIndex = eco_cbCfg.Items.Count - 1;
+            eco_cmbCfg.Items.Add("(none)");
+            eco_cmbCfg.SelectedIndex = eco_cmbCfg.Items.Count - 1;
             
-            eco_cbItemRank.Items.AddRange(GuiPerms.RankNames);
+            eco_cmbItemRank.Items.AddRange(GuiPerms.RankNames);
             eco_colRankPrice.CellTemplate = new NumericalCell();
             eco_dgvRanks.DataError += eco_dgv_DataError;
 
@@ -83,7 +83,7 @@ namespace MCGalaxy.Gui {
             eco_lblCurrency.Enabled = eco_cbEnabled.Checked;
             eco_txtCurrency.Enabled = eco_cbEnabled.Checked;
             eco_lblCfg.Enabled = eco_cbEnabled.Checked;
-            eco_cbCfg.Enabled = eco_cbEnabled.Checked;
+            eco_cmbCfg.Enabled = eco_cbEnabled.Checked;
             
             eco_gbItem.Enabled  = eco_cbEnabled.Checked;
             eco_gbLvl.Enabled = eco_cbEnabled.Checked;
@@ -94,10 +94,10 @@ namespace MCGalaxy.Gui {
             Eco_UpdateEnables();
         }
         
-        void Eco_cbCfg_SelectedIndexChanged(object sender, EventArgs e) {
+        void Eco_cmbCfg_SelectedIndexChanged(object sender, EventArgs e) {
             string text = "(none)";
-            if (eco_cbCfg.SelectedIndex != -1) {
-                text = eco_cbCfg.SelectedItem.ToString();
+            if (eco_cmbCfg.SelectedIndex != -1) {
+                text = eco_cmbCfg.SelectedItem.ToString();
             }
             
             eco_gbItem.Visible = false;
@@ -129,7 +129,7 @@ namespace MCGalaxy.Gui {
             eco_lblItemPrice.Enabled = eco_cbItem.Checked;
             eco_numItemPrice.Enabled = eco_cbItem.Checked;
             eco_lblItemRank.Enabled  = eco_cbItem.Checked;
-            eco_cbItemRank.Enabled   = eco_cbItem.Checked;
+            eco_cmbItemRank.Enabled   = eco_cbItem.Checked;
         }
         
         void Eco_UpdateItem() {
@@ -137,7 +137,7 @@ namespace MCGalaxy.Gui {
             eco_numItemPrice.Value = eco_curItem.Price;
             Eco_UpdateItemEnables();
             
-            GuiPerms.SetDefaultIndex(eco_cbItemRank, eco_curItem.PurchaseRank);
+            GuiPerms.SetDefaultIndex(eco_cmbItemRank, eco_curItem.PurchaseRank);
         }
         
         void eco_cbItem_CheckedChanged(object sender, EventArgs e) {
@@ -149,9 +149,9 @@ namespace MCGalaxy.Gui {
             eco_curItem.Price = (int)eco_numItemPrice.Value;
         }
         
-        void eco_cbItemRank_SelectedIndexChanged(object sender, EventArgs e) {
+        void eco_cmbItemRank_SelectedIndexChanged(object sender, EventArgs e) {
             const LevelPermission perm = LevelPermission.Guest;
-            eco_curItem.PurchaseRank = GuiPerms.GetPermission(eco_cbItemRank, perm);
+            eco_curItem.PurchaseRank = GuiPerms.GetPermission(eco_cmbItemRank, perm);
         }
 
         
