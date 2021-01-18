@@ -71,7 +71,8 @@ namespace MCGalaxy {
         public static void PerformUpdate() {
             try {
                 try {
-                    DeleteFiles("Changelog.txt", "MCGalaxy_.update", "MCGalaxy.update", "MCGalaxyCLI.update");
+                    DeleteFiles("Changelog.txt", "MCGalaxy_.update", "MCGalaxy.update", "MCGalaxyCLI.update",
+                                "prev_MCGalaxy_.dll", "prev_MCGalaxy.exe", "prev_MCGalaxyCLI.exe");
                 } catch {
                 }
                 
@@ -91,20 +92,18 @@ namespace MCGalaxy {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.save();
                 
-                // Although Process.Start checks path exists, that won't work correctly when running from mono
-                //  (since 'mono' exists but Updater.exe might not)
-                // So always explicitly check that Updater.exe exists here
-                string path = Path.Combine(Utils.FolderPath, "Updater.exe");
-                if (!File.Exists(path)) throw new FileNotFoundException("Unable to find " + path);
+                // Move current files to previous files (by moving instead of copying, 
+                //  can overwrite original the files without breaking the server)
+                File.Move("MCGalaxy_.dll",   "prev_MCGalaxy_.dll");
+                File.Move("MCGalaxy.exe",    "prev_MCGalaxy.exe");
+                File.Move("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
                 
-                try {
-                    Process.Start(path, "securitycheck10934579068013978427893755755270374" + exeName);
-                } catch {
-                    if (Type.GetType("Mono.Runtime") == null) throw;                    
-                    // if running on mono, try again with 'mono /home/user1/MCG/MCGalaxyCLI.exe' instead
-                    Process.Start("mono", path + " securitycheck10934579068013978427893755755270374" + exeName);
-                }
-                Server.Stop(false, "Updating server.");
+                // Move update files to current files
+                File.Move("MCGalaxy_.update",   "MCGalaxy_.dll");
+                File.Move("MCGalaxy.update",    "MCGalaxy.exe");
+                File.Move("MCGalaxyCLI.update", "MCGalaxyCLI.exe");                             
+
+                Server.Stop(true, "Updating server.");
             } catch (Exception ex) {
                 Logger.LogError("Error performing update", ex);
             }
