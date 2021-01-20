@@ -31,7 +31,7 @@ namespace MCGalaxy.Gui {
         delegate void StringCallback(string s);
         delegate void PlayerListCallback(List<Player> players);
         delegate void VoidDelegate();
-        bool mapgen = false;
+        bool mapgen, loaded;
 
         public NotifyIcon notifyIcon = new NotifyIcon();
         Player curPlayer;
@@ -42,6 +42,10 @@ namespace MCGalaxy.Gui {
         }
 
         void Window_Load(object sender, EventArgs e) {
+            // Necessary as some versions of Wine may call Window_Load multiple times
+            if (loaded) return;
+            loaded = true;
+ 
             MaximizeBox = false;
             Text = "Starting " + Server.SoftwareNameVersioned + "...";
             Show();
