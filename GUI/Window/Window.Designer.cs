@@ -49,7 +49,6 @@ namespace MCGalaxy.Gui
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Window));
             this.tsMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsMap_physicsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMap_physics0 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1305,7 +1304,6 @@ namespace MCGalaxy.Gui
             this.Controls.Add(this.main_btnRestart);
             this.Controls.Add(this.tabs);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Window";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Window_FormClosing);
