@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
             if (model == null) return;
             bot.UpdateModel(model);
             
-            p.Message("You changed the model of bot {0} %Sto a &c", bot.ColoredName, model);
+            p.Message("You changed the model of bot {0} %Sto a &c{1}", bot.ColoredName, model);
             BotsFile.Save(p.level);
         }
         
