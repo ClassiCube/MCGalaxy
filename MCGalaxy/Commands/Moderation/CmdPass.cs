@@ -21,6 +21,10 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+#if !DISABLE_OLD_PASSWORDFILE
+using System.Collections.Generic;
+using System.Linq;
+#endif
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command2 {
@@ -66,6 +70,17 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("You are now &averified %Sand have &aaccess to admin commands and features.");
                 p.verifiedPass = true;
                 p.Unverified   = false;
+
+#if !DISABLE_OLD_PASSWORDFILE
+                string oldpath = HashPath(p.name, false);
+                string path = HashPath(p.name, true);
+                if (oldpath != path) {
+                    File.Delete(oldpath);
+                    byte[] computed = ComputeHash(p.name, password);
+                    File.WriteAllBytes(path, computed);
+                    p.Message("Your password was &areset for the new format");
+                }
+#endif
             } else {
                 p.passtries++;
                 p.Message("%WWrong Password. %SRemember your password is %Wcase sensitive.");
@@ -108,16 +123,16 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
 
-        static string HashPath(string name)  { return "extra/passwords/" + name + ".dat"; }
-        static bool HasPassword(string name) { return File.Exists(HashPath(name)); }
-
-        static byte[] ComputeHash(string name, string pass) {
+#if !DISABLE_OLD_PASSWORDFILE
+        static byte[] OldComputeHash(string name, string pass) {
             // Pointless, but kept for backwards compatibility
             pass = pass.Replace("<", "(");
             pass = pass.Replace(">", ")");
 
             MD5 hash = MD5.Create();
             byte[] nameB = hash.ComputeHash(Encoding.ASCII.GetBytes(name));
+            // This line means that non-ASCII characters in passwords are
+            // all encoded as the "?" character.
             byte[] dataB = hash.ComputeHash(Encoding.ASCII.GetBytes(pass));
             
             byte[] result = new byte[nameB.Length + dataB.Length];
@@ -125,16 +140,40 @@ namespace MCGalaxy.Commands.Moderation {
             Array.Copy(dataB, 0, result, nameB.Length, dataB.Length);
             return hash.ComputeHash(result);
         }
+#endif
+
+        static byte[] ComputeHash(string name, string pass) {
+            // Pointless, but kept for backwards compatibility
+            pass = pass.Replace("<", "(");
+            pass = pass.Replace(">", ")");
+
+            // The constant string added to the username salt is to mitigate
+            // rainbox tables. We should really have a unique salt for each
+            // user, but this is close enough.
+            return SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes("MCGalaxy:" + name.ToLower() + " " + pass));
+        }
 
         static bool CheckHash(string name, string pass) {
             byte[] stored   = File.ReadAllBytes(HashPath(name));
             byte[] computed = ComputeHash(name, pass);
+
+#if !DISABLE_OLD_PASSWORDFILE
+            // Old style MD5 passwords.
+            byte[] oldcomputed = OldComputeHash(name, pass);
+            if (stored.Length == oldcomputed.Length) {
+                bool oldokay = true;
+                for (int i = 0; i < stored.Length; i++) {
+                    if (stored[i] != oldcomputed[i]) oldokay = false;
+                }
+                if (oldokay) return true;
+            }
+
             // Old passwords stored UTF8 string instead of just the raw 16 byte hashes
             // We need to support both since this behaviour was accidentally changed
             if (stored.Length != computed.Length) {
                 return Encoding.UTF8.GetString(stored) == Encoding.UTF8.GetString(computed);
             }
-            
+#endif
             for (int i = 0; i < stored.Length; i++) {
                 if (stored[i] != computed[i]) return false;
             }
@@ -150,5 +189,39 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("%HIf you are an admin, use this command to verify your login.");
             p.Message("%H You will need to be verified to be able to use commands.");
         }
+
+        public static bool HasPassword(string name) { return File.Exists(HashPath(name)); }
+
+#if DISABLE_OLD_PASSWORDFILE
+        static string HashPath(string name) { return "extra/passwords/" + name.ToLower() + ".pwd"; }
+#else
+        static string HashPath(string name, bool ForUpdate = false)
+        {
+            string PassName = "extra/passwords/" + name.ToLower() + ".pwd";
+            if (ForUpdate || File.Exists(PassName))
+                return PassName;
+
+            string OldName = "extra/passwords/" + name + ".dat";
+            string directory = Path.GetDirectoryName(OldName);
+            IEnumerable<string> foundFiles = EnumerateFilesCI(directory, OldName);
+
+            if (foundFiles.Count() < 1)
+                return PassName;
+
+            return foundFiles.First();
+        }
+
+        private static IEnumerable<string> EnumerateFilesCI(string directory, string pathAndFileName)
+        {
+            foreach (string file in Directory.EnumerateFiles(directory))
+            {
+                if (String.Equals(file, pathAndFileName, StringComparison.OrdinalIgnoreCase) )
+                {
+                    yield return file;
+                }
+            }
+        }
+#endif
+
     }
 }
