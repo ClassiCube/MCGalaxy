@@ -202,6 +202,9 @@ namespace MCGalaxy.Commands.Moderation {
                 return PassName;
 
             string OldName = "extra/passwords/" + name + ".dat";
+            if (File.Exists(PassName))
+                return PassName;
+
             string directory = Path.GetDirectoryName(OldName);
             IEnumerable<string> foundFiles = EnumerateFilesCI(directory, OldName);
 
