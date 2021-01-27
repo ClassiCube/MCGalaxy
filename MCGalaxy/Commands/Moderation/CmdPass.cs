@@ -143,10 +143,6 @@ namespace MCGalaxy.Commands.Moderation {
 #endif
 
         static byte[] ComputeHash(string name, string pass) {
-            // Pointless, but kept for backwards compatibility
-            pass = pass.Replace("<", "(");
-            pass = pass.Replace(">", ")");
-
             // The constant string added to the username salt is to mitigate
             // rainbox tables. We should really have a unique salt for each
             // user, but this is close enough.
