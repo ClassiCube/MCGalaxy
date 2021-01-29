@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/XBan [name] [message]");
-            p.Message("%HBans, IP bans, undoes, and kicks [name] with [message], if specified.");
-            p.Message("%T/UBan [name] [message]");
+            p.Message("%T/XBan [player] <reason>");
+            p.Message("%HBans, IP bans, undoes, and kicks the given player.");
+            p.Message("%T/UBan [player] <reason>");
             p.Message("%HSame as %T/XBan%H, but does not ban the IP.");
         }
     }
