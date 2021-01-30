@@ -146,7 +146,7 @@ namespace MCGalaxy.Commands.Moderation {
             // The constant string added to the username salt is to mitigate
             // rainbox tables. We should really have a unique salt for each
             // user, but this is close enough.
-            return SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes("MCGalaxy:" + name.ToLower() + " " + pass));
+            return SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes("0bec662b-416f-450c-8f50-664fd4a41d49" + name.ToLower() + " " + pass));
         }
 
         static bool CheckHash(string name, string pass) {
