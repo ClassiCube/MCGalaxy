@@ -44,7 +44,7 @@ namespace MCGalaxy.Eco {
             }
             
             UseCommand(p, "LoginMessage", "-own " + msg);
-            Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + msg);
+            Economy.MakePurchase(p, Price, "&3LoginMessage: &f" + msg);
         }
     }
     
@@ -72,7 +72,7 @@ namespace MCGalaxy.Eco {
             }
             
             UseCommand(p, "LogoutMessage", "-own " + msg);
-            Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + msg);
+            Economy.MakePurchase(p, Price, "&3LogoutMessage: &f" + msg);
         }
     }
 }

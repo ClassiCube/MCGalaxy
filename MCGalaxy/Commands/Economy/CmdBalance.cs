@@ -58,9 +58,10 @@ namespace MCGalaxy.Commands.Eco {
         const string dateFormat = "MM'/'dd'/'yyyy HH:mm:ss";
         static void Output(Player p, string value, string type) {
             if (value == null) return;
+            value = Colors.ConvertPercents(value);
             
-            if (!AdjustRelative(ref value, " on %f")) {
-                AdjustRelative(ref value, " - Date: %f"); // old date format for purchases
+            if (!AdjustRelative(ref value, " on &f")) {
+                AdjustRelative(ref value, " - Date: &f"); // old date format for purchases
             }
             p.Message(" Last {0}: {1}", type, value);
         }

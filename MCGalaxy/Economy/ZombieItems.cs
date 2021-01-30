@@ -41,7 +41,7 @@ namespace MCGalaxy.Eco {
             
             ZSData data = ZSGame.Get(p);
             data.BlocksLeft += 10 * count;
-            Economy.MakePurchase(p, Price * count, "%310Blocks: " + (10 * count));
+            Economy.MakePurchase(p, Price * count, "&310Blocks: " + (10 * count));
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -71,7 +71,7 @@ namespace MCGalaxy.Eco {
             
             if (!CheckPrice(p)) return;
             UseCommand(p, "Queue", "level " + map);
-            Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
+            Economy.MakePurchase(p, Price, "&3QueueLevel: " + map);
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -112,7 +112,7 @@ namespace MCGalaxy.Eco {
             
             ZSConfig.AppendPlayerInfectMessage(p.name, msg);
             p.Message("&aAdded infect message: &f" + msg);
-            Economy.MakePurchase(p, Price, "%3InfectMessage: " + msg);
+            Economy.MakePurchase(p, Price, "&3InfectMessage: " + msg);
         }
         
         static bool CheckEscape(string text, int i, ref bool hasAToken) {
@@ -161,7 +161,7 @@ namespace MCGalaxy.Eco {
             
             p.Message("Lasts for &a{0} &Sseconds. You can buy &a{1} &Smore this round.", duration, left);
             ZSGame.Instance.GoInvisible(p, duration);
-            Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
+            Economy.MakePurchase(p, Price, "&3Invisibility: " + duration);
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -214,7 +214,7 @@ namespace MCGalaxy.Eco {
             
             ZSGame.Instance.AttemptRevive(p);
             data.RevivesUsed++;
-            Economy.MakePurchase(p, Price, "%3Revive:");
+            Economy.MakePurchase(p, Price, "&3Revive:");
         }
         
         protected internal override void OnStoreCommand(Player p) {

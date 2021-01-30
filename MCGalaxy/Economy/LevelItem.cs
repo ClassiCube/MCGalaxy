@@ -108,7 +108,7 @@ namespace MCGalaxy.Eco {
                 lvl.Dispose();
                 Server.DoGC();
             }
-            Economy.MakePurchase(p, preset.price, "%3Map: %f" + preset.name);
+            Economy.MakePurchase(p, preset.price, "&3Map: &f" + preset.name);
         }
         
         protected internal override void OnSetup(Player p, string[] args) {

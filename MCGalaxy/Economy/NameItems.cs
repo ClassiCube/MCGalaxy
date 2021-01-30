@@ -42,7 +42,7 @@ namespace MCGalaxy.Eco {
             }
             
             UseCommand(p, "Title", "-own " + title);
-            Economy.MakePurchase(p, Price, "%3Title: %f" + title);
+            Economy.MakePurchase(p, Price, "&3Title: &f" + title);
         }
     }
     
@@ -69,7 +69,7 @@ namespace MCGalaxy.Eco {
             }
             
             UseCommand(p, "Nick", "-own " + nick);
-            Economy.MakePurchase(p, Price, "%3Nickname: %f" + nick);
+            Economy.MakePurchase(p, Price, "&3Nickname: &f" + nick);
         }
     }
     
@@ -94,7 +94,7 @@ namespace MCGalaxy.Eco {
             }
             
             UseCommand(p, "TColor", "-own " + colName);
-            Economy.MakePurchase(p, Price, "%3Titlecolor: " + color + colName);
+            Economy.MakePurchase(p, Price, "&3Titlecolor: " + color + colName);
         }
     }
     
@@ -119,7 +119,7 @@ namespace MCGalaxy.Eco {
             }
             
             UseCommand(p, "Color", "-own " + colName);
-            Economy.MakePurchase(p, Price, "%3Color: " + color + colName);
+            Economy.MakePurchase(p, Price, "&3Color: " + color + colName);
         }
     }
 }
