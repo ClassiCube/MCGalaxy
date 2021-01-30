@@ -55,9 +55,9 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/WhoIs [name]");
-            p.Message("%HDisplays information about that player.");
-            p.Message("%HNote: Works for both online and offline players.");
+            p.Message("&T/WhoIs [name]");
+            p.Message("&HDisplays information about that player.");
+            p.Message("&HNote: Works for both online and offline players.");
         }
     }
 }

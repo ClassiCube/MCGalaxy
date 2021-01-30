@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             string nick = p.FormatNick(name);
             
             if (notes.Count == 0) {
-                p.Message("{0} %Shas no notes.", nick); return;
+                p.Message("{0} &Shas no notes.", nick); return;
             } else {
                 p.Message("  Notes for {0}:", nick);
             }
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Moderation {
                 long duration = 0;
                 if (args.Length > 5) long.TryParse(args[5], out duration);
                 
-                p.Message("{0} by {1} %Son {2}{3}{4}",
+                p.Message("{0} by {1} &Son {2}{3}{4}",
                           Action(args[1]), p.FormatNick(args[2]), args[3],
                           duration      == 0 ? "" : " for " + TimeSpan.FromTicks(duration).Shorten(true),
                           reason.Length == 0 ? "" : " - "   + reason.Replace("%20", " "));
@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Notes [name] %H- views that player's notes.");
-            p.Message("%HNotes are things such as bans, kicks, warns, mutes.");
+            p.Message("&T/Notes [name] &H- views that player's notes.");
+            p.Message("&HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
     
@@ -87,8 +87,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/MyNotes %H- views your own notes.");
-            p.Message("%HNotes are things such as bans, kicks, warns, mutes.");
+            p.Message("&T/MyNotes &H- views your own notes.");
+            p.Message("&HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
 }

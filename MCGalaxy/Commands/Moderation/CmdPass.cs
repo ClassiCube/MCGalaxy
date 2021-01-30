@@ -54,33 +54,33 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         void VerifyPassword(Player p, string password) {
-            if (!p.Unverified) { p.Message("%WYou are already verified."); return; }
+            if (!p.Unverified) { p.Message("&WYou are already verified."); return; }
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
 
-            if (password.IndexOf(' ') >= 0) { p.Message("Your password must be %Wone %Sword!"); return; }
+            if (password.IndexOf(' ') >= 0) { p.Message("Your password must be &Wone &Sword!"); return; }
             if (!HasPassword(p.name)) {
-                p.Message("You have not %Wset a password, %Suse %T/SetPass [Password] %Wto set one!"); return;
+                p.Message("You have not &Wset a password, &Suse &T/SetPass [Password] &Wto set one!"); return;
             }
 
             if (CheckHash(p.name, password)) {
-                p.Message("You are now &averified %Sand have &aaccess to admin commands and features.");
+                p.Message("You are now &averified &Sand have &aaccess to admin commands and features.");
                 p.verifiedPass = true;
                 p.Unverified   = false;
             } else {
                 p.passtries++;
-                p.Message("%WWrong Password. %SRemember your password is %Wcase sensitive.");
-                p.Message("Forgot your password? Contact %W{0} %Sto %Wreset it.", Server.Config.OwnerName);
+                p.Message("&WWrong Password. &SRemember your password is &Wcase sensitive.");
+                p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
             }
         }
         
         void SetPassword(Player p, string password) {
             string path = HashPath(p.name);
             if (p.Unverified && File.Exists(path)) {
-                p.Message("%WYou must first verify with %T/pass [Password] %Wbefore you can change your password.");
-                p.Message("Forgot your password? Contact %W{0} %Sto %Wreset it.", Server.Config.OwnerName);
+                p.Message("&WYou must first verify with &T/pass [Password] &Wbefore you can change your password.");
+                p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
                 return;
             }
-            if (password.IndexOf(' ') >= 0) { p.Message("%WPassword must be one word."); return; }
+            if (password.IndexOf(' ') >= 0) { p.Message("&WPassword must be one word."); return; }
             
             byte[] computed = ComputeHash(p.name, password);
             File.WriteAllBytes(path, computed);
@@ -93,15 +93,15 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             
             if (!p.IsConsole && p.Unverified) {
-                p.Message("%WYou must first verify with %T/Pass [Password]"); return;
+                p.Message("&WYou must first verify with &T/Pass [Password]"); return;
             }
             if (!p.IsConsole && !Server.Config.OwnerName.CaselessEq(p.name))  {
-                p.Message("%WOnly console and the server owner may reset passwords."); return;
+                p.Message("&WOnly console and the server owner may reset passwords."); return;
             }
             
             string path = HashPath(target.name);
             if (!File.Exists(path)) {
-                p.Message("{0} %Sdoes not have a password.", p.FormatNick(target));
+                p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));
             } else {
                 File.Delete(path);
                 p.Message("Reset password for {0}", p.FormatNick(target));
@@ -142,13 +142,13 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Pass reset [Player] %H- Resets the password for that player");
-            p.Message("%H Note: Can only be used by console and the server owner.");
-            p.Message("%T/Pass set [Password] %H- Sets your password to [password]");
-            p.Message("%H Note: %WDo NOT set this as your Minecraft password!");
-            p.Message("%T/Pass [Password]");
-            p.Message("%HIf you are an admin, use this command to verify your login.");
-            p.Message("%H You will need to be verified to be able to use commands.");
+            p.Message("&T/Pass reset [Player] &H- Resets the password for that player");
+            p.Message("&H Note: Can only be used by console and the server owner.");
+            p.Message("&T/Pass set [Password] &H- Sets your password to [password]");
+            p.Message("&H Note: &WDo NOT set this as your Minecraft password!");
+            p.Message("&T/Pass [Password]");
+            p.Message("&HIf you are an admin, use this command to verify your login.");
+            p.Message("&H You will need to be verified to be able to use commands.");
         }
     }
 }

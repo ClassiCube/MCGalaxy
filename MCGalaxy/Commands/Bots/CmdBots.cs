@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Bots {
         
         static string FormatBot(PlayerBot bot) {
             string desc = bot.DisplayName;
-            if (bot.DisplayName != bot.name) desc += "%S(&1" + bot.name + "%S)";
+            if (bot.DisplayName != bot.name) desc += "&S(&1" + bot.name + "&S)";
             
             if (!String.IsNullOrEmpty(bot.AIName)) {
                 desc += "[" + bot.AIName + "]";
@@ -57,10 +57,10 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Bots");
-            p.Message("%HShows a list of bots on your level, and their AIs and levels");
-            p.Message("%T/Bots [level]");
-            p.Message("%HShows bots on the given level");
+            p.Message("&T/Bots");
+            p.Message("&HShows a list of bots on your level, and their AIs and levels");
+            p.Message("&T/Bots [level]");
+            p.Message("&HShows bots on the given level");
         }
     }
 }

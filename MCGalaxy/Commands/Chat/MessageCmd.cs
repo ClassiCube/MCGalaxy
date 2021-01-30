@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public static bool CanSpeak(Player p, string cmd) {
-            return p.CheckCanSpeak("use %T/" + cmd);
+            return p.CheckCanSpeak("use &T/" + cmd);
         }
     }
     
@@ -51,12 +51,12 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "High5"; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            TryMessageAction(p, message, "λNICK %Sjust highfived λTARGET", true);
+            TryMessageAction(p, message, "λNICK &Sjust highfived λTARGET", true);
         }
 
         public override void Help(Player p) {
-            p.Message("%T/High5 [player]");
-            p.Message("%HHigh five someone! :D");
+            p.Message("&T/High5 [player]");
+            p.Message("&HHigh five someone! :D");
         }
     }
 }

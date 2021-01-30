@@ -34,24 +34,24 @@ namespace MCGalaxy.Commands.Eco {
                     if (!item.Enabled) continue;
                     item.OnStoreOverview(p);
                 }
-                p.Message("%HUse %T/Store [item] %Hto see more information about that item.");
+                p.Message("&HUse &T/Store [item] &Hto see more information about that item.");
             } else {
                 Item item = Economy.GetItem(message);
                 if (item == null) { Help(p); return; }                
 
                 if (!item.Enabled) {
-                    p.Message("%WThe " + item.ShopName + " item is not currently buyable."); return;
+                    p.Message("&WThe " + item.ShopName + " item is not currently buyable."); return;
                 }
                 item.OnStoreCommand(p);
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Store [item]");
-            p.Message("%HViews information about the specific item, such as its cost.");
-            p.Message("%T/Store");
-            p.Message("%HViews information about all enabled items.");
-            p.Message("%H  Available items: %S" + Economy.EnabledItemNames());
+            p.Message("&T/Store [item]");
+            p.Message("&HViews information about the specific item, such as its cost.");
+            p.Message("&T/Store");
+            p.Message("&HViews information about all enabled items.");
+            p.Message("&H  Available items: &S" + Economy.EnabledItemNames());
         }
     }
 }

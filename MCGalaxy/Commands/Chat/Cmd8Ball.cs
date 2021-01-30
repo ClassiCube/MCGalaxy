@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (Char.IsLetterOrDigit(c)) builder.Append(c);
             }
            
-            string msg = p.ColoredName + " %Sasked the &b8-Ball: &f" + question;
+            string msg = p.ColoredName + " &Sasked the &b8-Ball: &f" + question;
             Chat.Message(ChatScope.Global, msg, null, Filter8Ball);
             
             string final = builder.ToString();
@@ -62,14 +62,14 @@ namespace MCGalaxy.Commands.Chatting {
             file.EnsureExists();
             string[] messages = file.GetText();
             
-            string msg = "The &b8-Ball %Ssays: &f" + messages[random.Next(messages.Length)];
+            string msg = "The &b8-Ball &Ssays: &f" + messages[random.Next(messages.Length)];
             Chat.Message(ChatScope.Global, msg, null, Filter8Ball);
         }
         
         static bool Filter8Ball(Player p, object arg) { return !p.Ignores.EightBall; }
         public override void Help(Player p) {
-            p.Message("%T/8ball [yes or no question]");
-            p.Message("%HGet an answer from the all-knowing 8-Ball!");
+            p.Message("&T/8ball [yes or no question]");
+            p.Message("&HGet an answer from the all-knowing 8-Ball!");
         }
     }
 }

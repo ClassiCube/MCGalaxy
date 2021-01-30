@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Break/build a block to display information.");
-            p.MakeSelection(1, "Selecting location for %SBlock info", data, PlacedMark);
+            p.MakeSelection(1, "Selecting location for &SBlock info", data, PlacedMark);
         }
 
         bool PlacedMark(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
                     p.level.BlockDB.FindChangesAt(x, y, z,
                                                   entry => OutputEntry(p, ref foundAny, names, entry));
                 } else {
-                    p.Message("%WUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
+                    p.Message("&WUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
                     return false;
                 }
             }
@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Info {
             if (!foundAny) p.Message("No block change records found for this block.");
             BlockID raw = Block.IsPhysicsType(block) ? block : Block.ToRaw(block);
             string blockName = Block.GetName(p, block);
-            p.Message("Block ({0}, {1}, {2}): &f{3} = {4}%S.", x, y, z, raw, blockName);
+            p.Message("Block ({0}, {1}, {2}): &f{3} = {4}&S.", x, y, z, raw, blockName);
             
             CommandData data = (CommandData)state;
             if (HasExtraPerm(p, data.Rank, 1)) {
@@ -120,8 +120,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/About");
-            p.Message("%HOutputs the change/edit history for a block.");
+            p.Message("&T/About");
+            p.Message("&HOutputs the change/edit history for a block.");
         }
     }
 }

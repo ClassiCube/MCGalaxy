@@ -161,7 +161,7 @@ namespace MCGalaxy.Games {
                 if (p.level != Map && !PlayerActions.ChangeMap(p, "countdown")) return;
                 Players.Add(p);
                 p.Message("You've joined countdown!");
-                Chat.MessageFrom(p, "λNICK %Sjoined countdown!");              
+                Chat.MessageFrom(p, "λNICK &Sjoined countdown!");              
             } else {
                 p.Message("You've already joined countdown. To leave, go to another map.");
             }

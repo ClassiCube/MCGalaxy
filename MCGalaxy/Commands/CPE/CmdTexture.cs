@@ -112,10 +112,10 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Texture global/level [url]");
-            p.Message("%HChanges server default or current level's texture.");
-            p.Message("%H[url] must end with .png (terrain) or .zip (texture pack)");
-            p.Message("%HUsing 'reset' for [url] will reset the texture to default");
+            p.Message("&T/Texture global/level [url]");
+            p.Message("&HChanges server default or current level's texture.");
+            p.Message("&H[url] must end with .png (terrain) or .zip (texture pack)");
+            p.Message("&HUsing 'reset' for [url] will reset the texture to default");
         }
     }
 }

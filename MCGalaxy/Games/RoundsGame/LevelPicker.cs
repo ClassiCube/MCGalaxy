@@ -107,7 +107,7 @@ namespace MCGalaxy.Games {
                 
                 foreach (Player pl in players) {
                     if (pl.level != map || !pl.Supports(CpeExt.MessageTypes)) continue;
-                    string timeLeft = "&e" + (VoteTime - i) + "s %Sleft to vote";
+                    string timeLeft = "&e" + (VoteTime - i) + "s &Sleft to vote";
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, timeLeft);
                 }
                 Thread.Sleep(1000);

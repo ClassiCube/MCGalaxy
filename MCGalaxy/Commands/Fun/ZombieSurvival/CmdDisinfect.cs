@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Cannot disinfect player");
             } else if (!who.Game.Referee) {
                 ZSGame.Instance.DisinfectPlayer(who);
-                Chat.MessageFrom(who, "λNICK %Swas disinfected.");
+                Chat.MessageFrom(who, "λNICK &Swas disinfected.");
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/DisInfect [name]");
-            p.Message("%HTurns [name] back into a human");
+            p.Message("&T/DisInfect [name]");
+            p.Message("&HTurns [name] back into a human");
         }
     }
 }

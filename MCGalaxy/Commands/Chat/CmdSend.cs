@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             if (message.Length >= 256 && Database.Backend.EnforcesTextLength) {
             	message = message.Substring(0, 255);
-                p.Message("%WMessage was too long. It has been trimmed to:");
+                p.Message("&WMessage was too long. It has been trimmed to:");
                 p.Message(message);
             }
             
@@ -46,11 +46,11 @@ namespace MCGalaxy.Commands.Chatting {
                             p.name, DateTime.Now.ToString(Database.DateFormat), message);
 
             Player target = PlayerInfo.FindExact(name);
-            p.Message("Message sent to {0}%S.", p.FormatNick(name));
+            p.Message("Message sent to {0}&S.", p.FormatNick(name));
             if (target == null) return;
             
             if (!Chat.Ignoring(target, p)) {
-                target.Message("Message received from {0}%S. Check %T/Inbox", target.FormatNick(p));
+                target.Message("Message received from {0}&S. Check &T/Inbox", target.FormatNick(p));
             }
         }
         
@@ -61,8 +61,8 @@ namespace MCGalaxy.Commands.Chatting {
         };
         
         public override void Help(Player p) {
-            p.Message("%T/Send [name] [message]");
-            p.Message("%HSends [message] to [name], which can be read with %T/Inbox");
+            p.Message("&T/Send [name] [message]");
+            p.Message("&HSends [message] to [name], which can be read with &T/Inbox");
         }
     }
 }

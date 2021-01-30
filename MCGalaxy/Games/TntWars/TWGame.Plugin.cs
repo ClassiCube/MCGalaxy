@@ -65,7 +65,7 @@ namespace MCGalaxy.Games {
             if (team == null || Config.Mode != TWGameMode.TDM) return;
             message = message.Substring(1);
             
-            // "To Team &c-" + ColoredName + "&c- %S" + message);
+            // "To Team &c-" + ColoredName + "&c- &S" + message);
             string prefix = team.Color + " - to " + team.Name;
             Chat.MessageChat(ChatScope.Level, p, prefix + " - λNICK: &f" + message,
                              Map, (pl, arg) => pl.Game.Referee || TeamOf(pl) == team);
@@ -247,7 +247,7 @@ namespace MCGalaxy.Games {
                 
                 if (plData.HarmedBy != null && plData.HarmedBy != killer) {
                     Player assistant = plData.HarmedBy;
-                    suffix = " %S(with help from " + assistant.ColoredName + ")";
+                    suffix = " &S(with help from " + assistant.ColoredName + ")";
                     
                     if (TeamKill(assistant, pl)) {
                         assistant.Message("TNT Wars: - " + cfg.AssistScore + " points for team kill assist!");
@@ -259,10 +259,10 @@ namespace MCGalaxy.Games {
                 }
                 
                 if (TeamKill(killer, pl)) {
-                    Map.Message("TNT Wars: " + killer.ColoredName + " %Steam killed " + pl.ColoredName + suffix);
+                    Map.Message("TNT Wars: " + killer.ColoredName + " &Steam killed " + pl.ColoredName + suffix);
                     penalty += cfg.ScorePerKill;
                 } else {
-                    Map.Message("TNT Wars: " + killer.ColoredName + " %Skilled " + pl.ColoredName + suffix);
+                    Map.Message("TNT Wars: " + killer.ColoredName + " &Skilled " + pl.ColoredName + suffix);
                     kills += 1;
                 }
                 
@@ -277,21 +277,21 @@ namespace MCGalaxy.Games {
                 if (data.KillStreak >= cfg.StreakOneAmount && data.KillStreak < cfg.StreakTwoAmount && data.LastKillStreakAnnounced != cfg.StreakOneAmount)
                 {
                     killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakOneMultiplier + ")");
-                    Map.Message(killer.ColoredName + " %Shas a kill streak of " + data.KillStreak);
+                    Map.Message(killer.ColoredName + " &Shas a kill streak of " + data.KillStreak);
                     data.ScoreMultiplier = cfg.StreakOneMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakOneAmount;
                 }
                 else if (data.KillStreak >= cfg.StreakTwoAmount && data.KillStreak < cfg.StreakThreeAmount && data.LastKillStreakAnnounced != cfg.StreakTwoAmount)
                 {
                     killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakTwoMultiplier + " and a bigger explosion!)");
-                    Map.Message(killer.ColoredName + " %Shas a kill streak of " + data.KillStreak + " and now has a bigger explosion for their TNT!");
+                    Map.Message(killer.ColoredName + " &Shas a kill streak of " + data.KillStreak + " and now has a bigger explosion for their TNT!");
                     data.ScoreMultiplier = cfg.StreakTwoMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakTwoAmount;
                 }
                 else if (data.KillStreak >= cfg.StreakThreeAmount && data.LastKillStreakAnnounced != cfg.StreakThreeAmount)
                 {
                     killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakThreeMultiplier + " and you now have 1 extra health!)");
-                    Map.Message(killer.ColoredName + " %Shas a kill streak of " + data.KillStreak + " and now has 1 extra health!");
+                    Map.Message(killer.ColoredName + " &Shas a kill streak of " + data.KillStreak + " and now has 1 extra health!");
                     data.ScoreMultiplier = cfg.StreakThreeMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakThreeAmount;
                     

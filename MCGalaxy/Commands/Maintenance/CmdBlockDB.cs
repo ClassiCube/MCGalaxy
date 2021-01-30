@@ -41,22 +41,22 @@ namespace MCGalaxy.Commands.Maintenance {
             if (!LevelInfo.Check(p, data.Rank, lvl, "change BlockDB state of this level")) return;
             
             if (args[0].CaselessEq("clear")) {
-                p.Message("Clearing &cALL %Sblock changes for {0}%S...", lvl.ColoredName);
+                p.Message("Clearing &cALL &Sblock changes for {0}&S...", lvl.ColoredName);
                 if (Database.TableExists("Block" + lvl.name))
                     Database.DeleteTable("Block" + lvl.name);
                 lvl.BlockDB.DeleteBackingFile();
-                p.Message("Cleared &cALL %Sblock changes for " + lvl.ColoredName);
+                p.Message("Cleared &cALL &Sblock changes for " + lvl.ColoredName);
             } else if (args[0].CaselessEq("disable")) {
                 lvl.Config.UseBlockDB = false;
                 lvl.BlockDB.Cache.Enabled = false;
                 
-                p.Message("&cDisabled %Srecording further block changes for " + lvl.ColoredName);
+                p.Message("&cDisabled &Srecording further block changes for " + lvl.ColoredName);
                 lvl.SaveSettings();
             } else if (args[0].CaselessEq("enable")) {
                 lvl.Config.UseBlockDB = true;
                 lvl.BlockDB.Cache.Enabled = true;
                 
-                p.Message("&aEnabled %Srecording further block changes for " + lvl.ColoredName);
+                p.Message("&aEnabled &Srecording further block changes for " + lvl.ColoredName);
                 lvl.SaveSettings();
             } else {
                 Help(p);
@@ -64,14 +64,14 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BlockDB clear [level]");
-            p.Message("%HClears the BlockDB (block changes stored in /b) for [level]");
-            p.Message("%T/BlockDB disable [level]");
-            p.Message("%HDisables recording block changes to the BlockDB for [level]");
-            p.Message("%T/BlockDB enable [level]");
-            p.Message("%HEnables %Hrecording block changes to the BlockDB for [level]");
-            p.Message("%HIf [level] is not given, uses your current level.");
-            p.Message("%WUse these commands with great caution!");
+            p.Message("&T/BlockDB clear [level]");
+            p.Message("&HClears the BlockDB (block changes stored in /b) for [level]");
+            p.Message("&T/BlockDB disable [level]");
+            p.Message("&HDisables recording block changes to the BlockDB for [level]");
+            p.Message("&T/BlockDB enable [level]");
+            p.Message("&HEnables &Hrecording block changes to the BlockDB for [level]");
+            p.Message("&HIf [level] is not given, uses your current level.");
+            p.Message("&WUse these commands with great caution!");
         }
     }
 }

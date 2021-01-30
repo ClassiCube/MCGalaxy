@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (grp == null) return;
 
                 Allow(perms, grp.Permission);
-                UpdatePerms(perms, p, " %Scan now be used by " + grp.ColoredName);
+                UpdatePerms(perms, p, " &Scan now be used by " + grp.ColoredName);
             } else if (grpName[0] == '-') {
                 Group grp = GetGroup(p, data, grpName.Substring(1));
                 if (grp == null) return;
@@ -43,13 +43,13 @@ namespace MCGalaxy.Commands.Moderation {
                 }
                 
                 Disallow(perms, grp.Permission);
-                UpdatePerms(perms, p, " %Sis no longer usable by " + grp.ColoredName);
+                UpdatePerms(perms, p, " &Sis no longer usable by " + grp.ColoredName);
             } else {
                 Group grp = GetGroup(p, data, grpName);
                 if (grp == null) return;
 
                 perms.MinRank = grp.Permission;
-                UpdatePerms(perms, p, " %Sis now usable by " + grp.ColoredName + "%S+");
+                UpdatePerms(perms, p, " &Sis now usable by " + grp.ColoredName + "&S+");
             }
         }
         
@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (grp == null) return null;
             
             if (grp.Permission > data.Rank) {
-                p.Message("%WCannot set permissions to a rank higher than yours."); return null;
+                p.Message("&WCannot set permissions to a rank higher than yours."); return null;
             }
             return grp;
         }

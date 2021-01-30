@@ -108,7 +108,7 @@ namespace MCGalaxy.Drawing.Ops {
             
             const int flags = BlockDBFlags.UndoOther | BlockDBFlags.UndoSelf;
             if ((e.Flags & flags) != 0) {
-                Player.Message("%WThis undo overlaps with previous undos, " +
+                Player.Message("&WThis undo overlaps with previous undos, " +
                                "so undoing may take longer..");
                 oldest = new Dictionary<int, BlockID>();
                 oldest[e.Index] = block;

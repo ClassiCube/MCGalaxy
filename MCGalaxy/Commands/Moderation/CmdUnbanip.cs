@@ -48,8 +48,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p)  {
-            p.Message("%T/UnbanIP [ip/player]");
-            p.Message("%HUn-bans an IP, or the IP the given player is on.");
+            p.Message("&T/UnbanIP [ip/player]");
+            p.Message("&HUn-bans an IP, or the IP the given player is on.");
         }
     }
 }

@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (grp.Permission < data.Rank) continue;
                 
                 p.Message("You can only IP ban IPs used by players with a lower rank.");
-                p.Message(name + "(" + grp.ColoredName + "%S) uses that IP.");
+                p.Message(name + "(" + grp.ColoredName + "&S) uses that IP.");
                 
                 Logger.Log(LogType.SuspiciousActivity, 
                            "{0} failed to ipban {1} - IP is also used by: {2}({3})", p.name, ip, name, grp.Name);
@@ -72,9 +72,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BanIP [ip/player] <reason>");
-            p.Message("%HBans an IP, or the IP the given player is on.");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/BanIP [ip/player] <reason>");
+            p.Message("&HBans an IP, or the IP the given player is on.");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

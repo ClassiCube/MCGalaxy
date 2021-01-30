@@ -32,12 +32,12 @@ namespace MCGalaxy {
     sealed class ConsolePlayer : Player {
         public ConsolePlayer() : base("(console)") {
             group = Group.NobodyRank;
-            color = "%S";
+            color = "&S";
             SuperName = "Console";
         }
         
         public override string FullName {
-            get { return "Console [&a" + Server.Config.ConsoleName + "%S]"; }
+            get { return "Console [&a" + Server.Config.ConsoleName + "&S]"; }
         }
         
         public override void Message(byte type, string message) {
@@ -288,15 +288,15 @@ namespace MCGalaxy {
             if (chatMsg == null) return;
             
             if (!isKick) {
-                string leaveMsg = "&c- λFULL %S" + chatMsg;
+                string leaveMsg = "&c- λFULL &S" + chatMsg;
                 if (Server.Config.GuestLeavesNotify || Rank > LevelPermission.Guest) {
                     Chat.MessageFrom(ChatScope.All, this, leaveMsg, null, Chat.FilterVisible(this), !hidden);
                 }
-                Logger.Log(LogType.UserActivity, "{0} disconnected ({1}%S).", truename, chatMsg);
+                Logger.Log(LogType.UserActivity, "{0} disconnected ({1}&S).", truename, chatMsg);
             } else {
-                string leaveMsg = "&c- λFULL %Skicked %S" + chatMsg;
+                string leaveMsg = "&c- λFULL &Skicked &S" + chatMsg;
                 Chat.MessageFrom(ChatScope.All, this, leaveMsg, null, null, true);
-                Logger.Log(LogType.UserActivity, "{0} kicked ({1}%S).", truename, chatMsg);
+                Logger.Log(LogType.UserActivity, "{0} kicked ({1}&S).", truename, chatMsg);
             }
         }
 
@@ -340,13 +340,13 @@ namespace MCGalaxy {
             if (IsConsole) return true;
             
             if (muted) { 
-                Message("Cannot {0} %Swhile muted", action); return false; 
+                Message("Cannot {0} &Swhile muted", action); return false; 
             }
             if (Server.chatmod && !voice) { 
-                Message("Cannot {0} %Swhile chat moderation is on without %T/Voice%S", action); return false; 
+                Message("Cannot {0} &Swhile chat moderation is on without &T/Voice&S", action); return false; 
             }
             if (Unverified) {
-                Message("%WYou must first verify with %T/Pass [Password]"); return false;
+                Message("&WYou must first verify with &T/Pass [Password]"); return false;
             }
             return true;
         }
@@ -358,9 +358,9 @@ namespace MCGalaxy {
             if (!Unverified) return;
             
             if (!File.Exists("extra/passwords/" + name + ".dat")) {
-                Message("%WPlease set your admin verification password with %T/SetPass [password]!");
+                Message("&WPlease set your admin verification password with &T/SetPass [password]!");
             } else {
-                Message("%WPlease complete admin verification with %T/Pass [password]!");
+                Message("&WPlease complete admin verification with &T/Pass [password]!");
             }
         }
         
@@ -487,13 +487,13 @@ namespace MCGalaxy {
         }
         
         string FormatSelectionMark(Vec3S32 P) {
-            return ": %S(" + P.X + ", " + P.Y + ", " + P.Z + ")";
+            return ": &S(" + P.X + ", " + P.Y + ", " + P.Z + ")";
         }
         
         void InitSelectionHUD() {
             SendCpeMessage(CpeMessageType.BottomRight3, selTitle);
-            SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1: %S(Not yet set)");
-            string mark2Msg = selMarks.Length >= 2 ? "Mark #2: %S(Not yet set)" : "";
+            SendCpeMessage(CpeMessageType.BottomRight2, "Mark #1: &S(Not yet set)");
+            string mark2Msg = selMarks.Length >= 2 ? "Mark #2: &S(Not yet set)" : "";
             SendCpeMessage(CpeMessageType.BottomRight1, mark2Msg);
         }
         

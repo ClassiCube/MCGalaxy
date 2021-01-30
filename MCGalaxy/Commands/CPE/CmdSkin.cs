@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             bot.SkinName = skin;
-            p.Message("You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
+            p.Message("You changed the skin of bot " + bot.ColoredName + " &Sto &c" + skin);
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.GlobalRespawn(who);
             
             if (p != who) {
-                Chat.MessageFrom(who,"λNICK %Shad their skin changed to &c" + skin);
+                Chat.MessageFrom(who,"λNICK &Shad their skin changed to &c" + skin);
             } else {
                 who.Message("Changed your own skin to &c" + skin);
             }
@@ -86,13 +86,13 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Skin [name] [skin] %H- Sets the skin of that player.");
-            p.Message("%T/Skin bot [name] [skin] %H- Sets the skin of that bot.");
-            p.Message("%H[skin] can be:");
-            p.Message("%H - a ClassiCube player's name (e.g Hetal)");
-            p.Message("%H - a Minecraft player's name, if you put a + (e.g +Hypixel)");
-            p.Message("%H - a direct url to a skin");
-            p.Message("%HDirect url skins also apply to non human models (e.g pig)");
+            p.Message("&T/Skin [name] [skin] &H- Sets the skin of that player.");
+            p.Message("&T/Skin bot [name] [skin] &H- Sets the skin of that bot.");
+            p.Message("&H[skin] can be:");
+            p.Message("&H - a ClassiCube player's name (e.g Hetal)");
+            p.Message("&H - a Minecraft player's name, if you put a + (e.g +Hypixel)");
+            p.Message("&H - a direct url to a skin");
+            p.Message("&HDirect url skins also apply to non human models (e.g pig)");
         }
     }
 }

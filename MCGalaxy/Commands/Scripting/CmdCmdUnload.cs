@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands.Scripting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/CmdUnload [command]");
-            p.Message("%HUnloads a command from the server.");
+            p.Message("&T/CmdUnload [command]");
+            p.Message("&HUnloads a command from the server.");
         }
     }
 }

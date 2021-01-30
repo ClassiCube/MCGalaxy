@@ -31,31 +31,31 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("You cannot un-pledge that you will be infected."); return;
             }
             if (ZSGame.Get(p).Infected) {
-                p.Message("You cannot use %T/human %Sas you are currently infected."); return;
+                p.Message("You cannot use &T/human &Sas you are currently infected."); return;
             }
             
             if (Economy.Enabled && p.money < 5) {
                 p.Message("You need to have at least 5 &3" + Server.Config.Currency + 
-                                   " %Sto pledge that you will not be infected."); return;
+                                   " &Sto pledge that you will not be infected."); return;
             }
             if (!ZSGame.Instance.RoundInProgress) {
-                p.Message("Can only use %T/human %Swhen a round is in progress."); return;
+                p.Message("Can only use &T/human &Swhen a round is in progress."); return;
             }
             
             TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
             if (delta < TimeSpan.FromMinutes(3)) {
-                p.Message("Cannot use %T/human %Sin last three minutes of a round."); return;
+                p.Message("Cannot use &T/human &Sin last three minutes of a round."); return;
             }
             
             p.Game.PledgeSurvive = true;
             ZSGame.Instance.Map
-                .Message(p.ColoredName + " %Spledges that they will not succumb to the infection!");
+                .Message(p.ColoredName + " &Spledges that they will not succumb to the infection!");
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Human %H- pledges that you will not be infected.");
-            p.Message("%HIf you survive, you receive an &aextra 5 &3" + Server.Config.Currency);
-            p.Message("%HHowever, if you are infected, you will &close 2 &3" + Server.Config.Currency);
+            p.Message("&T/Human &H- pledges that you will not be infected.");
+            p.Message("&HIf you survive, you receive an &aextra 5 &3" + Server.Config.Currency);
+            p.Message("&HHowever, if you are infected, you will &close 2 &3" + Server.Config.Currency);
         }
     }
 }

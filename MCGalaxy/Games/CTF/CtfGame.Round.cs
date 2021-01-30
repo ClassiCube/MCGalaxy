@@ -63,7 +63,7 @@ namespace MCGalaxy.Games {
                     CtfData otherData = Get(other);
 
                     otherData.TagCooldown = true;
-                    other.Message(p.ColoredName + " %Stagged you!");
+                    other.Message(p.ColoredName + " &Stagged you!");
                     PlayerActions.Respawn(other);
                     Thread.Sleep(300); // TODO: get rid of this
                     
@@ -100,9 +100,9 @@ namespace MCGalaxy.Games {
             RoundInProgress = false;
             
             if (Blue.Captures > Red.Captures) {
-                Map.Message(Blue.ColoredName + " %Swon this round of CTF!");
+                Map.Message(Blue.ColoredName + " &Swon this round of CTF!");
             } else if (Red.Captures > Blue.Captures) {
-                Map.Message(Red.ColoredName + " %Swon this round of CTF!");
+                Map.Message(Red.ColoredName + " &Swon this round of CTF!");
             } else {
                 Map.Message("The round ended in a tie!");
             }
@@ -118,7 +118,7 @@ namespace MCGalaxy.Games {
         /// <summary> Called when the given player takes the opposing team's flag. </summary>
         void TakeFlag(Player p, CtfTeam team) {
             CtfTeam opposing = Opposing(team);
-            Map.Message(team.Color + p.DisplayName + " took the " + opposing.ColoredName + " %Steam's FLAG");
+            Map.Message(team.Color + p.DisplayName + " took the " + opposing.ColoredName + " &Steam's FLAG");
             
             CtfData data = Get(p);
             data.HasFlag = true;

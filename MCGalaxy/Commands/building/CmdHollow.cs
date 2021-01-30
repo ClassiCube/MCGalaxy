@@ -37,10 +37,10 @@ namespace MCGalaxy.Commands.Building {
         protected override void GetBrush(DrawArgs dArgs) { dArgs.BrushName = "Normal"; }
         
         public override void Help(Player p) {
-            p.Message("%T/Hollow");
-            p.Message("%HHollows out an area without flooding it");
-            p.Message("%T/Hollow [block]");
-            p.Message("%HHollows around [block]");
+            p.Message("&T/Hollow");
+            p.Message("&HHollows out an area without flooding it");
+            p.Message("&T/Hollow [block]");
+            p.Message("&HHollows around [block]");
         }
     }
 }

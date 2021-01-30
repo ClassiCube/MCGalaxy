@@ -58,14 +58,14 @@ namespace MCGalaxy {
                     MessageOps(p, text.Substring(2));
                     return true;
                 } else {
-                    p.Message("%HIf you meant to send this to opchat, use %T##" + text.Substring(1));
+                    p.Message("&HIf you meant to send this to opchat, use &T##" + text.Substring(1));
                 }
             } else if (text[0] == '+') {
                 if (text.Length > 1 && text[1] == '+') {
                     MessageAdmins(p, text.Substring(2));
                     return true;
                 } else {
-                    p.Message("%HIf you meant to send this to adminchat, use %T++" + text.Substring(1));
+                    p.Message("&HIf you meant to send this to adminchat, use &T++" + text.Substring(1));
                 }
             }
             return false;

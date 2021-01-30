@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (newRank == null) return;
             
             if (curRank == newRank) {
-                p.Message("{0} %Sis already ranked {1}",
+                p.Message("{0} &Sis already ranked {1}",
                           p.FormatNick(target), curRank.ColoredName);
                 return;
             }
@@ -81,10 +81,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason == null) return false;
             
             if (newRank == banned) {
-                p.Message("Use /ban to change a player's rank to {0}%S.", banned.ColoredName); return false;
+                p.Message("Use /ban to change a player's rank to {0}&S.", banned.ColoredName); return false;
             }
             if (curRank == banned) {
-                p.Message("Use /unban to change a player's rank from %S{0}.", banned.ColoredName); return false;
+                p.Message("Use /unban to change a player's rank from &S{0}.", banned.ColoredName); return false;
             }
             
             if (!CheckRank(p, data, name, curRank.Permission, "change the rank of", false)) return false;            
@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (newRank.Permission == curRank.Permission) {
-                p.Message("{0} %Sis already ranked {1}.",
+                p.Message("{0} &Sis already ranked {1}.",
                           p.FormatNick(name), curRank.ColoredName); return false;
             }
             
@@ -127,10 +127,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/SetRank [player] [rank] <reason>");
-            p.Message("%HSets that player's rank/group, with an optional reason.");
-            p.Message("%HTo see available ranks, type %T/ViewRanks");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/SetRank [player] [rank] <reason>");
+            p.Message("&HSets that player's rank/group, with an optional reason.");
+            p.Message("&HTo see available ranks, type &T/ViewRanks");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

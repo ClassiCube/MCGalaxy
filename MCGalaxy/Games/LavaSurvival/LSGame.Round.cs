@@ -67,12 +67,12 @@ namespace MCGalaxy.Games {
 
         internal string FloodTimeLeftMessage() {
             TimeSpan left = RoundStart.Add(cfg.FloodTime) - DateTime.UtcNow;
-            return "&3" + left.Shorten(true) + " %Suntil the flood.";
+            return "&3" + left.Shorten(true) + " &Suntil the flood.";
         }
         
         internal string RoundTimeLeftMessage() {
             TimeSpan left = RoundStart.Add(cfg.RoundTime) - DateTime.UtcNow;
-            return "&3" + left.Shorten(true) + " %Suntil the round ends.";
+            return "&3" + left.Shorten(true) + " &Suntil the round ends.";
         }
 
         public override void OutputStatus(Player p) {
@@ -84,12 +84,12 @@ namespace MCGalaxy.Games {
             //    Map.ChatLevelOps("There will be another layer every " + mapSettings.layerInterval + " minutes.");
             //}
             
-            if (waterMode) p.Message("The map will be flooded with &9water %Sthis round!");
-            if (layerMode) p.Message("The " + block + " will &aflood in layers %Sthis round!");
+            if (waterMode) p.Message("The map will be flooded with &9water &Sthis round!");
+            if (layerMode) p.Message("The " + block + " will &aflood in layers &Sthis round!");
             
-            if (fastMode) p.Message("The lava will be &cfast %Sthis round!");
-            if (killerMode) p.Message("The " + block + " will &ckill you %Sthis round!");
-            if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "%Sthis round!");
+            if (fastMode) p.Message("The lava will be &cfast &Sthis round!");
+            if (killerMode) p.Message("The " + block + " will &ckill you &Sthis round!");
+            if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!");
             
             if (!flooded) p.Message(FloodTimeLeftMessage());
             p.Message(RoundTimeLeftMessage());

@@ -128,8 +128,8 @@ namespace MCGalaxy {
             
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
-            message = message.Replace("&f", "%S");
-            message = Colors.ConvertMCToIRC(message.Replace("%S", ResetSignal));
+            message = message.Replace("&f", "&S");
+            message = Colors.ConvertMCToIRC(message.Replace("&S", ResetSignal));
             return message;
         }
         

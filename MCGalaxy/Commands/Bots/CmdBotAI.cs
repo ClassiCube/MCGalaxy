@@ -126,21 +126,21 @@ namespace MCGalaxy.Commands.Bots{
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BotAI del [name] %H- deletes that AI");
-            p.Message("%T/BotAI del [name] last%H- deletes last instruction of that AI");
-            p.Message("%T/BotAI info [name] %H- prints list of instructions that AI has");
-            p.Message("%T/BotAI list %H- lists all current AIs");
-            p.Message("%T/BotAI add [name] [instruction] <args>");
+            p.Message("&T/BotAI del [name] &H- deletes that AI");
+            p.Message("&T/BotAI del [name] last&H- deletes last instruction of that AI");
+            p.Message("&T/BotAI info [name] &H- prints list of instructions that AI has");
+            p.Message("&T/BotAI list &H- lists all current AIs");
+            p.Message("&T/BotAI add [name] [instruction] <args>");
             
-            p.Message("%HInstructions: %S{0}",
+            p.Message("&HInstructions: &S{0}",
                       BotInstruction.Instructions.Join(ins => ins.Name));
-            p.Message("%HTo see detailed help, type %T/Help BotAI [instruction]");
+            p.Message("&HTo see detailed help, type &T/Help BotAI [instruction]");
         }
         
         public override void Help(Player p, string message) {
             BotInstruction ins = BotInstruction.Find(message);
             if (ins == null) {
-                p.Message("%HInstructions: %S{0}, reverse",
+                p.Message("&HInstructions: &S{0}, reverse",
                                BotInstruction.Instructions.Join(ins2 => ins2.Name));
             } else {
                 p.MessageLines(ins.Help);

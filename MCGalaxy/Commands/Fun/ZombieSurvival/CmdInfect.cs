@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Cannot infect player");
             } else if (!who.Game.Referee) {
                 ZSGame.Instance.InfectPlayer(who, p);
-                Chat.MessageFrom(who, "λNICK %Swas infected.");
+                Chat.MessageFrom(who, "λNICK &Swas infected.");
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Infect [name]");
-            p.Message("%HTurns [name] into a zombie");
+            p.Message("&T/Infect [name]");
+            p.Message("&HTurns [name] into a zombie");
         }
     }
 }

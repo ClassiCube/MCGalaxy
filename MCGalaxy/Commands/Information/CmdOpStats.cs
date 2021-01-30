@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Info {
                 Help(p); return;
             }
 
-            p.Message("OpStats for {0} %Ssince {1}", p.FormatNick(name), start);
+            p.Message("OpStats for {0} &Ssince {1}", p.FormatNick(name), start);
             
             int reviews = Count(start, end, name, "review", "LIKE 'next'");
             int ranks = Count(start, end, name, "setrank", "!=''");
@@ -80,11 +80,11 @@ namespace MCGalaxy.Commands.Info {
             int xbans = Count(start, end, name, "xban");
             int tempbans = Count(start, end, name, "tempban");
 
-            p.Message("  &a{0}%S bans, &a{1}%S IP-bans, &a{2}%S tempbans",
+            p.Message("  &a{0}&S bans, &a{1}&S IP-bans, &a{2}&S tempbans",
                            bans + kickbans + xbans, ipbans + xbans, tempbans);
-            p.Message("  &a{0}%S mutes, &a{1}%S warns, &a{2}%S freezes, &a{3}%S kicks",
+            p.Message("  &a{0}&S mutes, &a{1}&S warns, &a{2}&S freezes, &a{3}&S kicks",
                            mutes, warns, freezes, kicks + kickbans + xbans);
-            p.Message("  &a{0}%S reviews, &a{1}%S ranks (&a{2}%S promotes, &a{3}%S demotes)",
+            p.Message("  &a{0}&S reviews, &a{1}&S ranks (&a{2}&S promotes, &a{3}&S demotes)",
                            reviews, ranks + promotesOld + demotesOld,
                            promotes + promotesOld, demotes + demotesOld);
         }
@@ -99,8 +99,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
-            p.Message("%HDisplays information about operator command usage.");
+            p.Message("&T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
+            p.Message("&HDisplays information about operator command usage.");
         }
     }
 }

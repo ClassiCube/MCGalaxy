@@ -45,13 +45,13 @@ namespace MCGalaxy.Commands.Chatting {
                 number = rng.Next(min, adjMax);
             }
             
-            string msg = "λNICK %Srolled a &a" + number + " %S(" + min + "|" + max + ")";
+            string msg = "λNICK &Srolled a &a" + number + " &S(" + min + "|" + max + ")";
             TryMessage(p, msg);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Roll [min] [max]");
-            p.Message("%HRolls a random number between [min] and [max].");
+            p.Message("&T/Roll [min] [max]");
+            p.Message("&HRolls a random number between [min] and [max].");
         }
     }
 }

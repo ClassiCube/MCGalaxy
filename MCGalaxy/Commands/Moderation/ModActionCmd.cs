@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.Moderation {
             BlockID block = who.ModeBlock;
             if (block != Block.Invalid && !CommandParser.IsBlockAllowed(who, "place", block)) {
                 who.ModeBlock = Block.Invalid;
-                who.Message("   Hence, &b{0} %Smode was turned &cOFF",
+                who.Message("   Hence, &b{0} &Smode was turned &cOFF",
                             Block.GetName(who, block));
             }
             
@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 if (!CommandParser.IsBlockAllowed(who, "place", block)) {
                     who.BlockBindings[b] = (BlockID)b;
-                    who.Message("   Hence, binding for &b{0} %Swas unbound",
+                    who.Message("   Hence, binding for &b{0} &Swas unbound",
                                 Block.GetName(who, (BlockID)b));
                 }
             }
@@ -159,7 +159,7 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (confirmed != null) return name;
             string msgReason = String.IsNullOrEmpty(reason) ? "" : " " + reason;
-            p.Message("If you still want to {0} \"{1}\", use %T/{3} {1}{4}{2} confirm",
+            p.Message("If you still want to {0} \"{1}\", use &T/{3} {1}{4}{2} confirm",
                            action, name, msgReason, cmd, cmdSuffix);
             return null;
         }
@@ -199,7 +199,7 @@ namespace MCGalaxy.Commands.Moderation {
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
                 p.Message("Note: \"{0}\" is both an IP and an account name. "
-                          + "If you meant the account, use %T/{1} @{0}", message, cmd);
+                          + "If you meant the account, use &T/{1} @{0}", message, cmd);
                 return message;
             }
             

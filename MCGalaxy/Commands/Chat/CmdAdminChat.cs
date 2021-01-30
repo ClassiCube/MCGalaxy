@@ -32,10 +32,10 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/AdminChat [message]");
-            p.Message("%HSends a message to online Admins");
-            p.Message("%T/AdminChat");
-            p.Message("%HMakes all messages sent go to Admins by default");
+            p.Message("&T/AdminChat [message]");
+            p.Message("&HSends a message to online Admins");
+            p.Message("&T/AdminChat");
+            p.Message("&HMakes all messages sent go to Admins by default");
         }
     }
 }

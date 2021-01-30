@@ -80,11 +80,11 @@ namespace MCGalaxy.Games {
             
             string teamkillling = "Disabled";
             if (cfg.TeamKills) teamkillling = "Enabled";
-            Chat.MessageGlobal("&cTNT Wars %Son " + Map.ColoredName + " %Shas started &3" + Gamemode + " %Swith a difficulty of &3" +
-                               difficulty + " %S(&3" + HitsToDie + " %Shits to die, a &3" + explosiontime +
-                               " %Sexplosion delay and with a &3" + explosionsize + " %Sexplosion size)" +
-                               ", team killing is &3" + teamkillling + " %Sand you can place &3" + cfg.MaxActiveTnt
-                               + " %STNT at a time and there is a score limit of &3" + cfg.ScoreRequired + "%S!!");
+            Chat.MessageGlobal("&cTNT Wars &Son " + Map.ColoredName + " &Shas started &3" + Gamemode + " &Swith a difficulty of &3" +
+                               difficulty + " &S(&3" + HitsToDie + " &Shits to die, a &3" + explosiontime +
+                               " &Sexplosion delay and with a &3" + explosionsize + " &Sexplosion size)" +
+                               ", team killing is &3" + teamkillling + " &Sand you can place &3" + cfg.MaxActiveTnt
+                               + " &STNT at a time and there is a score limit of &3" + cfg.ScoreRequired + "&S!!");
             
             if (Config.Mode == TWGameMode.TDM) {
                 Map.Message("Start your message with ':' to send it to team only!");
@@ -115,14 +115,14 @@ namespace MCGalaxy.Games {
             if (!cfg.GracePeriod) return;
             int duration = (int)cfg.GracePeriodTime.SecondsLong();
             
-            Map.Message("Grace period of &a" + duration + " %Sseconds");
+            Map.Message("Grace period of &a" + duration + " &Sseconds");
             Map.Message("Building is disabled during this time!");
             if (!Running) return;
             
             Map.Config.Buildable = false;
             Map.Config.Deletable = false;
             Map.UpdateBlockPermissions();
-            DoCountdown("&b{0} %Sseconds left", duration, 15);
+            DoCountdown("&b{0} &Sseconds left", duration, 15);
             
             if (!Running) return;
             Map.Message("Grace period is over!");
@@ -157,10 +157,10 @@ namespace MCGalaxy.Games {
             if (Config.Mode == TWGameMode.TDM) {
                 if (Red.Score > Blue.Score) {
                     int amount = Red.Score - Blue.Score;
-                    Map.Message(Red.ColoredName + " %Swon &cTNT Wars %Sby &f" + amount + " %Spoints!");
+                    Map.Message(Red.ColoredName + " &Swon &cTNT Wars &Sby &f" + amount + " &Spoints!");
                 } else if (Blue.Score > Red.Score) {
                     int amount = Blue.Score - Red.Score;
-                    Map.Message(Blue.ColoredName + " %Swon &cTNT Wars %Sby &f" + amount + " %Spoints!");
+                    Map.Message(Blue.ColoredName + " &Swon &cTNT Wars &Sby &f" + amount + " &Spoints!");
                 } else {
                     Map.Message("The round ended in a tie!");
                 }

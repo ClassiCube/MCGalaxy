@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Fun {
                 
                 P = target.Pos.BlockCoords;
                 if (DoExplode(p, target.level, ref P)) {
-                    p.Message("{0} %Shas been exploded!", p.FormatNick(target));
+                    p.Message("{0} &Shas been exploded!", p.FormatNick(target));
                 }
             } else if (args.Length == 3) {
                 if (!CommandParser.GetCoords(p, args, 0, ref P)) return;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool DoExplode(Player p, Level lvl, ref Vec3S32 pos) {
             if (lvl.physics < 3 || lvl.physics == 5) {
-                p.Message("%WThe physics on {0} %Ware not sufficient for exploding!", lvl.ColoredName); 
+                p.Message("&WThe physics on {0} &Ware not sufficient for exploding!", lvl.ColoredName); 
                 return false;
             }
         	
@@ -69,10 +69,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Explode %H- Creates small explosions");
-            p.Message("%T/Explode me %H- Explodes at your location");
-            p.Message("%T/Explode [Player] %H- Explodes at given's player location");
-            p.Message("%T/Explode [x y z] %H- Explodes at the given corordinates");
+            p.Message("&T/Explode &H- Creates small explosions");
+            p.Message("&T/Explode me &H- Explodes at your location");
+            p.Message("&T/Explode [Player] &H- Explodes at given's player location");
+            p.Message("&T/Explode [x y z] &H- Explodes at the given corordinates");
         }
     }
 }

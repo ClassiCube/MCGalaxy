@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Mute [player] <timespan> <reason>");
-            p.Message("%HMutes player for <timespan>, or unmutes that player.");
-            p.Message("%H If <timespan> is not given, mutes for auto spam mute timespan");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/Mute [player] <timespan> <reason>");
+            p.Message("&HMutes player for <timespan>, or unmutes that player.");
+            p.Message("&H If <timespan> is not given, mutes for auto spam mute timespan");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

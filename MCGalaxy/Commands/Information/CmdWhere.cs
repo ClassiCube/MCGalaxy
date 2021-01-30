@@ -34,18 +34,18 @@ namespace MCGalaxy.Commands.Info {
             }
             
             int x = target.Pos.X, y = target.Pos.Y - Entities.CharacterHeight, z = target.Pos.Z;
-            p.Message("{0} %Sis on {1}", p.FormatNick(target), target.level.ColoredName);
-            p.Message("   X: &b{0:F5} %SY: &b{1:F5} %SZ: &b{2:F5}",
+            p.Message("{0} &Sis on {1}", p.FormatNick(target), target.level.ColoredName);
+            p.Message("   X: &b{0:F5} &SY: &b{1:F5} &SZ: &b{2:F5}",
                            x / 32.0, y / 32.0, z / 32.0);
             
-            p.Message("   Yaw: &b{0} %Sdegrees, Pitch: &b{1} %Sdegrees",
+            p.Message("   Yaw: &b{0} &Sdegrees, Pitch: &b{1} &Sdegrees",
                            Orientation.PackedToDegrees(p.Rot.RotY),
                            Orientation.PackedToDegrees(p.Rot.HeadX));
         }      
 
         public override void Help(Player p) {
-            p.Message("%T/Where [name]");
-            p.Message("%HDisplays level, position, and orienatation of that player.");
+            p.Message("&T/Where [name]");
+            p.Message("&HDisplays level, position, and orienatation of that player.");
         }
     }
 }

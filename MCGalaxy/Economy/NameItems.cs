@@ -35,10 +35,10 @@ namespace MCGalaxy.Eco {
             
         	if (!CheckPrice(p)) return;
             if (title == p.title) {
-                p.Message("%WYou already have that title."); return;
+                p.Message("&WYou already have that title."); return;
             }
             if (title.Length >= 20) {
-                p.Message("%WTitles must be under 20 characters."); return;
+                p.Message("&WTitles must be under 20 characters."); return;
             }
             
             UseCommand(p, "Title", "-own " + title);
@@ -62,10 +62,10 @@ namespace MCGalaxy.Eco {
             
         	if (!CheckPrice(p)) return;
             if (nick == p.DisplayName) {
-                p.Message("%WYou already have that nickname."); return;
+                p.Message("&WYou already have that nickname."); return;
             }
             if (nick.Length >= 30) {
-                p.Message("%WNicknames must be under 30 characters."); return;
+                p.Message("&WNicknames must be under 30 characters."); return;
             }
             
             UseCommand(p, "Nick", "-own " + nick);
@@ -90,7 +90,7 @@ namespace MCGalaxy.Eco {
             if (!CheckPrice(p)) return;
             
             if (color == p.titlecolor) {
-                p.Message("%WYour title color is already " + color + colName); return;
+                p.Message("&WYour title color is already " + color + colName); return;
             }
             
             UseCommand(p, "TColor", "-own " + colName);
@@ -115,7 +115,7 @@ namespace MCGalaxy.Eco {
             if (!CheckPrice(p)) return;
             
             if (color == p.color) {
-                p.Message("%WYour color is already " + color + colName); return;
+                p.Message("&WYour color is already " + color + colName); return;
             }
             
             UseCommand(p, "Color", "-own " + colName);

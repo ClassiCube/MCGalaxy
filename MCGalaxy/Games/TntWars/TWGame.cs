@@ -129,7 +129,7 @@ namespace MCGalaxy.Games {
                 p.Message("{0} team score: &f{1}/{2} points",
                                Blue.ColoredName, Blue.Score, cfg.ScoreRequired);
             }
-            p.Message("Your score: &f{0}/{1} %Spoints, health: &f{2} %SHP",
+            p.Message("Your score: &f{0}/{1} &Spoints, health: &f{2} &SHP",
                            Get(p).Score, cfg.ScoreRequired, Get(p).Health);
         }
 
@@ -184,7 +184,7 @@ namespace MCGalaxy.Games {
         
         void JoinTeam(Player p, TWTeam team) {
             team.Members.Add(p);
-            Map.Message(p.ColoredName + " %Sjoined the " + team.ColoredName + " %Steam");
+            Map.Message(p.ColoredName + " &Sjoined the " + team.ColoredName + " &Steam");
             
             p.UpdateColor(team.Color);
             p.Message("You are now on the " + team.ColoredName + " team!");
@@ -205,7 +205,7 @@ namespace MCGalaxy.Games {
             Player[] players = allPlayers.Items;
             
             foreach (Player pl in players) {
-                string msg = pl.ColoredName + " %Sis now on the ";
+                string msg = pl.ColoredName + " &Sis now on the ";
                 AutoAssignTeam(pl);
                 
                 // assigning team changed colour of player

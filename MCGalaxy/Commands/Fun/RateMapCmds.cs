@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Fun {
             p.level.SaveSettings();
             
             prefix = like ? "&a" : "&cdis";
-            p.Message("You have {0}liked %Sthis map.", prefix);
+            p.Message("You have {0}liked &Sthis map.", prefix);
             return true;
         }
         
@@ -56,8 +56,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Like");
-            p.Message("%HIncrements the number of times this map has been liked.");
+            p.Message("&T/Like");
+            p.Message("&HIncrements the number of times this map has been liked.");
         }
     }
     
@@ -66,8 +66,8 @@ namespace MCGalaxy.Commands.Fun {
         public override void Use(Player p, string message, CommandData data) { RateMap(p, false); }
         
         public override void Help(Player p) {
-            p.Message("%T/Dislike");
-            p.Message("%HIncrements the number of times this map has been disliked.");
+            p.Message("&T/Dislike");
+            p.Message("&HIncrements the number of times this map has been disliked.");
         }
     }
 }

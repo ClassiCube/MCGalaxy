@@ -50,10 +50,10 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/TColor [player] [color]");
-            p.Message("%HSets the title color of [player]");
-            p.Message("%H  If [color] is not given, title color is removed.");
-            p.Message("%HTo see a list of all colors, use %T/Help colors.");
+            p.Message("&T/TColor [player] [color]");
+            p.Message("&HSets the title color of [player]");
+            p.Message("&H  If [color] is not given, title color is removed.");
+            p.Message("&HTo see a list of all colors, use &T/Help colors.");
         }
     }
 }

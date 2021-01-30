@@ -72,11 +72,11 @@ namespace MCGalaxy.Commands.World {
         static void OutputBackups(Player p) {
             string backupPath = LevelInfo.BackupBasePath(p.level.name);
             if (!Directory.Exists(backupPath)) {
-                p.Message(p.level.ColoredName + " %Shas no backups yet."); return;
+                p.Message(p.level.ColoredName + " &Shas no backups yet."); return;
             }
             
             string[] dirs = Directory.GetDirectories(backupPath);
-            p.Message(p.level.ColoredName + " %Shas &b" + dirs.Length + " %Sbackups.");
+            p.Message(p.level.ColoredName + " &Shas &b" + dirs.Length + " &Sbackups.");
             int count = 0;
             StringBuilder custom = new StringBuilder();
             
@@ -90,15 +90,15 @@ namespace MCGalaxy.Commands.World {
             }
 
             if (count == 0) return;
-            p.Message("&b" + count + " %Sof these are custom-named restores:");
+            p.Message("&b" + count + " &Sof these are custom-named restores:");
             p.Message(custom.ToString(2, custom.Length - 2));
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Restore %H- lists all backups for the current level");
-            p.Message("%T/Restore [number] <level>");
-            p.Message("%HRestores a previous backup for the given level.");
-            p.Message("%H  If <level> is not given, the current level is used.");
+            p.Message("&T/Restore &H- lists all backups for the current level");
+            p.Message("&T/Restore [number] <level>");
+            p.Message("&HRestores a previous backup for the given level.");
+            p.Message("&H  If <level> is not given, the current level is used.");
         }
     }
 }

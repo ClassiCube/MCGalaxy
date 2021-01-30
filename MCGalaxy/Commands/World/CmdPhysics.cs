@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.World {
             Level[] loaded = LevelInfo.Loaded.Items;
             foreach (Level lvl in loaded) {
                 if (lvl.physics == 0) continue;
-                p.Message("{0} %Shas physics at &b{1}%S. &cChecks: {2}; Updates: {3}", 
+                p.Message("{0} &Shas physics at &b{1}&S. &cChecks: {2}; Updates: {3}", 
                                lvl.ColoredName, lvl.physics, lvl.lastCheck, lvl.lastUpdate);
             }
         }
@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.World {
             lvl.SetPhysics(state);
             if (state == 0) lvl.ClearPhysics();
             string stateDesc = states[state];
-            lvl.Message("Physics are now " + stateDesc + " %Son " + lvl.ColoredName);
+            lvl.Message("Physics are now " + stateDesc + " &Son " + lvl.ColoredName);
             
             stateDesc = stateDesc.Substring( 2 );
             string logInfo = "Physics are now " + stateDesc + " on " + lvl.name;
@@ -78,11 +78,11 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Physics [level] [0/1/2/3/4/5]");
-            p.Message("%HSets the physics state for the given level.");
-            p.Message("%H  If [level] is not given, uses the current level.");
-            p.Message("%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
-            p.Message("%T/Physics kill %H- Sets physics to 0 on all loaded levels.");
+            p.Message("&T/Physics [level] [0/1/2/3/4/5]");
+            p.Message("&HSets the physics state for the given level.");
+            p.Message("&H  If [level] is not given, uses the current level.");
+            p.Message("&H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
+            p.Message("&T/Physics kill &H- Sets physics to 0 on all loaded levels.");
         }
     }
 }

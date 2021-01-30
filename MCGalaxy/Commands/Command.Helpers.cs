@@ -76,7 +76,7 @@ namespace MCGalaxy {
             if (canAffectOwnRank && plRank == data.Rank) return true;
             
             if (canAffectOwnRank) {
-                p.Message("Can only {0} players ranked {1} %Sor below", action, p.group.ColoredName);
+                p.Message("Can only {0} players ranked {1} &Sor below", action, p.group.ColoredName);
             } else {
                 p.Message("Can only {0} players ranked below {1}", action, p.group.ColoredName);
             }

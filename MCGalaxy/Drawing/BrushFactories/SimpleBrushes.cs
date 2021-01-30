@@ -26,9 +26,9 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block]",
-            "%HDraws using the specified block.",
-            "%H  If [block] is not given, your currently held block is used.",
+            "&TArguments: [block]",
+            "&HDraws using the specified block.",
+            "&H  If [block] is not given, your currently held block is used.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -54,10 +54,10 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block1] [block2] <block3>..",
-            "%HDraws an alternating pattern of blocks.",
-            "%H  If [block1] is not given, your currently held block is used.",
-            "%H  If [block2] is not given, skip block is used.",
+            "&TArguments: [block1] [block2] <block3>..",
+            "&HDraws an alternating pattern of blocks.",
+            "&H  If [block1] is not given, your currently held block is used.",
+            "&H  If [block2] is not given, skip block is used.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -91,12 +91,12 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: none",
-            "%HDraws by pasting blocks from current %T/Copy.",
-            "%TArguments: [block1] [block2]..",
-            "%HDraws by pasting only the given blocks from current %T/Copy.",
-            "%TArguments: not [block1] [block2]..",
-            "%HDraws by pasting blocks from current %T/Copy, %Sexcept for the given blocks.",
+            "&TArguments: none",
+            "&HDraws by pasting blocks from current &T/Copy.",
+            "&TArguments: [block1] [block2]..",
+            "&HDraws by pasting only the given blocks from current &T/Copy.",
+            "&TArguments: not [block1] [block2]..",
+            "&HDraws by pasting blocks from current &T/Copy, &Sexcept for the given blocks.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -127,10 +127,10 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block1] [block2]",
-            "%HDraws a diagonally-alternating pattern of block1 and block2.",
-            "%H   If block1 is not given, the currently held block is used.",
-            "%H   If block2 is not given, air is used.",
+            "&TArguments: [block1] [block2]",
+            "&HDraws a diagonally-alternating pattern of block1 and block2.",
+            "&H   If block1 is not given, the currently held block is used.",
+            "&H   If block2 is not given, air is used.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -157,9 +157,9 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: <random>",
-            "%HIf no arguments are given, draws a diagonally repeating rainbow",
-            "%HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
+            "&TArguments: <random>",
+            "&HIf no arguments are given, draws a diagonally repeating rainbow",
+            "&HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
         };
         
         public override Brush Construct(BrushArgs args) {
@@ -174,8 +174,8 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: none",
-            "%HDraws a diagonally repeating black-white rainbow",
+            "&TArguments: none",
+            "&HDraws a diagonally repeating black-white rainbow",
         };
         
         public override Brush Construct(BrushArgs args) { return new BWRainbowBrush(); }

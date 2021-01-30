@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.World {
                 if (CmdResizeLvl.DoResize(p, args, p.DefaultCmdData, out needConfirm)) return;
                 
                 if (!needConfirm) return;
-                p.Message("Type %T/os map resize {0} {1} {2} confirm %Sif you're sure.",
+                p.Message("Type &T/os map resize {0} {1} {2} confirm &Sif you're sure.",
                           args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands.World {
                 if (opt == null) {
                     p.MessageLines(mapHelp);
                 } else if (DisallowedMapOption(opt.Name)) {
-                    p.Message("%WYou cannot change that map option via /os map."); return;
+                    p.Message("&WYou cannot change that map option via /os map."); return;
                 } else {
                     opt.SetFunc(p, p.level, value);
                     p.level.SaveSettings();
@@ -161,7 +161,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl == null) return;
             
             MapGen.SetRealmPerms(p, lvl);
-            p.Message("Use %T/os zone add [name] %Sto allow other players to build in the map.");
+            p.Message("Use &T/os zone add [name] &Sto allow other players to build in the map.");
             
             try {
                 lvl.Save(true);
@@ -173,7 +173,7 @@ namespace MCGalaxy.Commands.World {
         
         static void DeleteMap(Player p, string value) {
             if (value.Length > 0) {
-                p.Message("To delete your current map, type %T/os map delete");
+                p.Message("To delete your current map, type &T/os map delete");
                 return;
             }
             UseCommand(p, "DeleteLvl", p.level.name);
@@ -214,7 +214,7 @@ namespace MCGalaxy.Commands.World {
         }
         static void HandleZones(Player p, string cmd, string args) {
             if (args.Length == 0) {
-                p.Message("Arguments required. See %T/Help zone");
+                p.Message("Arguments required. See &T/Help zone");
             } else {
                 UseCommand(p, "Zone", cmd + " " + args);
             }

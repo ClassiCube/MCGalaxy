@@ -34,25 +34,25 @@ namespace MCGalaxy {
         public delegate void OptionSetter(Player p, string area, EnvConfig cfg, string value);
         
         public static List<EnvOption> Options = new List<EnvOption>() {
-             new EnvOption("Weather",   SetWeather,   "%HSets the weather (sun, rain, snow)"),
-             new EnvOption("SmoothFog", SetSmoothFog, "%HSets whether smoother fog is used"),
-             new EnvOption("Horizon",   SetHorizon,   "%HSets the \"ocean\" block outside the map"),
-             new EnvOption("Border",    SetBorder,    "%HSets the \"bedrock\" block outside the map"),
-             new EnvOption("CloudsHeight", SetCloudsHeight, "%HSets the clouds height of the map"),
-             new EnvOption("EdgeLevel",    SetEdgeLevel,    "%HSets the water height of the map"),
-             new EnvOption("SidesOffset",  SetSidesOffset,  "%HSets offset of bedrock from water (default -2)"),
-             new EnvOption("MaxFog",       SetMaxFog,       "%HSets maximum fog distance in the map (e.g. 16 for a horror map)"),
-             new EnvOption("Sky",    SetSky,    "%HSets color of the sky (default 99CCFF)"),
-             new EnvOption("Clouds", SetClouds, "%HSets color of the clouds (default FFFFFF)"),
-             new EnvOption("Fog",    SetFog,    "%HSets color of the fog (default FFFFFF)"),
-             new EnvOption("Sun",    SetSun,    "%HSets color of blocks in sunlight (default FFFFFF)"),
-             new EnvOption("Shadow", SetShadow, "%HSets color of blocks in darkness (default 9B9B9B)"),      
-             new EnvOption("Skybox", SetSkybox, "%HSets color of the skybox (default FFFFFF)"),             
-             new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "%HSets how fast clouds move (negative moves in opposite direction)"),
-             new EnvOption("WeatherSpeed", SetWeatherSpeed, "%HSets how fast rain/snow falls (negative falls upwards)"),
-             new EnvOption("WeatherFade",  SetWeatherFade,  "%HSets how quickly rain/snow fades out over distance"),
-             new EnvOption("SkyboxHorSpeed", SetSkyboxHor,  "%HSets how many times per second skybox fully spins horizontally (e.g. 0.1 is once every 10 seconds)"),
-             new EnvOption("SkyboxVerSpeed", SetSkyboxVer,  "%HSets how many times per second skybox fully spins vertically (e.g. 0.1 is once every 10 seconds)"),
+             new EnvOption("Weather",   SetWeather,   "&HSets the weather (sun, rain, snow)"),
+             new EnvOption("SmoothFog", SetSmoothFog, "&HSets whether smoother fog is used"),
+             new EnvOption("Horizon",   SetHorizon,   "&HSets the \"ocean\" block outside the map"),
+             new EnvOption("Border",    SetBorder,    "&HSets the \"bedrock\" block outside the map"),
+             new EnvOption("CloudsHeight", SetCloudsHeight, "&HSets the clouds height of the map"),
+             new EnvOption("EdgeLevel",    SetEdgeLevel,    "&HSets the water height of the map"),
+             new EnvOption("SidesOffset",  SetSidesOffset,  "&HSets offset of bedrock from water (default -2)"),
+             new EnvOption("MaxFog",       SetMaxFog,       "&HSets maximum fog distance in the map (e.g. 16 for a horror map)"),
+             new EnvOption("Sky",    SetSky,    "&HSets color of the sky (default 99CCFF)"),
+             new EnvOption("Clouds", SetClouds, "&HSets color of the clouds (default FFFFFF)"),
+             new EnvOption("Fog",    SetFog,    "&HSets color of the fog (default FFFFFF)"),
+             new EnvOption("Sun",    SetSun,    "&HSets color of blocks in sunlight (default FFFFFF)"),
+             new EnvOption("Shadow", SetShadow, "&HSets color of blocks in darkness (default 9B9B9B)"),      
+             new EnvOption("Skybox", SetSkybox, "&HSets color of the skybox (default FFFFFF)"),             
+             new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "&HSets how fast clouds move (negative moves in opposite direction)"),
+             new EnvOption("WeatherSpeed", SetWeatherSpeed, "&HSets how fast rain/snow falls (negative falls upwards)"),
+             new EnvOption("WeatherFade",  SetWeatherFade,  "&HSets how quickly rain/snow fades out over distance"),
+             new EnvOption("SkyboxHorSpeed", SetSkyboxHor,  "&HSets how many times per second skybox fully spins horizontally (e.g. 0.1 is once every 10 seconds)"),
+             new EnvOption("SkyboxVerSpeed", SetSkyboxVer,  "&HSets how many times per second skybox fully spins vertically (e.g. 0.1 is once every 10 seconds)"),
         };
 
         public static EnvOption Find(string opt) {
@@ -143,7 +143,7 @@ namespace MCGalaxy {
         static void SetWeather(Player p, string area, EnvConfig cfg, string value) {
             int weather;
             if (IsResetString(value)) {
-                p.Message("Reset weather for {0} %Sto 0 (Sun)", area);
+                p.Message("Reset weather for {0} &Sto 0 (Sun)", area);
                 weather = -1;
             } else {
                 if (int.TryParse(value, out weather)) {
@@ -155,45 +155,45 @@ namespace MCGalaxy {
                 if (weather < 0 || weather > 2) {
                     p.Message("Weather can be either sun, rain, or snow."); return;
                 }
-                string type = weather == 0 ? "%SSun" : (weather == 1 ? "&1Rain" : "&fSnow");
-                p.Message("Set weather for {0} %Sto {1} ({2}%S)", area, weather, type);
+                string type = weather == 0 ? "&SSun" : (weather == 1 ? "&1Rain" : "&fSnow");
+                p.Message("Set weather for {0} &Sto {1} ({2}&S)", area, weather, type);
             }
             cfg.Weather = weather;
         }
         
         static void SetSmoothFog(Player p, string area, EnvConfig cfg, string value) {
             if (IsResetString(value)) {
-                p.Message("Reset smooth fog for {0} %Sto &cOFF", area);
+                p.Message("Reset smooth fog for {0} &Sto &cOFF", area);
                 cfg.ExpFog = -1;
             } else {
                 bool enabled = false;
                 if (!CommandParser.GetBool(p, value, ref enabled)) return;
                 
                 cfg.ExpFog = enabled ? 1 : 0;
-                p.Message("Set smooth fog for {0} %Sto {1}", area, enabled ? "&aON" : "&cOFF");
+                p.Message("Set smooth fog for {0} &Sto {1}", area, enabled ? "&aON" : "&cOFF");
             }
         }
         
         static void SetBlock(Player p, string input, string area, string type, ref BlockID target) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", type, area);
+                p.Message("Reset {0} for {1} &Sto normal", type, area);
                 target = Block.Invalid;
             } else {
                 BlockID block;
                 if (!CommandParser.GetBlock(p, input, out block)) return;
                 if (Block.IsPhysicsType(block)) {
-                    p.Message("%WCannot use physics block ids for %T/env"); return;
+                    p.Message("&WCannot use physics block ids for &T/env"); return;
                 }
                 
                 string name = Block.GetName(p, block);
                 target = block;
-                p.Message("Set {0} for {1} %Sto {2}", type, area, name);
+                p.Message("Set {0} for {1} &Sto {2}", type, area, name);
             }
         }
         
         static void SetInt(Player p, string input, string area, string type, ref int target) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", type, area);
+                p.Message("Reset {0} for {1} &Sto normal", type, area);
                 target = -1;
             } else {
                 int value = 0;
@@ -201,32 +201,32 @@ namespace MCGalaxy {
                                           short.MinValue, short.MaxValue)) return;
                 
                 target = (short)value;
-                p.Message("Set {0} for {1} %Sto {2}", type, area, value);
+                p.Message("Set {0} for {1} &Sto {2}", type, area, value);
             }
         }
         
         static void SetFloat(Player p, string input, string area, int scale, string type, ref int target, int min, int max) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", type, area);
+                p.Message("Reset {0} for {1} &Sto normal", type, area);
                 target = -1;
             } else {
                 float value = 0, minF = (float)min / scale, maxF = (float)max / scale;
                 if (!CommandParser.GetReal(p, input, type, ref value, minF, maxF)) return;
 
                 target = (int)(value * scale);
-                p.Message("Set {0} for {1} %Sto {2}", type, area, value.ToString("F4"));
+                p.Message("Set {0} for {1} &Sto {2}", type, area, value.ToString("F4"));
             }
         }
         
         static void SetColor(Player p, string input, string area, string variable, ref string target) {
             if (IsResetString(input)) {
-                p.Message("Reset {0} for {1} %Sto normal", variable, area);
+                p.Message("Reset {0} for {1} &Sto normal", variable, area);
                 target = "";
             } else {
                 ColorDesc rgb = default(ColorDesc);
                 if (!CommandParser.GetHex(p, input, ref rgb)) return;
                 
-                p.Message("Set {0} for {1} %Sto #{2}", variable, area, input);
+                p.Message("Set {0} for {1} &Sto #{2}", variable, area, input);
                 target = Utils.Hex(rgb.R, rgb.G, rgb.B);
             }
         }

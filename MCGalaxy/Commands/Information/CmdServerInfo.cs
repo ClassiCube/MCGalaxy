@@ -38,21 +38,21 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message, CommandData data) {
             int count = Database.CountRows("Players");
-            p.Message("Server's name: &b{0}%S", Server.Config.Name);
-            p.Message("&a{0} %Splayers total. (&a{1} %Sonline, &8{2} banned%S)",
+            p.Message("Server's name: &b{0}&S", Server.Config.Name);
+            p.Message("&a{0} &Splayers total. (&a{1} &Sonline, &8{2} banned&S)",
                       count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
-            p.Message("&a{0} %Slevels currently loaded. Currency is &3{1}%S.",
+            p.Message("&a{0} &Slevels currently loaded. Currency is &3{1}&S.",
                       LevelInfo.Loaded.Count, Server.Config.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
-            p.Message("Been up for &b{0}%S, running &b{1} &a{2} &f" + Updater.SourceURL,
+            p.Message("Been up for &b{0}&S, running &b{1} &a{2} &f" + Updater.SourceURL,
                       up.Shorten(true), Server.SoftwareName, Server.Version);
             p.Message("Player positions are updated every &b"
-                      + Server.Config.PositionUpdateInterval + " %Smilliseconds.");
+                      + Server.Config.PositionUpdateInterval + " &Smilliseconds.");
             
             string owner = Server.Config.OwnerName;
             if (!owner.CaselessEq("Notch") && !owner.CaselessEq("the owner")) {
-                p.Message("Owner is &3{0}. %SConsole state: &3{1}", owner, Server.Config.ConsoleName);
+                p.Message("Owner is &3{0}. &SConsole state: &3{1}", owner, Server.Config.ConsoleName);
             } else {
                 p.Message("Console state: &3{0}", Server.Config.ConsoleName);
             }
@@ -78,13 +78,13 @@ namespace MCGalaxy.Commands.Info {
             int threads = proc.Threads.Count;
             int mem = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
             double cpu = cpuPCounter.NextValue(), all = allPCounter.NextValue();
-            p.Message("&a{0}% %SCPU usage, &a{1}% %Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
-            p.Message("&a{0} %Sthreads, using &a{1} %Smegabytes of memory", threads, mem);
+            p.Message("&a{0}% &SCPU usage, &a{1}% &Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
+            p.Message("&a{0} &Sthreads, using &a{1} &Smegabytes of memory", threads, mem);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ServerInfo");
-            p.Message("%HDisplays the server information.");
+            p.Message("&T/ServerInfo");
+            p.Message("&HDisplays the server information.");
         }
     }
 }

@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (!respawning || !Remaining.Contains(p)) return;
-            Map.Message(p.ColoredName + " %Sis out of countdown!");
+            Map.Message(p.ColoredName + " &Sis out of countdown!");
             OnPlayerDied(p);
         }
         

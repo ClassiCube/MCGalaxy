@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Building {
             if (message.Length > 0 && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
             
             p.Message("Destroy the block you wish to drill.");
-            p.MakeSelection(1, "Selecting location for %SDrill", dist, DoDrill);
+            p.MakeSelection(1, "Selecting location for &SDrill", dist, DoDrill);
         }
         
         bool DoDrill(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -85,8 +85,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Drill [distance]");
-            p.Message("%HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
+            p.Message("&T/Drill [distance]");
+            p.Message("&HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
         }
     }
 }

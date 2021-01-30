@@ -44,10 +44,10 @@ namespace MCGalaxy.Commands.Fun {
             
             string msg;
             if (old == null) {
-                msg = string.Format("Looks like someone really wants the brains of {0}%S! A bounty of &a{1} %S{2} was placed on them.", 
+                msg = string.Format("Looks like someone really wants the brains of {0}&S! A bounty of &a{1} &S{2} was placed on them.", 
                                     target.ColoredName, amount, Server.Config.Currency);
             } else {
-                msg = string.Format("{0} %Sis popular! The bounty on them was increased from &a{3} %Sto &a{1} %S{2}.", 
+                msg = string.Format("{0} &Sis popular! The bounty on them was increased from &a{3} &Sto &a{1} &S{2}.", 
                                     target.ColoredName, amount, Server.Config.Currency, old.Amount);
                 ZSGame.Instance.Bounties.Remove(old);
             }
@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Bounty [name] [amount]");
-            p.Message("%HSets a bounty on the given player.");
+            p.Message("&T/Bounty [name] [amount]");
+            p.Message("&HSets a bounty on the given player.");
         }
     }
 }

@@ -36,35 +36,35 @@ namespace MCGalaxy.Commands.Eco {
             string plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (plName == null) return;
             string award = Matcher.FindAwards(p, args[1]);
-            if (award == null) { p.Message("Use %T/Awards %Sfor a list of awards"); return; }
+            if (award == null) { p.Message("Use &T/Awards &Sfor a list of awards"); return; }
 
             string displayName = p.FormatNick(plName);
             if (!take) {
                 if (Awards.GiveAward(plName, award)) {
-                    Chat.MessageGlobal("{0} %Swas awarded: &b{1}", displayName, award);
+                    Chat.MessageGlobal("{0} &Swas awarded: &b{1}", displayName, award);
                     Awards.SavePlayers();
                 } else if (plName.CaselessEq(p.name)) {
                     p.Message("You already have that award.");
                 } else {
-                    p.Message("{0} %Salready has that award.", displayName);
+                    p.Message("{0} &Salready has that award.", displayName);
                 }
             } else {
                 if (Awards.TakeAward(plName, award)) {
-                    Chat.MessageGlobal("{0} %Shad their &b{1} %Saward removed", displayName, award);
+                    Chat.MessageGlobal("{0} &Shad their &b{1} &Saward removed", displayName, award);
                     Awards.SavePlayers();
                 } else if (plName.CaselessEq(p.name)) {
                     p.Message("You did not have that award to begin with.");
                 } else {
-                    p.Message("{0} %Sdid not have that award to begin with.", displayName);
+                    p.Message("{0} &Sdid not have that award to begin with.", displayName);
                 }
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Award give/take [player] [award]");
-            p.Message("%HGives/takes [award] award to/from [player]");
-            p.Message("%T/Award [player] [award]");
-            p.Message("%HShorthand for %T/Award give [player] [award]");
+            p.Message("&T/Award give/take [player] [award]");
+            p.Message("&HGives/takes [award] award to/from [player]");
+            p.Message("&T/Award [player] [award]");
+            p.Message("&HShorthand for &T/Award give [player] [award]");
         }
     }
 }

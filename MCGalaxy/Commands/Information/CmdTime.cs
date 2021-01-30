@@ -31,18 +31,18 @@ namespace MCGalaxy.Commands.Info {
             
             TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
             if (delta.TotalSeconds > 0) {
-                p.Message("&a{0} %Suntil the round ends.", delta.Shorten(true));
+                p.Message("&a{0} &Suntil the round ends.", delta.Shorten(true));
             } else {
                 delta = ZSGame.Instance.RoundStart - DateTime.UtcNow;
                 if (delta.TotalSeconds > 0)
-                    p.Message("&a{0} %Suntil the round starts.", delta.Shorten(true));
+                    p.Message("&a{0} &Suntil the round starts.", delta.Shorten(true));
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Time");
-            p.Message("%HShows the server time.");
-            p.Message("%HIf zombie survival is running, shows time left until round end or start.");
+            p.Message("&T/Time");
+            p.Message("&HShows the server time.");
+            p.Message("&HIf zombie survival is running, shows time left until round end or start.");
         }
     }
 }

@@ -84,9 +84,9 @@ namespace MCGalaxy.Games {
             string coloredName = lvlCfg.Color + map;
             
             if (cfg.Maps.CaselessContains(map)) {
-                p.Message("{0} %Sis already in the list of {1} maps", coloredName, game.GameName);
+                p.Message("{0} &Sis already in the list of {1} maps", coloredName, game.GameName);
             } else {
-                p.Message("Added {0} %Sto the list of {1} maps", coloredName, game.GameName);
+                p.Message("Added {0} &Sto the list of {1} maps", coloredName, game.GameName);
                 cfg.Maps.Add(map);
                 if (!cfg.AllowAutoload) lvlCfg.LoadOnGoto = false;
                 
@@ -101,9 +101,9 @@ namespace MCGalaxy.Games {
             string coloredName = lvlCfg.Color + map;
                 
             if (!cfg.Maps.CaselessRemove(map)) {
-                p.Message("{0} %Swas not in the list of {1} maps", coloredName, game.GameName);
+                p.Message("{0} &Swas not in the list of {1} maps", coloredName, game.GameName);
             } else {
-                p.Message("Removed {0} %Sfrom the list of {1} maps", coloredName, game.GameName);
+                p.Message("Removed {0} &Sfrom the list of {1} maps", coloredName, game.GameName);
                 lvlCfg.AutoUnload = true;
                 if (!cfg.AllowAutoload) lvlCfg.LoadOnGoto = true;
                 

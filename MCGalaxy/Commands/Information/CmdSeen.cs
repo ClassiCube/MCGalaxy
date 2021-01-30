@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info {
             if (matches > 1) return;
             if (matches == 1) {
                 Show(p, pl.ColoredName, pl.FirstLogin, pl.LastLogin);
-                p.Message("{0} %Sis currently online.", p.FormatNick(pl));
+                p.Message("{0} &Sis currently online.", p.FormatNick(pl));
                 return;
             }
 
@@ -47,13 +47,13 @@ namespace MCGalaxy.Commands.Info {
             TimeSpan lastDelta  = DateTime.Now - last;
             
             name = p.FormatNick(name);
-            p.Message("{0} %Swas first seen at {1:H:mm} on {1:d} ({2} ago)", name, first, firstDelta.Shorten());
-            p.Message("{0} %Swas last seen at {1:H:mm} on {1:d} ({2} ago)",  name, last,  lastDelta.Shorten());
+            p.Message("{0} &Swas first seen at {1:H:mm} on {1:d} ({2} ago)", name, first, firstDelta.Shorten());
+            p.Message("{0} &Swas last seen at {1:H:mm} on {1:d} ({2} ago)",  name, last,  lastDelta.Shorten());
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Seen [player]");
-            p.Message("%HSays when a player was first and last seen on the server");
+            p.Message("&T/Seen [player]");
+            p.Message("&HSays when a player was first and last seen on the server");
         }
     }
 }

@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Emote");
-            p.Message("%HEnables or disables emoticon parsing");
+            p.Message("&T/Emote");
+            p.Message("&HEnables or disables emoticon parsing");
         }
     }
 }

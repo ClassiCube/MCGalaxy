@@ -32,13 +32,13 @@ namespace MCGalaxy.Commands.Moderation {
                 if (pl.Rank < data.Rank)
                     PlayerActions.ChangeMap(pl, level.name);
                 else
-                    p.Message("You cannot move {0} %Sbecause they are of equal or higher rank", p.FormatNick(pl));
+                    p.Message("You cannot move {0} &Sbecause they are of equal or higher rank", p.FormatNick(pl));
             }
         }
         
         public override void Help(Player p) { 
-            p.Message("%T/MoveAll [level]");
-            p.Message("%HMoves all players to that level."); 
+            p.Message("&T/MoveAll [level]");
+            p.Message("&HMoves all players to that level."); 
         }
     }
 }

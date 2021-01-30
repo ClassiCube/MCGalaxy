@@ -74,9 +74,9 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p)  {
-            p.Message("%T/Timer [time] [message]");
-            p.Message("%HStarts a timer which repeats [message] every 5 seconds.");
-            p.Message("%HRepeats constantly until [time] has passed");
+            p.Message("&T/Timer [time] [message]");
+            p.Message("&HStarts a timer which repeats [message] every 5 seconds.");
+            p.Message("&HRepeats constantly until [time] has passed");
         }
     }
 }

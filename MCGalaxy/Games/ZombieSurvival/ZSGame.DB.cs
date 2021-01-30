@@ -87,8 +87,8 @@ namespace MCGalaxy.Games {
         }
         
         static void PrintZSStats(Player p, int rounds, int infected, int roundsMax, int infectedMax) {
-            p.Message("  Survived &a{0} %Srounds (max &e{1}%S)", rounds, roundsMax);
-            p.Message("  Infected &a{0} %Splayers (max &e{1}%S)", infected, infectedMax);
+            p.Message("  Survived &a{0} &Srounds (max &e{1}&S)", rounds, roundsMax);
+            p.Message("  Infected &a{0} &Splayers (max &e{1}&S)", infected, infectedMax);
         }        
         
                 

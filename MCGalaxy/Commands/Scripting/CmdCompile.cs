@@ -43,20 +43,20 @@ namespace MCGalaxy.Commands.Scripting {
             string dstPath = IScripting.DllPath(args[0]);   
             
             if (!File.Exists(srcPath)) {
-                p.Message("File &9{0} %Snot found.", srcPath);
+                p.Message("File &9{0} &Snot found.", srcPath);
             } else if (engine.Compile(srcPath, dstPath, p)) {
                 p.Message("Command compiled successfully.");
             } else {
-                p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
+                p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Compile [class name]");
-            p.Message("%HCompiles a command class file into a DLL.");
-            p.Message("%T/Compile [class name] vb");
-            p.Message("%HCompiles a command class (written in visual basic) file into a DLL.");
-            p.Message("%H  class name: &9Cmd&e<class name>&9.cs");
+            p.Message("&T/Compile [class name]");
+            p.Message("&HCompiles a command class file into a DLL.");
+            p.Message("&T/Compile [class name] vb");
+            p.Message("&HCompiles a command class (written in visual basic) file into a DLL.");
+            p.Message("&H  class name: &9Cmd&e<class name>&9.cs");
         }
     }
 }

@@ -39,8 +39,8 @@ namespace MCGalaxy.Commands.Fun {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/ShowQueue");
-            p.Message("%HLists the currently queued level and zombie.");
+            p.Message("&T/ShowQueue");
+            p.Message("&HLists the currently queued level and zombie.");
         }
     }
 }

@@ -175,7 +175,7 @@ namespace MCGalaxy {
             }
 
             Cleanup();
-            if (!silent) Chat.MessageOps(ColoredName + " %Swas unloaded.");
+            if (!silent) Chat.MessageOps(ColoredName + " &Swas unloaded.");
             Logger.Log(LogType.SystemActivity, name + " was unloaded.");
             return true;
         }
@@ -184,7 +184,7 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == this) {
-                    p.Message("You were moved to the main level as " + ColoredName + " %Swas unloaded.");
+                    p.Message("You were moved to the main level as " + ColoredName + " &Swas unloaded.");
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }

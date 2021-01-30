@@ -130,7 +130,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 p.Message("This will export all the BlockDB tables in the database to more efficient .cbdb files.");
                 p.Message("Note: This is only useful if you have updated from older {0} versions", Server.SoftwareName);
                 p.MessageLines(DBUpgrader.CompactMessages);
-                p.Message("Type %T/Server upgradeblockdb confirm %Sto begin");
+                p.Message("Type &T/Server upgradeblockdb confirm &Sto begin");
             } else if (DBUpgrader.Upgrading) {
                 p.Message("BlockDB upgrade is already in progress.");
             } else {
@@ -152,28 +152,28 @@ namespace MCGalaxy.Commands.Maintenance {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("backup")) {
-                p.Message("%T/Server backup [mode] <compress>");
-                p.Message("%HMode can be one of the following:");
-                p.Message("  &fall %H- Backups everything (default)");
-                p.Message("  &fdb %H- Only backups the database");
-                p.Message("  &ffiles %H- Backups everything, except the database");
-                p.Message("  &flite %H- Backups everything, except BlockDB files");
-                p.Message("%H<compress> - Whether to compress the backup (default yes)");
+                p.Message("&T/Server backup [mode] <compress>");
+                p.Message("&HMode can be one of the following:");
+                p.Message("  &fall &H- Backups everything (default)");
+                p.Message("  &fdb &H- Only backups the database");
+                p.Message("  &ffiles &H- Backups everything, except the database");
+                p.Message("  &flite &H- Backups everything, except BlockDB files");
+                p.Message("&H<compress> - Whether to compress the backup (default yes)");
             } else {
                 base.Help(p, message);
             }
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Server reload %H- Reloads the server files");
-            p.Message("%T/Server public/private %H- Makes the server public or private");
-            p.Message("%T/Server update %H- Force updates the server");
-            p.Message("%T/Server restore %H- Restores the server from a backup");           
-            p.Message("%T/Server backup %H- Make a backup. See %T/help server backup");
-            p.Message("%T/Server backup table [name] %H- Backups that database table");
-            p.Message("%T/Server import [name] %H- Imports a backed up database table");
-            p.Message("%T/Server upgradeblockdb %H- Dumps BlockDB tables from database");
-            p.Message("%HOnly useful when upgrading from a very old {0} version", Server.SoftwareName);
+            p.Message("&T/Server reload &H- Reloads the server files");
+            p.Message("&T/Server public/private &H- Makes the server public or private");
+            p.Message("&T/Server update &H- Force updates the server");
+            p.Message("&T/Server restore &H- Restores the server from a backup");           
+            p.Message("&T/Server backup &H- Make a backup. See &T/help server backup");
+            p.Message("&T/Server backup table [name] &H- Backups that database table");
+            p.Message("&T/Server import [name] &H- Imports a backed up database table");
+            p.Message("&T/Server upgradeblockdb &H- Dumps BlockDB tables from database");
+            p.Message("&HOnly useful when upgrading from a very old {0} version", Server.SoftwareName);
         }
     }
 }

@@ -66,10 +66,10 @@ namespace MCGalaxy.Games {
             if (FreezeMode) {
                 Map.Message("You have 20 seconds to stand on a square");
                 Map.Message("You won't be able to move from that square once the game starts!");
-                DoCountdown("&b{0} %Sseconds left", 20, 20);
+                DoCountdown("&b{0} &Sseconds left", 20, 20);
             } else {
                 Map.Message("You have 5 seconds before squares start disappearing");
-                DoCountdown("&b{0} %Sseconds left", 5, 5);
+                DoCountdown("&b{0} &Sseconds left", 5, 5);
             }
             
             if (!Running) return;
@@ -210,12 +210,12 @@ namespace MCGalaxy.Games {
             
             switch (players.Length) {
                 case 1:
-                    Map.Message(players[0].ColoredName + " %Sis the winner!");
+                    Map.Message(players[0].ColoredName + " &Sis the winner!");
                     EndRound(players[0]);
                     break;
                 case 2:
                     Map.Message("Only 2 Players left:");
-                    Map.Message(players[0].ColoredName + " %Sand " + players[1].ColoredName);
+                    Map.Message(players[0].ColoredName + " &Sand " + players[1].ColoredName);
                     break;
                 default:
                     Map.Message(players.Length + " players left!");

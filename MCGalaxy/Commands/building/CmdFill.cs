@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Building {
             bool confirmed = IsConfirmed(dArgs.Message), success = true;
             if (count < p.group.DrawLimit && count > p.level.ReloadThreshold && !confirmed) {
                 p.Message("This fill would affect {0} blocks.", count);
-                p.Message("If you still want to fill, type %T/Fill {0} confirm", dArgs.Message);
+                p.Message("If you still want to fill, type &T/Fill {0} confirm", dArgs.Message);
             } else {
                 success = base.DoDraw(p, marks, state, block);
             }
@@ -95,10 +95,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Fill <brush args>");
-            p.Message("%HFills the area specified with the output of your current brush.");
-            p.Message("%T/Fill [mode] <brush args>");
-            p.Message("%HModes: &fnormal/up/down/layer/vertical_x/vertical_z/2d");
+            p.Message("&T/Fill <brush args>");
+            p.Message("&HFills the area specified with the output of your current brush.");
+            p.Message("&T/Fill [mode] <brush args>");
+            p.Message("&HModes: &fnormal/up/down/layer/vertical_x/vertical_z/2d");
             p.Message(BrushHelpLine);
         }
     }

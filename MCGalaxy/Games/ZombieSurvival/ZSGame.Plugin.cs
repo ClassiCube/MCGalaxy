@@ -116,7 +116,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerConnect(Player p) {
             if (GetConfig().SetMainLevel) return;
-            p.Message("&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
+            p.Message("&3Zombie Survival &Sis running! Type &T/ZS go &Sto join");
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
@@ -150,11 +150,11 @@ namespace MCGalaxy.Games {
 
             double startLeft = (RoundStart - DateTime.UtcNow).TotalSeconds;
             if (startLeft >= 0) {
-                p.Message("&a{0} %Sseconds left until the round starts. &aRun!", (int)startLeft);
+                p.Message("&a{0} &Sseconds left until the round starts. &aRun!", (int)startLeft);
             }
             
             MessageMapInfo(p);
-            p.Message("This map's win chance is &a{0}%S%", Map.WinChance);
+            p.Message("This map's win chance is &a{0}&S%", Map.WinChance);
         }
         
         void HandlePlayerChat(Player p, string message) {
@@ -244,17 +244,17 @@ namespace MCGalaxy.Games {
             if ((!nonReplacable && data.BlocksStacked == 2) || (nonReplacable && data.BlocksStacked == 1)) {
                 TimeSpan delta = DateTime.UtcNow - data.LastPillarWarn;
                 if (delta.TotalSeconds >= 5) {
-                    Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
+                    Chat.MessageFromOps(p, "  &cWarning: λNICK &Sis pillaring!");
                     data.LastPillarWarn = DateTime.UtcNow;
                 }
                 
                 string action = data.PillarFined ? "kicked" : "fined 10 " + Server.Config.Currency;
-                p.Message("You are pillaring! %WStop before you are " + action + "!");
+                p.Message("You are pillaring! &WStop before you are " + action + "!");
             } else if ((!nonReplacable && data.BlocksStacked == 4) || (nonReplacable && data.BlocksStacked == 2)) {
                 if (!data.PillarFined) {
-                    Chat.MessageFromOps(p, "  &cWarning: λNICK %Sis pillaring!");
+                    Chat.MessageFromOps(p, "  &cWarning: λNICK &Sis pillaring!");
                     Command.Find("Take").Use(Player.Console, p.name + " 10 Auto fine for pillaring");
-                    p.Message("  %WThe next time you pillar, you will be &4kicked!");
+                    p.Message("  &WThe next time you pillar, you will be &4kicked!");
                 } else {
                     ModAction action = new ModAction(p.name, Player.Console, ModActionType.Kicked, "Auto kick for pillaring");
                     OnModActionEvent.Call(action);

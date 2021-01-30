@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Clear %H- Clears your chat.");
-            p.Message("%T/Clear global %H- Clears chat of all users.");
+            p.Message("&T/Clear &H- Clears your chat.");
+            p.Message("&T/Clear global &H- Clears chat of all users.");
         }
     }
 }

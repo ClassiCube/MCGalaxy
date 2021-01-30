@@ -45,24 +45,24 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void PrintHelpMenu(Player p) {
-            p.Message("%HCommand Categories:");
-            p.Message("  %TBuilding Chat Economy Games Info Moderation Other World");
-            p.Message("%HOther Categories:");
-            p.Message("  %TRanks Colors Emotes Shortcuts Commands");
-            p.Message("%HTo view help for a category, type %T/Help CategoryName");
-            p.Message("%HTo see detailed help for a command, type %T/Help CommandName");
-            p.Message("%HTo see your stats, type %T/Info");
-            p.Message("%HTo see loaded maps, type %T/Maps");
-            p.Message("%HTo view your personal world options, use %T/Realm");
-            p.Message("%HTo join a map, type %T/Goto WorldName");
-            p.Message("%HTo send private messages, type %T@PlayerName Message");
+            p.Message("&HCommand Categories:");
+            p.Message("  &TBuilding Chat Economy Games Info Moderation Other World");
+            p.Message("&HOther Categories:");
+            p.Message("  &TRanks Colors Emotes Shortcuts Commands");
+            p.Message("&HTo view help for a category, type &T/Help CategoryName");
+            p.Message("&HTo see detailed help for a command, type &T/Help CommandName");
+            p.Message("&HTo see your stats, type &T/Info");
+            p.Message("&HTo see loaded maps, type &T/Maps");
+            p.Message("&HTo view your personal world options, use &T/Realm");
+            p.Message("&HTo join a map, type &T/Goto WorldName");
+            p.Message("&HTo send private messages, type &T@PlayerName Message");
         }
         
         static void PrintRanks(Player p) {
             foreach (Group grp in Group.GroupList) {
                 if (grp.Permission >= LevelPermission.Nobody) continue;
 
-                p.Message("{0} %S- Draw: {1}, Perm: {2}, max realms: {3}",
+                p.Message("{0} &S- Draw: {1}, Perm: {2}, max realms: {3}",
                           grp.ColoredName, grp.DrawLimit, (int)grp.Permission, grp.OverseerMaps);
             }
         }
@@ -71,14 +71,14 @@ namespace MCGalaxy.Commands.Info {
             p.Message("&fTo use a color, put a '%' and then put the color code.");
             p.Message("Colors Available:");
             
-            p.Message("0 - &0{0} %S| 1 - &1{1} %S| 2 - &2{2} %S| 3 - &3{3}",
+            p.Message("0 - &0{0} &S| 1 - &1{1} &S| 2 - &2{2} &S| 3 - &3{3}",
                            Colors.Name('0'), Colors.Name('1'), Colors.Name('2'), Colors.Name('3'));
-            p.Message("4 - &4{0} %S| 5 - &5{1} %S| 6 - &6{2} %S| 7 - &7{3}",
+            p.Message("4 - &4{0} &S| 5 - &5{1} &S| 6 - &6{2} &S| 7 - &7{3}",
                            Colors.Name('4'), Colors.Name('5'), Colors.Name('6'), Colors.Name('7'));
             
-            p.Message("8 - &8{0} %S| 9 - &9{1} %S| a - &a{2} %S| b - &b{3}",
+            p.Message("8 - &8{0} &S| 9 - &9{1} &S| a - &a{2} &S| b - &b{3}",
                            Colors.Name('8'), Colors.Name('9'), Colors.Name('a'), Colors.Name('b'));
-            p.Message("c - &c{0} %S| d - &d{1} %S| e - &e{2} %S| f - &f{3}",
+            p.Message("c - &c{0} &S| d - &d{1} &S| e - &e{2} &S| f - &f{3}",
                            Colors.Name('c'), Colors.Name('d'), Colors.Name('e'), Colors.Name('f'));
             
             foreach (ColorDesc col in Colors.List) {
@@ -100,9 +100,9 @@ namespace MCGalaxy.Commands.Info {
         static string FormatEmote(char emote) {
             List<string> keywords = new List<string>();
             foreach (KeyValuePair<string, char> kvp in EmotesHandler.Keywords) {
-                if (kvp.Value == emote) keywords.Add("(%S" + kvp.Key + ")");
+                if (kvp.Value == emote) keywords.Add("(&S" + kvp.Key + ")");
             }
-            return "&f" + emote + " %S- " + keywords.Join();
+            return "&f" + emote + " &S- " + keywords.Join();
         }
         
         bool ParseCommand(Player p, string message) {

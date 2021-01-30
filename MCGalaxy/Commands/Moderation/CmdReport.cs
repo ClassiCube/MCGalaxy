@@ -79,8 +79,8 @@ namespace MCGalaxy.Commands.Moderation {
                 MultiPageOutput.Output(p, users, pl => p.FormatNick(pl),
                                        "Review list", "players", modifier, false);
                 
-                p.Message("Use %T/Report check [Player] %Sto view report details.");
-                p.Message("Use %T/Report delete [Player] %Sto delete a report");
+                p.Message("Use &T/Report check [Player] &Sto view report details.");
+                p.Message("Use &T/Report delete [Player] &Sto delete a report");
             } else {
                 p.Message("No reports were found.");
             }
@@ -118,8 +118,8 @@ namespace MCGalaxy.Commands.Moderation {
             
             DeleteReport(target);
             string nick = p.FormatNick(target);
-            p.Message("Reports on {0} %Swere deleted.", nick);
-            Chat.MessageFromOps(p, "λNICK %Sdeleted reports on " + nick);
+            p.Message("Reports on {0} &Swere deleted.", nick);
+            Chat.MessageFromOps(p, "λNICK &Sdeleted reports on " + nick);
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
         }
         
@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);
             if (reports.Count >= 5) {
-                p.Message("{0} %Walready has 5 reports! Please wait until an {1} %Whas reviewed these reports first!",
+                p.Message("{0} &Walready has 5 reports! Please wait until an {1} &Whas reviewed these reports first!",
                           p.FormatNick(target), checkPerms.Describe());
                 return;
             }
@@ -164,16 +164,16 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("&aReport sent! It should be viewed when a {0} &ais online", 
                            checkPerms.Describe());
             
-            string opsMsg = "λNICK %Smade a report, view it with %T/Report check " + target;
+            string opsMsg = "λNICK &Smade a report, view it with &T/Report check " + target;
             Chat.MessageFrom(ChatScope.Perms, p, opsMsg, checkPerms, null, true);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Report list %H- Lists all reported players.");
-            p.Message("%T/Report check [player] %H- Views reports for that player.");
-            p.Message("%T/Report delete [player] %H- Deletes reports for that player.");
-            p.Message("%T/Report clear %H- Clears &call%H reports.");
-            p.Message("%T/Report [player] [reason] %H- Reports that player for the given reason.");
+            p.Message("&T/Report list &H- Lists all reported players.");
+            p.Message("&T/Report check [player] &H- Views reports for that player.");
+            p.Message("&T/Report delete [player] &H- Deletes reports for that player.");
+            p.Message("&T/Report clear &H- Clears &call&H reports.");
+            p.Message("&T/Report [player] [reason] &H- Reports that player for the given reason.");
         }
     }
 }

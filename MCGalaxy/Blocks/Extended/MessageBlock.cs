@@ -75,7 +75,7 @@ namespace MCGalaxy.Blocks.Extended {
             bool mbUseable = !cmd.MessageBlockRestricted && !cmd.type.CaselessContains("mod");
             
             if (p.CanUse(cmd) && (allCmds || mbUseable)) return true;
-            p.Message("You cannot use %T/{0} %Sin a messageblock.", cmd.name);
+            p.Message("You cannot use &T/{0} &Sin a messageblock.", cmd.name);
             return false;
         }
         

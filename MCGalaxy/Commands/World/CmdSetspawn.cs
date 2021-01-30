@@ -39,19 +39,19 @@ namespace MCGalaxy.Commands.World {
             
             Player target = PlayerInfo.FindMatches(p, message);
             if (target == null) return;
-            if (target.level != p.level) { p.Message("{0} %Sis on a different map.", p.FormatNick(target)); return; }
+            if (target.level != p.level) { p.Message("{0} &Sis on a different map.", p.FormatNick(target)); return; }
             if (!CheckRank(p, data, target, "set spawn of", false)) return;
             
-            p.Message("Set spawn location of {0} %Sto your current location.", p.FormatNick(target));
+            p.Message("Set spawn location of {0} &Sto your current location.", p.FormatNick(target));
             target.Pos = p.Pos; target.Rot = p.Rot;
             Entities.Spawn(target, target);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/SetSpawn");
-            p.Message("%HSets the spawn location of the map to your current location.");
-            p.Message("%T/SetSpawn [player]");
-            p.Message("%HSets the spawn location of that player");
+            p.Message("&T/SetSpawn");
+            p.Message("&HSets the spawn location of the map to your current location.");
+            p.Message("&T/SetSpawn [player]");
+            p.Message("&HSets the spawn location of that player");
         }
     }
 }

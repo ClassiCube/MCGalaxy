@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
             if (!BrushFactory.Find("Paste").Validate(args)) return;
             
             p.Message("Place a block in the corner of where you want to paste.");
-            p.MakeSelection(1, "Selecting location for %SPaste", args, DoPaste);
+            p.MakeSelection(1, "Selecting location for &SPaste", args, DoPaste);
         }
 
         bool DoPaste(Player p, Vec3S32[] m, object state, BlockID block) {
@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Paste %H- Pastes the stored copy.");
-            p.Message("%T/Paste [block] [block2].. %H- Pastes only the specified blocks from the copy.");
-            p.Message("%T/Paste not [block] [block2].. %H- Pastes all blocks from the copy, except for the specified blocks.");
-            p.Message("&4BEWARE: %SThe blocks will always be pasted in a set direction");
+            p.Message("&T/Paste &H- Pastes the stored copy.");
+            p.Message("&T/Paste [block] [block2].. &H- Pastes only the specified blocks from the copy.");
+            p.Message("&T/Paste not [block] [block2].. &H- Pastes all blocks from the copy, except for the specified blocks.");
+            p.Message("&4BEWARE: &SThe blocks will always be pasted in a set direction");
         }
     }
 }

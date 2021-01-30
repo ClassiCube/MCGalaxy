@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void Add(Player p, string player) {
             if (!Server.whiteList.Add(player)) {
-                p.Message(player + " %Sis already on the whitelist!"); return;
+                p.Message(player + " &Sis already on the whitelist!"); return;
             } else {
-                Chat.MessageFromOps(p, "λNICK %Sadded &f" + player + " %Sto the whitelist.");
+                Chat.MessageFromOps(p, "λNICK &Sadded &f" + player + " &Sto the whitelist.");
                 Server.whiteList.Save();
                 Logger.Log(LogType.UserActivity, "WHITELIST: Added " + player);
             }
@@ -58,10 +58,10 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void Remove(Player p, string player) {
             if (!Server.whiteList.Remove(player)) {
-                p.Message(player + " %Sis not on the whitelist!"); return;
+                p.Message(player + " &Sis not on the whitelist!"); return;
             } else {
                 Server.whiteList.Save();
-                Chat.MessageFromOps(p, "λNICK %Sremoved &f" + player + " %Sfrom the whitelist.");
+                Chat.MessageFromOps(p, "λNICK &Sremoved &f" + player + " &Sfrom the whitelist.");
                 Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
             }
         }
@@ -71,10 +71,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Whitelist add/del [player]");
-            p.Message("%HAdds or removes [player] from the whitelist.");
-            p.Message("%T/Whitelist list");
-            p.Message("%HLists all players who are on the whitelist.");
+            p.Message("&T/Whitelist add/del [player]");
+            p.Message("&HAdds or removes [player] from the whitelist.");
+            p.Message("&T/Whitelist list");
+            p.Message("&HLists all players who are on the whitelist.");
         }
     }
 }

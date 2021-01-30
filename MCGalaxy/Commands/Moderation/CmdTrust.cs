@@ -27,13 +27,13 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             
             target.ignoreGrief = !target.ignoreGrief;
-            p.Message("{0}%S's trust status: " + target.ignoreGrief, p.FormatNick(target));
+            p.Message("{0}&S's trust status: " + target.ignoreGrief, p.FormatNick(target));
             target.Message("Your trust status was changed to: " + target.ignoreGrief);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Trust [name]");
-            p.Message("%HTurns off the anti-grief for [name]");
+            p.Message("&T/Trust [name]");
+            p.Message("&HTurns off the anti-grief for [name]");
         }
     }
 }

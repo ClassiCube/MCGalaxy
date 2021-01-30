@@ -61,7 +61,7 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (Unverified) {
-                Message("%WYou must first verify with %T/Pass [Password]");
+                Message("&WYou must first verify with &T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
@@ -422,7 +422,7 @@ namespace MCGalaxy {
             if (TimesDied > short.MaxValue) TimesDied = short.MaxValue;
 
             if (Server.Config.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
-                AnnounceDeath("@p %Shas died &3" + TimesDied + " times");
+                AnnounceDeath("@p &Shas died &3" + TimesDied + " times");
             }
             lastDeath = DateTime.UtcNow;
             return true;
@@ -482,7 +482,7 @@ namespace MCGalaxy {
             }
 
             if (text.CaselessContains("^detail.user=")) {
-                Message("%WYou cannot use WoM detail strings in a chat message.");
+                Message("&WYou cannot use WoM detail strings in a chat message.");
                 return true;
             }
 
@@ -521,7 +521,7 @@ namespace MCGalaxy {
                 if (text.Length == 0) {
                     Message("Cannot repeat command - no commands used yet."); return;
                 }
-                Message("Repeating %T/" + text);
+                Message("Repeating &T/" + text);
             }
             
             string cmd, args;            
@@ -532,7 +532,7 @@ namespace MCGalaxy {
         string HandleJoker(string text) {
             if (!joker) return text;
             Logger.Log(LogType.PlayerChat, "<JOKER>: {0}: {1}", name, text);
-            Chat.MessageFromOps(this, "%S<&aJ&bO&cK&5E&9R%S>: λNICK:&f " + text);
+            Chat.MessageFromOps(this, "&S<&aJ&bO&cK&5E&9R&S>: λNICK:&f " + text);
 
             TextFile jokerFile = TextFile.Files["Joker"];
             jokerFile.EnsureExists();
@@ -556,7 +556,7 @@ namespace MCGalaxy {
                 thread.Start();
             } catch (Exception e) {
                 Logger.LogError(e); 
-                Message("%WCommand failed");
+                Message("&WCommand failed");
             }
         }
         
@@ -583,7 +583,7 @@ namespace MCGalaxy {
                 thread.Start();
             } catch (Exception e) {
                 Logger.LogError(e); 
-                Message("%WCommand failed.");
+                Message("&WCommand failed.");
             }
         }
         
@@ -593,7 +593,7 @@ namespace MCGalaxy {
                 // failsafe for when server has turned off command spam checking
                 if (mbRecursion >= 100) {
                     mbRecursion = 0;
-                    Message("%WInfinite message block loop detected, aborting");
+                    Message("&WInfinite message block loop detected, aborting");
                     return false;
                 }
             } else if (data.Context == CommandContext.Normal) { 
@@ -611,7 +611,7 @@ namespace MCGalaxy {
                 Message("You cannot use any commands while jailed."); return false;
             }
             if (Unverified && !(cmd == "pass" || cmd == "setpass")) {
-                Message("%WYou must verify first with %T/Pass [Password]"); return false;
+                Message("&WYou must verify first with &T/Pass [Password]"); return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
@@ -629,7 +629,7 @@ namespace MCGalaxy {
             byte bindIndex;
             if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
                 if (CmdBindings[bindIndex] == null) { 
-                    Message("No command is bound to: %T/" + cmdName); return null; 
+                    Message("No command is bound to: &T/" + cmdName); return null; 
                 }
                 
                 CmdBindings[bindIndex].Separate(out cmdName, out cmdArgs);
@@ -660,10 +660,10 @@ namespace MCGalaxy {
                 Message("Command is disabled as " + reason); return null;
             }
             if (level != null && level.IsMuseum && !command.museumUsable) {
-                Message("Cannot use %T/{0} %Swhile in a museum.", command.name); return null;
+                Message("Cannot use &T/{0} &Swhile in a museum.", command.name); return null;
             }
             if (frozen && !command.UseableWhenFrozen) {
-                Message("Cannot use %T/{0} %Swhile frozen.", command.name); return null;
+                Message("Cannot use &T/{0} &Swhile frozen.", command.name); return null;
             }
             return command;
         }
@@ -687,7 +687,7 @@ namespace MCGalaxy {
                 command.Use(this, args, data);
             } catch (Exception e) {
                 Logger.LogError(e);
-                Message("%WAn error occured when using the command!");
+                Message("&WAn error occured when using the command!");
                 Message(e.GetType() + ": " + e.Message);
                 return false;
             }

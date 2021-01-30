@@ -62,8 +62,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ReplaceBrush [block] [brush name] <brush args>");
-            p.Message("%HReplaces all blocks of the given type, " +
+            p.Message("&T/ReplaceBrush [block] [brush name] <brush args>");
+            p.Message("&HReplaces all blocks of the given type, " +
                                "in the specified area with the output of the given brush.");
             p.Message(BrushHelpLine);
         }
@@ -76,8 +76,8 @@ namespace MCGalaxy.Commands.Building {
         protected override bool ReplaceNot { get { return true; } }
         
         public override void Help(Player p) {
-            p.Message("%T/ReplaceNotBrush [block] [brush name] <brush args>");
-            p.Message("%HReplaces all blocks (except for the given block), " +
+            p.Message("&T/ReplaceNotBrush [block] [brush name] <brush args>");
+            p.Message("&HReplaces all blocks (except for the given block), " +
                                "in the specified area with the output of the given brush.");
             p.Message(BrushHelpLine);
         }

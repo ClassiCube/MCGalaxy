@@ -407,7 +407,7 @@ namespace MCGalaxy.Generator {
         
         public static void RegisterGenerators() {
             string[] names = Enum.GetNames(typeof(MapGenBiome));
-            string desc = "%HSeed specifies biome of the map. " +
+            string desc = "&HSeed specifies biome of the map. " +
                  "It must be one of the following: &f" + names.Join();
                                                                                    
             for (MapGenTheme theme = 0; theme < MapGenTheme.Count; theme++) {

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
                 bool anyBinds = false;
                 for (int i = 0; i < p.CmdBindings.Length; i++)  {
                     if (p.CmdBindings[i] != null) {
-                        p.Message("%T/{0} %Sbound to %T/{1}", i, p.CmdBindings[i]);
+                        p.Message("&T/{0} &Sbound to &T/{1}", i, p.CmdBindings[i]);
                         anyBinds = true;
                     }
                 }
@@ -46,22 +46,22 @@ namespace MCGalaxy.Commands.Building {
             
             if (parts.Length == 1) {
                 if (p.CmdBindings[j] == null) {
-                    p.Message("No command bound for %T/{0}", j);
+                    p.Message("No command bound for &T/{0}", j);
                 } else {
-                    p.Message("%T/{0} %Sbound to %T/{1}", j, p.CmdBindings[j]);
+                    p.Message("&T/{0} &Sbound to &T/{1}", j, p.CmdBindings[j]);
                 }
             } else {
                 p.CmdBindings[j] = parts[1];
-                p.Message("Bound %T/{1} %Sto %T/{0}", j, p.CmdBindings[j]);
+                p.Message("Bound &T/{1} &Sto &T/{0}", j, p.CmdBindings[j]);
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CmdBind [num] [command]%H- Binds [num] to [command]");
-            p.Message("%H  Use with \"%T/[num]%H\" &b(example: %T/2&b)");
-            p.Message("%T/CmdBind [num] %H- Lists the command currently bound to [num]");
-            p.Message("%T/CmdBind %H- Lists all bound commands");
-            p.Message("%H[num] must be between 0 and 9");
+            p.Message("&T/CmdBind [num] [command]&H- Binds [num] to [command]");
+            p.Message("&H  Use with \"&T/[num]&H\" &b(example: &T/2&b)");
+            p.Message("&T/CmdBind [num] &H- Lists the command currently bound to [num]");
+            p.Message("&T/CmdBind &H- Lists all bound commands");
+            p.Message("&H[num] must be between 0 and 9");
         }
     }
 }

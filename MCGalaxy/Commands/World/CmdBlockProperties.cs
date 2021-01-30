@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
                 return p.level.Props;
             }
             
-            p.Message("%WScope must be: global or level");
+            p.Message("&WScope must be: global or level");
             return null;
         }
         
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.World {
             BlockID block = Block.Parse(pScope, str);
             
             if (block == Block.Invalid) {
-                p.Message("%WThere is no block \"{0}\".", str);
+                p.Message("&WThere is no block \"{0}\".", str);
             }
             return block;
         }
@@ -78,24 +78,24 @@ namespace MCGalaxy.Commands.World {
         internal static void Detail(Player p, BlockProps[] scope, BlockID block) {
             BlockProps props = scope[block];
             string name = BlockOptions.Name(scope, p, block);
-            p.Message("%TProperties of {0}:", name);
+            p.Message("&TProperties of {0}:", name);
             
             if (props.KillerBlock)          p.Message("  Kills players who collide with this block");
-            if (props.DeathMessage != null) p.Message("  Death message: %S" + props.DeathMessage);
+            if (props.DeathMessage != null) p.Message("  Death message: &S" + props.DeathMessage);
             
             if (props.IsDoor)  p.Message("  Is an ordinary door");
             if (props.IsTDoor) p.Message("  Is a tdoor (allows other blocks through when open)");
             if (props.oDoorBlock != Block.Invalid) 
                 p.Message("  Is an odoor (can be toggled by doors, and toggles other odoors)");
             
-            if (props.IsPortal)       p.Message("  Can be used as a %T/Portal");
-            if (props.IsMessageBlock) p.Message("  Can be used as a %T/MessageBlock");
+            if (props.IsPortal)       p.Message("  Can be used as a &T/Portal");
+            if (props.IsMessageBlock) p.Message("  Can be used as a &T/MessageBlock");
             
             if (props.WaterKills) p.Message("  Is destroyed by flooding water");
             if (props.LavaKills)  p.Message("  Is destroyed by flooding lava");
             
             if (props.OPBlock) p.Message("  Is not affected by explosions");
-            if (props.IsRails) p.Message("  Can be used as rails for %T/Train");
+            if (props.IsRails) p.Message("  Can be used as rails for &T/Train");
             
             if (props.AnimalAI != AnimalAI.None) {
                 p.Message("  Has the {0} AI behaviour", props.AnimalAI);
@@ -104,7 +104,7 @@ namespace MCGalaxy.Commands.World {
                 p.Message("  Stacks as {0} when placed on top of itself", 
                           BlockOptions.Name(scope, p, props.StackBlock));
             }
-            if (props.Drownable) p.Message("%H  Players can drown in this block");
+            if (props.Drownable) p.Message("&H  Players can drown in this block");
             
             if (props.GrassBlock != Block.Invalid) {
                 p.Message("  Grows into {0} when in sunlight", 
@@ -169,21 +169,21 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {                	
-            p.Message("%T/BlockProps global/level list");
-            p.Message("%HLists blocks which have non-default properties");
-            p.Message("%T/BlockProps global/level [id/name] copy [new id]");
-            p.Message("%HCopies properties of that block to another");
-            p.Message("%T/BlockProps global/level [id/name] reset");
-            p.Message("%HResets properties of that block to their default");
-            p.Message("%T/BlockProps global/level [id/name] [property] <value>");
-            p.Message("%HSets various properties of that block");
-            p.Message("%H  Use %T/Help BlockProps props %Hfor a list of properties");
+            p.Message("&T/BlockProps global/level list");
+            p.Message("&HLists blocks which have non-default properties");
+            p.Message("&T/BlockProps global/level [id/name] copy [new id]");
+            p.Message("&HCopies properties of that block to another");
+            p.Message("&T/BlockProps global/level [id/name] reset");
+            p.Message("&HResets properties of that block to their default");
+            p.Message("&T/BlockProps global/level [id/name] [property] <value>");
+            p.Message("&HSets various properties of that block");
+            p.Message("&H  Use &T/Help BlockProps props &Hfor a list of properties");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("props") || message.CaselessEq("properties")) {
-                p.Message("%HProperties: &f{0}", BlockOptions.Options.Join(o => o.Name));
-                p.Message("%HUse %T/Help BlockProps [property] %Hfor more details");
+                p.Message("&HProperties: &f{0}", BlockOptions.Options.Join(o => o.Name));
+                p.Message("&HUse &T/Help BlockProps [property] &Hfor more details");
                 return;
             }
             
@@ -191,7 +191,7 @@ namespace MCGalaxy.Commands.World {
             if (opt != null) {
                 p.Message(opt.Help);
             } else {
-                p.Message("%WUnrecognised property \"{0}\"", message);
+                p.Message("&WUnrecognised property \"{0}\"", message);
             }
         }
     }

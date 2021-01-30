@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
 
-            p.Message("Now {0} %SMBs.", 
+            p.Message("Now {0} &SMBs.", 
                            p.showMBs ? "showing &a" + coords.Count : "hiding");
         }
         
@@ -151,13 +151,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/MB [block] [message]");
-            p.Message("%HPlaces a message in your next block.");
+            p.Message("&T/MB [block] [message]");
+            p.Message("&HPlaces a message in your next block.");
             List<string> names = SupportedBlocks(p);            
-            p.Message("%H  Supported blocks: %S{0}", names.Join());
-            p.Message("%H  Use | to separate commands, e.g. /say 1 |/say 2");
-            p.Message("%H  Note: \"@p\" is a placeholder for player who clicked.");
-            p.Message("%T/MB show %H- Shows or hides message blocks");
+            p.Message("&H  Supported blocks: &S{0}", names.Join());
+            p.Message("&H  Use | to separate commands, e.g. /say 1 |/say 2");
+            p.Message("&H  Note: \"@p\" is a placeholder for player who clicked.");
+            p.Message("&T/MB show &H- Shows or hides message blocks");
         }
     }
 }

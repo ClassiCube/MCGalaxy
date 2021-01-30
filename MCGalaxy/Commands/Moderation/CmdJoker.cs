@@ -40,25 +40,25 @@ namespace MCGalaxy.Commands.Moderation {
 
             if (!who.joker) {
                 if (stealth) { 
-                    Chat.MessageFromOps(who, "λNICK %Sis now STEALTH jokered."); 
+                    Chat.MessageFromOps(who, "λNICK &Sis now STEALTH jokered."); 
                 } else {
-                    Chat.MessageFrom(who, "λNICK %Sis now a &aJ&bo&ck&5e&9r%S.", null, true);
+                    Chat.MessageFrom(who, "λNICK &Sis now a &aJ&bo&ck&5e&9r&S.", null, true);
                 }
             } else {
                 if (stealth) { 
-                    Chat.MessageFromOps(who, "λNICK %Sis now STEALTH unjokered.");
+                    Chat.MessageFromOps(who, "λNICK &Sis now STEALTH unjokered.");
                 } else {
-                    Chat.MessageFrom(who, "λNICK %Sis no longer a &aJ&bo&ck&5e&9r%S.", null, true);
+                    Chat.MessageFrom(who, "λNICK &Sis no longer a &aJ&bo&ck&5e&9r&S.", null, true);
                 }
             }
             who.joker = !who.joker;
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Joker [player]");
-            p.Message("%HMakes that player become a joker!");
-            p.Message("%T/Joker #[player]");
-            p.Message("%HMakes that player silently become a joker!");
+            p.Message("&T/Joker [player]");
+            p.Message("&HMakes that player become a joker!");
+            p.Message("&T/Joker #[player]");
+            p.Message("&HMakes that player silently become a joker!");
         }
     }
 }

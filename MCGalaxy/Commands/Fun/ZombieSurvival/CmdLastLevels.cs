@@ -36,8 +36,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/LastLevels");
-            p.Message("%HShows the maps most recently used for zombie survival rounds.");
+            p.Message("&T/LastLevels");
+            p.Message("&HShows the maps most recently used for zombie survival rounds.");
         }
     }
 }

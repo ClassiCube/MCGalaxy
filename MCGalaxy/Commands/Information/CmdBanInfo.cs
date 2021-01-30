@@ -44,23 +44,23 @@ namespace MCGalaxy.Commands.Info {
             string ip = PlayerInfo.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
-            if (!ipBanned && isBanned) msg += " %Sis &CBANNED";
-            else if (!ipBanned && !isBanned) msg += " %Sis not banned";
-            else if (ipBanned && isBanned) msg += " %Sand their IP are &CBANNED";
-            else msg += " %Sis not banned, but their IP is &CBANNED";
+            if (!ipBanned && isBanned) msg += " &Sis &CBANNED";
+            else if (!ipBanned && !isBanned) msg += " &Sis not banned";
+            else if (ipBanned && isBanned) msg += " &Sand their IP are &CBANNED";
+            else msg += " &Sis not banned, but their IP is &CBANNED";
             
             string banner, reason, prevRank;
             DateTime time;
             Ban.GetBanData(plName, out banner, out reason, out time, out prevRank);
             if (banner != null && permaBanned) {
                 string grpName = Group.GetColoredName(prevRank);
-                msg += " %S(Former rank: " + grpName + "%S)";
+                msg += " &S(Former rank: " + grpName + "&S)";
             }
             p.Message(msg);
             
             if (tempExpiry >= DateTime.UtcNow) {
                 TimeSpan delta = tempExpiry - DateTime.UtcNow;
-                p.Message("Temp-banned %S by {1} %Sfor another {0}",
+                p.Message("Temp-banned &S by {1} &Sfor another {0}",
                                delta.Shorten(), GetName(p, tempBanner));
                 if (tempReason.Length > 0) {
                     p.Message("Reason: {0}",tempReason);
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Info {
             if (banner != null) {
                 DisplayDetails(p, banner, reason, time, permaBanned ? "Banned" : "Last banned");
             } else {
-                p.Message("No previous bans recorded for {0}%S.", nick);
+                p.Message("No previous bans recorded for {0}&S.", nick);
             }            
             Ban.GetUnbanData(plName, out banner, out reason, out time);
             DisplayDetails(p, banner, reason, time, permaBanned ? "Last unbanned" : "Unbanned");
@@ -92,8 +92,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BanInfo [player]");
-            p.Message("%HOutputs information about current and/or previous ban/unban for that player.");
+            p.Message("&T/BanInfo [player]");
+            p.Message("&HOutputs information about current and/or previous ban/unban for that player.");
         }
     }
 }

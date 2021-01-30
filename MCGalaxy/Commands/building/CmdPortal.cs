@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Building {
             if (!CommandParser.IsBlockAllowed(p, "place a portal of", pArgs.Block)) return;
             pArgs.Entries = new List<PortalPos>();
             
-            p.Message("Place an &aEntry block %Sfor the portal");
+            p.Message("Place an &aEntry block &Sfor the portal");
             p.ClearBlockchange();
             p.blockchangeObject = pArgs;
             p.Blockchange += EntryChange;
@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
 
-            p.Message("&3Exit %Sblock placed");
+            p.Message("&3Exit &Sblock placed");
             if (!p.staticCommands) return;
             args.Entries.Clear();
             p.blockchangeObject = args;
@@ -157,7 +157,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
             
-            p.Message("Now {0} %Sportals.", 
+            p.Message("Now {0} &Sportals.", 
                            p.showPortals ? "showing &a" + coords.Count : "hiding");
         }
         
@@ -186,14 +186,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Portal [block]");
-            p.Message("%HPlace a block for the entry, then another block for exit.");
-            p.Message("%T/Portal [block] multi");
-            p.Message("%HPlace multiple blocks for entries, then a {0} block for exit.", Block.GetName(p, Block.Red));
-            p.Message("%H  Note: The exit can be on a different level.");
+            p.Message("&T/Portal [block]");
+            p.Message("&HPlace a block for the entry, then another block for exit.");
+            p.Message("&T/Portal [block] multi");
+            p.Message("&HPlace multiple blocks for entries, then a {0} block for exit.", Block.GetName(p, Block.Red));
+            p.Message("&H  Note: The exit can be on a different level.");
             List<string> names = SupportedBlocks(p); 
-            p.Message("%H  Supported blocks: %S{0}", names.Join());
-            p.Message("%T/Portal show %H- Shows portals (green = entry, red = exit)");
+            p.Message("&H  Supported blocks: &S{0}", names.Join());
+            p.Message("&T/Portal show &H- Shows portals (green = entry, red = exit)");
         }
     }
 }

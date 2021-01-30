@@ -30,13 +30,13 @@ namespace MCGalaxy.Commands.Fun {
                                                           ZSGame.Instance.Infected.Items);
             if (infected.Count == 0) { p.Message("No one is infected"); return; }
             
-            p.Message("Players who are &cinfected %Sare:");
-            p.Message(infected.Join(pl => "&c" + pl.DisplayName + "%S"));
+            p.Message("Players who are &cinfected &Sare:");
+            p.Message(infected.Join(pl => "&c" + pl.DisplayName + "&S"));
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Infected");
-            p.Message("%HShows who is infected/a zombie");
+            p.Message("&T/Infected");
+            p.Message("&HShows who is infected/a zombie");
         }
     }
 }

@@ -39,20 +39,20 @@ namespace MCGalaxy.Commands.Chatting {
             } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
-                p.Message("Ping/latency list of online players: (&ALo%S:&7Avg%S:&CHi%S)ms");
+                p.Message("Ping/latency list of online players: (&ALo&S:&7Avg&S:&CHi&S)ms");
                 
                 foreach (Player target in players) {
                     if (!p.CanSee(target, data.Rank)) continue;
                     if (target.Ping.Measures() == 0)  continue;
-                    p.Message(target.Ping.FormatAll() + " %S- " + p.FormatNick(target));
+                    p.Message(target.Ping.FormatAll() + " &S- " + p.FormatNick(target));
                 }
             }
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Ping %H- Outputs details about your ping to the server.");
-            p.Message("%T/Ping all %H- Outputs ping details for all players.");
-            p.Message("&cNOTE: %HNot all clients support measuring ping.");
+            p.Message("&T/Ping &H- Outputs details about your ping to the server.");
+            p.Message("&T/Ping all &H- Outputs ping details for all players.");
+            p.Message("&cNOTE: &HNot all clients support measuring ping.");
         }
     }
 }

@@ -60,11 +60,11 @@ namespace MCGalaxy.Commands.Scripting {
             string dstPath = IScripting.PluginPath(name);
             
             if (!File.Exists(srcPath)) {
-                p.Message("File &9{0} %Snot found.", srcPath);
+                p.Message("File &9{0} &Snot found.", srcPath);
             } else if (engine.Compile(srcPath, dstPath, p)) {
                 p.Message("Plugin compiled successfully.");
             } else {
-                p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
+                p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }
         
@@ -74,10 +74,10 @@ namespace MCGalaxy.Commands.Scripting {
                 if (Plugin.Load(path, false)) {
                     p.Message("Plugin loaded successfully.");
                 } else {
-                    p.Message("%WError loading plugin. See error logs for more information.");
+                    p.Message("&WError loading plugin. See error logs for more information.");
                 }
             } else {
-                p.Message("File &9{0} %Snot found.", path);
+                p.Message("File &9{0} &Snot found.", path);
             }
         }
         
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Scripting {
                 if (Plugin.Unload(plugin, false)) {
                     p.Message("Plugin unloaded successfully.");
                 } else {
-                    p.Message("%WError unloading plugin. See error logs for more information.");
+                    p.Message("&WError unloading plugin. See error logs for more information.");
                 }
             } else {
                 p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
@@ -144,16 +144,16 @@ namespace MCGalaxy
 }}";
         
         public override void Help(Player p) {
-            p.Message("%T/Plugin create [name]");
-            p.Message("%HCreate a example .cs plugin file");
-            p.Message("%T/Plugin compile [name]");
-            p.Message("%HCompiles a .cs plugin file");
-            p.Message("%T/Plugin load [filename]");
-            p.Message("%HLoad a plugin from your plugins folder");
-            p.Message("%T/Plugin unload [name]");
-            p.Message("%HUnloads a currently loaded plugin");
-            p.Message("%T/Plugin list");
-            p.Message("%HLists all loaded plugins");
+            p.Message("&T/Plugin create [name]");
+            p.Message("&HCreate a example .cs plugin file");
+            p.Message("&T/Plugin compile [name]");
+            p.Message("&HCompiles a .cs plugin file");
+            p.Message("&T/Plugin load [filename]");
+            p.Message("&HLoad a plugin from your plugins folder");
+            p.Message("&T/Plugin unload [name]");
+            p.Message("&HUnloads a currently loaded plugin");
+            p.Message("&T/Plugin list");
+            p.Message("&HLists all loaded plugins");
         }
     }
 }

@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Lockdown [level]");
-            p.Message("%HPrevents new players from joining that level.");
-            p.Message("%HUsing /lockdown again will unlock that level");
+            p.Message("&T/Lockdown [level]");
+            p.Message("&HPrevents new players from joining that level.");
+            p.Message("&HUsing /lockdown again will unlock that level");
         }
     }
 }

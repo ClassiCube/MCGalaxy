@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Back");
-            p.Message("%HTakes you back to the position you were in before teleportation");
+            p.Message("&T/Back");
+            p.Message("&HTakes you back to the position you were in before teleportation");
         }
     }
 }

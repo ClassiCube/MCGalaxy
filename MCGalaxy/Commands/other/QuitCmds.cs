@@ -32,8 +32,8 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/RageQuit");
-            p.Message("%HMakes you ragequit");
+            p.Message("&T/RageQuit");
+            p.Message("&HMakes you ragequit");
         }
     }
     
@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Quit <reason>");
-            p.Message("%HLeave the server.");
+            p.Message("&T/Quit <reason>");
+            p.Message("&HLeave the server.");
         }
     }
     
@@ -69,8 +69,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CrashServer");
-            p.Message("%HCrash the server with a generic error");
+            p.Message("&T/CrashServer");
+            p.Message("&HCrash the server with a generic error");
         }
     }
     
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length > 0) {
-                p.Message("%WIncorrect syntax. Abuse detected.");
+                p.Message("&WIncorrect syntax. Abuse detected.");
                 Thread.Sleep(3000);
             }
             
@@ -92,8 +92,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Hacks");
-            p.Message("%HPerforms various server hacks. OPERATORS ONLY!!!");
+            p.Message("&T/Hacks");
+            p.Message("&HPerforms various server hacks. OPERATORS ONLY!!!");
         }
     }
 }

@@ -42,7 +42,7 @@ namespace MCGalaxy.Games {
         }
         
         public void Action(Player source, string message) {
-            message = "Team - λNICK %S" + message;
+            message = "Team - λNICK &S" + message;
             Chat.MessageFrom(ChatScope.All, source, message, this,
                              (pl, arg) => pl.Game.Team == arg);
         }

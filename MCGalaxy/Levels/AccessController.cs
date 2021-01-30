@@ -68,21 +68,21 @@ namespace MCGalaxy {
             
             string whitelist = "";
             if (Whitelisted.Count > 0) {
-                whitelist = "(and " + Whitelisted.Join(pl => p.FormatNick(pl)) + "%S) ";
+                whitelist = "(and " + Whitelisted.Join(pl => p.FormatNick(pl)) + "&S) ";
             }
             
             if (access == AccessResult.BelowMinRank) {
-                p.Message("Only {2}%S+ {3}may {0} {1}",
+                p.Message("Only {2}&S+ {3}may {0} {1}",
                                Action, ColoredName, Group.GetColoredName(Min), whitelist);
             } else if (access == AccessResult.AboveMaxRank) {
-                p.Message("Only {2} %Sand below {3}may {0} {1}",
+                p.Message("Only {2} &Sand below {3}may {0} {1}",
                                Action, ColoredName, Group.GetColoredName(Max), whitelist);
             }
             return false;
         }
         
         public void Describe(Player p, StringBuilder perms) {
-            perms.Append(Group.GetColoredName(Min) + "%S+");
+            perms.Append(Group.GetColoredName(Min) + "&S+");
             if (Max != LevelPermission.Nobody) {
                 perms.Append(" up to " + Group.GetColoredName(Max));
             }
@@ -95,12 +95,12 @@ namespace MCGalaxy {
             List<string> blacklist = Blacklisted;
             if (blacklist.Count == 0) return;
             
-            perms.Append(" %S(except ");
+            perms.Append(" &S(except ");
             foreach (string name in blacklist) {
                 perms.Append(p.FormatNick(name) + ", ");
             }
             perms.Remove(perms.Length - 2, 2);
-            perms.Append("%S)");
+            perms.Append("&S)");
         }
         
 
@@ -123,7 +123,7 @@ namespace MCGalaxy {
         public bool Whitelist(Player p, LevelPermission plRank, Level lvl, string target) {
             if (!CheckList(p, plRank, target, true)) return false;
             if (Whitelisted.CaselessContains(target)) {
-                p.Message("{0} %Sis already whitelisted.", p.FormatNick(target));
+                p.Message("{0} &Sis already whitelisted.", p.FormatNick(target));
                 return true;
             }
             
@@ -139,7 +139,7 @@ namespace MCGalaxy {
         public bool Blacklist(Player p, LevelPermission plRank, Level lvl, string target) {
             if (!CheckList(p, plRank, target, false)) return false;
             if (Blacklisted.CaselessContains(target)) {
-                p.Message("{0} %Sis already blacklisted.", p.FormatNick(target));
+                p.Message("{0} &Sis already blacklisted.", p.FormatNick(target));
                 return true;
             }
             
@@ -161,9 +161,9 @@ namespace MCGalaxy {
         public void OnListChanged(Player p, Level lvl, string name, bool whitelist, bool removedFromOpposite) {
             string msg = p.FormatNick(name);
             if (removedFromOpposite) {
-                msg += " %Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
+                msg += " &Swas removed from the " + Type + (whitelist ? " blacklist" : " whitelist");
             } else {
-                msg += " %Swas " + Type + (whitelist ? " whitelisted" : " blacklisted");
+                msg += " &Swas " + Type + (whitelist ? " whitelisted" : " blacklisted");
             }
             ApplyChanges(p, lvl, msg);
         }
@@ -173,11 +173,11 @@ namespace MCGalaxy {
         bool CheckRank(Player p, LevelPermission plRank, LevelPermission perm, bool max) {
             string mode = max ? "max" : "min";
             if (!CheckDetailed(p, plRank)) {                
-                p.Message("%WHence you cannot change the {1} {0} rank.", Type, mode); return false;
+                p.Message("&WHence you cannot change the {1} {0} rank.", Type, mode); return false;
             }
             
             if (perm <= plRank || max && perm == LevelPermission.Nobody) return true;          
-            p.Message("%WYou cannot change the {1} {0} rank of {2} %Wto a rank higher than yours.",
+            p.Message("&WYou cannot change the {1} {0} rank of {2} &Wto a rank higher than yours.",
                       Type, mode, ColoredName);
             return false;
         }
@@ -185,17 +185,17 @@ namespace MCGalaxy {
         bool CheckList(Player p, LevelPermission plRank, string name, bool whitelist) {
             if (!CheckDetailed(p, plRank)) {
                 string mode = whitelist ? "whitelist" : "blacklist";
-                p.Message("%WHence you cannot modify the {0} {1}.", Type, mode); return false;
+                p.Message("&WHence you cannot modify the {0} {1}.", Type, mode); return false;
             }
             
             Group group = PlayerInfo.GetGroup(name);
             if (group.Permission <= plRank) return true;
             
             if (!whitelist) {
-                p.Message("%WYou cannot blacklist players of a higher rank.");
+                p.Message("&WYou cannot blacklist players of a higher rank.");
                 return false;
             } else if (Check(name, group.Permission) == AccessResult.Blacklisted) {
-                p.Message("{0} %Sis blacklisted from {1} {2}%S.",
+                p.Message("{0} &Sis blacklisted from {1} {2}&S.",
                           p.FormatNick(name), ActionIng, ColoredName);
                 return false;
             }
@@ -248,11 +248,11 @@ namespace MCGalaxy {
         
         protected override void ApplyChanges(Player p, Level lvl, string msg) {
             Update(lvl);
-            Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvlName);            
+            Logger.Log(LogType.UserActivity, "{0} &Son {1}", msg, lvlName);            
             if (lvl != null) lvl.Message(msg);
             
             if (p != Player.Console && p.level != lvl) {
-                p.Message("{0} %Son {1}", msg, ColoredName);
+                p.Message("{0} &Son {1}", msg, ColoredName);
             }
         }
         
@@ -269,7 +269,7 @@ namespace MCGalaxy {
                 if (!isVisit) {
                     p.AllowBuild = allowed;
                 } else if (!allowed) {                    
-                    p.Message("%WNo longer allowed to visit %S{0}", ColoredName);
+                    p.Message("&WNo longer allowed to visit &S{0}", ColoredName);
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }

@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
             
             // Work on current level by default
             if (cfg == null) {
-                if (p.IsSuper) { p.Message("%WWhen using %T/Env %Wfrom {0}, only %T/Env Global %Wis supported", p.SuperName); return; }
+                if (p.IsSuper) { p.Message("&WWhen using &T/Env &Wfrom {0}, only &T/Env Global &Wis supported", p.SuperName); return; }
             	
                 lvl = p.level; cfg = lvl.Config;
                 area = lvl.ColoredName;
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.CPE {
                 cfg.LightColor  = preset.Sun;
             } else if (type.CaselessEq("normal")) {
                 cfg.ResetEnv();
-                p.Message("Reset environment for {0} %Sto normal", area);
+                p.Message("Reset environment for {0} &Sto normal", area);
             } else {
                 EnvOption opt = EnvOptions.Find(type);
                 if (opt == null) return false;
@@ -108,27 +108,27 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         static void MessagePresets(Player p) {
-            p.Message("%T/Env preset [type] %H- Applies an env preset on the map");
-            p.Message("%HPresets: &f{0}", EnvPreset.Presets.Join(pr => pr.Key));
+            p.Message("&T/Env preset [type] &H- Applies an env preset on the map");
+            p.Message("&HPresets: &f{0}", EnvPreset.Presets.Join(pr => pr.Key));
             if (!Directory.Exists("presets")) return;
             
             string[] files = Directory.GetFiles("presets", "*.env");
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
-            if (all.Length > 0) p.Message("%HCustom presets: &f" + all);
+            if (all.Length > 0) p.Message("&HCustom presets: &f" + all);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Environment global/level [variable] [value]");
-            p.Message("%HChanges server default or current level's environment.");
-            p.Message("%HSee %T/Help env variables %Hfor list of variables");
-            p.Message("%T/Environment global/level normal");
-            p.Message("%HResets all environment variables to default");
+            p.Message("&T/Environment global/level [variable] [value]");
+            p.Message("&HChanges server default or current level's environment.");
+            p.Message("&HSee &T/Help env variables &Hfor list of variables");
+            p.Message("&T/Environment global/level normal");
+            p.Message("&HResets all environment variables to default");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("variable") || message.CaselessEq("variables")) {
-                p.Message("%HVariables: &f{0}", EnvOptions.Options.Join(o => o.Name));
-                p.Message("%HUse %T/Help env [variable] %Hto see details for that variable");
+                p.Message("&HVariables: &f{0}", EnvOptions.Options.Join(o => o.Name));
+                p.Message("&HUse &T/Help env [variable] &Hto see details for that variable");
                 return;
             } else if (message.CaselessEq("presets")) {
                 MessagePresets(p); return;
@@ -136,11 +136,11 @@ namespace MCGalaxy.Commands.CPE {
             
             EnvOption opt = EnvOptions.Find(message);
             if (opt != null) {
-                p.Message("%T/Env {0} [value]", opt.Name);
+                p.Message("&T/Env {0} [value]", opt.Name);
                 p.Message(opt.Help);
-                p.Message("%HUse 'normal' for [value] to reset to default");
+                p.Message("&HUse 'normal' for [value] to reset to default");
             } else {
-                p.Message("%WUnrecognised property \"{0}\"", message);
+                p.Message("&WUnrecognised property \"{0}\"", message);
             }
         }
     }

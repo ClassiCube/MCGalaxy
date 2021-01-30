@@ -73,10 +73,10 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/EntityRot [name] x/z [angle].");
-            p.Message("%HSets X or Z axis rotation (in degrees) of that player.");
-            p.Message("%T/EntityRot bot [name] x/z [angle]");
-            p.Message("%HSets the X or Z axis rotation (in degrees) of that bot.");
+            p.Message("&T/EntityRot [name] x/z [angle].");
+            p.Message("&HSets X or Z axis rotation (in degrees) of that player.");
+            p.Message("&T/EntityRot bot [name] x/z [angle]");
+            p.Message("&HSets the X or Z axis rotation (in degrees) of that bot.");
         }
     }
 }

@@ -75,7 +75,7 @@ namespace MCGalaxy {
             cfg.Load(propsPath);
             
             if (!cfg.LoadOnGoto) {
-                p.Message("Level \"{0}\" cannot be loaded using %T/Goto.", map);
+                p.Message("Level \"{0}\" cannot be loaded using &T/Goto.", map);
                 return false;
             }
             
@@ -93,7 +93,7 @@ namespace MCGalaxy {
         }
         
         static bool GotoLevel(Player p, Level lvl) {
-            if (p.level == lvl) { p.Message("You are already in {0}%S.", lvl.ColoredName); return false; }
+            if (p.level == lvl) { p.Message("You are already in {0}&S.", lvl.ColoredName); return false; }
             
             bool canJoin = lvl.CanJoin(p);
             OnJoiningLevelEvent.Call(p, lvl, ref canJoin);
@@ -135,7 +135,7 @@ namespace MCGalaxy {
             if (!announce || !Server.Config.ShowWorldChanges) return;
             
             announce = !p.hidden && Server.Config.IRCShowWorldChanges;
-            string msg = p.level.IsMuseum ? "λNICK %Swent to the " : "λNICK %Swent to ";
+            string msg = p.level.IsMuseum ? "λNICK &Swent to the " : "λNICK &Swent to ";
             Chat.MessageFrom(ChatScope.All, p, msg + lvl.ColoredName,
                              null, FilterGoto(p, prev, lvl), announce);
         }

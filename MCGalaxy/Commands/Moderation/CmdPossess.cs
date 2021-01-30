@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             string name = args[0];
             
             if (name.Length == 0) {
-                if (p.possess.Length == 0) { p.Message("%WNot possessing anyone"); return; }
+                if (p.possess.Length == 0) { p.Message("&WNot possessing anyone"); return; }
                 
                 Player target = PlayerInfo.FindExact(p.possess);
                 p.possess = "";
@@ -47,13 +47,13 @@ namespace MCGalaxy.Commands.Moderation {
                 Unpossess(target);
                 p.invincible = false;
                 Command.Find("Hide").Use(p, "", data);
-                p.Message("Stopped possessing {0}%S.", p.FormatNick(target));
+                p.Message("Stopped possessing {0}&S.", p.FormatNick(target));
             } else {
                 Player target = PlayerInfo.FindMatches(p, name);
                 if (target == null) return;
                 if (!CheckRank(p, data, target, "teleport", false)) return;
                 
-                if (p == target) { p.Message("%WCannot possess yourself!"); return; }
+                if (p == target) { p.Message("&WCannot possess yourself!"); return; }
                 if (target.possess.Length > 0) {
                     p.Message("That player is currently possessing someone!"); return;
                 }
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Entities.Despawn(p, target);
                 target.possessed = true;
-                p.Message("Now posessing {0}%S.", p.FormatNick(target));
+                p.Message("Now posessing {0}&S.", p.FormatNick(target));
             }
         }
 
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("/possess [player] <skin as #> - DEMONIC POSSESSION HUE HUE");
             p.Message("Using # after player name makes possessed keep their custom skin during possession.");
             p.Message("Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
-            p.Message("%T/possess %H- Ends current possession");
+            p.Message("&T/possess &H- Ends current possession");
         }
     }
 }

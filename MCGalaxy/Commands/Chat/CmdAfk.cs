@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     p.Message("You are now marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-λNICK%S- is AFK " + message);
+                    ShowMessage(p, "-λNICK&S- is AFK " + message);
                     p.CheckForMessageSpam();
                 }
                 p.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (cantSend) {
                     p.Message("You are no longer marked as being AFK.");
                 } else {
-                    ShowMessage(p, "-λNICK%S- is no longer AFK");
+                    ShowMessage(p, "-λNICK&S- is no longer AFK");
                     p.CheckForMessageSpam();
                 }
                 OnPlayerActionEvent.Call(p, PlayerAction.UnAFK, null, cantSend);
@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/AFK <reason>");
-            p.Message("%HMarks yourself as AFK. Use again to mark yourself as back");
+            p.Message("&T/AFK <reason>");
+            p.Message("&HMarks yourself as AFK. Use again to mark yourself as back");
         }
     }
 }

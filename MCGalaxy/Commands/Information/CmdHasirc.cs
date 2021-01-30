@@ -25,17 +25,17 @@ namespace MCGalaxy.Commands.Info {
             if (message.Length > 0) { Help(p); return; }
 
             if (Server.Config.UseIRC) {
-                p.Message("IRC is &aEnabled%S.");
+                p.Message("IRC is &aEnabled&S.");
                 p.Message("Location: " + Server.Config.IRCServer + " > " + Server.Config.IRCChannels);
             } else {
-                p.Message("IRC is &cDisabled%S.");
+                p.Message("IRC is &cDisabled&S.");
             }
         }
 
         public override void Help(Player p) {
-            p.Message("%T/HasIRC");
-            p.Message("%HOutputs whether the server has IRC enabled or not.");
-            p.Message("%HIf IRC is enabled, server and channel are also displayed.");
+            p.Message("&T/HasIRC");
+            p.Message("&HOutputs whether the server has IRC enabled or not.");
+            p.Message("&HIf IRC is enabled, server and channel are also displayed.");
         }
     }
 }

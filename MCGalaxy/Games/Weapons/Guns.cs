@@ -50,7 +50,7 @@ namespace MCGalaxy.Games {
         
         /// <summary> Called when a bullet has collided with a player. </summary>
         protected virtual void OnHitPlayer(AmmunitionData args, Player pl) {
-            pl.HandleDeath(Block.Cobblestone, "@p %Swas shot by " + p.ColoredName);
+            pl.HandleDeath(Block.Cobblestone, "@p &Swas shot by " + p.ColoredName);
         }
         
         protected virtual bool TickMove(AmmunitionData args) {
@@ -126,7 +126,7 @@ namespace MCGalaxy.Games {
         
         protected override void OnHitPlayer(AmmunitionData args, Player pl) {
             if (pl.level.physics >= 3) {
-                pl.HandleDeath(Block.Cobblestone, "@p %Swas blown up by " + p.ColoredName, true);
+                pl.HandleDeath(Block.Cobblestone, "@p &Swas blown up by " + p.ColoredName, true);
             } else {
                 base.OnHitPlayer(args, pl);
             }

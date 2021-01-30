@@ -55,7 +55,7 @@ namespace MCGalaxy.Games {
                 p.Message("Failed to load initial map!"); return;
             }
             
-            Chat.MessageGlobal("{0} is starting on {1}%S!", GameName, Map.ColoredName);
+            Chat.MessageGlobal("{0} is starting on {1}&S!", GameName, Map.ColoredName);
             Logger.Log(LogType.GameActivity, "[{0}] Game started", GameName);
             
             StartGame();
@@ -107,7 +107,7 @@ namespace MCGalaxy.Games {
                 End();
             } catch (Exception ex) {
                 Logger.LogError("Error in game " + GameName, ex);
-                Chat.MessageGlobal("%W" + GameName + " disabled due to an error.");
+                Chat.MessageGlobal("&W" + GameName + " disabled due to an error.");
                 
                 try { End(); }
                 catch (Exception ex2) { Logger.LogError(ex2); }
@@ -153,7 +153,7 @@ namespace MCGalaxy.Games {
                 
                 List<Player> players = GetPlayers();
                 if (players.Count >= 2) return players;
-                Map.Message("%WNeed 2 or more non-ref players to start a round.");
+                Map.Message("&WNeed 2 or more non-ref players to start a round.");
             }
         }
         
@@ -173,7 +173,7 @@ namespace MCGalaxy.Games {
             Level lastMap = Map; LastMap = Map.MapName;
             
             if (!SetMap(map)) {
-                Map.Message("%WFailed to change map to " + map);
+                Map.Message("&WFailed to change map to " + map);
                 ContinueOnSameMap();
             } else {
                 TransferPlayers(lastMap);
@@ -186,10 +186,10 @@ namespace MCGalaxy.Games {
             Level old = Level.Load(Map.MapName);
             
             if (old == null) {
-                Map.Message("%WCannot reset changes to map"); return;
+                Map.Message("&WCannot reset changes to map"); return;
             }
             if (old.Width != Map.Width || old.Height != Map.Height || old.Length != Map.Length) {
-                Map.Message("%WCannot reset changes to map"); return;
+                Map.Message("&WCannot reset changes to map"); return;
             }
             
             // Try to reset changes made to this map, if possible
@@ -255,7 +255,7 @@ namespace MCGalaxy.Games {
             // in case players left game partway through
             foreach (Player pl in players) { SaveStats(pl); }
             
-            if (Map != null) Map.Message(GameName + " %Sgame ended");
+            if (Map != null) Map.Message(GameName + " &Sgame ended");
             Logger.Log(LogType.GameActivity, "[{0}] Game ended", GameName);
             if (Picker != null) Picker.Clear();
             

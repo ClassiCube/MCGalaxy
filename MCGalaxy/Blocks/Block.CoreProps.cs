@@ -73,9 +73,9 @@ namespace MCGalaxy {
             props.IsRails  = b == Red || b == Op_Air;
             
             props.Drownable = b >= Water && b <= StillLava;
-            if (b == Water || b == StillWater) props.DeathMessage = "@p %S&cdrowned.";
-            if (b == Lava  || b == StillLava)  props.DeathMessage = "@p %Sburnt to a &ccrisp.";
-            if (b == Air) props.DeathMessage = "@p %Shit the floor &chard.";
+            if (b == Water || b == StillWater) props.DeathMessage = "@p &S&cdrowned.";
+            if (b == Lava  || b == StillLava)  props.DeathMessage = "@p &Sburnt to a &ccrisp.";
+            if (b == Air) props.DeathMessage = "@p &Shit the floor &chard.";
             
             string deathMsg = GetDeathMessage(b);
             if (deathMsg != null) {
@@ -111,25 +111,25 @@ namespace MCGalaxy {
         }
         
         static string GetDeathMessage(BlockID b) {
-            if (b == TNT_Explosion) return "@p %S&cblew into pieces.";
-            if (b == Deadly_Air) return "@p %Swalked into &cnerve gas and suffocated.";
+            if (b == TNT_Explosion) return "@p &S&cblew into pieces.";
+            if (b == Deadly_Air) return "@p &Swalked into &cnerve gas and suffocated.";
             
             if (b == Deadly_Water || b == Deadly_ActiveWater)
-                return "@p %Sstepped in &dcold water and froze.";
+                return "@p &Sstepped in &dcold water and froze.";
             if (b == Deadly_Lava  || b == Deadly_ActiveLava || b == Deadly_FastLava)
-                return "@p %Sstood in &cmagma and melted.";
+                return "@p &Sstood in &cmagma and melted.";
             
-            if (b == Magma)  return "@p %Swas hit by &cflowing magma and melted.";
-            if (b == Geyser) return "@p %Swas hit by &cboiling water and melted.";
-            if (b == Bird_Killer) return "@p %Swas hit by a &cphoenix and burnt.";
-            if (b == Train)       return "@p %Swas hit by a &ctrain.";
-            if (b == Fish_Shark)  return "@p %Swas eaten by a &cshark.";
-            if (b == LavaFire)    return "@p %Sburnt to a &ccrisp.";
-            if (b == RocketHead)  return "@p %Swas &cin a fiery explosion.";
-            if (b == ZombieBody)  return "@p %Sdied due to lack of &5brain.";
-            if (b == Creeper)     return "@p %Swas killed &cb-SSSSSSSSSSSSSS";
-            if (b == Fish_LavaShark) return "@p %Swas eaten by a ... LAVA SHARK?!";
-            if (b == Snake)       return "@p %Swas bit by a deadly snake.";
+            if (b == Magma)  return "@p &Swas hit by &cflowing magma and melted.";
+            if (b == Geyser) return "@p &Swas hit by &cboiling water and melted.";
+            if (b == Bird_Killer) return "@p &Swas hit by a &cphoenix and burnt.";
+            if (b == Train)       return "@p &Swas hit by a &ctrain.";
+            if (b == Fish_Shark)  return "@p &Swas eaten by a &cshark.";
+            if (b == LavaFire)    return "@p &Sburnt to a &ccrisp.";
+            if (b == RocketHead)  return "@p &Swas &cin a fiery explosion.";
+            if (b == ZombieBody)  return "@p &Sdied due to lack of &5brain.";
+            if (b == Creeper)     return "@p &Swas killed &cb-SSSSSSSSSSSSSS";
+            if (b == Fish_LavaShark) return "@p &Swas eaten by a ... LAVA SHARK?!";
+            if (b == Snake)       return "@p &Swas bit by a deadly snake.";
             
             return null;
         }

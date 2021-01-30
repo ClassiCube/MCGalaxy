@@ -45,13 +45,13 @@ namespace MCGalaxy.Commands.World {
             if (!Formatter.ValidMapName(p, dst)) return;
 
             if (!LevelActions.Copy(p, src, dst)) return;
-            Chat.MessageGlobal("Level {0} %Swas copied to {1}", cfg.Color + src, cfg.Color + dst);
+            Chat.MessageGlobal("Level {0} &Swas copied to {1}", cfg.Color + src, cfg.Color + dst);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CopyLvl [level] [copied level]");
-            p.Message("%HMakes a copy of [level] called [copied level].");
-            p.Message("%HNote: The level's BlockDB is not copied.");
+            p.Message("&T/CopyLvl [level] [copied level]");
+            p.Message("&HMakes a copy of [level] called [copied level].");
+            p.Message("&HNote: The level's BlockDB is not copied.");
         }
     }
 }

@@ -67,16 +67,16 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         static void UpdateBot(Player p, PlayerBot bot, string msg) {
-            p.Message(bot.ColoredName + "%S" + msg);
+            p.Message(bot.ColoredName + "&S" + msg);
             Logger.Log(LogType.UserActivity, bot.name + msg);
             BotsFile.Save(p.level);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BotSet [bot] <AI script>");
-            p.Message("%HMakes [bot] do the instructions in <AI script>");
-            p.Message("%H  Special AI scripts: Kill and Hunt");
-            p.Message("%HIf <AI script> is not given, turns off the bot's AI.");
+            p.Message("&T/BotSet [bot] <AI script>");
+            p.Message("&HMakes [bot] do the instructions in <AI script>");
+            p.Message("&H  Special AI scripts: Kill and Hunt");
+            p.Message("&HIf <AI script> is not given, turns off the bot's AI.");
         }
     }
 }

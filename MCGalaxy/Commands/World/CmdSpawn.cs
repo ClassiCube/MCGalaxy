@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseRespawn(p)) {
-                p.Message("You cannot use %T/Spawn %Son this map.");
+                p.Message("You cannot use &T/Spawn &Son this map.");
                 p.isFlying = false; return;
             }
             
@@ -35,8 +35,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Spawn");
-            p.Message("%HTeleports you to the spawn location of the level.");
+            p.Message("&T/Spawn");
+            p.Message("&HTeleports you to the spawn location of the level.");
         }
     }
 }

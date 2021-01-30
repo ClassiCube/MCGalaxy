@@ -88,45 +88,45 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void PrintMapInfo(Player p, LevelConfig cfg) {
-            p.Message("%TPhysics settings:");
-            p.Message("  Finite mode: {0}%S, Random flow: {1}",
+            p.Message("&TPhysics settings:");
+            p.Message("  Finite mode: {0}&S, Random flow: {1}",
                            GetBool(cfg.FiniteLiquids), GetBool(cfg.RandomFlow));
-            p.Message("  Animal hunt AI: {0}%S, Edge water: {1}",
+            p.Message("  Animal hunt AI: {0}&S, Edge water: {1}",
                            GetBool(cfg.AnimalHuntAI), GetBool(cfg.EdgeWater));
-            p.Message("  Grass growing: {0}%S, {1} tree growing: {2}",
+            p.Message("  Grass growing: {0}&S, {1} tree growing: {2}",
                            GetBool(cfg.GrassGrow), cfg.TreeType.Capitalize(), GetBool(cfg.GrowTrees));
-            p.Message("  Leaf decay: {0}%S, Physics overload: {1}",
+            p.Message("  Leaf decay: {0}&S, Physics overload: {1}",
                            GetBool(cfg.LeafDecay), cfg.PhysicsOverload);
-            p.Message("  Physics speed: &b{0} %Smilliseconds between ticks",
+            p.Message("  Physics speed: &b{0} &Smilliseconds between ticks",
                            cfg.PhysicsSpeed);
             
-            p.Message("%TSurvival settings:");
-            p.Message("  Survival death: {0} %S(Fall: {1}, Drown: {2})",
+            p.Message("&TSurvival settings:");
+            p.Message("  Survival death: {0} &S(Fall: {1}, Drown: {2})",
                            GetBool(cfg.SurvivalDeath), cfg.FallHeight, cfg.DrownTime);
-            p.Message("  Guns: {0}%S, Killer blocks: {1}",
+            p.Message("  Guns: {0}&S, Killer blocks: {1}",
                            GetBool(cfg.Guns), GetBool(cfg.KillerBlocks));
             
-            p.Message("%TGeneral settings:");
+            p.Message("&TGeneral settings:");
             p.Message("  MOTD: &b" + cfg.MOTD);
             p.Message("  Local level only chat: " + GetBool(!cfg.ServerWideChat));
-            p.Message("  Load on /goto: {0}%S, Auto unload: {1}",
+            p.Message("  Load on /goto: {0}&S, Auto unload: {1}",
                            GetBool(cfg.LoadOnGoto), GetBool(cfg.AutoUnload));
-            p.Message("  Buildable: {0}%S, Deletable: {1}%S, Drawing: {2}",
+            p.Message("  Buildable: {0}&S, Deletable: {1}&S, Drawing: {2}",
                            GetBool(cfg.Buildable), GetBool(cfg.Deletable), GetBool(cfg.Drawing));
         }
         
         static string GetBool(bool value) { return value ? "&aON" : "&cOFF"; }
 
         public override void Help(Player p) {
-            p.Message("%T/Map [level] [option] <value> %H- Sets [option] on that level");
-            p.Message("%HUse %T/Help map options %Hfor a list of options");
-            p.Message("%HUse %T/Help map [option] %Hto see description for that option");
+            p.Message("&T/Map [level] [option] <value> &H- Sets [option] on that level");
+            p.Message("&HUse &T/Help map options &Hfor a list of options");
+            p.Message("&HUse &T/Help map [option] &Hto see description for that option");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("options")) {
-                p.Message("%HOptions: &f{0}", LevelOptions.Options.Join(o => o.Name));
-                p.Message("%HUse %T/Help map [option] %Hto see description for that option");
+                p.Message("&HOptions: &f{0}", LevelOptions.Options.Join(o => o.Name));
+                p.Message("&HUse &T/Help map [option] &Hto see description for that option");
                 return;
             }
             
@@ -138,25 +138,25 @@ namespace MCGalaxy.Commands.World {
             bool isMotd = opt.Name == LevelOptions.MOTD;
             string suffix = isMotd ? " <value>" : (HasArgument(opt.Name) ? " [value]" : "");
             
-            p.Message("%T/Map [level] {0}{1}", opt.Name, suffix);
-            p.Message("%H" + opt.Help);
+            p.Message("&T/Map [level] {0}{1}", opt.Name, suffix);
+            p.Message("&H" + opt.Help);
             if (isMotd) ShowMotdRules(p);
         }
         
         static void ShowMotdRules(Player p) {
-            p.Message("%HSpecial rules that can be put in a motd:");
-            p.Message("%T-/+hax %H- disallows/allows all hacks");
-            p.Message("%T-/+fly %H- disallows/allows flying");
-            p.Message("%T-/+noclip %H- disallows/allows noclipping");
-            p.Message("%T-/+respawn %H- disallows/allows respawning");
-            p.Message("%T-/+thirdperson %H- disallows/allows third person camera");
-            p.Message("%T-/+speed %H- disallows/allows speeding");
-            p.Message("%T-/+ophax %H- disallows/allows hacks for {0}%S+",
+            p.Message("&HSpecial rules that can be put in a motd:");
+            p.Message("&T-/+hax &H- disallows/allows all hacks");
+            p.Message("&T-/+fly &H- disallows/allows flying");
+            p.Message("&T-/+noclip &H- disallows/allows noclipping");
+            p.Message("&T-/+respawn &H- disallows/allows respawning");
+            p.Message("&T-/+thirdperson &H- disallows/allows third person camera");
+            p.Message("&T-/+speed &H- disallows/allows speeding");
+            p.Message("&T-/+ophax &H- disallows/allows hacks for {0}&S+",
                            Group.GetColoredName(LevelPermission.Operator));
-            p.Message("%T-/+push %H- disallows/allows player pushing");
-            p.Message("%Tjumpheight=[height] %H- sets max height users can jump up to");
-            p.Message("%Thorspeed=[speed] %H- sets base horizontal speed users move at");
-            p.Message("%Tjumps=[number] %H- sets max number of consecutive jumps");
+            p.Message("&T-/+push &H- disallows/allows player pushing");
+            p.Message("&Tjumpheight=[height] &H- sets max height users can jump up to");
+            p.Message("&Thorspeed=[speed] &H- sets base horizontal speed users move at");
+            p.Message("&Tjumps=[number] &H- sets max number of consecutive jumps");
         }
     }
 }

@@ -55,14 +55,14 @@ namespace MCGalaxy.Commands.Fun {
             if (who.level.IsValidPos(x, y, z)) {
                 pos.Y = FindYAbove(who.level, (ushort)x, (ushort)y, (ushort)z);
                 if (pos.Y != -1) {
-                    Chat.MessageFromLevel(who, "λNICK %Swas slapped into the roof by " + p.ColoredName);
+                    Chat.MessageFromLevel(who, "λNICK &Swas slapped into the roof by " + p.ColoredName);
                     who.SendPos(Entities.SelfID, pos, who.Rot);
                     return;
                 }
             }
             
             pos.Y = 1000 * 32;
-            Chat.MessageFromLevel(who, "λNICK %Swas slapped sky high by " + p.ColoredName);
+            Chat.MessageFromLevel(who, "λNICK &Swas slapped sky high by " + p.ColoredName);
             who.SendPos(Entities.SelfID, pos, who.Rot);
         }
         
@@ -82,10 +82,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Slap [name]");
-            p.Message("%HSlaps [name], knocking them into the air");
-            p.Message("%T/Slap [level]");
-            p.Message("%HSlaps all players on [level] that are a lower rank, knocking them into the air");
+            p.Message("&T/Slap [name]");
+            p.Message("&HSlaps [name], knocking them into the air");
+            p.Message("&T/Slap [level]");
+            p.Message("&HSlaps all players on [level] that are a lower rank, knocking them into the air");
         }
     }
 }

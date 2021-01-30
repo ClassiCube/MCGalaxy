@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (group == null) return;
             
             if (group.Permission == LevelPermission.Banned) {
-                p.Message("{0} %Sis already banned.", p.FormatNick(target));
+                p.Message("{0} &Sis already banned.", p.FormatNick(target));
                 return;
             }
 
@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Ban [player] <reason>");
-            p.Message("%HBans a player (and kicks them if online).");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/Ban [player] <reason>");
+            p.Message("&HBans a player (and kicks them if online).");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

@@ -39,20 +39,20 @@ namespace MCGalaxy.Commands.Info {
         
         static void ShowLastCommand(Player p, Player target) {
             if (target.lastCMD.Length == 0) {
-        		p.Message("{0} %Shas not used any commands yet.", 
+        		p.Message("{0} &Shas not used any commands yet.", 
         		          p.FormatNick(target));
             } else {
                 TimeSpan delta = DateTime.UtcNow - target.lastCmdTime;
-                p.Message("{0} %Slast used \"{1}\" {2} ago", 
+                p.Message("{0} &Slast used \"{1}\" {2} ago", 
                           p.FormatNick(target), target.lastCMD, delta.Shorten(true));
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Last [user]");
-            p.Message("%H Shows last command used by [user]");
-            p.Message("%T/Last");
-            p.Message("%HShows last commands for all users (SPAMMY)");
+            p.Message("&T/Last [user]");
+            p.Message("&H Shows last command used by [user]");
+            p.Message("&T/Last");
+            p.Message("&HShows last commands for all users (SPAMMY)");
         }
     }
 }

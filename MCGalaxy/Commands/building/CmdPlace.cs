@@ -59,11 +59,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Place <block>");
-            p.Message("%HPlaces block at your feet.");
-            p.Message("%T/Place <block> [x y z]");
-            p.Message("%HPlaces block at [x y z]");
-            p.Message("%HUse ~ before a coord to place relative to current position");
+            p.Message("&T/Place <block>");
+            p.Message("&HPlaces block at your feet.");
+            p.Message("&T/Place <block> [x y z]");
+            p.Message("&HPlaces block at [x y z]");
+            p.Message("&HUse ~ before a coord to place relative to current position");
         }
     }
 }

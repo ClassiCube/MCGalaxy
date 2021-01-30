@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Flood position: &b" + cfg.FloodPos);
                 p.Message("Layer position: &b" + cfg.LayerPos);
                 p.Message("Layer flood chance: &b" + cfg.LayerChance + "%");
-                p.Message("  &b{0} %Slayers, each &b{1} %Sblocks tall",
+                p.Message("  &b{0} &Slayers, each &b{1} &Sblocks tall",
                                cfg.LayerCount, cfg.LayerHeight);
                 return;
             }
@@ -188,48 +188,48 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                p.Message("%T/Help LS spawn %H- Views help for lava spawn settings");
-                p.Message("%T/Help LS block %H- Views help for lava block settings");
-                p.Message("%T/Help LS other %H- Views help for other settings");
+                p.Message("&T/Help LS spawn &H- Views help for lava spawn settings");
+                p.Message("&T/Help LS block &H- Views help for lava block settings");
+                p.Message("&T/Help LS other &H- Views help for other settings");
             } else if (message.CaselessEq("spawn")) {
-                p.Message("%T/LS set spawn %H- View lava spawns and layer info");
-                p.Message("%T/LS set spawn flood %H- Set position lava floods from");
+                p.Message("&T/LS set spawn &H- View lava spawns and layer info");
+                p.Message("&T/LS set spawn flood &H- Set position lava floods from");
                 // TODO: /ls set layer instead
-                p.Message("%T/LS set spawn layer %H- Set start position layers flood from");
-                p.Message("%T/LS set spawn height [height] %H- Sets height of each layer");
-                p.Message("%T/LS set spawn count [count] %H- Sets number of layers to flood");
-                p.Message("%T/LS set spawn layer [chance] %H- Sets chance of layer flooding");
+                p.Message("&T/LS set spawn layer &H- Set start position layers flood from");
+                p.Message("&T/LS set spawn height [height] &H- Sets height of each layer");
+                p.Message("&T/LS set spawn count [count] &H- Sets number of layers to flood");
+                p.Message("&T/LS set spawn layer [chance] &H- Sets chance of layer flooding");
             } else if (message.CaselessEq("block")) {
-                p.Message("%T/LS set block %H- View lava block type settings");
-                p.Message("%T/LS set block fast [chance] %H- Sets chance of fast lava");
-                p.Message("%T/LS set block water [chance]");
-                p.Message("%HSets chance of water instead of lava flood");
-                p.Message("%T/LS set block killer [chance]");
-                p.Message("%HSets chance of killer lava/water");
-                p.Message("%T/LS set block destroy [chance]");
-                p.Message("%HSets chance of the lava/water destroying blocks");
+                p.Message("&T/LS set block &H- View lava block type settings");
+                p.Message("&T/LS set block fast [chance] &H- Sets chance of fast lava");
+                p.Message("&T/LS set block water [chance]");
+                p.Message("&HSets chance of water instead of lava flood");
+                p.Message("&T/LS set block killer [chance]");
+                p.Message("&HSets chance of killer lava/water");
+                p.Message("&T/LS set block destroy [chance]");
+                p.Message("&HSets chance of the lava/water destroying blocks");
             } else if (message.CaselessEq("other")) {
-                p.Message("%T/LS set other %H- View times and safe zone location");
-                p.Message("%T/LS set other safe %H- Sets safe area that can't be flooded");
-                p.Message("%T/LS set other layer [timespan]");
-                p.Message("%HSet interval between layer floods");
-                p.Message("%T/LS set other flood [timespan]");
-                p.Message("%HSet how long until the map is flooded");
-                p.Message("%T/LS set other round [timespan]");
-                p.Message("%HSets how long until the round ends");
+                p.Message("&T/LS set other &H- View times and safe zone location");
+                p.Message("&T/LS set other safe &H- Sets safe area that can't be flooded");
+                p.Message("&T/LS set other layer [timespan]");
+                p.Message("&HSet interval between layer floods");
+                p.Message("&T/LS set other flood [timespan]");
+                p.Message("&HSet how long until the map is flooded");
+                p.Message("&T/LS set other round [timespan]");
+                p.Message("&HSets how long until the round ends");
             } else {
                 base.Help(p, message);
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/LS start <map> %H- Starts Lava Survival");
-            p.Message("%T/LS stop %H- Stops Lava Survival");
-            p.Message("%T/LS end %H- Ends current round of Lava Survival");
-            p.Message("%T/LS add/remove %H- Adds/removes current map from map list");
-            p.Message("%T/LS set [property] %H- Sets a property. See %T/Help LS set");
-            p.Message("%T/LS status %H- View current round info and time");
-            p.Message("%T/LS go %H- Moves you to the current Lava Survival map");
+            p.Message("&T/LS start <map> &H- Starts Lava Survival");
+            p.Message("&T/LS stop &H- Stops Lava Survival");
+            p.Message("&T/LS end &H- Ends current round of Lava Survival");
+            p.Message("&T/LS add/remove &H- Adds/removes current map from map list");
+            p.Message("&T/LS set [property] &H- Sets a property. See &T/Help LS set");
+            p.Message("&T/LS status &H- View current round info and time");
+            p.Message("&T/LS go &H- Moves you to the current Lava Survival map");
         }
     }
 }

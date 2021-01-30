@@ -61,7 +61,7 @@ namespace MCGalaxy.Games {
                 QueuedZombie = null;
             } while (first == null || first.level != Map);
             
-            Map.Message("&c" + first.DisplayName + " %Sstarted the infection!");
+            Map.Message("&c" + first.DisplayName + " &Sstarted the infection!");
             InfectPlayer(first, null);
         }
         
@@ -122,7 +122,7 @@ namespace MCGalaxy.Games {
                             if (infectCombo >= 2) {
                                 killer.Message("You gained " + (2 + infectCombo) + " " + Server.Config.Currency);
                                 killer.SetMoney(killer.money + (2 + infectCombo));
-                                Map.Message("&c" + killer.DisplayName + " %Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
+                                Map.Message("&c" + killer.DisplayName + " &Sis on a rampage! " + (infectCombo + 1) + " infections in a row!");
                             }
                         } else {
                             infectCombo = 0;
@@ -171,7 +171,7 @@ namespace MCGalaxy.Games {
         void CheckHumanPledge(Player p, Player killer) {
             if (!p.Game.PledgeSurvive) return;
             p.Game.PledgeSurvive = false;
-            Map.Message("&c" + p.DisplayName + " %Sbroke their pledge of not being infected.");
+            Map.Message("&c" + p.DisplayName + " &Sbroke their pledge of not being infected.");
             
             if (killer == null) {
                 p.Message("As this was an automatic infection, you have not lost any &3" + Server.Config.Currency);
@@ -187,13 +187,13 @@ namespace MCGalaxy.Games {
             
             Player setter = PlayerInfo.FindExact(bounty.Origin);
             if (pKiller == null) {
-                Map.Message("Bounty on " + p.ColoredName + " %Sis no longer active");
+                Map.Message("Bounty on " + p.ColoredName + " &Sis no longer active");
                 if (setter != null) setter.SetMoney(setter.money + bounty.Amount);
             } else if (setter == null) {
                 pKiller.Message("Cannot collect the bounty, as the player who set it is offline.");
             } else {
-                Map.Message("&c" + pKiller.DisplayName + " %Scollected the bounty of &a" +
-                              bounty.Amount + " %S" + Server.Config.Currency + " on " + p.ColoredName);
+                Map.Message("&c" + pKiller.DisplayName + " &Scollected the bounty of &a" +
+                              bounty.Amount + " &S" + Server.Config.Currency + " on " + p.ColoredName);
                 pKiller.SetMoney(pKiller.money + bounty.Amount);
             }
         }
@@ -209,8 +209,8 @@ namespace MCGalaxy.Games {
             }
             
             Map.Message(string.Format(text,
-                                        "&c" + pKiller.DisplayName + "%S",
-                                        pAlive.ColoredName + "%S"));
+                                        "&c" + pKiller.DisplayName + "&S",
+                                        pAlive.ColoredName + "&S"));
         }
 
         internal static void RespawnPlayer(Player p) {
@@ -258,15 +258,15 @@ namespace MCGalaxy.Games {
             }
             
             string group = count == 1 ? " zombie " : " zombies ";
-            string suffix = maxKills == 1 ? " %Skill" : " %Skills";
+            string suffix = maxKills == 1 ? " &Skill" : " &Skills";
             StringFormatter<Player> formatter = p => Get(p).CurrentInfected == maxKills ? p.ColoredName : null;
-            Map.Message("&8Best" + group + "%S(&b" + maxKills + suffix + "%S)&8: " + dead.Join(formatter));
+            Map.Message("&8Best" + group + "&S(&b" + maxKills + suffix + "&S)&8: " + dead.Join(formatter));
         }
 
         void IncreaseAliveStats(Player p) {
             if (p.Game.PledgeSurvive) {
                 p.Message("You received &a5 &3" + Server.Config.Currency +
-                               " %Sfor successfully pledging that you would survive.");
+                               " &Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }
             

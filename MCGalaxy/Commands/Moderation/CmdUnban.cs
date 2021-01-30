@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Unban [player] <reason>");
-            p.Message("%HUnbans a player. This includes temporary bans.");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/Unban [player] <reason>");
+            p.Message("&HUnbans a player. This includes temporary bans.");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

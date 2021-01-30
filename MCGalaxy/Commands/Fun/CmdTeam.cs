@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Fun {
             p.SetPrefix();
             Team.Add(team);
             Team.SaveList();
-            Chat.MessageFrom(p, "λNICK %Screated the &a" + args[1] + " %Steam");
+            Chat.MessageFrom(p, "λNICK &Screated the &a" + args[1] + " &Steam");
         }
         
         void HandleJoin(Player p, string[] args) {
@@ -166,8 +166,8 @@ namespace MCGalaxy.Commands.Fun {
             }
             p.NextTeamInvite = now.AddSeconds(5);
             
-            p.Message("Invited {0} %Sto join your team.", p.FormatNick(target));
-            target.Message(p.ColoredName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
+            p.Message("Invited {0} &Sto join your team.", p.FormatNick(target));
+            target.Message(p.ColoredName + " &Sinvited you to join the " + team.Color + team.Name + " &Steam.");
             target.Game.TeamInvite = team.Name;
         }
         
@@ -208,16 +208,16 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Team owner [name] %H- Sets the player who has owner privileges for the team.");
-            p.Message("%T/Team kick [name] %H- Removes that player from the team you are in.");
-            p.Message("%T/Team color [color] %H- Sets the color of the team name shown in chat.");
-            p.Message("%T/Team create %H- Creates a new team.");
-            p.Message("%T/Team join %H- Joins the team you last received an invite to.");
-            p.Message("%T/Team invite [name] %H- Invites that player to join your team.");
-            p.Message("%T/Team leave %H- Removes you from the team you are in.");
-            p.Message("%T/Team members [name] %H- Lists the players within that team.");
-            p.Message("%T/Team list %H- Lists all teams.");
-            p.Message("%HAnything else is sent as a message to all members of the team.");
+            p.Message("&T/Team owner [name] &H- Sets the player who has owner privileges for the team.");
+            p.Message("&T/Team kick [name] &H- Removes that player from the team you are in.");
+            p.Message("&T/Team color [color] &H- Sets the color of the team name shown in chat.");
+            p.Message("&T/Team create &H- Creates a new team.");
+            p.Message("&T/Team join &H- Joins the team you last received an invite to.");
+            p.Message("&T/Team invite [name] &H- Invites that player to join your team.");
+            p.Message("&T/Team leave &H- Removes you from the team you are in.");
+            p.Message("&T/Team members [name] &H- Lists the players within that team.");
+            p.Message("&T/Team list &H- Lists all teams.");
+            p.Message("&HAnything else is sent as a message to all members of the team.");
         }
     }
 }

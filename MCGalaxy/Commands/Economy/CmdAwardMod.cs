@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Eco {
             if (IsCreateCommand(args[0])) {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
-                    p.Message("%WUse a : to separate the award name from its description."); 
+                    p.Message("&WUse a : to separate the award name from its description."); 
                     Help(p); return;
                 }
 
@@ -54,11 +54,11 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/AwardMod add [name] : [description]");
-            p.Message("%HAdds a new award");
-            p.Message("%H  e.g. %T/AwardMod add Bomb voyage : Blow up a lot of TNT");
-            p.Message("%T/AwardMod del [name]");
-            p.Message("%HDeletes the given award");
+            p.Message("&T/AwardMod add [name] : [description]");
+            p.Message("&HAdds a new award");
+            p.Message("&H  e.g. &T/AwardMod add Bomb voyage : Blow up a lot of TNT");
+            p.Message("&T/AwardMod del [name]");
+            p.Message("&HDeletes the given award");
         }
     }
 }

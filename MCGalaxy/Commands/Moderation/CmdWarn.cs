@@ -43,9 +43,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Warn [player] <reason>");
-            p.Message("%HWarns a player. Players are kicked after 3 warnings.");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/Warn [player] <reason>");
+            p.Message("&HWarns a player. Players are kicked after 3 warnings.");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

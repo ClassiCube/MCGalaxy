@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void CreateZone(Player p, string[] args, CommandData data, int offset) {
             if (p.level.FindZoneExact(args[offset]) != null) {
-                p.Message("A zone with that name already exists. Use %T/zedit %Sto change it.");
+                p.Message("A zone with that name already exists. Use &T/zedit &Sto change it.");
                 return;
             }
             if (!LevelInfo.Check(p, data.Rank, p.level, "create zones in this level")) return;
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             p.Message("Creating zone " + z.ColoredName);
             p.Message("Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SNew zone", z, AddZone);
+            p.MakeSelection(2, "Selecting region for &SNew zone", z, AddZone);
         }
         
         bool AddZone(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             zone.RemoveFrom(lvl);
-            p.Message("Zone " + zone.ColoredName + " %Sdeleted");
+            p.Message("Zone " + zone.ColoredName + " &Sdeleted");
             lvl.Save(true);
         }
         
@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands.Moderation {
         void SetZoneProp(Player p, string[] args, Zone zone) {
             ColorDesc desc = default(ColorDesc);
             if (args.Length < 4) { 
-                p.Message("No value provided. See %T/Help zone properties");
+                p.Message("No value provided. See &T/Help zone properties");
                 return;
             }
             
@@ -150,28 +150,28 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Zone add [name] <permissions>");
-            p.Message("%HCreates a new zone, optionally also sets build permissions");
-            p.Message("%T/Zone del [name]");
-            p.Message("%HDeletes the given zone");
-            p.Message("%T/Zone perbuild [name] [permissions]");
-            p.Message("%HSets build permissions for the given zone");
-            p.Message("%H  For syntax of permissions, see %T/Help PerBuild");
-            p.Message("%T/Zone set [name] [property] [value]");
-            p.Message("%HSets a property of this zone. See %T/Help zone properties");
+            p.Message("&T/Zone add [name] <permissions>");
+            p.Message("&HCreates a new zone, optionally also sets build permissions");
+            p.Message("&T/Zone del [name]");
+            p.Message("&HDeletes the given zone");
+            p.Message("&T/Zone perbuild [name] [permissions]");
+            p.Message("&HSets build permissions for the given zone");
+            p.Message("&H  For syntax of permissions, see &T/Help PerBuild");
+            p.Message("&T/Zone set [name] [property] [value]");
+            p.Message("&HSets a property of this zone. See &T/Help zone properties");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("properties")) {
-                p.Message("%T/Zone set [name] alpha [value]");
-                p.Message("%HSets how solid the box shown around the zone is");
-                p.Message("%H0 - not shown at all, 0.5 - half solid, 1 - fully solid");
-                p.Message("%T/Zone set [name] col [hex color]");
-                p.Message("%HSets the color of the box shown around the zone");
-                p.Message("%T/Zone set [name] motd [value]");
-                p.Message("%HSets the MOTD applied when in the zone. See %T/Help map motd");
-                p.Message("%T/Zone set [name] [env property] [value]");
-                p.Message("%HSets an env setting applied when in the zone. See %T/Help env");
+                p.Message("&T/Zone set [name] alpha [value]");
+                p.Message("&HSets how solid the box shown around the zone is");
+                p.Message("&H0 - not shown at all, 0.5 - half solid, 1 - fully solid");
+                p.Message("&T/Zone set [name] col [hex color]");
+                p.Message("&HSets the color of the box shown around the zone");
+                p.Message("&T/Zone set [name] motd [value]");
+                p.Message("&HSets the MOTD applied when in the zone. See &T/Help map motd");
+                p.Message("&T/Zone set [name] [env property] [value]");
+                p.Message("&HSets an env setting applied when in the zone. See &T/Help env");
             } else {
                 base.Help(p, message);
             }
@@ -186,7 +186,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Place or delete a block where you would like to check for zones.");
-            p.MakeSelection(1, "Selecting point for %SZone check", data, TestZone);
+            p.MakeSelection(1, "Selecting point for &SZone check", data, TestZone);
         }
         
         bool TestZone(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -203,7 +203,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 AccessResult status = z.Access.Check(p.name, data.Rank);
                 bool allowed = z.Access.CheckAllowed(p);
-                p.Message("  Zone {0} %S- {1}{2}", z.ColoredName, allowed ? "&a" : "&c", status );
+                p.Message("  Zone {0} &S- {1}{2}", z.ColoredName, allowed ? "&a" : "&c", status );
             }
             
             if (!found) { p.Message("No zones affect this block."); }
@@ -211,7 +211,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ZoneTest %H- Lists all zones affecting a block");
+            p.Message("&T/ZoneTest &H- Lists all zones affecting a block");
         }
     }
     
@@ -234,7 +234,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ZoneList %H- Lists all zones in current level");
+            p.Message("&T/ZoneList &H- Lists all zones in current level");
         }
     }
     
@@ -261,8 +261,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ZoneMark [name]");
-            p.Message("%HUses corners of the given zone as a %T/Mark %Hfor selections");
+            p.Message("&T/ZoneMark [name]");
+            p.Message("&HUses corners of the given zone as a &T/Mark &Hfor selections");
         }
     }
 }
