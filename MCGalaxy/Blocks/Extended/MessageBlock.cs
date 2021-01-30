@@ -159,7 +159,6 @@ namespace MCGalaxy.Blocks.Extended {
         /// <summary> Creates or updates the given message block in the given map. </summary>
         public static void Set(string map, ushort x, ushort y, ushort z, string contents) {
             contents = contents.Replace("'", "\\'");
-            contents = Colors.Escape(contents);
             contents = contents.UnicodeToCp437();
             
             Database.CreateTable("Messages" + map, LevelDB.createMessages);            

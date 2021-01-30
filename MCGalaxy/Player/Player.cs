@@ -251,12 +251,9 @@ namespace MCGalaxy {
                 IsAfk = false;
                 isFlying = false;
                 if (weapon != null) weapon.Disable();
-                
-                if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
-                discMsg = Colors.Escape(discMsg);
-                
-                string kickPacketMsg = ChatTokens.Apply(discMsg, this);
-                Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
+                          
+                string kickMsg = Chat.Format(discMsg, this);
+                Send(Packet.Kick(kickMsg, hasCP437), sync);
                 Socket.Disconnected = true;
                 ZoneIn = null;
                 if (isKick) TimesBeenKicked++;

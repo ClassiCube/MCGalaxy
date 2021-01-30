@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (nick.Length > 62) { p.Message("Name must be 62 or fewer letters."); return; }
                 
                 p.Message("You changed the name of bot " + bot.ColoredName + " &Sto &c" + nameTag);
-                bot.DisplayName = Colors.Escape(nick);
+                bot.DisplayName = nick;
             }
             
             bot.GlobalDespawn();

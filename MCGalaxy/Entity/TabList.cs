@@ -36,7 +36,6 @@ namespace MCGalaxy {
             string name, group;
             GetEntry(p, dst, out name, out group);
             
-            name  = Colors.Escape(name); // for nicks
             name  = LineWrapper.CleanupColors(name,  dst);
             group = LineWrapper.CleanupColors(group, dst);
             dst.Send(Packet.ExtAddPlayerName(id, p.truename, name, group, grpPerm, dst.hasCP437));

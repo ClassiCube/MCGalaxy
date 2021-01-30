@@ -164,9 +164,8 @@ namespace MCGalaxy.Gui.Components {
         
         static Color GetCol(char c, Color foreCol) {
             if (c == 'S' || c == 'f' || c == 'F' || c == '0') return foreCol;
-            Colors.Map(ref c);
-
-            if (!Colors.IsDefined(c)) return foreCol;
+            if (!Colors.Map(ref c)) return foreCol;
+            
             ColorDesc col = Colors.Get(c);
             return Color.FromArgb(col.R, col.G, col.B);
         }

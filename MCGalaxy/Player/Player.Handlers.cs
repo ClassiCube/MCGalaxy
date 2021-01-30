@@ -432,8 +432,10 @@ namespace MCGalaxy {
             if (!loggedIn) return;
             byte continued = buffer[offset + 1];
             string text = NetUtils.ReadString(buffer, offset + 2);
-            LastAction = DateTime.UtcNow;
+            LastAction  = DateTime.UtcNow;
+            
             if (FilterChat(ref text, continued)) return;
+            text = Colors.ConvertPercents(text);
 
             if (text != "/afk" && IsAfk)
                 CmdAfk.ToggleAfk(this, "");
@@ -500,9 +502,6 @@ namespace MCGalaxy {
             }
 
             text = Regex.Replace(text, "  +", " ");
-            if (text.IndexOf('&') >= 0) {
-                Leave("Illegal character in chat message!", true); return true;
-            }
             return text.Length == 0;
         }
         

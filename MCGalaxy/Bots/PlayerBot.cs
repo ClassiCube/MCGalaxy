@@ -297,7 +297,7 @@ namespace MCGalaxy {
             p.Message("Bot {0} &S({1}) has:", ColoredName, name);
             p.Message("  Owner: &f{0}", string.IsNullOrEmpty(Owner) ? "no one" : p.FormatNick(Owner));
             if (!String.IsNullOrEmpty(AIName)) { p.Message("  AI: &f{0}", AIName); }
-            if (hunt || kill)                  { p.Message("  Hunt: &f{0}&S, Kill: %f{1}", hunt, kill); }
+            if (hunt || kill)                  { p.Message("  Hunt: &f{0}&S, Kill: &f{1}", hunt, kill); }
             if (SkinName != name)              { p.Message("  Skin: &f{0}", SkinName); }
             if (Model != "humanoid")           { p.Message("  Model: &f{0}", Model); }
             if (!(ScaleX == 0 && ScaleY == 0 && ScaleZ == 0)) {

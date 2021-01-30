@@ -137,8 +137,7 @@ namespace MCGalaxy {
         };
         static readonly Regex IrcTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
-        public static string ConvertIRCToMC(string input) {
-            if (input == null) throw new ArgumentNullException("input");
+        public static string ConvertFromIRC(string input) {
             // get rid of background color component of some IRC color codes.
             input = IrcTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
@@ -166,8 +165,7 @@ namespace MCGalaxy {
             return sb.ToString();
         }
 
-        public static string ConvertMCToIRC(string input) {
-            if (input == null) throw new ArgumentNullException("input");
+        public static string ConvertToIRC(string input) {
             input = Escape(input);
             input = LineWrapper.CleanupColors(input, true, false);
             
@@ -203,21 +201,13 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Converts percentage color codes to their actual/real color codes. </summary>
-        /// <remarks> Does not escape percentage codes that are part of urls. </remarks>
+        /// <summary> Converts system percentage color codes to ampersands </summary>
         public static string Escape(string value) {
             if (value.IndexOf('%') == -1) return value;
-            char[] chars = new char[value.Length];
-            for (int i = 0; i < chars.Length; i++) { chars[i] = value[i]; }
-            
-            for (int i = 0; i < chars.Length;) {
-                int end = value.IndexOf(' ', i);
-                if (end == -1) end = value.Length;
-                
-                if (!IsUrlAt(chars, i, end - i)) Escape(chars, i, end);
-                i = end + 1;
-            }
-            return new string(chars);
+            return new StringBuilder(value)
+                .Replace("%S", "&S").Replace("%H", "&H")
+                .Replace("%T", "&T").Replace("%I", "&I")
+                .Replace("%W", "&W").ToString();
         }
         
         static bool IsUrlAt(char[] chars, int i, int len) {
@@ -237,31 +227,45 @@ namespace MCGalaxy {
             return len >= 3 && chars[i] == ':' && chars[i + 1] == '/' && chars[i + 2] == '/';
         }
         
-        static void Escape(char[] chars, int start, int end) {
+        /// <summary> Converts percentage color codes to ampersand color codes. </summary>
+        /// <remarks> Does not convert percentage codes that are part of urls. </remarks>
+        public static string ConvertPercents(string value) {
+            if (value.IndexOf('%') == -1) return value;
+            char[] chars = new char[value.Length];
+            for (int i = 0; i < chars.Length; i++) { chars[i] = value[i]; }
+            
+            for (int i = 0; i < chars.Length;) {
+                int end = value.IndexOf(' ', i);
+                if (end == -1) end = value.Length;
+                
+                if (!IsUrlAt(chars, i, end - i)) ConvertPercents(chars, i, end);
+                i = end + 1;
+            }
+            return new string(chars);
+        }
+        
+        static void ConvertPercents(char[] chars, int start, int end) {
             for (int i = start; i < end; i++ ) {
                 char c = chars[i];
                 bool validCode = c == '%' && i < chars.Length - 1;
-                
                 if (!validCode) continue;
-                char col = Lookup(chars[i + 1]);
-                if (col == '\0') continue;
                 
+                if (Lookup(chars[i + 1]) == '\0') continue;                
                 chars[i] = '&';
-                chars[i + 1] = col;
                 i++; // skip over color code
             }
         }
         
-        /// <summary> Removes all occurrences of % or &amp; and the following character. </summary>
+        /// <summary> Removes all occurrences of &amp; and the following character. </summary>
         /// <remarks> Does NOT check if the following character is actually a valid color code. </remarks>
         public static string Strip(string value) {
-            if (value.IndexOf('%') == -1 && value.IndexOf('&') == -1) return value;
+            if (value.IndexOf('&') == -1) return value;
             char[] output = new char[value.Length];
             int usedChars = 0;
             
             for (int i = 0; i < value.Length; i++) {
                 char token = value[i];
-                if (token == '%' || token == '&') {
+                if (token == '&') {
                     i++; // Skip over the following color code
                 } else {
                     output[usedChars++] = token;
@@ -276,15 +280,15 @@ namespace MCGalaxy {
             return Lookup(message[i + 1]) != '\0';
         }
         
-        /// <summary> Removes all occurrences of % and &amp; that are followed by a used color code. </summary>
+        /// <summary> Removes all occurrences of &amp; that are followed by a used color code. </summary>
         public static string StripUsed(string message) {
-            if (message.IndexOf('%') == -1 && message.IndexOf('&') == -1) return message;
+            if (message.IndexOf('&') == -1) return message;
             char[] output = new char[message.Length];
             int usedChars = 0;
             
             for (int i = 0; i < message.Length; i++) {
                 char c = message[i];
-                if ((c == '%' || c == '&') && UsedColor(message, i)) {
+                if (c == '&' && UsedColor(message, i)) {
                     i++; // Skip over the following color code
                 } else {
                     output[usedChars++] = c;

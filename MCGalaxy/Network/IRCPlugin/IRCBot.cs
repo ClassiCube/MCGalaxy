@@ -128,8 +128,11 @@ namespace MCGalaxy {
             
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
+            // use 'Reset' to show text in client's preferred colour
+            //  (especially as most IRC clients use white background)
             message = message.Replace("&f", "&S");
-            message = Colors.ConvertMCToIRC(message.Replace("&S", ResetSignal));
+            message = message.Replace("&S", ResetSignal);
+            message = Colors.ConvertToIRC(message);
             return message;
         }
         

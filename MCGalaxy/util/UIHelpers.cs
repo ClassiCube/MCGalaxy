@@ -86,9 +86,7 @@ namespace MCGalaxy.UI {
         }
         
         public static string Format(string message) {
-            message = message.Replace("&S", "&f"); // We want &S to be treated specially when displayed in UI
-            message = Colors.Escape(message);      // Need to Replace first, otherwise it's mapped by Colors.Escape
-            return message;
+            return Colors.Escape(message);
         }
         
         public static string OutputPart(ref char nextCol, ref int start, string message) {

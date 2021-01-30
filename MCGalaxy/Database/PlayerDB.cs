@@ -40,8 +40,8 @@ namespace MCGalaxy.DB {
                 if (parts.Length < 2) continue;
                 string key = parts[0].Trim(), value = parts[1].Trim();
 
-                if (key.CaselessEq("nick"))
-                    p.DisplayName = value;
+                if (key.CaselessEq("nick")) 
+                    p.DisplayName = Colors.ConvertPercents(value);
             }
             p.SetPrefix();
             return true;
@@ -53,27 +53,34 @@ namespace MCGalaxy.DB {
         }
         
         
-        public static string GetLoginMessage(Player p) {
-            if (!Directory.Exists("text/login"))
-                Directory.CreateDirectory("text/login");
-            
+        static string RawLoginMessage(Player p) {
             string path = LoginPath(p.name);
             if (File.Exists(path)) return File.ReadAllText(path);
+            
             // Unix is case sensitive (older files used correct casing of name)
             path = "text/login/" + p.name + ".txt";
             return File.Exists(path) ? File.ReadAllText(path) : "connected";
         }
+        
+        public static string GetLoginMessage(Player p) {
+            if (!Directory.Exists("text/login"))
+                Directory.CreateDirectory("text/login");            
+            return Colors.ConvertPercents(RawLoginMessage(p));
+        }
 
-        public static string GetLogoutMessage(Player p) {
-            if (p.name == null) return "disconnected";
-            if (!Directory.Exists("text/logout"))
-                Directory.CreateDirectory("text/logout");
-            
+        static string RawLogoutMessage(Player p) {
             string path = LogoutPath(p.name);
             if (File.Exists(path)) return File.ReadAllText(path);
             
             path = "text/logout/" + p.name + ".txt";
             return File.Exists(path) ? File.ReadAllText(path) : "disconnected";
+        }
+        
+        public static string GetLogoutMessage(Player p) {
+            if (p.name == null) return "disconnected";
+            if (!Directory.Exists("text/logout"))
+                Directory.CreateDirectory("text/logout");
+            return Colors.ConvertPercents(RawLogoutMessage(p));
         }
         
         static void SetMessage(string path, string msg) {
