@@ -113,7 +113,7 @@ namespace MCGalaxy.UI {
                 
                 // Check following character is an actual colour code
                 char col = message[i + 1];
-                if (Colors.Map(ref col)) return i;
+                if (Colors.Lookup(col) != '\0') return i;
             }
             return -1;
         }
