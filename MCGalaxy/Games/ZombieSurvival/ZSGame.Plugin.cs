@@ -70,7 +70,7 @@ namespace MCGalaxy.Games {
             if (!canSee || p.Game.Referee || target == null) return;
             
             ZSData data = TryGet(target);
-            if (data == null) return;
+            if (data == null || target.level != Map) return;
             canSee = !(target.Game.Referee || data.Invisible);
         }
         
