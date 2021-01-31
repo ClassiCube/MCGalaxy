@@ -207,8 +207,14 @@ namespace MCGalaxy {
             motd = Chat.Format(motd, this);
             OnSendingMotdEvent.Call(this, ref motd);
             
-            // change -hax into +hax etc
-            if (Game.Referee) motd = motd.Replace('-', '+');
+            // Change -hax into +hax etc when in Referee mode
+            //  (can't just do Replace('-', '+') though, that breaks -push)
+            if (Game.Referee) {
+                motd = motd
+                    .Replace("-hax",  "+hax"  ).Replace("-noclip",  "+noclip")
+                    .Replace("-speed","+speed").Replace("-respawn", "+respawn")
+                    .Replace("-fly",  "+fly"  ).Replace("-thirdperson", "+thirdperson");
+            }
             byte[] packet = Packet.Motd(this, motd);
             Send(packet);
             
