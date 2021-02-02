@@ -92,8 +92,10 @@ namespace MCGalaxy.Gui {
                 cfg.ReviveChance  = (int)zs_numReviveEff.Value;
                 cfg.ReviveTooSlow = (int)zs_numReviveLimit.Value;
                 
-                cfg.ZombieName  = zs_txtName.Text;
-                cfg.ZombieModel = zs_txtModel.Text;
+                cfg.ZombieName  =  zs_txtName.Text.Trim();
+                cfg.ZombieModel = zs_txtModel.Text.Trim();
+                if (cfg.ZombieModel.Length == 0) cfg.ZombieModel = "zombie";
+                
                 zsHelper.Save();
             } catch (Exception ex) {
                 Logger.LogError("Error saving ZS settings", ex);

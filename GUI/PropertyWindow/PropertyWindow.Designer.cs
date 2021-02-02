@@ -336,11 +336,11 @@ namespace MCGalaxy.Gui
             this.zs_lblModel = new System.Windows.Forms.Label();
             this.zs_lblName = new System.Windows.Forms.Label();
             this.zs_grpRevive = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.zs_lblReviveEff = new System.Windows.Forms.Label();
             this.zs_numReviveEff = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.zs_lblReviveLimitFtr = new System.Windows.Forms.Label();
+            this.zs_lblReviveLimitHdr = new System.Windows.Forms.Label();
             this.zs_numReviveLimit = new System.Windows.Forms.NumericUpDown();
             this.zs_numReviveMax = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -357,7 +357,7 @@ namespace MCGalaxy.Gui
             this.zs_lblInvHumanMax = new System.Windows.Forms.Label();
             this.zs_cbStart = new System.Windows.Forms.CheckBox();
             this.zs_grpMaps = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.zs_lblNotUsed = new System.Windows.Forms.Label();
             this.zs_lblUsed = new System.Windows.Forms.Label();
             this.zs_btnAdd = new System.Windows.Forms.Button();
             this.zs_btnRemove = new System.Windows.Forms.Button();
@@ -3782,6 +3782,7 @@ namespace MCGalaxy.Gui
             this.zs_txtModel.Name = "zs_txtModel";
             this.zs_txtModel.Size = new System.Drawing.Size(76, 21);
             this.zs_txtModel.TabIndex = 39;
+            this.toolTip.SetToolTip(this.zs_txtModel, "Model to use for infected players.\nIf left blank, then 'zombie' model is used.");
             // 
             // zs_txtName
             // 
@@ -3790,6 +3791,7 @@ namespace MCGalaxy.Gui
             this.zs_txtName.Name = "zs_txtName";
             this.zs_txtName.Size = new System.Drawing.Size(80, 21);
             this.zs_txtName.TabIndex = 38;
+            this.toolTip.SetToolTip(this.zs_txtName, "Name to show above head of infected players.\nIf left blank, then the player's name is shown instead.");
             // 
             // zs_lblModel
             // 
@@ -3811,11 +3813,11 @@ namespace MCGalaxy.Gui
             // 
             // zs_grpRevive
             // 
-            this.zs_grpRevive.Controls.Add(this.label5);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveEff);
             this.zs_grpRevive.Controls.Add(this.zs_numReviveEff);
             this.zs_grpRevive.Controls.Add(this.label4);
-            this.zs_grpRevive.Controls.Add(this.label7);
-            this.zs_grpRevive.Controls.Add(this.label8);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveLimitFtr);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveLimitHdr);
             this.zs_grpRevive.Controls.Add(this.zs_numReviveLimit);
             this.zs_grpRevive.Controls.Add(this.zs_numReviveMax);
             this.zs_grpRevive.Controls.Add(this.label9);
@@ -3826,14 +3828,14 @@ namespace MCGalaxy.Gui
             this.zs_grpRevive.TabStop = false;
             this.zs_grpRevive.Text = "Revive settings";
             // 
-            // label5
+            // zs_lblReviveEff
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(201, 20);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(79, 13);
-            this.label5.TabIndex = 40;
-            this.label5.Text = "% effectiveness";
+            this.zs_lblReviveEff.AutoSize = true;
+            this.zs_lblReviveEff.Location = new System.Drawing.Point(202, 20);
+            this.zs_lblReviveEff.Name = "zs_lblReviveEff";
+            this.zs_lblReviveEff.Size = new System.Drawing.Size(79, 13);
+            this.zs_lblReviveEff.TabIndex = 40;
+            this.zs_lblReviveEff.Text = "% effectiveness";
             // 
             // zs_numReviveEff
             // 
@@ -3852,6 +3854,7 @@ namespace MCGalaxy.Gui
                                     0,
                                     0,
                                     0});
+            this.toolTip.SetToolTip(this.zs_numReviveEff, "Likelihood that /buy revive will disinfect a zombie");
             // 
             // label4
             // 
@@ -3862,23 +3865,23 @@ namespace MCGalaxy.Gui
             this.label4.TabIndex = 34;
             this.label4.Text = "times, with";
             // 
-            // label7
+            // zs_lblReviveLimitFtr
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(167, 48);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(100, 13);
-            this.label7.TabIndex = 38;
-            this.label7.Text = "seconds of infection";
+            this.zs_lblReviveLimitFtr.AutoSize = true;
+            this.zs_lblReviveLimitFtr.Location = new System.Drawing.Point(167, 48);
+            this.zs_lblReviveLimitFtr.Name = "zs_lblReviveLimitFtr";
+            this.zs_lblReviveLimitFtr.Size = new System.Drawing.Size(100, 13);
+            this.zs_lblReviveLimitFtr.TabIndex = 38;
+            this.zs_lblReviveLimitFtr.Text = "seconds of infection";
             // 
-            // label8
+            // zs_lblReviveLimitHdr
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 48);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(102, 13);
-            this.label8.TabIndex = 36;
-            this.label8.Text = "Must be used within";
+            this.zs_lblReviveLimitHdr.AutoSize = true;
+            this.zs_lblReviveLimitHdr.Location = new System.Drawing.Point(7, 48);
+            this.zs_lblReviveLimitHdr.Name = "zs_lblReviveLimitHdr";
+            this.zs_lblReviveLimitHdr.Size = new System.Drawing.Size(102, 13);
+            this.zs_lblReviveLimitHdr.TabIndex = 36;
+            this.zs_lblReviveLimitHdr.Text = "Must be used within";
             // 
             // zs_numReviveLimit
             // 
@@ -3897,6 +3900,7 @@ namespace MCGalaxy.Gui
                                     0,
                                     0,
                                     0});
+            this.toolTip.SetToolTip(this.zs_numReviveLimit, "The time limit after a human is infected that /buy revive must be used within");
             // 
             // zs_numReviveMax
             // 
@@ -3959,6 +3963,7 @@ namespace MCGalaxy.Gui
             this.zs_numInvZombieDur.Name = "zs_numInvZombieDur";
             this.zs_numInvZombieDur.Size = new System.Drawing.Size(52, 21);
             this.zs_numInvZombieDur.TabIndex = 33;
+            this.toolTip.SetToolTip(this.zs_numInvZombieDur, "How many seconds a zombie is invisible for after using /buy invisibility");
             // 
             // zs_numInvHumanDur
             // 
@@ -3966,7 +3971,8 @@ namespace MCGalaxy.Gui
             this.zs_numInvHumanDur.Location = new System.Drawing.Point(227, 20);
             this.zs_numInvHumanDur.Name = "zs_numInvHumanDur";
             this.zs_numInvHumanDur.Size = new System.Drawing.Size(52, 21);
-            this.zs_numInvHumanDur.TabIndex = 32;
+            this.zs_numInvHumanDur.TabIndex = 32;            
+            this.toolTip.SetToolTip(this.zs_numInvHumanDur, "How many seconds a human is invisible for after using /buy invisibility");
             // 
             // zs_numInvZombieMax
             // 
@@ -3975,6 +3981,7 @@ namespace MCGalaxy.Gui
             this.zs_numInvZombieMax.Name = "zs_numInvZombieMax";
             this.zs_numInvZombieMax.Size = new System.Drawing.Size(52, 21);
             this.zs_numInvZombieMax.TabIndex = 31;
+            this.toolTip.SetToolTip(this.zs_numInvZombieMax, "Maximum number of times a zombie can use /buy invisibility in a round");
             // 
             // zs_numInvHumanMax
             // 
@@ -3983,11 +3990,7 @@ namespace MCGalaxy.Gui
             this.zs_numInvHumanMax.Name = "zs_numInvHumanMax";
             this.zs_numInvHumanMax.Size = new System.Drawing.Size(52, 21);
             this.zs_numInvHumanMax.TabIndex = 27;
-            this.zs_numInvHumanMax.Value = new decimal(new int[] {
-                                    100,
-                                    0,
-                                    0,
-                                    0});
+            this.toolTip.SetToolTip(this.zs_numInvHumanMax, "Maximum number of times a human can use /buy invisibility in a round");
             // 
             // zs_lblInvZombieDur
             // 
@@ -3996,7 +3999,7 @@ namespace MCGalaxy.Gui
             this.zs_lblInvZombieDur.Name = "zs_lblInvZombieDur";
             this.zs_lblInvZombieDur.Size = new System.Drawing.Size(100, 13);
             this.zs_lblInvZombieDur.TabIndex = 30;
-            this.zs_lblInvZombieDur.Text = "potions, and last for";
+            this.zs_lblInvZombieDur.Text = "times, which last for";
             // 
             // zs_lblInvZombieMax
             // 
@@ -4037,7 +4040,7 @@ namespace MCGalaxy.Gui
             // 
             // zs_grpMaps
             // 
-            this.zs_grpMaps.Controls.Add(this.label12);
+            this.zs_grpMaps.Controls.Add(this.zs_lblNotUsed);
             this.zs_grpMaps.Controls.Add(this.zs_lblUsed);
             this.zs_grpMaps.Controls.Add(this.zs_btnAdd);
             this.zs_grpMaps.Controls.Add(this.zs_btnRemove);
@@ -4050,14 +4053,14 @@ namespace MCGalaxy.Gui
             this.zs_grpMaps.TabStop = false;
             this.zs_grpMaps.Text = "Maps";
             // 
-            // label12
+            // zs_lblNotUsed
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(187, 17);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(83, 13);
-            this.label12.TabIndex = 6;
-            this.label12.Text = "Maps Not In Use";
+            this.zs_lblNotUsed.AutoSize = true;
+            this.zs_lblNotUsed.Location = new System.Drawing.Point(187, 17);
+            this.zs_lblNotUsed.Name = "zs_lblNotUsed";
+            this.zs_lblNotUsed.Size = new System.Drawing.Size(83, 13);
+            this.zs_lblNotUsed.TabIndex = 6;
+            this.zs_lblNotUsed.Text = "Maps Not In Use";
             // 
             // zs_lblUsed
             // 
@@ -5633,15 +5636,15 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown zs_numReviveMax;
         private System.Windows.Forms.NumericUpDown zs_numReviveLimit;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label zs_lblReviveLimitHdr;
+        private System.Windows.Forms.Label zs_lblReviveLimitFtr;
         private System.Windows.Forms.GroupBox zs_grpRevive;
         private System.Windows.Forms.ListBox zs_lstUsed;
         private System.Windows.Forms.ListBox zs_lstNotUsed;
         private System.Windows.Forms.Button zs_btnRemove;
         private System.Windows.Forms.Button zs_btnAdd;
         private System.Windows.Forms.Label zs_lblUsed;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label zs_lblNotUsed;
         private System.Windows.Forms.GroupBox zs_grpMaps;
         private System.Windows.Forms.CheckBox zs_cbStart;
         private System.Windows.Forms.CheckBox zs_cbMap;
@@ -5656,7 +5659,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.NumericUpDown zs_numInvHumanDur;
         private System.Windows.Forms.NumericUpDown zs_numInvZombieDur;
         private System.Windows.Forms.GroupBox zs_grpInv;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label zs_lblReviveEff;
         private System.Windows.Forms.NumericUpDown zs_numReviveEff;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
