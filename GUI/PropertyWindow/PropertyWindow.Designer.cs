@@ -405,7 +405,6 @@ namespace MCGalaxy.Gui
             this.tw_lblScoreLimit = new System.Windows.Forms.Label();
             this.tw_numScoreLimit = new System.Windows.Forms.NumericUpDown();
             this.tw_grpSettings = new System.Windows.Forms.GroupBox();
-            this.tw_btnAbout = new System.Windows.Forms.Button();
             this.tw_cmbMode = new System.Windows.Forms.ComboBox();
             this.tw_cmbDiff = new System.Windows.Forms.ComboBox();
             this.tw_lblMode = new System.Windows.Forms.Label();
@@ -4128,6 +4127,7 @@ namespace MCGalaxy.Gui
             // 
             // tabCTF
             // 
+            this.tabCTF.BackColor = System.Drawing.SystemColors.Control;
             this.tabCTF.Controls.Add(this.ctf_grpControls);
             this.tabCTF.Controls.Add(this.ctf_grpSettings);
             this.tabCTF.Controls.Add(this.ctf_grpMaps);
@@ -4136,7 +4136,6 @@ namespace MCGalaxy.Gui
             this.tabCTF.Size = new System.Drawing.Size(484, 489);
             this.tabCTF.TabIndex = 3;
             this.tabCTF.Text = "CTF";
-            this.tabCTF.UseVisualStyleBackColor = true;
             // 
             // ctf_grpControls
             // 
@@ -4290,6 +4289,7 @@ namespace MCGalaxy.Gui
             // 
             // tabTW
             // 
+            this.tabTW.BackColor = System.Drawing.SystemColors.Control;
             this.tabTW.Controls.Add(this.tw_grpControls);
             this.tabTW.Controls.Add(this.tw_grpMapSettings);
             this.tabTW.Controls.Add(this.tw_grpSettings);
@@ -4299,7 +4299,6 @@ namespace MCGalaxy.Gui
             this.tabTW.Size = new System.Drawing.Size(484, 489);
             this.tabTW.TabIndex = 4;
             this.tabTW.Text = "TNT Wars";
-            this.tabTW.UseVisualStyleBackColor = true;
             // 
             // tw_grpControls
             // 
@@ -4570,7 +4569,6 @@ namespace MCGalaxy.Gui
             // 
             // tw_grpSettings
             // 
-            this.tw_grpSettings.Controls.Add(this.tw_btnAbout);
             this.tw_grpSettings.Controls.Add(this.tw_cmbMode);
             this.tw_grpSettings.Controls.Add(this.tw_cmbDiff);
             this.tw_grpSettings.Controls.Add(this.tw_lblMode);
@@ -4584,16 +4582,6 @@ namespace MCGalaxy.Gui
             this.tw_grpSettings.TabIndex = 6;
             this.tw_grpSettings.TabStop = false;
             this.tw_grpSettings.Text = "Settings";
-            // 
-            // tw_btnAbout
-            // 
-            this.tw_btnAbout.Location = new System.Drawing.Point(156, 89);
-            this.tw_btnAbout.Name = "tw_btnAbout";
-            this.tw_btnAbout.Size = new System.Drawing.Size(134, 23);
-            this.tw_btnAbout.TabIndex = 30;
-            this.tw_btnAbout.Text = "About Difficulties";
-            this.tw_btnAbout.UseVisualStyleBackColor = true;
-            this.tw_btnAbout.Click += new System.EventHandler(this.tw_btnAbout_Click);
             // 
             // tw_cmbMode
             // 
@@ -4620,6 +4608,8 @@ namespace MCGalaxy.Gui
             this.tw_cmbDiff.Name = "tw_cmbDiff";
             this.tw_cmbDiff.Size = new System.Drawing.Size(76, 21);
             this.tw_cmbDiff.TabIndex = 28;
+            this.toolTip.SetToolTip(this.tw_cmbDiff, "Easy (2 Hits to die, TNT has long delay)\nNormal (2 Hits to die, TNT has normal delay)\n" +
+                                    "Hard (1 Hit to die, TNT has short delay and team kills on)\nExtreme (1 Hit to die, TNT has short delay, big explosion and team kills on)");
             // 
             // tw_lblMode
             // 
@@ -6074,7 +6064,6 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox tw_cbKills;
         private System.Windows.Forms.CheckBox tw_cbBalance;
         private System.Windows.Forms.CheckBox tw_cbGrace;
-        private System.Windows.Forms.Button tw_btnAbout;
         private System.Windows.Forms.CheckBox tw_cbStreaks;
         private System.Windows.Forms.PropertyGrid propsZG;
     }

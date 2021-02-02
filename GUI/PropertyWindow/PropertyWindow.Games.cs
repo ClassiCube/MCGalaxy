@@ -278,20 +278,6 @@ namespace MCGalaxy.Gui {
             
             twCurCfg.Save(twCurMap);          
             twHelper.UpdateMapConfig(twCurMap);
-        }       
-
-        void tw_btnAbout_Click(object sender, EventArgs e) {
-            string msg = "Difficulty:";
-            msg += Environment.NewLine;
-            msg += "Easy (2 Hits to die, TNT has long delay)";
-            msg += Environment.NewLine;
-            msg += "Normal (2 Hits to die, TNT has normal delay)";
-            msg += Environment.NewLine;
-            msg += "Hard (1 Hit to die, TNT has short delay and team kills on)";
-            msg += Environment.NewLine;
-            msg += "Extreme (1 Hit to die, TNT has short delay, big explosion and team kills on)";
-            
-            Popup.Message(msg, "Difficulty");
         }
     }
 }
