@@ -120,7 +120,8 @@ namespace MCGalaxy.Core {
                 
                 if (who != null) {
                     string msg = e.Reason.Length == 0 ? Server.Config.DefaultBanMessage : e.Reason;
-                    who.Kick("Banned by " + e.Actor.ColoredName + ": " + msg);
+                    who.Kick("Banned by " + e.Actor.ColoredName + ": %S" + msg,
+                             "Banned by " + e.Actor.ColoredName + ": &f" + msg);
                 }
             }
         }
