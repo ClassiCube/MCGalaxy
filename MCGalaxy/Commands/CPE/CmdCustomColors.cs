@@ -56,8 +56,7 @@ namespace MCGalaxy.Commands.CPE {
                 return;
             }
             
-            char code2 = code;
-            if (Colors.Map(ref code2)) {
+            if (Colors.Lookup(code) != '\0') {
                 p.Message("There is already an existing or server defined color with the code " + code +
                                ", you must either use a different code or use %T/CustomColors remove " + code);
                 return;

@@ -35,8 +35,8 @@ namespace MCGalaxy {
             for (int i = length - 2; i >= 0; i--) {
                 if (line[i] != '&') continue;
                 
-                char col = line[i + 1];
-                if (Colors.Map(ref col)) return col;
+                char col = Colors.Lookup(line[i + 1]);
+                if (col != '\0') return col;
             }
             return 'f';
         }
@@ -144,8 +144,6 @@ namespace MCGalaxy {
             }
             return lines;
         }
-        
-        static bool ValidColor(char c) { return Colors.IsStandard(c) || Colors.IsDefined(c); }
 
         public static string CleanupColors(string value, Player p) {
             // Although ClassiCube in classic mode supports invalid colours,
@@ -163,7 +161,7 @@ namespace MCGalaxy {
             if (value.IndexOf('&') == -1) return value;
             StringBuilder sb = new StringBuilder(value.Length);
             int lastIdx  = -1;
-            char lastCol = 'f';
+            char lastCol = 'f', col;
             bool combinable = false;
             
             for (int i = 0; i < value.Length; i++) {
@@ -175,9 +173,9 @@ namespace MCGalaxy {
                 }
                 
                 // Maybe still not a colour code
-                if (i == value.Length - 1 || !ValidColor(value[i + 1])) {
+                if (i == value.Length - 1 || (col = Colors.Lookup(value[i + 1])) == '\0') {
                     if (!fullAmpersands) {
-                        // Client doesn't support standalone & 
+                        // Client doesn't support standalone &, skip over it
                         i++;
                     } else {
                         // Treat the & like a normal character
@@ -186,10 +184,6 @@ namespace MCGalaxy {
                     }
                     continue;
                 }
-                
-                char col = value[i + 1];
-                // A-F --> a-f
-                if (col >= 'A' && col <= 'F') col += ' ';
                 if (!customCols) col = Colors.Get(col).Fallback;
                 
                 // Don't append duplicate colour codes
@@ -207,8 +201,9 @@ namespace MCGalaxy {
             
             // Trim trailing color codes
             while (sb.Length >= 2) {
-                if (sb[sb.Length - 2] != '&')       break;
-                if (!ValidColor(sb[sb.Length - 1])) break;
+                if (sb[sb.Length - 2] != '&') break;
+                if (Colors.Lookup(sb[sb.Length - 1]) == '\0') break;
+                // got a color code at the end, remove
                 sb.Remove(sb.Length - 2, 2);
             }
             return sb.ToString();

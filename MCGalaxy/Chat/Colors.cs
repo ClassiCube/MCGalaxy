@@ -182,17 +182,23 @@ namespace MCGalaxy {
         /// <remarks> Also converts uppercase standard color codes to lowercase. </remarks>
         /// <returns> Whether given color code was a valid color code. </returns>
         public static bool Map(ref char col) {
-            if (IsStandard(col)) {
-                if (col >= 'A' && col <= 'F') col += ' ';
-                return true;
-            }
+            col = Lookup(col); return col != '\0';
+        }
+        
+        /// <summary> Maps internal system color codes to their actual color codes. </summary>
+        /// <remarks> Also converts uppercase standard color codes to lowercase. </remarks>
+        /// <returns> Whether given color code was a valid color code. </returns>
+        public static char Lookup(char col) {
+            // inlined as this must be fast for line wrapper
+            if  (col >= 'A' && col <= 'F') return (char)(col + ' ');
+            if ((col >= '0' && col <= '9') || (col >= 'a' && col <= 'f')) return col;
             
-            if (col == 'S') { col = Server.Config.DefaultColor[1]; return true; }
-            if (col == 'H') { col = Server.Config.HelpDescriptionColor[1]; return true; }
-            if (col == 'T') { col = Server.Config.HelpSyntaxColor[1]; return true; }
-            if (col == 'I') { col = Server.Config.IRCColor[1]; return true; }
-            if (col == 'W') { col = Server.Config.WarningErrorColor[1]; return true; }
-            return IsDefined(col);
+            if (col == 'S') return Server.Config.DefaultColor[1];
+            if (col == 'H') return Server.Config.HelpDescriptionColor[1];
+            if (col == 'T') return Server.Config.HelpSyntaxColor[1];
+            if (col == 'I') return Server.Config.IRCColor[1];
+            if (col == 'W') return Server.Config.WarningErrorColor[1];
+            return IsDefined(col) ? col : '\0';
         }
         
         
@@ -236,11 +242,11 @@ namespace MCGalaxy {
                 bool validCode = c == '%' && i < chars.Length - 1;
                 
                 if (!validCode) continue;
-                char color = chars[i + 1];
-                if (!Map(ref color)) continue;
+                char col = Lookup(chars[i + 1]);
+                if (col == '\0') continue;
                 
                 chars[i] = '&';
-                chars[i + 1] = color;
+                chars[i + 1] = col;
                 i++; // skip over color code
             }
         }
@@ -266,9 +272,7 @@ namespace MCGalaxy {
         static bool UsedColor(string message, int i) {
             // handle & being last character in string
             if (i >= message.Length - 1) return false;
-            
-            char c = message[i + 1];
-            return Map(ref c);
+            return Lookup(message[i + 1]) != '\0';
         }
         
         /// <summary> Removes all occurrences of % and &amp; that are followed by a used color code. </summary>
