@@ -200,7 +200,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (File.Exists(path)) return path;
 
             // Have to fallback on this for case sensitive file systems
-            foreach (string file in Directory.EnumerateFiles(passDir, ".dat")) {
+            string[] files = FileIO.TryGetDirectoryFiles(passDir, ".dat");
+            if (files == null) return null;
+            
+            foreach (string file in files) {
                 if (file.CaselessEq(path)) return file;
             }
             return null;

@@ -23,7 +23,7 @@ namespace MCGalaxy {
     /// <summary> Provides utility methods for File I/O operations. </summary>
     public static class FileIO {
         
-        public static bool DeleteIfExists(string path) {
+        public static bool TryDelete(string path) {
             try {
                 File.Delete(path);
                 return true;
@@ -32,12 +32,20 @@ namespace MCGalaxy {
             }
         }
         
-        public static bool MoveIfExists(string srcPath, string dstPath) {
+        public static bool TryMove(string srcPath, string dstPath) {
             try {
                 File.Move(srcPath, dstPath);
                 return true;
             } catch (FileNotFoundException) {
                 return false;
+            }
+        }
+        
+        public static string[] TryGetDirectoryFiles(string path, string searchPattern) {
+            try {
+                return Directory.GetFiles(path, searchPattern);
+            } catch (DirectoryNotFoundException) {
+                return null;
             }
         }
     }

@@ -94,9 +94,9 @@ namespace MCGalaxy {
                 
                 // Move current files to previous files (by moving instead of copying, 
                 //  can overwrite original the files without breaking the server)
-                FileIO.MoveIfExists("MCGalaxy_.dll",   "prev_MCGalaxy_.dll");
-                FileIO.MoveIfExists("MCGalaxy.exe",    "prev_MCGalaxy.exe");
-                FileIO.MoveIfExists("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
+                FileIO.TryMove("MCGalaxy_.dll",   "prev_MCGalaxy_.dll");
+                FileIO.TryMove("MCGalaxy.exe",    "prev_MCGalaxy.exe");
+                FileIO.TryMove("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
                 
                 // Move update files to current files
                 File.Move("MCGalaxy_.update",   "MCGalaxy_.dll");
@@ -110,7 +110,7 @@ namespace MCGalaxy {
         }
         
         static void DeleteFiles(params string[] paths) {
-            foreach (string path in paths) { FileIO.DeleteIfExists(path); }
+            foreach (string path in paths) { FileIO.TryDelete(path); }
         }
     }
 }
