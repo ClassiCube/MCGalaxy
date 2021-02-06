@@ -66,10 +66,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void StorePassword(string curPath, string name, string pass) {
+            byte[] hash = ComputeNewHash(name, pass);
+        	
             // In case was using .dat password before
             if (curPath != null) File.Delete(curPath);
-            
-            byte[] hash = ComputeNewHash(name, pass);
             File.WriteAllBytes(NewHashPath(name), hash);
         }
         
@@ -99,7 +99,6 @@ namespace MCGalaxy.Commands.Moderation {
                 OnVerified(p);
                 // Switch password to new format
                 StorePassword(path, p.name, password);
-                p.Message("Your password was &areset for the new format");
             }
         }
         
@@ -192,7 +191,8 @@ namespace MCGalaxy.Commands.Moderation {
 
         
         static string NewHashPath(string name) {
-            return passDir + name.ToLower() + ".pwd";
+            // don't want '+' at end of names
+            return passDir + name.RemoveLastPlus().ToLower() + ".pwd";
         }
         
         static string FindOldHashPath(string name) {
@@ -200,7 +200,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (File.Exists(path)) return path;
 
             // Have to fallback on this for case sensitive file systems
-            string[] files = FileIO.TryGetDirectoryFiles(passDir, ".dat");
+            string[] files = FileIO.TryGetDirectoryFiles(passDir, "*.dat");
             if (files == null) return null;
             
             foreach (string file in files) {
