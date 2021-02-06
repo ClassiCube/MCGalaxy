@@ -7,6 +7,7 @@ cd ${DATA_DIR}
 touch MCGalaxy.db
 mkdir -p blockdb \
   blockdefs \
+  blockprops \
   backups \
   bots \
   extra \
@@ -20,6 +21,7 @@ mkdir -p blockdb \
 cd ${MCGALAXY}
 ln -sf ${DATA_DIR}/blockdb blockdb
 ln -sf ${DATA_DIR}/blockdefs blockdefs
+ln -sf ${DATA_DIR}/blockprops blockprops
 ln -sf ${DATA_DIR}/backups backups
 ln -sf ${DATA_DIR}/bots bots
 ln -sf ${DATA_DIR}/extra extra
