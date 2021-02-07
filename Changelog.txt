@@ -1,3 +1,42 @@
+v 1.9.2.9
+Improved: Explanatory comments for /cmdcreate generated command skeletons
+Improved: Add cancel argument for levelsave/unload/rankchange events
+Fixed: + being trimmed from end of bot nametags
+Fixed: /tp erroring with normally impossible invalid input
+Fixed: /shutdown [reason] only showing first word of reason
+Fixed: Doing /me from console not showing on IRC and erroring instead
+Fixed: Can use /unflood to turn off physics on maps don't have access to
+Fixed: Custom color list in being formatted improperly
+Added: Event for infoswapping
+Added: Compiling instructions to readme
+Improved: Use darkgrey instead of black color for CLI (avoid black text on black background)
+Improved: Allow configuring tag distance threshold in CTF
+Improved: Layout and behaviour of Players tab in GUI
+Improved: Allow configuring announcement interval
+Fixed: checking for updates not working by force enabling TLS 1.1/1.2
+Improved: For heartbeat errors, only log error message in URL textbox
+Fixed: Remember current speed for bots when saved to disc
+Improved: If you double click server url in GUI, it opens it in web browser
+Improved: Make levels list table fit horizontally in GUI
+Improved:Fix players table not updating on changing map in GUI
+Improved: Fix levels table not updating when player leaves server in GUI
+GUI: Fix having grey instead of white background for input controls on mono
+Improved: Update in-place instead of using Updater.exe
+Fixed: Server failing to start if can't load sqlite3 dll
+Fixed: Problems with minimising GUI on some versions on wine
+Fixed: GUI icon not showing on wine/mono
+Fixed: /model bot not showing new model names (Thanks aleksb385)
+Fixed: /pass bypass issue when verify names off and on case sensitive filesystem
+Improved: /help XBan
+Fixed: Getting pushed in /ref mode even with -push MOTD
+Fixed: If you join ZS, enter /ref mode, then go to another map, other players don't see you
+Fixed: background colour of CTF/TNT wars gui settings
+Fixed: wrong colour in kick message upon /ban
+Improved: Add support for &S etc in LineWrapper
+Removed: Support for automatically combining ancient .env and .properties files
+Removed: /botai add reverse
+Removed: Most of 'Zombie old' from GUI, since it is in 'Zombie survival' tab now
+
 v 1.9.2.8
 Improved: When matching player names, prefer exactly matching a player's name (without +) first
 Improved: Hidden players die to bots/deadly blocks now (death message only shows to yourself though)

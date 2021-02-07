@@ -24,9 +24,6 @@ using System.Text;
 namespace MCGalaxy {
     public static class Utils {
 
-        /// <summary> The absolute path on disc of the folder MCGalaxy.exe is currently running from. </summary>
-        public static string FolderPath { get { return AppDomain.CurrentDomain.BaseDirectory; } }
-        
         public static string Hex(byte r, byte g, byte b) {
             return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
         }
