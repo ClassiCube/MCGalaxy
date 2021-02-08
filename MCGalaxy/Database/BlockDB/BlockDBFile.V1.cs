@@ -82,8 +82,8 @@ namespace MCGalaxy.DB {
         }
         
         public unsafe override int ReadForward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
-            int remaining = (int)((s.Length - s.Position) / EntrySize);
-            int count = Math.Min(remaining, BulkEntries);
+            long remaining = (s.Length - s.Position) / EntrySize;
+            int count = (int)Math.Min(remaining, BulkEntries);
             
             if (count > 0) {
                 BlockDBFile.ReadFully(s, bulk, 0, count * EntrySize);
@@ -93,8 +93,8 @@ namespace MCGalaxy.DB {
          
         public unsafe override int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long pos = s.Position;
-            int remaining = (int)(pos / EntrySize) - HeaderEntries;
-            int count = Math.Min(remaining, BulkEntries);
+            long remaining = (pos / EntrySize) - HeaderEntries;
+            int count = (int)Math.Min(remaining, BulkEntries);
             
             if (count > 0) {
                 pos -= count * EntrySize;
