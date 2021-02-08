@@ -65,6 +65,7 @@ namespace MCGalaxy {
     // This class is just kept around for backwards compatibility    
     //   Plugin used to be completely abstract, with Plugin_Simple having virtual methods
     //   However this is now obsolete as the virtual methods were moved into Plugin
+    [Obsolete("Derive from Plugin instead", true)]
     public abstract class Plugin_Simple : Plugin { }
 }
 

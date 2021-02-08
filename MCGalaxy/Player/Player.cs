@@ -223,7 +223,7 @@ namespace MCGalaxy {
             LeaveServer(msg, msg, false, sync);
         }
         
-        [Obsolete("Use Leave() or Kick() instead")]
+        [Obsolete("Use Leave() or Kick() instead", true)]
         public void leftGame(string discMsg = "") { Kick(discMsg); }
 
         bool leftServer = false;

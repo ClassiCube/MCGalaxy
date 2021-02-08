@@ -154,9 +154,9 @@ namespace MCGalaxy {
     
     // Kept around for backwards compatibility
     public sealed class CommandList {
-        [Obsolete("Use Command.Register() instead")]
+        [Obsolete("Use Command.Register() instead", true)]
         public void Add(Command cmd) { Command.Register(cmd); }
-        [Obsolete("Use CommandUnregister() instead")]
+        [Obsolete("Use Command.Unregister() instead", true)]
         public bool Remove(Command cmd) { return Command.Unregister(cmd); }
         
         [Obsolete("Use Command.Find() instead")]
