@@ -219,11 +219,20 @@ namespace MCGalaxy.Network {
         static void SendCallback(object sender, SocketAsyncEventArgs e) {
             TcpSocket s = (TcpSocket)e.UserToken;
             try {
-                // TODO: Need to check if all data was sent or not?
-                int sent = e.BytesTransferred;
-                lock (s.sendLock) {
+                lock (s.sendLock) {                   
+                    // check if last packet was only partially sent? try to resend it
+                    for (;;) {
+                        int sent  = e.BytesTransferred;
+                        int count = e.Count;
+                        if (sent >= count || sent < 0) break;
+                        
+                        // last packet was only partially sent - resend rest of packet
+                        s.sendArgs.SetBuffer(e.Offset + sent, e.Count - sent);
+                        s.sendInProgress = s.socket.SendAsync(s.sendArgs);
+                        if (s.sendInProgress) return;
+                    }
+                    
                     s.sendInProgress = false;
-
                     while (s.sendQueue.Count > 0) {
                         // DoSendAsync returns false if SendAsync completed sync
                         // If that happens, SendCallback isn't called so we need to send data here instead
