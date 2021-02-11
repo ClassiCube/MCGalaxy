@@ -155,7 +155,8 @@ namespace MCGalaxy.Commands.Fun {
             
             string prop = args[2];
             if (prop.CaselessEq("safe")) {
-                p.Message("Place or break two blocks to determine the edges.");
+                if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                    p.Message("Place or break two blocks to determine the edges.");
                 p.MakeSelection(2, cfg, SetSafeZone);
                 return;
             }

@@ -90,7 +90,8 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
 
-            p.Message("Place or break two blocks to determine the edges.");
+            if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                p.Message("Place or break two blocks to determine the edges.");
             int marks = cArgs.offsetIndex != -1 ? 3 : 2;
             p.MakeSelection(marks, "Selecting region for &SCopy", cArgs, DoCopy, DoCopyMark);
         }

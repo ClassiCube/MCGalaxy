@@ -27,7 +27,8 @@ namespace MCGalaxy.Commands.Building {
         public override string type { get { return CommandTypes.Building; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            p.Message("Place or break two blocks to determine the edges.");
+            if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                p.Message("Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for &SCenter", null, DoCentre);
         }
         

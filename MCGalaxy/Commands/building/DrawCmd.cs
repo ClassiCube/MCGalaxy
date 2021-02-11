@@ -42,7 +42,8 @@ namespace MCGalaxy.Commands.Building {
             BrushArgs bArgs = new BrushArgs(p, dArgs.BrushArgs, dArgs.Block);
             if (!factory.Validate(bArgs)) return;
             
-            p.Message(PlaceMessage);
+            if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                p.Message(PlaceMessage);
             p.MakeSelection(MarksCount, "Selecting " + SelectionType + " for &S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
