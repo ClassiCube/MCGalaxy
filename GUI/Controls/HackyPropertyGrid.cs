@@ -22,7 +22,7 @@ using System.Windows.Forms.Design;
 using System.Windows.Forms.PropertyGridInternal;
 
 namespace MCGalaxy.Gui {
-    /// <summary> Hacky workaround class to fix crashing with some versions of wine-mono </summary>
+    /// <summary> Hacky workaround for PropertyGrid to fix crashing with some versions of wine-mono </summary>
     public sealed class HackyPropertyGrid : PropertyGrid {
         
         sealed class HackyPropertiesTab : PropertiesTab {

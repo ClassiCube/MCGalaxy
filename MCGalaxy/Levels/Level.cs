@@ -198,8 +198,11 @@ namespace MCGalaxy {
             return x >= Width || y >= Height || z >= Length || !listCheckExists.Get(x, y, z);
         }
 
+        /// <summary> Attempts to save this level (can be cancelled) </summary>
+        /// <param name="force"> Whether to save even if nothing changed since last save </param>
+        /// <returns> Whether this level was successfully saved to disc </returns>
         public bool Save(bool force = false) {
-            if (blocks == null || IsMuseum) return false; // museums do not save properties
+            if (blocks == null || IsMuseum) return false; // museums do not save changes
             
             string path = LevelInfo.MapPath(MapName);
             bool cancel = false;

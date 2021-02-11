@@ -219,12 +219,12 @@ namespace MCGalaxy.Network {
         static void SendCallback(object sender, SocketAsyncEventArgs e) {
             TcpSocket s = (TcpSocket)e.UserToken;
             try {
-                lock (s.sendLock) {                   
-                    // check if last packet was only partially sent? try to resend it
+                lock (s.sendLock) {
+                    // check if last packet was only partially sent
                     for (;;) {
                         int sent  = e.BytesTransferred;
                         int count = e.Count;
-                        if (sent >= count || sent < 0) break;
+                        if (sent >= count || sent <= 0) break;
                         
                         // last packet was only partially sent - resend rest of packet
                         s.sendArgs.SetBuffer(e.Offset + sent, e.Count - sent);
