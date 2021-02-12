@@ -129,12 +129,12 @@ namespace MCGalaxy.Network {
                 // prefer explicit http status error codes if possible
                 try {
                     int status = (int)((HttpWebResponse)webEx.Response).StatusCode;
-                    return "(" + status + " error) from &f{0}";
+                    return "(" + status + " error) from ";
                 } catch {
-                    return "(" + webEx.Status + ") from &f{0}";
+                    return "(" + webEx.Status + ") from ";
                 }
             } catch {
-                return "from &f{0}";
+                return null;
             }
         }
         
@@ -152,11 +152,20 @@ namespace MCGalaxy.Network {
                     data = client.DownloadData(uri);
                 }
                 p.Message("Finished downloading.");
-            } catch (Exception ex) {
-                Logger.LogError("Error downloading " + url, ex);
+            } catch (Exception ex) {                
                 string msg = DescribeError(ex);
                 
-                p.Message("%WFailed to download " + msg, url);
+                if (msg == null) {
+                    // unexpected error, log full error details
+                    msg = "from ";
+                    Logger.LogError("Error downloading " + url, ex);
+                } else {
+                    // known error, so just log a warning
+                    string logMsg = msg + url + Environment.NewLine + ex.Message;
+                    Logger.Log(LogType.Warning, "Error downloading " + logMsg);
+                }
+                
+                p.Message("%WFailed to download {0}&f{1}", msg, url);
                 return null;
             }
             return data;
