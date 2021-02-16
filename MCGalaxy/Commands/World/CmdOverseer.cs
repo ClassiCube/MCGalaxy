@@ -32,12 +32,12 @@ namespace MCGalaxy.Commands.World {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
-            string cmd = args[0];
+            string cmd  = args[0];
             string arg1 = args.Length > 1 ? args[1] : "";
             string arg2 = args.Length > 2 ? args[2] : "";
             
             bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
-            if (mapOnly && !LevelInfo.IsRealmOwner(p.name, p.level.name)) {
+            if (mapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
                 p.Message("You may only perform that action on your own map."); return;
             }
             

@@ -71,7 +71,7 @@ namespace MCGalaxy {
         }
         
         public static bool CanEditAny(Player p) {
-            if (LevelInfo.IsRealmOwner(p.name, p.level.name)) { return true; }
+            if (LevelInfo.IsRealmOwner(p.level, p.name)) { return true; }
             ItemPerms perms = CommandExtraPerms.Find("Bot", 1) ?? new ItemPerms(LevelPermission.Operator);
             if (perms.UsableBy(p.Rank)) { return true; }
             return false;
