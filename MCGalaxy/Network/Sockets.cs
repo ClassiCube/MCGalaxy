@@ -272,7 +272,7 @@ namespace MCGalaxy.Network {
     }
     
     /// <summary> Abstracts a WebSocket on top of a socket. </summary>
-    public sealed class WebSocket : BaseWebSocket {
+    public sealed class WebSocket : ServerWebSocket {
         readonly INetSocket s;
         
         public WebSocket(INetSocket socket) { s  = socket; }

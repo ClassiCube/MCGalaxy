@@ -130,7 +130,7 @@ namespace MCGalaxy {
         
         
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
-        public void Send(byte[] buffer, bool sync = false) { 
+        public void Send(byte[] buffer, bool sync) { 
             Socket.Send(buffer, sync ? SendFlags.Synchronous : SendFlags.None);
         }
         
