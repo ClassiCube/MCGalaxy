@@ -250,7 +250,7 @@ namespace MCGalaxy.Network {
         
         /// <summary> Wraps the given data in a websocket frame </summary>
         protected static byte[] WrapData(byte[] data) {
-            int headerLen = 2 + (data.Length >= 126 ? 2 : 0);
+            int headerLen = data.Length >= 126 ? 4 : 2;
             byte[] packet = new byte[headerLen + data.Length];
             packet[0] = OPCODE_BINARY | FIN;
             
