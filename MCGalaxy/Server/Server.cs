@@ -243,7 +243,7 @@ namespace MCGalaxy {
             byte[] kick = Packet.Kick(msg, false);
             try {
                 INetSocket[] pending = INetSocket.pending.Items;
-                foreach (INetSocket p in pending) { p.Send(kick, false); }
+                foreach (INetSocket p in pending) { p.Send(kick, SendFlags.None); }
             } catch (Exception ex) { Logger.LogError(ex); }
 
             Plugin.UnloadAll();

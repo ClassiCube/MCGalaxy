@@ -25,6 +25,12 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MCGalaxy.Network {
     
+    public enum SendFlags {
+        None        = 0x00,
+        Synchronous = 0x01,
+        LowPriority = 0x02,
+    }
+    
     /// <summary> Abstracts sending to/receiving from a network socket. </summary>
     public abstract class INetSocket {
         protected INetProtocol protocol;        
@@ -37,13 +43,9 @@ namespace MCGalaxy.Network {
         public abstract bool LowLatency { set; }
         
         /// <summary> Initialises state to begin asynchronously sending and receiving data. </summary>
-        public abstract void Init();
-        
-        /// <summary> Sends a block of data, either synchronously or asynchronously. </summary>
-        public abstract void Send(byte[] buffer, bool sync);
-        /// <summary> Asynchronously sends a block of low-priority data. </summary>
-        public abstract void SendLowPriority(byte[] buffer);
-        
+        public abstract void Init();        
+        /// <summary> Sends a block of data. </summary>
+        public abstract void Send(byte[] buffer, SendFlags flags);      
         /// <summary> Closes this network socket. </summary>
         public abstract void Close();
         
@@ -175,11 +177,12 @@ namespace MCGalaxy.Network {
         
         
         static EventHandler<SocketAsyncEventArgs> sendCallback = SendCallback;
-        public override void Send(byte[] buffer, bool sync) {
+        public override void Send(byte[] buffer, SendFlags flags) {
             if (Disconnected || !socket.Connected) return;
 
+            // TODO: Low priority sending support
             try {
-                if (sync) {
+            	if ((flags & SendFlags.Synchronous) != 0) {
                     socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
                     return;
                 }
@@ -197,9 +200,6 @@ namespace MCGalaxy.Network {
                 // Socket was already closed by another thread
             }
         }
-        
-        // TODO: do this seprately
-        public override void SendLowPriority(byte[] buffer) { Send(buffer, false); }
         
         bool TrySendAsync(byte[] buffer) {
             // BlockCopy has some overhead, not worth it for very small data
@@ -282,14 +282,11 @@ namespace MCGalaxy.Network {
         public override string IP { get { return s.IP; } }
         public override bool LowLatency { set { s.LowLatency = value; } }
 
-        protected override void SendRaw(byte[] data, bool sync) {
-            s.Send(data, sync);
+        protected override void SendRaw(byte[] data, SendFlags flags) {
+            s.Send(data, flags);
         } 
-        public override void Send(byte[] buffer, bool sync) {
-            s.Send(WrapData(buffer), sync);
-        }
-        public override void SendLowPriority(byte[] buffer) {
-            s.SendLowPriority(WrapData(buffer));
+        public override void Send(byte[] buffer, SendFlags flags) {
+            s.Send(WrapData(buffer), flags);
         }
         
         protected override void HandleData(byte[] data, int len) {
@@ -331,14 +328,13 @@ namespace MCGalaxy.Network {
         
         // This is an extremely UGLY HACK 
         readonly object locker = new object();
-        public override void Send(byte[] buffer, bool sync) {
+        public override void Send(byte[] buffer, SendFlags flags) {
             try {
                 lock (locker) ssl.Write(buffer);
             } catch (Exception ex) {
                 Logger.LogError("Error writing to secure stream", ex);
             }
         }
-        public override void SendLowPriority(byte[] buffer) { Send(buffer, false); }
         
         public int ProcessReceived(byte[] data, int count) {
             lock (wrapper.locker) {

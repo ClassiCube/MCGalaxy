@@ -129,7 +129,10 @@ namespace MCGalaxy {
         }
         
         
-        public void Send(byte[] buffer, bool sync = false) { Socket.Send(buffer, sync); }
+        public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
+        public void Send(byte[] buffer, bool sync = false) { 
+            Socket.Send(buffer, sync ? SendFlags.Synchronous : SendFlags.None);
+        }
         
         public void MessageLines(IEnumerable<string> lines) {
             foreach (string line in lines) { Message(line); }
@@ -325,7 +328,7 @@ namespace MCGalaxy {
             
             BlockID raw = ConvertBlock(block);
             NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
-            Socket.SendLowPriority(buffer);
+            Socket.Send(buffer, SendFlags.LowPriority);
         }
         
         

@@ -150,13 +150,13 @@ namespace MCGalaxy {
                 sb.Replace(ircSingle[i], ircReplacements[i]);
             }
             
-            // replace fancy quotes
+            // simplify fancy quotes
             sb.Replace("“", "\"");
             sb.Replace("”", "\"");
             sb.Replace("‘", "'");
             sb.Replace("’", "'"); 
             
-            // trim misc formatting chars
+            // remove misc formatting chars
             sb.Replace("\x02", ""); // bold
             sb.Replace("\x1D", ""); // italic
             sb.Replace("\x1F", ""); // underline

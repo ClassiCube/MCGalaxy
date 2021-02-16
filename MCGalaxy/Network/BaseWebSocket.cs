@@ -41,7 +41,7 @@ namespace MCGalaxy.Network {
             byte[] raw = sha.ComputeHash(Encoding.ASCII.GetBytes(key));
             
             string headers = String.Format(fmt, Convert.ToBase64String(raw));
-            SendRaw(Encoding.ASCII.GetBytes(headers), false);
+            SendRaw(Encoding.ASCII.GetBytes(headers), SendFlags.None);
             readingHeaders = false;
         }
         
@@ -101,6 +101,11 @@ namespace MCGalaxy.Network {
         const int state_mask    = 4;
         const int state_data    = 5;
         
+        const int opcode_continued  = 0;
+        const int opcode_binary     = 2;
+        const int opcode_disconnect = 8;        
+        const int FIN = 0x80;
+        
         void DecodeFrame() {
             for (int i = 0; i < frameLen; i++) {
                 frame[i] ^= mask[i & 3];
@@ -108,12 +113,12 @@ namespace MCGalaxy.Network {
             
             switch (opcode) {
                     // TODO: reply to ping frames
-                case 0x00:
-                case 0x02:
+                case opcode_continued:
+                case opcode_binary:
                     if (frameLen == 0) return;
                     HandleData(frame, frameLen);
                     break;
-                case 0x08:
+                case opcode_disconnect:
                     // Connection is getting closed
                     Disconnect(1000); break;
                 default:
@@ -204,7 +209,7 @@ namespace MCGalaxy.Network {
         protected static byte[] WrapData(byte[] data) {
             int headerLen = 2 + (data.Length >= 126 ? 2 : 0);
             byte[] packet = new byte[headerLen + data.Length];
-            packet[0] = 0x82; // FIN bit, binary opcode
+            packet[0] = opcode_binary | FIN;
             
             if (headerLen > 2) {
                 packet[1] = 126;
@@ -217,20 +222,41 @@ namespace MCGalaxy.Network {
             return packet;
         }
         
-        protected virtual void Disconnect(int reason) {
+        protected static byte[] WrapDisconnect(int reason) {
             byte[] packet = new byte[4];
-            packet[0] = 0x88; // FIN BIT, close opcode
+            packet[0] = opcode_disconnect | FIN;
             packet[1] = 2;
             packet[2] = (byte)(reason >> 8);
             packet[3] = (byte)reason;
-            SendRaw(packet, true);
+            return packet;
+        }
+        
+        protected virtual void Disconnect(int reason) {
+            SendRaw(WrapDisconnect(reason), SendFlags.Synchronous);
         }
         
         protected abstract void HandleData(byte[] data, int len);
         
         /// <summary> Sends data to the underlying socket without wrapping the data in a websocket frame </summary>
-        protected abstract void SendRaw(byte[] data, bool sync);
+        protected abstract void SendRaw(byte[] data, SendFlags flags);
         
         public void Disconnect() { Disconnect(1000); }
+    }
+    
+    public abstract class ClientWebSocket : BaseWebSocket {
+        
+        protected void WriteHeader(string value) {
+            byte[] data = Encoding.ASCII.GetBytes(value + "\r\n");
+            SendRaw(data, SendFlags.None);
+        }
+        
+        public override void Init() {
+            WriteHeader("GET / HTTP/1.1");
+            WriteHeader("Connection: Upgrade");
+            WriteHeader("Upgrade: websocket");
+            WriteHeader("Sec-WebSocket-Version: 13");
+            WriteHeader("Sec-WebSocket-Key: xTNDiuZRoMKtxrnJDWyLmA==");
+            WriteHeader("");
+        }
     }
 }
