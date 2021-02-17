@@ -53,7 +53,7 @@ namespace MCGalaxy.Drawing.Ops {
             Level lvl = p.level;
             op.Setup(p, lvl, marks);
             
-            if (lvl != null && !lvl.Config.Drawing) {
+            if (lvl != null && !lvl.Config.Drawing && !op.AlwaysUsable) {
                 p.Message("Drawing commands are turned off on this map.");
                 return false;
             }

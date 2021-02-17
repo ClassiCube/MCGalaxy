@@ -70,11 +70,14 @@ namespace MCGalaxy.Drawing.Ops {
         /// <summary> Whether this draw operation can be undone. </summary>
         public bool Undoable = true;
         
+        /// <summary> Whether this draw operation can be used on maps that have drawing disabled. </summary>
+        public bool AlwaysUsable;
+        
         
         /// <summary> Human friendly name of the draw operation. </summary>
         public abstract string Name { get; }
         
-        /// <summary> Whether the output blocks this draw operation are affected by the player's current Transform. </summary>
+        /// <summary> Whether the output of this draw operation is affected by the player's current Transform. </summary>
         public bool AffectedByTransform = true;
         
         /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>

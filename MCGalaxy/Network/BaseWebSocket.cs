@@ -87,6 +87,7 @@ namespace MCGalaxy.Network {
         const int state_data    = 5;
         
         protected const int OPCODE_CONTINUED  = 0;
+        protected const int OPCODE_TEXT       = 1;
         protected const int OPCODE_BINARY     = 2;
         protected const int OPCODE_DISCONNECT = 8;        
         protected const int FIN = 0x80;
@@ -289,6 +290,24 @@ namespace MCGalaxy.Network {
             if (key.CaselessEq("Sec-WebSocket-Accept")) {
                 verKey = val;
             }
+        }
+        
+        /// <summary> Wraps the given data in a websocket frame </summary>
+        protected static byte[] WrapData(byte[] data) {
+            int headerLen = data.Length >= 126 ? 4 : 2;
+            byte[] packet = new byte[headerLen + 4 + data.Length];
+            packet[0] = OPCODE_TEXT | FIN;
+            
+            if (headerLen > 2) {
+                packet[1] = 126;
+                packet[2] = (byte)(data.Length >> 8);
+                packet[3] = (byte)data.Length;
+            } else {
+                packet[1] = (byte)data.Length;
+            }
+            packet[1] |= 0x80;
+            Buffer.BlockCopy(data, 0, packet, headerLen + 4, data.Length);
+            return packet;
         }
         
         public override void Init() {

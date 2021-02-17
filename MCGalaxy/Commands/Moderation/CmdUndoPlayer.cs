@@ -74,6 +74,7 @@ namespace MCGalaxy.Commands.Moderation {
             UndoDrawOp op = new UndoDrawOp();
             op.Start = DateTime.UtcNow.Subtract(delta);
             op.who = names[0]; op.ids = ids;
+            op.AlwaysUsable = true;
             
             if (p.IsSuper) {
                 // undo them across all loaded levels
