@@ -19,20 +19,19 @@ using System;
 
 namespace MCGalaxy.Blocks.Physics {
 
-    public static class LeafPhysics {
+    public unsafe static class LeafPhysics {
         
         public static void DoLeaf(Level lvl, ref PhysInfo C) {
             if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
                 ActivateablePhysics.CheckNeighbours(lvl, C.X, C.Y, C.Z);
             }
 
-            // Just immediately remove from physics list
+            // Decaying disabled? Then just remove from the physics list
             if (!lvl.Config.LeafDecay) {
-                lvl.leaves.Clear();
                 C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
             }
             
-            // Delay checking for decay for a random amount of time
+            // Delay checking for leaf decay for a random amount of time
             if (C.Data.Data < 5) {
                 Random rand = lvl.physRandom;
                 if (rand.Next(10) == 0) C.Data.Data++;
@@ -44,53 +43,67 @@ namespace MCGalaxy.Blocks.Physics {
             C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        static bool DoLeafDecay(Level lvl, ref PhysInfo C) {
-            const int dist = 4;
-            ushort x = C.X, y = C.Y, z = C.Z;
+        // radius of box around the given leaf block that is checked for logs
+        const int range = 4;
+        const int blocksPerAxis = range * 2 + 1;
 
-            for (int xx = -dist; xx <= dist; xx++)
-                for (int yy = -dist; yy <= dist; yy++)
-                    for (int zz = -dist; zz <= dist; zz++)
+        const int oneX = 1; // index + oneX = (X + 1, Y, Z)
+        const int oneY = blocksPerAxis; // index + oneY = (X, Y + 1, Z)
+        const int oneZ = blocksPerAxis * blocksPerAxis;
+
+        static bool DoLeafDecay(Level lvl, ref PhysInfo C) {
+            int* dists = stackalloc int[blocksPerAxis * blocksPerAxis * blocksPerAxis];
+            ushort x = C.X, y = C.Y, z = C.Z;
+            int idx  = 0;
+            
+            // The general overview of this algorithm is that it finds all log blocks
+            //  from (x - range, y - range, z - range) to (x + range, y + range, z + range),
+            //  and then tries to find a path from any of those logs to the block at (x, y, z)
+
+            for (int xx = -range; xx <= range; xx++)
+                for (int yy = -range; yy <= range; yy++)
+                    for (int zz = -range; zz <= range; zz++, idx++)
             {
                 int index = lvl.PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz));
-                if (index < 0) continue;
-                byte type = lvl.blocks[index];
+                byte type = index < 0 ? Block.Air : lvl.blocks[index];
                 
                 if (type == Block.Log)
-                    lvl.leaves[index] = 0;
+                    dists[idx] = 0;
                 else if (type == Block.Leaves)
-                    lvl.leaves[index] = -2;
+                    dists[idx] = -2;
                 else
-                    lvl.leaves[index] = -1;
+                    dists[idx] = -1;
             }
 
-            for (int i = 1; i <= dist; i++)
-                for (int xx = -dist; xx <= dist; xx++)
-                    for (int yy = -dist; yy <= dist; yy++)
-                        for (int zz = -dist; zz <= dist; zz++)
-            {
-                int index = lvl.PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz));
-                if (index < 0) continue;
+            for (int dist = 1; dist <= range; dist++) {
+                idx = 0;
                 
-                if (lvl.leaves[index] == i - 1) {
-                    CheckLeaf(lvl, i, x + xx - 1, y + yy, z + zz);
-                    CheckLeaf(lvl, i, x + xx + 1, y + yy, z + zz);
-                    CheckLeaf(lvl, i, x + xx, y + yy - 1, z + zz);
-                    CheckLeaf(lvl, i, x + xx, y + yy + 1, z + zz);
-                    CheckLeaf(lvl, i, x + xx, y + yy, z + zz - 1);
-                    CheckLeaf(lvl, i, x + xx, y + yy, z + zz + 1);
+                for (int xx = -range; xx <= range; xx++)
+                    for (int yy = -range; yy <= range; yy++)
+                        for (int zz = -range; zz <= range; zz++, idx++)
+                {
+                    if (dists[idx] != dist - 1) continue;
+                    // if this block is X-1 dist away from a log, potentially update neighbours as X blocks away from a log
+                    
+                    if (xx > -range) PropagateDist(dists, dist, idx - oneX);
+                    if (xx <  range) PropagateDist(dists, dist, idx + oneX);
+                    
+                    if (yy > -range) PropagateDist(dists, dist, idx - oneY);
+                    if (yy <  range) PropagateDist(dists, dist, idx + oneY);
+                    
+                    if (zz > -range) PropagateDist(dists, dist, idx - oneZ);
+                    if (zz <  range) PropagateDist(dists, dist, idx + oneZ);
                 }
             }
-            return lvl.leaves[C.Index] < 0;
+            
+            // calculate index of (0, 0, 0)
+            idx = range * oneX + range * oneY + range * oneZ;
+            return dists[idx] < 0;
         }
         
-        static void CheckLeaf(Level lvl, int i, int x, int y, int z) {
-            int index = lvl.PosToInt((ushort)x, (ushort)y, (ushort)z);
-            if (index < 0) return;
-            
-            sbyte type;
-            if (lvl.leaves.TryGetValue(index, out type) && type == -2)
-                lvl.leaves[index] = (sbyte)i;
+        static void PropagateDist(int* dists, int dist, int index) {
+            // distances can only propagate through leaf blocks
+            if (dists[index] == -2) dists[index] = dist;
         }
     }
 }

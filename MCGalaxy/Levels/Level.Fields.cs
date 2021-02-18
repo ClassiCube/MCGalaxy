@@ -101,7 +101,6 @@ namespace MCGalaxy {
         bool physThreadStarted = false;
         
         public List<C4Data> C4list = new List<C4Data>();
-        internal readonly Dictionary<int, sbyte> leaves = new Dictionary<int, sbyte>(); // Block state for leaf decay
 
         public bool CanPlace { get { return Config.Buildable && Config.BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Config.Deletable && Config.BuildType != BuildType.NoModify; } }

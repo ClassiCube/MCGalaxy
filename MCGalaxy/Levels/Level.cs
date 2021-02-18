@@ -92,7 +92,6 @@ namespace MCGalaxy {
 
         public void Dispose() {
             Extras.Clear();
-            leaves.Clear();
             ListCheck.Clear(); listCheckExists.Clear();
             ListUpdate.Clear(); listUpdateExists.Clear();
             UndoBuffer.Clear();
