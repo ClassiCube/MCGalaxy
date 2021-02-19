@@ -26,6 +26,12 @@ using MCGalaxy.Drawing;
 namespace MCGalaxy.Generator {
     public static class HeightmapGen {
         
+        static void OnDecodeError(Player p, Bitmap bmp) {
+            if (bmp != null) bmp.Dispose();                
+            p.Message("%WThere was an error reading the downloaded image.");
+            p.Message("%WThe url may need to end with its extension (such as .jpg).");
+        }
+        
         public static Bitmap DecodeImage(byte[] data, Player p) {
             Bitmap bmp = null;
             try {
@@ -34,12 +40,17 @@ namespace MCGalaxy.Generator {
                 // sometimes Mono will return an invalid bitmap instance that throws ArgumentNullException,
                 // so we make sure to check for that here rather than later.
                 return bmp;
+            } catch (ArgumentException ex) {
+                // GDI+ throws ArgumentException when data is not an image
+                // This is a fairly expected error - e.g. when a user tries to /imgprint
+                //   the webpage an image is hosted on, instead of the actual image itself. 
+                // So don't bother logging a full error for this case
+                Logger.Log(LogType.Warning, "Error decoding image: " + ex.Message);
+                OnDecodeError(p, bmp);
+                return null;
             } catch (Exception ex) {
-                Logger.LogError("Error reading bitmap", ex);
-                if (bmp != null) bmp.Dispose();
-                
-                p.Message("%WThere was an error reading the downloaded image.");
-                p.Message("%WThe url may need to end with its extension (such as .jpg).");
+                Logger.LogError("Error decoding image", ex);
+                OnDecodeError(p, bmp);
                 return null;
             }
         }
@@ -56,7 +67,7 @@ namespace MCGalaxy.Generator {
             try {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
                     p.Message("&cHeightmap size ({0}x{1}) does not match Width x Length ({2}x{3}) of the level",
-            		          bmp.Width, bmp.Height, lvl.Width, lvl.Length);
+                              bmp.Width, bmp.Height, lvl.Width, lvl.Length);
                     p.Message("&cAs such, the map may not look accurate.");
                     bmp = Resize(bmp, lvl.Width, lvl.Length);
                 }

@@ -141,6 +141,7 @@ namespace MCGalaxy.Drawing.Ops {
                 dir = m[1].Z <= m[0].Z ? 3 : 2;
             }
             
+            // TODO: Rewrite to use dirX/dirZ instead
             // Calculate back layer offset
             if (dir == 0) adj.Z = -1;
             if (dir == 1) adj.Z = +1;
