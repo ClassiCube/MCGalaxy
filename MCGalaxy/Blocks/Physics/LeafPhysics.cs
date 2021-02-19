@@ -58,7 +58,8 @@ namespace MCGalaxy.Blocks.Physics {
             
             // The general overview of this algorithm is that it finds all log blocks
             //  from (x - range, y - range, z - range) to (x + range, y + range, z + range),
-            //  and then tries to find a path from any of those logs to the block at (x, y, z)
+            //  and then tries to find a path from any of those logs to the block at (x, y, z).
+            // Note that these paths can only travel through leaf blocks
 
             for (int xx = -range; xx <= range; xx++)
                 for (int yy = -range; yy <= range; yy++)
