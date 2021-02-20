@@ -141,8 +141,9 @@ namespace MCGalaxy {
             
             args = new ConnectionArgs(nick, server);
             args.RealName = Server.SoftwareNameVersioned;
-            args.Port = Server.Config.IRCPort;
-            bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
+            args.Port     = Server.Config.IRCPort;
+            args.UseSSL   = Server.Config.IRCSSL;
+            bool usePass  = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
             args.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
         }
         

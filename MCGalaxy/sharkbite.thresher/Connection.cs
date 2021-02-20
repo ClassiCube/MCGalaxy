@@ -24,17 +24,12 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-#if SSL
-using Org.Mentalis.Security.Ssl;
-#endif
-
-[assembly:CLSCompliant(false)]
-[assembly:ComVisible(false)]
 namespace Sharkbite.Irc
 {
 	/// <summary>
@@ -54,24 +49,19 @@ namespace Sharkbite.Irc
 		public event RawMessageSentEventHandler OnRawMessageSent;
 
 
-		#if SSL
-		private SecureTcpClient client;
-		#else
-		private TcpClient client;
-		#endif
-
-		private Listener listener;
-		private Sender sender;
-		private Thread socketListenThread;
-		private StreamReader reader;
+		TcpClient client;
+		Listener listener;
+		Sender sender;
+		Thread socketListenThread;
+		StreamReader reader;
+		StreamWriter writer;
 		//Connected and registered with IRC server
-		private bool registered;
+		bool registered;
 		//TCP/IP connection established with IRC server
-		private bool connected;
-		private bool handleNickFailure;
-		private Encoding encoding;
+		bool connected;
+		bool handleNickFailure;
+		Encoding encoding;
 
-		internal StreamWriter writer; //Access is internal for testing
 		internal ConnectionArgs connectionArgs;
 
 		/// <summary>
@@ -214,37 +204,6 @@ namespace Sharkbite.Irc
 			listener.OnRegistered += new RegisteredEventHandler( OnRegistered );
 		}
 
-		#if SSL
-		private void ConnectClient( SecureProtocol protocol )
-		{
-			lock ( this )
-			{
-				if( connected )
-				{
-					throw new Exception("Connection with IRC server already opened.");
-				}
-				
-				SecurityOptions options = new SecurityOptions( protocol );
-				options.Certificate = null;
-				options.Entity = ConnectionEnd.Client;
-				options.VerificationType = CredentialVerification.None;
-				options.Flags = SecurityFlags.Default;
-				options.AllowedAlgorithms = SslAlgorithms.SECURE_CIPHERS;
-				client = new SecureTcpClient( options );
-				client.Connect( connectionArgs.Hostname, connectionArgs.Port );
-				
-				connected = true;
-				writer = new StreamWriter( client.GetStream(), TextEncoding );
-				writer.AutoFlush = true;
-				reader = new StreamReader( client.GetStream(), TextEncoding );
-				socketListenThread = new Thread(new ThreadStart( ReceiveIRCMessages ) );
-				socketListenThread.Name = Name;
-				socketListenThread.Start();
-				sender.RegisterConnection( connectionArgs );
-			}
-		}
-		#endif
-
 		/// <summary>
 		/// Read in message lines from the IRC server
 		/// and send them to a parser for processing.
@@ -328,32 +287,17 @@ namespace Sharkbite.Irc
 			}
 			command.Remove(0, command.Length );
 		}
-
-
-		#if SSL
-		///<summary>
-		/// Connect to the IRC server and start listening for messages
-		/// on a new thread.
-		/// </summary>
-		/// <exception cref="SocketException">If a connection cannot be established with the IRC server</exception>
-		public void Connect()
-		{
-			Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"Connecting over clear socket");
-			ConnectClient( SecureProtocol.None );
-		}
-
-		///<summary>
-		/// Connect to the IRC server over an encrypted connection using TLS.
-		/// </summary>
-		/// <exception cref="SocketException">If a connection cannot be established with the IRC server</exception>
-		public void SecureConnect()
-		{
-			Debug.WriteLineIf( Rfc2812Util.IrcTrace.TraceInfo,"Connecting over encrypted socket");
-			ConnectClient( SecureProtocol.Tls1 );
-		}
-
 		
-		#else
+		Stream MakeDataStream() 
+		{
+			Stream raw = client.GetStream();
+			if (!connectionArgs.UseSSL) return raw;
+			
+			SslStream wrapped = new SslStream( raw );
+			wrapped.AuthenticateAsClient( connectionArgs.Hostname );
+			return wrapped;
+		}
+		
 		/// <summary>
 		/// Connect to the IRC server and start listening for messages
 		/// on a new thread.
@@ -366,17 +310,19 @@ namespace Sharkbite.Irc
 				if( connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
 				client = new TcpClient();
 				client.Connect( connectionArgs.Hostname, connectionArgs.Port );
+				Stream s  = MakeDataStream();
 				connected = true;
-				writer = new StreamWriter( client.GetStream(), TextEncoding );
+				
+				writer = new StreamWriter( s, TextEncoding );
 				writer.AutoFlush = true;
-				reader = new StreamReader( client.GetStream(), TextEncoding );
+				reader = new StreamReader( s, TextEncoding );
 				socketListenThread = new Thread(new ThreadStart( ReceiveIRCMessages ) );
 				socketListenThread.Name = Name;
 				socketListenThread.Start();
 				sender.RegisterConnection( connectionArgs );
 			}
 		}
-		#endif
+
 		/// <summary>
 		/// Sends a 'Quit' message to the server, closes the connection,
 		/// and stops the listening thread.

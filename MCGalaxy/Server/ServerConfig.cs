@@ -162,6 +162,8 @@ namespace MCGalaxy {
         public string IRCNickServName = "NickServ";
         [ConfigString("irc-password", "IRC bot", "", true)]
         public string IRCPassword = "";
+        [ConfigBool("irc-ssl", "IRC bot", false)]
+        public bool IRCSSL = false;
 
         [ConfigBool("UseMySQL", "Database", false)]
         public bool UseMySQL = false;

@@ -45,33 +45,35 @@ namespace Sharkbite.Irc {
 
 		/// <summary> The IRC server hostname </summary>
 		/// <value>The full hostname such as irc.gamesnet.net</value>
-		public string Hostname { get; set; }
+		public string Hostname;
 		
 		/// <summary>
 		/// Set's the user's initial IRC mode mask. Set to 0 to recieve wallops
 		/// and be invisible. Set to 4 to be invisible and not receive wallops.
 		/// </summary>
 		/// <value>A number mask such as 0 or 4.</value>
-		public string ModeMask { get; set; }
+		public string ModeMask;
 		
 		/// <summary> The user's nick name. </summary>
 		/// <value>A string which conforms to the IRC nick standard.</value>
-		public string Nick { get; set; }
+		public string Nick;
 		
 		/// <summary> The TCP/IP port the IRC listens server listens on. </summary>
 		/// <value> Normally should be set to 6667. </value>
-		public int Port { get; set; }
+		public int Port;
 		
 		/// <summary> The user's 'real' name. </summary>
 		/// <value>A short string with any legal characters.</value>
-		public string RealName { get; set; }
+		public string RealName;
 		
 		/// <summary> The user's machine logon name. </summary>
 		/// <value>A short string with any legal characters.</value>
-		public string UserName { get; set; }
+		public string UserName;
 		
 		/// <summary> The password for this server. These are seldomly used. Set to '*'  </summary>
 		/// <value>A short string with any legal characters.</value>
-		public string ServerPassword { get; set; }
+		public string ServerPassword;
+		
+		public bool UseSSL;
 	}
 }
