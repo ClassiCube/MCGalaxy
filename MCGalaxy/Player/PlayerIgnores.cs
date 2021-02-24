@@ -85,11 +85,14 @@ namespace MCGalaxy {
         }
         
         public void Output(Player p) {
+            bool Nothing = !(All|IRC|Titles|Nicks|EightBall|DrawOutput|WorldChanges);
             if (Names.Count > 0) {
+                Nothing = false;
                 p.Message("&cCurrently ignoring the following players:");
                 p.Message(Names.Join(n => p.FormatNick(n)));
             }
             if (IRCNicks.Count > 0) {
+                Nothing = false;
                 p.Message("&cCurrently ignoring the following IRC nicks:");
                 p.Message(IRCNicks.Join());
             }
@@ -103,6 +106,8 @@ namespace MCGalaxy {
             if (EightBall) p.Message("&cIgnoring &T/8ball");            
             if (DrawOutput) p.Message("&cIgnoring draw command output");           
             if (WorldChanges) p.Message("&cIgnoring world change messages");
+
+            if (Nothing) p.Message("&cIgnoring nothing and nobody");
         }
     }
 }
