@@ -171,13 +171,18 @@ namespace MCGalaxy.Commands {
         }
         
         
+        static bool IsSkipBlock(string input, out BlockID block) {
+            // Skip/None block for draw operations
+            if (input.CaselessEq("skip") || input.CaselessEq("none")) {
+                block = Block.Invalid; return true;
+            } else {
+                block = Block.Air; return false;
+            }
+        }
+        
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         public static bool GetBlock(Player p, string input, out BlockID block, bool allowSkip = false) {
-            block = Block.Air;
-            // Skip/None block for draw operations
-            if (allowSkip && (input.CaselessEq("skip") || input.CaselessEq("none"))) {
-                block = Block.Invalid; return true;
-            }
+            if (allowSkip && IsSkipBlock(input, out block)) return true;
             
             block = Block.Parse(p, input);
             if (block == Block.Invalid) p.Message("%WThere is no block \"{0}\".", input);
@@ -187,8 +192,9 @@ namespace MCGalaxy.Commands {
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
         public static bool GetBlockIfAllowed(Player p, string input, out BlockID block, bool allowSkip = false) {
-            return GetBlock(p, input, out block, allowSkip) 
-                && IsBlockAllowed(p, "draw with", block);
+            if (allowSkip && IsSkipBlock(input, out block)) return true;
+            
+            return GetBlock(p, input, out block) && IsBlockAllowed(p, "draw with", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>
