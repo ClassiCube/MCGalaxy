@@ -173,11 +173,11 @@ namespace MCGalaxy {
         bool CheckRank(Player p, LevelPermission plRank, LevelPermission perm, bool max) {
             string mode = max ? "max" : "min";
             if (!CheckDetailed(p, plRank)) {                
-                p.Message("%WHence you cannot change the {1} {0} rank.", Type, mode); return false;
+                p.Message("&WHence you cannot change the {1} {0} rank.", Type, mode); return false;
             }
             
             if (perm <= plRank || max && perm == LevelPermission.Nobody) return true;          
-            p.Message("%WYou cannot change the {1} {0} rank of {2} %Wto a rank higher than yours.",
+            p.Message("&WYou cannot change the {1} {0} rank of {2} &Wto a rank higher than yours.",
                       Type, mode, ColoredName);
             return false;
         }
@@ -185,14 +185,14 @@ namespace MCGalaxy {
         bool CheckList(Player p, LevelPermission plRank, string name, bool whitelist) {
             if (!CheckDetailed(p, plRank)) {
                 string mode = whitelist ? "whitelist" : "blacklist";
-                p.Message("%WHence you cannot modify the {0} {1}.", Type, mode); return false;
+                p.Message("&WHence you cannot modify the {0} {1}.", Type, mode); return false;
             }
             
             Group group = PlayerInfo.GetGroup(name);
             if (group.Permission <= plRank) return true;
             
             if (!whitelist) {
-                p.Message("%WYou cannot blacklist players of a higher rank.");
+                p.Message("&WYou cannot blacklist players of a higher rank.");
                 return false;
             } else if (Check(name, group.Permission) == AccessResult.Blacklisted) {
                 p.Message("{0} %Sis blacklisted from {1} {2}%S.",
@@ -269,7 +269,7 @@ namespace MCGalaxy {
                 if (!isVisit) {
                     p.AllowBuild = allowed;
                 } else if (!allowed) {                    
-                    p.Message("%WNo longer allowed to visit %S{0}", ColoredName);
+                    p.Message("&WNo longer allowed to visit %S{0}", ColoredName);
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             }

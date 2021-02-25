@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.World {
             if (name == null) return false;
             
             if (!include && name.CaselessEq(p.name)) {
-                p.Message("%WYou cannot blacklist yourself."); return false;
+                p.Message("&WYou cannot blacklist yourself."); return false;
             }
             
             if (include) {

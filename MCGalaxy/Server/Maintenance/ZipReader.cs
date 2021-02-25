@@ -82,7 +82,7 @@ namespace MCGalaxy {
             
             uint sig = reader.ReadUInt32();
             if (sig != ZipEntry.SigLocal) {
-                Logger.Log(LogType.Warning, "%WFailed to find local file entry {0}", i); return null;
+                Logger.Log(LogType.Warning, "&WFailed to find local file entry {0}", i); return null;
             }
             
             entry = ReadLocalFileRecord();
@@ -100,7 +100,7 @@ namespace MCGalaxy {
             for (int i = 0; i < numEntries; i++) {
                 uint sig = reader.ReadUInt32();
                 if (sig != ZipEntry.SigCentral) {
-                    Logger.Log(LogType.Warning, "%WFailed to find central dir entry {0}", i); return i;
+                    Logger.Log(LogType.Warning, "&WFailed to find central dir entry {0}", i); return i;
                 }
                 
                 ZipEntry entry = ReadCentralDirectoryRecord();
@@ -122,7 +122,7 @@ namespace MCGalaxy {
             }
             
             if (sig != ZipEntry.SigEnd) {
-                Logger.Log(LogType.Warning, "%WFailed to find end of central directory"); return;
+                Logger.Log(LogType.Warning, "&WFailed to find end of central directory"); return;
             }
             ReadEndOfCentralDirectoryRecord();
             
@@ -132,14 +132,14 @@ namespace MCGalaxy {
             stream.Seek(-i - 20, SeekOrigin.End);
             sig = r.ReadUInt32();
             if (sig != ZipEntry.SigZip64Loc) {
-                Logger.Log(LogType.Warning, "%WFailed to find ZIP64 locator"); return;
+                Logger.Log(LogType.Warning, "&WFailed to find ZIP64 locator"); return;
             }
             ReadZip64EndOfCentralDirectoryLocator();
             
             stream.Seek(zip64EndOffset, SeekOrigin.Begin);
             sig = r.ReadUInt32();
             if (sig != ZipEntry.SigZip64End) {
-                Logger.Log(LogType.Warning, "%WFailed to find ZIP64 end"); return;
+                Logger.Log(LogType.Warning, "&WFailed to find ZIP64 end"); return;
             }
             ReadZip64EndOfCentralDirectoryRecord();
         }

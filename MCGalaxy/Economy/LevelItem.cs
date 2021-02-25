@@ -77,7 +77,7 @@ namespace MCGalaxy.Eco {
             if (raw.Length == 0) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[0]);
             
-            if (preset == null) { p.Message("%WThat isn't a level preset"); return; }
+            if (preset == null) { p.Message("&WThat isn't a level preset"); return; }
             if (!CheckPrice(p, preset.price, "that map")) return;
             
             string name = null;
@@ -127,7 +127,7 @@ namespace MCGalaxy.Eco {
         }
         
         void AddPreset(Player p, string[] args, LevelPreset preset) {
-            if (preset != null) { p.Message("%WThat preset level already exists"); return; }
+            if (preset != null) { p.Message("&WThat preset level already exists"); return; }
             
             preset = new LevelPreset();
             preset.name = args[2];
@@ -151,13 +151,13 @@ namespace MCGalaxy.Eco {
         }
         
         void RemovePreset(Player p, string[] args, LevelPreset preset) {
-            if (preset == null) { p.Message("%WThat preset level doesn't exist"); return; }
+            if (preset == null) { p.Message("&WThat preset level doesn't exist"); return; }
             Presets.Remove(preset);
             p.Message("&aSuccessfully removed preset: &f" + preset.name);
         }
 
         void EditPreset(Player p, string[] args, LevelPreset preset) {
-            if (preset == null) { p.Message("%WThat preset level doesn't exist"); return; }
+            if (preset == null) { p.Message("&WThat preset level doesn't exist"); return; }
             
             if (args[3] == "name" || args[3] == "title") {
                 preset.name = args[4];

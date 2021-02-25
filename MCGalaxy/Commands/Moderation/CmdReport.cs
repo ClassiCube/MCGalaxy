@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);
             if (reports.Count >= 5) {
-                p.Message("{0} %Walready has 5 reports! Please wait until an {1} %Whas reviewed these reports first!",
+                p.Message("{0} &Walready has 5 reports! Please wait until an {1} &Whas reviewed these reports first!",
                           p.FormatNick(target), checkPerms.Describe());
                 return;
             }

@@ -28,11 +28,11 @@ namespace MCGalaxy.Commands.World {
             if (!CommandParser.GetTimespan(p, message, ref duration, "wait for", "ms")) return;
             
             if (duration.TotalSeconds > 60) {
-                p.Message("%WCan only wait for a minute at most."); return;
+                p.Message("&WCan only wait for a minute at most."); return;
             }
 
             if (data.Context != CommandContext.MessageBlock) {
-                p.Message("%WThis command can only be used in message blocks."); return;
+                p.Message("&WThis command can only be used in message blocks."); return;
             }
             Thread.Sleep((int)duration.TotalMilliseconds);
         }

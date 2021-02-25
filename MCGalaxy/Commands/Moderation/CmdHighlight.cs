@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (op.found) {
                 p.Message("Now highlighting past &b{0} %Sfor {1}",
                            delta.Shorten(true), p.FormatNick(who));
-                p.Message("%WUse /reload to un-highlight");
+                p.Message("&WUse /reload to un-highlight");
             } else {
                 p.Message("No changes found by {1} %Sin the past &b{0}",
                            delta.Shorten(true), p.FormatNick(who));
@@ -101,7 +101,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("%T/Highlight area [player] <timespan>");
             p.Message("%HOnly highlights in the specified region.");
             p.Message("%H If <timespan> is not given, highlights for last 30 minutes");
-            p.Message("%W/Highlight cannot be disabled, use /reload to un-highlight");
+            p.Message("&W/Highlight cannot be disabled, use /reload to un-highlight");
         }
     }
 }

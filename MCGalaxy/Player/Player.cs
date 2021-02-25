@@ -346,7 +346,7 @@ namespace MCGalaxy {
                 Message("Cannot {0} %Swhile chat moderation is on without %T/Voice%S", action); return false; 
             }
             if (Unverified) {
-                Message("%WYou must first verify with %T/Pass [Password]"); return false;
+                Message("&WYou must first verify with %T/Pass [Password]"); return false;
             }
             return true;
         }
@@ -358,9 +358,9 @@ namespace MCGalaxy {
             if (!Unverified) return;
             
             if (!Commands.Moderation.CmdPass.HasPassword(name)) {
-                Message("%WPlease set your admin verification password with %T/SetPass [password]!");
+                Message("&WPlease set your admin verification password with %T/SetPass [password]!");
             } else {
-                Message("%WPlease complete admin verification with %T/Pass [password]!");
+                Message("&WPlease complete admin verification with %T/Pass [password]!");
             }
         }
         

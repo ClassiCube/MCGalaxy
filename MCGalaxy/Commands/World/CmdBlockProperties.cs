@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.World {
                 return p.level.Props;
             }
             
-            p.Message("%WScope must be: global or level");
+            p.Message("&WScope must be: global or level");
             return null;
         }
         
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.World {
             BlockID block = Block.Parse(pScope, str);
             
             if (block == Block.Invalid) {
-                p.Message("%WThere is no block \"{0}\".", str);
+                p.Message("&WThere is no block \"{0}\".", str);
             }
             return block;
         }
@@ -191,7 +191,7 @@ namespace MCGalaxy.Commands.World {
             if (opt != null) {
                 p.Message(opt.Help);
             } else {
-                p.Message("%WUnrecognised property \"{0}\"", message);
+                p.Message("&WUnrecognised property \"{0}\"", message);
             }
         }
     }

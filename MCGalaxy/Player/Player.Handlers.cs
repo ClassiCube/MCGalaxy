@@ -61,7 +61,7 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (Unverified) {
-                Message("%WYou must first verify with %T/Pass [Password]");
+                Message("&WYou must first verify with %T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
@@ -482,7 +482,7 @@ namespace MCGalaxy {
             }
 
             if (text.CaselessContains("^detail.user=")) {
-                Message("%WYou cannot use WoM detail strings in a chat message.");
+                Message("&WYou cannot use WoM detail strings in a chat message.");
                 return true;
             }
 
@@ -556,7 +556,7 @@ namespace MCGalaxy {
                 thread.Start();
             } catch (Exception e) {
                 Logger.LogError(e); 
-                Message("%WCommand failed");
+                Message("&WCommand failed");
             }
         }
         
@@ -583,7 +583,7 @@ namespace MCGalaxy {
                 thread.Start();
             } catch (Exception e) {
                 Logger.LogError(e); 
-                Message("%WCommand failed.");
+                Message("&WCommand failed.");
             }
         }
         
@@ -593,7 +593,7 @@ namespace MCGalaxy {
                 // failsafe for when server has turned off command spam checking
                 if (mbRecursion >= 100) {
                     mbRecursion = 0;
-                    Message("%WInfinite message block loop detected, aborting");
+                    Message("&WInfinite message block loop detected, aborting");
                     return false;
                 }
             } else if (data.Context == CommandContext.Normal) { 
@@ -611,7 +611,7 @@ namespace MCGalaxy {
                 Message("You cannot use any commands while jailed."); return false;
             }
             if (Unverified && !(cmd == "pass" || cmd == "setpass")) {
-                Message("%WYou must verify first with %T/Pass [Password]"); return false;
+                Message("&WYou must verify first with %T/Pass [Password]"); return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
@@ -687,7 +687,7 @@ namespace MCGalaxy {
                 command.Use(this, args, data);
             } catch (Exception e) {
                 Logger.LogError(e);
-                Message("%WAn error occured when using the command!");
+                Message("&WAn error occured when using the command!");
                 Message(e.GetType() + ": " + e.Message);
                 return false;
             }

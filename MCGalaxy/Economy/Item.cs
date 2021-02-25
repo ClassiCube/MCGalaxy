@@ -98,7 +98,7 @@ namespace MCGalaxy.Eco {
         
         protected static bool CheckPrice(Player p, int price, string item) {
             if (p.money < price) {
-                p.Message("%WYou don't have enough &3{1} %Wto buy {0}.", item, Server.Config.Currency); 
+                p.Message("&WYou don't have enough &3{1} &Wto buy {0}.", item, Server.Config.Currency); 
                 return false;
             }
             return true;

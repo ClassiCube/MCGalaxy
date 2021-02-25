@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
                     p.level.BlockDB.FindChangesAt(x, y, z,
                                                   entry => OutputEntry(p, ref foundAny, names, entry));
                 } else {
-                    p.Message("%WUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
+                    p.Message("&WUnable to accquire read lock on BlockDB after 30 seconds, aborting.");
                     return false;
                 }
             }

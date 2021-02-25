@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Misc {
         public override void Help(Player p) {
             p.Message("%T/SendCmd [player] [command] <arguments>");
             p.Message("%HMake another user use a command. (e.g %T/SendCmd bob tp bob2%H)");
-            p.Message("  %WNote [player] uses the command as if they had your rank");
+            p.Message("  &WNote [player] uses the command as if they had your rank");
         }
     }
 }

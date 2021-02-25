@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
             string name = args[0];
             
             if (name.Length == 0) {
-                if (p.possess.Length == 0) { p.Message("%WNot possessing anyone"); return; }
+                if (p.possess.Length == 0) { p.Message("&WNot possessing anyone"); return; }
                 
                 Player target = PlayerInfo.FindExact(p.possess);
                 p.possess = "";
@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (target == null) return;
                 if (!CheckRank(p, data, target, "teleport", false)) return;
                 
-                if (p == target) { p.Message("%WCannot possess yourself!"); return; }
+                if (p == target) { p.Message("&WCannot possess yourself!"); return; }
                 if (target.possess.Length > 0) {
                     p.Message("That player is currently possessing someone!"); return;
                 }

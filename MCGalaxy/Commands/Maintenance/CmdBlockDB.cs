@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Maintenance {
             p.Message("%T/BlockDB enable [level]");
             p.Message("%HEnables %Hrecording block changes to the BlockDB for [level]");
             p.Message("%HIf [level] is not given, uses your current level.");
-            p.Message("%WUse these commands with great caution!");
+            p.Message("&WUse these commands with great caution!");
         }
     }
 }

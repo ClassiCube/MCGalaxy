@@ -60,7 +60,7 @@ namespace MCGalaxy.Core {
 
             if (p.weapon != null && !level.Config.Guns) p.weapon.Disable();
             if (!level.Config.UseBlockDB) {
-                p.Message("BlockDB is disabled here, %Wyou will not be able to /undo or /redo");
+                p.Message("BlockDB is disabled here, &Wyou will not be able to /undo or /redo");
             }
         }
 		

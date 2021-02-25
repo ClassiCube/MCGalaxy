@@ -66,7 +66,7 @@ namespace MCGalaxy {
             if (CanEditAny(p)) { return true; }
             if (Owner == p.name) { return true; }
             
-            p.Message("%WYou are not allowed to {0} bots that you did not create.", attemptedAction);
+            p.Message("&WYou are not allowed to {0} bots that you did not create.", attemptedAction);
             return false;
         }
         

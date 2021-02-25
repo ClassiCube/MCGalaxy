@@ -32,14 +32,14 @@ namespace MCGalaxy.Commands.Eco {
             // Player can use /pay messages to bypass a mute
             // TODO: Make MessageCmd.CanSpeak more generic so that can be used here instead
             if (trans.Reason != null && !p.CanSpeak()) {
-                p.Message("%WCannot specify a payment reason, as you cannot currently speak");
+                p.Message("&WCannot specify a payment reason, as you cannot currently speak");
                 return;
             }
             
             int matches = 1;
             Player who = PlayerInfo.FindMatches(p, trans.TargetName, out matches);
             if (matches > 1) return;
-            if (p == who) { p.Message("%WYou cannot pay yourself &3" + Server.Config.Currency); return; }
+            if (p == who) { p.Message("&WYou cannot pay yourself &3" + Server.Config.Currency); return; }
             int money, srcMoney = p.IsSuper ? int.MaxValue : p.money;
             
             if (who == null) {
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands.Eco {
 
         static bool IsLegalPayment(Player p, int payer, int receiver, int amount) {
             if (receiver + amount > 16777215) { 
-                p.Message("%WPlayers cannot have over &f16777215 &3" + Server.Config.Currency); return false; 
+                p.Message("&WPlayers cannot have over &f16777215 &3" + Server.Config.Currency); return false; 
             }
             if (payer < amount) { 
-                p.Message("%WYou don't have enough &3" + Server.Config.Currency); return false; 
+                p.Message("&WYou don't have enough &3" + Server.Config.Currency); return false; 
             }
             return true;
         }

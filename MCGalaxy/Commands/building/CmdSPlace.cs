@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval, 1)) return null;
 
             if (interval >= distance) {
-                p.Message("%WThe Interval cannot be greater than the distance."); return null;
+                p.Message("&WThe Interval cannot be greater than the distance."); return null;
             }
 
             SPlaceDrawOp op = new SPlaceDrawOp();

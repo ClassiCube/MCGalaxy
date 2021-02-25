@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Fun {
             string prop = args[1], value = args[2];
             if (prop.CaselessEq("spawn")) {
                 if (gameCfg.Mode == TWGameMode.FFA) {
-                    p.Message("%WCannot set spawns in Free For All mode"); return;
+                    p.Message("&WCannot set spawns in Free For All mode"); return;
                 }
                 
                 if (value.CaselessEq("red")) {

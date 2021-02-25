@@ -182,7 +182,7 @@ namespace MCGalaxy {
                 BlockID block;
                 if (!CommandParser.GetBlock(p, input, out block)) return;
                 if (Block.IsPhysicsType(block)) {
-                    p.Message("%WCannot use physics block ids for %T/env"); return;
+                    p.Message("&WCannot use physics block ids for %T/env"); return;
                 }
                 
                 string name = Block.GetName(p, block);

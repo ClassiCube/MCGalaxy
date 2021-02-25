@@ -225,12 +225,12 @@ namespace MCGalaxy {
         void CheckState() {
             if (Server.muted.Contains(name)) {
                 muted = true;
-                Chat.MessageFrom(this, "λNICK %Wis still muted from previously.");
+                Chat.MessageFrom(this, "λNICK &Wis still muted from previously.");
             }
             
             if (Server.frozen.Contains(name)) {
                 frozen = true;
-                Chat.MessageFrom(this, "λNICK %Wis still frozen from previously.");
+                Chat.MessageFrom(this, "λNICK &Wis still frozen from previously.");
             }
         }
         

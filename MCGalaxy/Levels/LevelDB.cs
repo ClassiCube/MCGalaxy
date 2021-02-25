@@ -33,7 +33,7 @@ namespace MCGalaxy {
 
             using (IDisposable wLock = lvl.BlockDB.Locker.AccquireWrite(60 * 1000)) {
                 if (wLock == null) {
-                    Logger.Log(LogType.Warning, "%WCouldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
+                    Logger.Log(LogType.Warning, "&WCouldn't accquire BlockDB write lock on {0}, skipping save", lvl.name);
                     return;
                 }
                 lvl.BlockDB.FlushCache();

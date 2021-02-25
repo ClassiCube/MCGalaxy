@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
             
             // Work on current level by default
             if (cfg == null) {
-                if (p.IsSuper) { p.Message("%WWhen using %T/Env %Wfrom {0}, only %T/Env Global %Wis supported", p.SuperName); return; }
+                if (p.IsSuper) { p.Message("&WWhen using %T/Env &Wfrom {0}, only %T/Env Global &Wis supported", p.SuperName); return; }
             	
                 lvl = p.level; cfg = lvl.Config;
                 area = lvl.ColoredName;
@@ -140,7 +140,7 @@ namespace MCGalaxy.Commands.CPE {
                 p.Message(opt.Help);
                 p.Message("%HUse 'normal' for [value] to reset to default");
             } else {
-                p.Message("%WUnrecognised property \"{0}\"", message);
+                p.Message("&WUnrecognised property \"{0}\"", message);
             }
         }
     }

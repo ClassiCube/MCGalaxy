@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Fun {
         
         static bool DoExplode(Player p, Level lvl, ref Vec3S32 pos) {
             if (lvl.physics < 3 || lvl.physics == 5) {
-                p.Message("%WThe physics on {0} %Ware not sufficient for exploding!", lvl.ColoredName); 
+                p.Message("&WThe physics on {0} &Ware not sufficient for exploding!", lvl.ColoredName); 
                 return false;
             }
         	

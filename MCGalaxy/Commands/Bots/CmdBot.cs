@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Bots {
                             BotsFile.Save(p.level);
                         }
                     } else {
-                        p.Message("%WYou cannot remove all bots belonging to {0}%W unless you are the owner of this map.", p.FormatNick(ownerName));
+                        p.Message("&WYou cannot remove all bots belonging to {0}&W unless you are the owner of this map.", p.FormatNick(ownerName));
                     }
                     return;
                 }
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.Bots {
                         BotsFile.Save(p.level);
                     }
                 } else {
-                    p.Message("%WYou cannot remove all bots unless you are the owner of this map.");
+                    p.Message("&WYou cannot remove all bots unless you are the owner of this map.");
                 }
 
             } else {

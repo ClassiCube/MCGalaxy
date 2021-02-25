@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Scripting {
             } else if (engine.Compile(srcPath, dstPath, p)) {
                 p.Message("Command compiled successfully.");
             } else {
-                p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
+                p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }
 

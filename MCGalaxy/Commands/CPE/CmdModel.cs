@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.CPE {
             float max = ModelInfo.MaxScale(e, model);
             // restrict player model scale, but bots can have unlimited model scale
             if (ModelInfo.GetRawScale(model) > max) {
-                dst.Message("%WScale must be {0} or less for {1} model",
+                dst.Message("&WScale must be {0} or less for {1} model",
                             max, ModelInfo.GetRawModel(model));
                 return null;
             }

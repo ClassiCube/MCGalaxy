@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Eco {
                 if (item == null) { Help(p); return; }                
 
                 if (!item.Enabled) {
-                    p.Message("%WThe " + item.ShopName + " item is not currently buyable."); return;
+                    p.Message("&WThe " + item.ShopName + " item is not currently buyable."); return;
                 }
                 item.OnStoreCommand(p);
             }

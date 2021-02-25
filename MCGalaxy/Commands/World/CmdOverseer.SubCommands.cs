@@ -129,7 +129,7 @@ namespace MCGalaxy.Commands.World {
                 if (opt == null) {
                     p.MessageLines(mapHelp);
                 } else if (DisallowedMapOption(opt.Name)) {
-                    p.Message("%WYou cannot change that map option via /os map."); return;
+                    p.Message("&WYou cannot change that map option via /os map."); return;
                 } else {
                     opt.SetFunc(p, p.level, value);
                     p.level.SaveSettings();

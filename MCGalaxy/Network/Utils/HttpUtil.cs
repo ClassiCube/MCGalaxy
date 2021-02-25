@@ -105,7 +105,7 @@ namespace MCGalaxy.Network {
             string scheme = uri.Scheme;
             if (scheme.CaselessEq("http") || scheme.CaselessEq("https")) return true;
             
-            p.Message("%WOnly http:// or https:// urls are supported, " +
+            p.Message("&WOnly http:// or https:// urls are supported, " +
                       "{0} is a {1}:// url", url, scheme);
             return false;
         }
@@ -118,7 +118,7 @@ namespace MCGalaxy.Network {
             FilterURL(ref url);
             
             if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
-                p.Message("%W{0} is not a valid URL.", url); return null;
+                p.Message("&W{0} is not a valid URL.", url); return null;
             }
             return uri;
         }
@@ -165,7 +165,7 @@ namespace MCGalaxy.Network {
                     Logger.Log(LogType.Warning, "Error downloading " + logMsg);
                 }
                 
-                p.Message("%WFailed to download {0}&f{1}", msg, url);
+                p.Message("&WFailed to download {0}&f{1}", msg, url);
                 return null;
             }
             return data;
@@ -176,7 +176,7 @@ namespace MCGalaxy.Network {
             if (uri == null) return null;
             
             byte[] data = DownloadData(p, url, uri);
-            if (data == null) p.Message("%WThe url may need to end with its extension (such as .jpg).");
+            if (data == null) p.Message("&WThe url may need to end with its extension (such as .jpg).");
             return data;
         }
     }

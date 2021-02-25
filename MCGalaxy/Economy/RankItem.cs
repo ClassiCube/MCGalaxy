@@ -81,12 +81,12 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnPurchase(Player p, string args) {
             if (args.Length > 0) {
-                p.Message("%WYou cannot provide a rank name, use %T/Buy rank %Wto buy the NEXT rank."); return;
+                p.Message("&WYou cannot provide a rank name, use %T/Buy rank &Wto buy the NEXT rank."); return;
             }
             
             RankEntry nextRank = NextRank(p);
             if (nextRank == null) {
-                p.Message("%WYou are already at or past the max buyable rank"); return;
+                p.Message("&WYou are already at or past the max buyable rank"); return;
             }
             if (!CheckPrice(p, nextRank.Price, "the next rank")) return;
             
@@ -100,7 +100,7 @@ namespace MCGalaxy.Eco {
             if (args[1].CaselessEq("price")) {
                 Group grp = Matcher.FindRanks(p, args[2]);
                 if (grp == null) return;
-                if (p.Rank < grp.Permission) { p.Message("%WCannot set price of a rank higher than yours."); return; }
+                if (p.Rank < grp.Permission) { p.Message("&WCannot set price of a rank higher than yours."); return; }
                 
                 int cost = 0;
                 if (!CommandParser.GetInt(p, args[3], "Price", ref cost, 0)) return;
@@ -109,12 +109,12 @@ namespace MCGalaxy.Eco {
             } else if (Command.IsDeleteCommand(args[1])) {
                 Group grp = Matcher.FindRanks(p, args[2]);
                 if (grp == null) return;
-                if (p.Rank < grp.Permission) { p.Message("%WCannot remove a rank higher than yours."); return; }
+                if (p.Rank < grp.Permission) { p.Message("&WCannot remove a rank higher than yours."); return; }
                 
                 if (Remove(grp.Permission)) {
                     p.Message("&aMade rank {0} &ano longer buyable", grp.ColoredName);
                 } else {
-                    p.Message("%WThat rank was not buyable to begin with.");
+                    p.Message("&WThat rank was not buyable to begin with.");
                 }
             } else {
                 OnSetupHelp(p);
@@ -132,7 +132,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreOverview(Player p) {
             RankEntry next = NextRank(p);
             if (next == null) {
-                p.Message("&6Rankup %S- %Wno further ranks to buy.");
+                p.Message("&6Rankup %S- &Wno further ranks to buy.");
             } else {
                 p.Message("&6Rankup to {0} %S- &a{1} %S{2}",
                                Group.GetColoredName(next.Perm), next.Price, Server.Config.Currency);
@@ -142,12 +142,12 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             p.Message("%T/Buy rankup");
             if (Ranks.Count == 0) {
-                p.Message("%WNo ranks have been setup be buyable. See %T/eco help rank"); return;
+                p.Message("&WNo ranks have been setup be buyable. See %T/eco help rank"); return;
             }
             
             LevelPermission maxRank = Ranks[Ranks.Count - 1].Perm;
             p.Message("&fThe highest buyable rank is: {0}", Group.GetColoredName(maxRank));
-            p.Message("%WYou can only buy ranks one at a time, in sequential order.");
+            p.Message("&WYou can only buy ranks one at a time, in sequential order.");
             
             foreach (RankEntry rank in Ranks) {
                 p.Message("&6{0} %S- &a{1} %S{2}",

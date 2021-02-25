@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Scripting {
             } else if (engine.Compile(srcPath, dstPath, p)) {
                 p.Message("Plugin compiled successfully.");
             } else {
-                p.Message("%WCompilation error. See " + IScripting.ErrorPath + " for more information.");
+                p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }
         
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Scripting {
                 if (Plugin.Load(path, false)) {
                     p.Message("Plugin loaded successfully.");
                 } else {
-                    p.Message("%WError loading plugin. See error logs for more information.");
+                    p.Message("&WError loading plugin. See error logs for more information.");
                 }
             } else {
                 p.Message("File &9{0} %Snot found.", path);
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Scripting {
                 if (Plugin.Unload(plugin, false)) {
                     p.Message("Plugin unloaded successfully.");
                 } else {
-                    p.Message("%WError unloading plugin. See error logs for more information.");
+                    p.Message("&WError unloading plugin. See error logs for more information.");
                 }
             } else {
                 p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
