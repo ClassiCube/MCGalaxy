@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Paint");
-            p.Message("%HTurns painting mode on/off.");
-            p.Message("%HWhen paint mode is on, any block you delete is replaced by the block you are holding.");
+            p.Message("&T/Paint");
+            p.Message("&HTurns painting mode on/off.");
+            p.Message("&HWhen paint mode is on, any block you delete is replaced by the block you are holding.");
         }
     }
 }

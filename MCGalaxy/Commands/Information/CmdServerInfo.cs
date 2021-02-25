@@ -83,8 +83,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ServerInfo");
-            p.Message("%HDisplays the server information.");
+            p.Message("&T/ServerInfo");
+            p.Message("&HDisplays the server information.");
         }
     }
 }

@@ -112,13 +112,13 @@ namespace MCGalaxy.Commands.Building {
         class AdvDrawMeta { public int radius, height; }
         
         public override void Help(Player p) {
-            p.Message("%T/Draw [object] [baseradius] [height] <brush args>");
-            p.Message("%T/Draw [object] [radius] <brush args>");
-            p.Message("%HDraws an object at the specified point.");
-            p.Message("   %HObjects: &fcone/hcone/icone/hicone");
+            p.Message("&T/Draw [object] [baseradius] [height] <brush args>");
+            p.Message("&T/Draw [object] [radius] <brush args>");
+            p.Message("&HDraws an object at the specified point.");
+            p.Message("   &HObjects: &fcone/hcone/icone/hicone");
             p.Message("     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
-            p.Message("   %HObjects with only radius: &fsphere/hsphere");
-            p.Message("   %HNote 'h' means hollow, 'i' means inverse");
+            p.Message("   &HObjects with only radius: &fsphere/hsphere");
+            p.Message("   &HNote 'h' means hollow, 'i' means inverse");
             p.Message(BrushHelpLine);
         }
     }

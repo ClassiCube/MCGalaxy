@@ -152,15 +152,15 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Palette create/delete [name]");
-            p.Message("%HCreates or deletes a palette for %T/ImagePrint");
-            p.Message("%T/Palette add [name] [block] [hex color]");
-            p.Message("%HAdds a block to a palette's entries.");
-            p.Message("%T/Palette remove [name] [block]");
-            p.Message("%HRemoves a block from a palette's entries.");
-            p.Message("%T/Palette entries [name]");
-            p.Message("%HLists the entries of that palette.");
-            p.Message("%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
+            p.Message("&T/Palette create/delete [name]");
+            p.Message("&HCreates or deletes a palette for &T/ImagePrint");
+            p.Message("&T/Palette add [name] [block] [hex color]");
+            p.Message("&HAdds a block to a palette's entries.");
+            p.Message("&T/Palette remove [name] [block]");
+            p.Message("&HRemoves a block from a palette's entries.");
+            p.Message("&T/Palette entries [name]");
+            p.Message("&HLists the entries of that palette.");
+            p.Message("&HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
         }
     }
 }

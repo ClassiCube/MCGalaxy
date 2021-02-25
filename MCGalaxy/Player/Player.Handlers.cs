@@ -61,7 +61,7 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (Unverified) {
-                Message("&WYou must first verify with %T/Pass [Password]");
+                Message("&WYou must first verify with &T/Pass [Password]");
                 RevertBlock(x, y, z); return;
             }
 
@@ -521,7 +521,7 @@ namespace MCGalaxy {
                 if (text.Length == 0) {
                     Message("Cannot repeat command - no commands used yet."); return;
                 }
-                Message("Repeating %T/" + text);
+                Message("Repeating &T/" + text);
             }
             
             string cmd, args;            
@@ -611,7 +611,7 @@ namespace MCGalaxy {
                 Message("You cannot use any commands while jailed."); return false;
             }
             if (Unverified && !(cmd == "pass" || cmd == "setpass")) {
-                Message("&WYou must verify first with %T/Pass [Password]"); return false;
+                Message("&WYou must verify first with &T/Pass [Password]"); return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
@@ -629,7 +629,7 @@ namespace MCGalaxy {
             byte bindIndex;
             if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
                 if (CmdBindings[bindIndex] == null) { 
-                    Message("No command is bound to: %T/" + cmdName); return null; 
+                    Message("No command is bound to: &T/" + cmdName); return null; 
                 }
                 
                 CmdBindings[bindIndex].Separate(out cmdName, out cmdArgs);
@@ -660,10 +660,10 @@ namespace MCGalaxy {
                 Message("Command is disabled as " + reason); return null;
             }
             if (level != null && level.IsMuseum && !command.museumUsable) {
-                Message("Cannot use %T/{0} %Swhile in a museum.", command.name); return null;
+                Message("Cannot use &T/{0} %Swhile in a museum.", command.name); return null;
             }
             if (frozen && !command.UseableWhenFrozen) {
-                Message("Cannot use %T/{0} %Swhile frozen.", command.name); return null;
+                Message("Cannot use &T/{0} %Swhile frozen.", command.name); return null;
             }
             return command;
         }

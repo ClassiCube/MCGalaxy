@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.CPE {
             
             char code = args[1][0];
             if (Colors.IsStandard(code)) {
-                p.Message("You may only edit standard codes using %T/CustomColors edit"); return;
+                p.Message("You may only edit standard codes using &T/CustomColors edit"); return;
             }
             if (code == ' ' || code == '\0' || code == '\u00a0' || code == '%' || code == '&') {
                 p.Message("Colour code cannot be a space, percentage, or ampersand.");
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.CPE {
             
             if (Colors.Lookup(code) != '\0') {
                 p.Message("There is already an existing or server defined color with the code " + code +
-                               ", you must either use a different code or use %T/CustomColors remove " + code);
+                               ", you must either use a different code or use &T/CustomColors remove " + code);
                 return;
             }
             
@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (Colors.IsDefined(code)) return code;
                 
                 p.Message("There is no color with the code {0}.", code);
-                p.Message("Use %T/CustomColors list %Sto see a list of colors.");
+                p.Message("Use &T/CustomColors list %Sto see a list of colors.");
             }
             return '\0';
         }
@@ -166,12 +166,12 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CustomColors add [code] [name] [fallback] [hex]");
-            p.Message("%H  code is a single character.");
-            p.Message("%H  fallback is the color code shown to non-supporting clients.");
-            p.Message("%T/CustomColors remove [code] %H- Removes that custom color.");
-            p.Message("%T/CustomColors list [offset] %H- lists all custom colors.");
-            p.Message("%T/CustomColors edit [code] [name/fallback/hex] [value]");
+            p.Message("&T/CustomColors add [code] [name] [fallback] [hex]");
+            p.Message("&H  code is a single character.");
+            p.Message("&H  fallback is the color code shown to non-supporting clients.");
+            p.Message("&T/CustomColors remove [code] &H- Removes that custom color.");
+            p.Message("&T/CustomColors list [offset] &H- lists all custom colors.");
+            p.Message("&T/CustomColors edit [code] [name/fallback/hex] [value]");
         }
     }
 }

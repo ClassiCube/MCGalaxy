@@ -137,7 +137,7 @@ namespace MCGalaxy {
             if (CanUse("Inbox") && Database.TableExists("Inbox" + name)) {
                 int count = Database.CountRows("Inbox" + name);
                 if (count > 0) {
-                    Message("You have &a" + count + " %Smessages in %T/Inbox");
+                    Message("You have &a" + count + " %Smessages in &T/Inbox");
                 }
             }
             

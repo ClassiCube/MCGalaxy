@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Maintenance {
             } else {
                 if (shutdownTask != null) {
                     p.Message("Server is already shutting down, use " +
-                                   "%T/Shutdown abort %Sto abort the shutdown."); return;
+                                   "&T/Shutdown abort %Sto abort the shutdown."); return;
                 }
                 
                 if (message.Length == 0) message = "10";
@@ -100,12 +100,12 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Shutdown [delay] <reason>");
-            p.Message("%HShuts the server down after [delay]");
-            p.Message("%T/Shutdown <reason>");
-            p.Message("%HShuts the server down after 10 seconds");
-            p.Message("%T/Shutdown abort");
-            p.Message("%HAborts the current server shutdown.");
+            p.Message("&T/Shutdown [delay] <reason>");
+            p.Message("&HShuts the server down after [delay]");
+            p.Message("&T/Shutdown <reason>");
+            p.Message("&HShuts the server down after 10 seconds");
+            p.Message("&T/Shutdown abort");
+            p.Message("&HAborts the current server shutdown.");
         }
     }
 }

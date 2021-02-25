@@ -49,9 +49,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CopyLvl [level] [copied level]");
-            p.Message("%HMakes a copy of [level] called [copied level].");
-            p.Message("%HNote: The level's BlockDB is not copied.");
+            p.Message("&T/CopyLvl [level] [copied level]");
+            p.Message("&HMakes a copy of [level] called [copied level].");
+            p.Message("&HNote: The level's BlockDB is not copied.");
         }
     }
 }

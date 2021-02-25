@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Goto [map name]");
-            p.Message("%HTeleports yourself to a different level.");
-            p.Message("%T/Goto -random");
-            p.Message("%HTeleports yourself to a random level.");
+            p.Message("&T/Goto [map name]");
+            p.Message("&HTeleports yourself to a different level.");
+            p.Message("&T/Goto -random");
+            p.Message("&HTeleports yourself to a random level.");
         }
     }
 }

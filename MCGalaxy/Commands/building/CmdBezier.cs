@@ -32,9 +32,9 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) { return new BezierDrawOp(); }
         
         public override void Help(Player p) {
-            p.Message("%T/Bezier <brush args>");
-            p.Message("%HDraws a quadratic bezier curve.");
-            p.Message("%HFirst two points specify the endpoints, then another point specifies the control point.");
+            p.Message("&T/Bezier <brush args>");
+            p.Message("&HDraws a quadratic bezier curve.");
+            p.Message("&HFirst two points specify the endpoints, then another point specifies the control point.");
             p.Message(BrushHelpLine);
         }
     }

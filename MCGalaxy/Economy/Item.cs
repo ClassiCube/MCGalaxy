@@ -56,10 +56,10 @@ namespace MCGalaxy.Eco {
         
         /// <summary> Called when the player does /eco help [item name] </summary>
         protected internal virtual void OnSetupHelp(Player p) {
-            p.Message("%T/Eco {0} enable/disable", Name.ToLower());
-            p.Message("%HEnables/disables purchasing this item.");
-            p.Message("%T/Eco {0} purchaserank [rank]", Name.ToLower());
-            p.Message("%HSets the lowest rank which can purchase this item.");
+            p.Message("&T/Eco {0} enable/disable", Name.ToLower());
+            p.Message("&HEnables/disables purchasing this item.");
+            p.Message("&T/Eco {0} purchaserank [rank]", Name.ToLower());
+            p.Message("&HSets the lowest rank which can purchase this item.");
         }
 
         /// <summary> Called when the player does /store </summary>
@@ -136,8 +136,8 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupHelp(Player p) {
             base.OnSetupHelp(p);
-            p.Message("%T/Eco {0} price [amount]", Name.ToLower());
-            p.Message("%HSets how many &3{0} %Hthis item costs.", Server.Config.Currency);
+            p.Message("&T/Eco {0} price [amount]", Name.ToLower());
+            p.Message("&HSets how many &3{0} &Hthis item costs.", Server.Config.Currency);
         }
         
         protected internal override void OnStoreOverview(Player p) {
@@ -150,12 +150,12 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            p.Message("%T/Buy {0} [value]", Name);
+            p.Message("&T/Buy {0} [value]", Name);
             OutputItemInfo(p);
         }
         
         protected void OutputItemInfo(Player p) {
-            p.Message("%HCosts &a{0} {1} %Heach time the item is bought.", Price, Server.Config.Currency);
+            p.Message("&HCosts &a{0} {1} &Heach time the item is bought.", Price, Server.Config.Currency);
             List<string> shortcuts = new List<string>();
             foreach (Alias a in Alias.aliases) {
                 if (!a.Target.CaselessEq("buy") || a.Format == null) continue;
@@ -172,7 +172,7 @@ namespace MCGalaxy.Eco {
             }
             
             if (shortcuts.Count == 0) return;
-            p.Message("Shortcuts: %T{0}", shortcuts.Join());
+            p.Message("Shortcuts: &T{0}", shortcuts.Join());
         }
     }
 }

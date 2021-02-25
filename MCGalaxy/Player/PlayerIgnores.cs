@@ -100,7 +100,7 @@ namespace MCGalaxy {
             if (Titles) p.Message("&cPlayer titles do not show before names in chat");
             if (Nicks) p.Message("&cCustom player nicks do not show in chat");
             
-            if (EightBall) p.Message("&cIgnoring %T/8ball");            
+            if (EightBall) p.Message("&cIgnoring &T/8ball");            
             if (DrawOutput) p.Message("&cIgnoring draw command output");           
             if (WorldChanges) p.Message("&cIgnoring world change messages");
         }

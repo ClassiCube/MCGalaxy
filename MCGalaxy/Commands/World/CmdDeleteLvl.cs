@@ -40,9 +40,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/DeleteLvl [level]");
-            p.Message("%HCompletely deletes [level] (portals, MBs, everything)");
-            p.Message("%HA backup of the level is made in the levels/deleted folder");
+            p.Message("&T/DeleteLvl [level]");
+            p.Message("&HCompletely deletes [level] (portals, MBs, everything)");
+            p.Message("&HA backup of the level is made in the levels/deleted folder");
         }
     }
 }

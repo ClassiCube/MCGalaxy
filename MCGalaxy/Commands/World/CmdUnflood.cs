@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Unflood [liquid]");
-            p.Message("%HUnfloods the map you are currently in of [liquid].");
-            p.Message("%H  If [liquid] is \"all\", unfloods the map of all liquids.");
+            p.Message("&T/Unflood [liquid]");
+            p.Message("&HUnfloods the map you are currently in of [liquid].");
+            p.Message("&H  If [liquid] is \"all\", unfloods the map of all liquids.");
         }
     }
 }

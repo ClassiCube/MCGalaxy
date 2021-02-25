@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Calculate [num1] [operation] [num2]");
-            p.Message("%H[operation] can be +, -, /, or *");
-            p.Message("%T/Calculate [num1] [operation]");
-            p.Message("%H[operation] can be sqrt, square, or cubed");
+            p.Message("&T/Calculate [num1] [operation] [num2]");
+            p.Message("&H[operation] can be +, -, /, or *");
+            p.Message("&T/Calculate [num1] [operation]");
+            p.Message("&H[operation] can be sqrt, square, or cubed");
         }
     }
 }

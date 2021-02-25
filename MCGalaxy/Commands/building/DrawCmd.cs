@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         protected virtual int MarksCount { get { return 2; } }
         protected virtual string SelectionType { get { return "region"; } }
         protected virtual string PlaceMessage { get { return "Place or break two blocks to determine the edges."; } }
-        protected const string BrushHelpLine = "   %HFor help about brushes, type %T/Help Brush";
+        protected const string BrushHelpLine = "   &HFor help about brushes, type &T/Help Brush";
         
         public override void Use(Player p, string message, CommandData data) {
             DrawArgs dArgs = MakeArgs(p, message);

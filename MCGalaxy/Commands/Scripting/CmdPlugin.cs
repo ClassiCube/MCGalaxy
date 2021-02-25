@@ -144,16 +144,16 @@ namespace MCGalaxy
 }}";
         
         public override void Help(Player p) {
-            p.Message("%T/Plugin create [name]");
-            p.Message("%HCreate a example .cs plugin file");
-            p.Message("%T/Plugin compile [name]");
-            p.Message("%HCompiles a .cs plugin file");
-            p.Message("%T/Plugin load [filename]");
-            p.Message("%HLoad a plugin from your plugins folder");
-            p.Message("%T/Plugin unload [name]");
-            p.Message("%HUnloads a currently loaded plugin");
-            p.Message("%T/Plugin list");
-            p.Message("%HLists all loaded plugins");
+            p.Message("&T/Plugin create [name]");
+            p.Message("&HCreate a example .cs plugin file");
+            p.Message("&T/Plugin compile [name]");
+            p.Message("&HCompiles a .cs plugin file");
+            p.Message("&T/Plugin load [filename]");
+            p.Message("&HLoad a plugin from your plugins folder");
+            p.Message("&T/Plugin unload [name]");
+            p.Message("&HUnloads a currently loaded plugin");
+            p.Message("&T/Plugin list");
+            p.Message("&HLists all loaded plugins");
         }
     }
 }

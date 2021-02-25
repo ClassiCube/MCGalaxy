@@ -78,11 +78,11 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Physics [level] [0/1/2/3/4/5]");
-            p.Message("%HSets the physics state for the given level.");
-            p.Message("%H  If [level] is not given, uses the current level.");
-            p.Message("%H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
-            p.Message("%T/Physics kill %H- Sets physics to 0 on all loaded levels.");
+            p.Message("&T/Physics [level] [0/1/2/3/4/5]");
+            p.Message("&HSets the physics state for the given level.");
+            p.Message("&H  If [level] is not given, uses the current level.");
+            p.Message("&H  0 = off, 1 = on, 2 = advanced, 3 = hardcore, 4 = instant, 5 = doors only");
+            p.Message("&T/Physics kill &H- Sets physics to 0 on all loaded levels.");
         }
     }
 }

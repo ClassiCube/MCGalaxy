@@ -38,11 +38,11 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Delay [timespan]");
-            p.Message("%HWaits for a certain amount of time.");
-            p.Message("%HUse to run a command after a certain delay in a %T/MB");
-            p.Message("%H  e.g. %T/MB air /Delay 1000ms |/Help Me %Hruns %T/Help Me " +
-                           "%H1000 milliseconds (1 second) after the MB is clicked");
+            p.Message("&T/Delay [timespan]");
+            p.Message("&HWaits for a certain amount of time.");
+            p.Message("&HUse to run a command after a certain delay in a &T/MB");
+            p.Message("&H  e.g. &T/MB air /Delay 1000ms |/Help Me &Hruns &T/Help Me " +
+                           "&H1000 milliseconds (1 second) after the MB is clicked");
         }
     }
 }

@@ -41,34 +41,34 @@ namespace MCGalaxy {
         public const string LoadDelay = "LoadDelay", Drawing = "Drawing", Authors = "Authors";
         
         public static List<LevelOption> Options = new List<LevelOption>() {
-             new LevelOption(MOTD,       SetMotd,  "%HSets the motd for this map. (leave blank to use default motd)"),
-             new LevelOption(RealmOwner, SetOwner, "%HSets the players allowed to use /realm on this map."),
-             new LevelOption(TreeType,   SetTree,  "%HSets the type of trees saplings grow into."),
-             new LevelOption(Speed,      SetSpeed, "%HSets the delay (in milliseconds) between physics ticks. " +
+             new LevelOption(MOTD,       SetMotd,  "&HSets the motd for this map. (leave blank to use default motd)"),
+             new LevelOption(RealmOwner, SetOwner, "&HSets the players allowed to use /realm on this map."),
+             new LevelOption(TreeType,   SetTree,  "&HSets the type of trees saplings grow into."),
+             new LevelOption(Speed,      SetSpeed, "&HSets the delay (in milliseconds) between physics ticks. " +
                              "E.g. a delay of 250 milliseconds means 4 ticks per second."),
-             new LevelOption(Overload, SetOverload, "%HSets how long (in milliseconds) a physics tick can run over before physics shuts off. " +
+             new LevelOption(Overload, SetOverload, "&HSets how long (in milliseconds) a physics tick can run over before physics shuts off. " +
                              "E.g a speed of 250 and overload of 500 means physics shuts off if a physics tick takes over 750 milliseconds."),
-             new LevelOption(Fall,   SetFall,   "%HSets how many blocks you can fall before dying."),
-             new LevelOption(Drown,  SetDrown,  "%HSets how long you can stay underwater (in tenths of a second) before drowning."),
-             new LevelOption(Finite, SetFinite, "%HWhether all liquids are finite."),
-             new LevelOption(AI,     SetAI,     "%HAI will make animals hunt or flee."),
-             new LevelOption(Edge,   SetEdge,   "%HWhether water flows from the map edges."),
-             new LevelOption(Grass,  SetGrass,  "%HWhether grass auto grows or not."),
-             new LevelOption(Death,  SetDeath,  "%HWhether you can die from falling or drowning."),
-             new LevelOption(Killer, SetKiller, "%HWhether certain blocks (e.g. nerve_gas) kill you."),
-             new LevelOption(Unload, SetUnload, "%HWhether the map auto unloads when no one's there."),
-             new LevelOption(Goto,   SetGoto,   "%HWhether the map auto loads when /goto is used."),
-             new LevelOption(Decay,  SetDecay,  "%HWhether leaves not connected to log blocks within 4 blocks randomly disappear."),
-             new LevelOption(Flow,   SetFlow,   "%HWhether flooding liquids flow less uniformly."),
-             new LevelOption(Trees,  SetTrees,  "%HWhether saplings grow into trees after a while."),
-             new LevelOption(Chat,   SetChat,   "%HWhether chat is only seen from and sent to players in the map."),
-             new LevelOption(Guns,   SetGuns,   "%HWhether guns and missiles can be used"),
-             new LevelOption(Buildable, SetBuildable, "%HWhether any blocks can be placed by players."),
-             new LevelOption(Deletable, SetDeletable, "%HWhether any blocks can be deleted by players."),
-             new LevelOption(Drawing,   SetDrawing,   "%HWhether drawing commands (e.g /z) can be used on this map."),
-             new LevelOption(LoadDelay, SetLoadDelay, "%HSets the delay before the end of the map is sent. " +
+             new LevelOption(Fall,   SetFall,   "&HSets how many blocks you can fall before dying."),
+             new LevelOption(Drown,  SetDrown,  "&HSets how long you can stay underwater (in tenths of a second) before drowning."),
+             new LevelOption(Finite, SetFinite, "&HWhether all liquids are finite."),
+             new LevelOption(AI,     SetAI,     "&HAI will make animals hunt or flee."),
+             new LevelOption(Edge,   SetEdge,   "&HWhether water flows from the map edges."),
+             new LevelOption(Grass,  SetGrass,  "&HWhether grass auto grows or not."),
+             new LevelOption(Death,  SetDeath,  "&HWhether you can die from falling or drowning."),
+             new LevelOption(Killer, SetKiller, "&HWhether certain blocks (e.g. nerve_gas) kill you."),
+             new LevelOption(Unload, SetUnload, "&HWhether the map auto unloads when no one's there."),
+             new LevelOption(Goto,   SetGoto,   "&HWhether the map auto loads when /goto is used."),
+             new LevelOption(Decay,  SetDecay,  "&HWhether leaves not connected to log blocks within 4 blocks randomly disappear."),
+             new LevelOption(Flow,   SetFlow,   "&HWhether flooding liquids flow less uniformly."),
+             new LevelOption(Trees,  SetTrees,  "&HWhether saplings grow into trees after a while."),
+             new LevelOption(Chat,   SetChat,   "&HWhether chat is only seen from and sent to players in the map."),
+             new LevelOption(Guns,   SetGuns,   "&HWhether guns and missiles can be used"),
+             new LevelOption(Buildable, SetBuildable, "&HWhether any blocks can be placed by players."),
+             new LevelOption(Deletable, SetDeletable, "&HWhether any blocks can be deleted by players."),
+             new LevelOption(Drawing,   SetDrawing,   "&HWhether drawing commands (e.g /z) can be used on this map."),
+             new LevelOption(LoadDelay, SetLoadDelay, "&HSets the delay before the end of the map is sent. " +
                              "Only useful for forcing players to see the map's MOTD at the loading screen."),
-             new LevelOption(Authors, SetAuthors, "%HSets authors of map. Only shown when running games"),
+             new LevelOption(Authors, SetAuthors, "&HSets authors of map. Only shown when running games"),
         };
 
         public static LevelOption Find(string opt) {

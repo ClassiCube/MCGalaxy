@@ -45,8 +45,8 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            p.Message("%T/Buy 10blocks [num]");
-            p.Message("%HCosts &a{0} * [num] %H{1}", Price, Server.Config.Currency);
+            p.Message("&T/Buy 10blocks [num]");
+            p.Message("&HCosts &a{0} * [num] &H{1}", Price, Server.Config.Currency);
             p.Message("Increases the blocks you are able to place by 10 * [num].");
         }
     }
@@ -75,7 +75,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            p.Message("%T/Buy {0} [level]", Name);
+            p.Message("&T/Buy {0} [level]", Name);
             OutputItemInfo(p);
             p.Message("The map used for the next round of " +
                            "zombie survival will be the given map.");
@@ -165,7 +165,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            p.Message("%T/Buy " + Name);
+            p.Message("&T/Buy " + Name);
             OutputItemInfo(p);
             
             p.Message("Humans: Makes you invisible to zombies for {0} seconds", ZSGame.Config.InvisibilityDuration);
@@ -220,7 +220,7 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreCommand(Player p) {
             int time = ZSGame.Config.ReviveNoTime, expiry = ZSGame.Config.ReviveTooSlow;
             int potions = ZSGame.Config.ReviveTimes;
-            p.Message("%T/Buy " + Name);
+            p.Message("&T/Buy " + Name);
             OutputItemInfo(p);
             
             p.Message("Lets you rejoin the humans - &Wnot guaranteed to always work");

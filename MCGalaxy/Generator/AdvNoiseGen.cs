@@ -21,14 +21,14 @@ using LibNoise;
 
 namespace MCGalaxy.Generator {
     public static class AdvNoiseGen {
-        const string defHelp = "%HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
+        const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         
         public static void RegisterGenerators() {
             const GenType type = GenType.Advanced;
             MapGen.Register("Billow",             type, GenBillow2D, defHelp);
             MapGen.Register("RidgedMultifractal", type, GenRidged2D, defHelp);
             MapGen.Register("Perlin",             type, GenPerlin2D, defHelp);
-            MapGen.Register("Checkerboard", type, GenCheckerboard, "%HSeed does nothing");
+            MapGen.Register("Checkerboard", type, GenCheckerboard, "&HSeed does nothing");
             MapGen.Register("Voronoi",         type, GenVoronoi,         defHelp);          
             MapGen.Register("Perlin3D",        type, GenPerlin3D,        defHelp);
             MapGen.Register("Perlin3Dyadjust", type, GenPerlin3DYAdjust, defHelp);

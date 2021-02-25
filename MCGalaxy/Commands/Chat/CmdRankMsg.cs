@@ -42,9 +42,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/RankMsg [Rank] [Message]");
-            p.Message("%HSends a message to the specified rank.");
-            p.Message("%HNote: If no [rank] is given, player's rank is taken.");
+            p.Message("&T/RankMsg [Rank] [Message]");
+            p.Message("&HSends a message to the specified rank.");
+            p.Message("&HNote: If no [rank] is given, player's rank is taken.");
         }
     }
 }

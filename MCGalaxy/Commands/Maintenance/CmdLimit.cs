@@ -101,12 +101,12 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Limit [type] [amount]");
-            p.Message("%HSets the general limit for [type]");
-            p.Message("  %HValid types: &freloadthreshold, restartphysics(rp), rpnormal, physicsundo(pu)");
-            p.Message("%T/Limit [type] [amount] [rank]");
-            p.Message("%HSets the limit for [type] for the given rank");
-            p.Message("  %HValid types: &fdraw, maxundo, gen, realms");
+            p.Message("&T/Limit [type] [amount]");
+            p.Message("&HSets the general limit for [type]");
+            p.Message("  &HValid types: &freloadthreshold, restartphysics(rp), rpnormal, physicsundo(pu)");
+            p.Message("&T/Limit [type] [amount] [rank]");
+            p.Message("&HSets the limit for [type] for the given rank");
+            p.Message("  &HValid types: &fdraw, maxundo, gen, realms");
         }
     }
 }

@@ -72,12 +72,12 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Nick [player] [nick]");
-            p.Message("%HSets the nick of that player.");
-            p.Message("%H  If [nick] is not given, reverts [player]'s nick to their account name.");
-            p.Message("%T/Nick bot [bot] [name]");
-            p.Message("%HSets the name shown above that bot in game.");
-            p.Message("%H  If [name] is \"empty\", the bot will not have a name shown.");
+            p.Message("&T/Nick [player] [nick]");
+            p.Message("&HSets the nick of that player.");
+            p.Message("&H  If [nick] is not given, reverts [player]'s nick to their account name.");
+            p.Message("&T/Nick bot [bot] [name]");
+            p.Message("&HSets the name shown above that bot in game.");
+            p.Message("&H  If [name] is \"empty\", the bot will not have a name shown.");
         }
     }
 }

@@ -63,8 +63,8 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Give [player] [amount] <reason>");
-            p.Message("%HGives [player] [amount] &3" + Server.Config.Currency);
+            p.Message("&T/Give [player] [amount] <reason>");
+            p.Message("&HGives [player] [amount] &3" + Server.Config.Currency);
         }
     }
 }

@@ -52,11 +52,11 @@ namespace MCGalaxy.Commands.Scripting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Compile [class name]");
-            p.Message("%HCompiles a command class file into a DLL.");
-            p.Message("%T/Compile [class name] vb");
-            p.Message("%HCompiles a command class (written in visual basic) file into a DLL.");
-            p.Message("%H  class name: &9Cmd&e<class name>&9.cs");
+            p.Message("&T/Compile [class name]");
+            p.Message("&HCompiles a command class file into a DLL.");
+            p.Message("&T/Compile [class name] vb");
+            p.Message("&HCompiles a command class (written in visual basic) file into a DLL.");
+            p.Message("&H  class name: &9Cmd&e<class name>&9.cs");
         }
     }
 }

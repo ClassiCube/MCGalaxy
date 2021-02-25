@@ -57,8 +57,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Center");
-            p.Message("%HPlaces gold blocks at the center of your selection");
+            p.Message("&T/Center");
+            p.Message("&HPlaces gold blocks at the center of your selection");
         }
     }
 }

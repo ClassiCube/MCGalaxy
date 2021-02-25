@@ -94,13 +94,13 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                p.Message("%T/CTF set redspawn/bluespawn");
-                p.Message("%HSets spawn of red/blue team to your position.");
-                p.Message("%T/CTF set redflag/blueflag");
-                p.Message("%HSets flag position and block of red/blue team to the next block you place or delete.");
-                p.Message("%T/CTF set divider");
-                p.Message("%HSets the divider line to your current Z position.");
-                p.Message("   %HRed team tags blue team when the Z position is less than the divider, " +
+                p.Message("&T/CTF set redspawn/bluespawn");
+                p.Message("&HSets spawn of red/blue team to your position.");
+                p.Message("&T/CTF set redflag/blueflag");
+                p.Message("&HSets flag position and block of red/blue team to the next block you place or delete.");
+                p.Message("&T/CTF set divider");
+                p.Message("&HSets the divider line to your current Z position.");
+                p.Message("   &HRed team tags blue team when the Z position is less than the divider, " +
                                "blue teams tags when Z position is more.");
             } else {
                 Help(p);
@@ -108,13 +108,13 @@ namespace MCGalaxy.Commands.Fun {
         }
                 
         public override void Help(Player p) {
-            p.Message("%T/CTF start <map> %H- Starts CTF game");
-            p.Message("%T/CTF stop %H- Stops CTF game");
-            p.Message("%T/CTF end %H- Ends current round of CTF");
-            p.Message("%T/CTF add/remove %H- Adds/removes current map from map list");
-            p.Message("%T/CTF set [property] %H- Sets a property. See %T/Help CTF set");
-            p.Message("%T/CTF status %H- View stats of both teams");
-            p.Message("%T/CTF go %H- Moves you to the current CTF map");
+            p.Message("&T/CTF start <map> &H- Starts CTF game");
+            p.Message("&T/CTF stop &H- Stops CTF game");
+            p.Message("&T/CTF end &H- Ends current round of CTF");
+            p.Message("&T/CTF add/remove &H- Adds/removes current map from map list");
+            p.Message("&T/CTF set [property] &H- Sets a property. See &T/Help CTF set");
+            p.Message("&T/CTF status &H- View stats of both teams");
+            p.Message("&T/CTF go &H- Moves you to the current CTF map");
         }
     }
 }

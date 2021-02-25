@@ -68,9 +68,9 @@ namespace MCGalaxy.Generator {
             return Generators.Join(g => g.Type == type ? g.Theme : null); 
         }
         public static void PrintThemes(Player p) {
-            p.Message("%HSimple themes: &f"   + FilterThemes(GenType.Simple));
-            p.Message("%HfCraft themes: &f"   + FilterThemes(GenType.fCraft));
-            p.Message("%HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
+            p.Message("&HSimple themes: &f"   + FilterThemes(GenType.Simple));
+            p.Message("&HfCraft themes: &f"   + FilterThemes(GenType.fCraft));
+            p.Message("&HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
         
         /// <summary> Adds a new map generator to the list of generators. </summary>
@@ -84,7 +84,7 @@ namespace MCGalaxy.Generator {
             fCraftMapGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
             Register("Heightmap", GenType.Advanced, HeightmapGen.Generate,
-                     "%HSeed specifies the URL of the heightmap image");
+                     "&HSeed specifies the URL of the heightmap image");
         }        
         
         

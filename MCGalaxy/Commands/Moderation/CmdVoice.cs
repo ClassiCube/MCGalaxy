@@ -38,9 +38,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Voice [name]");
-            p.Message("%HToggles voice status on or off for the given player.");
-            p.Message("%HIf no name is given, toggles your own voice status.");
+            p.Message("&T/Voice [name]");
+            p.Message("&HToggles voice status on or off for the given player.");
+            p.Message("&HIf no name is given, toggles your own voice status.");
         }
     }
 }

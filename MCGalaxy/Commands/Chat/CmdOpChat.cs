@@ -35,10 +35,10 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/OpChat [message]");
-            p.Message("%HSends a message to online OPs");
-            p.Message("%T/OpChat");
-            p.Message("%HMakes all messages sent go to OPs by default");
+            p.Message("&T/OpChat [message]");
+            p.Message("&HSends a message to online OPs");
+            p.Message("&T/OpChat");
+            p.Message("&HMakes all messages sent go to OPs by default");
         }
     }
 }

@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Whisper [name]");
-            p.Message("%HMakes all messages act like whispers");
+            p.Message("&T/Whisper [name]");
+            p.Message("&HMakes all messages act like whispers");
         }
     }
 }

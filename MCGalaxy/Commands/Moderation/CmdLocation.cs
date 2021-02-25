@@ -63,8 +63,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Location [name/IP]");
-            p.Message("%HTracks down location of the given IP, or IP player is on.");
+            p.Message("&T/Location [name/IP]");
+            p.Message("&HTracks down location of the given IP, or IP player is on.");
         }
     }
 }

@@ -63,13 +63,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Mode");
-            p.Message("%HReverts the last %T/Mode [block].");
-            p.Message("%T/Mode [block]");
-            p.Message("%HMakes every block placed into [block].");
-            p.Message("%H/[block] also works");
-            p.Message("%T/Mode tnt small/big/nuke %H");
-            p.Message("%HMakes every block placed into exploding TNT (if physics on).");
+            p.Message("&T/Mode");
+            p.Message("&HReverts the last &T/Mode [block].");
+            p.Message("&T/Mode [block]");
+            p.Message("&HMakes every block placed into [block].");
+            p.Message("&H/[block] also works");
+            p.Message("&T/Mode tnt small/big/nuke &H");
+            p.Message("&HMakes every block placed into exploding TNT (if physics on).");
         }
     }
 }

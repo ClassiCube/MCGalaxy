@@ -60,8 +60,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/AFK <reason>");
-            p.Message("%HMarks yourself as AFK. Use again to mark yourself as back");
+            p.Message("&T/AFK <reason>");
+            p.Message("&HMarks yourself as AFK. Use again to mark yourself as back");
         }
     }
 }

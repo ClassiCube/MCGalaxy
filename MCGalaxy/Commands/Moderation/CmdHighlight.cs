@@ -96,11 +96,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Highlight [player] <timespan>");
-            p.Message("%HHighlights blocks changed by [player] in the past <timespan>");
-            p.Message("%T/Highlight area [player] <timespan>");
-            p.Message("%HOnly highlights in the specified region.");
-            p.Message("%H If <timespan> is not given, highlights for last 30 minutes");
+            p.Message("&T/Highlight [player] <timespan>");
+            p.Message("&HHighlights blocks changed by [player] in the past <timespan>");
+            p.Message("&T/Highlight area [player] <timespan>");
+            p.Message("&HOnly highlights in the specified region.");
+            p.Message("&H If <timespan> is not given, highlights for last 30 minutes");
             p.Message("&W/Highlight cannot be disabled, use /reload to un-highlight");
         }
     }

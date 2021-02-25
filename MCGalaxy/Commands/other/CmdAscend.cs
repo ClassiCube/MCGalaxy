@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseHacks(p)) {
-                p.Message("You cannot use %T/Ascend %Son this map."); return;
+                p.Message("You cannot use &T/Ascend %Son this map."); return;
             }
             int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
             if (y < 0) y = 0;
@@ -64,10 +64,10 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
-            p.Message("%T/Ascend");
-            p.Message("%HTeleports you to the first free space above you.");
-            p.Message("%H  Cannot be used on maps which have -hax in their motd. " +
-                           "(unless you are {0}%H+ and the motd has +ophax)", name);
+            p.Message("&T/Ascend");
+            p.Message("&HTeleports you to the first free space above you.");
+            p.Message("&H  Cannot be used on maps which have -hax in their motd. " +
+                           "(unless you are {0}&H+ and the motd has +ophax)", name);
         }
     }
 }

@@ -31,9 +31,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Delete");
-            p.Message("%HDeletes any block you click");
-            p.Message("%H\"any block\" meaning Door_Air, Portals, MBs, etc");
+            p.Message("&T/Delete");
+            p.Message("&HDeletes any block you click");
+            p.Message("&H\"any block\" meaning Door_Air, Portals, MBs, etc");
         }
     }
 }

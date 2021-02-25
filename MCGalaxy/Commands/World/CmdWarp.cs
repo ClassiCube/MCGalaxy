@@ -85,11 +85,11 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Warp [name] %H- Move to that warp");
-            p.Message("%T/Warp list %H- List all the warps");
-            p.Message("%T/Warp create [name] %H- Create a warp at your position");
-            p.Message("%T/Warp delete [name] %H- Deletes a warp");
-            p.Message("%T/Warp move [name] %H- Moves a warp to your position");
+            p.Message("&T/Warp [name] &H- Move to that warp");
+            p.Message("&T/Warp list &H- List all the warps");
+            p.Message("&T/Warp create [name] &H- Create a warp at your position");
+            p.Message("&T/Warp delete [name] &H- Deletes a warp");
+            p.Message("&T/Warp move [name] &H- Moves a warp to your position");
         }
     }
 }

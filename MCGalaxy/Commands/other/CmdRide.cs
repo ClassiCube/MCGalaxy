@@ -80,8 +80,8 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Ride");
-            p.Message("%HRides a nearby train.");
+            p.Message("&T/Ride");
+            p.Message("&HRides a nearby train.");
         }
     }
 }

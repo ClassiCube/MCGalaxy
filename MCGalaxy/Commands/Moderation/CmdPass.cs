@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Moderation {
             // Fallback onto old format
             path = FindOldHashPath(p.name);
             if (path == null) {
-                p.Message("You have not &Wset a password, %Suse %T/SetPass [Password] &Wto set one!");
+                p.Message("You have not &Wset a password, %Suse &T/SetPass [Password] &Wto set one!");
             } else if (!CheckOldHash(path, p.name, password)) {
                 OnFailed(p);
             } else {
@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void SetPassword(Player p, string password) {
             string curPath = FindHashPath(p.name);
             if (p.Unverified && curPath != null) {
-                p.Message("&WYou must first verify with %T/pass [Password] &Wbefore you can change your password.");
+                p.Message("&WYou must first verify with &T/pass [Password] &Wbefore you can change your password.");
                 p.Message("Forgot your password? Contact &W{0} %Sto &Wreset it.", Server.Config.OwnerName);
                 return;
             }
@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             
             if (!p.IsConsole && p.Unverified) {
-                p.Message("&WYou must first verify with %T/Pass [Password]"); return;
+                p.Message("&WYou must first verify with &T/Pass [Password]"); return;
             }
             if (!p.IsConsole && !Server.Config.OwnerName.CaselessEq(p.name))  {
                 p.Message("&WOnly console and the server owner may reset passwords."); return;
@@ -218,13 +218,13 @@ namespace MCGalaxy.Commands.Moderation {
         public static bool HasPassword(string name) { return FindHashPath(name) != null; }
         
         public override void Help(Player p) {
-            p.Message("%T/Pass reset [player] %H- Resets the password for that player");
-            p.Message("%H Note: Can only be used by console and the server owner.");
-            p.Message("%T/Pass set [password] %H- Sets your password to [password]");
-            p.Message("%H Note: &WDo NOT set this as your Minecraft password!");
-            p.Message("%T/Pass [password]");
-            p.Message("%HIf you are an admin, use this command to verify your login.");
-            p.Message("%H You will need to be verified to be able to use commands.");
+            p.Message("&T/Pass reset [player] &H- Resets the password for that player");
+            p.Message("&H Note: Can only be used by console and the server owner.");
+            p.Message("&T/Pass set [password] &H- Sets your password to [password]");
+            p.Message("&H Note: &WDo NOT set this as your Minecraft password!");
+            p.Message("&T/Pass [password]");
+            p.Message("&HIf you are an admin, use this command to verify your login.");
+            p.Message("&H You will need to be verified to be able to use commands.");
         }
     }
 }

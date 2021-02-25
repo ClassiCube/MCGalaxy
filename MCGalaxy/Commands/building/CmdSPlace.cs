@@ -59,9 +59,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/SPlace [distance] <interval>");
-            p.Message("%HMeasures a set [distance] and places your held block at each end.");
-            p.Message("%HOptionally place a block at set <interval> between them.");
+            p.Message("&T/SPlace [distance] <interval>");
+            p.Message("&HMeasures a set [distance] and places your held block at each end.");
+            p.Message("&HOptionally place a block at set <interval> between them.");
         }
     }
 }

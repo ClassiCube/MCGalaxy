@@ -191,14 +191,14 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupHelp(Player p) {
             base.OnSetupHelp(p);
-            p.Message("%T/Eco level add [name] [x] [y] [z] [theme] [price]");
-            p.Message("%T/Eco level remove [name]");
-            p.Message("%T/Eco level edit [name] [name/x/y/z/type/price] [value]");
-            p.Message("%HAdds, removes, or edits a level preset.");
+            p.Message("&T/Eco level add [name] [x] [y] [z] [theme] [price]");
+            p.Message("&T/Eco level remove [name]");
+            p.Message("&T/Eco level edit [name] [name/x/y/z/type/price] [value]");
+            p.Message("&HAdds, removes, or edits a level preset.");
         }
         
         protected internal override void OnStoreOverview(Player p) {
-            p.Message("&6Maps %S- see %T/Store maps");
+            p.Message("&6Maps %S- see &T/Store maps");
         }
         
         protected internal override void OnStoreCommand(Player p) {

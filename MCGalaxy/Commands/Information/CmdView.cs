@@ -51,8 +51,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/view %H- Lists all files you can view");
-            p.Message("%T/view [file] %H- Views [file]'s contents");
+            p.Message("&T/view &H- Lists all files you can view");
+            p.Message("&T/view [file] &H- Views [file]'s contents");
         }
     }
 }

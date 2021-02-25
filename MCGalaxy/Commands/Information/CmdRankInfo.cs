@@ -72,8 +72,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/RankInfo [player]");
-            p.Message("%HReturns details about that person's rankings.");
+            p.Message("&T/RankInfo [player]");
+            p.Message("&HReturns details about that person's rankings.");
         }
     }
 }

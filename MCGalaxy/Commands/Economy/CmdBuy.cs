@@ -41,10 +41,10 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Buy [item] [value] <map name>");
-            p.Message("%Hmap name is only used for %T/Buy map%H.");
-            p.Message("%HUse %T/Store [item] %Hto see more information for an item.");
-            p.Message("%H  Available items: %S" + Economy.EnabledItemNames());
+            p.Message("&T/Buy [item] [value] <map name>");
+            p.Message("&Hmap name is only used for &T/Buy map&H.");
+            p.Message("&HUse &T/Store [item] &Hto see more information for an item.");
+            p.Message("&H  Available items: %S" + Economy.EnabledItemNames());
         }
     }
 }

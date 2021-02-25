@@ -58,12 +58,12 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/NewLvl [name] [width] [height] [length] [theme] <seed>");
-            p.Message("%HCreates/generates a new level.");
-            p.Message("  %HSizes must be between 1 and 16384");
-            p.Message("  %HSeed is optional, and controls how the level is generated");
-            p.Message("%HUse %T/Help NewLvl themes %Hfor a list of themes.");
-            p.Message("%HUse %T/Help NewLvl [theme] %Hfor details on how seeds affect levels generated with that theme.");
+            p.Message("&T/NewLvl [name] [width] [height] [length] [theme] <seed>");
+            p.Message("&HCreates/generates a new level.");
+            p.Message("  &HSizes must be between 1 and 16384");
+            p.Message("  &HSeed is optional, and controls how the level is generated");
+            p.Message("&HUse &T/Help NewLvl themes &Hfor a list of themes.");
+            p.Message("&HUse &T/Help NewLvl [theme] &Hfor details on how seeds affect levels generated with that theme.");
         }
         
         public override void Help(Player p, string message) {
@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.World {
                 MapGen.PrintThemes(p);
             } else if (gen == null) {
                 p.Message("No theme found with name \"{0}\".", message);
-                p.Message("%HUse %T/Help NewLvl themes %Hfor a list of themes.");
+                p.Message("&HUse &T/Help NewLvl themes &Hfor a list of themes.");
             } else {
                 p.Message(gen.Desc);
             }

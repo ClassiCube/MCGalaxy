@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
         void Agree(Player p) {
             if (p.IsSuper) { p.Message("Only in-game players can agree to the rules."); return; }
             if (!Server.Config.AgreeToRulesOnEntry) { p.Message("agree-to-rules-on-entry is not enabled."); return; }
-            if (!p.hasreadrules) { p.Message("&9You must read %T/Rules &9before agreeing."); return; }
+            if (!p.hasreadrules) { p.Message("&9You must read &T/Rules &9before agreeing."); return; }
             
             if (!Server.agreed.Add(p.name)) {
                 p.Message("You have already agreed to the rules.");
@@ -80,11 +80,11 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Help(Player p) {
             if (HasExtraPerm(p, p.Rank, 1)) {
-                p.Message("%T/Rules [player] %H- Displays server rules to [player]");
+                p.Message("&T/Rules [player] &H- Displays server rules to [player]");
             }
-            p.Message("%T/Rules %H- Displays the server rules to you");
-            p.Message("%T/Rules agree %H- Agrees to the server's rules");
-            p.Message("%T/Rules disagree %H- Disagrees with the server's rules");
+            p.Message("&T/Rules &H- Displays the server rules to you");
+            p.Message("&T/Rules agree &H- Agrees to the server's rules");
+            p.Message("&T/Rules disagree &H- Disagrees with the server's rules");
         }
     }
 }

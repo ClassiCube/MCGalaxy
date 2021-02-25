@@ -108,10 +108,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Players");
-            p.Message("%HLists name and rank of all online players");
-            p.Message("%T/Players [rank]");
-            p.Message("%HLists all online players who have that rank");
+            p.Message("&T/Players");
+            p.Message("&HLists name and rank of all online players");
+            p.Message("&T/Players [rank]");
+            p.Message("&HLists all online players who have that rank");
         }
     }
 }

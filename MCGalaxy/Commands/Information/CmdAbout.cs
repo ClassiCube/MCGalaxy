@@ -120,8 +120,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/About");
-            p.Message("%HOutputs the change/edit history for a block.");
+            p.Message("&T/About");
+            p.Message("&HOutputs the change/edit history for a block.");
         }
     }
 }

@@ -94,10 +94,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Measure <block1> <block2>..");
-            p.Message("%HMeasures all the blocks between two points");
-            p.Message("%HShows information such as dimensions, most frequent blocks");
-            p.Message("%H  <blocks> optionally indicates which blocks to only count");
+            p.Message("&T/Measure <block1> <block2>..");
+            p.Message("&HMeasures all the blocks between two points");
+            p.Message("&HShows information such as dimensions, most frequent blocks");
+            p.Message("&H  <blocks> optionally indicates which blocks to only count");
         }
     }
 }

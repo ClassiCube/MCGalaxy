@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (target == null) return;
             
             if (!Chat.Ignoring(target, p)) {
-                target.Message("Message received from {0}%S. Check %T/Inbox", target.FormatNick(p));
+                target.Message("Message received from {0}%S. Check &T/Inbox", target.FormatNick(p));
             }
         }
         
@@ -62,8 +62,8 @@ namespace MCGalaxy.Commands.Chatting {
         };
         
         public override void Help(Player p) {
-            p.Message("%T/Send [name] [message]");
-            p.Message("%HSends [message] to [name], which can be read with %T/Inbox");
+            p.Message("&T/Send [name] [message]");
+            p.Message("&HSends [message] to [name], which can be read with &T/Inbox");
         }
     }
 }

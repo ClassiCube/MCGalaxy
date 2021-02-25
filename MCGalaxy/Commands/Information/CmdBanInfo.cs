@@ -92,8 +92,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BanInfo [player]");
-            p.Message("%HOutputs information about current and/or previous ban/unban for that player.");
+            p.Message("&T/BanInfo [player]");
+            p.Message("&HOutputs information about current and/or previous ban/unban for that player.");
         }
     }
 }

@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands.Misc {
         class HackRankArgs { public string name; public Group newRank; }
         
         public override void Help(Player p) {
-            p.Message("%T/HackRank [rank] %H- Hacks a rank");
-            p.Message("%HTo see available ranks, type %T/ViewRanks");
+            p.Message("&T/HackRank [rank] &H- Hacks a rank");
+            p.Message("&HTo see available ranks, type &T/ViewRanks");
         }
     }
 }

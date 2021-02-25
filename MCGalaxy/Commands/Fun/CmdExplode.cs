@@ -69,10 +69,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Explode %H- Creates small explosions");
-            p.Message("%T/Explode me %H- Explodes at your location");
-            p.Message("%T/Explode [Player] %H- Explodes at given's player location");
-            p.Message("%T/Explode [x y z] %H- Explodes at the given corordinates");
+            p.Message("&T/Explode &H- Creates small explosions");
+            p.Message("&T/Explode me &H- Explodes at your location");
+            p.Message("&T/Explode [Player] &H- Explodes at given's player location");
+            p.Message("&T/Explode [x y z] &H- Explodes at the given corordinates");
         }
     }
 }

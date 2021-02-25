@@ -64,13 +64,13 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BlockDB clear [level]");
-            p.Message("%HClears the BlockDB (block changes stored in /b) for [level]");
-            p.Message("%T/BlockDB disable [level]");
-            p.Message("%HDisables recording block changes to the BlockDB for [level]");
-            p.Message("%T/BlockDB enable [level]");
-            p.Message("%HEnables %Hrecording block changes to the BlockDB for [level]");
-            p.Message("%HIf [level] is not given, uses your current level.");
+            p.Message("&T/BlockDB clear [level]");
+            p.Message("&HClears the BlockDB (block changes stored in /b) for [level]");
+            p.Message("&T/BlockDB disable [level]");
+            p.Message("&HDisables recording block changes to the BlockDB for [level]");
+            p.Message("&T/BlockDB enable [level]");
+            p.Message("&HEnables &Hrecording block changes to the BlockDB for [level]");
+            p.Message("&HIf [level] is not given, uses your current level.");
             p.Message("&WUse these commands with great caution!");
         }
     }

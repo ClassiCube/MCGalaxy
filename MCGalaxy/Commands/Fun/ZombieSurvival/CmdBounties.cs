@@ -40,8 +40,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Bounties");
-            p.Message("%HOutputs a list of all active bounties on players.");
+            p.Message("&T/Bounties");
+            p.Message("&HOutputs a list of all active bounties on players.");
         }
     }
 }

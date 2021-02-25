@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Outline [block] <brush args>");
-            p.Message("%HOutlines [block] with output of your current brush.");
-            p.Message("%T/Outline [block] [mode] <brush args>");
-            p.Message("%HModes: &fall/up/layer/down (default all)");
+            p.Message("&T/Outline [block] <brush args>");
+            p.Message("&HOutlines [block] with output of your current brush.");
+            p.Message("&T/Outline [block] [mode] <brush args>");
+            p.Message("&HModes: &fall/up/layer/down (default all)");
             p.Message(BrushHelpLine);
         }
     }

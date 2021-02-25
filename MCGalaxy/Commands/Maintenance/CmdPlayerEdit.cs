@@ -222,15 +222,15 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         static void MessageValidTypes(Player p) {
-            p.Message("%HValid types: %SFirstLogin, LastLogin, Logins, Title, IP, Deaths, Money, " +
+            p.Message("&HValid types: %SFirstLogin, LastLogin, Logins, Title, IP, Deaths, Money, " +
                       "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor, Messages ");
         }
         
         public override void Help(Player p) {
-            p.Message("%T/PlayerEdit [username] [type] <value>");
-            p.Message("%HEdits an online or offline player's information. Use with caution!");
+            p.Message("&T/PlayerEdit [username] [type] <value>");
+            p.Message("&HEdits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
-            p.Message("%HTo see value format for a specific type, leave <value> blank.");
+            p.Message("&HTo see value format for a specific type, leave <value> blank.");
         }
     }
 }

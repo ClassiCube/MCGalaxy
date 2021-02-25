@@ -54,11 +54,11 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/AwardMod add [name] : [description]");
-            p.Message("%HAdds a new award");
-            p.Message("%H  e.g. %T/AwardMod add Bomb voyage : Blow up a lot of TNT");
-            p.Message("%T/AwardMod del [name]");
-            p.Message("%HDeletes the given award");
+            p.Message("&T/AwardMod add [name] : [description]");
+            p.Message("&HAdds a new award");
+            p.Message("&H  e.g. &T/AwardMod add Bomb voyage : Blow up a lot of TNT");
+            p.Message("&T/AwardMod del [name]");
+            p.Message("&HDeletes the given award");
         }
     }
 }

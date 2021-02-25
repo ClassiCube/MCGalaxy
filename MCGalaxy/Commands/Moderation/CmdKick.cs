@@ -51,9 +51,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Kick [player] <reason>");
-            p.Message("%HKicks a player.");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/Kick [player] <reason>");
+            p.Message("&HKicks a player.");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

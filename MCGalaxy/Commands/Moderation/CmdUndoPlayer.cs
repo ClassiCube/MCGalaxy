@@ -115,11 +115,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/UndoPlayer [player1] <player2..> <timespan>");
-            p.Message("%HUndoes the block changes of [players] in the past <timespan>");
-            p.Message("%T/UndoPlayer -area [player1] <player2..> <timespan>");
-            p.Message("%HOnly undoes block changes in the specified region.");
-            p.Message("%H  If <timespan> is not given, undoes 30 minutes.");
+            p.Message("&T/UndoPlayer [player1] <player2..> <timespan>");
+            p.Message("&HUndoes the block changes of [players] in the past <timespan>");
+            p.Message("&T/UndoPlayer -area [player1] <player2..> <timespan>");
+            p.Message("&HOnly undoes block changes in the specified region.");
+            p.Message("&H  If <timespan> is not given, undoes 30 minutes.");
         }
     }
 }

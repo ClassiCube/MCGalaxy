@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Patrol");
+            p.Message("&T/Patrol");
             ItemPerms except = CommandExtraPerms.Find(name, 1);
-            p.Message("%HTeleports you to a random player. {0} %Hare not patrolled", except.Describe());
-            p.Message("%HPlayers patrolled within the last 15 seconds are ignored");
+            p.Message("&HTeleports you to a random player. {0} &Hare not patrolled", except.Describe());
+            p.Message("&HPlayers patrolled within the last 15 seconds are ignored");
         }
     }
 }

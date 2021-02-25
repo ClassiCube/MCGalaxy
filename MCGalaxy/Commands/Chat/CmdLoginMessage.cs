@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/LoginMessage [player] [message]");
-            p.Message("%HSets the login message shown for that player.");
+            p.Message("&T/LoginMessage [player] [message]");
+            p.Message("&HSets the login message shown for that player.");
         }
     }
 }

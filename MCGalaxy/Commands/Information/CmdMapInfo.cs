@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Info {
                       cfg.UseBlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
             
             ShowPermissions(p, data, cfg);
-            p.Message("Use %T/mi env {0} %Sto see environment settings.", data.MapName);
+            p.Message("Use &T/mi env {0} %Sto see environment settings.", data.MapName);
             ShowZombieSurvival(p, data, cfg);
         }
         
@@ -229,10 +229,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p)  {
-            p.Message("%T/MapInfo [level]");
-            p.Message("%HDisplay details of [level]");
-            p.Message("%T/MapInfo env [level]");
-            p.Message("%HDisplay environment details of [level]");
+            p.Message("&T/MapInfo [level]");
+            p.Message("&HDisplay details of [level]");
+            p.Message("&T/MapInfo env [level]");
+            p.Message("&HDisplay environment details of [level]");
         }
     }
 }

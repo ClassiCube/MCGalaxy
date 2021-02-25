@@ -81,7 +81,7 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnPurchase(Player p, string args) {
             if (args.Length > 0) {
-                p.Message("&WYou cannot provide a rank name, use %T/Buy rank &Wto buy the NEXT rank."); return;
+                p.Message("&WYou cannot provide a rank name, use &T/Buy rank &Wto buy the NEXT rank."); return;
             }
             
             RankEntry nextRank = NextRank(p);
@@ -123,10 +123,10 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnSetupHelp(Player p) {
             base.OnSetupHelp(p);
-            p.Message("%T/Eco rank price [rank] [amount]");
-            p.Message("%HSets how many &3{0} %Hthat rank costs.", Server.Config.Currency);
-            p.Message("%T/Eco rank remove [rank]");
-            p.Message("%HMakes that rank no longer buyable");
+            p.Message("&T/Eco rank price [rank] [amount]");
+            p.Message("&HSets how many &3{0} &Hthat rank costs.", Server.Config.Currency);
+            p.Message("&T/Eco rank remove [rank]");
+            p.Message("&HMakes that rank no longer buyable");
         }
 
         protected internal override void OnStoreOverview(Player p) {
@@ -140,9 +140,9 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            p.Message("%T/Buy rankup");
+            p.Message("&T/Buy rankup");
             if (Ranks.Count == 0) {
-                p.Message("&WNo ranks have been setup be buyable. See %T/eco help rank"); return;
+                p.Message("&WNo ranks have been setup be buyable. See &T/eco help rank"); return;
             }
             
             LevelPermission maxRank = Ranks[Ranks.Count - 1].Perm;

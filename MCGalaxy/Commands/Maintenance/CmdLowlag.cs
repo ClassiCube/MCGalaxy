@@ -39,9 +39,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/LowLag [interval in milliseconds]");
-            p.Message("%HSets the interval between sending of position packets.");
-            p.Message("%HIf no interval is given, then 2000 ms is used if the current interval" + 
+            p.Message("&T/LowLag [interval in milliseconds]");
+            p.Message("&HSets the interval between sending of position packets.");
+            p.Message("&HIf no interval is given, then 2000 ms is used if the current interval" + 
                                " is less than 1000 ms, otherwise 200 ms is used for the interval.");
         }
     }

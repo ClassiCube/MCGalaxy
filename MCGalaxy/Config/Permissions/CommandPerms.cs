@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands {
         }
         
         public void MessageCannotUse(Player p) {
-            p.Message("Only {0} can use %T/{1}", Describe(), CmdName);
+            p.Message("Only {0} can use &T/{1}", Describe(), CmdName);
         }
 
 

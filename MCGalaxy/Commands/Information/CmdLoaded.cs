@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Loaded levels [physics level] (&c[no] %Sif not visitable): ");
             MultiPageOutput.Output(p, loaded, (lvl) => FormatMap(p, lvl),
                                    "Levels", "levels", message, false);
-            p.Message("Use %T/Levels %Sfor all levels.");
+            p.Message("Use &T/Levels %Sfor all levels.");
         }
         
         static string FormatMap(Player p, Level lvl) {            
@@ -39,8 +39,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Loaded");
-            p.Message("%HLists loaded levels and their physics levels.");
+            p.Message("&T/Loaded");
+            p.Message("&HLists loaded levels and their physics levels.");
         }
     }
 }

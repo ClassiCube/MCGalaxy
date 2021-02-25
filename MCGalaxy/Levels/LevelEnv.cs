@@ -34,25 +34,25 @@ namespace MCGalaxy {
         public delegate void OptionSetter(Player p, string area, EnvConfig cfg, string value);
         
         public static List<EnvOption> Options = new List<EnvOption>() {
-             new EnvOption("Weather",   SetWeather,   "%HSets the weather (sun, rain, snow)"),
-             new EnvOption("SmoothFog", SetSmoothFog, "%HSets whether smoother fog is used"),
-             new EnvOption("Horizon",   SetHorizon,   "%HSets the \"ocean\" block outside the map"),
-             new EnvOption("Border",    SetBorder,    "%HSets the \"bedrock\" block outside the map"),
-             new EnvOption("CloudsHeight", SetCloudsHeight, "%HSets the clouds height of the map"),
-             new EnvOption("EdgeLevel",    SetEdgeLevel,    "%HSets the water height of the map"),
-             new EnvOption("SidesOffset",  SetSidesOffset,  "%HSets offset of bedrock from water (default -2)"),
-             new EnvOption("MaxFog",       SetMaxFog,       "%HSets maximum fog distance in the map (e.g. 16 for a horror map)"),
-             new EnvOption("Sky",    SetSky,    "%HSets color of the sky (default 99CCFF)"),
-             new EnvOption("Clouds", SetClouds, "%HSets color of the clouds (default FFFFFF)"),
-             new EnvOption("Fog",    SetFog,    "%HSets color of the fog (default FFFFFF)"),
-             new EnvOption("Sun",    SetSun,    "%HSets color of blocks in sunlight (default FFFFFF)"),
-             new EnvOption("Shadow", SetShadow, "%HSets color of blocks in darkness (default 9B9B9B)"),      
-             new EnvOption("Skybox", SetSkybox, "%HSets color of the skybox (default FFFFFF)"),             
-             new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "%HSets how fast clouds move (negative moves in opposite direction)"),
-             new EnvOption("WeatherSpeed", SetWeatherSpeed, "%HSets how fast rain/snow falls (negative falls upwards)"),
-             new EnvOption("WeatherFade",  SetWeatherFade,  "%HSets how quickly rain/snow fades out over distance"),
-             new EnvOption("SkyboxHorSpeed", SetSkyboxHor,  "%HSets how many times per second skybox fully spins horizontally (e.g. 0.1 is once every 10 seconds)"),
-             new EnvOption("SkyboxVerSpeed", SetSkyboxVer,  "%HSets how many times per second skybox fully spins vertically (e.g. 0.1 is once every 10 seconds)"),
+             new EnvOption("Weather",   SetWeather,   "&HSets the weather (sun, rain, snow)"),
+             new EnvOption("SmoothFog", SetSmoothFog, "&HSets whether smoother fog is used"),
+             new EnvOption("Horizon",   SetHorizon,   "&HSets the \"ocean\" block outside the map"),
+             new EnvOption("Border",    SetBorder,    "&HSets the \"bedrock\" block outside the map"),
+             new EnvOption("CloudsHeight", SetCloudsHeight, "&HSets the clouds height of the map"),
+             new EnvOption("EdgeLevel",    SetEdgeLevel,    "&HSets the water height of the map"),
+             new EnvOption("SidesOffset",  SetSidesOffset,  "&HSets offset of bedrock from water (default -2)"),
+             new EnvOption("MaxFog",       SetMaxFog,       "&HSets maximum fog distance in the map (e.g. 16 for a horror map)"),
+             new EnvOption("Sky",    SetSky,    "&HSets color of the sky (default 99CCFF)"),
+             new EnvOption("Clouds", SetClouds, "&HSets color of the clouds (default FFFFFF)"),
+             new EnvOption("Fog",    SetFog,    "&HSets color of the fog (default FFFFFF)"),
+             new EnvOption("Sun",    SetSun,    "&HSets color of blocks in sunlight (default FFFFFF)"),
+             new EnvOption("Shadow", SetShadow, "&HSets color of blocks in darkness (default 9B9B9B)"),      
+             new EnvOption("Skybox", SetSkybox, "&HSets color of the skybox (default FFFFFF)"),             
+             new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "&HSets how fast clouds move (negative moves in opposite direction)"),
+             new EnvOption("WeatherSpeed", SetWeatherSpeed, "&HSets how fast rain/snow falls (negative falls upwards)"),
+             new EnvOption("WeatherFade",  SetWeatherFade,  "&HSets how quickly rain/snow fades out over distance"),
+             new EnvOption("SkyboxHorSpeed", SetSkyboxHor,  "&HSets how many times per second skybox fully spins horizontally (e.g. 0.1 is once every 10 seconds)"),
+             new EnvOption("SkyboxVerSpeed", SetSkyboxVer,  "&HSets how many times per second skybox fully spins vertically (e.g. 0.1 is once every 10 seconds)"),
         };
 
         public static EnvOption Find(string opt) {
@@ -182,7 +182,7 @@ namespace MCGalaxy {
                 BlockID block;
                 if (!CommandParser.GetBlock(p, input, out block)) return;
                 if (Block.IsPhysicsType(block)) {
-                    p.Message("&WCannot use physics block ids for %T/env"); return;
+                    p.Message("&WCannot use physics block ids for &T/env"); return;
                 }
                 
                 string name = Block.GetName(p, block);

@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/P2P [source] [target]");
-            p.Message("%HTeleports the source player to the target player.");
+            p.Message("&T/P2P [source] [target]");
+            p.Message("&HTeleports the source player to the target player.");
         }
     }
 }

@@ -133,12 +133,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/TempRank [player] [rank] [timespan] <reason>");
-            p.Message("%HSets a temporary rank for the specified player.");
-            p.Message("%T/TempRank info [player]");
-            p.Message("%HLists information about the temp rank for the given player.");
-            p.Message("%T/TempRank delete [player] %H- Removes player's temp rank.");
-            p.Message("%T/TempRank list %H- Lists all current temp ranks.");
+            p.Message("&T/TempRank [player] [rank] [timespan] <reason>");
+            p.Message("&HSets a temporary rank for the specified player.");
+            p.Message("&T/TempRank info [player]");
+            p.Message("&HLists information about the temp rank for the given player.");
+            p.Message("&T/TempRank delete [player] &H- Removes player's temp rank.");
+            p.Message("&T/TempRank list &H- Lists all current temp ranks.");
         }
     }
 }

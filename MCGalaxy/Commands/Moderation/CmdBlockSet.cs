@@ -48,13 +48,13 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BlockSet [block] [rank]");
-            p.Message("%HSets lowest rank that can modify/use [block] to [rank]");
-            p.Message("%T/BlockSet [block] +[rank]");
-            p.Message("%HAllows a specific rank to modify/use [block]");
-            p.Message("%T/BlockSet [block] -[rank]");
-            p.Message("%HPrevents a specific rank from modifying/using [block]");
-            p.Message("%HTo see available ranks, type %T/ViewRanks");
+            p.Message("&T/BlockSet [block] [rank]");
+            p.Message("&HSets lowest rank that can modify/use [block] to [rank]");
+            p.Message("&T/BlockSet [block] +[rank]");
+            p.Message("&HAllows a specific rank to modify/use [block]");
+            p.Message("&T/BlockSet [block] -[rank]");
+            p.Message("&HPrevents a specific rank from modifying/using [block]");
+            p.Message("&HTo see available ranks, type &T/ViewRanks");
         }
     }
 }

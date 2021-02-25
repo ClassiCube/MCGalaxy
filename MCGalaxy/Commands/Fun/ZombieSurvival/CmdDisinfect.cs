@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/DisInfect [name]");
-            p.Message("%HTurns [name] back into a human");
+            p.Message("&T/DisInfect [name]");
+            p.Message("&HTurns [name] back into a human");
         }
     }
 }

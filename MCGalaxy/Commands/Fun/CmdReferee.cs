@@ -49,10 +49,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Referee");
-            p.Message("%HTurns referee mode on/off.");
-            p.Message("%HReferee mode enables you to use hacks and TP in games");
-            p.Message("%H  Note that leaving referee mode sends you back to spawn");
+            p.Message("&T/Referee");
+            p.Message("&HTurns referee mode on/off.");
+            p.Message("&HReferee mode enables you to use hacks and TP in games");
+            p.Message("&H  Note that leaving referee mode sends you back to spawn");
         }
     }
 }

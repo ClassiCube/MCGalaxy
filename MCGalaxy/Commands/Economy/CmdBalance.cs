@@ -89,10 +89,10 @@ namespace MCGalaxy.Commands.Eco {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Balance [player]");
-            p.Message("%HShows how much &3" + Server.Config.Currency + " %H[player] has, " +
+            p.Message("&T/Balance [player]");
+            p.Message("&HShows how much &3" + Server.Config.Currency + " &H[player] has, " +
                            "plus their most recent transactions.");
-            p.Message("%HIf [player] is not given, shows your own balance.");
+            p.Message("&HIf [player] is not given, shows your own balance.");
         }
     }
 }

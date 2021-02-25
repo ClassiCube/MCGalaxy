@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Infect [name]");
-            p.Message("%HTurns [name] into a zombie");
+            p.Message("&T/Infect [name]");
+            p.Message("&HTurns [name] into a zombie");
         }
     }
 }

@@ -39,12 +39,12 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/IRCBot connect");
-            p.Message("%HCauses the IRC bot to connect to IRC.");
-            p.Message("%T/IRCBot disconnect");
-            p.Message("%HCauses the IRC bot to disconnect from IRC.");
-            p.Message("%T/IRCBot reset");
-            p.Message("%HCauses the IRC bot to disconnect then reconnect.");
+            p.Message("&T/IRCBot connect");
+            p.Message("&HCauses the IRC bot to connect to IRC.");
+            p.Message("&T/IRCBot disconnect");
+            p.Message("&HCauses the IRC bot to disconnect from IRC.");
+            p.Message("&T/IRCBot reset");
+            p.Message("&HCauses the IRC bot to disconnect then reconnect.");
         }
     }
 }

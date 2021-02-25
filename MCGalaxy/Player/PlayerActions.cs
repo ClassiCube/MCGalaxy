@@ -75,7 +75,7 @@ namespace MCGalaxy {
             cfg.Load(propsPath);
             
             if (!cfg.LoadOnGoto) {
-                p.Message("Level \"{0}\" cannot be loaded using %T/Goto.", map);
+                p.Message("Level \"{0}\" cannot be loaded using &T/Goto.", map);
                 return false;
             }
             

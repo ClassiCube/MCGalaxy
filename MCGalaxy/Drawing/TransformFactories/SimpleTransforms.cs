@@ -25,8 +25,8 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: none",
-            "%HDoes not affect the output of draw operations.",
+            "&TArguments: none",
+            "&HDoes not affect the output of draw operations.",
         };
         
         public override Transform Construct(Player p, string message) {
@@ -39,10 +39,10 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [scaleX] [scaleY] [scaleZ] <centre>",
-            "%TAlternatively: [scale] <centre>",
-            "%H[scale] values can be an integer or a fraction (e.g. 2 or 1/2).",
-            "%H[centre] if given, indicates to scale from the centre of a draw operation, " +
+            "&TArguments: [scaleX] [scaleY] [scaleZ] <centre>",
+            "&TAlternatively: [scale] <centre>",
+            "&H[scale] values can be an integer or a fraction (e.g. 2 or 1/2).",
+            "&H[centre] if given, indicates to scale from the centre of a draw operation, " +
                 "instead of outwards from the first mark. Recommended for cuboid and cylinder.",
         };
         

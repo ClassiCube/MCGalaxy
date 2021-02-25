@@ -30,10 +30,10 @@ namespace MCGalaxy.Commands.Chatting {
      
         public override void Help(Player p) {
             SimpleItem item = (SimpleItem)Economy.GetItem("Snack");
-            p.Message("%T/Eat %H- Eats a random snack.");
+            p.Message("&T/Eat &H- Eats a random snack.");
             
             if (item.Price == 0) return;
-            p.Message("%HCosts {0} &3{1} %Heach time", item.Price, Server.Config.Currency);
+            p.Message("&HCosts {0} &3{1} &Heach time", item.Price, Server.Config.Currency);
         }
     }
 }

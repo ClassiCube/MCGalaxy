@@ -68,8 +68,8 @@ namespace MCGalaxy.Commands.Chatting {
         
         static bool Filter8Ball(Player p, object arg) { return !p.Ignores.EightBall; }
         public override void Help(Player p) {
-            p.Message("%T/8ball [yes or no question]");
-            p.Message("%HGet an answer from the all-knowing 8-Ball!");
+            p.Message("&T/8ball [yes or no question]");
+            p.Message("&HGet an answer from the all-knowing 8-Ball!");
         }
     }
 }

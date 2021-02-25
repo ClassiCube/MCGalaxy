@@ -27,12 +27,12 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message, CommandData data) {
            p.ClickToMark = !p.ClickToMark;
-           p.Message("Click blocks to %T/mark%S: {0}", p.ClickToMark ? "&2ON" : "&4OFF");
+           p.Message("Click blocks to &T/mark%S: {0}", p.ClickToMark ? "&2ON" : "&4OFF");
         }
         
         public override void Help(Player p) {
-            p.Message("%T/DoNotMark");
-            p.Message("%HToggles whether clicking blocks adds a marker to a selection. (e.g. %T/cuboid%H)");
+            p.Message("&T/DoNotMark");
+            p.Message("&HToggles whether clicking blocks adds a marker to a selection. (e.g. &T/cuboid&H)");
         }
     }
 }

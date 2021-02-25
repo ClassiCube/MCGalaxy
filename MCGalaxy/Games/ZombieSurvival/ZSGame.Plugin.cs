@@ -116,7 +116,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerConnect(Player p) {
             if (GetConfig().SetMainLevel) return;
-            p.Message("&3Zombie Survival %Sis running! Type %T/ZS go %Sto join");
+            p.Message("&3Zombie Survival %Sis running! Type &T/ZS go %Sto join");
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {

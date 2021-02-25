@@ -25,13 +25,13 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block1/frequency] [block2] <args>..",
-            "%HDraws by selecting blocks from the given [blocks] using perlin noise.",
-            "%Hfrequency is optional (defaults to 1), and specifies the number of times " +
+            "&TArguments: [block1/frequency] [block2] <args>..",
+            "&HDraws by selecting blocks from the given [blocks] using perlin noise.",
+            "&Hfrequency is optional (defaults to 1), and specifies the number of times " +
                 "the block should appear (as a fraction of the total of all the frequencies).",
-            "%HOptional args format: %T<first letter of argument>=<value>",
-            "%HArguments: %Ta%Hmplitude, %Tf%Hrequency (scale), %Ts%Heed, " +
-            "%To%Hctaves, %Tp%Hersistence (turbulence), %Tl%Hacunarity",
+            "&HOptional args format: &T<first letter of argument>=<value>",
+            "&HArguments: &Ta&Hmplitude, &Tf&Hrequency (scale), &Ts&Heed, " +
+            "&To&Hctaves, &Tp&Hersistence (turbulence), &Tl&Hacunarity",
         };
         
         public override Brush Construct(BrushArgs args) {

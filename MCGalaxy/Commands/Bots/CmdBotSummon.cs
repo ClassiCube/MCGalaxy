@@ -50,11 +50,11 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {   
-            p.Message("%T/BotSummon [name] [x y z] <yaw> <pitch>");
-            p.Message("%HTeleports a bot to the given block coordinates.");
-            p.Message("%HUse ~ before a coordinate to move relative to current position");
-            p.Message("%T/BotSummon [name]");
-            p.Message("%HSummons a bot to your position.");
+            p.Message("&T/BotSummon [name] [x y z] <yaw> <pitch>");
+            p.Message("&HTeleports a bot to the given block coordinates.");
+            p.Message("&HUse ~ before a coordinate to move relative to current position");
+            p.Message("&T/BotSummon [name]");
+            p.Message("&HSummons a bot to your position.");
         }
     }
 }

@@ -90,13 +90,13 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Inbox");
-            p.Message("%HDisplays all your messages.");
-            p.Message("%T/Inbox [num]");
-            p.Message("%HDisplays the message at [num]");
-            p.Message("%T/Inbox del [num]/all");
-            p.Message("%HDeletes the message at [num], deletes all messages if \"all\"");
-            p.Message("  %HUse %T/Send %Hto reply to a message");
+            p.Message("&T/Inbox");
+            p.Message("&HDisplays all your messages.");
+            p.Message("&T/Inbox [num]");
+            p.Message("&HDisplays the message at [num]");
+            p.Message("&T/Inbox del [num]/all");
+            p.Message("&HDeletes the message at [num], deletes all messages if \"all\"");
+            p.Message("  &HUse &T/Send &Hto reply to a message");
         }
     }
 }

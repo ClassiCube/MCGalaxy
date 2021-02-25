@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Eco {
             string plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (plName == null) return;
             string award = Matcher.FindAwards(p, args[1]);
-            if (award == null) { p.Message("Use %T/Awards %Sfor a list of awards"); return; }
+            if (award == null) { p.Message("Use &T/Awards %Sfor a list of awards"); return; }
 
             string displayName = p.FormatNick(plName);
             if (!take) {
@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Award give/take [player] [award]");
-            p.Message("%HGives/takes [award] award to/from [player]");
-            p.Message("%T/Award [player] [award]");
-            p.Message("%HShorthand for %T/Award give [player] [award]");
+            p.Message("&T/Award give/take [player] [award]");
+            p.Message("&HGives/takes [award] award to/from [player]");
+            p.Message("&T/Award [player] [award]");
+            p.Message("&HShorthand for &T/Award give [player] [award]");
         }
     }
 }

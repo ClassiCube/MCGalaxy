@@ -89,12 +89,12 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/IRCControllers add/remove [name]");
-            p.Message("%HAdds or removes [name] from list of IRC controllers");
-            p.Message("%T/IRCControllers reload/list");
-            p.Message("%HReloads or outputs list of IRC controllers");
-            p.Message("%T/IRCControllers rank [rank]");
-            p.Message("%HSets which rank IRC controllers are treated as having");
+            p.Message("&T/IRCControllers add/remove [name]");
+            p.Message("&HAdds or removes [name] from list of IRC controllers");
+            p.Message("&T/IRCControllers reload/list");
+            p.Message("&HReloads or outputs list of IRC controllers");
+            p.Message("&T/IRCControllers rank [rank]");
+            p.Message("&HSets which rank IRC controllers are treated as having");
         }
     }
 }

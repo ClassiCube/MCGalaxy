@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("/possess [player] <skin as #> - DEMONIC POSSESSION HUE HUE");
             p.Message("Using # after player name makes possessed keep their custom skin during possession.");
             p.Message("Not using it makes them lose their skin, and makes their name show as \"Player (YourName)\".");
-            p.Message("%T/possess %H- Ends current possession");
+            p.Message("&T/possess &H- Ends current possession");
         }
     }
 }
