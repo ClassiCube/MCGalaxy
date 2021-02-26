@@ -98,15 +98,15 @@ namespace MCGalaxy.Commands.Misc {
                           p.FormatNick(target), target.group.ColoredName);
             }
             
-            p.Message("If you still want to summon them, type %T/Summon {0} confirm", target.name);
+            p.Message("If you still want to summon them, type &T/Summon {0} confirm", target.name);
             return false;
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Summon [player]");
-            p.Message("%HSummons [player] to your position.");
-            p.Message("%T/Summon all");
-            p.Message("%HSummons all players in your map");
+            p.Message("&T/Summon [player]");
+            p.Message("&HSummons [player] to your position.");
+            p.Message("&T/Summon all");
+            p.Message("&HSummons all players in your map");
         }
     }
 }

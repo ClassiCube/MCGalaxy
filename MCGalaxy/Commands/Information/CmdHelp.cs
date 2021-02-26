@@ -45,17 +45,17 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void PrintHelpMenu(Player p) {
-            p.Message("%HCommand Categories:");
-            p.Message("  %TBuilding Chat Economy Games Info Moderation Other World");
-            p.Message("%HOther Categories:");
-            p.Message("  %TRanks Colors Emotes Shortcuts Commands");
-            p.Message("%HTo view help for a category, type %T/Help CategoryName");
-            p.Message("%HTo see detailed help for a command, type %T/Help CommandName");
-            p.Message("%HTo see your stats, type %T/Info");
-            p.Message("%HTo see loaded maps, type %T/Maps");
-            p.Message("%HTo view your personal world options, use %T/Realm");
-            p.Message("%HTo join a map, type %T/Goto WorldName");
-            p.Message("%HTo send private messages, type %T@PlayerName Message");
+            p.Message("&HCommand Categories:");
+            p.Message("  &TBuilding Chat Economy Games Info Moderation Other World");
+            p.Message("&HOther Categories:");
+            p.Message("  &TRanks Colors Emotes Shortcuts Commands");
+            p.Message("&HTo view help for a category, type &T/Help CategoryName");
+            p.Message("&HTo see detailed help for a command, type &T/Help CommandName");
+            p.Message("&HTo see your stats, type &T/Info");
+            p.Message("&HTo see loaded maps, type &T/Maps");
+            p.Message("&HTo view your personal world options, use &T/Realm");
+            p.Message("&HTo join a map, type &T/Goto WorldName");
+            p.Message("&HTo send private messages, type &T@PlayerName Message");
         }
         
         static void PrintRanks(Player p) {

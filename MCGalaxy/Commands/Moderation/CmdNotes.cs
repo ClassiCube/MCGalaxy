@@ -71,8 +71,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Notes [name] %H- views that player's notes.");
-            p.Message("%HNotes are things such as bans, kicks, warns, mutes.");
+            p.Message("&T/Notes [name] &H- views that player's notes.");
+            p.Message("&HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
     
@@ -87,8 +87,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/MyNotes %H- views your own notes.");
-            p.Message("%HNotes are things such as bans, kicks, warns, mutes.");
+            p.Message("&T/MyNotes &H- views your own notes.");
+            p.Message("&HNotes are things such as bans, kicks, warns, mutes.");
         }
     }
 }

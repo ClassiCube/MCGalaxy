@@ -49,10 +49,10 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Clones [name]");
-            p.Message("%HFinds everyone with the same IP as [name]");
-            p.Message("%T/Clones [ip address]");
-            p.Message("%HFinds everyone who last played or is playing on the given IP");
+            p.Message("&T/Clones [name]");
+            p.Message("&HFinds everyone with the same IP as [name]");
+            p.Message("&T/Clones [ip address]");
+            p.Message("&HFinds everyone who last played or is playing on the given IP");
         }
     }
 }

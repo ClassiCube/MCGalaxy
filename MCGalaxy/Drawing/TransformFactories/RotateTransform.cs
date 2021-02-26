@@ -26,9 +26,9 @@ namespace MCGalaxy.Drawing.Transforms {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [angleX] [angleY] [angleZ] <centre>",
-            "%H[angle] values are values in degrees.",
-            "%H[centre] if given, indicates to scale from the centre of a draw operation, " +
+            "&TArguments: [angleX] [angleY] [angleZ] <centre>",
+            "&H[angle] values are values in degrees.",
+            "&H[centre] if given, indicates to scale from the centre of a draw operation, " +
             "instead of outwards from the first mark. Recommended for cuboid and cylinder.",
         };
         

@@ -71,10 +71,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Whitelist add/del [player]");
-            p.Message("%HAdds or removes [player] from the whitelist.");
-            p.Message("%T/Whitelist list");
-            p.Message("%HLists all players who are on the whitelist.");
+            p.Message("&T/Whitelist add/del [player]");
+            p.Message("&HAdds or removes [player] from the whitelist.");
+            p.Message("&T/Whitelist list");
+            p.Message("&HLists all players who are on the whitelist.");
         }
     }
 }

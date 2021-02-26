@@ -42,8 +42,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/LogoutMessage [player] [message]");
-            p.Message("%HSets the logout message shown for that player.");
+            p.Message("&T/LogoutMessage [player] [message]");
+            p.Message("&HSets the logout message shown for that player.");
         }
     }
 }

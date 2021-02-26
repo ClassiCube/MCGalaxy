@@ -50,9 +50,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Ping %H- Outputs details about your ping to the server.");
-            p.Message("%T/Ping all %H- Outputs ping details for all players.");
-            p.Message("&cNOTE: %HNot all clients support measuring ping.");
+            p.Message("&T/Ping &H- Outputs details about your ping to the server.");
+            p.Message("&T/Ping all &H- Outputs ping details for all players.");
+            p.Message("&cNOTE: &HNot all clients support measuring ping.");
         }
     }
 }

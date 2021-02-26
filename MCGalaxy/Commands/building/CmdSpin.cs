@@ -87,10 +87,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Spin mirrorx/mirrory/mirrorz");
-            p.Message("%HFlips/Mirrors the copied object around that axis.");
-            p.Message("%T/Spin X/Y/Z 90/180/270");
-            p.Message("%HRotates the copied object around that axis by the given angle. " +
+            p.Message("&T/Spin mirrorx/mirrory/mirrorz");
+            p.Message("&HFlips/Mirrors the copied object around that axis.");
+            p.Message("&T/Spin X/Y/Z 90/180/270");
+            p.Message("&HRotates the copied object around that axis by the given angle. " +
                            "If no angle is given, 90 degrees is used.");
         }
     }

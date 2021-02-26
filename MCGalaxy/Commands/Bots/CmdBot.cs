@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Bots {
                             BotsFile.Save(p.level);
                         }
                     } else {
-                        p.Message("%WYou cannot remove all bots belonging to {0}%W unless you are the owner of this map.", p.FormatNick(ownerName));
+                        p.Message("&WYou cannot remove all bots belonging to {0}&W unless you are the owner of this map.", p.FormatNick(ownerName));
                     }
                     return;
                 }
@@ -124,7 +124,7 @@ namespace MCGalaxy.Commands.Bots {
                         BotsFile.Save(p.level);
                     }
                 } else {
-                    p.Message("%WYou cannot remove all bots unless you are the owner of this map.");
+                    p.Message("&WYou cannot remove all bots unless you are the owner of this map.");
                 }
 
             } else {
@@ -211,9 +211,9 @@ namespace MCGalaxy.Commands.Bots {
             if (botName.Length == 0) {
                 if (!p.Supports(CpeExt.PlayerClick)) {
                     p.Message("Your client does not support clicking on entities.");
-                    p.Message("You must type %T/botinfo [name] %Sto see info.");
+                    p.Message("You must type &T/botinfo [name] %Sto see info.");
                     p.Message("To help find the name of a nicknamed bot, try");
-                    p.Message("%T/whonick bot [nickname]");
+                    p.Message("&T/whonick bot [nickname]");
                     return;
                 }
                 p.checkingBotInfo = true;
@@ -227,21 +227,21 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Bot add [name] %H- Adds a new bot at your position");
-            p.Message("%T/Bot remove [name] %H- Removes the bot with that name");
-            p.Message("%T/Bot remove all %H- Removes all bots on your map.");
-            p.Message("%T/Bot remove all [owner]");
-            p.Message("%HRemoves all bots owned by [owner] on your map.");
-            p.Message("%T/Bot text [name] <text>");
-            p.Message("%HSets the text shown when a player clicks on this bot");
-            p.Message("%HSee %T/Help mb %Hfor more details on <text>");
-            p.Message("%T/Bot deathmessage [name] <message>");
-            p.Message("%HSets the message shown when this bot kills a player");
-            p.Message("%T/Bot rename [name] [new name] %H- Renames a bot");
-            p.Message("%H  Note: To only change name tag of a bot, use %T/Nick bot");
-            p.Message("%T/Bot copy [name] [new name] %H- Clones an existing bot");
-            p.Message("%T/Bot info %H- Displays info of the next bot you click");
-            p.Message("%T/Bot info [name] %H- Displays info of bot with that name");
+            p.Message("&T/Bot add [name] &H- Adds a new bot at your position");
+            p.Message("&T/Bot remove [name] &H- Removes the bot with that name");
+            p.Message("&T/Bot remove all &H- Removes all bots on your map.");
+            p.Message("&T/Bot remove all [owner]");
+            p.Message("&HRemoves all bots owned by [owner] on your map.");
+            p.Message("&T/Bot text [name] <text>");
+            p.Message("&HSets the text shown when a player clicks on this bot");
+            p.Message("&HSee &T/Help mb &Hfor more details on <text>");
+            p.Message("&T/Bot deathmessage [name] <message>");
+            p.Message("&HSets the message shown when this bot kills a player");
+            p.Message("&T/Bot rename [name] [new name] &H- Renames a bot");
+            p.Message("&H  Note: To only change name tag of a bot, use &T/Nick bot");
+            p.Message("&T/Bot copy [name] [new name] &H- Clones an existing bot");
+            p.Message("&T/Bot info &H- Displays info of the next bot you click");
+            p.Message("&T/Bot info [name] &H- Displays info of bot with that name");
         }
     }
 }

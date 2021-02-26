@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (args[0] == null) return;
             Player who = PlayerInfo.FindExact(args[0]);
             if (args.Length == 1) {
-                p.Message("%WYou must specify a type to modify.");
+                p.Message("&WYou must specify a type to modify.");
                 MessageValidTypes(p); return;
             }
             
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 
                 IPAddress ip;
                 if (!IPAddress.TryParse(args[2], out ip)) {
-                    p.Message("%W\"{0}\" is not a valid IP address.", args[2]); return;
+                    p.Message("&W\"{0}\" is not a valid IP address.", args[2]); return;
                 }
                 
                 if (who != null) who.ip = args[2];
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 SetColor(p, args, PlayerData.ColumnTColor, who,
                          v => who.titlecolor = v);
             } else {
-                p.Message("%WInvalid type");
+                p.Message("&WInvalid type");
                 MessageValidTypes(p);
             }
         }
@@ -222,15 +222,15 @@ namespace MCGalaxy.Commands.Maintenance {
         }
 
         static void MessageValidTypes(Player p) {
-            p.Message("%HValid types: %SFirstLogin, LastLogin, Logins, Title, IP, Deaths, Money, " +
+            p.Message("&HValid types: %SFirstLogin, LastLogin, Logins, Title, IP, Deaths, Money, " +
                       "Modified, Drawn, Placed, Deleted, TotalKicked, TimeSpent, Color, TitleColor, Messages ");
         }
         
         public override void Help(Player p) {
-            p.Message("%T/PlayerEdit [username] [type] <value>");
-            p.Message("%HEdits an online or offline player's information. Use with caution!");
+            p.Message("&T/PlayerEdit [username] [type] <value>");
+            p.Message("&HEdits an online or offline player's information. Use with caution!");
             MessageValidTypes(p);
-            p.Message("%HTo see value format for a specific type, leave <value> blank.");
+            p.Message("&HTo see value format for a specific type, leave <value> blank.");
         }
     }
 }

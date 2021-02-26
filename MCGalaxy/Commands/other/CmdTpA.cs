@@ -124,9 +124,9 @@ namespace MCGalaxy.Commands.Misc {
         } 
 
         public override void Help(Player p) {
-            p.Message("%T/TPA [player] %H- Sends a teleport request to that player");
-            p.Message("%T/TPA accept %H- Accepts a teleport request");
-            p.Message("%T/TPA deny %H- Denies a teleport request");
+            p.Message("&T/TPA [player] &H- Sends a teleport request to that player");
+            p.Message("&T/TPA accept &H- Accepts a teleport request");
+            p.Message("&T/TPA deny &H- Denies a teleport request");
         }
     }
 }

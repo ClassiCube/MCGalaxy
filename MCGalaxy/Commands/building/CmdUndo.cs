@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             
             TimeSpan delta = GetDelta(p, p.name, parts, undoPhysics ? 1 : 0);
             if (delta == TimeSpan.MinValue || (!undoPhysics && parts.Length > 1)) {
-                p.Message("If you are trying to undo another player, use %T/UndoPlayer");
+                p.Message("If you are trying to undo another player, use &T/UndoPlayer");
                 return;
             }
             
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Building {
             UndoDrawOpEntry[] entries = p.DrawOps.Items;
             if (entries.Length == 0) {
                 p.Message("You have no draw operations to undo.");
-                p.Message("Try using %T/Undo [timespan] %Sinstead.");
+                p.Message("Try using &T/Undo [timespan] %Sinstead.");
                 return;
             }
             
@@ -69,14 +69,14 @@ namespace MCGalaxy.Commands.Building {
             }
             
             p.Message("Unable to undo any draw operations, as all of the " +
-                               "past 50 draw operations are %T/Undo %Sor %T/Undo [timespan]");
-            p.Message("Try using %T/Undo [timespan] %Sinstead");
+                               "past 50 draw operations are &T/Undo %Sor &T/Undo [timespan]");
+            p.Message("Try using &T/Undo [timespan] %Sinstead");
         }
         
         void UndoPhysics(Player p, CommandData data, TimeSpan delta) {
             if (!CheckExtraPerm(p, data, 1)) return;
             if (!p.CanUse("Physics")) {
-                p.Message("%WYou can only undo physics if you can use %T/Physics"); return;
+                p.Message("&WYou can only undo physics if you can use &T/Physics"); return;
             }
             
             CmdPhysics.SetPhysics(p.level, 0);
@@ -127,10 +127,10 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Undo %H- Undoes your last draw operation");
-            p.Message("%T/Undo [timespan]");
-            p.Message("%HUndoes your blockchanges in the past [timespan]");
-            p.Message("%T/Undo physics [timespan] %H- Undoes physics on current map");
+            p.Message("&T/Undo &H- Undoes your last draw operation");
+            p.Message("&T/Undo [timespan]");
+            p.Message("&HUndoes your blockchanges in the past [timespan]");
+            p.Message("&T/Undo physics [timespan] &H- Undoes physics on current map");
         }
     }
 }

@@ -129,15 +129,15 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%HUse ~ before a coordinate to move relative to current position");
-            p.Message("%T/TP [x y z] <yaw> <pitch>");
-            p.Message("%HTeleports yourself to the given block coordinates.");
-            p.Message("%T/TP -precise [x y z] <yaw> <pitch>");
-            p.Message("%HTeleports using precise units. (32 units = 1 block)");
-            p.Message("%T/TP [player]");
-            p.Message("%HTeleports yourself to that player.");
-            p.Message("%T/TP bot [name]");
-            p.Message("%HTeleports yourself to that bot.");
+            p.Message("&HUse ~ before a coordinate to move relative to current position");
+            p.Message("&T/TP [x y z] <yaw> <pitch>");
+            p.Message("&HTeleports yourself to the given block coordinates.");
+            p.Message("&T/TP -precise [x y z] <yaw> <pitch>");
+            p.Message("&HTeleports using precise units. (32 units = 1 block)");
+            p.Message("&T/TP [player]");
+            p.Message("&HTeleports yourself to that player.");
+            p.Message("&T/TP bot [name]");
+            p.Message("&HTeleports yourself to that bot.");
         }
     }
 }

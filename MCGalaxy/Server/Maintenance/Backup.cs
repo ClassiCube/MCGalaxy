@@ -159,7 +159,7 @@ namespace MCGalaxy {
                         Extract(part, path); return path;
                     } catch (IOException e) {
                         Logger.LogError(e);
-                        Logger.Log(LogType.Warning, "%WError extracting {0}, continuing with rest.", path);
+                        Logger.Log(LogType.Warning, "&WError extracting {0}, continuing with rest.", path);
                         errors++;
                         return "";
                     }

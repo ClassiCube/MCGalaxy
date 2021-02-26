@@ -107,7 +107,7 @@ namespace MCGalaxy.Games {
                 End();
             } catch (Exception ex) {
                 Logger.LogError("Error in game " + GameName, ex);
-                Chat.MessageGlobal("%W" + GameName + " disabled due to an error.");
+                Chat.MessageGlobal("&W" + GameName + " disabled due to an error.");
                 
                 try { End(); }
                 catch (Exception ex2) { Logger.LogError(ex2); }
@@ -153,7 +153,7 @@ namespace MCGalaxy.Games {
                 
                 List<Player> players = GetPlayers();
                 if (players.Count >= 2) return players;
-                Map.Message("%WNeed 2 or more non-ref players to start a round.");
+                Map.Message("&WNeed 2 or more non-ref players to start a round.");
             }
         }
         
@@ -173,7 +173,7 @@ namespace MCGalaxy.Games {
             Level lastMap = Map; LastMap = Map.MapName;
             
             if (!SetMap(map)) {
-                Map.Message("%WFailed to change map to " + map);
+                Map.Message("&WFailed to change map to " + map);
                 ContinueOnSameMap();
             } else {
                 TransferPlayers(lastMap);
@@ -186,10 +186,10 @@ namespace MCGalaxy.Games {
             Level old = Level.Load(Map.MapName);
             
             if (old == null) {
-                Map.Message("%WCannot reset changes to map"); return;
+                Map.Message("&WCannot reset changes to map"); return;
             }
             if (old.Width != Map.Width || old.Height != Map.Height || old.Length != Map.Length) {
-                Map.Message("%WCannot reset changes to map"); return;
+                Map.Message("&WCannot reset changes to map"); return;
             }
             
             // Try to reset changes made to this map, if possible

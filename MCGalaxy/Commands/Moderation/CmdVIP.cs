@@ -79,11 +79,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/VIP add/remove [player]");
-            p.Message("%HAdds or removes [player] from the VIP list.");
-            p.Message("%T/VIP list");
-            p.Message("%HLists all players who are on the VIP list.");
-            p.Message("%H  VIPs can join regardless of the player limit.");
+            p.Message("&T/VIP add/remove [player]");
+            p.Message("&HAdds or removes [player] from the VIP list.");
+            p.Message("&T/VIP list");
+            p.Message("&HLists all players who are on the VIP list.");
+            p.Message("&H  VIPs can join regardless of the player limit.");
         }
     }
 }

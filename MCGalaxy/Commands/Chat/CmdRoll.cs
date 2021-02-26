@@ -50,8 +50,8 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Roll [min] [max]");
-            p.Message("%HRolls a random number between [min] and [max].");
+            p.Message("&T/Roll [min] [max]");
+            p.Message("&HRolls a random number between [min] and [max].");
         }
     }
 }

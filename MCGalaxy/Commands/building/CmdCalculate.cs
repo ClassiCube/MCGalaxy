@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
             string r1 = args[0], op = args[1], r2 = null, format = null;
             
             if (!Utils.TryParseDouble(r1, out n1)) {
-                p.Message("%W\"{0}\" is not a valid number.", r1); return;
+                p.Message("&W\"{0}\" is not a valid number.", r1); return;
             }
 
             char sym = op[0];
@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
                 r2 = args[2];
                 
                 if (!Utils.TryParseDouble(r2, out n2)) {
-                    p.Message("%W\"{0}\" is not a valid number.", r2); return;
+                    p.Message("&W\"{0}\" is not a valid number.", r2); return;
                 }
                 
                 if (sym == '+') { result = n1 + n2; }
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Building {
                 result = n1 * n1 * n1;
                 format = "&aResult&f: Cube of {0} = {3}";
             } else {
-                p.Message("%WOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
+                p.Message("&WOnly supported operators are: +, -, *, /, sqrt, square, or cubed");
                 return;
             }
             
@@ -68,10 +68,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Calculate [num1] [operation] [num2]");
-            p.Message("%H[operation] can be +, -, /, or *");
-            p.Message("%T/Calculate [num1] [operation]");
-            p.Message("%H[operation] can be sqrt, square, or cubed");
+            p.Message("&T/Calculate [num1] [operation] [num2]");
+            p.Message("&H[operation] can be +, -, /, or *");
+            p.Message("&T/Calculate [num1] [operation]");
+            p.Message("&H[operation] can be sqrt, square, or cubed");
         }
     }
 }

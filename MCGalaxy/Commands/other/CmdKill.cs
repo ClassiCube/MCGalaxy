@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Kill [name] <message>");
-            p.Message("%HKills [name], with <message> if given.");
-            p.Message("%HCauses an explosion if \"explode\" is used for <message>");
+            p.Message("&T/Kill [name] <message>");
+            p.Message("&HKills [name], with <message> if given.");
+            p.Message("&HCauses an explosion if \"explode\" is used for <message>");
         }
     }
 }

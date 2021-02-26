@@ -28,8 +28,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/FlipHeads");
-            p.Message("%HMakes all players have upside down heads");
+            p.Message("&T/FlipHeads");
+            p.Message("&HMakes all players have upside down heads");
         }
     }
 }

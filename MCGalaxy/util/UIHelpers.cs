@@ -38,7 +38,7 @@ namespace MCGalaxy.UI {
                 Logger.Log(LogType.CommandUsage, "(console): Cannot repeat command - no commands used yet.");
                 return;
             }
-            Logger.Log(LogType.CommandUsage, "Repeating %T/" + lastCMD);
+            Logger.Log(LogType.CommandUsage, "Repeating &T/" + lastCMD);
             HandleCommand(lastCMD);
         }
         

@@ -135,12 +135,12 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Search [list] [keyword]");
-            p.Message("%HFinds entries in a list that match the given keyword");
-            p.Message("%H  keyword can also include wildcard characters:");
-            p.Message("%H    * - placeholder for zero or more characters");
-            p.Message("%H    ? - placeholder for exactly one character");
-            p.Message("%HLists available: &fblocks/commands/ranks/players/loaded/maps");
+            p.Message("&T/Search [list] [keyword]");
+            p.Message("&HFinds entries in a list that match the given keyword");
+            p.Message("&H  keyword can also include wildcard characters:");
+            p.Message("&H    * - placeholder for zero or more characters");
+            p.Message("&H    ? - placeholder for exactly one character");
+            p.Message("&HLists available: &fblocks/commands/ranks/players/loaded/maps");
         }
     }
 }

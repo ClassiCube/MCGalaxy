@@ -49,10 +49,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Last [user]");
-            p.Message("%H Shows last command used by [user]");
-            p.Message("%T/Last");
-            p.Message("%HShows last commands for all users (SPAMMY)");
+            p.Message("&T/Last [user]");
+            p.Message("&H Shows last command used by [user]");
+            p.Message("&T/Last");
+            p.Message("&HShows last commands for all users (SPAMMY)");
         }
     }
 }

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (ip == null) return;
             
             if (HttpUtil.IsPrivateIP(ip)) {
-                p.Message("%WPlayer has an internal IP, cannot trace"); return;
+                p.Message("&WPlayer has an internal IP, cannot trace"); return;
             }
 
             string json, region = null, country = null;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Moderation {
             };
             
             reader.Parse();
-            if (reader.Failed) { p.Message("%WError parsing GeoIP info"); return; }           
+            if (reader.Failed) { p.Message("&WError parsing GeoIP info"); return; }           
             
             string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}%S/&b{2}" : "&b{2}";
             string nick   = name == null ? ip : "of " + p.FormatNick(name);
@@ -63,8 +63,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Location [name/IP]");
-            p.Message("%HTracks down location of the given IP, or IP player is on.");
+            p.Message("&T/Location [name/IP]");
+            p.Message("&HTracks down location of the given IP, or IP player is on.");
         }
     }
 }

@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
                 
                 if (dArgs.Pal.Entries == null || dArgs.Pal.Entries.Length == 0) {
                     p.Message("Palette {0} does not have any entries", dArgs.Pal.Name);
-                    p.Message("Use %T/Palette %Sto add entries to it"); return;
+                    p.Message("Use &T/Palette %Sto add entries to it"); return;
                 }
             }
             
@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Building {
             float ratio = Math.Min(resizedWidth / (float)width, resizedHeight / (float)height);
             resizedWidth = (int)(width * ratio); resizedHeight = (int)(height * ratio);
             
-            p.Message("%WImage is too large ({0}x{1}), resizing to ({2}x{3})",
+            p.Message("&WImage is too large ({0}x{1}), resizing to ({2}x{3})",
                       width, height, resizedWidth, resizedHeight);
             width = resizedWidth; height = resizedHeight;
         }
@@ -166,11 +166,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/ImagePrint [file/url] [palette] <mode> <width height>");
-            p.Message("%HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
-            p.Message("%HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
-            p.Message("%HModes: &fVertical, Vertical2Layer, Horizontal");
-            p.Message("%H  <width height> optionally resize the printed image");
+            p.Message("&T/ImagePrint [file/url] [palette] <mode> <width height>");
+            p.Message("&HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
+            p.Message("&HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
+            p.Message("&HModes: &fVertical, Vertical2Layer, Horizontal");
+            p.Message("&H  <width height> optionally resize the printed image");
         }
 
         class DrawArgs { public bool Layer, Dual; public ImagePalette Pal; public byte[] Data; public int Width, Height; }

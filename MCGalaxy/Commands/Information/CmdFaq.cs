@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/FAQ");
-            p.Message("%HDisplays frequently asked questions");
+            p.Message("&T/FAQ");
+            p.Message("&HDisplays frequently asked questions");
         }
     }
 }

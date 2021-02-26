@@ -86,7 +86,7 @@ namespace MCGalaxy.Generator {
                 Logger.Log(LogType.SystemActivity, "Total time was {0} seconds.", (DateTime.UtcNow - start).TotalSeconds);
             } catch (Exception e) {
                 Logger.LogError(e);
-                p.Message("%WGeneration failed. See error logs.");
+                p.Message("&WGeneration failed. See error logs.");
                 return false;
             }
             return true;

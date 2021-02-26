@@ -61,15 +61,15 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CmdSet [cmd] [rank]");
-            p.Message("%HSets lowest rank that can use [cmd] to [rank]");
-            p.Message("%T/CmdSet [cmd] +[rank]");
-            p.Message("%HAllows a specific rank to use [cmd]");
-            p.Message("%T/CmdSet [cmd] -[rank]");
-            p.Message("%HPrevents a specific rank from using [cmd]");
-            p.Message("%T/CmdSet [cmd] [rank] [extra permission number]");
-            p.Message("%HSet the lowest rank that has that extra permission for [cmd]");
-            p.Message("%HTo see available ranks, type %T/ViewRanks");
+            p.Message("&T/CmdSet [cmd] [rank]");
+            p.Message("&HSets lowest rank that can use [cmd] to [rank]");
+            p.Message("&T/CmdSet [cmd] +[rank]");
+            p.Message("&HAllows a specific rank to use [cmd]");
+            p.Message("&T/CmdSet [cmd] -[rank]");
+            p.Message("&HPrevents a specific rank from using [cmd]");
+            p.Message("&T/CmdSet [cmd] [rank] [extra permission number]");
+            p.Message("&HSet the lowest rank that has that extra permission for [cmd]");
+            p.Message("&HTo see available ranks, type &T/ViewRanks");
         }
     }
 }

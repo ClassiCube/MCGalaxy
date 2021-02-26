@@ -54,7 +54,7 @@ namespace MCGalaxy {
         /// <remarks> Backups are NOT renamed. </remarks>
         public static bool Rename(Player p, string src, string dst) {
             if (LevelInfo.MapExists(dst)) { 
-                p.Message("%WLevel \"{0}\" already exists.", dst); return false;
+                p.Message("&WLevel \"{0}\" already exists.", dst); return false;
             }
             
             Level lvl = LevelInfo.FindExact(src);
@@ -217,13 +217,13 @@ namespace MCGalaxy {
         /// <remarks> Backups and BlockDB are NOT copied. </remarks>
         public static bool Copy(Player p, string src, string dst) {
             if (LevelInfo.MapExists(dst)) { 
-                p.Message("%WLevel \"{0}\" already exists.", dst); return false;
+                p.Message("&WLevel \"{0}\" already exists.", dst); return false;
             }
             
             // Make sure any changes to live map are saved first
             Level lvl = LevelInfo.FindExact(src);
             if (lvl != null && !lvl.Save(true)) {
-                p.Message("%WUnable to save {0}! Some recent block changes may not be copied.", src);
+                p.Message("&WUnable to save {0}! Some recent block changes may not be copied.", src);
             }
             
             File.Copy(LevelInfo.MapPath(src), LevelInfo.MapPath(dst));
@@ -307,7 +307,7 @@ namespace MCGalaxy {
             map = map.ToLower();
             Level cur = LevelInfo.FindExact(map);
             if (cur != null) {
-                p.Message("%WLevel {0} %Wis already loaded.", cur.ColoredName); return null;
+                p.Message("&WLevel {0} &Wis already loaded.", cur.ColoredName); return null;
             }
             
             try {
@@ -316,7 +316,7 @@ namespace MCGalaxy {
 
                 cur = LevelInfo.FindExact(map);
                 if (cur != null) {
-                    p.Message("%WLevel {0} %Wis already loaded.", cur.ColoredName); return null;
+                    p.Message("&WLevel {0} &Wis already loaded.", cur.ColoredName); return null;
                 }
 
                 LevelInfo.Add(lvl);
@@ -335,7 +335,7 @@ namespace MCGalaxy {
             Level lvl = Level.Load(map, path);
             
             if (lvl != null) return lvl;
-            p.Message("%WLoading {1} of {0} failed.", map, type);
+            p.Message("&WLoading {1} of {0} failed.", map, type);
             return null;
         }
         
@@ -358,7 +358,7 @@ namespace MCGalaxy {
                 path = LevelInfo.BackupFilePath(map, latest.ToString());
                 lvl = ReadBackup(p, map, path, "latest backup");
             } else {
-                p.Message("%WLatest backup of {0} does not exist.", map);
+                p.Message("&WLatest backup of {0} does not exist.", map);
             }
             return lvl;
         }

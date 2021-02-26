@@ -78,7 +78,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (grp == null) return null;
             
             if (grp.Permission > data.Rank) {
-                p.Message("%WCannot set permissions to a rank higher than yours."); return null;
+                p.Message("&WCannot set permissions to a rank higher than yours."); return null;
             }
             return grp;
         }

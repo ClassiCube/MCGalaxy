@@ -72,9 +72,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/BanIP [ip/player] <reason>");
-            p.Message("%HBans an IP, or the IP the given player is on.");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/BanIP [ip/player] <reason>");
+            p.Message("&HBans an IP, or the IP the given player is on.");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

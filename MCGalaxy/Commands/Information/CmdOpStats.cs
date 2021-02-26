@@ -99,8 +99,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
-            p.Message("%HDisplays information about operator command usage.");
+            p.Message("&T/OpStats [player] today/yesterday/thismonth/lastmonth/all");
+            p.Message("&HDisplays information about operator command usage.");
         }
     }
 }

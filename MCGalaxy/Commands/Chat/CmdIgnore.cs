@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Chatting {
                 Toggle(p, ref p.Ignores.Nicks, "{1}Custom player nicks {0} show in chat");
                 TabList.Update(p, true); return;
             } else if (action == "8ball") {
-                Toggle(p, ref p.Ignores.EightBall, "{0} ignoring %T/8ball"); return;
+                Toggle(p, ref p.Ignores.EightBall, "{0} ignoring &T/8ball"); return;
             } else if (action == "drawoutput") {
                 Toggle(p, ref p.Ignores.DrawOutput, "{0} ignoring draw command output"); return;
             } else if (action == "worldchanges") {
@@ -96,23 +96,23 @@ namespace MCGalaxy.Commands.Chatting {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Ignore [name]");
-            p.Message("%HSee %T/Help ignore special %Hfor special names when ignoring.");
-            p.Message("%HOtherwise, all chat from the player with [name] is ignored.");
-            p.Message("%HUsing the same [name] again will unignore.");
+            p.Message("&T/Ignore [name]");
+            p.Message("&HSee &T/Help ignore special &Hfor special names when ignoring.");
+            p.Message("&HOtherwise, all chat from the player with [name] is ignored.");
+            p.Message("&HUsing the same [name] again will unignore.");
         }
         
         public override void Help(Player p, string message) {
             if (!message.CaselessEq("special")) { Help(p); return; }
-            p.Message("%HSpecial names for %T/Ignore [name]");
-            p.Message("%H all - all chat is ignored.");
-            p.Message("%H irc - IRC chat is ignored.");
-            p.Message("%H irc [nick] - IRC chat by that IRC nick ignored.");
-            p.Message("%H titles - player titles before names are ignored.");
-            p.Message("%H nicks - custom player nicks do not show in chat.");
-            p.Message("%H 8ball - %T/8ball %His ignored.");
-            p.Message("%H drawoutput - drawing command output is ignored.");
-            p.Message("%H worldchanges - world change messages are ignored.");  
+            p.Message("&HSpecial names for &T/Ignore [name]");
+            p.Message("&H all - all chat is ignored.");
+            p.Message("&H irc - IRC chat is ignored.");
+            p.Message("&H irc [nick] - IRC chat by that IRC nick ignored.");
+            p.Message("&H titles - player titles before names are ignored.");
+            p.Message("&H nicks - custom player nicks do not show in chat.");
+            p.Message("&H 8ball - &T/8ball &His ignored.");
+            p.Message("&H drawoutput - drawing command output is ignored.");
+            p.Message("&H worldchanges - world change messages are ignored.");  
         }
     }
 }

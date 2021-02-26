@@ -37,10 +37,10 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/CompLoad [command]");
-            p.Message("%HCompiles and loads a C# command into the server for use.");
-            p.Message("%T/CompLoad [command] vb");
-            p.Message("%HCompiles and loads a Visual basic command into the server for use.");
+            p.Message("&T/CompLoad [command]");
+            p.Message("&HCompiles and loads a C# command into the server for use.");
+            p.Message("&T/CompLoad [command] vb");
+            p.Message("&HCompiles and loads a Visual basic command into the server for use.");
         }        
     }
 }

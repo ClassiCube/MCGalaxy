@@ -43,8 +43,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/viewranks [rank] %H- Shows all players who have [rank]");
-            p.Message("%T/viewranks banned %H- Shows all players who are banned");
+            p.Message("&T/viewranks [rank] &H- Shows all players who have [rank]");
+            p.Message("&T/viewranks banned &H- Shows all players who are banned");
             p.Message("Available ranks: " + Group.GroupList.Join(g => g.ColoredName));
         }
     }

@@ -50,14 +50,14 @@ namespace MCGalaxy.Commands.Building {
         }
         
         static void List(Player p) {
-            p.Message("%HAvailable transforms: &f" + TransformFactory.Transforms.Join(t => t.Name));
+            p.Message("&HAvailable transforms: &f" + TransformFactory.Transforms.Join(t => t.Name));
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Transform [name] <transform args>");
-            p.Message("%HSets your current transform to the transform with that name.");
-            p.Message("%T/Help Transform [name]");
-            p.Message("%HOutputs the help for the transform with that name.");
+            p.Message("&T/Transform [name] <transform args>");
+            p.Message("&HSets your current transform to the transform with that name.");
+            p.Message("&T/Help Transform [name]");
+            p.Message("&HOutputs the help for the transform with that name.");
             List(p);
         }
         

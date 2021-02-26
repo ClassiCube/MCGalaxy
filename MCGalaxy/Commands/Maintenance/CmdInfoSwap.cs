@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Maintenance {
             if (src == null || dst == null) return;
 
             Group srcGroup = Group.GroupIn(src), dstGroup = Group.GroupIn(dst);
-            if (!CheckRank(p, data, src, srcGroup.Permission, "%T/InfoSwap%S", false)) return;
-            if (!CheckRank(p, data, dst, dstGroup.Permission, "%T/InfoSwap%S", false)) return;
+            if (!CheckRank(p, data, src, srcGroup.Permission, "&T/InfoSwap%S", false)) return;
+            if (!CheckRank(p, data, dst, dstGroup.Permission, "&T/InfoSwap%S", false)) return;
                         
             SwapStats(src, dst);
             SwapGroups(src, dst, srcGroup, dstGroup);
@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Maintenance {
         static string GetName(Player p, string name) {
             if (!Formatter.ValidName(p, name, "player")) return null;
             if (PlayerInfo.FindExact(name) != null) {
-                p.Message("\"{0}\" must be offline to use %T/InfoSwap", name); return null;
+                p.Message("\"{0}\" must be offline to use &T/InfoSwap", name); return null;
             }
             
             string match = PlayerInfo.FindName(name);
@@ -78,9 +78,9 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/InfoSwap [source] [other]");
-            p.Message("%HSwaps all the player's info from [source] to [other].");
-            p.Message("%HNote that both players must be offline for this to work.");
+            p.Message("&T/InfoSwap [source] [other]");
+            p.Message("&HSwaps all the player's info from [source] to [other].");
+            p.Message("&HNote that both players must be offline for this to work.");
         }
     }
 }

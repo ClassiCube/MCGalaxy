@@ -103,9 +103,9 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = GetBD(p, global);
             def.SetBlock(target);
             
-            p.Message("Use %T{0} abort %Sat anytime to abort the creation process.", cmd);
-            p.Message("  Use %T{0} revert %Sto go back a step", cmd);
-            p.Message("  Use %T{0} [input] %Sto provide input", cmd);
+            p.Message("Use &T{0} abort %Sat anytime to abort the creation process.", cmd);
+            p.Message("  Use &T{0} revert %Sto go back a step", cmd);
+            p.Message("  Use &T{0} [input] %Sto provide input", cmd);
             p.Message("&f----------------------------------------------------------");
             
             SetStep(p, global, 2);
@@ -282,7 +282,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static string FormatBlock(BlockDefinition def) {
-            return "Custom block %T" + def.RawID + " %Shas name %T" + def.Name;
+            return "Custom block &T" + def.RawID + " %Shas name &T" + def.Name;
         }
         
         static void DoRemove(Player p, Level lvl, BlockID block, 
@@ -600,11 +600,11 @@ namespace MCGalaxy.Commands.CPE {
             if (!CommandParser.GetBlock(p, value, out block)) return Block.Invalid;
             
             if (block >= Block.Extended) {
-                p.Message("%WCustom blocks cannot be used as fallback blocks.");
+                p.Message("&WCustom blocks cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
             if (Block.IsPhysicsType(block)) {
-                p.Message("%WPhysics block cannot be used as fallback blocks.");
+                p.Message("&WPhysics block cannot be used as fallback blocks.");
                 return Block.Invalid;
             }
             return (BlockRaw)block;
@@ -631,14 +631,14 @@ namespace MCGalaxy.Commands.CPE {
         
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            p.Message("%WThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            p.Message("Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
+            p.Message("&WThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
+            p.Message("Type &T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
-            p.Message("%WThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            p.Message("Type %T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
+            p.Message("&WThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
+            p.Message("Type &T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static bool EditByte(Player p, string value, string propName, ref byte target, string help) {
@@ -822,32 +822,32 @@ namespace MCGalaxy.Commands.CPE {
         
         
         internal static void Help(Player p, string cmd) {
-            p.Message("%H{0} help page 1:", cmd.Substring(1));
-            p.Message("%T{0} add [id] %H- begins creating a new custom block", cmd);
-            p.Message("%T{0} copy [id] <new id> %H- clones an existing custom block", cmd);
-            p.Message("%T{0} edit [id] [property] [value] %H- edits that custom block", cmd);
-            p.Message("%T{0} remove [id] %H- removes that custom block", cmd);
-            p.Message("%HTo see the list of editable properties, type %T{0} edit", cmd);
-            p.Message("%HTo read help page 2, type %T/help {0} 2", cmd.Substring(1));
+            p.Message("&H{0} help page 1:", cmd.Substring(1));
+            p.Message("&T{0} add [id] &H- begins creating a new custom block", cmd);
+            p.Message("&T{0} copy [id] <new id> &H- clones an existing custom block", cmd);
+            p.Message("&T{0} edit [id] [property] [value] &H- edits that custom block", cmd);
+            p.Message("&T{0} remove [id] &H- removes that custom block", cmd);
+            p.Message("&HTo see the list of editable properties, type &T{0} edit", cmd);
+            p.Message("&HTo read help page 2, type &T/help {0} 2", cmd.Substring(1));
         }
         
         internal static void Help(Player p, string cmd, string args) {
             if (args.CaselessEq("2")) { 
-                p.Message("%H{0} help page 2:", cmd.Substring(1));
-                p.Message("%T{0} copyall [level] %H- clones all custom blocks from [level]", cmd);                
-                p.Message("%T{0} list <offset> %H- lists all custom blocks", cmd);
-                p.Message("%T{0} info [id] %H- shows info about that custom block", cmd);
-                p.Message("%HYou may edit, remove or see info for multiple IDs at once.");
-                p.Message("%HUse %T/help {0} 3 %Hfor multi explanation.", cmd.Substring(1));
+                p.Message("&H{0} help page 2:", cmd.Substring(1));
+                p.Message("&T{0} copyall [level] &H- clones all custom blocks from [level]", cmd);                
+                p.Message("&T{0} list <offset> &H- lists all custom blocks", cmd);
+                p.Message("&T{0} info [id] &H- shows info about that custom block", cmd);
+                p.Message("&HYou may edit, remove or see info for multiple IDs at once.");
+                p.Message("&HUse &T/help {0} 3 &Hfor multi explanation.", cmd.Substring(1));
                 return;
             }
             else if (args.CaselessEq("3")) {
-                p.Message("%H{0} help page 3:", cmd.Substring(1));
-                p.Message("%HTo work with multiple block IDs at once,");
-                p.Message("%Huse a start and end range seperated by a dash.");
-                p.Message("%HFor example, %T{0} remove 21-24", cmd);
-                p.Message("%Hwould remove blocks with ID 21, 22, 23, and 24.", cmd);
-                p.Message("%HMulti editing only works with %T{0} edit, remove, or info", cmd);
+                p.Message("&H{0} help page 3:", cmd.Substring(1));
+                p.Message("&HTo work with multiple block IDs at once,");
+                p.Message("&Huse a start and end range seperated by a dash.");
+                p.Message("&HFor example, &T{0} remove 21-24", cmd);
+                p.Message("&Hwould remove blocks with ID 21, 22, 23, and 24.", cmd);
+                p.Message("&HMulti editing only works with &T{0} edit, remove, or info", cmd);
                 return;
             }
             if (!args.CaselessStarts("edit ")) { Help(p, cmd); return; }

@@ -68,9 +68,9 @@ namespace MCGalaxy.Generator {
             return Generators.Join(g => g.Type == type ? g.Theme : null); 
         }
         public static void PrintThemes(Player p) {
-            p.Message("%HSimple themes: &f"   + FilterThemes(GenType.Simple));
-            p.Message("%HfCraft themes: &f"   + FilterThemes(GenType.fCraft));
-            p.Message("%HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
+            p.Message("&HSimple themes: &f"   + FilterThemes(GenType.Simple));
+            p.Message("&HfCraft themes: &f"   + FilterThemes(GenType.fCraft));
+            p.Message("&HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
         
         /// <summary> Adds a new map generator to the list of generators. </summary>
@@ -84,7 +84,7 @@ namespace MCGalaxy.Generator {
             fCraftMapGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
             Register("Heightmap", GenType.Advanced, HeightmapGen.Generate,
-                     "%HSeed specifies the URL of the heightmap image");
+                     "&HSeed specifies the URL of the heightmap image");
         }        
         
         
@@ -95,7 +95,7 @@ namespace MCGalaxy.Generator {
             if (!Formatter.ValidMapName(p, name)) return null;
             
             if (LevelInfo.MapExists(name)) {
-                p.Message("%WLevel \"{0}\" already exists", name); return null;
+                p.Message("&WLevel \"{0}\" already exists", name); return null;
             }
 
             if (Interlocked.CompareExchange(ref p.GeneratingMap, 1, 0) == 1) {
@@ -136,7 +136,7 @@ namespace MCGalaxy.Generator {
             int limit = p.group.GenVolume;
             if ((long)x * y * z <= limit) return true;
             
-            string text = "%WYou cannot create a map with over ";
+            string text = "&WYou cannot create a map with over ";
             if (limit > 1000 * 1000) text += (limit / (1000 * 1000)) + " million blocks";
             else if (limit > 1000) text += (limit / 1000) + " thousand blocks";
             else text += limit + " blocks";

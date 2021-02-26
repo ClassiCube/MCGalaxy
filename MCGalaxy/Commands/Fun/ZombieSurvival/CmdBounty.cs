@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Bounty [name] [amount]");
-            p.Message("%HSets a bounty on the given player.");
+            p.Message("&T/Bounty [name] [amount]");
+            p.Message("&HSets a bounty on the given player.");
         }
     }
 }

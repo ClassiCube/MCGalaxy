@@ -26,9 +26,9 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block1] [block2].. [new]",
-            "%HDraws by replacing existing blocks that are in the given [blocks] with [new]",
-            "%H  If only [block] is given, replaces with your held block.",
+            "&TArguments: [block1] [block2].. [new]",
+            "&HDraws by replacing existing blocks that are in the given [blocks] with [new]",
+            "&H  If only [block] is given, replaces with your held block.",
         };
         
         public override Brush Construct(BrushArgs args) { return ProcessReplace(args, false); }
@@ -80,9 +80,9 @@ namespace MCGalaxy.Drawing.Brushes {
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "%TArguments: [block1] [block2].. [new]",
-            "%HDraws by replacing existing blocks that not are in the given [blocks] with [new]",
-            "%H  If only [block] is given, replaces with your held block.",
+            "&TArguments: [block1] [block2].. [new]",
+            "&HDraws by replacing existing blocks that not are in the given [blocks] with [new]",
+            "&H  If only [block] is given, replaces with your held block.",
         };
         
         public override Brush Construct(BrushArgs args) { return ReplaceBrushFactory.ProcessReplace(args, true); }

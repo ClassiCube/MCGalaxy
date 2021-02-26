@@ -48,9 +48,9 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Hold [block] <locked>");
-            p.Message("%HMakes you hold the given block in your hand");
-            p.Message("%H  <locked> optionally prevents you from changing it");
+            p.Message("&T/Hold [block] <locked>");
+            p.Message("&HMakes you hold the given block in your hand");
+            p.Message("&H  <locked> optionally prevents you from changing it");
         }
     }
 }

@@ -50,9 +50,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Title [player] [title]");
-            p.Message("%HSets the title of [player]");
-            p.Message("%H  If [title] is not given, removes [player]'s title.");
+            p.Message("&T/Title [player] [title]");
+            p.Message("&HSets the title of [player]");
+            p.Message("&H  If [title] is not given, removes [player]'s title.");
         }
     }
 }

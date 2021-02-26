@@ -85,8 +85,8 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Drill [distance]");
-            p.Message("%HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
+            p.Message("&T/Drill [distance]");
+            p.Message("&HDrills a hole, destroying all similar blocks in a 3x3 rectangle ahead of you.");
         }
     }
 }

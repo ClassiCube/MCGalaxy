@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.CPE {
             float max = ModelInfo.MaxScale(e, model);
             // restrict player model scale, but bots can have unlimited model scale
             if (ModelInfo.GetRawScale(model) > max) {
-                dst.Message("%WScale must be {0} or less for {1} model",
+                dst.Message("&WScale must be {0} or less for {1} model",
                             max, ModelInfo.GetRawModel(model));
                 return null;
             }
@@ -92,20 +92,20 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Model [name] [model] %H- Sets the model of that player.");
-            p.Message("%T/Model bot [name] [model] %H- Sets the model of that bot.");
-            p.Message("%HUse %T/Help Model models %Hfor a list of models.");
-            p.Message("%HUse %T/Help Model scale %Hfor how to scale a model.");
+            p.Message("&T/Model [name] [model] &H- Sets the model of that player.");
+            p.Message("&T/Model bot [name] [model] &H- Sets the model of that bot.");
+            p.Message("&HUse &T/Help Model models &Hfor a list of models.");
+            p.Message("&HUse &T/Help Model scale &Hfor how to scale a model.");
         }
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("models")) {
-                p.Message("%HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
-                p.Message("%HTo set a block model, use a block ID for the model name.");
-                p.Message("%HUse %T/Help Model scale %Hfor how to scale a model.");
+                p.Message("&HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
+                p.Message("&HTo set a block model, use a block ID for the model name.");
+                p.Message("&HUse &T/Help Model scale &Hfor how to scale a model.");
             } else if (message.CaselessEq("scale")) {
-                p.Message("%HFor a scaled model, put \"|[scale]\" after the model name.");
-                p.Message("%H  e.g. pig|0.5, chibi|3");
+                p.Message("&HFor a scaled model, put \"|[scale]\" after the model name.");
+                p.Message("&H  e.g. pig|0.5, chibi|3");
             } else {
                 Help(p);
             }

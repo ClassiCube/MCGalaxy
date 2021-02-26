@@ -55,8 +55,8 @@ namespace MCGalaxy.Commands.Eco {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Awards <player> %H- Lists awards");
-            p.Message("%HAppears &agreen %Hif player has an award, &cred %Hif not");
+            p.Message("&T/Awards <player> &H- Lists awards");
+            p.Message("&HAppears &agreen &Hif player has an award, &cred &Hif not");
         }
     }
 }

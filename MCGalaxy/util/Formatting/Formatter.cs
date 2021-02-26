@@ -33,21 +33,21 @@ namespace MCGalaxy {
             if (cmd.ExtraPerms == null) extraPerms.Clear();
             if (extraPerms.Count == 0) return;
             
-            p.Message("%TExtra permissions:");
+            p.Message("&TExtra permissions:");
             foreach (CommandExtraPerms extra in extraPerms) {
                 p.Message("{0}) {1} {2}", extra.Num, extra.Describe(), extra.Desc);
             }
         }
         
         static void PrintAliases(Player p, Command cmd) {
-            StringBuilder dst = new StringBuilder("Shortcuts: %T");
+            StringBuilder dst = new StringBuilder("Shortcuts: &T");
             if (!String.IsNullOrEmpty(cmd.shortcut)) {
                 dst.Append('/').Append(cmd.shortcut).Append(", ");
             }
             FindAliases(Alias.coreAliases, cmd, dst);
             FindAliases(Alias.aliases, cmd, dst);
             
-            if (dst.Length == "Shortcuts: %T".Length) return;
+            if (dst.Length == "Shortcuts: &T".Length) return;
             p.Message(dst.ToString(0, dst.Length - 2));
         }
         

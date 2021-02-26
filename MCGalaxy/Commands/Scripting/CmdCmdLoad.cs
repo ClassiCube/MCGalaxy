@@ -37,14 +37,14 @@ namespace MCGalaxy.Commands.Scripting {
             }
             
             string error = IScripting.Load(path);
-            if (error != null) { p.Message("%W" + error); return; }
+            if (error != null) { p.Message("&W" + error); return; }
             p.Message("Command was successfully loaded.");
         }
 
         public override void Help(Player p) {
-            p.Message("%T/CmdLoad [command name]");
-            p.Message("%HLoads a compiled command into the server for use.");
-            p.Message("%H  Loads both C# and Visual Basic compiled commands.");
+            p.Message("&T/CmdLoad [command name]");
+            p.Message("&HLoads a compiled command into the server for use.");
+            p.Message("&H  Loads both C# and Visual Basic compiled commands.");
         }
     }
 }

@@ -155,7 +155,7 @@ namespace MCGalaxy.Commands.Building {
                       cState.OriginX == cState.X ? "Min" : "Max",
                       cState.OriginY == cState.Y ? "Min" : "Max",
                       cState.OriginZ == cState.Z ? "Min" : "Max");
-            if (!cState.PasteAir) p.Message("To also copy air blocks, use %T/Copy Air");
+            if (!cState.PasteAir) p.Message("To also copy air blocks, use &T/Copy Air");
             
             if (cArgs.offsetIndex != -1) {
                 p.Message("Place a block to determine where to paste from");
@@ -223,13 +223,13 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Copy %H- Copies the blocks in an area.");
-            p.Message("%T/Copy save [name] %H- Saves what you have copied.");
-            p.Message("%T/Copy load [name] %H- Loads what you have saved.");
-            p.Message("%T/Copy delete [name] %H- Deletes the specified copy.");
-            p.Message("%T/Copy list %H- Lists all saved copies you have");
-            p.Message("%T/Copy cut %H- Copies the blocks in an area, then removes them.");
-            p.Message("%T/Copy air %H- Copies the blocks in an area, including air.");
+            p.Message("&T/Copy &H- Copies the blocks in an area.");
+            p.Message("&T/Copy save [name] &H- Saves what you have copied.");
+            p.Message("&T/Copy load [name] &H- Loads what you have saved.");
+            p.Message("&T/Copy delete [name] &H- Deletes the specified copy.");
+            p.Message("&T/Copy list &H- Lists all saved copies you have");
+            p.Message("&T/Copy cut &H- Copies the blocks in an area, then removes them.");
+            p.Message("&T/Copy air &H- Copies the blocks in an area, including air.");
             p.Message("/Copy @ - @ toggle for all the above, gives you a third click after copying that determines where to paste from");
         }
     }

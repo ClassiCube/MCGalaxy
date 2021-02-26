@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Alive");
-            p.Message("%HShows who is alive/a human");
+            p.Message("&T/Alive");
+            p.Message("&HShows who is alive/a human");
         }
     }
 }

@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands {
                 result = false; return true;
             }
             
-            p.Message("%W\"{0}\" is not a valid boolean.", input);
-            p.Message("%WValue must be either 1/yes/on or 0/no/off");
+            p.Message("&W\"{0}\" is not a valid boolean.", input);
+            p.Message("&WValue must be either 1/yes/on or 0/no/off");
             return false;
         }
         
@@ -65,11 +65,11 @@ namespace MCGalaxy.Commands {
                 DateTime.UtcNow.Add(span).AddYears(1);
                 return true;
             } catch (OverflowException) {
-                p.Message("%WTimespan given is too big");
+                p.Message("&WTimespan given is too big");
             } catch (ArgumentOutOfRangeException) {
-                p.Message("%WTimespan given is too big");
+                p.Message("&WTimespan given is too big");
             } catch (FormatException ex) {
-                p.Message("%W{0} is not a valid quantifier.", ex.Message);
+                p.Message("&W{0} is not a valid quantifier.", ex.Message);
                 p.Message(TimespanHelp, action);
             }
             return false;
@@ -82,11 +82,11 @@ namespace MCGalaxy.Commands {
             
             // Try to provide more helpful range messages
             if (max == int.MaxValue) {
-                p.Message("%W{0} must be {1} or greater", argName, min);
+                p.Message("&W{0} must be {1} or greater", argName, min);
             } else if (min == int.MinValue) {
-                p.Message("%W{0} must be {1} or less", argName, max);
+                p.Message("&W{0} must be {1} or less", argName, max);
             } else {
-                p.Message("%W{0} must be between {1} and {2}", argName, min, max);
+                p.Message("&W{0} must be between {1} and {2}", argName, min, max);
             }
             return false;
         }
@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands {
                                   int min = int.MinValue, int max = int.MaxValue) {
             int value;
             if (!int.TryParse(input, out value)) {
-                p.Message("%W\"{0}\" is not a valid integer.", input); return false;
+                p.Message("&W\"{0}\" is not a valid integer.", input); return false;
             }
             
             if (!CheckRange(p, value, argName, min, max)) return false;
@@ -108,11 +108,11 @@ namespace MCGalaxy.Commands {
                                    float min = float.NegativeInfinity, float max = float.MaxValue) {
             float value;
             if (!Utils.TryParseSingle(input, out value)) {
-                p.Message("%W\"{0}\" is not a valid number.", input); return false;
+                p.Message("&W\"{0}\" is not a valid number.", input); return false;
             }
             
             if (value < min || value > max) {
-                p.Message("%W{0} must be between {1} and {2}", argName, 
+                p.Message("&W{0} must be between {1} and {2}", argName, 
                                min.ToString("F4"), max.ToString("F4"));
                 return false;
             }
@@ -143,7 +143,7 @@ namespace MCGalaxy.Commands {
         public static bool GetHex(Player p, string input, ref ColorDesc col) {
             ColorDesc tmp;
             if (!Colors.TryParseHex(input, out tmp)) {
-                p.Message("%W\"#{0}\" is not a valid HEX color.", input); return false;
+                p.Message("&W\"#{0}\" is not a valid HEX color.", input); return false;
             }
             col = tmp; return true;
         }
@@ -171,24 +171,30 @@ namespace MCGalaxy.Commands {
         }
         
         
+        static bool IsSkipBlock(string input, out BlockID block) {
+            // Skip/None block for draw operations
+            if (input.CaselessEq("skip") || input.CaselessEq("none")) {
+                block = Block.Invalid; return true;
+            } else {
+                block = Block.Air; return false;
+            }
+        }
+        
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         public static bool GetBlock(Player p, string input, out BlockID block, bool allowSkip = false) {
-            block = Block.Air;
-            // Skip/None block for draw operations
-            if (allowSkip && (input.CaselessEq("skip") || input.CaselessEq("none"))) {
-                block = Block.Invalid; return true;
-            }
+            if (allowSkip && IsSkipBlock(input, out block)) return true;
             
             block = Block.Parse(p, input);
-            if (block == Block.Invalid) p.Message("%WThere is no block \"{0}\".", input);
+            if (block == Block.Invalid) p.Message("&WThere is no block \"{0}\".", input);
             return block != Block.Invalid;
         }
 
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
         public static bool GetBlockIfAllowed(Player p, string input, out BlockID block, bool allowSkip = false) {
-            return GetBlock(p, input, out block, allowSkip) 
-                && IsBlockAllowed(p, "draw with", block);
+            if (allowSkip && IsSkipBlock(input, out block)) return true;
+            
+            return GetBlock(p, input, out block) && IsBlockAllowed(p, "draw with", block);
         }
         
         /// <summary> Returns whether the player is allowed to place/modify/delete the given block. </summary>

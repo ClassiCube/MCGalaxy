@@ -48,10 +48,10 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/SetSpawn");
-            p.Message("%HSets the spawn location of the map to your current location.");
-            p.Message("%T/SetSpawn [player]");
-            p.Message("%HSets the spawn location of that player");
+            p.Message("&T/SetSpawn");
+            p.Message("&HSets the spawn location of the map to your current location.");
+            p.Message("&T/SetSpawn [player]");
+            p.Message("&HSets the spawn location of that player");
         }
     }
 }

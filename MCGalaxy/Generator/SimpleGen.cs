@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace MCGalaxy.Generator {
     public static class SimpleGen {
         delegate byte NextBlock();
-        const string defHelp = "%HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
+        const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         
         public static void RegisterGenerators() {
             const GenType type = GenType.Simple;
@@ -29,9 +29,9 @@ namespace MCGalaxy.Generator {
             MapGen.Register("Mountains", type, GenMountains, defHelp);
             MapGen.Register("Forest",    type, GenForest,    defHelp);
             MapGen.Register("Ocean",     type, GenOcean,     defHelp);
-            MapGen.Register("Flat",  type, GenFlat,  "%HSeed specifies grass height (default half of level height)");
-            MapGen.Register("Pixel", type, GenPixel, "%HSeed does nothing");
-            MapGen.Register("Empty", type, GenEmpty, "%HSeed does nothing");
+            MapGen.Register("Flat",  type, GenFlat,  "&HSeed specifies grass height (default half of level height)");
+            MapGen.Register("Pixel", type, GenPixel, "&HSeed does nothing");
+            MapGen.Register("Empty", type, GenEmpty, "&HSeed does nothing");
             MapGen.Register("Desert",  type, GenDesert,  defHelp);
             MapGen.Register("Space",   type, GenSpace,   defHelp);
             MapGen.Register("Rainbow", type, GenRainbow, defHelp);

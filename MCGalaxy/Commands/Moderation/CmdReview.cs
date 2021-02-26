@@ -159,8 +159,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Review enter/view/leave/next/clear");
-            p.Message("%HLets you enter, view, leave, or clear the review queue, or " +
+            p.Message("&T/Review enter/view/leave/next/clear");
+            p.Message("&HLets you enter, view, leave, or clear the review queue, or " +
                                "teleport you to the next player in the review queue.");
         }
     }

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseFly(p)) {
-                p.Message("You cannot use %T/Fly %Son this map.");
+                p.Message("You cannot use &T/Fly %Son this map.");
                 p.isFlying = false; return;
             }
             
@@ -99,11 +99,11 @@ namespace MCGalaxy.Commands.Misc {
         
         public override void Help(Player p) {
             string name = Group.GetColoredName(LevelPermission.Operator);
-            p.Message("%T/Fly");
-            p.Message("%HCreates a glass platform underneath you that moves with you.");
-            p.Message("%H  May not work if you have high latency.");
-            p.Message("%H  Cannot be used on maps which have -hax in their motd. " +
-                           "(unless you are {0}%H+ and the motd has +ophax)", name);
+            p.Message("&T/Fly");
+            p.Message("&HCreates a glass platform underneath you that moves with you.");
+            p.Message("&H  May not work if you have high latency.");
+            p.Message("&H  Cannot be used on maps which have -hax in their motd. " +
+                           "(unless you are {0}&H+ and the motd has +ophax)", name);
         }
     }
 }

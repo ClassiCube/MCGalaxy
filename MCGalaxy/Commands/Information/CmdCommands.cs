@@ -96,7 +96,7 @@ namespace MCGalaxy.Commands.Info {
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
-            p.Message("Type %T/Help <command> %Sfor more help on a command.");
+            p.Message("Type &T/Help <command> %Sfor more help on a command.");
         }
         
         static void PrintAllCommands(Player p, string sort, string modifier) {
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Info {
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);            
-            p.Message("Type %T/Help <command> %Sfor more help on a command.");
+            p.Message("Type &T/Help <command> %Sfor more help on a command.");
         }
         
         // common shortcuts people tend to use 
@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.Info {
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
             
-            p.Message("Type %T/Help <command> %Sfor more help on a command.");
+            p.Message("Type &T/Help <command> %Sfor more help on a command.");
             return true;
         }
         
@@ -166,14 +166,14 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Commands [category] <sort>");
-            p.Message("%HIf no category is given, outputs all commands you can use.");
-            p.Message("  %H\"shortcuts\" category outputs all command shortcuts.");
-            p.Message("  %H\"all\" category outputs all commands.");
-            p.Message("  %HIf category is a rank name, outputs all commands that rank can use.");
-            p.Message("%HOther command categories:");
-            p.Message("  %HBuilding Chat Economy Games Info Moderation Other World");
-            p.Message("%HSort is optional, and can be either \"name\" or \"rank\"");
+            p.Message("&T/Commands [category] <sort>");
+            p.Message("&HIf no category is given, outputs all commands you can use.");
+            p.Message("  &H\"shortcuts\" category outputs all command shortcuts.");
+            p.Message("  &H\"all\" category outputs all commands.");
+            p.Message("  &HIf category is a rank name, outputs all commands that rank can use.");
+            p.Message("&HOther command categories:");
+            p.Message("  &HBuilding Chat Economy Games Info Moderation Other World");
+            p.Message("&HSort is optional, and can be either \"name\" or \"rank\"");
         }
     }
 }

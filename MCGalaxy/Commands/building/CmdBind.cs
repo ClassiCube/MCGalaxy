@@ -60,10 +60,10 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Bind [block] [replacement block]");
-            p.Message("%HCauses [replacement] to be placed, whenever you place [block].");
-            p.Message("%T/Bind [block] %H- Removes binding for [block].");
-            p.Message("%T/Bind clear %H- Clears all binds.");
+            p.Message("&T/Bind [block] [replacement block]");
+            p.Message("&HCauses [replacement] to be placed, whenever you place [block].");
+            p.Message("&T/Bind [block] &H- Removes binding for [block].");
+            p.Message("&T/Bind clear &H- Clears all binds.");
         }
     }
 }

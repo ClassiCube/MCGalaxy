@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             if (parts.Length > 1 && !CommandParser.GetUShort(p, parts[1], "Interval", ref interval, 1)) return null;
 
             if (interval >= distance) {
-                p.Message("%WThe Interval cannot be greater than the distance."); return null;
+                p.Message("&WThe Interval cannot be greater than the distance."); return null;
             }
 
             SPlaceDrawOp op = new SPlaceDrawOp();
@@ -59,9 +59,9 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/SPlace [distance] <interval>");
-            p.Message("%HMeasures a set [distance] and places your held block at each end.");
-            p.Message("%HOptionally place a block at set <interval> between them.");
+            p.Message("&T/SPlace [distance] <interval>");
+            p.Message("&HMeasures a set [distance] and places your held block at each end.");
+            p.Message("&HOptionally place a block at set <interval> between them.");
         }
     }
 }

@@ -29,12 +29,12 @@ namespace MCGalaxy.Commands.Misc {
         }
 
         public override void Help(Player p) {
-            p.Message("%HWaypoints are warps only usable by you.");
-            p.Message("%T/Waypoint create [name] %H- Create a new waypoint");
-            p.Message("%T/Waypoint update [name] %H- Update a waypoint");
-            p.Message("%T/Waypoint remove [name] %H- Remove a waypoint");
-            p.Message("%T/Waypoint list %H- Shows a list of waypoints");
-            p.Message("%T/Waypoint [name] %H- Goto a waypoint");
+            p.Message("&HWaypoints are warps only usable by you.");
+            p.Message("&T/Waypoint create [name] &H- Create a new waypoint");
+            p.Message("&T/Waypoint update [name] &H- Update a waypoint");
+            p.Message("&T/Waypoint remove [name] &H- Remove a waypoint");
+            p.Message("&T/Waypoint list &H- Shows a list of waypoints");
+            p.Message("&T/Waypoint [name] &H- Goto a waypoint");
         }
     }
 }

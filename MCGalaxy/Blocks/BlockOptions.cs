@@ -35,29 +35,29 @@ namespace MCGalaxy.Blocks {
         public delegate void OptionSetter(Player p, BlockProps[] scope, BlockID b, string value);
 
         public static List<BlockOption> Options = new List<BlockOption>() {
-            new BlockOption("Portal",       SetPortal, "%HToggles whether the block is a %T/Portal"),
-            new BlockOption("MessageBlock", SetMB,     "%HToggles whether the block is a %T/MessageBlock"),
-            new BlockOption("Rails",        SetRails,  "%HToggles whether %Strain %Hblocks can run over this block"),
-            new BlockOption("WaterKills",   SetWater,  "%HToggles whether flooding water kills this block"),
-            new BlockOption("LavaKills",    SetLava,   "%HToggles whether flooding lava kills this block"),
-            new BlockOption("Door",         SetDoor,   "%HToggles whether this block is a Door block"),
-            new BlockOption("tDoor",        SetTDoor,  "%HToggles whether this block is a tDoor block"),
-            new BlockOption("Killer",       SetKiller, "%HToggles whether colliding with this block kills player"),
-            new BlockOption("DeathMessage", SetDeathMsg, "%HSets or removes the death message for this block " +
-                            "(Note: %S@p %His a placeholder for name of player who dies"),
-            new BlockOption("AnimalAI",   SetAI,     "%HSets the flying or swimming animal AI for this block. " +
+            new BlockOption("Portal",       SetPortal, "&HToggles whether the block is a &T/Portal"),
+            new BlockOption("MessageBlock", SetMB,     "&HToggles whether the block is a &T/MessageBlock"),
+            new BlockOption("Rails",        SetRails,  "&HToggles whether %Strain &Hblocks can run over this block"),
+            new BlockOption("WaterKills",   SetWater,  "&HToggles whether flooding water kills this block"),
+            new BlockOption("LavaKills",    SetLava,   "&HToggles whether flooding lava kills this block"),
+            new BlockOption("Door",         SetDoor,   "&HToggles whether this block is a Door block"),
+            new BlockOption("tDoor",        SetTDoor,  "&HToggles whether this block is a tDoor block"),
+            new BlockOption("Killer",       SetKiller, "&HToggles whether colliding with this block kills player"),
+            new BlockOption("DeathMessage", SetDeathMsg, "&HSets or removes the death message for this block " +
+                            "(Note: %S@p &His a placeholder for name of player who dies"),
+            new BlockOption("AnimalAI",   SetAI,     "&HSets the flying or swimming animal AI for this block. " +
                             "Types: &f" + Enum.GetNames(typeof(AnimalAI)).Join()),
-            new BlockOption("StackBlock", SetStackId,"%HSets the block this block is changed into, when placed on top " +
+            new BlockOption("StackBlock", SetStackId,"&HSets the block this block is changed into, when placed on top " +
                             "of itself (e.g. placing a slab on top of another slab turns into a double slab)"),
-            new BlockOption("OPBlock",    SetOPBlock,"%HMarks the block as being on OP block. OP blocks can't be " +
+            new BlockOption("OPBlock",    SetOPBlock,"&HMarks the block as being on OP block. OP blocks can't be " +
                             "blown up by explosions, and can't be replaced in games when build type is ModifyOnly."),
-            new BlockOption("Drownable",  SetDrown,  "%HSets whether this block can drown players " +
-                            "(Note %T/Map death %Hmust be enabled for players to drown)"),
-            new BlockOption("Grass",      SetGrass,  "%HSets the block that this block is changed into, " +
+            new BlockOption("Drownable",  SetDrown,  "&HSets whether this block can drown players " +
+                            "(Note &T/Map death &Hmust be enabled for players to drown)"),
+            new BlockOption("Grass",      SetGrass,  "&HSets the block that this block is changed into, " +
                             "when exposed to sunlight (leave block blank to remove)"),
-            new BlockOption("Dirt",       SetDirt,   "%HSets the block that this block is changed into, " +
+            new BlockOption("Dirt",       SetDirt,   "&HSets the block that this block is changed into, " +
                             "when no longer exposed to sunlight (leave block blank to remove)"),
-            new BlockOption("oDoor",      SetODoor,  "%HSets the block that this block is changed into, " +
+            new BlockOption("oDoor",      SetODoor,  "&HSets the block that this block is changed into, " +
                             "when activated by a neighbouring door"),
         };
         
@@ -145,7 +145,7 @@ namespace MCGalaxy.Blocks {
             // If blocks have multiple behaviour, this would confuse users because only 1 behaviour works
             if (!on && (behaviour = CheckBehaviour(scope, block)) != null) {
                 string name = Name(scope, p, block);
-                p.Message("%WBlock {0} cannot be made {1}, is it already a {2}", name, type, behaviour);
+                p.Message("&WBlock {0} cannot be made {1}, is it already a {2}", name, type, behaviour);
                 return;
             }         
             Toggle(p, scope, block, type, ref on);

@@ -37,8 +37,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) { 
-            p.Message("%T/MoveAll [level]");
-            p.Message("%HMoves all players to that level."); 
+            p.Message("&T/MoveAll [level]");
+            p.Message("&HMoves all players to that level."); 
         }
     }
 }

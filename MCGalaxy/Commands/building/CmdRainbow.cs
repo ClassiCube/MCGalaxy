@@ -34,9 +34,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Rainbow <replace air>");
-            p.Message("%HReplaces blocks with a rainbow between two points.");
-            p.Message("%H<replace air> if given, also replaces over air.");
+            p.Message("&T/Rainbow <replace air>");
+            p.Message("&HReplaces blocks with a rainbow between two points.");
+            p.Message("&H<replace air> if given, also replaces over air.");
         }
     }
 }

@@ -44,8 +44,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/RenameLvl [level] [new name]");
-            p.Message("%HRenames [level] to [new name]");
+            p.Message("&T/RenameLvl [level] [new name]");
+            p.Message("&HRenames [level] to [new name]");
         }
     }
 }

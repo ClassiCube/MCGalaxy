@@ -47,9 +47,9 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Hug [player] <type>");
-            p.Message("%HValid types are: &floving, friendly, creepy and deadly.");
-            p.Message("%HSpecifying no type or a non-existent type results in a normal hug.");
+            p.Message("&T/Hug [player] <type>");
+            p.Message("&HValid types are: &floving, friendly, creepy and deadly.");
+            p.Message("&HSpecifying no type or a non-existent type results in a normal hug.");
         }
     }
 }

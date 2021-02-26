@@ -84,11 +84,11 @@ namespace MCGalaxy.Commands.CPE {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/ModelScale [name] X/Y/Z [scale] %H- Sets scale for a player");
-            p.Message("%T/ModelScale bot [name] X/Y/Z [scale] %H- Sets scale for a bot");
-            p.Message("%HSets the scale of the given entity's model on one axis ");
-            p.Message("%H  e.g. %T/ModelScale -own Y 2 %Hmakes yourself twice as tall");
-            p.Message("%H  Use a [scale] of 0 to reset scale on that axis");
+            p.Message("&T/ModelScale [name] X/Y/Z [scale] &H- Sets scale for a player");
+            p.Message("&T/ModelScale bot [name] X/Y/Z [scale] &H- Sets scale for a bot");
+            p.Message("&HSets the scale of the given entity's model on one axis ");
+            p.Message("&H  e.g. &T/ModelScale -own Y 2 &Hmakes yourself twice as tall");
+            p.Message("&H  Use a [scale] of 0 to reset scale on that axis");
         }
     }
 }

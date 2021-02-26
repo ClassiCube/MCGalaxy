@@ -60,7 +60,7 @@ namespace MCGalaxy.Core {
 
             if (p.weapon != null && !level.Config.Guns) p.weapon.Disable();
             if (!level.Config.UseBlockDB) {
-                p.Message("BlockDB is disabled here, %Wyou will not be able to /undo or /redo");
+                p.Message("BlockDB is disabled here, &Wyou will not be able to /undo or /redo");
             }
         }
 		
@@ -69,7 +69,7 @@ namespace MCGalaxy.Core {
             p.SendCurrentEnv();
             
             if (p.isFlying && !Hacks.CanUseFly(p)) {
-                p.Message("You cannot use %T/Fly %Son this map.");
+                p.Message("You cannot use &T/Fly %Son this map.");
                 p.isFlying = false;
             }
         }

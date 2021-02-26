@@ -56,10 +56,10 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/TempBan [name] [timespan] <reason>");
-            p.Message("%HBans [name] for [timespan]. Default is 1 hour.");
-            p.Message("%H e.g. to tempban for 90 minutes, [timespan] would be %S1h30m");
-            p.Message("%HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&T/TempBan [name] [timespan] <reason>");
+            p.Message("&HBans [name] for [timespan]. Default is 1 hour.");
+            p.Message("&H e.g. to tempban for 90 minutes, [timespan] would be %S1h30m");
+            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
         }
     }
 }

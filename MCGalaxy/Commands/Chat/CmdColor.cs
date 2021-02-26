@@ -65,12 +65,12 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Color [player] [color]");
-            p.Message("%HSets the nick color of that player");
-            p.Message("%H  If [color] is not given, reverts to player's rank color.");
-            p.Message("%T/Color bot [bot] [color]");
-            p.Message("%HSets the name color of that bot.");
-            p.Message("%HTo see a list of all colors, use /Help colors.");
+            p.Message("&T/Color [player] [color]");
+            p.Message("&HSets the nick color of that player");
+            p.Message("&H  If [color] is not given, reverts to player's rank color.");
+            p.Message("&T/Color bot [bot] [color]");
+            p.Message("&HSets the name color of that bot.");
+            p.Message("&HTo see a list of all colors, use /Help colors.");
         }
     }
 }

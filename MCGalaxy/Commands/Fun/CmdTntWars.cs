@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Fun {
             string prop = args[1], value = args[2];
             if (prop.CaselessEq("spawn")) {
                 if (gameCfg.Mode == TWGameMode.FFA) {
-                    p.Message("%WCannot set spawns in Free For All mode"); return;
+                    p.Message("&WCannot set spawns in Free For All mode"); return;
                 }
                 
                 if (value.CaselessEq("red")) {
@@ -286,48 +286,48 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
-                p.Message("%T/Help TW team %H- Views help for team settings");
-                p.Message("%T/Help TW score %H- Views help for score settings");
-                p.Message("%T/Help TW zone %H- Views help for zone settings");
-                p.Message("%T/Help TW other %H- Views help for other settings");
-                p.Message("%T/TW set status %H- view status of settings");
+                p.Message("&T/Help TW team &H- Views help for team settings");
+                p.Message("&T/Help TW score &H- Views help for score settings");
+                p.Message("&T/Help TW zone &H- Views help for zone settings");
+                p.Message("&T/Help TW other &H- Views help for other settings");
+                p.Message("&T/TW set status &H- view status of settings");
             } else if (message.CaselessEq("team")) {
-                p.Message("%T/TW set spawn [red/blue] %H- set the spawns for red/blue team");
-                p.Message("%T/TW set balanceteams [on/off] %H- enable/disable balancing teams");
-                p.Message("%T/TW set teamkill [on/off] %H- enable/disable teamkills");
+                p.Message("&T/TW set spawn [red/blue] &H- set the spawns for red/blue team");
+                p.Message("&T/TW set balanceteams [on/off] &H- enable/disable balancing teams");
+                p.Message("&T/TW set teamkill [on/off] &H- enable/disable teamkills");
             } else if (message.CaselessEq("score")) {
-                p.Message("%T/TW set score required [points] %H- Sets score required to win the round");
-                p.Message("%T/TW set score streaks [on/off] %H- enable/disable kill streaks");
-                p.Message("%T/TW set score multi [points] %H- set the score bonus per multikill");
-                p.Message("%T/TW set score kill [points] %H- set the score per kill");
-                p.Message("%T/TW set score assist [points] %H- set the score per assist");
+                p.Message("&T/TW set score required [points] &H- Sets score required to win the round");
+                p.Message("&T/TW set score streaks [on/off] &H- enable/disable kill streaks");
+                p.Message("&T/TW set score multi [points] &H- set the score bonus per multikill");
+                p.Message("&T/TW set score kill [points] &H- set the score per kill");
+                p.Message("&T/TW set score assist [points] &H- set the score per assist");
             } else if (message.CaselessEq("zone")) {
                 // TODO: improve this massively
-                p.Message("%T/TW set zone notnt/nodestroy add %H- Creates a new zone");
-                p.Message("%T/TW set zone notnt/nodestroy delete %H- Deletes all zones affecting a block");
-                p.Message("%T/TW set zone notnt/nodestroy delete all %H- Deletes all zones");
-                p.Message("%T/TW set zone notnt/nodestroy check %H- Lists zones affecting a block");
+                p.Message("&T/TW set zone notnt/nodestroy add &H- Creates a new zone");
+                p.Message("&T/TW set zone notnt/nodestroy delete &H- Deletes all zones affecting a block");
+                p.Message("&T/TW set zone notnt/nodestroy delete all &H- Deletes all zones");
+                p.Message("&T/TW set zone notnt/nodestroy check &H- Lists zones affecting a block");
                 p.Message("(No TNT zones or zones where explosions do not delete blocks");
             } else if (message.CaselessEq("other")) {
-                p.Message("%T/TW set tnt [amount] %H- sets the amount of tnt per player at a time");
-                p.Message("%T/TW set graceperiod [on/off] %H- enable/disable the grace period");
-                p.Message("%T/TW set gracetime [amount] %H- set the grace period time (in seconds)");
-                p.Message("%T/TW set gamemode [tdm/ffa] %H- set team or free for all gamemode");
-                p.Message("%T/TW set difficulty [easy/normal/hard/extreme] %H- set difficulty");
+                p.Message("&T/TW set tnt [amount] &H- sets the amount of tnt per player at a time");
+                p.Message("&T/TW set graceperiod [on/off] &H- enable/disable the grace period");
+                p.Message("&T/TW set gracetime [amount] &H- set the grace period time (in seconds)");
+                p.Message("&T/TW set gamemode [tdm/ffa] &H- set team or free for all gamemode");
+                p.Message("&T/TW set difficulty [easy/normal/hard/extreme] &H- set difficulty");
             } else {
                 base.Help(p, message);
             }
         }
         
         public override void Help(Player p) {
-            p.Message("%T/TW start <map> %H- Starts TNT wars");
-            p.Message("%T/TW stop %H- Stops TNT wars");
-            p.Message("%T/TW end %H- Ends current round of TNT wars");
-            p.Message("%T/TW add/remove %H- Adds/removes current map from map list");
-            p.Message("%T/TW set [property] %H- Sets a property. See %T/Help TW set");
-            p.Message("%T/TW status %H- View your current score and health");
-            p.Message("%T/TW go %H- Moves you to the current TNT wars map");
-            p.Message("%T/TW scores %H- lists players with highest scores");
+            p.Message("&T/TW start <map> &H- Starts TNT wars");
+            p.Message("&T/TW stop &H- Stops TNT wars");
+            p.Message("&T/TW end &H- Ends current round of TNT wars");
+            p.Message("&T/TW add/remove &H- Adds/removes current map from map list");
+            p.Message("&T/TW set [property] &H- Sets a property. See &T/Help TW set");
+            p.Message("&T/TW status &H- View your current score and health");
+            p.Message("&T/TW go &H- Moves you to the current TNT wars map");
+            p.Message("&T/TW scores &H- lists players with highest scores");
         }
     }
 }

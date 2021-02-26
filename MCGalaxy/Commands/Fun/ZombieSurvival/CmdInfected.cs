@@ -35,8 +35,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Infected");
-            p.Message("%HShows who is infected/a zombie");
+            p.Message("&T/Infected");
+            p.Message("&HShows who is infected/a zombie");
         }
     }
 }

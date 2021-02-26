@@ -59,8 +59,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/RestoreSelection [backup name]");
-            p.Message("%HRestores a previous backup of the current selection");
+            p.Message("&T/RestoreSelection [backup name]");
+            p.Message("&HRestores a previous backup of the current selection");
         }
     }
 }

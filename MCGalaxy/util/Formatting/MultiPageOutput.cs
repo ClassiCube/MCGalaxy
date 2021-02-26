@@ -33,7 +33,7 @@ namespace MCGalaxy {
             if (modifier.Length == 0) {
                 OutputPage(p, items, formatter, cmd, type, 1, lines);
                 if (total <= perPage) return;
-                p.Message("To see all {0}, use %T/{1} all", type, cmd);
+                p.Message("To see all {0}, use &T/{1} all", type, cmd);
             } else if (modifier.CaselessEq("all")) {
                 OutputItems(p, items, 0, items.Count, lines, formatter);
                 p.Message("Showing {0} 1-{1} (out of {1})", type, items.Count);
@@ -54,7 +54,7 @@ namespace MCGalaxy {
             if (items.Count == 0) {
                 p.Message("Showing {0} 0-0 (out of 0)", type);
             } else if (end < items.Count) {
-                p.Message("Showing {0} {1}-{2} (out of {3}) Next: %T/{4} {5}",
+                p.Message("Showing {0} {1}-{2} (out of {3}) Next: &T/{4} {5}",
                                type, start + 1, end, items.Count, cmd, start + 1 + perPage);
             } else {
                 p.Message("Showing {0} {1}-{2} (out of {3})",

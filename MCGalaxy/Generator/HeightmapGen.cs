@@ -28,8 +28,8 @@ namespace MCGalaxy.Generator {
         
         static void OnDecodeError(Player p, Bitmap bmp) {
             if (bmp != null) bmp.Dispose();                
-            p.Message("%WThere was an error reading the downloaded image.");
-            p.Message("%WThe url may need to end with its extension (such as .jpg).");
+            p.Message("&WThere was an error reading the downloaded image.");
+            p.Message("&WThe url may need to end with its extension (such as .jpg).");
         }
         
         public static Bitmap DecodeImage(byte[] data, Player p) {

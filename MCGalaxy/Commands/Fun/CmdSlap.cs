@@ -82,10 +82,10 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Slap [name]");
-            p.Message("%HSlaps [name], knocking them into the air");
-            p.Message("%T/Slap [level]");
-            p.Message("%HSlaps all players on [level] that are a lower rank, knocking them into the air");
+            p.Message("&T/Slap [name]");
+            p.Message("&HSlaps [name], knocking them into the air");
+            p.Message("&T/Slap [level]");
+            p.Message("&HSlaps all players on [level] that are a lower rank, knocking them into the air");
         }
     }
 }

@@ -81,15 +81,15 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             p.following = target.name;
-            p.Message("Following {0}%S. Use %T/Follow %Sto stop.", p.FormatNick(target));
+            p.Message("Following {0}%S. Use &T/Follow %Sto stop.", p.FormatNick(target));
             Entities.Despawn(p, target);
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Follow [name]");
-            p.Message("%HFollows <name> until the command is cancelled");
-            p.Message("%T/Follow # [name]");
-            p.Message("%HWill cause %T/Hide %Hnot to be toggled");
+            p.Message("&T/Follow [name]");
+            p.Message("&HFollows <name> until the command is cancelled");
+            p.Message("&T/Follow # [name]");
+            p.Message("&HWill cause &T/Hide &Hnot to be toggled");
         }
     }
 }

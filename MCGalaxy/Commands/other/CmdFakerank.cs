@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/FakeRank [player] [rank]");
-            p.Message("%HGives [player] the appearance of being ranked to [rank].");
+            p.Message("&T/FakeRank [player] [rank]");
+            p.Message("&HGives [player] the appearance of being ranked to [rank].");
         }
     }
 }

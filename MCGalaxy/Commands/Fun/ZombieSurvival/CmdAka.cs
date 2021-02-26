@@ -40,8 +40,8 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/AKA");
-            p.Message("%HToggles whether infected players show their actual names.");
+            p.Message("&T/AKA");
+            p.Message("&HToggles whether infected players show their actual names.");
         }
     }
 }

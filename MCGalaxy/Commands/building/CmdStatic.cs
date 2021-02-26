@@ -41,9 +41,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("%T/Static [command]");
-            p.Message("%HMakes every command a toggle.");
-            p.Message("%HIf [command] is given, then that command is used");
+            p.Message("&T/Static [command]");
+            p.Message("&HMakes every command a toggle.");
+            p.Message("&HIf [command] is given, then that command is used");
         }
     }
 }

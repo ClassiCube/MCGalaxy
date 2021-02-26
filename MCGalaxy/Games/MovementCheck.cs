@@ -53,7 +53,7 @@ namespace MCGalaxy.Games {
             DateTime now = DateTime.UtcNow;
             if (now < last) return;
             
-            p.Message("&4Do not {0} %W- ops have been warned.", action);
+            p.Message("&4Do not {0} &W- ops have been warned.", action);
             Chat.MessageFromOps(p, "λNICK &4appears to be " + action + "ing");
             Logger.Log(LogType.SuspiciousActivity, "{0} appears to be {1}ing", p.name, action);
             last = now.AddSeconds(5);

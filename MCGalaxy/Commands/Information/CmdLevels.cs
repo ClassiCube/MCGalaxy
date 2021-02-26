@@ -77,8 +77,8 @@ namespace MCGalaxy.Commands.Info {
         struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
-            p.Message("%T/Levels");
-            p.Message("%HLists levels and whether you can go to them.");
+            p.Message("&T/Levels");
+            p.Message("&HLists levels and whether you can go to them.");
         }
     }
 }

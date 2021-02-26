@@ -82,9 +82,9 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         public override void Help(Player p) {
-            p.Message("%T/Hide %H- Toggles your visibility to other players, also toggles opchat.");
-            p.Message("%T/Hide silent %H- Hides without showing join/leave message");
-            p.Message("%HUse %T/OHide %Hto hide other players.");
+            p.Message("&T/Hide &H- Toggles your visibility to other players, also toggles opchat.");
+            p.Message("&T/Hide silent &H- Hides without showing join/leave message");
+            p.Message("&HUse &T/OHide &Hto hide other players.");
         }
     }
 }
