@@ -190,8 +190,8 @@ namespace MCGalaxy {
         public string IRCCommandPrefix = ".x";
         [ConfigEnum("irc-controller-verify", "IRC bot", IRCControllerVerify.HalfOp, typeof(IRCControllerVerify))]
         public IRCControllerVerify IRCVerify = IRCControllerVerify.HalfOp;
-        [ConfigPerm("irc-controller-rank", "IRC bot", LevelPermission.Nobody)]
-        public LevelPermission IRCControllerRank = LevelPermission.Nobody;       
+        [ConfigPerm("irc-controller-rank", "IRC bot", LevelPermission.Admin)]
+        public LevelPermission IRCControllerRank = LevelPermission.Admin;
         
         [ConfigBool("tablist-rank-sorted", "Tablist", true)]
         public bool TablistRankSorted = true;

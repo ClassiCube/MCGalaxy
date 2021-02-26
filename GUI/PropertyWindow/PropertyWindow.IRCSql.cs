@@ -64,7 +64,7 @@ namespace MCGalaxy.Gui {
             Server.Config.IRCShowWorldChanges = irc_cbWorldChanges.Checked;
             Server.Config.IRCShowAFK = irc_cbAFK.Checked;
             
-            Server.Config.IRCControllerRank = GuiPerms.GetPermission(irc_cmbRank, LevelPermission.Nobody);
+            Server.Config.IRCControllerRank = GuiPerms.GetPermission(irc_cmbRank, LevelPermission.Admin);
             Server.Config.IRCVerify = (IRCControllerVerify)irc_cmbVerify.SelectedIndex;
             Server.Config.IRCCommandPrefix = irc_txtPrefix.Text;
             
