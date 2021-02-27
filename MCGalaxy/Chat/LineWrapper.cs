@@ -41,8 +41,8 @@ namespace MCGalaxy {
             return 'f';
         }
         
-        static string MakeLine(char[] line, int length, bool emoteFix) {
-            if (emoteFix) line[length++] = '\'';
+        static string MakeLine(char[] line, int length, bool emotePad) {
+            if (emotePad) line[length++] = '\'';
             return new string(line, 0, length);
         }
 
@@ -102,20 +102,20 @@ namespace MCGalaxy {
                 }
                 
                 int lineLength = limit;
-                bool emoteFix  = false;
-                // Check if need to add padding ' to line end
-                // (Lines ended in emote are trimmed by minecraft classic client)
+                bool emotePad  = false;
+                // Check if need to add a padding ' to line end
+                // (Lines ending in emote are trimmed by minecraft classic client)
                 if (!supportsEmotes && EndsInEmote(line, length, lineLength)) {
                     lineLength--;
                     // If last character on line was an emote, but second last
                     // is NOT an emote, then don't add the trailing ' to line
                     // TODO: avoid calling twice? probably doesn't even matter
-                    emoteFix = EndsInEmote(line, length, lineLength);
+                    emotePad = EndsInEmote(line, length, lineLength);
                 }
                 
                 // No need for any more linewrapping?
-                if (length < lineLength) {
-                    lines.Add(MakeLine(line, length, emoteFix));
+                if (length <= lineLength) {
+                    lines.Add(MakeLine(line, length, emotePad));
                     break;
                 }
                 firstLine = false;
@@ -140,7 +140,7 @@ namespace MCGalaxy {
                 if (line[length - 1] == '&') { length--; offset--; }
                 
                 lastColor = LastColor(line, length);
-                lines.Add(MakeLine(line, length, emoteFix));
+                lines.Add(MakeLine(line, length, emotePad));
             }
             return lines;
         }
