@@ -25,21 +25,40 @@ namespace MCGalaxy.Commands.Moderation {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
+        const string UNMUTE_FLAG = "-unmute";
+
+        public override CommandAlias[] Aliases
+        { get { return new[] { new CommandAlias("Unmute", UNMUTE_FLAG) }; } }
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces(2);
-            
-            string target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
+            string[] args = message.SplitSpaces(3);
+
+            string target;
+
+            if (args[0].CaselessEq(UNMUTE_FLAG)) {
+                target = PlayerInfo.FindMatchesPreferOnline(p, args[1]);
+                if (target == null) return;
+
+                if (!Server.muted.Contains(target)) {
+                    p.Message("{0}&S is not muted.", p.FormatNick(target));
+                    return;
+                }
+                
+                DoUnmute(p, target, args.Length > 2 ? args[2] : "");
+                return;
+            }
+
+            target = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (target == null) return;
-            
+
             if (Server.muted.Contains(target)) {
-                DoUnmute(p, target, args);
+                p.Message("{0}&S is already muted.", p.FormatNick(target));
+                p.Message("You may unmute them with &T/Unmute {0}", target);
             } else {            
                 Group group = ModActionCmd.CheckTarget(p, data, "mute", target);
                 if (group == null) return;
                 
-                // unmute has second argument as reason, mute has third argument instead
-                DoMute(p, target, message.SplitSpaces(3));
+                DoMute(p, target, args);
             }
         }
         
@@ -57,8 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
             OnModActionEvent.Call(action);
         }
         
-        void DoUnmute(Player p, string target, string[] args) {
-            string reason = args.Length > 1 ? args[1] : "";
+        void DoUnmute(Player p, string target, string reason) {
             reason = ModActionCmd.ExpandReason(p, reason);
             if (reason == null) return;
             if (p.name == target) { p.Message("You cannot unmute yourself."); return; }
@@ -69,9 +87,12 @@ namespace MCGalaxy.Commands.Moderation {
 
         public override void Help(Player p) {
             p.Message("&T/Mute [player] <timespan> <reason>");
-            p.Message("&HMutes player for <timespan>, or unmutes that player.");
-            p.Message("&H If <timespan> is not given, mutes for auto spam mute timespan");
-            p.Message("&HFor <reason>, @number can be used as a shortcut for that rule.");
+            p.Message("&H Mutes player for <timespan>, which defaults to");
+            p.Message("&H the auto-mute timespan.");
+            p.Message("&H If <timespan> is 0, the mute is permanent.");
+            p.Message("&H For <reason>, @1 substitutes for rule 1, @2 for rule 2, etc.");
+            p.Message("&T/Unmute [player] <reason>");
+            p.Message("&H Unmutes player with optional <reason>.");
         }
     }
 }
