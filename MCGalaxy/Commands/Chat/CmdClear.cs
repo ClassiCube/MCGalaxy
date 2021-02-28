@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         static void ClearChat(Player p) {
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 30; i++) {
                 p.Send(Packet.BlankMessage());
             }
         }
