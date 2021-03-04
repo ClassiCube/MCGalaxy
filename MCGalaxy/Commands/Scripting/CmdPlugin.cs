@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Scripting {
         
         static void UnloadPlugin(Player p, string name) {
             int matches;
-            Plugin plugin = Matcher.Find(p, name, out matches, Plugin.all, 
+            Plugin plugin = Matcher.Find(p, Colors.Strip(name), out matches, Plugin.all,
                                          null, pln => pln.name, "plugins");
             if (plugin == null) return;
             
