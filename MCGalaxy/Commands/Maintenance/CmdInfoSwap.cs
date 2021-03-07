@@ -17,7 +17,7 @@
  */
 using System;
 using MCGalaxy.DB;
-using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Events.PlayerDBEvents;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Maintenance {

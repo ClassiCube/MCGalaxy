@@ -86,14 +86,4 @@ namespace MCGalaxy.Events.ServerEvents {
             }
         }
     }
-        
-    public delegate void OnInfoSwap(string src, string dst);
-    /// <summary> Called when the information of two players is being swapped. </summary>
-    public sealed class OnInfoSwapEvent : IEvent<OnInfoSwap> {
-        
-        public static void Call(string src, string dst) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(src, dst));
-        }        
-    }
 }

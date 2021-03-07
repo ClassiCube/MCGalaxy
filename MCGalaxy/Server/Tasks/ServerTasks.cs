@@ -161,7 +161,7 @@ namespace MCGalaxy.Tasks {
 
             Player[] players = PlayerInfo.Online.Items;
             try {
-                foreach (Player p in players) p.save();
+                foreach (Player p in players) p.SaveStats();
             } catch (Exception ex) {
                 Logger.LogError("Error auto-saving players", ex);
             }

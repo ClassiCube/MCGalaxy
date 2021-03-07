@@ -22,6 +22,7 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.PlayerDBEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
@@ -156,9 +157,10 @@ namespace MCGalaxy {
             return AABB.IntersectsSolidBlocks(bb, level);
         }
 
-        public void save() {
-            OnSQLSaveEvent.Call(this);
-            if (cancelmysql) { cancelmysql = false; return; }
+        public void SaveStats() {
+            bool cancel = false;      	
+            OnInfoSaveEvent.Call(this, ref cancel);
+            if (cancel) return;
 
             // Player disconnected before SQL data was retrieved
             if (!gotSQLData) return;
@@ -270,7 +272,7 @@ namespace MCGalaxy {
 
                 Entities.DespawnEntities(this, false);
                 ShowDisconnectInChat(chatMsg, isKick);
-                save();
+                SaveStats();
 
                 PlayerInfo.Online.Remove(this);
                 OnPlayerDisconnectEvent.Call(this, discMsg);

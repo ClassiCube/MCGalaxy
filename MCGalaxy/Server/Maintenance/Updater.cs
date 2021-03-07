@@ -90,7 +90,7 @@ namespace MCGalaxy {
                 }
 
                 Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) pl.save();
+                foreach (Player pl in players) pl.SaveStats();
                 
                 // Move current files to previous files (by moving instead of copying, 
                 //  can overwrite original the files without breaking the server)

@@ -53,16 +53,6 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
     
-    public delegate void OnSQLSave(Player p);
-    /// <summary> This event is called whenever the server saves player's data to MySQL or SQLite </summary>
-    public sealed class OnSQLSaveEvent : IEvent<OnSQLSave> {
-        
-        public static void Call(Player p) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(p));
-        }
-    }
-    
     public delegate void OnPlayerCommand(Player p, string cmd, string args, CommandData data);
     /// <summary> Called whenever a player uses a command. </summary>
     /// <remarks> You must cancel this event to prevent "Unknown command!" being shown. </remarks>

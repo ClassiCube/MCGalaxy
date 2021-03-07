@@ -475,6 +475,7 @@
     <Compile Include="Entity\ModelInfo.cs" />
     <Compile Include="Entity\Structs.cs" />
     <Compile Include="Entity\TabList.cs" />
+    <Compile Include="Events\PlayerDBEvents.cs" />
     <Compile Include="Events\EconomyEvents.cs" />
     <Compile Include="Events\EntityEvents.cs" />
     <Compile Include="Events\GameEvents.cs" />

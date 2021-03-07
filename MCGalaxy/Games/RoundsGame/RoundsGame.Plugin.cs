@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.PlayerDBEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Network;
 
@@ -28,7 +29,7 @@ namespace MCGalaxy.Games {
         protected virtual void HookEventHandlers() {
             OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);  
             OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
-            OnSQLSaveEvent.Register(SaveStats, Priority.High);
+            OnInfoSaveEvent.Register(HandleSaveStats, Priority.High);
             
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
@@ -37,12 +38,14 @@ namespace MCGalaxy.Games {
         protected virtual void UnhookEventHandlers() {
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
             OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
-            OnSQLSaveEvent.Unregister(SaveStats);
+            OnInfoSaveEvent.Unregister(HandleSaveStats);
             
             OnPlayerActionEvent.Unregister(HandlePlayerAction);            
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
         }
         
+        void HandleSaveStats(Player p, ref bool cancel) { SaveStats(p); }
+		
         protected virtual void HandleSendingHeartbeat(Heartbeat service, ref string name) {
             if (Map == null || !GetConfig().MapInHeartbeat) return;
             name += " (map: " + Map.MapName + ")";
