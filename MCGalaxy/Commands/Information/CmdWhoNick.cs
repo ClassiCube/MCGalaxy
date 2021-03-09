@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Info {
             p.Message("&T/WhoNick [nickname]");
             p.Message("&HDisplays the player's real username");
             p.Message("&T/WhoNick bot [nickname]");
-            p.Message("&HDisplays the bots's real name");
+            p.Message("&HDisplays the bot's real name");
         }
     }
 }

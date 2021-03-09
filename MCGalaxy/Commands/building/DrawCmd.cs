@@ -73,7 +73,7 @@ namespace MCGalaxy.Commands.Building {
             return true;
         }
         
-        BrushFactory MakeBrush(DrawArgs args) {
+        protected BrushFactory MakeBrush(DrawArgs args) {
             args.BrushName = args.Player.BrushName;
             args.BrushArgs = "";
             GetBrush(args);
