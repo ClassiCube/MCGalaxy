@@ -53,21 +53,21 @@ namespace MCGalaxy.Commands.Moderation {
             p.hidden = !p.hidden;
             if (p.hidden) {
                 p.hideRank = data.Rank;
-                AnnounceOps(p, "To Ops -λNICK%S- is now &finvisible");               
+                AnnounceOps(p, "To Ops -λNICK&S- is now &finvisible");               
                 
                 if (!silent) {
-                    string leaveMsg = "&c- λFULL %S" + PlayerDB.GetLogoutMessage(p);
+                    string leaveMsg = "&c- λFULL &S" + PlayerDB.GetLogoutMessage(p);
                     Chat.MessageFrom(ChatScope.All, p, leaveMsg, null, null, true);
                 }
                 
                 if (!p.opchat) opchat.Use(p, "", data);
                 Server.hidden.Add(p.name);
             } else {
-                AnnounceOps(p, "To Ops -λNICK%S- is now &fvisible");
+                AnnounceOps(p, "To Ops -λNICK&S- is now &fvisible");
                 p.hideRank = LevelPermission.Banned;
                 
                 if (!silent) {
-                    string joinMsg = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(p);
+                    string joinMsg = "&a+ λFULL &S" + PlayerDB.GetLoginMessage(p);
                     Chat.MessageFrom(ChatScope.All, p, joinMsg, null, null, true);
                 }
                 

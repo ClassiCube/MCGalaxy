@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.Moderation {
             TimeSpan assignDelta = DateTime.UtcNow - assigned;
             TimeSpan expireDelta = expiry - DateTime.UtcNow;
             p.Message("Temp rank information for {0}:", p.FormatNick(name));
-            p.Message("  From {0} %Sto {1}%S, by {2} &a{3} %Sago, expires in &a{4}",
+            p.Message("  From {0} &Sto {1}&S, by {2} &a{3} &Sago, expires in &a{4}",
                            oldRank, tempRank, assigner,
                            assignDelta.Shorten(), expireDelta.Shorten());
         }

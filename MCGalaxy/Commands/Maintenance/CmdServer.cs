@@ -132,7 +132,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 p.Message("This will export all the BlockDB tables in the database to more efficient .cbdb files.");
                 p.Message("Note: This is only useful if you have updated from older {0} versions", Server.SoftwareName);
                 p.MessageLines(DBUpgrader.CompactMessages);
-                p.Message("Type &T/Server upgradeblockdb confirm %Sto begin");
+                p.Message("Type &T/Server upgradeblockdb confirm &Sto begin");
             } else if (DBUpgrader.Upgrading) {
                 p.Message("BlockDB upgrade is already in progress.");
             } else {

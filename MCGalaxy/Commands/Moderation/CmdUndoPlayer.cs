@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("Place or break two blocks to determine the edges.");
                 UndoAreaArgs args = new UndoAreaArgs();
                 args.ids = ids; args.names = names; args.delta = delta;
-                p.MakeSelection(2, "Selecting region for %SUndo player", args, DoUndoArea);
+                p.MakeSelection(2, "Selecting region for &SUndo player", args, DoUndoArea);
             }
         }
         
@@ -91,10 +91,10 @@ namespace MCGalaxy.Commands.Moderation {
 
             string namesStr = names.Join(name => p.FormatNick(name));
             if (op.found) {
-                Chat.MessageGlobal("Undid {1}%S's changes for the past &b{0}", delta.Shorten(true), namesStr);
+                Chat.MessageGlobal("Undid {1}&S's changes for the past &b{0}", delta.Shorten(true), namesStr);
                 Logger.Log(LogType.UserActivity, "Actions of {0} for the past {1} were undone.", names.Join(), delta.Shorten(true));
             } else {
-                p.Message("No changes found by {1} %Sin the past &b{0}", delta.Shorten(true), namesStr);
+                p.Message("No changes found by {1} &Sin the past &b{0}", delta.Shorten(true), namesStr);
             }
         }
         

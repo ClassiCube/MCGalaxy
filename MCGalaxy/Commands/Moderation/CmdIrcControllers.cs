@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Moderation {
                     
                     Server.Config.IRCControllerRank = grp.Permission;
                     SrvProperties.Save();
-                    p.Message("Set IRC controller rank to {0}%S.", grp.ColoredName);
+                    p.Message("Set IRC controller rank to {0}&S.", grp.ColoredName);
                     break;
                     
                 default:

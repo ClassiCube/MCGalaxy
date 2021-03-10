@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Eco {
             }
 
             string targetName = p.FormatNick(target);
-            p.Message("Economy stats for {0}%S:", targetName);
+            p.Message("Economy stats for {0}&S:", targetName);
             p.Message(" Current balance: &f{0} &3{1}", money, Server.Config.Currency);
             
             Economy.EcoStats ecos = Economy.RetrieveStats(target);

@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             p.Message("&T/os [command] [args]");
             p.Message("&HAllows you to modify and manage your personal realms.");
-            p.Message("&HCommands: %S{0}", subCommands.Join(grp => grp.Group));
+            p.Message("&HCommands: &S{0}", subCommands.Join(grp => grp.Group));
             p.Message("&HUse &T/Help os [command] &Hfor more details");
         }
         

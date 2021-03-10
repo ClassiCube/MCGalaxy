@@ -34,14 +34,14 @@ namespace MCGalaxy.Commands.Maintenance {
             if (src == null || dst == null) return;
 
             Group srcGroup = Group.GroupIn(src), dstGroup = Group.GroupIn(dst);
-            if (!CheckRank(p, data, src, srcGroup.Permission, "&T/InfoSwap%S", false)) return;
-            if (!CheckRank(p, data, dst, dstGroup.Permission, "&T/InfoSwap%S", false)) return;
+            if (!CheckRank(p, data, src, srcGroup.Permission, "&T/InfoSwap&S", false)) return;
+            if (!CheckRank(p, data, dst, dstGroup.Permission, "&T/InfoSwap&S", false)) return;
                         
             SwapStats(src, dst);
             SwapGroups(src, dst, srcGroup, dstGroup);
             OnInfoSwapEvent.Call(src, dst);
             
-            p.Message("Successfully infoswapped {0} %Sand {1}",
+            p.Message("Successfully infoswapped {0} &Sand {1}",
                       p.FormatNick(src), p.FormatNick(dst));
         }
         

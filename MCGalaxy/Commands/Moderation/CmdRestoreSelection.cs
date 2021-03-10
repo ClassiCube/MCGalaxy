@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             string path = LevelInfo.BackupFilePath(p.level.name, message);
             if (File.Exists(path)) {
                 p.Message("Select two corners for restore.");
-                p.MakeSelection(2, "Selecting region for %SRestore", path, DoRestore);
+                p.MakeSelection(2, "Selecting region for &SRestore", path, DoRestore);
             } else {
                 p.Message("Backup " + message + " does not exist.");
             }

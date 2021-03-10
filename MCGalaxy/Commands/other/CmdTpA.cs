@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Misc {
                 p.Message("Player \"{0}\" is in a museum.", p.FormatNick(target)); return;
             }
             if (target.Loading) {
-            	p.Message("Waiting for {0} %Sto spawn...", p.FormatNick(target));
+            	p.Message("Waiting for {0} &Sto spawn...", p.FormatNick(target));
                 target.BlockUntilLoad(10);
             }
             
@@ -75,15 +75,15 @@ namespace MCGalaxy.Commands.Misc {
         
         static void ShowSentMessage(Player p, Player target) {
             p.Message("Your teleport request has been sent to {0}", p.FormatNick(target));
-            p.Message("This request will timeout after &b90 %Sseconds.");
+            p.Message("This request will timeout after &b90 &Sseconds.");
         }
         
         static void ShowRequestMessage(Player p, Player target) {
             if (Chat.Ignoring(target, p)) return;
             
-            target.Message("{0} %Swould like to teleport to you.", target.FormatNick(p));
-            target.Message("Type &2/tpaccept %Sor &4/tpdeny%S.");
-            target.Message("This request will timeout after &b90 %Sseconds.");
+            target.Message("{0} &Swould like to teleport to you.", target.FormatNick(p));
+            target.Message("Type &2/tpaccept &Sor &4/tpdeny&S.");
+            target.Message("This request will timeout after &b90 &Sseconds.");
         }
         
         void DoAccept(Player p) {
@@ -96,8 +96,8 @@ namespace MCGalaxy.Commands.Misc {
                 p.Message("The player who requested to teleport to you isn't online anymore."); return;
             }
             
-            p.Message("You have accepted {0}%S's teleportation request.", p.FormatNick(sender));
-            sender.Message("{0} %Shas accepted your request. Teleporting now...", sender.FormatNick(p));
+            p.Message("You have accepted {0}&S's teleportation request.", p.FormatNick(sender));
+            sender.Message("{0} &Shas accepted your request. Teleporting now...", sender.FormatNick(p));
             sender.currentTpa = "";
             Thread.Sleep(1000);
             if (p.level != sender.level) {
@@ -118,8 +118,8 @@ namespace MCGalaxy.Commands.Misc {
                 p.Message("The player who requested to teleport to you isn't online anymore."); return;
             }
             
-            p.Message("You have denied {0}%S's teleportation request.", p.FormatNick(sender));
-            sender.Message("{0} %Shas denied your request.", sender.FormatNick(p));
+            p.Message("You have denied {0}&S's teleportation request.", p.FormatNick(sender));
+            sender.Message("{0} &Shas denied your request.", sender.FormatNick(p));
             sender.currentTpa = "";            
         } 
 

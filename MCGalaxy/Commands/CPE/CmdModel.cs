@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
             if (model == null) return;
             bot.UpdateModel(model);
             
-            p.Message("You changed the model of bot {0} %Sto a &c{1}", bot.ColoredName, model);
+            p.Message("You changed the model of bot {0} &Sto a &c{1}", bot.ColoredName, model);
             BotsFile.Save(p.level);
         }
         
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.CPE {
             who.UpdateModel(model);
             
             if (p != who) {
-                Chat.MessageFrom(who, "λNICK %Shad their model changed to a &c" + model);
+                Chat.MessageFrom(who, "λNICK &Shad their model changed to a &c" + model);
             } else {
                 who.Message("Changed your own model to a &c" + model);
             }
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.CPE {
         
         public override void Help(Player p, string message) {
             if (message.CaselessEq("models")) {
-                p.Message("&HAvailable models: %SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
+                p.Message("&HAvailable models: &SChibi, Chicken, Creeper, Giant, Humanoid, Pig, Sheep, Spider, Skeleton, Zombie, Head, Sit, Corpse");
                 p.Message("&HTo set a block model, use a block ID for the model name.");
                 p.Message("&HUse &T/Help Model scale &Hfor how to scale a model.");
             } else if (message.CaselessEq("scale")) {

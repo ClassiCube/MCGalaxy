@@ -33,12 +33,12 @@ namespace MCGalaxy.DB {
             name = p.FormatNick(name);
             
             if (newBlock == Block.Air) {
-                p.Message("{0} ago {1} &4deleted %S{2}{3}",
+                p.Message("{0} ago {1} &4deleted &S{2}{3}",
                                delta.Shorten(true, false), name,
                                Block.GetName(p, oldBlock),
                                FormatReason(e.Flags));
             } else {
-                p.Message("{0} ago {1} &3placed %S{2}{3}",
+                p.Message("{0} ago {1} &3placed &S{2}{3}",
                                delta.Shorten(true, false), name,
                                Block.GetName(p, newBlock),
                                FormatReason(e.Flags));

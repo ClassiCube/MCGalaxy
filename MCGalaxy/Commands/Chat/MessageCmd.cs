@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "High5"; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            TryMessageAction(p, message, "λNICK %Sjust highfived λTARGET", true);
+            TryMessageAction(p, message, "λNICK &Sjust highfived λTARGET", true);
         }
 
         public override void Help(Player p) {

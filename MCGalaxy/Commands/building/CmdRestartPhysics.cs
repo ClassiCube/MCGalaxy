@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Building {
             if (message.Length > 0 && !ParseArgs(p, message, ref extraInfo)) return;
 
             p.Message("Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SRestart physics", extraInfo, DoRestart);
+            p.MakeSelection(2, "Selecting region for &SRestart physics", extraInfo, DoRestart);
         }
         
         bool ParseArgs(Player p, string message, ref PhysicsArgs args) {

@@ -57,9 +57,9 @@ namespace MCGalaxy.Commands.Moderation {
             reader.Parse();
             if (reader.Failed) { p.Message("&WError parsing GeoIP info"); return; }           
             
-            string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}%S/&b{2}" : "&b{2}";
+            string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}&S/&b{2}" : "&b{2}";
             string nick   = name == null ? ip : "of " + p.FormatNick(name);
-            p.Message("The IP {0} %Straces to: " + suffix, nick, region, country);
+            p.Message("The IP {0} &Straces to: " + suffix, nick, region, country);
         }
         
         public override void Help(Player p) {

@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
                                                        ZSGame.Instance.Alive.Items);
             if (alive.Count == 0) { p.Message("No one is alive."); return; }
             
-            p.Message("Players who are &2alive %Sare:");
+            p.Message("Players who are &2alive &Sare:");
             p.Message(alive.Join(pl => pl.ColoredName));
         }
         

@@ -104,9 +104,9 @@ namespace MCGalaxy.Commands.Bots {
                     if (PlayerBot.CanEditAny(p) || ownerName.CaselessEq(p.name)) {
                         int removedCount = PlayerBot.RemoveBotsOwnedBy(p, ownerName, p.level, false);
                         if (removedCount == 0) {
-                            p.Message("There are no bots owned by {0}%S in this level.", p.FormatNick(ownerName));
+                            p.Message("There are no bots owned by {0}&S in this level.", p.FormatNick(ownerName));
                         } else {
-                            p.Message("Removed {0} bot{1} belonging to {2}%S.", removedCount, removedCount > 1 ? "s" : "", p.FormatNick(ownerName));
+                            p.Message("Removed {0} bot{1} belonging to {2}&S.", removedCount, removedCount > 1 ? "s" : "", p.FormatNick(ownerName));
                             BotsFile.Save(p.level);
                         }
                     } else {
@@ -141,11 +141,11 @@ namespace MCGalaxy.Commands.Bots {
             if (bot == null) return;
             if (!bot.EditableBy(p, "set the text of")) { return; }
             if (text == null) {
-                p.Message("Removed text shown when bot {0} %Sclicked on", bot.ColoredName);
+                p.Message("Removed text shown when bot {0} &Sclicked on", bot.ColoredName);
                 bot.ClickedOnText = null;
             } else {
                 if (!MessageBlock.Validate(p, text, false)) return;
-                p.Message("Set text shown when bot {0} %Sis clicked on to {1}", bot.ColoredName, text);
+                p.Message("Set text shown when bot {0} &Sis clicked on to {1}", bot.ColoredName, text);
                 bot.ClickedOnText = text;
             }
             BotsFile.Save(p.level);
@@ -156,11 +156,11 @@ namespace MCGalaxy.Commands.Bots {
             if (bot == null) return;
             if (!bot.EditableBy(p, "set the death message of")) { return; }
             if (text == null) {
-                p.Message("Reset shown when bot {0} %Skills someone", bot.ColoredName);
+                p.Message("Reset shown when bot {0} &Skills someone", bot.ColoredName);
                 bot.DeathMessage = null;
             } else {
                 if (!MessageBlock.Validate(p, text, false)) return;
-                p.Message("Set message shown when bot {0} %Skills someone to {1}", bot.ColoredName, text);
+                p.Message("Set message shown when bot {0} &Skills someone to {1}", bot.ColoredName, text);
                 bot.DeathMessage = text;
             }
             BotsFile.Save(p.level);
@@ -211,7 +211,7 @@ namespace MCGalaxy.Commands.Bots {
             if (botName.Length == 0) {
                 if (!p.Supports(CpeExt.PlayerClick)) {
                     p.Message("Your client does not support clicking on entities.");
-                    p.Message("You must type &T/botinfo [name] %Sto see info.");
+                    p.Message("You must type &T/botinfo [name] &Sto see info.");
                     p.Message("To help find the name of a nicknamed bot, try");
                     p.Message("&T/whonick bot [nickname]");
                     return;

@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Info {
                 OutputBlockInfo(p, block);
             } else if (Group.Find(type) != null) {
                 Group grp = Group.Find(type);
-                p.Message("Blocks which {0} %Scan place: ", grp.ColoredName);
+                p.Message("Blocks which {0} &Scan place: ", grp.ColoredName);
                 OutputBlocks(p, type, modifier,
                              b => grp.Blocks[b]);
             } else if (args.Length > 1) {

@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Chatting {
             }
             Server.voting = true;
             Server.NoVotes = 0; Server.YesVotes = 0;
-            Chat.MessageGlobal("&2 VOTE: %S{0} %S(&2Yes %S/&cNo%S)", message);
+            Chat.MessageGlobal("&2 VOTE: &S{0} &S(&2Yes &S/&cNo&S)", message);
             Server.MainScheduler.QueueOnce(VoteCallback, null, TimeSpan.FromSeconds(15));
         }
         

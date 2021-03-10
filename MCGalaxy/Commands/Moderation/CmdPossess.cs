@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Unpossess(target);
                 p.invincible = false;
                 Command.Find("Hide").Use(p, "", data);
-                p.Message("Stopped possessing {0}%S.", p.FormatNick(target));
+                p.Message("Stopped possessing {0}&S.", p.FormatNick(target));
             } else {
                 Player target = PlayerInfo.FindMatches(p, name);
                 if (target == null) return;
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 Entities.Despawn(p, target);
                 target.possessed = true;
-                p.Message("Now posessing {0}%S.", p.FormatNick(target));
+                p.Message("Now posessing {0}&S.", p.FormatNick(target));
             }
         }
 

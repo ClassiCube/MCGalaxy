@@ -79,8 +79,8 @@ namespace MCGalaxy.Commands.Moderation {
                 MultiPageOutput.Output(p, users, pl => p.FormatNick(pl),
                                        "Review list", "players", modifier, false);
                 
-                p.Message("Use &T/Report check [Player] %Sto view report details.");
-                p.Message("Use &T/Report delete [Player] %Sto delete a report");
+                p.Message("Use &T/Report check [Player] &Sto view report details.");
+                p.Message("Use &T/Report delete [Player] &Sto delete a report");
             } else {
                 p.Message("No reports were found.");
             }
@@ -118,8 +118,8 @@ namespace MCGalaxy.Commands.Moderation {
             
             DeleteReport(target);
             string nick = p.FormatNick(target);
-            p.Message("Reports on {0} %Swere deleted.", nick);
-            Chat.MessageFromOps(p, "λNICK %Sdeleted reports on " + nick);
+            p.Message("Reports on {0} &Swere deleted.", nick);
+            Chat.MessageFromOps(p, "λNICK &Sdeleted reports on " + nick);
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
         }
         
@@ -164,7 +164,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("&aReport sent! It should be viewed when a {0} &ais online", 
                            checkPerms.Describe());
             
-            string opsMsg = "λNICK %Smade a report, view it with &T/Report check " + target;
+            string opsMsg = "λNICK &Smade a report, view it with &T/Report check " + target;
             Chat.MessageFrom(ChatScope.Perms, p, opsMsg, checkPerms, null, true);
         }
         

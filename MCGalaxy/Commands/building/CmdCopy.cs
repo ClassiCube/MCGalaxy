@@ -92,7 +92,7 @@ namespace MCGalaxy.Commands.Building {
 
             p.Message("Place or break two blocks to determine the edges.");
             int marks = cArgs.offsetIndex != -1 ? 3 : 2;
-            p.MakeSelection(marks, "Selecting region for %SCopy", cArgs, DoCopy, DoCopyMark);
+            p.MakeSelection(marks, "Selecting region for &SCopy", cArgs, DoCopy, DoCopyMark);
         }
         
         void CompleteCopy(Player p, Vec3S32[] m, CopyArgs cArgs) {
@@ -151,7 +151,7 @@ namespace MCGalaxy.Commands.Building {
             cState.CopySource = "level " + p.level.name;
             p.CurrentCopy = cState;
 
-            p.Message("Copied &a{0} %Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
+            p.Message("Copied &a{0} &Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
                       cState.OriginX == cState.X ? "Min" : "Max",
                       cState.OriginY == cState.Y ? "Min" : "Max",
                       cState.OriginZ == cState.Z ? "Min" : "Max");

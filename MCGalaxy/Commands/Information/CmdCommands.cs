@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Info {
             }
             
             MultiPageOutput.Output(p, shortcuts,
-                                   (cmd) => "&b" + cmd.shortcut + " %S[" + cmd.name + "]",
+                                   (cmd) => "&b" + cmd.shortcut + " &S[" + cmd.name + "]",
                                    "Commands shortcuts", "shortcuts", modifier, false);
         }
         
@@ -83,20 +83,20 @@ namespace MCGalaxy.Commands.Info {
             }   
             
             if (cmds.Count == 0) {
-                p.Message("{0} %Scannot use any commands.", group.ColoredName); return;
+                p.Message("{0} &Scannot use any commands.", group.ColoredName); return;
             }            
             SortCommands(cmds, sort);            
             if (own)
                 p.Message("Available commands:");
             else
-                p.Message("Commands available to " + group.ColoredName + " %Srank:");
+                p.Message("Commands available to " + group.ColoredName + " &Srank:");
             
             string type = "Cmds " + group.Name;
             if (sort.Length > 0) type += " " + sort;
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
-            p.Message("Type &T/Help <command> %Sfor more help on a command.");
+            p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
         
         static void PrintAllCommands(Player p, string sort, string modifier) {
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Info {
             MultiPageOutput.Output(p, cmds,
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);            
-            p.Message("Type &T/Help <command> %Sfor more help on a command.");
+            p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
         
         // common shortcuts people tend to use 
@@ -150,7 +150,7 @@ namespace MCGalaxy.Commands.Info {
                                    (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
                                    type, "commands", modifier, false);
             
-            p.Message("Type &T/Help <command> %Sfor more help on a command.");
+            p.Message("Type &T/Help <command> &Sfor more help on a command.");
             return true;
         }
         

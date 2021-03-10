@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands.Info {
             }
             
             if (totalPlayers == 1) {
-                p.Message("There is &a1 %Splayer online.");
+                p.Message("There is &a1 &Splayer online.");
             } else {
-                p.Message("There are &a" + totalPlayers + " %Splayers online.");
+                p.Message("There are &a" + totalPlayers + " &Splayers online.");
             }
             
             for (int i = allPlayers.Count - 1; i >= 0; i--) {

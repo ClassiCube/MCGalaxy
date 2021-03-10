@@ -42,12 +42,12 @@ namespace MCGalaxy.Commands.Chatting {
         protected override void SetBotData(Player p, PlayerBot bot, string nick) {
             if (nick.Length == 0) {
                 bot.DisplayName = bot.name;
-                p.level.Message("Bot " + bot.ColoredName + " %Sreverted to their original name.");
+                p.level.Message("Bot " + bot.ColoredName + " &Sreverted to their original name.");
             } else {
                 string nameTag = nick.CaselessEq("empty") ? "" : nick;
                 if (nick.Length > 62) { p.Message("Name must be 62 or fewer letters."); return; }
                 
-                p.Message("You changed the name of bot " + bot.ColoredName + " %Sto &c" + nameTag);
+                p.Message("You changed the name of bot " + bot.ColoredName + " &Sto &c" + nameTag);
                 bot.DisplayName = Colors.Escape(nick);
             }
             
@@ -58,12 +58,12 @@ namespace MCGalaxy.Commands.Chatting {
         
         protected override void SetOnlineData(Player p, Player who, string nick) {
             if (nick.Length == 0) {
-                Chat.MessageFrom(who, "λNICK %Shad their custom nick reset");
+                Chat.MessageFrom(who, "λNICK &Shad their custom nick reset");
                 who.DisplayName = who.truename;
             } else {
                 if (Colors.Strip(nick).Length >= 30) { p.Message("Nick must be under 30 letters."); return; }
                 
-                Chat.MessageFrom(who, "λNICK %Shad their nick set to " + who.color + nick);
+                Chat.MessageFrom(who, "λNICK &Shad their nick set to " + who.color + nick);
                 who.DisplayName = nick;
             }
         	

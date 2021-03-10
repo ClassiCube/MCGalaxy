@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Scripting {
             
             string path = IScripting.DllPath(cmdName);
             if (!File.Exists(path)) {
-                p.Message("File &9{0} %Snot found.", path); return;
+                p.Message("File &9{0} &Snot found.", path); return;
             }
             
             string error = IScripting.Load(path);

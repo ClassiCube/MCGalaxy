@@ -46,9 +46,9 @@ namespace MCGalaxy.Commands.Misc {
 
             string globalMsg = target.invincible ? Server.Config.InvincibleMessage : "has stopped being invincible";
             if (Server.Config.ShowInvincibleMessage && !target.hidden) {
-                Chat.MessageFrom(target, "λNICK %S" + globalMsg);
+                Chat.MessageFrom(target, "λNICK &S" + globalMsg);
             } else if (p != target) {
-                p.Message("{0} %Sis {1}.", p.FormatNick(target), msg);
+                p.Message("{0} &Sis {1}.", p.FormatNick(target), msg);
             }
         }
         

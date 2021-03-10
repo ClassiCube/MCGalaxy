@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             bot.SkinName = skin;
-            p.Message("You changed the skin of bot " + bot.ColoredName + " %Sto &c" + skin);
+            p.Message("You changed the skin of bot " + bot.ColoredName + " &Sto &c" + skin);
             
             bot.GlobalDespawn();
             bot.GlobalSpawn();
@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.CPE {
             Entities.GlobalRespawn(who);
             
             if (p != who) {
-                Chat.MessageFrom(who,"λNICK %Shad their skin changed to &c" + skin);
+                Chat.MessageFrom(who,"λNICK &Shad their skin changed to &c" + skin);
             } else {
                 who.Message("Changed your own skin to &c" + skin);
             }

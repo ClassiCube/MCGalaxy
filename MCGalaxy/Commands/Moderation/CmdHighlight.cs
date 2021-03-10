@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("Place or break two blocks to determine the edges.");
                 HighlightAreaArgs args = new HighlightAreaArgs();
                 args.ids = ids; args.who = parts[0]; args.delta = delta;
-                p.MakeSelection(2,  "Selecting region for %SHighlight", args, DoHighlightArea);
+                p.MakeSelection(2,  "Selecting region for &SHighlight", args, DoHighlightArea);
             }
         }
         
@@ -86,11 +86,11 @@ namespace MCGalaxy.Commands.Moderation {
             buffer.Flush();
             
             if (op.found) {
-                p.Message("Now highlighting past &b{0} %Sfor {1}",
+                p.Message("Now highlighting past &b{0} &Sfor {1}",
                            delta.Shorten(true), p.FormatNick(who));
                 p.Message("&WUse /reload to un-highlight");
             } else {
-                p.Message("No changes found by {1} %Sin the past &b{0}",
+                p.Message("No changes found by {1} &Sin the past &b{0}",
                            delta.Shorten(true), p.FormatNick(who));
             }
         }

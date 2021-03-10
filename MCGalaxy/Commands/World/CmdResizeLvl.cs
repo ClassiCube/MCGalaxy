@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.World {
             if (DoResize(p, args, data, out needConfirm)) return;
             
             if (!needConfirm) return;
-            p.Message("Type &T/ResizeLvl {0} {1} {2} {3} confirm %Sif you're sure.",
+            p.Message("Type &T/ResizeLvl {0} {1} {2} {3} confirm &Sif you're sure.",
                       args[0], args[1], args[2], args[3]);
         }
         
@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.World {
             
             bool confirmed = args.Length > 4 && args[4].CaselessEq("confirm");
             if (!confirmed && (x < lvl.Width || y < lvl.Height || z < lvl.Length)) {
-                p.Message("New level dimensions are smaller than the current dimensions, &Wyou will lose blocks%S.");
+                p.Message("New level dimensions are smaller than the current dimensions, &Wyou will lose blocks&S.");
                 needConfirm = true;
                 return false;
             }

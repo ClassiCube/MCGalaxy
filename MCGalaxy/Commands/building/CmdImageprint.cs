@@ -59,7 +59,7 @@ namespace MCGalaxy.Commands.Building {
                 
                 if (dArgs.Pal.Entries == null || dArgs.Pal.Entries.Length == 0) {
                     p.Message("Palette {0} does not have any entries", dArgs.Pal.Name);
-                    p.Message("Use &T/Palette %Sto add entries to it"); return;
+                    p.Message("Use &T/Palette &Sto add entries to it"); return;
                 }
             }
             
@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             p.Message("Place or break two blocks to determine direction.");
-            p.MakeSelection(2, "Selecting direction for %SImagePrint", dArgs, DoImage);
+            p.MakeSelection(2, "Selecting direction for &SImagePrint", dArgs, DoImage);
         }
         
         bool DoImage(Player p, Vec3S32[] m, object state, BlockID block) {

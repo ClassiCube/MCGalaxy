@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (p.possessed) { p.Message("You're currently being &4possessed%S!"); return; }
+            if (p.possessed) { p.Message("You're currently being &4possessed&S!"); return; }
             string[] args = message.SplitSpaces(2);
             string name = args[0];
             
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CheckRank(p, data, target, "follow", false)) return;
             
             if (target.following.Length > 0) { 
-                p.Message("{0} %Sis already following {1}", 
+                p.Message("{0} &Sis already following {1}", 
             	          p.FormatNick(target), p.FormatNick(target.following)); return;
             }
 
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             p.following = target.name;
-            p.Message("Following {0}%S. Use &T/Follow %Sto stop.", p.FormatNick(target));
+            p.Message("Following {0}&S. Use &T/Follow &Sto stop.", p.FormatNick(target));
             Entities.Despawn(p, target);
         }
         

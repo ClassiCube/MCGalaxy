@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Maintenance {
             } else {
                 if (shutdownTask != null) {
                     p.Message("Server is already shutting down, use " +
-                                   "&T/Shutdown abort %Sto abort the shutdown."); return;
+                                   "&T/Shutdown abort &Sto abort the shutdown."); return;
                 }
                 
                 if (message.Length == 0) message = "10";

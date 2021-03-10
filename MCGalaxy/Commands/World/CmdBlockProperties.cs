@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.World {
             p.Message("&TProperties of {0}:", name);
             
             if (props.KillerBlock)          p.Message("  Kills players who collide with this block");
-            if (props.DeathMessage != null) p.Message("  Death message: %S" + props.DeathMessage);
+            if (props.DeathMessage != null) p.Message("  Death message: &S" + props.DeathMessage);
             
             if (props.IsDoor)  p.Message("  Is an ordinary door");
             if (props.IsTDoor) p.Message("  Is a tdoor (allows other blocks through when open)");

@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Server.reviewlist.Add(p.name);
             int pos = Server.reviewlist.IndexOf(p.name) + 1;
-            p.Message("You entered the &creview %Squeue at &aposition #" + pos);
+            p.Message("You entered the &creview &Squeue at &aposition #" + pos);
             
             string msg = opsOn ? 
                 "The online staff have been notified. Someone should be with you shortly." :
@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message(msg);
             
             Chat.MessageFrom(ChatScope.Perms, p, 
-                             "λNICK %Srequested a review! &c(Total " + pos + " waiting)", nextPerms, null, true);
+                             "λNICK &Srequested a review! &c(Total " + pos + " waiting)", nextPerms, null, true);
             
             p.NextReviewTime = DateTime.UtcNow.Add(Server.Config.ReviewCooldown);
         }

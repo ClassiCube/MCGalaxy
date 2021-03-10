@@ -60,16 +60,16 @@ namespace MCGalaxy.Commands.Maintenance {
 
             switch (args[0].ToLower()) {
                 case "draw":
-                    Chat.MessageAll(grp.ColoredName + "%S's draw limit set to &b" + limit);
+                    Chat.MessageAll(grp.ColoredName + "&S's draw limit set to &b" + limit);
                     grp.DrawLimit = limit; break;
                 case "maxundo":
-                    Chat.MessageAll(grp.ColoredName + "%S's undo limit set to &b" + limit);
+                    Chat.MessageAll(grp.ColoredName + "&S's undo limit set to &b" + limit);
                     grp.MaxUndo = TimeSpan.FromSeconds(limit); break;
                 case "gen":
-                    Chat.MessageAll(grp.ColoredName + "%S's map gen volume limit set to &b" + limit);
+                    Chat.MessageAll(grp.ColoredName + "&S's map gen volume limit set to &b" + limit);
                     grp.GenVolume = limit; break;
                 case "realms":
-                    Chat.MessageAll(grp.ColoredName + "%S's max realms set to &b" + limit);
+                    Chat.MessageAll(grp.ColoredName + "&S's max realms set to &b" + limit);
                     grp.OverseerMaps = limit; break;
                 default:
                     Help(p); return;

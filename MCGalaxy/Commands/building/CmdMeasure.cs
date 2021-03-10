@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             p.Message("Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SMeasure", toCount, DoMeasure);
+            p.MakeSelection(2, "Selecting region for &SMeasure", toCount, DoMeasure);
         }
         
         bool DoMeasure(Player p, Vec3S32[] m, object state, BlockID block) {
@@ -54,8 +54,8 @@ namespace MCGalaxy.Commands.Building {
 
             int width = max.X - min.X + 1, height = max.Y - min.Y + 1, length = max.Z - min.Z + 1;
             int volume = width * height * length;
-            p.Message("Measuring from &a({0}) %Sto &a({1})", min, max);
-            p.Message("  &b{0} %Swide, &b{1} %Shigh, &b{2} %Slong, {3} blocks",
+            p.Message("Measuring from &a({0}) &Sto &a({1})", min, max);
+            p.Message("  &b{0} &Swide, &b{1} &Shigh, &b{2} &Slong, {3} blocks",
                            width, height, length, volume);
             
             string title = "Block types: ";

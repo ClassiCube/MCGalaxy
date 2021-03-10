@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseRespawn(p)) {
-                p.Message("You cannot use &T/Spawn %Son this map.");
+                p.Message("You cannot use &T/Spawn &Son this map.");
                 p.isFlying = false; return;
             }
             

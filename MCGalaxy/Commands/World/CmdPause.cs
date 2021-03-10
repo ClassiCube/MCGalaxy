@@ -49,11 +49,11 @@ namespace MCGalaxy.Commands.World {
             lvl.PhysicsPaused = !lvl.PhysicsPaused;
             
             if (enabled) {
-                Chat.MessageGlobal("Physics on {0} %Swere re-enabled.", lvl.ColoredName);
+                Chat.MessageGlobal("Physics on {0} &Swere re-enabled.", lvl.ColoredName);
             } else {
                 Server.MainScheduler.QueueOnce(PauseCallback, lvl.name,
                                                TimeSpan.FromSeconds(seconds));
-                Chat.MessageGlobal("Physics on {0} %Swere temporarily disabled.", lvl.ColoredName);
+                Chat.MessageGlobal("Physics on {0} &Swere temporarily disabled.", lvl.ColoredName);
             }
         }
         
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl == null) return;
             
             lvl.PhysicsPaused = false;
-            Chat.MessageGlobal("Physics on {0} %Swere re-enabled.", lvl.ColoredName);
+            Chat.MessageGlobal("Physics on {0} &Swere re-enabled.", lvl.ColoredName);
         }
         
         public override void Help(Player p) {

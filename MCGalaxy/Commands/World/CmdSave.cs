@@ -60,18 +60,18 @@ namespace MCGalaxy.Commands.World {
             if (!force && !lvl.Changed) return false;
             
             if (!lvl.SaveChanges) {
-                p.Message("Level {0} %Sis running a game, skipping save", lvl.ColoredName);
+                p.Message("Level {0} &Sis running a game, skipping save", lvl.ColoredName);
                 return false;
             }
             
             bool saved = lvl.Save(force);
-            if (!saved) p.Message("Saving of level {0} %Swas cancelled", lvl.ColoredName);
+            if (!saved) p.Message("Saving of level {0} &Swas cancelled", lvl.ColoredName);
             return saved;
         }
         
         static void Save(Player p, Level lvl, string restoreName) {
             if (!TrySave(p, lvl, true)) return;
-            p.Message("Level {0} %Ssaved", lvl.ColoredName);
+            p.Message("Level {0} &Ssaved", lvl.ColoredName);
             
             string backup = lvl.Backup(true, restoreName);
             if (backup == null) return;
@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.World {
                 lvl.Message("Backup " + backup + " saved for " + lvl.ColoredName);
             } else {
                 Logger.Log(LogType.SystemActivity, "{0} had a backup created named &b{1}", lvl.name, backup);
-                lvl.Message(lvl.ColoredName + " %Shad a backup created named &b" + backup);
+                lvl.Message(lvl.ColoredName + " &Shad a backup created named &b" + backup);
             }
         }
         

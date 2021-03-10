@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Eco {
             p.Message("&HViews information about the specific item, such as its cost.");
             p.Message("&T/Store");
             p.Message("&HViews information about all enabled items.");
-            p.Message("&H  Available items: %S" + Economy.EnabledItemNames());
+            p.Message("&H  Available items: &S" + Economy.EnabledItemNames());
         }
     }
 }

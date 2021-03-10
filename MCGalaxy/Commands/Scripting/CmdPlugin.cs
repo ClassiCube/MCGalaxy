@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Scripting {
             string dstPath = IScripting.PluginPath(name);
             
             if (!File.Exists(srcPath)) {
-                p.Message("File &9{0} %Snot found.", srcPath);
+                p.Message("File &9{0} &Snot found.", srcPath);
             } else if (engine.Compile(srcPath, dstPath, p)) {
                 p.Message("Plugin compiled successfully.");
             } else {
@@ -77,7 +77,7 @@ namespace MCGalaxy.Commands.Scripting {
                     p.Message("&WError loading plugin. See error logs for more information.");
                 }
             } else {
-                p.Message("File &9{0} %Snot found.", path);
+                p.Message("File &9{0} &Snot found.", path);
             }
         }
         

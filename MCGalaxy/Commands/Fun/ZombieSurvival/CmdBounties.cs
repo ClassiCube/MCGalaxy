@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Fun {
                 Player pl = PlayerInfo.FindExact(bounty.Target);
                 if (pl == null) continue;
                 
-                p.Message("Bounty for {0} %Sis &a{1} %S{2}.", 
+                p.Message("Bounty for {0} &Sis &a{1} &S{2}.", 
                           p.FormatNick(pl), bounty.Amount, Server.Config.Currency);
             }
         }

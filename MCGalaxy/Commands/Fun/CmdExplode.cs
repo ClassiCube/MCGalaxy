@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Fun {
                 
                 P = target.Pos.BlockCoords;
                 if (DoExplode(p, target.level, ref P)) {
-                    p.Message("{0} %Shas been exploded!", p.FormatNick(target));
+                    p.Message("{0} &Shas been exploded!", p.FormatNick(target));
                 }
             } else if (args.Length == 3) {
                 if (!CommandParser.GetCoords(p, args, 0, ref P)) return;

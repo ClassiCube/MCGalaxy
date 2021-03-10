@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (color == null) return;
             
             p.Message("You changed the color of bot " + bot.ColoredName + 
-                      " %Sto " + color + Colors.Name(color));
+                      " &Sto " + color + Colors.Name(color));
             bot.color = color;
             
             bot.GlobalDespawn();

@@ -70,10 +70,10 @@ namespace MCGalaxy.Commands.Fun {
                 
                 if (value.CaselessEq("red")) {
                     cfg.RedSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                    p.Message("Set &cRed %Sspawn");
+                    p.Message("Set &cRed &Sspawn");
                 } else if (value.CaselessEq("blue")) {
                     cfg.BlueSpawn = (Vec3U16)p.Pos.FeetBlockCoords;
-                    p.Message("Set &9Blue %Sspawn");
+                    p.Message("Set &9Blue &Sspawn");
                 } else {
                     Help(p, "team"); return;
                 }
@@ -138,19 +138,19 @@ namespace MCGalaxy.Commands.Fun {
         }
         
         static void OutputStatus(Player p, TWConfig gameCfg, TWMapConfig cfg) {
-            p.Message("Gamemode: &a{0} %Sat difficulty &a{1}",
+            p.Message("Gamemode: &a{0} &Sat difficulty &a{1}",
                            gameCfg.Mode, gameCfg.Difficulty);
             p.Message("TNT per player at a time: &a{0}",
                            cfg.MaxActiveTnt == 0 ? "unlimited" : cfg.MaxActiveTnt.ToString());
-            p.Message("Grace period: {0} %S(for {1} seconds)",
+            p.Message("Grace period: {0} &S(for {1} seconds)",
                            GetBool(cfg.GracePeriod), cfg.GracePeriodTime);
-            p.Message("Team balancing: {0}%S, Team killing: {1}",
+            p.Message("Team balancing: {0}&S, Team killing: {1}",
                            GetBool(cfg.BalanceTeams), GetBool(cfg.TeamKills));
-            p.Message("Score: &a{0} %Spoints needed to win, &a{1} %Spoints per kill",
+            p.Message("Score: &a{0} &Spoints needed to win, &a{1} &Spoints per kill",
                            cfg.ScoreRequired, cfg.ScorePerKill);
-            p.Message("Streaks: {0}%S, Multikill bonus: {1}",
+            p.Message("Streaks: {0}&S, Multikill bonus: {1}",
                            GetBool(cfg.Streaks), GetBool(cfg.MultiKillBonus != 0));
-            p.Message("Assists: {0} %S(at {1} points)",
+            p.Message("Assists: {0} &S(at {1} points)",
                            GetBool(cfg.AssistScore > 0), cfg.AssistScore);
         }
         
@@ -163,7 +163,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (!CommandParser.GetInt(p, value, "Points", ref score, 0)) return false;
                 cfg.ScoreRequired = score;
                 
-                p.Message("Score required to win is now &a{0} %Spoints!", score);
+                p.Message("Score required to win is now &a{0} &Spoints!", score);
             } else if (opt.CaselessEq("streaks")) {
                 SetBool(p, ref cfg.Streaks, value, "Streaks");
             } else if (opt.CaselessEq("multi")) {
@@ -174,14 +174,14 @@ namespace MCGalaxy.Commands.Fun {
                 if (multi == 0) {
                     p.Message("Multikill bonus is now &cdisabled");
                 } else {
-                    p.Message("Scores per extra kill is now &a{0} %Spoints", multi);
+                    p.Message("Scores per extra kill is now &a{0} &Spoints", multi);
                 }
             } else if (opt.CaselessEq("kill")) {
                 int kill = 1;
                 if (!CommandParser.GetInt(p, value, "Points", ref kill, 0)) return false;
                 cfg.ScorePerKill = kill;
                 
-                p.Message("Score per kill is now &a{0} %Spoints", kill);
+                p.Message("Score per kill is now &a{0} &Spoints", kill);
             } else if (opt.CaselessEq("assist")) {
                 int assist = 1;
                 if (!CommandParser.GetInt(p, value, "Points", ref assist, 0)) return false;
@@ -190,7 +190,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (assist == 0) {
                     p.Message("Scores per assist is now &cdisabled");
                 } else {
-                    p.Message("Score per assist is now &a{0} %Spoints", assist);
+                    p.Message("Score per assist is now &a{0} &Spoints", assist);
                 }
             } else {
                 return false;

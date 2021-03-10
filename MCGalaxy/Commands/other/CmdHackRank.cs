@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Misc {
             if (who == null) return;
 
             string msg = "for hacking the rank " + args.newRank.ColoredName;
-            who.Leave("kicked (" + msg + "%S)", "Kicked " + msg);
+            who.Leave("kicked (" + msg + "&S)", "Kicked " + msg);
         }
         
         class HackRankArgs { public string name; public Group newRank; }

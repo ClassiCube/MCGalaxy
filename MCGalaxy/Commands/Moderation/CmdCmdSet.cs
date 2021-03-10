@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Moderation {
             } else {
                 CommandExtraPerms.Save();
                 CommandExtraPerms ex = (CommandExtraPerms)perms;
-                //Announce(p, cmd.name + "%S's extra permission " + idx + " was set to " + grp.ColoredName);
+                //Announce(p, cmd.name + "&S's extra permission " + idx + " was set to " + grp.ColoredName);
                 Announce(p, ex.CmdName + " extra permission #" + ex.Num + msg);
             }
         }

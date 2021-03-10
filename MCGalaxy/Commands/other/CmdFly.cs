@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseFly(p)) {
-                p.Message("You cannot use &T/Fly %Son this map.");
+                p.Message("You cannot use &T/Fly &Son this map.");
                 p.isFlying = false; return;
             }
             

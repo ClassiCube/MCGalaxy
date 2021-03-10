@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Fun {
             p.level.SaveSettings();
             
             prefix = like ? "&a" : "&cdis";
-            p.Message("You have {0}liked %Sthis map.", prefix);
+            p.Message("You have {0}liked &Sthis map.", prefix);
             return true;
         }
         

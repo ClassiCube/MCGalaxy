@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Fun {
             p.SetPrefix();
             Team.Add(team);
             Team.SaveList();
-            Chat.MessageFrom(p, "λNICK %Screated the &a" + args[1] + " %Steam");
+            Chat.MessageFrom(p, "λNICK &Screated the &a" + args[1] + " &Steam");
         }
         
         void HandleJoin(Player p, string[] args) {
@@ -166,8 +166,8 @@ namespace MCGalaxy.Commands.Fun {
             }
             p.NextTeamInvite = now.AddSeconds(5);
             
-            p.Message("Invited {0} %Sto join your team.", p.FormatNick(target));
-            target.Message(p.ColoredName + " %Sinvited you to join the " + team.Color + team.Name + " %Steam.");
+            p.Message("Invited {0} &Sto join your team.", p.FormatNick(target));
+            target.Message(p.ColoredName + " &Sinvited you to join the " + team.Color + team.Name + " &Steam.");
             target.Game.TeamInvite = team.Name;
         }
         

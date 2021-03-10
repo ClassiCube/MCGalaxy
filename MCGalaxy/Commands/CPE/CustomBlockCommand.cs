@@ -103,9 +103,9 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = GetBD(p, global);
             def.SetBlock(target);
             
-            p.Message("Use &T{0} abort %Sat anytime to abort the creation process.", cmd);
-            p.Message("  Use &T{0} revert %Sto go back a step", cmd);
-            p.Message("  Use &T{0} [input] %Sto provide input", cmd);
+            p.Message("Use &T{0} abort &Sat anytime to abort the creation process.", cmd);
+            p.Message("  Use &T{0} revert &Sto go back a step", cmd);
+            p.Message("  Use &T{0} [input] &Sto provide input", cmd);
             p.Message("&f----------------------------------------------------------");
             
             SetStep(p, global, 2);
@@ -282,7 +282,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static string FormatBlock(BlockDefinition def) {
-            return "Custom block &T" + def.RawID + " %Shas name &T" + def.Name;
+            return "Custom block &T" + def.RawID + " &Shas name &T" + def.Name;
         }
         
         static void DoRemove(Player p, Level lvl, BlockID block, 
@@ -632,13 +632,13 @@ namespace MCGalaxy.Commands.CPE {
         static void MessageNoBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
             p.Message("&WThere is no {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            p.Message("Type &T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
+            p.Message("Type &T{0} list &Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static void MessageAlreadyBlock(Player p, BlockID block, bool global, string cmd) {
             string scope = global ? "global" : "level";
             p.Message("&WThere is already a {1} custom block with the id \"{0}\".", Block.ToRaw(block), scope);
-            p.Message("Type &T{0} list %Sto see a list of {1} custom blocks.", cmd, scope);
+            p.Message("Type &T{0} list &Sto see a list of {1} custom blocks.", cmd, scope);
         }
         
         static bool EditByte(Player p, string value, string propName, ref byte target, string help) {

@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Info {
             string nick = p.FormatNick(name);
             
             if (rankings.Count == 0) {
-                p.Message("{0} %Shas no rankings.", nick); return;
+                p.Message("{0} &Shas no rankings.", nick); return;
             } else {
                 p.Message("  Rankings for {0}:", nick);
             }
@@ -67,7 +67,7 @@ namespace MCGalaxy.Commands.Info {
                 p.Message("&aFrom {0} &ato {1} &a{2} ago", 
                                Group.GetColoredName(oldRank), Group.GetColoredName(newRank), 
                                delta.Shorten(true, false));
-                p.Message("&aBy %S{0}&a, reason: %S{1}", p.FormatNick(args[1]), reason);
+                p.Message("&aBy &S{0}&a, reason: &S{1}", p.FormatNick(args[1]), reason);
             }
         }
         

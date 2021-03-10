@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
 
         public override void Use(Player p, string message, CommandData data) {
            p.ClickToMark = !p.ClickToMark;
-           p.Message("Click blocks to &T/mark%S: {0}", p.ClickToMark ? "&2ON" : "&4OFF");
+           p.Message("Click blocks to &T/mark&S: {0}", p.ClickToMark ? "&2ON" : "&4OFF");
         }
         
         public override void Help(Player p) {

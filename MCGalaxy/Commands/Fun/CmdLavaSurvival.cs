@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Flood position: &b" + cfg.FloodPos);
                 p.Message("Layer position: &b" + cfg.LayerPos);
                 p.Message("Layer flood chance: &b" + cfg.LayerChance + "%");
-                p.Message("  &b{0} %Slayers, each &b{1} %Sblocks tall",
+                p.Message("  &b{0} &Slayers, each &b{1} &Sblocks tall",
                                cfg.LayerCount, cfg.LayerHeight);
                 return;
             }

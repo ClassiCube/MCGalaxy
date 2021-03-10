@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (message.Length == 0) {
                 if (p.ModeBlock != Block.Invalid) {
-                    p.Message("&b{0} %Smode: &cOFF", Block.GetName(p, p.ModeBlock));
+                    p.Message("&b{0} &Smode: &cOFF", Block.GetName(p, p.ModeBlock));
                     p.ModeBlock = Block.Invalid;
                 } else {
                     Help(p);
@@ -54,11 +54,11 @@ namespace MCGalaxy.Commands.Building {
             if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
             
             if (p.ModeBlock == block) {
-                p.Message("&b{0} %Smode: &cOFF", Block.GetName(p, p.ModeBlock));
+                p.Message("&b{0} &Smode: &cOFF", Block.GetName(p, p.ModeBlock));
                 p.ModeBlock = Block.Invalid;
             } else {
                 p.ModeBlock = block;
-                p.Message("&b{0} %Smode: &aON", Block.GetName(p, p.ModeBlock));
+                p.Message("&b{0} &Smode: &aON", Block.GetName(p, p.ModeBlock));
             }
         }
         

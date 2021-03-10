@@ -46,12 +46,12 @@ namespace MCGalaxy.Commands.Fun {
             
             if (prop.CaselessEq("hitbox")) {
                 if (!CommandParser.GetReal(p, args[2], "Hitbox detection", ref cfg.HitboxDist, 0, 4)) return;
-                p.Message("Set hitbox detection to &a" + cfg.HitboxDist + " %Sblocks apart");
+                p.Message("Set hitbox detection to &a" + cfg.HitboxDist + " &Sblocks apart");
                 
                 cfg.Save(); return;
             } else if (prop.CaselessEq("maxmove")) {
                 if (!CommandParser.GetReal(p, args[2], "Max move distance", ref cfg.MaxMoveDist, 0, 4)) return;
-                p.Message("Set max move distance to &a" + cfg.MaxMoveDist + " %Sblocks apart");
+                p.Message("Set max move distance to &a" + cfg.MaxMoveDist + " &Sblocks apart");
                 
                 cfg.Save(); return;
             } else if (prop.CaselessEq("pillaring")) {

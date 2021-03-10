@@ -25,10 +25,10 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             Level[] loaded = LevelInfo.Loaded.Items;
-            p.Message("Loaded levels [physics level] (&c[no] %Sif not visitable): ");
+            p.Message("Loaded levels [physics level] (&c[no] &Sif not visitable): ");
             MultiPageOutput.Output(p, loaded, (lvl) => FormatMap(p, lvl),
                                    "Levels", "levels", message, false);
-            p.Message("Use &T/Levels %Sfor all levels.");
+            p.Message("Use &T/Levels &Sfor all levels.");
         }
         
         static string FormatMap(Player p, Level lvl) {            

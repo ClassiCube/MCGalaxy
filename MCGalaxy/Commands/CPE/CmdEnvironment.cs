@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.CPE {
                 cfg.LightColor  = preset.Sun;
             } else if (type.CaselessEq("normal")) {
                 cfg.ResetEnv();
-                p.Message("Reset environment for {0} %Sto normal", area);
+                p.Message("Reset environment for {0} &Sto normal", area);
             } else {
                 EnvOption opt = EnvOptions.Find(type);
                 if (opt == null) return false;

@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void CreateZone(Player p, string[] args, CommandData data, int offset) {
             if (p.level.FindZoneExact(args[offset]) != null) {
-                p.Message("A zone with that name already exists. Use &T/zedit %Sto change it.");
+                p.Message("A zone with that name already exists. Use &T/zedit &Sto change it.");
                 return;
             }
             if (!LevelInfo.Check(p, data.Rank, p.level, "create zones in this level")) return;
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             p.Message("Creating zone " + z.ColoredName);
             p.Message("Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SNew zone", z, AddZone);
+            p.MakeSelection(2, "Selecting region for &SNew zone", z, AddZone);
         }
         
         bool AddZone(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             zone.RemoveFrom(lvl);
-            p.Message("Zone " + zone.ColoredName + " %Sdeleted");
+            p.Message("Zone " + zone.ColoredName + " &Sdeleted");
             lvl.Save(true);
         }
         
@@ -186,7 +186,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Place or delete a block where you would like to check for zones.");
-            p.MakeSelection(1, "Selecting point for %SZone check", data, TestZone);
+            p.MakeSelection(1, "Selecting point for &SZone check", data, TestZone);
         }
         
         bool TestZone(Player p, Vec3S32[] marks, object state, BlockID block) {
@@ -203,7 +203,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 AccessResult status = z.Access.Check(p.name, data.Rank);
                 bool allowed = z.Access.CheckAllowed(p);
-                p.Message("  Zone {0} %S- {1}{2}", z.ColoredName, allowed ? "&a" : "&c", status );
+                p.Message("  Zone {0} &S- {1}{2}", z.ColoredName, allowed ? "&a" : "&c", status );
             }
             
             if (!found) { p.Message("No zones affect this block."); }

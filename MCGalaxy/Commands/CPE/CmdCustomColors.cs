@@ -92,8 +92,8 @@ namespace MCGalaxy.Commands.CPE {
         
         // Not very elegant, because we don't want the % to be escaped like everywhere else
         internal static string FormatColor(ColorDesc col) {
-            string format = "{0} &{1}({2})%S - %%S{1}, falls back to &{3}%&{3}{3}";
-            if (col.Code == col.Fallback) format = "{0} &{1}({2})%S - %&S{1}";
+            string format = "{0} &{1}({2})&S - %&S{1}, falls back to &{3}%&{3}{3}";
+            if (col.Code == col.Fallback) format = "{0} &{1}({2})&S - %&S{1}";
 
             return string.Format(format, col.Name, col.Code, Utils.Hex(col.R, col.G, col.B), col.Fallback);
         }
@@ -147,7 +147,7 @@ namespace MCGalaxy.Commands.CPE {
                 if (Colors.IsDefined(code)) return code;
                 
                 p.Message("There is no color with the code {0}.", code);
-                p.Message("Use &T/CustomColors list %Sto see a list of colors.");
+                p.Message("Use &T/CustomColors list &Sto see a list of colors.");
             }
             return '\0';
         }

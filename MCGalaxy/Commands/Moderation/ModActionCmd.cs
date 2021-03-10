@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.Moderation {
             BlockID block = who.ModeBlock;
             if (block != Block.Invalid && !CommandParser.IsBlockAllowed(who, "place", block)) {
                 who.ModeBlock = Block.Invalid;
-                who.Message("   Hence, &b{0} %Smode was turned &cOFF",
+                who.Message("   Hence, &b{0} &Smode was turned &cOFF",
                             Block.GetName(who, block));
             }
             
@@ -125,7 +125,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 if (!CommandParser.IsBlockAllowed(who, "place", block)) {
                     who.BlockBindings[b] = (BlockID)b;
-                    who.Message("   Hence, binding for &b{0} %Swas unbound",
+                    who.Message("   Hence, binding for &b{0} &Swas unbound",
                                 Block.GetName(who, (BlockID)b));
                 }
             }

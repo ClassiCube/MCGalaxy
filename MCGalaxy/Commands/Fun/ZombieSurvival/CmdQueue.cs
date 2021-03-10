@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message(value + " was queued.");
                 ZSGame.Instance.QueuedZombie = who.name;
                 if (ZSGame.Instance.Map != null)
-                    ZSGame.Instance.Map.Message(who.ColoredName + " %Swas queued as the next zombie.");
+                    ZSGame.Instance.Map.Message(who.ColoredName + " &Swas queued as the next zombie.");
             } else if (args[0].CaselessEq("level")) {
                 string map = Matcher.FindMaps(p, value);
                 if (map == null) return;

@@ -83,9 +83,9 @@ namespace MCGalaxy.Commands {
         protected void MessageFrom(string target, Player who, string message) {
             if (who == null) {
                 string nick = Player.Console.FormatNick(target);
-                Chat.MessageGlobal(nick + " %S" + message);
+                Chat.MessageGlobal(nick + " &S" + message);
             } else {
-                Chat.MessageFrom(who, "λNICK %S" + message);
+                Chat.MessageFrom(who, "λNICK &S" + message);
             }
         }
     }

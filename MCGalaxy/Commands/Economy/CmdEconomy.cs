@@ -56,13 +56,13 @@ namespace MCGalaxy.Commands.Eco {
         public override void Help(Player p) {
             p.Message("&T/Eco enable/disable &H- Enables/disables the economy system.");
             p.Message("&T/Eco help [item] &H- Outputs help for setting up that item.");
-            p.Message("   &HAll items: %S" + Economy.Items.Join(item => item.Name));
+            p.Message("   &HAll items: &S" + Economy.Items.Join(item => item.Name));
         }
         
         public override void Help(Player p, string message) {
             Item item = Economy.GetItem(message);
             if (item == null) {
-                p.Message("No item has that name, see &T/Eco help %Sfor a list of items.");
+                p.Message("No item has that name, see &T/Eco help &Sfor a list of items.");
             } else {
                 item.OnSetupHelp(p);
             }

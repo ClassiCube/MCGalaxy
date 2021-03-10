@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.World {
                 if (CmdResizeLvl.DoResize(p, args, p.DefaultCmdData, out needConfirm)) return;
                 
                 if (!needConfirm) return;
-                p.Message("Type &T/os map resize {0} {1} {2} confirm %Sif you're sure.",
+                p.Message("Type &T/os map resize {0} {1} {2} confirm &Sif you're sure.",
                           args[1], args[2], args[3]);
             } else if (cmd == "PERVISIT") {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
@@ -161,7 +161,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl == null) return;
             
             MapGen.SetRealmPerms(p, lvl);
-            p.Message("Use &T/os zone add [name] %Sto allow other players to build in the map.");
+            p.Message("Use &T/os zone add [name] &Sto allow other players to build in the map.");
             
             try {
                 lvl.Save(true);

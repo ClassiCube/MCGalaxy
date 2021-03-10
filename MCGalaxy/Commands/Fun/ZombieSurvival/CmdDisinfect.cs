@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Cannot disinfect player");
             } else if (!who.Game.Referee) {
                 ZSGame.Instance.DisinfectPlayer(who);
-                Chat.MessageFrom(who, "λNICK %Swas disinfected.");
+                Chat.MessageFrom(who, "λNICK &Swas disinfected.");
             }
         }
         

@@ -46,10 +46,10 @@ namespace MCGalaxy.Commands.Misc {
                     if (target.level == p.level && target != p && data.Rank > target.Rank) {
                         target.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
                         target.SendPos(Entities.SelfID, p.Pos, p.Rot);
-                        target.Message("You were summoned by {0}%S.", target.FormatNick(p));
+                        target.Message("You were summoned by {0}&S.", target.FormatNick(p));
                     }
                 }
-                Chat.MessageFromLevel(p, "λNICK %Ssummoned everyone");
+                Chat.MessageFromLevel(p, "λNICK &Ssummoned everyone");
             }
         }
         
@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Misc {
             
             if (p.level != target.level) {
                 if (!CheckVisitPerm(p, target, confirmed)) return;
-                p.Message("{0} %Sis in a different level, moving them..", p.FormatNick(target));
+                p.Message("{0} &Sis in a different level, moving them..", p.FormatNick(target));
                 
                 target.summonedMap = p.level.name;
                 PlayerActions.ChangeMap(target, p.level);
@@ -75,7 +75,7 @@ namespace MCGalaxy.Commands.Misc {
             
             target.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
             target.SendPos(Entities.SelfID, p.Pos, p.Rot);
-            target.Message("You were summoned by {0}%S.", target.FormatNick(p));
+            target.Message("You were summoned by {0}&S.", target.FormatNick(p));
         }
         
         static bool CheckVisitPerm(Player p, Player target, bool confirmed) {
@@ -86,14 +86,14 @@ namespace MCGalaxy.Commands.Misc {
             if (result == AccessResult.BelowMinRank && confirmed) return true;
             
             if (result == AccessResult.Blacklisted) {
-                p.Message("{0} %Sis blacklisted from visiting this map.", p.FormatNick(target));
+                p.Message("{0} &Sis blacklisted from visiting this map.", p.FormatNick(target));
                 return false;
             } else if (result == AccessResult.BelowMinRank) {
-                p.Message("Only {0}%S+ may normally visit this map. {1}%S is ranked {2}",
+                p.Message("Only {0}&S+ may normally visit this map. {1}&S is ranked {2}",
                           Group.GetColoredName(p.level.VisitAccess.Min),
                           p.FormatNick(target), target.group.ColoredName);
             } else if (result == AccessResult.AboveMaxRank) {
-                p.Message("Only {0}%S and below may normally visit this map. {1}%S is ranked {2}",
+                p.Message("Only {0}&S and below may normally visit this map. {1}&S is ranked {2}",
                           Group.GetColoredName(p.level.VisitAccess.Max),
                           p.FormatNick(target), target.group.ColoredName);
             }

@@ -41,22 +41,22 @@ namespace MCGalaxy.Commands.Maintenance {
             if (!LevelInfo.Check(p, data.Rank, lvl, "change BlockDB state of this level")) return;
             
             if (args[0].CaselessEq("clear")) {
-                p.Message("Clearing &cALL %Sblock changes for {0}%S...", lvl.ColoredName);
+                p.Message("Clearing &cALL &Sblock changes for {0}&S...", lvl.ColoredName);
                 if (Database.TableExists("Block" + lvl.name))
                     Database.DeleteTable("Block" + lvl.name);
                 lvl.BlockDB.DeleteBackingFile();
-                p.Message("Cleared &cALL %Sblock changes for " + lvl.ColoredName);
+                p.Message("Cleared &cALL &Sblock changes for " + lvl.ColoredName);
             } else if (args[0].CaselessEq("disable")) {
                 lvl.Config.UseBlockDB = false;
                 lvl.BlockDB.Cache.Enabled = false;
                 
-                p.Message("&cDisabled %Srecording further block changes for " + lvl.ColoredName);
+                p.Message("&cDisabled &Srecording further block changes for " + lvl.ColoredName);
                 lvl.SaveSettings();
             } else if (args[0].CaselessEq("enable")) {
                 lvl.Config.UseBlockDB = true;
                 lvl.BlockDB.Cache.Enabled = true;
                 
-                p.Message("&aEnabled %Srecording further block changes for " + lvl.ColoredName);
+                p.Message("&aEnabled &Srecording further block changes for " + lvl.ColoredName);
                 lvl.SaveSettings();
             } else {
                 Help(p);

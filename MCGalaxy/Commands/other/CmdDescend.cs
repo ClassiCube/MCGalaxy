@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Misc {
 
         public override void Use(Player p, string message, CommandData data) {
             if (!Hacks.CanUseHacks(p)) {
-                p.Message("You cannot use &T/Descend %Son this map."); return;
+                p.Message("You cannot use &T/Descend &Son this map."); return;
             }
 
             // Move starting position down half a block since players are a little bit above the ground.

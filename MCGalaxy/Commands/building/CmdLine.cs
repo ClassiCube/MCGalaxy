@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Building {
             if (dArgs.Mode != DrawMode.wire) return true;
             
             // special for connected line mode
-            p.MakeSelection(MarksCount, "Selecting endpoints for %S" + dArgs.Op.Name, dArgs, DoDraw);
+            p.MakeSelection(MarksCount, "Selecting endpoints for &S" + dArgs.Op.Name, dArgs, DoDraw);
             Vec3U16 pos = p.lastClick;
             p.DoBlockchangeCallback(pos.X, pos.Y, pos.Z, p.GetHeldBlock());
             return false;

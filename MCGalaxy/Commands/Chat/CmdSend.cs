@@ -47,11 +47,11 @@ namespace MCGalaxy.Commands.Chatting {
             p.CheckForMessageSpam();
 
             Player target = PlayerInfo.FindExact(name);
-            p.Message("Message sent to {0}%S.", p.FormatNick(name));
+            p.Message("Message sent to {0}&S.", p.FormatNick(name));
             if (target == null) return;
             
             if (!Chat.Ignoring(target, p)) {
-                target.Message("Message received from {0}%S. Check &T/Inbox", target.FormatNick(p));
+                target.Message("Message received from {0}&S. Check &T/Inbox", target.FormatNick(p));
             }
         }
         

@@ -28,7 +28,7 @@ namespace MCGalaxy.SQL {
         public static IDatabaseBackend Instance = new MySQLBackend();
         public MySQLBackend() {
             CaselessWhereSuffix = " COLLATE utf8_general_ci";
-            CaselessLikeSuffix = "";
+            CaselessLikeSuffix  = "";
         }
         
         public override bool EnforcesTextLength { get { return true; } }

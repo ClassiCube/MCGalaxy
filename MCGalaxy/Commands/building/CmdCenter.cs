@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Place or break two blocks to determine the edges.");
-            p.MakeSelection(2, "Selecting region for %SCenter", null, DoCentre);
+            p.MakeSelection(2, "Selecting region for &SCenter", null, DoCentre);
         }
         
         bool DoCentre(Player p, Vec3S32[] m, object state, BlockID block) {

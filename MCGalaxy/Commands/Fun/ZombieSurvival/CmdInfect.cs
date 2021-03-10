@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("Cannot infect player");
             } else if (!who.Game.Referee) {
                 ZSGame.Instance.InfectPlayer(who, p);
-                Chat.MessageFrom(who, "λNICK %Swas infected.");
+                Chat.MessageFrom(who, "λNICK &Swas infected.");
             }
         }
         

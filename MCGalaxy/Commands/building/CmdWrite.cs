@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             Player p = dArgs.Player;
             if (!p.CanUse("Write")) {
-                p.Message("You must be able to use &T/Write %Sto use &T/WriteText."); return null;
+                p.Message("You must be able to use &T/Write &Sto use &T/WriteText."); return null;
             }
             
             string[] args = dArgs.Message.SplitSpaces(3);

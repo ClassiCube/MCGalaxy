@@ -29,11 +29,11 @@ namespace MCGalaxy.Commands.Fun {
         
         public override void Use(Player p, string message, CommandData data) {
             if (p.Game.Referee) {
-                Chat.MessageFrom(p, "λNICK %Sis no longer a referee");
+                Chat.MessageFrom(p, "λNICK &Sis no longer a referee");
                 OnPlayerActionEvent.Call(p, PlayerAction.UnReferee);
                 p.Game.Referee = false;
             } else {
-                Chat.MessageFrom(p, "λNICK %Sis now a referee");
+                Chat.MessageFrom(p, "λNICK &Sis now a referee");
                 OnPlayerActionEvent.Call(p, PlayerAction.Referee);
                 p.Game.Referee = true;
             }

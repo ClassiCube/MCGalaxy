@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!Ban.ChangeBanReason(args[0], args[1])) {
                 p.Message("That player isn't banned.");
             } else {
-                p.Message("Set ban reason for &0{0} %Sto: &2{1}", args[0], args[1]);
+                p.Message("Set ban reason for &0{0} &Sto: &2{1}", args[0], args[1]);
             }
         }
         

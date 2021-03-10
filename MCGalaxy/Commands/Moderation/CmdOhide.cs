@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!own) data.Rank = target.Rank;
             
             Command.Find("Hide").Use(target, "", data);
-            p.Message("Hidden {0} %Sfrom players ranked below {1}",
+            p.Message("Hidden {0} &Sfrom players ranked below {1}",
                       p.FormatNick(target), Group.GetColoredName(data.Rank));
         }
 

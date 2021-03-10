@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Bots {
         
         static string FormatBot(PlayerBot bot) {
             string desc = bot.DisplayName;
-            if (bot.DisplayName != bot.name) desc += "%S(&1" + bot.name + "%S)";
+            if (bot.DisplayName != bot.name) desc += "&S(&1" + bot.name + "&S)";
             
             if (!String.IsNullOrEmpty(bot.AIName)) {
                 desc += "[" + bot.AIName + "]";

@@ -36,14 +36,14 @@ namespace MCGalaxy.Commands.Misc {
 
         internal static void DoFakerank(Player p, Player who, Group newRank) {            
             if (newRank.Permission == LevelPermission.Banned) {
-                Chat.MessageGlobal("{0} %Swas &8banned%S.", who.ColoredName);
+                Chat.MessageGlobal("{0} &Swas &8banned&S.", who.ColoredName);
             } else {
                 string reason    = newRank.Permission >= who.Rank ? Server.Config.DefaultPromoteMessage : Server.Config.DefaultDemoteMessage;
-                string direction = newRank.Permission >= who.Rank ? " %Swas promoted to " : " %Swas demoted to ";
-                string rankMsg   = who.ColoredName + direction + newRank.ColoredName + "%S. (" + reason + "%S)";
+                string direction = newRank.Permission >= who.Rank ? " &Swas promoted to " : " &Swas demoted to ";
+                string rankMsg   = who.ColoredName + direction + newRank.ColoredName + "&S. (" + reason + "&S)";
                 
                 Chat.MessageGlobal(rankMsg);
-                who.Message("You are now ranked {0}%S, type /Help for your new set of commands.", newRank.ColoredName);
+                who.Message("You are now ranked {0}&S, type /Help for your new set of commands.", newRank.ColoredName);
             }
         	who.UpdateColor(newRank.Color);         
         }

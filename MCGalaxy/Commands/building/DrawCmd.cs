@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Building {
             if (!factory.Validate(bArgs)) return;
             
             p.Message(PlaceMessage);
-            p.MakeSelection(MarksCount, "Selecting " + SelectionType + " for %S" + dArgs.Op.Name, dArgs, DoDraw);
+            p.MakeSelection(MarksCount, "Selecting " + SelectionType + " for &S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
         protected virtual DrawArgs MakeArgs(Player p, string message) {

@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Misc {
 
             if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
             if (target != null && target.Loading) {
-                p.Message("Waiting for {0} %Sto spawn..", p.FormatNick(target));
+                p.Message("Waiting for {0} &Sto spawn..", p.FormatNick(target));
                 target.BlockUntilLoad(10);
             }
             
@@ -116,7 +116,7 @@ namespace MCGalaxy.Commands.Misc {
         
         static bool CheckPlayer(Player p, Player target, CommandData data) {
             if (target.level.IsMuseum) {
-                p.Message("{0} %Sis in a museum.", p.FormatNick(target)); return false;
+                p.Message("{0} &Sis in a museum.", p.FormatNick(target)); return false;
             }          
             if (!Server.Config.HigherRankTP && !CheckRank(p, data, target, "teleport to", true)) return false;
             

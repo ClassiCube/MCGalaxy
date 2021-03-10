@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Building {
             p.painting = !p.painting;
             
             string type = p.painting ? "&aON" : "&cOFF";
-            p.Message("Painting mode: " + type + "%S.");
+            p.Message("Painting mode: " + type + "&S.");
         }
         
         public override void Help(Player p) {
