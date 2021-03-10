@@ -82,9 +82,7 @@ namespace MCGalaxy {
             frozen = PlayerExtList.Load("ranks/frozen.txt");
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans  = PlayerExtList.Load(Paths.TempBansFile);
-            
-            if (Server.Config.WhitelistedOnly)
-                whiteList = PlayerList.Load("ranks/whitelist.txt");
+            whiteList = PlayerList.Load("ranks/whitelist.txt");
 	    }
         
         static void LoadAutoloadMaps(SchedulerTask task) {

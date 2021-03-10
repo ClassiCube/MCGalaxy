@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void Add(Player p, string player) {
             if (!Server.whiteList.Add(player)) {
-                p.Message(player + " %Sis already on the whitelist!"); return;
+                p.Message("{0} %Sis already on the whitelist!", p.FormatNick(player));
             } else {
                 Chat.MessageFromOps(p, "λNICK %Sadded &f" + player + " %Sto the whitelist.");
                 Server.whiteList.Save();
@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void Remove(Player p, string player) {
             if (!Server.whiteList.Remove(player)) {
-                p.Message(player + " %Sis not on the whitelist!"); return;
+        	    p.Message("{0} %Sis not on the whitelist!", p.FormatNick(player));
             } else {
                 Server.whiteList.Save();
                 Chat.MessageFromOps(p, "λNICK %Sremoved &f" + player + " %Sfrom the whitelist.");

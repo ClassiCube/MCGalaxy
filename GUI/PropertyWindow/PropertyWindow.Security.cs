@@ -55,10 +55,8 @@ namespace MCGalaxy.Gui {
             Server.Config.LogNotes = sec_cbLogNotes.Checked;
             Server.Config.verifyadmins = sec_cbVerifyAdmins.Checked;
             Server.Config.VerifyAdminsRank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
-            Server.Config.WhitelistedOnly = sec_cbWhitelist.Checked;
-            if (Server.Config.WhitelistedOnly && Server.whiteList == null)
-                Server.whiteList = PlayerList.Load("ranks/whitelist.txt");
-            
+            Server.Config.WhitelistedOnly  = sec_cbWhitelist.Checked;
+
             Server.Config.ChatSpamCheck = sec_cbChatAuto.Checked;
             Server.Config.ChatSpamCount = (int)sec_numChatMsgs.Value;
             Server.Config.ChatSpamInterval = sec_numChatSecs.Value;
