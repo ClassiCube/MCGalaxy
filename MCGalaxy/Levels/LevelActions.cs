@@ -322,7 +322,7 @@ namespace MCGalaxy {
                 LevelInfo.Add(lvl);
                 if (!announce) return lvl;
                 
-                string autoloadMsg = "Level " + lvl.ColoredName + " %Sloaded.";
+                string autoloadMsg = "Level " + lvl.ColoredName + " &Sloaded.";
                 Chat.Message(ChatScope.All, autoloadMsg, null, Chat.FilterVisible(p));
                 return lvl;
             } finally {

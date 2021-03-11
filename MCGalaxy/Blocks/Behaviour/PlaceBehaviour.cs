@@ -77,7 +77,7 @@ namespace MCGalaxy.Blocks {
                 p.c4circuitNumber = num;
                 
                 string detonatorName = Block.GetName(p, Block.Red);
-                p.Message("Place more blocks for more c4, then place a &c{0} %Sblock for the detonator.", 
+                p.Message("Place more blocks for more c4, then place a &c{0} &Sblock for the detonator.", 
                                detonatorName);
             }
             

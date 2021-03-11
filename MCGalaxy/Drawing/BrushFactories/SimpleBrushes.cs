@@ -96,7 +96,7 @@ namespace MCGalaxy.Drawing.Brushes {
             "&TArguments: [block1] [block2]..",
             "&HDraws by pasting only the given blocks from current &T/Copy.",
             "&TArguments: not [block1] [block2]..",
-            "&HDraws by pasting blocks from current &T/Copy, %Sexcept for the given blocks.",
+            "&HDraws by pasting blocks from current &T/Copy, &Sexcept for the given blocks.",
         };
         
         public override Brush Construct(BrushArgs args) {

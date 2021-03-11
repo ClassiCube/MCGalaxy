@@ -68,7 +68,7 @@ namespace MCGalaxy {
         }
         
         public static void MessageNeedMinPerm(Player p, string action, LevelPermission perm) {
-            p.Message("Only {0}%S{1}", Group.GetColoredName(perm), action);
+            p.Message("Only {0}&S{1}", Group.GetColoredName(perm), action);
         }
         
         public static bool ValidName(Player p, string name, string type) {

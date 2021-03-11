@@ -48,7 +48,7 @@ namespace MCGalaxy.Core {
                 int used = p.Extras.GetInt("MCG_PONY");
                             
                 if (used < 2) {
-                    Chat.MessageFrom(p, "λNICK %Sjust so happens to be a proud brony! Everyone give λNICK %Sa brohoof!");
+                    Chat.MessageFrom(p, "λNICK &Sjust so happens to be a proud brony! Everyone give λNICK &Sa brohoof!");
                     Logger.Log(LogType.CommandUsage, "{0} used /{1}", p.name, cmd);
                 } else {
                     p.Message("You have used this command 2 times. You cannot use it anymore! Sorry, Brony!");

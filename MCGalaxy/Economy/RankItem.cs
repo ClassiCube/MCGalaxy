@@ -132,9 +132,9 @@ namespace MCGalaxy.Eco {
         protected internal override void OnStoreOverview(Player p) {
             RankEntry next = NextRank(p);
             if (next == null) {
-                p.Message("&6Rankup %S- &Wno further ranks to buy.");
+                p.Message("&6Rankup &S- &Wno further ranks to buy.");
             } else {
-                p.Message("&6Rankup to {0} %S- &a{1} %S{2}",
+                p.Message("&6Rankup to {0} &S- &a{1} &S{2}",
                                Group.GetColoredName(next.Perm), next.Price, Server.Config.Currency);
             }
         }
@@ -150,7 +150,7 @@ namespace MCGalaxy.Eco {
             p.Message("&WYou can only buy ranks one at a time, in sequential order.");
             
             foreach (RankEntry rank in Ranks) {
-                p.Message("&6{0} %S- &a{1} %S{2}",
+                p.Message("&6{0} &S- &a{1} &S{2}",
                                Group.GetColoredName(rank.Perm), rank.Price, Server.Config.Currency);
             }
         }

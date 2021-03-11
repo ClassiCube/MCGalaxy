@@ -37,14 +37,14 @@ namespace MCGalaxy.Blocks {
         public static List<BlockOption> Options = new List<BlockOption>() {
             new BlockOption("Portal",       SetPortal, "&HToggles whether the block is a &T/Portal"),
             new BlockOption("MessageBlock", SetMB,     "&HToggles whether the block is a &T/MessageBlock"),
-            new BlockOption("Rails",        SetRails,  "&HToggles whether %Strain &Hblocks can run over this block"),
+            new BlockOption("Rails",        SetRails,  "&HToggles whether &Strain &Hblocks can run over this block"),
             new BlockOption("WaterKills",   SetWater,  "&HToggles whether flooding water kills this block"),
             new BlockOption("LavaKills",    SetLava,   "&HToggles whether flooding lava kills this block"),
             new BlockOption("Door",         SetDoor,   "&HToggles whether this block is a Door block"),
             new BlockOption("tDoor",        SetTDoor,  "&HToggles whether this block is a tDoor block"),
             new BlockOption("Killer",       SetKiller, "&HToggles whether colliding with this block kills player"),
             new BlockOption("DeathMessage", SetDeathMsg, "&HSets or removes the death message for this block " +
-                            "(Note: %S@p &His a placeholder for name of player who dies"),
+                            "(Note: &S@p &His a placeholder for name of player who dies"),
             new BlockOption("AnimalAI",   SetAI,     "&HSets the flying or swimming animal AI for this block. " +
                             "Types: &f" + Enum.GetNames(typeof(AnimalAI)).Join()),
             new BlockOption("StackBlock", SetStackId,"&HSets the block this block is changed into, when placed on top " +

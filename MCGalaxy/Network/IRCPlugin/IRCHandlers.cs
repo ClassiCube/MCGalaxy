@@ -409,7 +409,7 @@ namespace MCGalaxy.Network {
                 }
             }
 
-            MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " %Sis now known as &I" + newNick);
+            MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " &Sis now known as &I" + newNick);
         }
         
         void Listener_OnNames(string channel, string[] nicks, bool last) {

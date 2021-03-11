@@ -63,11 +63,11 @@ namespace MCGalaxy {
         
         protected override void ApplyChanges(Player p, Level lvl, string msg) {
             lvl.Save(true);
-            msg += " %Sin " + ColoredName;
-            Logger.Log(LogType.UserActivity, "{0} %Son {1}", msg, lvl.name);
+            msg += " &Sin " + ColoredName;
+            Logger.Log(LogType.UserActivity, "{0} &Son {1}", msg, lvl.name);
             
             lvl.Message(msg);           
-            if (p.level != lvl) p.Message("{0} %Son {1}", msg, lvl.ColoredName);
+            if (p.level != lvl) p.Message("{0} &Son {1}", msg, lvl.ColoredName);
         }
     }
     

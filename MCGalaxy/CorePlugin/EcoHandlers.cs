@@ -49,21 +49,21 @@ namespace MCGalaxy.Core {
         }
         
         static void HandleTake(EcoTransaction data) {
-            MessageAll("{0} %Stook &f{2} &3{3} %Sfrom {1}{4}", data);
+            MessageAll("{0} &Stook &f{2} &3{3} &Sfrom {1}{4}", data);
             Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
             stats.Fine = Format(" by " + data.Source.name, data);
             Economy.UpdateStats(stats);
         }
         
         static void HandleGive(EcoTransaction data) {
-            MessageAll("{0} %Sgave {1} &f{2} &3{3}{4}", data);
+            MessageAll("{0} &Sgave {1} &f{2} &3{3}{4}", data);
             Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
             stats.Salary = Format(" by " + data.Source.name, data);
             Economy.UpdateStats(stats);
         }
         
         static void HandlePayment(EcoTransaction data) {
-            MessageAll("{0} %Spaid {1} &f{2} &3{3}{4}", data);
+            MessageAll("{0} &Spaid {1} &f{2} &3{3}{4}", data);
             Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
             stats.Salary = Format(" by " + data.Source.name, data);
             Economy.UpdateStats(stats);
@@ -78,7 +78,7 @@ namespace MCGalaxy.Core {
         
         
         static void MessageAll(string format, EcoTransaction data) {
-            string reason = data.Reason == null ? "" : " %S(" + data.Reason + "%S)";
+            string reason = data.Reason == null ? "" : " &S(" + data.Reason + "&S)";
             string msg = string.Format(format, data.Source.ColoredName, data.TargetFormatted,
                                        data.Amount, Server.Config.Currency, reason);
             Chat.MessageGlobal(msg);

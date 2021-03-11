@@ -159,7 +159,7 @@ namespace MCGalaxy.Eco {
             data.InvisibilityPotions++;
             int left = maxPotions - data.InvisibilityPotions;
             
-            p.Message("Lasts for &a{0} %Sseconds. You can buy &a{1} %Smore this round.", duration, left);
+            p.Message("Lasts for &a{0} &Sseconds. You can buy &a{1} &Smore this round.", duration, left);
             ZSGame.Instance.GoInvisible(p, duration);
             Economy.MakePurchase(p, Price, "%3Invisibility: " + duration);
         }
@@ -224,9 +224,9 @@ namespace MCGalaxy.Eco {
             OutputItemInfo(p);
             
             p.Message("Lets you rejoin the humans - &Wnot guaranteed to always work");
-            p.Message("  Cannot be used in the last &a" + time + " %Sseconds of a round.");
-            p.Message("  Can only be used within &a" + expiry + " %Sseconds after being infected.");
-            p.Message("  Can only buy &a" + potions + " %Srevive potions per round.");
+            p.Message("  Cannot be used in the last &a" + time + " &Sseconds of a round.");
+            p.Message("  Can only be used within &a" + expiry + " &Sseconds after being infected.");
+            p.Message("  Can only buy &a" + potions + " &Srevive potions per round.");
         }
     }
 }

@@ -61,7 +61,7 @@ namespace MCGalaxy.Games {
         
         /// <summary> Called when a missile has collided with a player. </summary>
         protected virtual void OnHitPlayer(MissileData args, Player pl) {
-            pl.HandleDeath(Block.Cobblestone, "@p %Swas hit by a missile from " + p.ColoredName);
+            pl.HandleDeath(Block.Cobblestone, "@p &Swas hit by a missile from " + p.ColoredName);
         }
         
         void MissileCallback(SchedulerTask task) {
@@ -163,7 +163,7 @@ namespace MCGalaxy.Games {
         
         protected override void OnHitPlayer(MissileData args, Player pl) {
             if (pl.level.physics >= 3) {
-                pl.HandleDeath(Block.Cobblestone, "@p %Swas blown up by " + p.ColoredName, true);
+                pl.HandleDeath(Block.Cobblestone, "@p &Swas blown up by " + p.ColoredName, true);
             } else {
                 base.OnHitPlayer(args, pl);
             }

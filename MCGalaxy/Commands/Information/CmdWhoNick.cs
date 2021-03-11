@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Info {
         static void ForPlayer(Player p, string message) {
             Player nick = FindNick(p, message);
             if (nick == null) return;
-            p.Message("The player nicknamed {0} %Sis named {1}", nick.DisplayName, nick.name);
+            p.Message("The player nicknamed {0} &Sis named {1}", nick.DisplayName, nick.name);
         }
         static Player FindNick(Player p, string nick) {
             nick = Colors.Strip(nick);
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Info {
         static void ForBot(Player p, string message) {
             PlayerBot bot = FindBotNick(p, message);
             if (bot == null) return;
-            p.Message("The bot nicknamed {0} %Sis named {1}", bot.DisplayName, bot.name);
+            p.Message("The bot nicknamed {0} &Sis named {1}", bot.DisplayName, bot.name);
         }
         static PlayerBot FindBotNick(Player p, string nick) {
             nick = Colors.Strip(nick);

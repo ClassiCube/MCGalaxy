@@ -114,7 +114,7 @@ namespace MCGalaxy.Bots {
                 
                 if (dx <= 8 && dy <= 16 && dz <= 8) {
                     string msg = bot.DeathMessage;
-                    if (msg == null) msg = "@p %Swas &cterminated.";
+                    if (msg == null) msg = "@p &Swas &cterminated.";
                     p.HandleDeath(Block.Cobblestone, msg);
                 }
             }

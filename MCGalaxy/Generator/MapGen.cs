@@ -109,7 +109,7 @@ namespace MCGalaxy.Generator {
                 lvl = new Level(name, x, y, z);
                 if (!gen.Generate(p, lvl, seed)) { lvl.Dispose(); return null; }
 
-                string msg = seed.Length > 0 ? "λNICK%S created level {0}%S with seed \"{1}\"" : "λNICK%S created level {0}";
+                string msg = seed.Length > 0 ? "λNICK&S created level {0}&S with seed \"{1}\"" : "λNICK&S created level {0}";
                 Chat.MessageFrom(p, string.Format(msg, lvl.ColoredName, seed));
             } finally {
                 Interlocked.Exchange(ref p.GeneratingMap, 0);

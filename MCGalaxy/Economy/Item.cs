@@ -83,7 +83,7 @@ namespace MCGalaxy.Eco {
                 if (grp == null) return;
                 
                 PurchaseRank = grp.Permission;
-                p.Message("Min purchase rank for {0} item set to {1}%S.", Name, grp.ColoredName);
+                p.Message("Min purchase rank for {0} item set to {1}&S.", Name, grp.ColoredName);
             } else {
                 OnSetup(p, args);
             }
@@ -142,10 +142,10 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnStoreOverview(Player p) {
             if (p.Rank >= PurchaseRank) {
-                p.Message("&6{0} %S- &a{1} %S{2}", Name, Price, Server.Config.Currency);
+                p.Message("&6{0} &S- &a{1} &S{2}", Name, Price, Server.Config.Currency);
             } else {
                 string grpName = Group.GetColoredName(PurchaseRank);
-                p.Message("&6{0} %S({3}%S+) - &a{1} %S{2}", Name, Price, Server.Config.Currency, grpName);
+                p.Message("&6{0} &S({3}&S+) - &a{1} &S{2}", Name, Price, Server.Config.Currency, grpName);
             }
         }
         

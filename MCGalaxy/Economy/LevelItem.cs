@@ -198,7 +198,7 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreOverview(Player p) {
-            p.Message("&6Maps %S- see &T/Store maps");
+            p.Message("&6Maps &S- see &T/Store maps");
         }
         
         protected internal override void OnStoreCommand(Player p) {
@@ -208,7 +208,7 @@ namespace MCGalaxy.Eco {
             }
             
             foreach (LevelPreset preset in Presets) {
-                p.Message("&6{0} %S({1}, {2}, {3}) {4}: &a{5} %S{6}",
+                p.Message("&6{0} &S({1}, {2}, {3}) {4}: &a{5} &S{6}",
                           preset.name, preset.x, preset.y, preset.z,
                           preset.type, preset.price, Server.Config.Currency);
             }

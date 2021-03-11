@@ -218,7 +218,7 @@ namespace MCGalaxy.Games {
             
             // Auto continue infection
             Player zombie = alive[rnd.Next(alive.Length)];
-            Map.Message("&c" + zombie.DisplayName + " %Scontinued the infection!");
+            Map.Message("&c" + zombie.DisplayName + " &Scontinued the infection!");
             InfectPlayer(zombie, null);
         }
         
@@ -233,7 +233,7 @@ namespace MCGalaxy.Games {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
                 
                 string nick = p.FormatNick(b.Target);
-                Map.Message("Bounty on " + nick + " %Sis no longer active.");
+                Map.Message("Bounty on " + nick + " &Sis no longer active.");
                 Bounties.Remove(b);
                 
                 Player setter = PlayerInfo.FindExact(b.Origin);
@@ -256,7 +256,7 @@ namespace MCGalaxy.Games {
             data.Invisible = true;
             data.InvisibilityEnd = DateTime.UtcNow.AddSeconds(duration);
 
-            Map.Message(p.ColoredName + " %Svanished. &a*POOF*");
+            Map.Message(p.ColoredName + " &Svanished. &a*POOF*");
             Entities.GlobalDespawn(p, false, false);
         }
         
@@ -264,9 +264,9 @@ namespace MCGalaxy.Games {
             int chance = new Random().Next(1, 101);
             if (chance <= Config.ReviveChance) {
                 DisinfectPlayer(p);
-                Map.Message(p.ColoredName + " %Sused a revive potion. &aIt was super effective!");
+                Map.Message(p.ColoredName + " &Sused a revive potion. &aIt was super effective!");
             } else {
-                Map.Message(p.ColoredName + " %Stried using a revive potion. &cIt was not very effective..");
+                Map.Message(p.ColoredName + " &Stried using a revive potion. &cIt was not very effective..");
             }
         }
         
@@ -287,19 +287,19 @@ namespace MCGalaxy.Games {
             int left = (int)(RoundEnd - DateTime.UtcNow).TotalSeconds;
             string timespan = GetTimeLeft(left);
             
-            string format = timespan.Length == 0 ? "&a{0} %Salive %S(map: {1})" :
-                "&a{0} %Salive %S({2}, map: {1})";
+            string format = timespan.Length == 0 ? "&a{0} &Salive &S(map: {1})" :
+                "&a{0} &Salive &S({2}, map: {1})";
             return string.Format(format, Alive.Count, Map.MapName, timespan);
         }
         
         protected override string FormatStatus2(Player p) {
-            string pillar = "%SPillaring " + (Map.Config.Pillaring ? "&aYes" : "&cNo");
-            string type = "%S, Type is &a" + Map.Config.BuildType;
+            string pillar = "&SPillaring " + (Map.Config.Pillaring ? "&aYes" : "&cNo");
+            string type = "&S, Type is &a" + Map.Config.BuildType;
             return pillar + type;
         }
 
         protected override string FormatStatus3(Player p) {
-            string money = "&a" + p.money + " %S" + Server.Config.Currency;
+            string money = "&a" + p.money + " &S" + Server.Config.Currency;
             string state = ", you are " + (Get(p).Infected ? "&cdead" : "&aalive");
             return money + state;
         }

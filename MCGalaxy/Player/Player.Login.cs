@@ -120,7 +120,7 @@ namespace MCGalaxy {
             OnPlayerConnectEvent.Call(this);
             if (cancellogin) { cancellogin = false; return; }
             
-            string joinMsg = "&a+ λFULL %S" + PlayerDB.GetLoginMessage(this);
+            string joinMsg = "&a+ λFULL &S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinMsg = "&8(hidden)" + joinMsg;
             
             if (Server.Config.GuestJoinsNotify || Rank > LevelPermission.Guest) {
@@ -137,7 +137,7 @@ namespace MCGalaxy {
             if (CanUse("Inbox") && Database.TableExists("Inbox" + name)) {
                 int count = Database.CountRows("Inbox" + name);
                 if (count > 0) {
-                    Message("You have &a" + count + " %Smessages in &T/Inbox");
+                    Message("You have &a" + count + " &Smessages in &T/Inbox");
                 }
             }
             
@@ -213,11 +213,11 @@ namespace MCGalaxy {
 			                               "WHERE Name=@0", name);
             if (raw == null) {
                 PlayerData.Create(this);
-                Chat.MessageFrom(this, "λNICK %Shas connected for the first time!");
-                Message("Welcome " + ColoredName + "%S! This is your first visit.");
+                Chat.MessageFrom(this, "λNICK &Shas connected for the first time!");
+                Message("Welcome " + ColoredName + "&S! This is your first visit.");
             } else {
                 ((PlayerData)raw).ApplyTo(this);
-                Message("Welcome back " + FullName + "%S! You've been here " + TimesVisited + " times!");
+                Message("Welcome back " + FullName + "&S! You've been here " + TimesVisited + " times!");
             }
             gotSQLData = true;
         }
@@ -245,7 +245,7 @@ namespace MCGalaxy {
             if (alts.Count == 0) return;
             
             ItemPerms opchat = Chat.OpchatPerms;
-            string altsMsg = "λNICK %Sis lately known as: " + alts.Join();
+            string altsMsg = "λNICK &Sis lately known as: " + alts.Join();
 
             Chat.MessageFrom(p, altsMsg,
                              (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl.Rank));

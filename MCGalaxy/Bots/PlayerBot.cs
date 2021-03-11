@@ -294,14 +294,14 @@ namespace MCGalaxy {
         }
         
         public void DisplayInfo(Player p) {
-            p.Message("Bot {0} %S({1}) has:", ColoredName, name);
+            p.Message("Bot {0} &S({1}) has:", ColoredName, name);
             p.Message("  Owner: &f{0}", string.IsNullOrEmpty(Owner) ? "no one" : p.FormatNick(Owner));
             if (!String.IsNullOrEmpty(AIName)) { p.Message("  AI: &f{0}", AIName); }
-            if (hunt || kill)                  { p.Message("  Hunt: &f{0}%S, Kill: %f{1}", hunt, kill); }
+            if (hunt || kill)                  { p.Message("  Hunt: &f{0}&S, Kill: %f{1}", hunt, kill); }
             if (SkinName != name)              { p.Message("  Skin: &f{0}", SkinName); }
             if (Model != "humanoid")           { p.Message("  Model: &f{0}", Model); }
             if (!(ScaleX == 0 && ScaleY == 0 && ScaleZ == 0)) {
-                p.Message("  X scale: &a{0}%S, Y scale: &a{1}%S, Z scale: &a{2}",
+                p.Message("  X scale: &a{0}&S, Y scale: &a{1}&S, Z scale: &a{2}",
                          ScaleX == 0 ? "none" : ScaleX.ToString(),
                          ScaleY == 0 ? "none" : ScaleY.ToString(),
                          ScaleZ == 0 ? "none" : ScaleZ.ToString()

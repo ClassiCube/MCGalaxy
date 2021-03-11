@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Info {
             for (int i = 0; i < stats.Count; i++) {
                 string nick  = p.FormatNick(stats[i][0]);
                 string value = stat.Formatter(stats[i][1]);
-                p.Message("{0}) {1} %S- {2}", offset + (i + 1), nick, value);
+                p.Message("{0}) {1} &S- {2}", offset + (i + 1), nick, value);
             }
         }
         

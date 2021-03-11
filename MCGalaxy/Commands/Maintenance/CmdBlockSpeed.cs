@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Maintenance {
         
         public override void Help(Player p) {
             p.Message("&T/BlockSpeed [option] [value].");
-            p.Message("&HOptions: %Sbs (blocks per interval), ts (interval in milliseconds), clear");
+            p.Message("&HOptions: &Sbs (blocks per interval), ts (interval in milliseconds), clear");
             p.Message("&T/BlockSpeed net [2,4,8,12,16,20,24]");
             p.Message("&HPresets, divide by 8 and times by 1000 to get blocks per second.");
         }

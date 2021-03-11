@@ -55,7 +55,7 @@ namespace MCGalaxy.Games {
                 p.Message("Failed to load initial map!"); return;
             }
             
-            Chat.MessageGlobal("{0} is starting on {1}%S!", GameName, Map.ColoredName);
+            Chat.MessageGlobal("{0} is starting on {1}&S!", GameName, Map.ColoredName);
             Logger.Log(LogType.GameActivity, "[{0}] Game started", GameName);
             
             StartGame();
@@ -255,7 +255,7 @@ namespace MCGalaxy.Games {
             // in case players left game partway through
             foreach (Player pl in players) { SaveStats(pl); }
             
-            if (Map != null) Map.Message(GameName + " %Sgame ended");
+            if (Map != null) Map.Message(GameName + " &Sgame ended");
             Logger.Log(LogType.GameActivity, "[{0}] Game ended", GameName);
             if (Picker != null) Picker.Clear();
             

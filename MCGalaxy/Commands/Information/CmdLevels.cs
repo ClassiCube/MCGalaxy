@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             string[] files = LevelInfo.AllMapFiles();
-            p.Message("Levels (&c[no] %Sif not visitable): ");
+            p.Message("Levels (&c[no] &Sif not visitable): ");
             MultiPageOutput.Output(p, files, (file) => FormatMap(p, file),
                                    "Levels", "levels", message, false);
         }

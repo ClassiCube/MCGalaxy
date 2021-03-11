@@ -53,7 +53,7 @@ namespace MCGalaxy.Core {
             
             action = Colors.Strip(action);
             string suffix = "";
-            if (e.Duration.Ticks != 0) suffix = " %Sfor " + e.Duration.Shorten();
+            if (e.Duration.Ticks != 0) suffix = " &Sfor " + e.Duration.Shorten();
             
             Logger.Log(LogType.UserActivity, "{0} was {1} by {2}",
                        e.Target, action, e.Actor.name + suffix);
@@ -120,7 +120,7 @@ namespace MCGalaxy.Core {
                 
                 if (who != null) {
                     string msg = e.Reason.Length == 0 ? Server.Config.DefaultBanMessage : e.Reason;
-                    who.Kick("Banned by " + e.Actor.ColoredName + ": %S" + msg,
+                    who.Kick("Banned by " + e.Actor.ColoredName + ": &S" + msg,
                              "Banned by " + e.Actor.ColoredName + ": &f" + msg);
                 }
             }
@@ -182,8 +182,8 @@ namespace MCGalaxy.Core {
                 } else if (who.warn == 1) {
                     who.Message("Do it one more time and you will get kicked!");
                 } else if (who.warn == 2) {
-                    Chat.MessageGlobal("{0} %Swas warn-kicked by {1}", who.ColoredName, e.Actor.ColoredName);
-                    string chatMsg = "by " + e.Actor.ColoredName + "%S: " + e.Reason;
+                    Chat.MessageGlobal("{0} &Swas warn-kicked by {1}", who.ColoredName, e.Actor.ColoredName);
+                    string chatMsg = "by " + e.Actor.ColoredName + "&S: " + e.Reason;
                     string kickMsg = "Kicked by " + e.Actor.ColoredName + ": &f" + e.Reason;
                     who.Kick(chatMsg, kickMsg);
                 }
@@ -204,7 +204,7 @@ namespace MCGalaxy.Core {
             LogAction(e, who, action + newRank.ColoredName);
             
             if (who != null && e.Announce) {
-                who.Message("You are now ranked " + newRank.ColoredName + "%S, type /Help for your new set of commands.");
+                who.Message("You are now ranked " + newRank.ColoredName + "&S, type /Help for your new set of commands.");
             }
             if (Server.tempRanks.Remove(e.Target)) {
                 ModerationTasks.TemprankCalcNextRun();
