@@ -28,7 +28,6 @@ namespace MCGalaxy {
     
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
     public sealed class IRCBot {
-        public const string ResetSignal = "\x03\x0F";
         internal Connection connection;
         internal string[] channels, opchannels;
         internal string nick, server;
@@ -125,11 +124,14 @@ namespace MCGalaxy {
         
         public static string ConvertMessage(string message) {
             if (String.IsNullOrEmpty(message.Trim())) message = ".";
+            const string resetSignal = "\x03\x0F";
             
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
-            message = message.Replace("&f", "%S");
-            message = Colors.ConvertMCToIRC(message.Replace("%S", ResetSignal));
+            message = message.Replace("%S", "&f"); // TODO remove
+            message = message.Replace("&S", "&f");
+            message = message.Replace("&f", resetSignal);
+            message = Colors.ConvertMCToIRC(message);
             return message;
         }
         

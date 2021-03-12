@@ -174,14 +174,10 @@ namespace MCGalaxy {
                 
                 // Maybe still not a colour code
                 if (i == value.Length - 1 || (col = Colors.Lookup(value[i + 1])) == '\0') {
-                    if (!fullAmpersands) {
-                        // Client doesn't support standalone &, skip over it
-                        i++;
-                    } else {
-                        // Treat the & like a normal character
-                        combinable = false;
-                        sb.Append(c); 
-                    }
+                    // Treat the & like a normal character
+                    //  For clients not supporting standalone '&', show '%' instead
+                    combinable = false;
+                    sb.Append(fullAmpersands ? '&' : '%');
                     continue;
                 }
                 if (!customCols) col = Colors.Get(col).Fallback;
