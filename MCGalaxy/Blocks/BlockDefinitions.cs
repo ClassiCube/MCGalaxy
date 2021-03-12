@@ -205,7 +205,6 @@ namespace MCGalaxy {
                 pl.Send(def.MakeDefinePacket(pl));
                 pl.SendCurrentBlockPermissions();
             }
-            Save(global, level);
         }
         
         public static void Remove(BlockDefinition def, BlockDefinition[] defs, Level level) {
@@ -225,7 +224,6 @@ namespace MCGalaxy {
                 
                 pl.Send(Packet.UndefineBlock(def, pl.hasExtBlocks));
             }
-            Save(global, level);
         }
         
         public static void UpdateOrder(BlockDefinition def, bool global, Level level) {

@@ -146,8 +146,7 @@ namespace MCGalaxy.Commands.CPE {
             dstDef.SetBlock(dst);
             if (!keepOrder) dstDef.InventoryOrder = -1;
             
-            AddBlock(p, lvl, dstDef, global, cmd, props);
-            return true;
+            return AddBlock(p, lvl, dstDef, global, cmd, props);
         }
         
         static void CopyAllHandler(Player p, Level lvl, string[] parts, CommandData data, 
@@ -170,8 +169,9 @@ namespace MCGalaxy.Commands.CPE {
                 p.Message("Copied the {0} custom block with id \"{1}\".", scope, Block.ToRaw(b));
             }
             
-            string prefix = copied > 0 ? copied.ToString() : "No";
-            p.Message("{0} custom blocks were copied from level {1}", prefix, coloredMap);
+            p.Message("{0} custom blocks were copied from level {1}", 
+                      copied > 0 ? copied.ToString() : "No", coloredMap);
+            if (copied > 0) BlockDefinition.Save(global, lvl);
         }
         
         static void CopyHandler(Player p, Level lvl, string[] parts, CommandData data, 
@@ -198,7 +198,8 @@ namespace MCGalaxy.Commands.CPE {
                     return;
                 }
             }
-
+            bool changed = false;
+            
             for (int i = min; i <= max && Block.ToRaw(dst) <= Block.MaxRaw; i++, dst++) {
                 BlockID src = Block.FromRaw((BlockID)i);
                 if (!DoCopy(p, lvl, global, cmd, false, defs[src], src, dst)) continue;
@@ -206,7 +207,9 @@ namespace MCGalaxy.Commands.CPE {
                 
                 p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
                           scope, i, Block.ToRaw(dst));
+                changed = true;
             }
+            if (changed) BlockDefinition.Save(global, lvl);
         }        
         
         static void DoInfo(Player p, Level lvl, BlockID block, 
@@ -285,11 +288,11 @@ namespace MCGalaxy.Commands.CPE {
             return "Custom block &T" + def.RawID + " &Shas name &T" + def.Name;
         }
         
-        static void DoRemove(Player p, Level lvl, BlockID block, 
+        static bool DoRemove(Player p, Level lvl, BlockID block, 
 		                     bool global, string cmd) {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
             BlockDefinition def = defs[block];
-            if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
+            if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return false; }
             
             BlockDefinition.Remove(def, defs, lvl);
             ResetProps(global, lvl, block, p);          
@@ -300,6 +303,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
             if (!global && globalDef != null)
                 BlockDefinition.Add(globalDef, defs, lvl);
+            return true;
         }
         
         static void RemoveHandler(Player p, Level lvl, string[] parts, 
@@ -307,10 +311,12 @@ namespace MCGalaxy.Commands.CPE {
             if (parts.Length <= 1) { Help(p, cmd); return; }
             int min, max;
             if (!CheckRawBlocks(p, parts[1], out min, out max)) return;
+            bool changed = false;
             
             for (int i = min; i <= max; i++) {
-                DoRemove(p, lvl, Block.FromRaw((BlockID)i), global, cmd);
+            	changed |= DoRemove(p, lvl, Block.FromRaw((BlockID)i), global, cmd);
             }
+            if (changed) BlockDefinition.Save(global, lvl);
         }
         
         static void DefineBlockStep(Player p, Level lvl, string value, 
@@ -395,6 +401,7 @@ namespace MCGalaxy.Commands.CPE {
                 
                 BlockID block = bd.GetBlock();
                 if (!AddBlock(p, lvl, bd, global, cmd, Block.Props[block])) return;
+                BlockDefinition.Save(global, lvl);
                 
                 SetBD(p, global, null);
                 SetStep(p, global, 0);
@@ -405,7 +412,7 @@ namespace MCGalaxy.Commands.CPE {
             SendStepHelp(p, global);
         }
         
-        static void DoEdit(Player p, Level lvl, BlockID block, string[] parts, 
+        static bool DoEdit(Player p, Level lvl, BlockID block, string[] parts, 
 		                   bool global, string cmd) {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
             BlockDefinition def = defs[block], globalDef = BlockDefinition.GlobalDefs[block];
@@ -418,7 +425,7 @@ namespace MCGalaxy.Commands.CPE {
                 def = globalDef.Copy();
                 AddBlock(p, lvl, def, global, cmd, Block.Props[block]);
             }
-            if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return; }
+            if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return false; }
             
             string value = parts[3], blockName = def.Name;
             bool temp = false, changedFallback = false;
@@ -428,84 +435,84 @@ namespace MCGalaxy.Commands.CPE {
                 case "name":
                     def.Name = value; break;
                 case "collide":
-                    if (!EditByte(p, value, "Collide type", ref def.CollideType, arg)) return;
+                    if (!EditByte(p, value, "Collide type", ref def.CollideType, arg)) return false;
                     break;
                 case "speed":
                     if (!CommandParser.GetReal(p, value, "Movement speed", ref def.Speed, 0.25f, 3.96f)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     } break;                  
                 case "toptex":
-                    if (!EditUShort(p, value, "Top texture", ref def.TopTex, arg)) return;
+                    if (!EditUShort(p, value, "Top texture", ref def.TopTex, arg)) return false;
                     break;
                 case "alltex":
-                    if (!EditUShort(p, value, "All textures", ref def.RightTex, arg)) return;
+                    if (!EditUShort(p, value, "All textures", ref def.RightTex, arg)) return false;
                     def.SetAllTex(def.RightTex);
                     break;
                 case "sidetex":
-                    if (!EditUShort(p, value, "Side texture", ref def.RightTex, arg)) return;
+                    if (!EditUShort(p, value, "Side texture", ref def.RightTex, arg)) return false;
                     def.SetSideTex(def.RightTex);
                     break;
                 case "lefttex":
-                    if (!EditUShort(p, value, "Left texture", ref def.LeftTex, arg)) return;
+                    if (!EditUShort(p, value, "Left texture", ref def.LeftTex, arg)) return false;
                     break;
                 case "righttex":
-                    if (!EditUShort(p, value, "Right texture", ref def.RightTex, arg)) return;
+                    if (!EditUShort(p, value, "Right texture", ref def.RightTex, arg)) return false;
                     break;
                 case "fronttex":
-                    if (!EditUShort(p, value, "Front texture", ref def.FrontTex, arg)) return;
+                    if (!EditUShort(p, value, "Front texture", ref def.FrontTex, arg)) return false;
                     break;
                 case "backtex":
-                    if (!EditUShort(p, value, "Back texture", ref def.BackTex, arg)) return;
+                    if (!EditUShort(p, value, "Back texture", ref def.BackTex, arg)) return false;
                     break;
                 case "bottomtex":
-                    if (!EditUShort(p, value, "Bottom texture", ref def.BottomTex, arg)) return;
+                    if (!EditUShort(p, value, "Bottom texture", ref def.BottomTex, arg)) return false;
                     break;
                     
                 case "blockslight":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     }
                     def.BlocksLight = temp;
                     break;
                 case "sound":
-                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, arg)) return;
+                    if (!EditByte(p, value, "Walk sound", ref def.WalkSound, arg)) return false;
                     break;
                 case "fullbright":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     }
                     def.FullBright = temp;
                     break;
                     
                 case "shape":
                     if (!CommandParser.GetBool(p, value, ref temp)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     }
                     def.Shape = temp ? (byte)0 : def.MaxZ;
                     break;
                 case "blockdraw":
-                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, arg)) return;
+                    if (!EditByte(p, value, "Block draw", ref def.BlockDraw, arg)) return false;
                     break;
                 case "min":
                     if (!ParseCoords(p, value, ref def.MinX, ref def.MinY, ref def.MinZ)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     } break;
                 case "max":
                     if (!ParseCoords(p, value, ref def.MaxX, ref def.MaxY, ref def.MaxZ)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     } break;
                     
                 case "fogdensity":
-                    if (!EditByte(p, value, "Fog density", ref def.FogDensity, arg)) return;
+                    if (!EditByte(p, value, "Fog density", ref def.FogDensity, arg)) return false;
                     break;
                 case "fogcolor":
                     ColorDesc rgb = default(ColorDesc);
-                    if (!CommandParser.GetHex(p, value, ref rgb)) return;
+                    if (!CommandParser.GetHex(p, value, ref rgb)) return false;
                     def.FogR = rgb.R; def.FogG = rgb.G; def.FogB = rgb.B;
                     break;
                 case "fallback":
                     byte fallback = GetFallback(p, value);
-                    if (fallback == Block.Invalid) return;
+                    if (fallback == Block.Invalid) return false;
                     changedFallback = true;
                     
                     value = Block.GetName(p, fallback);
@@ -514,7 +521,7 @@ namespace MCGalaxy.Commands.CPE {
                 case "order":
                     int order = 0;
                     if (!CommandParser.GetInt(p, value, "Inventory order", ref order, 0, Block.MaxRaw)) {
-                        SendEditHelp(p, arg); return;
+                        SendEditHelp(p, arg); return false;
                     }
                     
                     // Don't let multiple blocks be assigned to same order
@@ -522,18 +529,17 @@ namespace MCGalaxy.Commands.CPE {
                         for (int i = 0; i < defs.Length; i++) {
                             if (defs[i] == null || defs[i].InventoryOrder != order) continue;
                             p.Message("Block {0} already had order {1}", defs[i].Name, order);
-                            return;
+                            return false;
                         }
                     }
                     
                     def.InventoryOrder = order == def.RawID ? -1 : order;
                     BlockDefinition.UpdateOrder(def, global, lvl);
-                    BlockDefinition.Save(global, lvl);
                     p.Message("Set inventory order for {0} to {1}", blockName,
                                    order == def.RawID ? "default" : order.ToString());
-                    return;
+                    return true;
                 default:
-                    p.Message("Unrecognised property: " + arg); return;
+                    p.Message("Unrecognised property: " + arg); return false;
             }
             
             p.Message("Set {0} for {1} to {2}", arg, blockName, value);
@@ -541,6 +547,7 @@ namespace MCGalaxy.Commands.CPE {
             if (changedFallback) {
                 BlockDefinition.UpdateFallback(global, def.GetBlock(), lvl);
             }
+            return true;
         }
         
         static void EditHandler(Player p, Level lvl, string[] parts, 
@@ -558,13 +565,15 @@ namespace MCGalaxy.Commands.CPE {
             
             int min, max;
             if (!CheckRawBlocks(p, parts[1], out min, out max)) return;
+            bool changed = false;
             
             for (int i = min; i <= max; i++) {
-                DoEdit(p, lvl, Block.FromRaw((BlockID)i), parts, global, cmd);
+                changed |= DoEdit(p, lvl, Block.FromRaw((BlockID)i), parts, global, cmd);
             }
+            if (changed) BlockDefinition.Save(global, lvl); // TODO SaveChanged(bool changed, bool global, Level lvl) func
         }
         
-        
+		
         static bool AddBlock(Player p, Level lvl, BlockDefinition def, 
 		                     bool global, string cmd, BlockProps props) {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
@@ -576,8 +585,7 @@ namespace MCGalaxy.Commands.CPE {
             if (old != null) {
                 block = GetFreeBlock(global, lvl);
                 if (block == Block.Invalid) {
-                    p.Message("There are no custom block ids left, " +
-                                   "you must " + cmd + " remove a custom block first.");
+                    p.Message("There are no custom block ids left, you must {0} remove a custom block first.", cmd);
                     if (!global) {
                         p.Message("You may also manually specify the same existing id of a global custom block.");
                     }
