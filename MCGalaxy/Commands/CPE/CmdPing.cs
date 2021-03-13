@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Chatting
 		} else {
                     p.Message(p.FormatNick(who) + " &S- " + who.Ping.Format());
                 }
-	        } else {
+	     } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
                 p.Message("Ping/latency list of online players: (&ALo&S:&7Avg&S:&CHi&S)ms");
