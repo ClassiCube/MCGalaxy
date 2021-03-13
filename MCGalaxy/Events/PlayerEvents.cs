@@ -165,14 +165,14 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
 
-    public delegate void OnMessageReceived(Player p, string message);
+    public delegate void OnMessageReceived(Player p, string message, ref bool cancel);
     /// <summary> Called whenever a player recieves a message from the server or from another player. </summary>
     public sealed class OnMessageRecievedEvent : IEvent<OnMessageReceived> {
         
-        public static void Call(Player p, string message) {
+        public static void Call(Player p, string message, ref bool cancel) {
             IEvent<OnMessageReceived>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(p, message); } 
+                try { items[i].method(p, message, ref cancel); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }

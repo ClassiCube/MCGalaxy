@@ -175,8 +175,10 @@ namespace MCGalaxy {
                 message = Server.Config.DefaultColor + message;
             }
             message = Chat.Format(message, this);
-            OnMessageRecievedEvent.Call(this, message);
-            if (cancelmessage) { cancelmessage = false; return; }
+            
+            bool cancel = false;
+            OnMessageRecievedEvent.Call(this, message, ref cancel);
+            if (cancel) return;
             
             try {
                 message = LineWrapper.CleanupColors(message, this);

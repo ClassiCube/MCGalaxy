@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Chatting {
             
             if (who != null) who.DisplayName = nick;
             if (who != null) TabList.Update(who, true);
-            PlayerDB.Save(target, nick);
+            PlayerDB.SetNick(target, nick);
         }
         
         public override void Help(Player p) {

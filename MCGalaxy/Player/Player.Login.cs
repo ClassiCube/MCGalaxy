@@ -102,7 +102,7 @@ namespace MCGalaxy {
             
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
-            PlayerDB.Load(this);
+            PlayerDB.LoadNick(this);
             Game.Team = Team.TeamIn(this);
             SetPrefix();
             LoadCpeData();

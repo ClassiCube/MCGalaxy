@@ -30,8 +30,8 @@ namespace MCGalaxy.DB {
         static string LogoutPath(string name) { return "text/logout/" + name.ToLower() + ".txt"; }
         
         static char[] trimChars = new char[] {'='};
-        public static bool Load(Player p) {
-            if (!File.Exists("players/" + p.name + "DB.txt")) return false;
+        public static void LoadNick(Player p) {
+            if (!File.Exists("players/" + p.name + "DB.txt")) return;
             
             string[] lines = File.ReadAllLines("players/" + p.name + "DB.txt");
             foreach (string line in lines) {
@@ -44,10 +44,9 @@ namespace MCGalaxy.DB {
                     p.DisplayName = value;
             }
             p.SetPrefix();
-            return true;
         }
 
-        public static void Save(string name, string nick) {
+        public static void SetNick(string name, string nick) {
             using (StreamWriter sw = new StreamWriter("players/" + name + "DB.txt", false))
                 sw.WriteLine("Nick = " + nick);
         }
