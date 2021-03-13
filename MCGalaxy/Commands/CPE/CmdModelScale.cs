@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.CPE {
             if (!ParseArgs(p, bot, args, out axis)) return;
             bot.UpdateModel(bot.Model);
             
-            p.Message("You changed the {1} scale of bot {0} &S", bot.ColoredName, axis);
+            p.Message("You changed the {1} scale of bot {0}", bot.ColoredName, axis);
             BotsFile.Save(p.level);
         }
         

@@ -38,31 +38,6 @@ namespace MCGalaxy.Tasks {
             File.WriteAllText("ranks/agreed.txt", data);
         }
         
-        internal static void MovePreviousLevelFiles(SchedulerTask task) {
-            if (!Directory.Exists("levels")) return;
-            if (Directory.Exists("levels/prev")) return;
-            
-            try {
-                string[] files = Directory.GetFiles("levels", "*.prev");
-                if (files.Length == 0) return;
-                if (!Directory.Exists("levels/prev"))
-                    Directory.CreateDirectory("levels/prev");
-                
-                foreach (string file in files) {
-                    string name = Path.GetFileName(file);
-                    string newFile = "levels/prev/" + name;
-                    
-                    try {
-                        File.Move(file, newFile);
-                    } catch (Exception ex) {
-                        Logger.LogError("Error while trying to move .lvl.prev file", ex);
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.LogError("Error moving .lvl.prev files", ex);
-            }
-        }
-        
         internal static void UpgradeOldTempranks(SchedulerTask task) {
             if (!File.Exists(Paths.TempRanksFile)) return;
 

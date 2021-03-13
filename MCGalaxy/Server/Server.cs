@@ -105,7 +105,6 @@ namespace MCGalaxy {
             Background.QueueOnce(LoadMainLevel);
             Plugin.LoadAll();
             Background.QueueOnce(LoadAutoloadMaps);
-            Background.QueueOnce(UpgradeTasks.MovePreviousLevelFiles);
             Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
             Background.QueueOnce(InitPlayerLists);
