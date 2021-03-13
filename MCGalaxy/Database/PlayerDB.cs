@@ -47,9 +47,9 @@ namespace MCGalaxy.DB {
             return true;
         }
 
-        public static void Save(Player p) {
-            using (StreamWriter sw = new StreamWriter("players/" + p.name + "DB.txt", false))
-                sw.WriteLine("Nick = " + p.DisplayName);
+        public static void Save(string name, string nick) {
+            using (StreamWriter sw = new StreamWriter("players/" + name + "DB.txt", false))
+                sw.WriteLine("Nick = " + nick);
         }
         
         
