@@ -37,12 +37,12 @@ namespace MCGalaxy.Commands.Chatting
                 if (who != p && !CheckExtraPerm(p, data, 1)) return;
                 if (!who.hasTwoWayPing) {
                     p.Message("This player's client does not support measuring ping.");
-				} else if (who.Ping.Measures() == 0) {
+		} else if (who.Ping.Measures() == 0) {
                     p.Message("No ping measurements yet. Try again in a bit.");
-				} else {
+		} else {
                     p.Message(p.FormatNick(who) + " &S- " + who.Ping.Format());
                 }
-			} else {
+	        } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
                 p.Message("Ping/latency list of online players: (&ALo&S:&7Avg&S:&CHi&S)ms");
