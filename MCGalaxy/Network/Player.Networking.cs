@@ -188,14 +188,6 @@ namespace MCGalaxy {
             }
         }
         
-        static bool LineEndsInEmote(string line) {
-            line = line.TrimEnd(' ');
-            if (line.Length == 0) return false;
-            
-            char last = line[line.Length - 1];
-            return last.UnicodeToCp437() != last;
-        }
-        
         public void SendCpeMessage(CpeMessageType type, string message) {
             if (type != CpeMessageType.Normal && !Supports(CpeExt.MessageTypes)) {
                 if (type == CpeMessageType.Announcement) type = CpeMessageType.Normal;
