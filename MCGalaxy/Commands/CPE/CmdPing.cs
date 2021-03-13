@@ -17,14 +17,11 @@
  */
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands.Chatting
-{
-    public sealed class CmdPing : Command2
-    {
+namespace MCGalaxy.Commands.Chatting {
+    public sealed class CmdPing : Command2 {
         public override string name { get { return "Ping"; } }
         public override string type { get { return CommandTypes.Information; } }
-        public override CommandPerm[] ExtraPerms
-        {
+        public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can see ping of other players") }; }
         }
 
@@ -42,7 +39,7 @@ namespace MCGalaxy.Commands.Chatting
 		} else {
                     p.Message(p.FormatNick(who) + " &S- " + who.Ping.Format());
                 }
-	     } else {
+	    } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
                 p.Message("Ping/latency list of online players: (&ALo&S:&7Avg&S:&CHi&S)ms");
