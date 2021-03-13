@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (!message.CaselessEq("all")) {
                 if (message.Length == 0) message = p.name;
 
-                Player who = PlayerInfo.FindExact(message);
+                Player who = PlayerInfo.FindMatches(message);
                 if (who == null) { p.Message("Unable to find user"); return; }
                 if (who != p && !CheckExtraPerm(p, data, 1)) return;
                 if (!who.hasTwoWayPing) {
