@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.Info {
     public sealed class CmdBanInfo : Command2 {
@@ -41,7 +42,7 @@ namespace MCGalaxy.Commands.Info {
             bool permaBanned = Group.BannedRank.Players.Contains(plName);
             bool isBanned = permaBanned || tempExpiry >= DateTime.UtcNow;
             string msg = nick;
-            string ip = PlayerInfo.FindIP(plName);
+            string ip  = PlayerDB.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
             if (!ipBanned && isBanned) msg += " &Sis &CBANNED";

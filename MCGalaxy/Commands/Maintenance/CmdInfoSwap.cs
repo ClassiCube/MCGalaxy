@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 p.Message("\"{0}\" must be offline to use &T/InfoSwap", name); return null;
             }
             
-            string match = PlayerInfo.FindName(name);
+            string match = PlayerDB.FindName(name);
             if (match == null) {
                 p.Message("\"{0}\" was not found in the database.", name); return null;
             }

@@ -19,6 +19,7 @@
 using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Moderation;
+using MCGalaxy.DB;
 using MCGalaxy.Events;
 using MCGalaxy.Tasks;
 
@@ -139,7 +140,7 @@ namespace MCGalaxy.Core {
             Ban.UnbanPlayer(e.Actor, e.Target, e.Reason);
             ModActionCmd.ChangeRank(e.Target, Group.BannedRank, Group.DefaultRank, who, false);
             
-            string ip = PlayerInfo.FindIP(e.Target);
+            string ip = PlayerDB.FindIP(e.Target);
             if (ip != null && Server.bannedIP.Contains(ip)) {
                 e.Actor.Message("NOTE: Their IP is still banned.");
             }

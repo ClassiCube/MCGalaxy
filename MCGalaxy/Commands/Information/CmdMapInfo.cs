@@ -133,12 +133,12 @@ namespace MCGalaxy.Commands.Info {
             while (map.Length > 0 && Char.IsNumber(map[map.Length - 1])) {
                 // If the server does not have account with +, we have to account for the
                 // that say Player123's second level is Player1232, and the realm owner is Player123
-                name = plus ? null : PlayerInfo.FindName(map);
+                name = plus ? null : PlayerDB.FindName(map);
                 if (name != null) break;
                 map = map.Substring(0, map.Length - 1);
             }
             
-            if (name == null) name = PlayerInfo.FindName(map);
+            if (name == null) name = PlayerDB.FindName(map);
             if (name != null && !LevelInfo.IsRealmOwner(name, origMap)) return null;
             return name;
         }

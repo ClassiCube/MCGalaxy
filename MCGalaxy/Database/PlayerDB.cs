@@ -92,6 +92,30 @@ namespace MCGalaxy.DB {
         }
         
         
+        public static PlayerData FindData(string name) {
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
+                                           "WHERE Name=@0" + suffix, name);
+            return (PlayerData)raw;
+        }
+
+        public static string FindName(string name) {
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            return Database.ReadString("Players", "Name", "WHERE Name=@0" + suffix, name);
+        }
+        
+        public static string FindIP(string name) {
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            return Database.ReadString("Players", "IP", "WHERE Name=@0" + suffix, name);
+        }
+        
+        public static string FindOfflineIPMatches(Player p, string name, out string ip) {
+            string[] match = PlayerDB.MatchValues(p, name, "Name,IP");
+            ip   = match == null ? null : match[1];
+            return match == null ? null : match[0];
+        }
+        
+        
         public static void Update(string name, string column, string value) {
             Database.UpdateRows("Players", column + "=@1", "WHERE Name=@0", name, value);
         }

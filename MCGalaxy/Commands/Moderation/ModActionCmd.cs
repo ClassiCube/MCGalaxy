@@ -195,7 +195,7 @@ namespace MCGalaxy.Commands.Moderation {
             // TryParse returns "0.0.0.123" for "123", we do not want that behaviour
             if (IPAddress.TryParse(message, out ip) && message.Split('.').Length == 4) {
                 string account = Server.Config.ClassicubeAccountPlus ? message + "+" : message;
-                if (PlayerInfo.FindName(account) == null) return message;
+                if (PlayerDB.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
                 p.Message("Note: \"{0}\" is both an IP and an account name. "
@@ -209,7 +209,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             p.Message("Searching PlayerDB..");
             string dbIP;
-            name = PlayerInfo.FindOfflineIPMatches(p, message, out dbIP);
+            name = PlayerDB.FindOfflineIPMatches(p, message, out dbIP);
             return dbIP;
         }
     }
