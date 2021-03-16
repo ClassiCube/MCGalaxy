@@ -2,16 +2,6 @@ FROM mono:latest as builder
 
 WORKDIR /build
 
-# Install build dependencies
-RUN apt-get update \
-    && apt-get install -yq wget \
-    && wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
-    && dpkg -i packages-microsoft-prod.deb \
-    && rm packages-microsoft-prod.deb \
-    && apt-get install -yq apt-transport-https \
-    && apt-get update \
-    && apt-get install -yq dotnet-sdk-5.0
-
 # Copy in source files
 COPY . .
 
