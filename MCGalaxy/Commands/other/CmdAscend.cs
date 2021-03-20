@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Misc {
             }
             
             if (freeY == -1) {
-                p.Message("No free spaces found above you.");
+                p.Message("There are no blocks above to ascend to.");
             } else {
                 p.Message("Teleported you up.");
                 Position pos = Position.FromFeet(p.Pos.X, freeY * 32, p.Pos.Z);
