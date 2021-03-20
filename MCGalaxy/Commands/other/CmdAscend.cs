@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Misc {
             }
         }
         
-        static int FindYAbove(Level lvl, in ushort x, in ushort y, in ushort z) {
+        static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
             bool foundAnySolid = false;
             for (ushort yCheck = y; yCheck < lvl.Height; yCheck++) {
                 BlockID block = lvl.GetBlock(x, yCheck, z);
