@@ -22,7 +22,7 @@ namespace MCGalaxy.Blocks.Physics {
     
     public static class FirePhysics {
         
-        static bool ExpandSimple(Level lvl, int x, int y, int z) {
+        static bool ExpandToAir(Level lvl, int x, int y, int z) {
             int index;
             if (lvl.IsAirAt((ushort)x, (ushort)y, (ushort)z, out index)) {
                 lvl.AddUpdate(index, Block.Fire, default(PhysicsArgs));
@@ -66,22 +66,23 @@ namespace MCGalaxy.Blocks.Physics {
             if (rand.Next(1, 20) == 1 && C.Data.Data % 2 == 0) {
                 int max = rand.Next(1, 18);
 
-                if (max <= 3 && ExpandSimple(lvl, x - 1, y, z)) {
-                } else if (max <= 6 && ExpandSimple(lvl, x + 1, y, z)) {
-                } else if (max <= 9 && ExpandSimple(lvl, x, y - 1, z)) {
-                } else if (max <= 12 && ExpandSimple(lvl, x, y + 1, z)) {
-                } else if (max <= 15 && ExpandSimple(lvl, x, y, z - 1)) {
-                } else if (max <= 18 && ExpandSimple(lvl, x, y, z + 1)) {
+                if (max <= 3 && ExpandToAir(lvl, x - 1, y, z)) {
+                } else if (max <= 6 && ExpandToAir(lvl, x + 1, y, z)) {
+                } else if (max <= 9 && ExpandToAir(lvl, x, y - 1, z)) {
+                } else if (max <= 12 && ExpandToAir(lvl, x, y + 1, z)) {
+                } else if (max <= 15 && ExpandToAir(lvl, x, y, z - 1)) {
+                } else if (max <= 18 && ExpandToAir(lvl, x, y, z + 1)) {
                 }
-            }
-            for (int yy = -1; yy <= 1; yy++ ) {
-                ExpandDiagonal(lvl, x, y, z, -1, yy, -1);
-                ExpandDiagonal(lvl, x, y, z, +1, yy, -1);
-                ExpandDiagonal(lvl, x, y, z, -1, yy, +1);
-                ExpandDiagonal(lvl, x, y, z, +1, yy, +1);
             }
 
             if (lvl.physics >= 2) {
+                for (int yy = -1; yy <= 1; yy++ ) {
+                    ExpandDiagonal(lvl, x, y, z, -1, yy, -1);
+                    ExpandDiagonal(lvl, x, y, z, +1, yy, -1);
+                    ExpandDiagonal(lvl, x, y, z, -1, yy, +1);
+                    ExpandDiagonal(lvl, x, y, z, +1, yy, +1);
+                }
+            	
                 if (C.Data.Data < 4) {
                     C.Data.Data++;
                     return;
