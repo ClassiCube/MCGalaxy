@@ -159,7 +159,7 @@ namespace MCGalaxy {
         [Obsolete("Use Command.Unregister() instead", true)]
         public bool Remove(Command cmd) { return Command.Unregister(cmd); }
         
-        [Obsolete("Use Command.Find() instead")]
+        [Obsolete("Use Command.Find() instead", true)]
         public Command FindByName(string name) { return Command.Find(name); }
         [Obsolete("Use Command.Find() instead")]
         public Command Find(string name) {

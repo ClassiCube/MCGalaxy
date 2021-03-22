@@ -138,10 +138,12 @@ namespace MCGalaxy {
             foreach (string line in lines) { Message(line); }
         }
         
+        [Obsolete("Use p.Message(message) instead", true)]
         public static void Message(Player p, string message) {
             if (p == null) p = Player.Console;
             p.Message(0, message);
         }
+        [Obsolete("Use p.Message(message) instead", true)]
         public static void SendMessage(Player p, string message) { Message(p, message); }
         
         public void Message(string message, object a0) { Message(string.Format(message, a0)); }  
@@ -149,7 +151,9 @@ namespace MCGalaxy {
         public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
         public void Message(string message, params object[] args) { Message(string.Format(message, args)); }
         
+        [Obsolete("Use Message(message) instead", true)]
         public void SendMessage(string message) { Message(0, message); } 
+        [Obsolete("Use Message(id, message) instead", true)]
         public void SendMessage(byte id, string message) { Message(id, message); }
         public void Message(string message) { Message(0, message); }
         
