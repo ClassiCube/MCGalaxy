@@ -55,7 +55,6 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         void btnLoad_Click(object sender, EventArgs e) {
-            List<Command> commands = null;
             string fileName;
             using (FileDialog dialog = new OpenFileDialog()) {
                 dialog.RestoreDirectory = true;
@@ -65,41 +64,25 @@ namespace MCGalaxy.Gui.Popups {
             }
             
             if (fileName.CaselessEnds(".dll")) {
-                byte[] data  = File.ReadAllBytes(fileName);
-                Assembly lib = Assembly.Load(data);
-                commands = IScripting.LoadTypes<Command>(lib);
-            } else {
-                IScripting engine = fileName.CaselessEnds(".cs") ? IScripting.CS : IScripting.VB;
-                if (!File.Exists(fileName)) return;
-                ConsoleHelpPlayer p = new ConsoleHelpPlayer();
-                
-                CompilerParameters args = new CompilerParameters();
-                args.GenerateInMemory   = true;
-                CompilerResults result  = engine.Compile(fileName, args, p);
-
-                if (result.Errors.HasErrors) {
-                    string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
-                    Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
-                    return;
-                }
-                commands = IScripting.LoadTypes<Command>(result.CompiledAssembly);
+                Assembly lib = IScripting.LoadAssembly(fileName);
+                LoadCommands(lib);
+                return;
             }
+            
+            IScripting engine = fileName.CaselessEnds(".cs") ? IScripting.CS : IScripting.VB;
+            if (!File.Exists(fileName)) return;
+            ConsoleHelpPlayer p = new ConsoleHelpPlayer();
+            
+            CompilerParameters args = new CompilerParameters();
+            args.GenerateInMemory   = true;
+            CompilerResults result  = engine.Compile(fileName, args, p);
 
-            if (commands == null) { 
-                Popup.Error("Error compiling files. Check logs for more details"); return; 
+            if (result.Errors.HasErrors) {
+                string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
+                Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
+                return;
             }
-            for (int i = 0; i < commands.Count; i++) {
-                Command cmd = commands[i];
-
-                if (lstCommands.Items.Contains(cmd.name)) {
-                    Popup.Warning("Command " + cmd.name + " already exists, so was not loaded");
-                    continue;
-                }
-
-                lstCommands.Items.Add(cmd.name);
-                Command.Register(cmd);
-                Logger.Log(LogType.SystemActivity, "Added " + cmd.name + " to commands");
-            }
+            LoadCommands(result.CompiledAssembly);            
         }
 
         void btnUnload_Click(object sender, EventArgs e) {
@@ -116,6 +99,27 @@ namespace MCGalaxy.Gui.Popups {
         
         void lstCommands_SelectedIndexChanged(object sender, EventArgs e) {
             btnUnload.Enabled = lstCommands.SelectedIndex != -1;
+        }
+		
+		
+        void LoadCommands(Assembly assembly) {
+            List<Command> commands = IScripting.LoadTypes<Command>(assembly);
+            if (commands == null) {
+                Popup.Error("Error compiling files. Check logs for more details"); return;
+            }
+            
+            for (int i = 0; i < commands.Count; i++) {
+                Command cmd = commands[i];
+
+                if (lstCommands.Items.Contains(cmd.name)) {
+                    Popup.Warning("Command " + cmd.name + " already exists, so was not loaded");
+                    continue;
+                }
+
+                lstCommands.Items.Add(cmd.name);
+                Command.Register(cmd);
+                Logger.Log(LogType.SystemActivity, "Added " + cmd.name + " to commands");
+            }
         }
     }
 }
