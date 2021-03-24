@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.CodeDom.Compiler;
 using System.IO;
 using MCGalaxy.Scripting;
 
@@ -40,13 +41,16 @@ namespace MCGalaxy.Commands.Scripting {
             }
 
             string srcPath = engine.SourcePath(args[0]);
-            string dstPath = IScripting.DllPath(args[0]);   
-            
+            string dstPath = IScripting.DllPath(args[0]);
             if (!File.Exists(srcPath)) {
-                p.Message("File &9{0} &Snot found.", srcPath);
-            } else if (engine.Compile(srcPath, dstPath, p)) {
+                p.Message("File &9{0} &Snot found.", srcPath); return;
+            }
+            
+            CompilerResults results = engine.Compile(srcPath, dstPath);
+            if (!results.Errors.HasErrors) {
                 p.Message("Command compiled successfully.");
             } else {
+                IScripting.SummariseErrors(results, p);
                 p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }

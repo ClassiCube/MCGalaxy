@@ -26,7 +26,7 @@ namespace MCGalaxy.Network {
         protected bool conn, upgrade;
         protected bool readingHeaders = true;
         
-        /// <summary> Computes the base64-encoded handshake verification key </summary>
+        /// <summary> Computes a base64-encoded handshake verification key </summary>
         protected static string ComputeKey(string rawKey) {
             string key = rawKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
             SHA1   sha = SHA1.Create();

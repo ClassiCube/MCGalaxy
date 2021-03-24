@@ -74,21 +74,18 @@ namespace MCGalaxy.Scripting {
                 sw.WriteLine(syntax);
             }
         }
-
-        /// <summary> Attempts to compile source code from the given file. </summary>
-        /// <remarks> Logs errors to player (summarised) and to IScripting.ErrorPath. </remarks>
-        public bool Compile(string srcPath, string dstPath, Player p) {
+        
+        const int maxLog = 2;
+        /// <summary> Attempts to compile the given source code file to a .dll file. </summary>
+        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
+        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>      
+        public CompilerResults Compile(string srcPath, string dstPath) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
-            args.OutputAssembly     = dstPath;
-            return !Compile(srcPath, args, p).Errors.HasErrors;
-        }
-
-        const int maxLog = 2;
-        /// <summary> Attempts to compile source code from the given file. </summary>
-        /// <remarks> Logs errors to player (summarised) and to IScripting.ErrorPath. </remarks>        
-        public CompilerResults Compile(string srcPath, CompilerParameters args, Player p) {
-            List<string> source = ReadSource(srcPath, args);
+            if (dstPath != null) args.OutputAssembly   = dstPath;
+            if (dstPath == null) args.GenerateInMemory = true;
+            
+            List<string> source     = ReadSource(srcPath, args);
             CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
             if (!results.Errors.HasErrors) return results;
             
@@ -111,6 +108,14 @@ namespace MCGalaxy.Scripting {
                 sb.AppendLine();
             }
             
+            using (StreamWriter w = new StreamWriter(ErrorPath, true)) {
+                w.Write(sb.ToString());
+            }
+            return results;
+        }
+        
+        /// <summary> Messages a summary of warnings and errors to the given player. </summary>
+        public static void SummariseErrors(CompilerResults results, Player p) {
             int logged = 0;
             foreach (CompilerError err in results.Errors) {
                 string type = err.IsWarning ? "Warning" : "Error";
@@ -119,12 +124,9 @@ namespace MCGalaxy.Scripting {
                 logged++;
                 if (logged >= maxLog) break;
             }
-            if (results.Errors.Count > maxLog) p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
             
-            using (StreamWriter w = new StreamWriter(ErrorPath, true)) {
-                w.Write(sb.ToString());
-            }
-            return results;
+            if (results.Errors.Count <= maxLog) return;
+            p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
         }
         
         static List<string> ReadSource(string path, CompilerParameters args) {
@@ -144,7 +146,7 @@ namespace MCGalaxy.Scripting {
         }
         
         /// <summary> Compiles the given source code. </summary>
-        public CompilerResults CompileSource(string source, CompilerParameters args) {
+        CompilerResults CompileSource(string source, CompilerParameters args) {
             args.ReferencedAssemblies.Add("MCGalaxy_.dll");
             PrepareArgs(args);
             source = source.Replace("MCLawl", "MCGalaxy");

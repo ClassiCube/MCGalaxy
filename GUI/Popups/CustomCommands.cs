@@ -71,13 +71,12 @@ namespace MCGalaxy.Gui.Popups {
             
             IScripting engine = fileName.CaselessEnds(".cs") ? IScripting.CS : IScripting.VB;
             if (!File.Exists(fileName)) return;
-            ConsoleHelpPlayer p = new ConsoleHelpPlayer();
             
-            CompilerParameters args = new CompilerParameters();
-            args.GenerateInMemory   = true;
-            CompilerResults result  = engine.Compile(fileName, args, p);
+            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();          
+            CompilerResults result = engine.Compile(fileName, null);
 
             if (result.Errors.HasErrors) {
+                IScripting.SummariseErrors(result, p);
                 string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
                 Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
                 return;
