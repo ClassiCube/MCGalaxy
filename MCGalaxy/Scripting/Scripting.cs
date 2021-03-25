@@ -149,6 +149,8 @@ namespace MCGalaxy.Scripting {
         public abstract string ProviderName { get; }
         public abstract string CommandSkeleton { get; }
         
+        public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
+        
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
         /// <summary> C# compiler instance. </summary>
@@ -165,8 +167,6 @@ namespace MCGalaxy.Scripting {
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
         }
-        
-        public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
         
         public void CreateNew(string path, string cmdName) {
             cmdName = cmdName.ToLower();
