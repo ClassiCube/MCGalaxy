@@ -27,22 +27,6 @@ namespace MCGalaxy {
     public abstract partial class Plugin {
         internal static List<Plugin> core = new List<Plugin>();
         public static List<Plugin> all = new List<Plugin>();
-
-        /// <summary> Loads all plugins from the given path. </summary>
-        public static bool Load(string path, bool startup) {
-            try {
-                Assembly lib = IScripting.LoadAssembly(path);
-                List<Plugin> plugins = IScripting.LoadTypes<Plugin>(lib);
-                
-                foreach (Plugin plugin in plugins) {
-                    if (!Load(plugin, startup)) return false;
-                }
-                return true;
-            } catch (Exception ex) {
-                Logger.LogError("Error loading plugins from " + path, ex);
-                return false;
-            }
-        }
         
         public static bool Load(Plugin p, bool startup) {
             try {
@@ -92,13 +76,7 @@ namespace MCGalaxy {
         public static void LoadAll() {
             LoadCorePlugin(new CorePlugin());
             LoadCorePlugin(new NotesPlugin());
-            
-            if (Directory.Exists("plugins")) {
-                string[] files = Directory.GetFiles("plugins", "*.dll");
-                foreach (string path in files) { Load(path, true); }
-            } else {
-                Directory.CreateDirectory("plugins");
-            }
+            IScripting.AutoloadPlugins();
         }
         
         static void LoadCorePlugin(Plugin plugin) {

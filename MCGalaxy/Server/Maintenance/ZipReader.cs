@@ -191,7 +191,7 @@ namespace MCGalaxy {
             int filenameLen = r.ReadUInt16();
             int extraLen = r.ReadUInt16();
             int commentLen = r.ReadUInt16();
-            r.ReadUInt16(); // disk number
+            r.ReadUInt16(); // disc number
             r.ReadUInt16(); // internal attributes
             r.ReadUInt32(); // external attributes
             entry.LocalHeaderOffset = r.ReadUInt32();
@@ -220,27 +220,27 @@ namespace MCGalaxy {
             r.ReadInt64(); // zip64 end of central dir size
             r.ReadUInt16(); // version
             r.ReadUInt16(); // version
-            r.ReadUInt32(); // disk number
-            r.ReadUInt32(); // disk number of central directory
+            r.ReadUInt32(); // disc number
+            r.ReadUInt32(); // disc number of central directory
             numEntries = (int)r.ReadInt64();
-            r.ReadInt64(); // num entries on disk
+            r.ReadInt64(); // num entries on disc
             r.ReadInt64(); // central dir size
             centralDirOffset = r.ReadInt64();
         }
         
         void ReadZip64EndOfCentralDirectoryLocator() {
             BinaryReader r = reader;
-            r.ReadUInt32(); // disk number of zip64 end of central directory
+            r.ReadUInt32(); // disc number of zip64 end of central directory
             zip64EndOffset = reader.ReadInt64();
-            r.ReadUInt32(); // total number of disks
+            r.ReadUInt32(); // total number of discs
         }
         
         void ReadEndOfCentralDirectoryRecord() {
             BinaryReader r = reader;
-            r.ReadUInt16(); // disk number
-            r.ReadUInt16(); // disk number of start
+            r.ReadUInt16(); // disc number
+            r.ReadUInt16(); // disc number of start
             numEntries = r.ReadUInt16();
-            r.ReadUInt16(); // num entries on disk
+            r.ReadUInt16(); // num entries on disc
             r.ReadUInt32(); // cental dir size
             centralDirOffset = r.ReadUInt32();
             r.ReadUInt16(); // comment length

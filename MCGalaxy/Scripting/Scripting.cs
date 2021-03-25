@@ -30,12 +30,10 @@ namespace MCGalaxy.Scripting {
     public static class IScripting {
         
         public const string AutoloadFile = "text/cmdautoload.txt";
-        public const string SourceDir = "extra/commands/source/";
         public const string DllDir = "extra/commands/dll/";
-        public const string ErrorPath = "logs/errors/compiler.log";
         
-        public static string DllPath(string cmdName) { return DllDir + "Cmd" + cmdName + ".dll"; }
-        public static string PluginPath(string name) { return "plugins/" + name + ".dll"; }
+        public static string CommandPath(string name) { return DllDir + "Cmd" + name + ".dll"; }
+        public static string PluginPath(string name)  { return "plugins/" + name + ".dll"; }
         
         /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
         /// <returns> The list of constructed instances. </returns>
@@ -67,6 +65,7 @@ namespace MCGalaxy.Scripting {
             }
         }
         
+        /// <summary> Loads the given assembly from disc (and associated .pdb debug data) </summary>
         public static Assembly LoadAssembly(string path) {
             byte[] data  = File.ReadAllBytes(path);
             byte[] debug = GetDebugData(path);
@@ -75,12 +74,12 @@ namespace MCGalaxy.Scripting {
         
         
         public static void AutoloadCommands() {
-            if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
+            if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }
             string[] list = File.ReadAllLines(AutoloadFile);
             
             foreach (string cmdName in list) {
                 if (cmdName.IsCommentLine()) continue;
-                string path  = DllPath(cmdName);
+                string path  = CommandPath(cmdName);
                 string error = LoadCommands(path);
                 
                 if (error != null) { Logger.Log(LogType.Warning, error); continue; }
@@ -88,7 +87,7 @@ namespace MCGalaxy.Scripting {
             }
         }
         
-        /// <summary> Loads and registers all the commands in the given dll. </summary>
+        /// <summary> Loads and registers all the commands from the given .dll path. </summary>
         public static string LoadCommands(string path) {
             try {
                 Assembly lib = LoadAssembly(path);
@@ -111,14 +110,38 @@ namespace MCGalaxy.Scripting {
             }
             return null;
         }
+        
+        
+        public static void AutoloadPlugins() {
+            if (Directory.Exists("plugins")) {
+                string[] files = Directory.GetFiles("plugins", "*.dll");
+                foreach (string path in files) { LoadPlugin(path, true); }
+            } else {
+                Directory.CreateDirectory("plugins");
+            }
+        }
+        
+        /// <summary> Loads all plugins from the given .dll path. </summary>
+        public static bool LoadPlugin(string path, bool auto) {
+            try {
+                Assembly lib = LoadAssembly(path);
+                List<Plugin> plugins = IScripting.LoadTypes<Plugin>(lib);
+                
+                foreach (Plugin plugin in plugins) {
+                    if (!Plugin.Load(plugin, auto)) return false;
+                }
+                return true;
+            } catch (Exception ex) {
+                Logger.LogError("Error loading plugins from " + path, ex);
+                return false;
+            }
+        }
     }
     
     /// <summary> Compiles source code files from a particular language into a .dll file. </summary>
     public abstract class ICompiler {
         
-        public const string AutoloadFile = "text/cmdautoload.txt";
         public const string SourceDir = "extra/commands/source/";
-        public const string DllDir = "extra/commands/dll/";
         public const string ErrorPath = "logs/errors/compiler.log";
         protected CodeDomProvider compiler;
         
@@ -143,8 +166,6 @@ namespace MCGalaxy.Scripting {
             }
         }
         
-        public static string DllPath(string cmdName) { return DllDir + "Cmd" + cmdName + ".dll"; }
-        public static string PluginPath(string name) { return "plugins/" + name + ".dll"; }
         public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
         
         public void CreateNew(string path, string cmdName) {

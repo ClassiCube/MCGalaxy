@@ -245,7 +245,7 @@ namespace MCGalaxy {
             w.Write((ushort)entry.Filename.Length);
             w.Write(extraLen);
             w.Write((ushort)0);  // file comment length
-            w.Write((ushort)0);  // disk number
+            w.Write((ushort)0);  // disc number
             w.Write((ushort)0);  // internal attributes
             w.Write(0);          // external attributes
             w.Write((uint)entry.LocalHeaderOffset);
@@ -275,8 +275,8 @@ namespace MCGalaxy {
             w.Write(zip64EndDataSize);
             w.Write(ver_zip64);
             w.Write(ver_zip64);
-            w.Write(0); // disk number
-            w.Write(0); // disk number of central directory
+            w.Write(0); // disc number
+            w.Write(0); // disc number of central directory
             w.Write((long)numEntries);
             w.Write((long)numEntries);
             w.Write(centralDirSize);
@@ -286,16 +286,16 @@ namespace MCGalaxy {
         void WriteZip64EndOfCentralDirectoryLocator() {
             BinaryWriter w = writer;
             w.Write(ZipEntry.SigZip64Loc);
-            w.Write(0); // disk number of zip64 end of central directory
+            w.Write(0); // disc number of zip64 end of central directory
             w.Write(zip64EndOffset);
-            w.Write(1); // total number of disks
+            w.Write(1); // total number of discs
         }
         
         void WriteEndOfCentralDirectoryRecord() {
             BinaryWriter w = writer;
             w.Write(ZipEntry.SigEnd);
-            w.Write((ushort)0); // disk number
-            w.Write((ushort)0); // disk number of start
+            w.Write((ushort)0); // disc number
+            w.Write((ushort)0); // disc number of start
             w.Write((ushort)numEntries);
             w.Write((ushort)numEntries);
             w.Write((uint)centralDirSize);

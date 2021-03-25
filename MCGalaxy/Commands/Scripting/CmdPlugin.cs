@@ -69,20 +69,20 @@ namespace MCGalaxy.Commands.Scripting {
                 p.Message("Plugin compiled successfully.");
             } else {
                 ICompiler.SummariseErrors(results, p);
-                p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
+                p.Message("&WCompilation error. See " + ICompiler.ErrorPath + " for more information.");
             }
         }
         
         static void LoadPlugin(Player p, string name) {
             string path = IScripting.PluginPath(name);
-            if (File.Exists(path)) {
-                if (Plugin.Load(path, false)) {
-                    p.Message("Plugin loaded successfully.");
-                } else {
-                    p.Message("&WError loading plugin. See error logs for more information.");
-                }
+            if (!File.Exists(path)) {
+                p.Message("File &9{0} &Snot found.", path); return;
+            }
+            
+            if (IScripting.LoadPlugin(path, false)) {
+                p.Message("Plugin loaded successfully.");
             } else {
-                p.Message("File &9{0} &Snot found.", path);
+                p.Message("&WError loading plugin. See error logs for more information.");
             }
         }
         

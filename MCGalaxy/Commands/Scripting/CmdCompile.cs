@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Scripting {
             }
 
             string srcPath = engine.SourcePath(args[0]);
-            string dstPath = IScripting.DllPath(args[0]);
+            string dstPath = IScripting.CommandPath(args[0]);
             if (!File.Exists(srcPath)) {
                 p.Message("File &9{0} &Snot found.", srcPath); return;
             }
@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Scripting {
                 p.Message("Command compiled successfully.");
             } else {
                 ICompiler.SummariseErrors(results, p);
-                p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
+                p.Message("&WCompilation error. See " + ICompiler.ErrorPath + " for more information.");
             }
         }
 

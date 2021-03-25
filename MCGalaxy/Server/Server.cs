@@ -150,7 +150,7 @@ namespace MCGalaxy {
             EnsureDirectoryExists(Paths.ImportsDir);
             EnsureDirectoryExists("blockdefs");
             EnsureDirectoryExists(IScripting.DllDir);
-            EnsureDirectoryExists(IScripting.SourceDir);
+            EnsureDirectoryExists(ICompiler.SourceDir);
         }
         
         static void EnsureDirectoryExists(string dir) {

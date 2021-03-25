@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Scripting {
                 p.Message("That command is already loaded!"); return;
             }
             
-            string path = IScripting.DllPath(cmdName);
+            string path = IScripting.CommandPath(cmdName);
             if (!File.Exists(path)) {
                 p.Message("File &9{0} &Snot found.", path); return;
             }
