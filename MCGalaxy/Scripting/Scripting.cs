@@ -26,8 +26,95 @@ using System.Text;
 
 namespace MCGalaxy.Scripting {
     
+    /// <summary> Utility methods for loading assemblies, commands, and plugins </summary>
+    public static class IScripting {
+        
+        public const string AutoloadFile = "text/cmdautoload.txt";
+        public const string SourceDir = "extra/commands/source/";
+        public const string DllDir = "extra/commands/dll/";
+        public const string ErrorPath = "logs/errors/compiler.log";
+        
+        public static string DllPath(string cmdName) { return DllDir + "Cmd" + cmdName + ".dll"; }
+        public static string PluginPath(string name) { return "plugins/" + name + ".dll"; }
+        
+        /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
+        /// <returns> The list of constructed instances. </returns>
+        public static List<T> LoadTypes<T>(Assembly lib) {
+            List<T> instances = new List<T>();
+            
+            foreach (Type t in lib.GetTypes()) {
+                if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(T))) continue;
+                object instance = Activator.CreateInstance(t);
+                
+                if (instance == null) {
+                    Logger.Log(LogType.Warning, "{0} \"{1}\" could not be loaded", typeof(T).Name, t.Name);
+                    throw new BadImageFormatException();
+                }
+                instances.Add((T)instance);
+            }
+            return instances;
+        }
+        
+        static byte[] GetDebugData(string path) {
+            path = Path.ChangeExtension(path, ".pdb");
+            if (!File.Exists(path)) return null;
+            
+            try {
+                return File.ReadAllBytes(path);
+            } catch (Exception ex) {
+                Logger.LogError("Error loading .pdb " + path, ex);
+                return null;
+            }
+        }
+        
+        public static Assembly LoadAssembly(string path) {
+            byte[] data  = File.ReadAllBytes(path);
+            byte[] debug = GetDebugData(path);
+            return Assembly.Load(data, debug);
+        }
+        
+        
+        public static void AutoloadCommands() {
+            if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
+            string[] list = File.ReadAllLines(AutoloadFile);
+            
+            foreach (string cmdName in list) {
+                if (cmdName.IsCommentLine()) continue;
+                string path  = DllPath(cmdName);
+                string error = LoadCommands(path);
+                
+                if (error != null) { Logger.Log(LogType.Warning, error); continue; }
+                Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
+            }
+        }
+        
+        /// <summary> Loads and registers all the commands in the given dll. </summary>
+        public static string LoadCommands(string path) {
+            try {
+                Assembly lib = LoadAssembly(path);
+                List<Command> commands = LoadTypes<Command>(lib);
+                
+                if (commands.Count == 0) return "No commands in dll file";
+                foreach (Command cmd in commands) { Command.Register(cmd); }
+            } catch (Exception ex) {
+                Logger.LogError("Error loading commands from " + path, ex);
+                
+                string file = Path.GetFileName(path);
+                if (ex is FileNotFoundException) {
+                    return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
+                } else if (ex is BadImageFormatException) {
+                    return file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
+                } else if (ex is FileLoadException) {
+                    return file + " or one of its dependencies could not be loaded. Details in the error log.";
+                }
+                return "An unknown error occured. Details in the error log.";
+            }
+            return null;
+        }
+    }
+    
     /// <summary> Compiles source code files from a particular language into a .dll file. </summary>
-    public abstract class IScripting {
+    public abstract class ICompiler {
         
         public const string AutoloadFile = "text/cmdautoload.txt";
         public const string SourceDir = "extra/commands/source/";
@@ -42,11 +129,11 @@ namespace MCGalaxy.Scripting {
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
         /// <summary> C# compiler instance. </summary>
-        public static IScripting CS = new ScriptingCS();
+        public static ICompiler CS = new CSCompiler();
         /// <summary> Visual Basic compiler instance. </summary>
-        public static IScripting VB = new ScriptingVB();
+        public static ICompiler VB = new VBCompiler();
         
-        public IScripting() {
+        public ICompiler() {
             compiler = CodeDomProvider.CreateProvider(ProviderName);
             if (compiler == null) {
                 Logger.Log(LogType.Warning, 
@@ -152,81 +239,6 @@ namespace MCGalaxy.Scripting {
             source = source.Replace("MCLawl", "MCGalaxy");
             source = source.Replace("MCForge", "MCGalaxy");
             return compiler.CompileAssemblyFromSource(args, source);
-        }
-        
-        
-        public static void Autoload() {
-            if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }        
-            string[] list = File.ReadAllLines(AutoloadFile);
-            
-            foreach (string cmdName in list) {
-                if (cmdName.IsCommentLine()) continue;
-                string path = DllPath(cmdName);
-                string error = IScripting.Load(path);
-                
-                if (error != null) { Logger.Log(LogType.Warning, error); continue; }
-                Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
-            }
-        }
-        
-        /// <summary> Loads and registers all the commands in the given dll. </summary>
-        public static string Load(string path) {
-            try {
-                Assembly lib = LoadAssembly(path);
-                List<Command> commands = LoadTypes<Command>(lib);
-                
-                if (commands.Count == 0) return "No commands in dll file";
-                foreach (Command cmd in commands) { Command.Register(cmd); }
-            } catch (Exception ex) {
-                Logger.LogError("Error loading commands from " + path, ex);
-                
-                string file = Path.GetFileName(path);
-                if (ex is FileNotFoundException) {
-                    return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
-                } else if (ex is BadImageFormatException) {
-                    return file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
-                } else if (ex is FileLoadException) {
-                    return file + " or one of its dependencies could not be loaded. Details in the error log.";
-                }
-                return "An unknown error occured. Details in the error log.";
-            }
-            return null;
-        }
-        
-        /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
-        /// <returns> The list of constructed instances. </returns>
-        public static List<T> LoadTypes<T>(Assembly lib) {
-            List<T> instances = new List<T>();
-            
-            foreach (Type t in lib.GetTypes()) {
-                if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(T))) continue;
-                object instance = Activator.CreateInstance(t);
-                
-                if (instance == null) {
-                    Logger.Log(LogType.Warning, "{0} \"{1}\" could not be loaded", typeof(T).Name, t.Name);
-                    throw new BadImageFormatException();
-                }
-                instances.Add((T)instance);
-            }
-            return instances;
-        }
-        
-        static byte[] GetDebugData(string path) {
-            path = Path.ChangeExtension(path, ".pdb");
-            if (!File.Exists(path)) return null;
-            
-            try {
-                return File.ReadAllBytes(path);
-            } catch (Exception ex) {
-                Logger.LogError("Error loading .pdb " + path, ex);
-                return null;
-            }
-        }
-        
-        public static Assembly LoadAssembly(string path) {
-            byte[] data  = File.ReadAllBytes(path);
-            byte[] debug = GetDebugData(path);
-            return Assembly.Load(data, debug);
         }
     }
 }

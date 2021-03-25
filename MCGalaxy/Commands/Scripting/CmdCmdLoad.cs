@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Scripting {
                 p.Message("File &9{0} &Snot found.", path); return;
             }
             
-            string error = IScripting.Load(path);
+            string error = IScripting.LoadCommands(path);
             if (error != null) { p.Message("&W" + error); return; }
             p.Message("Command was successfully loaded.");
         }

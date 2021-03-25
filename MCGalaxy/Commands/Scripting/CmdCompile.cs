@@ -31,11 +31,11 @@ namespace MCGalaxy.Commands.Scripting {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
             
-            IScripting engine = null;
+            ICompiler engine = null;
             if (args.Length == 1) {
-                engine = IScripting.CS;
+                engine = ICompiler.CS;
             } else if (args[1].CaselessEq("vb")) {
-                engine = IScripting.VB;
+                engine = ICompiler.VB;
             } else {
                 Help(p); return;
             }
@@ -50,7 +50,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (!results.Errors.HasErrors) {
                 p.Message("Command compiled successfully.");
             } else {
-                IScripting.SummariseErrors(results, p);
+                ICompiler.SummariseErrors(results, p);
                 p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }

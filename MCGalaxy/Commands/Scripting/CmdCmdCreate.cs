@@ -30,11 +30,11 @@ namespace MCGalaxy.Commands.Scripting {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
 
-            IScripting engine = null;
+            ICompiler engine = null;
             if (args.Length == 1) {
-                engine = IScripting.CS;
+                engine = ICompiler.CS;
             } else if (args[1].CaselessEq("vb")) {
-                engine = IScripting.VB;
+                engine = ICompiler.VB;
             } else {
                 Help(p); return;
             }

@@ -38,7 +38,7 @@ namespace MCGalaxy.Gui.Popups {
                 Popup.Warning("Command must have a name"); return;
             }
             
-            IScripting engine = radVB.Checked ? IScripting.VB : IScripting.CS;
+            ICompiler engine = radVB.Checked ? ICompiler.VB : ICompiler.CS;
             string path = engine.SourcePath(cmdName);
             if (File.Exists(path)) {
                 Popup.Warning("Command already exists"); return;
@@ -69,14 +69,14 @@ namespace MCGalaxy.Gui.Popups {
                 return;
             }
             
-            IScripting engine = fileName.CaselessEnds(".cs") ? IScripting.CS : IScripting.VB;
+            ICompiler engine = fileName.CaselessEnds(".cs") ? ICompiler.CS : ICompiler.VB;
             if (!File.Exists(fileName)) return;
             
             ConsoleHelpPlayer p    = new ConsoleHelpPlayer();          
             CompilerResults result = engine.Compile(fileName, null);
 
             if (result.Errors.HasErrors) {
-                IScripting.SummariseErrors(result, p);
+                ICompiler.SummariseErrors(result, p);
                 string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
                 Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
                 return;

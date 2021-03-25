@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         static void CompilePlugin(Player p, string name) {
-            IScripting engine = IScripting.CS;
+            ICompiler engine = ICompiler.CS;
             
             string srcPath = "plugins/" + name + engine.Ext;
             string dstPath = IScripting.PluginPath(name);  
@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (!results.Errors.HasErrors) {
                 p.Message("Plugin compiled successfully.");
             } else {
-                IScripting.SummariseErrors(results, p);
+                ICompiler.SummariseErrors(results, p);
                 p.Message("&WCompilation error. See " + IScripting.ErrorPath + " for more information.");
             }
         }

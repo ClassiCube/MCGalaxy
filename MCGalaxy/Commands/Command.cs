@@ -68,7 +68,7 @@ namespace MCGalaxy {
             }
             
             coreCmds = new List<Command>(allCmds);
-            IScripting.Autoload();
+            IScripting.AutoloadCommands();
         }
         
         public static void Register(Command cmd) {
