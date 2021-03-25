@@ -613,8 +613,7 @@
     <Compile Include="Player\Warp.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />
     <Compile Include="Network\Player.Networking.cs" />
-    <Compile Include="Plugins\Plugin.cs" />
-    <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Scripting\Plugin.cs" />
     <Compile Include="Scripting\Scripting.cs" />
     <Compile Include="Player\Ban.cs" />
     <Compile Include="Database\SqlTransaction.cs" />
