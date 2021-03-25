@@ -22,10 +22,6 @@ namespace MCGalaxy.Blocks.Physics {
     public unsafe static class LeafPhysics {
         
         public static void DoLeaf(Level lvl, ref PhysInfo C) {
-            if (lvl.physics > 1) { //Adv physics kills flowers and mushroos in water/lava
-                ActivateablePhysics.CheckNeighbours(lvl, C.X, C.Y, C.Z);
-            }
-
             // Decaying disabled? Then just remove from the physics list
             if (!lvl.Config.LeafDecay) {
                 C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
@@ -39,7 +35,10 @@ namespace MCGalaxy.Blocks.Physics {
             }
             
             // Perform actual leaf decay, then remove from physics list
-            if (DoLeafDecay(lvl, ref C)) lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+            if (DoLeafDecay(lvl, ref C)) {
+                lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+                if (lvl.physics > 1) ActivateablePhysics.CheckNeighbours(lvl, C.X, C.Y, C.Z);
+            }
             C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
