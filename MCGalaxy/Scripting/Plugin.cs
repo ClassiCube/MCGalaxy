@@ -36,11 +36,11 @@ namespace MCGalaxy {
     public abstract partial class Plugin {
 
         /// <summary> Hooks into events and initalises states/resources etc </summary>
-        /// <param name="startup"> True if plugin is being automatically loaded (e.g. on server startup), false if manually. </param>
+        /// <param name="auto"> True if plugin is being automatically loaded (e.g. on server startup), false if manually. </param>
         public abstract void Load(bool auto);
         
         /// <summary> Unhooks from events and disposes of state/resources etc </summary>
-        /// <param name="shutdown"> True if plugin is being auto unloaded (e.g. on server shutdown), false if manually. </param>
+        /// <param name="auto"> True if plugin is being auto unloaded (e.g. on server shutdown), false if manually. </param>
         public abstract void Unload(bool auto);
         
         /// <summary> Called when a player does /Help on the plugin. Typically tells the player what this plugin is about. </summary>

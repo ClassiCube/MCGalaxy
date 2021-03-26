@@ -117,6 +117,7 @@ namespace MCGalaxy.Blocks.Physics {
             // NOTE: omission of y-1 to match original behaviour
         }
         
+        // TODO: Stop checking block type and just always call lvl.AddCheck
         internal static void CheckAt(Level lvl, ushort x, ushort y, ushort z) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
@@ -127,6 +128,7 @@ namespace MCGalaxy.Blocks.Physics {
                 case Block.Sapling:
                 case Block.Sand:
                 case Block.Gravel:
+                case Block.Log:
                 case Block.Leaves:
                 case Block.FloatWood:
                     /*case Block.lava_fast:

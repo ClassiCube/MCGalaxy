@@ -105,5 +105,20 @@ namespace MCGalaxy.Blocks.Physics {
             // distances can only propagate through leaf blocks
             if (dists[index] == -2) dists[index] = dist;
         }
+        
+        
+        public static void DoLog(Level lvl, ref PhysInfo C) {
+            ushort x = C.X, y = C.Y, z = C.Z;
+            
+            for (int xx = -range; xx <= range; xx++)
+                for (int yy = -range; yy <= range; yy++)
+                    for (int zz = -range; zz <= range; zz++)
+            {
+                int index = lvl.PosToInt((ushort)(x + xx), (ushort)(y + yy), (ushort)(z + zz));              
+                if (index < 0 || lvl.blocks[index] != Block.Leaves) continue;
+                
+                lvl.AddCheck(index);
+            }
+        }
     }
 }
