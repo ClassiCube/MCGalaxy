@@ -49,7 +49,7 @@ namespace MCGalaxy
 \t\t// The command's name (what you put after a slash to use this command)
 \t\tpublic override string name {{ get {{ return ""{0}""; }} }}
 
-\t\t// Command's shortcut, can be left blank (e.g. ""/copy"" has a shortcut of ""c"")
+\t\t// Command's shortcut, can be left blank (e.g. ""/Copy"" has a shortcut of ""c"")
 \t\tpublic override string shortcut {{ get {{ return """"; }} }}
 
 \t\t// Which submenu this command displays in under /Help
@@ -91,10 +91,8 @@ namespace MCGalaxy
 \t{{
 \t\tpublic override string name {{ get {{ return ""{0}""; }} }}
 \t\tpublic override string MCGalaxy_Version {{ get {{ return ""{2}""; }} }}
-\t\tpublic override int build {{ get {{ return 100; }} }}
 \t\tpublic override string welcome {{ get {{ return ""Loaded Message!""; }} }}
 \t\tpublic override string creator {{ get {{ return ""{1}""; }} }}
-\t\tpublic override bool LoadAtStartup {{ get {{ return true; }} }}
 
 \t\tpublic override void Load(bool startup)
 \t\t{{
@@ -146,7 +144,7 @@ Namespace MCGalaxy
 \t\t\tEnd Get
 \t\tEnd Property
 
-\t\t' Command's shortcut, can be left blank (e.g. ""/copy"" has a shortcut of ""c"")
+\t\t' Command's shortcut, can be left blank (e.g. ""/Copy"" has a shortcut of ""c"")
 \t\tPublic Overrides ReadOnly Property shortcut() As String
 \t\t\tGet
 \t\t\t\tReturn """"
@@ -200,6 +198,7 @@ Imports System
 Namespace MCGalaxy
 \tPublic Class {0}
 \t\tInherits Plugin
+
 \t\tPublic Overrides ReadOnly Property name() As String
 \t\t\tGet
 \t\t\t\tReturn ""{0}""
@@ -210,11 +209,6 @@ Namespace MCGalaxy
 \t\t\t\tReturn ""{2}""
 \t\t\tEnd Get
 \t\t End Property
-\t\tPublic Overrides ReadOnly Property build() As Integer
-\t\t\tGet
-\t\t\t\tReturn 100
-\t\t\tEnd Get
-\t\t End Property
 \t\tPublic Overrides ReadOnly Property welcome() As String
 \t\t\tGet
 \t\t\t\tReturn ""Loaded Message!""
@@ -223,11 +217,6 @@ Namespace MCGalaxy
 \t\tPublic Overrides ReadOnly Property creator() As String
 \t\t\tGet
 \t\t\t\tReturn ""{1}""
-\t\t\tEnd Get
-\t\t End Property
-\t\tPublic Overrides ReadOnly Property LoadAtStartup() As Boolean
-\t\t\tGet
-\t\t\t\tReturn true
 \t\t\tEnd Get
 \t\t End Property
 

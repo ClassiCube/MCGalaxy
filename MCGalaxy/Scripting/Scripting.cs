@@ -237,15 +237,20 @@ namespace MCGalaxy.Scripting {
     
     /// <summary> Compiles source code files from a particular language into a .dll file, using a CodeDomProvider for the compiler. </summary>
     public abstract class ICodeDomCompiler : ICompiler {
-        protected CodeDomProvider compiler;
-        public abstract string ProviderName { get; }
+        readonly object compilerLock = new object();
+        CodeDomProvider compiler;
         
+        public abstract string ProviderName { get; }
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
         
-        public ICodeDomCompiler() {
-            compiler = CodeDomProvider.CreateProvider(ProviderName);
-            if (compiler == null) {
+        // Lazy init compiler when it's actually needed
+        void InitCompiler() {
+            lock (compilerLock) {
+                if (compiler != null) return;
+                compiler = CodeDomProvider.CreateProvider(ProviderName);
+                if (compiler != null) return;
+                
                 Logger.Log(LogType.Warning, 
                            "WARNING: {0} compiler is missing, you will be unable to compile {1} files.", 
                            ProviderName, Ext);
@@ -274,11 +279,13 @@ namespace MCGalaxy.Scripting {
             if (dstPath != null) args.OutputAssembly   = dstPath;
             if (dstPath == null) args.GenerateInMemory = true;
             
-            AddReferences(lines, args);
-            PrepareArgs(args);         
             string source = lines.Join(Environment.NewLine)
                                 .Replace("MCLawl", "MCGalaxy")
                                 .Replace("MCForge", "MCGalaxy");
+            
+            AddReferences(lines, args);
+            PrepareArgs(args);
+            InitCompiler();
             return compiler.CompileAssemblyFromSource(args, source);
         }
     }
