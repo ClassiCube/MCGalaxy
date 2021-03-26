@@ -80,6 +80,40 @@ namespace MCGalaxy
 }}";
             }
         }
+        
+        public override string PluginSkeleton {
+            get {
+                return @"//This is an example plugin source!
+using System;
+namespace MCGalaxy
+{{
+\tpublic class {0} : Plugin
+\t{{
+\t\tpublic override string name {{ get {{ return ""{0}""; }} }}
+\t\tpublic override string MCGalaxy_Version {{ get {{ return ""{2}""; }} }}
+\t\tpublic override int build {{ get {{ return 100; }} }}
+\t\tpublic override string welcome {{ get {{ return ""Loaded Message!""; }} }}
+\t\tpublic override string creator {{ get {{ return ""{1}""; }} }}
+\t\tpublic override bool LoadAtStartup {{ get {{ return true; }} }}
+
+\t\tpublic override void Load(bool startup)
+\t\t{{
+\t\t\t//LOAD YOUR PLUGIN WITH EVENTS OR OTHER THINGS!
+\t\t}}
+                        
+\t\tpublic override void Unload(bool shutdown)
+\t\t{{
+\t\t\t//UNLOAD YOUR PLUGIN BY SAVING FILES OR DISPOSING OBJECTS!
+\t\t}}
+                        
+\t\tpublic override void Help(Player p)
+\t\t{{
+\t\t\t//HELP INFO!
+\t\t}}
+\t}}
+}}";
+            }
+        }
     }
     
     public sealed class VBCompiler : ICodeDomCompiler {
@@ -152,6 +186,61 @@ Namespace MCGalaxy
 \t\t' This is for when a player does /Help {0}
 \t\tPublic Overrides Sub Help(p As Player)
 \t\t\tp.Message(""/{0} - Does stuff. Example command."")
+\t\tEnd Sub
+\tEnd Class
+End Namespace";
+            }
+        }
+        
+        public override string PluginSkeleton {
+            get {
+                return @"' This is an example plugin source!
+Imports System
+
+Namespace MCGalaxy
+\tPublic Class {0}
+\t\tInherits Plugin
+\t\tPublic Overrides ReadOnly Property name() As String
+\t\t\tGet
+\t\t\t\tReturn ""{0}""
+\t\t\tEnd Get
+\t\t End Property
+\t\tPublic Overrides ReadOnly Property MCGalaxy_Version() As String
+\t\t\tGet
+\t\t\t\tReturn ""{2}""
+\t\t\tEnd Get
+\t\t End Property
+\t\tPublic Overrides ReadOnly Property build() As Integer
+\t\t\tGet
+\t\t\t\tReturn 100
+\t\t\tEnd Get
+\t\t End Property
+\t\tPublic Overrides ReadOnly Property welcome() As String
+\t\t\tGet
+\t\t\t\tReturn ""Loaded Message!""
+\t\t\tEnd Get
+\t\t End Property
+\t\tPublic Overrides ReadOnly Property creator() As String
+\t\t\tGet
+\t\t\t\tReturn ""{1}""
+\t\t\tEnd Get
+\t\t End Property
+\t\tPublic Overrides ReadOnly Property LoadAtStartup() As Boolean
+\t\t\tGet
+\t\t\t\tReturn true
+\t\t\tEnd Get
+\t\t End Property
+
+\t\tPublic Overrides Sub Load(startup As Boolean)
+\t\t\t' LOAD YOUR PLUGIN WITH EVENTS OR OTHER THINGS!
+\t\tEnd Sub
+                        
+\t\tPublic Overrides Sub Unload(shutdown As Boolean)
+\t\t\t' UNLOAD YOUR PLUGIN BY SAVING FILES OR DISPOSING OBJECTS!
+\t\tEnd Sub
+                        
+\t\tPublic Overrides Sub Help(p As Player)
+\t\t\t' HELP INFO!
 \t\tEnd Sub
 \tEnd Class
 End Namespace";

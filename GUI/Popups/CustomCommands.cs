@@ -39,13 +39,14 @@ namespace MCGalaxy.Gui.Popups {
             }
             
             ICompiler engine = radVB.Checked ? ICompiler.VB : ICompiler.CS;
-            string path = engine.SourcePath(cmdName);
+            string path = engine.CommandPath(cmdName);
             if (File.Exists(path)) {
                 Popup.Warning("Command already exists"); return;
             }
             
             try {
-                engine.CreateNew(path, cmdName);
+                string source = engine.GenExampleCommand(cmdName);
+                File.WriteAllText(path, source);
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Popup.Error("Failed to generate command. Check error logs for more details.");
@@ -99,8 +100,8 @@ namespace MCGalaxy.Gui.Popups {
         void lstCommands_SelectedIndexChanged(object sender, EventArgs e) {
             btnUnload.Enabled = lstCommands.SelectedIndex != -1;
         }
-		
-		
+        
+        
         void LoadCommands(Assembly assembly) {
             List<Command> commands = IScripting.LoadTypes<Command>(assembly);
             if (commands == null) {

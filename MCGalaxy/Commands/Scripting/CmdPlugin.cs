@@ -38,25 +38,29 @@ namespace MCGalaxy.Commands.Scripting {
                 return;
             }
             
-            string[] parts = message.SplitSpaces(2);
-            if (parts.Length == 1) { Help(p); return; }
-            if (!Formatter.ValidName(p, parts[1], "plugin")) return;
+            string[] args = message.SplitSpaces(3);
+            if (args.Length == 1) { Help(p); return; }
             
-            if (parts[0].CaselessEq("load")) {
-                LoadPlugin(p, parts[1]);
-            } else if (parts[0].CaselessEq("unload")) {
-                UnloadPlugin(p, parts[1]);
-            } else if (parts[0].CaselessEq("create")) {
-                CreatePlugin(p, parts[1]);
-            } else if (parts[0].CaselessEq("compile")) {
-                CompilePlugin(p, parts[1]);
+            string cmd = args[0], name = args[1];
+            if (!Formatter.ValidName(p, name, "plugin")) return;
+            string language = args.Length > 2 ? args[2] : "";
+            
+            if (cmd.CaselessEq("load")) {
+                LoadPlugin(p, name);
+            } else if (cmd.CaselessEq("unload")) {
+                UnloadPlugin(p, name);
+            } else if (cmd.CaselessEq("create")) {
+                CreatePlugin(p, name, language);
+            } else if (cmd.CaselessEq("compile")) {
+                CompilePlugin(p, name, language);
             } else {
                 Help(p);
             }
         }
         
-        static void CompilePlugin(Player p, string name) {
-            ICompiler engine = ICompiler.CS;
+        static void CompilePlugin(Player p, string name, string language) {
+            ICompiler engine = ICompiler.Lookup(language, p);
+            if (engine == null) return;
             
             string srcPath = "plugins/" + name + engine.Ext;
             string dstPath = IScripting.PluginPath(name);  
@@ -108,45 +112,17 @@ namespace MCGalaxy.Commands.Scripting {
             }
         }
         
-        static void CreatePlugin(Player p, string name) {
+        static void CreatePlugin(Player p, string name, string language) {
+            ICompiler engine = ICompiler.Lookup(language, p);
+            if (engine == null) return;
+            
+            string path = engine.PluginPath(name);
             p.Message("Creating a plugin example source");
-            string creator = p.IsSuper ? Server.Config.Name : p.name;
-            string syntax = pluginSrc.Replace(@"\t", "\t");
-            syntax = string.Format(syntax, name, creator, Server.Version);
-            File.WriteAllText("plugins/" + name + ".cs", syntax);
+            
+            string creator = p.IsSuper ? Server.Config.Name : p.truename;
+            string source  = engine.GenExamplePlugin(name, creator);
+            File.WriteAllText(path, source);
         }
-        
-        const string pluginSrc =
-            @"//This is an example plugin source!
-using System;
-namespace MCGalaxy
-{{
-\tpublic class {0} : Plugin
-\t{{
-\t\tpublic override string name {{ get {{ return ""{0}""; }} }}
-\t\tpublic override string website {{ get {{ return ""www.example.com""; }} }}
-\t\tpublic override string MCGalaxy_Version {{ get {{ return ""{2}""; }} }}
-\t\tpublic override int build {{ get {{ return 100; }} }}
-\t\tpublic override string welcome {{ get {{ return ""Loaded Message!""; }} }}
-\t\tpublic override string creator {{ get {{ return ""{1}""; }} }}
-\t\tpublic override bool LoadAtStartup {{ get {{ return true; }} }}
-
-\t\tpublic override void Load(bool startup)
-\t\t{{
-\t\t\t//LOAD YOUR PLUGIN WITH EVENTS OR OTHER THINGS!
-\t\t}}
-                        
-\t\tpublic override void Unload(bool shutdown)
-\t\t{{
-\t\t\t//UNLOAD YOUR PLUGIN BY SAVING FILES OR DISPOSING OBJECTS!
-\t\t}}
-                        
-\t\tpublic override void Help(Player p)
-\t\t{{
-\t\t\t//HELP INFO!
-\t\t}}
-\t}}
-}}";
         
         public override void Help(Player p) {
             p.Message("&T/Plugin create [name]");

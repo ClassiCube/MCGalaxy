@@ -30,22 +30,18 @@ namespace MCGalaxy.Commands.Scripting {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
 
-            ICompiler engine = null;
-            if (args.Length == 1) {
-                engine = ICompiler.CS;
-            } else if (args[1].CaselessEq("vb")) {
-                engine = ICompiler.VB;
-            } else {
-                Help(p); return;
-            }
+            string language  = args.Length > 1 ? args[1] : "";
+            ICompiler engine = ICompiler.Lookup(language, p);
+            if (engine == null) return;
             
-            string path = engine.SourcePath(args[0]);
+            string path = engine.CommandPath(args[0]);
             if (File.Exists(path)) {
                 p.Message("File {0} already exists. Choose another name.", path); return;
             }
             
             try {
-                engine.CreateNew(path, args[0]);
+            	string source = engine.GenExampleCommand(args[0]);
+            	File.WriteAllText(path, source);
             } catch (Exception ex) {
                 Logger.LogError("Error saving new command to " + path, ex);
                 p.Message("An error occurred creating the command.");

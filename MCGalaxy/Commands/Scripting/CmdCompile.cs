@@ -30,17 +30,12 @@ namespace MCGalaxy.Commands.Scripting {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
-            
-            ICompiler engine = null;
-            if (args.Length == 1) {
-                engine = ICompiler.CS;
-            } else if (args[1].CaselessEq("vb")) {
-                engine = ICompiler.VB;
-            } else {
-                Help(p); return;
-            }
 
-            string srcPath = engine.SourcePath(args[0]);
+            string language  = args.Length > 1 ? args[1] : "";
+            ICompiler engine = ICompiler.Lookup(language, p);
+            if (engine == null) return;
+
+            string srcPath = engine.CommandPath(args[0]);
             string dstPath = IScripting.CommandPath(args[0]);
             if (!File.Exists(srcPath)) {
                 p.Message("File &9{0} &Snot found.", srcPath); return;

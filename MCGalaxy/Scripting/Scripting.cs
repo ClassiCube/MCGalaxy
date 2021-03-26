@@ -145,27 +145,41 @@ namespace MCGalaxy.Scripting {
         public const string ErrorPath = "logs/errors/compiler.log";
         public abstract string Ext { get; }
         public abstract string CommandSkeleton { get; }
+        public abstract string PluginSkeleton { get; }
         
-        public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
+        public string CommandPath(string name) { return SourceDir + "Cmd" + name + Ext; }
+        public string PluginPath(string name)  { return "plugins/" + name + Ext; }
         
         /// <summary> C# compiler instance. </summary>
         public static ICompiler CS = new CSCompiler();
         /// <summary> Visual Basic compiler instance. </summary>
         public static ICompiler VB = new VBCompiler();
         
-        public void CreateNew(string path, string cmdName) {
-            cmdName = cmdName.ToLower();
+        public static ICompiler Lookup(string name, Player p) {
+            if (name.Length == 0) return CS;
+            if (name.CaselessEq("CS")) return CS;
+            if (name.CaselessEq("VB")) return VB;
             
-            string syntax = CommandSkeleton;
+            p.Message("&WUnknown language \"{0}\"", name);
+            return null;
+        }
+
+
+        static string FormatSource(string source, params string[] args) {
             // Make sure we use the OS's line endings
-            syntax = syntax.Replace(@"\t", "\t");
-            syntax = syntax.Replace("\r\n", "\n");
-            syntax = syntax.Replace("\n", Environment.NewLine);
-            syntax = string.Format(syntax, cmdName.Capitalize());
-            
-            using (StreamWriter sw = new StreamWriter(path)) {
-                sw.WriteLine(syntax);
-            }
+            source = source.Replace(@"\t", "\t");
+            source = source.Replace("\r\n", "\n");
+            source = source.Replace("\n", Environment.NewLine);
+            return string.Format(source, args);
+        }
+        
+        public string GenExampleCommand(string cmdName) {
+            cmdName = cmdName.ToLower().Capitalize();
+            return FormatSource(CommandSkeleton, cmdName);
+        }
+        
+        public string GenExamplePlugin(string plugin, string creator) {
+            return FormatSource(PluginSkeleton, plugin, creator, Server.Version);
         }
         
         const int maxLog = 2;
