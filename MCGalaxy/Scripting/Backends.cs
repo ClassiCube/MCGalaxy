@@ -21,7 +21,7 @@ using System.CodeDom.Compiler;
 using System;
 
 namespace MCGalaxy.Scripting {
-    public sealed class CSCompiler : ICompiler {    
+    public sealed class CSCompiler : ICodeDomCompiler {    
         
         public override string Ext { get { return ".cs"; } }        
         public override string ProviderName { get { return "CSharp"; } }     
@@ -82,7 +82,7 @@ namespace MCGalaxy
         }
     }
     
-    public sealed class VBCompiler : ICompiler {
+    public sealed class VBCompiler : ICodeDomCompiler {
         
         public override string Ext { get { return ".vb"; } }
         public override string ProviderName { get { return "VisualBasic"; } }

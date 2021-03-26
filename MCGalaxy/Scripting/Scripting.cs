@@ -143,30 +143,15 @@ namespace MCGalaxy.Scripting {
         
         public const string SourceDir = "extra/commands/source/";
         public const string ErrorPath = "logs/errors/compiler.log";
-        protected CodeDomProvider compiler;
-        
         public abstract string Ext { get; }
-        public abstract string ProviderName { get; }
         public abstract string CommandSkeleton { get; }
         
         public string SourcePath(string cmdName) { return SourceDir + "Cmd" + cmdName + Ext; }
         
-        /// <summary> Adds language-specific default arguments to list of arguments. </summary>
-        protected abstract void PrepareArgs(CompilerParameters args);
         /// <summary> C# compiler instance. </summary>
         public static ICompiler CS = new CSCompiler();
         /// <summary> Visual Basic compiler instance. </summary>
         public static ICompiler VB = new VBCompiler();
-        
-        public ICompiler() {
-            compiler = CodeDomProvider.CreateProvider(ProviderName);
-            if (compiler == null) {
-                Logger.Log(LogType.Warning, 
-                           "WARNING: {0} compiler is missing, you will be unable to compile {1} commands.", 
-                           ProviderName, Ext);
-                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
-            }
-        }
         
         public void CreateNew(string path, string cmdName) {
             cmdName = cmdName.ToLower();
@@ -188,13 +173,8 @@ namespace MCGalaxy.Scripting {
         /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
         /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>      
         public CompilerResults Compile(string srcPath, string dstPath) {
-            CompilerParameters args = new CompilerParameters();
-            args.GenerateExecutable = false;
-            if (dstPath != null) args.OutputAssembly   = dstPath;
-            if (dstPath == null) args.GenerateInMemory = true;
-            
-            List<string> source     = ReadSource(srcPath, args);
-            CompilerResults results = CompileSource(source.Join(Environment.NewLine), args);
+            List<string> source     = Utils.ReadAllLinesList(srcPath);
+            CompilerResults results = Compile(source, dstPath);
             if (!results.Errors.HasErrors) return results;
             
             StringBuilder sb = new StringBuilder();
@@ -237,8 +217,29 @@ namespace MCGalaxy.Scripting {
             p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
         }
         
-        static List<string> ReadSource(string path, CompilerParameters args) {
-            List<string> lines = Utils.ReadAllLinesList(path);
+        /// <summary> Compiles the given source code. </summary>
+        protected abstract CompilerResults Compile(List<string> source, string dstPath);
+    }
+    
+    /// <summary> Compiles source code files from a particular language into a .dll file, using a CodeDomProvider for the compiler. </summary>
+    public abstract class ICodeDomCompiler : ICompiler {
+        protected CodeDomProvider compiler;
+        public abstract string ProviderName { get; }
+        
+        /// <summary> Adds language-specific default arguments to list of arguments. </summary>
+        protected abstract void PrepareArgs(CompilerParameters args);
+        
+        public ICodeDomCompiler() {
+            compiler = CodeDomProvider.CreateProvider(ProviderName);
+            if (compiler == null) {
+                Logger.Log(LogType.Warning, 
+                           "WARNING: {0} compiler is missing, you will be unable to compile {1} files.", 
+                           ProviderName, Ext);
+                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
+            }
+        }       
+        
+        static void AddReferences(List<string> lines, CompilerParameters args) {
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
             for (int i = 0; i < lines.Count; i++) {
                 string line = lines[i];
@@ -250,15 +251,20 @@ namespace MCGalaxy.Scripting {
                 
                 args.ReferencedAssemblies.Add(assem);
             }
-            return lines;
+            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
         }
         
-        /// <summary> Compiles the given source code. </summary>
-        CompilerResults CompileSource(string source, CompilerParameters args) {
-            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
-            PrepareArgs(args);
-            source = source.Replace("MCLawl", "MCGalaxy");
-            source = source.Replace("MCForge", "MCGalaxy");
+        protected override CompilerResults Compile(List<string> lines, string dstPath) {
+            CompilerParameters args = new CompilerParameters();
+            args.GenerateExecutable = false;
+            if (dstPath != null) args.OutputAssembly   = dstPath;
+            if (dstPath == null) args.GenerateInMemory = true;
+            
+            AddReferences(lines, args);
+            PrepareArgs(args);         
+            string source = lines.Join(Environment.NewLine)
+                                .Replace("MCLawl", "MCGalaxy")
+                                .Replace("MCForge", "MCGalaxy");
             return compiler.CompileAssemblyFromSource(args, source);
         }
     }
