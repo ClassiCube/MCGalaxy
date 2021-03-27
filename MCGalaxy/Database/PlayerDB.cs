@@ -162,7 +162,7 @@ namespace MCGalaxy.DB {
         static void MatchMulti(string name, string columns, object arg, ReaderCallback callback) {
             string suffix = Database.Backend.CaselessLikeSuffix;
             Database.ReadRows("Players", columns, arg, callback,
-                              "WHERE Name LIKE @0 ESCAPE '#' LIMIT 21" + suffix,
+                              "WHERE Name LIKE @0 ESCAPE '#' LIMIT 101" + suffix,
                               "%" + name.Replace("_", "#_") + "%");
         }
     }
