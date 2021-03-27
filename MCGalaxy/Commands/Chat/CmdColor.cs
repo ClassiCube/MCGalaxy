@@ -54,14 +54,15 @@ namespace MCGalaxy.Commands.Chatting {
             if (colName.Length == 0) {
                 col = Group.GroupIn(target).Color;
                 MessageFrom(target, who, "had their color removed");
+                PlayerDB.Update(target, PlayerData.ColumnColor, "");
             } else {
                 col = Matcher.FindColor(p, colName);
                 if (col == null) return;
                 MessageFrom(target, who, "had their color changed to " + col + Colors.Name(col));
+                PlayerDB.Update(target, PlayerData.ColumnColor, col);
             }
             
             if (who != null) who.UpdateColor(col);
-            PlayerDB.Update(target, PlayerData.ColumnColor, col);
         }
         
         public override void Help(Player p) {
