@@ -64,7 +64,6 @@ namespace MCGalaxy {
         public static PlayerExtList frozen, muted, tempBans, tempRanks;
         
         public static readonly List<string> Devs = new List<string>() { "Hetal", "venom983", "UclCommander" };
-        public static readonly List<string> Mods = new List<string>() { "Goodly" };
         public static readonly List<string> Opstats = new List<string>() { "ban", "tempban", "xban", "banip", "kick", "warn", "mute", "freeze", "setrank" };
 
         public static Level mainLevel;
