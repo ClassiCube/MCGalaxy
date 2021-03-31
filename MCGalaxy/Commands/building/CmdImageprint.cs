@@ -136,8 +136,9 @@ namespace MCGalaxy.Commands.Building {
             int resizedHeight = height - LargestDelta(lvl, yEnd);
             
             // Preserve aspect ratio of image
-            float ratio = Math.Min(resizedWidth / (float)width, resizedHeight / (float)height);
-            resizedWidth = (int)(width * ratio); resizedHeight = (int)(height * ratio);
+            float ratio   = Math.Min(resizedWidth / (float)width, resizedHeight / (float)height);
+            resizedWidth  = Math.Max(1, (int)(width  * ratio));
+            resizedHeight = Math.Max(1, (int)(height * ratio));
             
             p.Message("&WImage is too large ({0}x{1}), resizing to ({2}x{3})",
                       width, height, resizedWidth, resizedHeight);
