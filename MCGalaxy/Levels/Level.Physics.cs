@@ -76,10 +76,10 @@ namespace MCGalaxy {
 
                     DateTime tickStart = default(DateTime);
                     try {
-                    	lock (physTickLock) {
+                        lock (physTickLock) {
                             tickStart = DateTime.UtcNow;
                             PhysicsTick();
-                    	}
+                        }
                     } catch (Exception ex) {
                         Logger.LogError("Error in physics tick", ex);
                     }
@@ -198,8 +198,7 @@ namespace MCGalaxy {
                 }
             }
             
-            if (bulkSender != null)
-                bulkSender.Flush();
+            if (bulkSender != null) bulkSender.Flush();
             ListUpdate.Clear(); listUpdateExists.Clear();
         }
         
@@ -309,11 +308,15 @@ namespace MCGalaxy {
         }
         
         
+        void ClearPhysicsLists() {
+            ListCheck.Count  = 0; listCheckExists.Clear();
+            ListUpdate.Count = 0; listUpdateExists.Clear();
+        }
+        
         public void ClearPhysics() {
             for (int i = 0; i < ListCheck.Count; i++ )
                 RevertPhysics(ListCheck.Items[i]);
-            ListCheck.Clear(); listCheckExists.Clear();
-            ListUpdate.Clear(); listUpdateExists.Clear();
+            ClearPhysicsLists();
         }
         
         void RevertPhysics(Check C) {

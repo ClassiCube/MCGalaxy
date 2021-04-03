@@ -27,7 +27,6 @@ namespace MCGalaxy {
     /// <summary> Checks for and applies software updates. </summary>
     public static class Updater {
         
-        static string exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
         public static string SourceURL = "https://github.com/UnknownShadow200/MCGalaxy";
         public const string BaseURL    = "https://raw.githubusercontent.com/UnknownShadow200/MCGalaxy/master/";
         public const string UploadsURL = "https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads";

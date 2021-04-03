@@ -92,8 +92,7 @@ namespace MCGalaxy {
 
         public void Dispose() {
             Extras.Clear();
-            ListCheck.Clear(); listCheckExists.Clear();
-            ListUpdate.Clear(); listUpdateExists.Clear();
+            ClearPhysicsLists();
             UndoBuffer.Clear();
             BlockDB.Cache.Clear();
             Zones.Clear();

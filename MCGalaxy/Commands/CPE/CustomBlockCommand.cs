@@ -391,7 +391,6 @@ namespace MCGalaxy.Commands.CPE {
                 if (fallback == Block.Invalid) { SendStepHelp(p, global); return; }
                 bd.FallBack = fallback;
                 
-                BlockID block = bd.GetBlock();
                 if (!AddBlock(p, lvl, bd, global, cmd)) return;
                 BlockDefinition.Save(global, lvl);
                 
