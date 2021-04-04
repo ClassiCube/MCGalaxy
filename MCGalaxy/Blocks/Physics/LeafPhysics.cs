@@ -119,6 +119,7 @@ namespace MCGalaxy.Blocks.Physics {
                 
                 lvl.AddCheck(index);
             }
+            C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
     }
 }
