@@ -23,8 +23,8 @@ namespace MCGalaxy {
     public delegate void LineProcessor<T>(string key, string value, ref T state);
     public delegate void SimpleLineProcessor(string key, string value);
     
-    /// <summary> Handles text files that have multiple key-value lines in the format 'key=value'.
-    /// Also supports # for commented lines. </summary>
+    /// <summary> Handles text files that have multiple key-value lines in the format 'key=value'. </summary>
+    /// <remarks> Also supports # for commented lines. </remarks>
     public static class PropertiesFile {
         
         public static bool Read(string path, SimpleLineProcessor processor,

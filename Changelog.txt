@@ -21,7 +21,7 @@ Fixed: Very rare case where multiple players copying/editing custom blocks at sa
 Fixed: Make sure /levels is always in sorted order
 Improved: Allow using /nick on offline players
 Improved: Allow using /skin on offline players
-Improved: Allow checking specific player's ping in /ping
+Improved: Allow checking specific player's ping in /ping (Thanks iD)
 Fixed: /Ascend not allowing you to move to the very top of a level
 Added: Visual Basic plugin compiling and creation support
 Fixed: Bump record limit from 21 to 101 for database queries that are matching multiple names
