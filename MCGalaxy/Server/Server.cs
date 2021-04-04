@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using MCGalaxy.Commands;
@@ -269,8 +270,52 @@ namespace MCGalaxy {
             } catch { }
             
             try { FileLogger.Flush(null); } catch { }
-            if (restarting) Process.Start(RestartPath);
+            
+            if (restarting) {
+                // first try to use excevp to restart in CLI mode under mono 
+                // - see detailed comment in Excvp_Hack for why this is required
+                if (HACK_TryExecvp()) HACK_Execvp();
+                Process.Start(RestartPath);
+            }
             Environment.Exit(0);
+        }
+        
+        [DllImport("libc", SetLastError = true)]
+        static extern int execvp(string path, string[] argv);
+        
+        static bool HACK_TryExecvp() {
+            return CLIMode && Environment.OSVersion.Platform == PlatformID.Unix 
+                && Type.GetType("Mono.Runtime") != null;
+        }
+        
+        static void HACK_Execvp() {
+            // With using normal Process.Start with mono, after Environment.Exit
+            //  is called, all FDs (including standard input) are also closed.
+            // Unfortunately, this causes the new server process to constantly error with
+            //   Type: IOException
+            //   Source: mscorlib
+            //   Message: Invalid handle to path "server_folder_path/[Unknown]"
+            //   Target: ReadData
+            //   Trace:   at System.IO.FileStream.ReadData (System.Runtime.InteropServices.SafeHandle safeHandle, System.Byte[] buf, System.Int32 offset, System.Int32 count) [0x0002d]
+            //     at System.IO.FileStream.ReadInternal (System.Byte[] dest, System.Int32 offset, System.Int32 count) [0x00026]
+            //     at System.IO.FileStream.Read (System.Byte[] array, System.Int32 offset, System.Int32 count) [0x000a1] 
+            //     at System.IO.StreamReader.ReadBuffer () [0x000b3]
+            //     at System.IO.StreamReader.Read () [0x00028]
+            //     at System.TermInfoDriver.GetCursorPosition () [0x0000d]
+            //     at System.TermInfoDriver.ReadUntilConditionInternal (System.Boolean haltOnNewLine) [0x0000e]
+            //     at System.TermInfoDriver.ReadLine () [0x00000]
+            //     at System.ConsoleDriver.ReadLine () [0x00000]
+            //     at System.Console.ReadLine () [0x00013]
+            //     at MCGalaxy.Cli.CLI.ConsoleLoop () [0x00002]
+            // (this errors multiple times a second and can quickly fill up tons of disk space)
+            // And also causes console to be spammed with '1R3;1R3;1R3;' or '363;1R;363;1R;'
+            //
+            // Note this issue does NOT happen with GUI mode for some reason - and also
+            // don't want to use excevp in GUI mode, otherwise the X socket FDs pile up
+            try {
+                execvp("mono", new string[] { "mono", RestartPath });
+            } catch {
+            }
         }
 
         public static void UpdateUrl(string url) {

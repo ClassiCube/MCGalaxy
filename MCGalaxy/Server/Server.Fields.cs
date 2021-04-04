@@ -56,7 +56,7 @@ namespace MCGalaxy {
         public static INetListen Listener;
 
         //Other
-        public static bool SetupFinished = false;
+        public static bool SetupFinished, CLIMode;
         
         public static PlayerList bannedIP, whiteList, ircControllers, invalidIds;
         public static PlayerList ignored, hidden, agreed, vip, noEmotes, lockdown;

@@ -38,6 +38,14 @@ namespace MCGalaxy.Cli {
             StartCLI();
         }
         
+        static void EnableCLIMode() {
+            try {
+                Server.CLIMode = true;
+            } catch {
+                // in case user is running CLI with older MCGalaxy dll
+            }
+        }
+        
         static void StartCLI() {
             FileLogger.Init();
             Server.RestartPath = Path.GetFileName(Assembly.GetEntryAssembly().Location);
@@ -47,6 +55,7 @@ namespace MCGalaxy.Cli {
                 Logger.LogHandler += LogMessage;
                 Updater.NewerVersionDetected += LogNewerVersionDetected;
                 
+                EnableCLIMode();
                 Server.Start();
                 Console.Title = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
                 Console.CancelKeyPress += OnCancelKeyPress;
