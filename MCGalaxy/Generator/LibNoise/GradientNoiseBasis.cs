@@ -326,15 +326,13 @@ namespace LibNoise
             return LinearInterpolate(iy0, iy1, zs);
         }
 
-        static double GradientNoise(double fx, double fy, double fz, int ix,
-            int iy, int iz, long seed)
+        static double GradientNoise(double fx, double fy, double fz, int ix, int iy, int iz, int seed)
         {
-            long vectorIndex = (
+            int vectorIndex = (
                   XNoiseGen * ix
                 + YNoiseGen * iy
                 + ZNoiseGen * iz
-                + SeedNoiseGen * seed)
-                & 0xffffffff;
+                + SeedNoiseGen * seed);
             vectorIndex ^= (vectorIndex >> ShiftNoiseGen);
             vectorIndex &= 0xff;
 
