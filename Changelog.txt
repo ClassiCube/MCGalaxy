@@ -1,3 +1,36 @@
+v 1.9.3.0
+Fixed: Errors when BlockDB file is > 32 GB
+Improved: For /img (and heightmap gen, import, etc) don't log to error logs for simple known errors like 404, website address can't be resolved, etc
+Fixed: Spamming /send not triggering auto mute
+Improved: /server public/private should persist across restart
+Fixed: /UndoPlayer should still be usable on levels with drawing disabled
+Improved: Optimise leaf decay calculation
+Fixed: /me not showing on IRC when used from non-localchat level
+Improved: Don't log to error logs for image decode failure for imgprint/heightmap
+Improved: Support connecting to IRC over SSL (Thanks Kamino)
+Fixed: Skip block for brushes not working when ranked below SuperOP
+Improved: Superops should be able to use restricted commands in MBs by default
+Improved: IRC controllers should default to superop not nobody permission level
+Improved: Add separarate /unmute, remove /mute toggling mute on/off (Thanks Goodly)
+Fixed: Message of exactlty 64 characters wrongly being line wrapped
+Fixed: /clear not completing clearing chat for people who use 30 chatlines
+Improved: Whitelist: Use formatted nick in warning messages for /Whitelist
+Improved: For classic mode, convert ampersands to percent instead of completely removing
+Improved: When changing many custom blocks at once, only save once instead of after each block
+Fixed: Very rare case where multiple players copying/editing custom blocks at same time errored
+Fixed: Make sure /levels is always in sorted order
+Improved: Allow using /nick on offline players
+Improved: Allow using /skin on offline players
+Improved: Allow checking specific player's ping in /ping (Thanks 8cta)
+Fixed: /Ascend not allowing you to move to the very top of a level
+Added: Visual Basic plugin compiling and creation support
+Fixed: Bump record limit from 21 to 101 for database queries that are matching multiple names
+Fixed: /color without a colour specified should remove the colour completely
+Fix imageprint very rarely resizing to 0x0 and erroring (Thanks Goodly)
+Fixed: constantly erroring after restarting with Mono on linux with CLI
+Removed: MCGalaxy mods altogether (only gave you an in-game title anyways)
+Removed: Automatically moving .prev files from levels into levels/prev (obsolete for 4.75 years now)
+
 v 1.9.2.9
 Improved: Explanatory comments for /cmdcreate generated command skeletons
 Improved: Add cancel argument for levelsave/unload/rankchange events
