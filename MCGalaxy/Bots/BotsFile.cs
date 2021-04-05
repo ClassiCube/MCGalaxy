@@ -53,17 +53,20 @@ namespace MCGalaxy.Bots {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
             string json = File.ReadAllText(path);
             
-            bool success;
-            JsonArray array = (JsonArray)Json.Parse(json, out success);
+            JsonReader reader = new JsonReader(json);
+            reader.OnMember   = (obj, key, value) => {
+                if (obj.Meta == null) obj.Meta = new BotProperties();
+                ConfigElement.Parse(elems, obj.Meta, key, (string)value);
+            };
+            
+            JsonArray array = (JsonArray)reader.Parse();
             if (array == null) return props;
             
             foreach (object raw in array) {
                 JsonObject obj = (JsonObject)raw;
-                if (obj == null) continue;
+                if (obj == null || obj.Meta == null) continue;
                 
-                BotProperties data = new BotProperties();
-                obj.Deserialise(elems, data);
-                
+                BotProperties data = (BotProperties)obj.Meta;
                 if (String.IsNullOrEmpty(data.DisplayName)) data.DisplayName = data.Name;
                 props.Add(data);
             }

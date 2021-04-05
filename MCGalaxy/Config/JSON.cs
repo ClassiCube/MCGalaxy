@@ -6,16 +6,14 @@ using System.Text;
 
 namespace MCGalaxy.Config {
     
-    public sealed class JsonArray : List<object> { }
+    public sealed class JsonArray  : List<object> { }
     
-    public sealed class JsonObject {
-        // NOTE: BlockDefinitions entries have about 30 members
-        public List<string> Keys = new List<string>(30);
-        public List<object> Values = new List<object>(30);
+    public sealed class JsonObject : Dictionary<string, object> {
+        public object Meta;
         
         public void Deserialise(ConfigElement[] elems, object instance) {
-            for (int i = 0; i < Keys.Count; i++) {
-                ConfigElement.Parse(elems, instance, Keys[i], (string)Values[i]);
+            foreach (var kvp in this) {
+                ConfigElement.Parse(elems, instance, kvp.Key, (string)kvp.Value);
             }
         }
     }
@@ -39,10 +37,7 @@ namespace MCGalaxy.Config {
             OnMember = DefaultOnMember;
         }
         
-        static void DefaultOnMember(JsonObject obj, string key, object value) {
-            obj.Keys.Add(key);
-            obj.Values.Add(value);
-        }
+        static void DefaultOnMember(JsonObject obj, string key, object value) { obj[key] = value; }
         
         
         const int T_NONE = 0, T_NUM = 1, T_TRUE = 2, T_FALSE = 3, T_NULL = 4;        

@@ -92,22 +92,27 @@ namespace MCGalaxy {
         
         static ConfigElement[] elems;
         public static BlockDefinition[] Load(string path) {
-        	BlockDefinition[] defs = new BlockDefinition[Block.ExtendedCount];
+            BlockDefinition[] defs = new BlockDefinition[Block.ExtendedCount];
             if (!File.Exists(path)) return defs;
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             
             try {
-                bool success;
                 string json = File.ReadAllText(path);
-                JsonArray array = (JsonArray)Json.Parse(json, out success);
+                
+                JsonReader reader = new JsonReader(json);
+                reader.OnMember   = (obj, key, value) => {
+                    if (obj.Meta == null) obj.Meta = new BlockDefinition();
+                    ConfigElement.Parse(elems, obj.Meta, key, (string)value);
+                };
+                
+                JsonArray array = (JsonArray)reader.Parse();
                 if (array == null) return defs;
                 
                 foreach (object raw in array) {
                     JsonObject obj = (JsonObject)raw;
-                    if (obj == null) continue;
+                    if (obj == null || obj.Meta == null) continue;
                     
-                    BlockDefinition def = new BlockDefinition();
-                    obj.Deserialise(elems, def);
+                    BlockDefinition def = (BlockDefinition)obj.Meta;
                     if (String.IsNullOrEmpty(def.Name)) continue;
                     
                     BlockID block = def.GetBlock();

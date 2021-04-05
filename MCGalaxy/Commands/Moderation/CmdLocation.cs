@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             JsonReader reader = new JsonReader(json);
-            reader.OnMember    = (obj, key, value) => {
+            reader.OnMember   = (obj, key, value) => {
             	if (key == "region")  region  = (string)value;
             	if (key == "country") country = (string)value;
             };
