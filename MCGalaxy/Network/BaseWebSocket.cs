@@ -274,6 +274,7 @@ namespace MCGalaxy.Network {
     
     /// <summary> Abstracts a client side WebSocket </summary>
     public abstract class ClientWebSocket : BaseWebSocket {
+        protected string path = "/";
         string verKey;
         // TODO: use a random securely generated key
         const string key = "xTNDiuZRoMKtxrnJDWyLmA==";
@@ -324,11 +325,10 @@ namespace MCGalaxy.Network {
             SendRaw(Encoding.ASCII.GetBytes(header + "\r\n"), SendFlags.None);
         }
         
-        protected virtual string Path { get { return "/"; } }
         protected virtual void WriteCustomHeaders() { }
         
         public override void Init() {
-            WriteHeader("GET " + Path + " HTTP/1.1");
+            WriteHeader("GET " + path + " HTTP/1.1");
             WriteHeader("Upgrade: websocket");
             WriteHeader("Connection: Upgrade");
             WriteHeader("Sec-WebSocket-Version: 13");

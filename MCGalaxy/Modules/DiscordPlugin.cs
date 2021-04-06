@@ -45,22 +45,23 @@ namespace MCGalaxy.Modules.Discord {
             if (!File.Exists(file)) Save();
 
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.ParseFile(cfg, "properties/discordbot.properties", null);
+            ConfigElement.ParseFile(cfg, file, null);
         }
         
         public static void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.SerialiseSimple(cfg, "properties/discordbot.properties", null);
+            ConfigElement.SerialiseSimple(cfg, file, null);
         }
     }
     
     public sealed class DiscordWebsocket : ClientWebSocket {
+        public string Token;
+        public Action<string> Handler;
         TcpClient client;
         SslStream stream;
-        string _token;
         
-        public DiscordWebsocket(string token) {
-            _token = token;
+        public DiscordWebsocket() {
+            path = "/?v=6&encoding=json";
         }
         
         const string host = "gateway.discord.gg";
@@ -77,6 +78,10 @@ namespace MCGalaxy.Modules.Discord {
             Init();
         }
         
+        public void SendMessage(int opcode, JsonObject data) {
+            throw new NotImplementedException();
+        }
+        
         public void ReadLoop() {
             byte[] data = new byte[4096];
             for (;;) {
@@ -87,7 +92,8 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         protected override void HandleData(byte[] data, int len) {
-            Console.WriteLine("DATA: " + Encoding.UTF8.GetString(data, 0, len));
+            string value = Encoding.UTF8.GetString(data, 0, len);
+            Handler(value);
         }
         
         protected override void SendRaw(byte[] data, SendFlags flags) {
@@ -103,25 +109,29 @@ namespace MCGalaxy.Modules.Discord {
             Close();
         }
         
-        protected override string Path { get { return "/?v=6&encoding=json"; } }
-        
         protected override void WriteCustomHeaders() {
-            WriteHeader("Authorization: Bot " + _token);
+            WriteHeader("Authorization: Bot " + Token);
             WriteHeader("Host: " + host);
         }
     }
     
-    public sealed class DiscordPlugin : Plugin {
-        public override string creator { get { return Server.SoftwareName + " team"; } }
-        public override string MCGalaxy_Version { get { return Server.Version; } }
-        public override string name { get { return "DiscordRelayPlugin"; } }
+    public sealed class DiscordBot {
         Thread thread;
         DiscordWebsocket socket;
         
-        public override void Load(bool startup) {
-            DiscordConfig.Load();
-            if (!DiscordConfig.Enabled) return;
-            
+        void HandlePacket(string value) {
+        	JsonReader ctx = new JsonReader(value);
+        	JsonObject obj = (JsonObject)ctx.Parse();
+        	
+        	Logger.Log(LogType.SystemActivity, value);
+        	if (obj == null) return;
+        }
+        
+        public void RunAsync() {
+            socket = new DiscordWebsocket();
+            socket.Token   = DiscordConfig.BotToken;
+            socket.Handler = HandlePacket;
+                
             thread      = new Thread(IOThread);
             thread.Name = "MCG-DiscordRelay";
             thread.IsBackground = true;
@@ -130,13 +140,26 @@ namespace MCGalaxy.Modules.Discord {
         
         void IOThread() {
             try {
-                string token = DiscordConfig.BotToken;
-                socket = new DiscordWebsocket(token);
                 socket.Connect();
                 socket.ReadLoop();
             } catch (Exception ex) {
                 Logger.LogError("Discord relay error", ex);
             }
+        }
+    }
+    
+    public sealed class DiscordPlugin : Plugin {
+        public override string creator { get { return Server.SoftwareName + " team"; } }
+        public override string MCGalaxy_Version { get { return Server.Version; } }
+        public override string name { get { return "DiscordRelayPlugin"; } }
+        DiscordBot bot;
+        
+        public override void Load(bool startup) {
+            DiscordConfig.Load();
+            if (!DiscordConfig.Enabled) return;
+            
+            bot = new DiscordBot();
+            bot.RunAsync();
         }
         
         public override void Unload(bool shutdown) {
