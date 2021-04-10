@@ -185,7 +185,7 @@ namespace MCGalaxy.Games {
             Map.Message("Please wait while you are transfered.");
         }
         
-        void ContinueOnSameMap() {
+        protected virtual void ContinueOnSameMap() {
             Map.Message("Continuing " + GameName + " on the same map");
             Level old = Level.Load(Map.MapName);
             

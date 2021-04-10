@@ -25,6 +25,7 @@ namespace MCGalaxy.Games {
         
          protected override void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
+            OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
             OnJoinedLevelEvent.Register(HandleOnJoinedLevel, Priority.High);
             OnGettingMotdEvent.Register(HandleGettingMotd, Priority.High);
@@ -34,12 +35,17 @@ namespace MCGalaxy.Games {
         
         protected override void UnhookEventHandlers() {
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
+            OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
             OnJoinedLevelEvent.Unregister(HandleOnJoinedLevel);
             OnGettingMotdEvent.Unregister(HandleGettingMotd);
             
             base.UnhookEventHandlers();
-        }       
+        }
+		
+		void HandlePlayerChat(Player p, string message) {
+            if (Picker.HandlesMessage(p, message)) { p.cancelchat = true; return; }
+        }
         
         void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
             if (!RoundInProgress || !FreezeMode) return;

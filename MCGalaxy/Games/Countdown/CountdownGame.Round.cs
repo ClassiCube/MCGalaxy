@@ -56,8 +56,10 @@ namespace MCGalaxy.Games {
             RemoveSquares();
         }
         
-        // TODO: Multi round countdown on multiple maps
-        protected override void VoteAndMoveToNextMap() { }
+        protected override void ContinueOnSameMap() {
+            // countdown only modifies board in the map, so it's fine to continue on the same map
+            // without needing to reload the entire map
+        }
         
         void BeginRound() {
             string modeSuffix = FreezeMode ? " in freeze mode" : "";

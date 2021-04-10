@@ -27,16 +27,15 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
 
-    class CountdownLevelPicker : LevelPicker {
-        public override List<string> GetCandidateMaps(RoundsGame game) { 
-            return new List<string>() { "countdown" }; 
-        }
-    }
-    
     public sealed class CountdownConfig : RoundsGameConfig {
         public override bool AllowAutoload { get { return true; } }
         protected override string GameName { get { return "Countdown"; } }
         protected override string PropsPath { get { return "properties/countdown.properties"; } }
+        
+        public override void Load() {
+            base.Load();
+            if (Maps.Count == 0) Maps.Add("countdown");
+        }
     }
     
     public sealed partial class CountdownGame : RoundsGame {
@@ -52,7 +51,7 @@ namespace MCGalaxy.Games {
         public string SpeedType;
         
         public static CountdownGame Instance = new CountdownGame();
-        public CountdownGame() { Picker = new CountdownLevelPicker(); }
+        public CountdownGame() { Picker = new LevelPicker(); }
         
         public override void UpdateMapConfig() { }
         
