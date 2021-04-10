@@ -179,7 +179,7 @@ namespace MCGalaxy {
             message = Chat.Format(message, this);
             
             bool cancel = false;
-            OnMessageRecievedEvent.Call(this, message, ref cancel);
+            OnMessageRecievedEvent.Call(this, ref message, ref cancel);
             if (cancel) return;
             
             try {
