@@ -168,8 +168,7 @@ namespace MCGalaxy.Games {
                 ContinueOnSameMap(); return; 
             }
             
-            Map.Message("The next map has been chosen - &c" + map);
-            Map.Message("Please wait while you are transfered.");            
+            AnnounceMapChange(map);
             Level lastMap = Map; LastMap = Map.MapName;
             
             if (!SetMap(map)) {
@@ -179,6 +178,11 @@ namespace MCGalaxy.Games {
                 TransferPlayers(lastMap);
                 lastMap.Unload();
             }
+        }
+        
+        protected virtual void AnnounceMapChange(string newMap) {
+            Map.Message("The next map has been chosen - &c" + newMap);
+            Map.Message("Please wait while you are transfered.");
         }
         
         void ContinueOnSameMap() {
