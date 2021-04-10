@@ -40,7 +40,7 @@ namespace MCGalaxy.Config {
         static void DefaultOnMember(JsonObject obj, string key, object value) { obj[key] = value; }
         
         
-        const int T_NONE = 0, T_NUM = 1, T_TRUE = 2, T_FALSE = 3, T_NULL = 4;        
+        const int T_NONE = 0, T_NUM = 1, T_TRUE = 2, T_FALSE = 3, T_NULL = 4;
         static bool IsWhitespace(char c) {
             return c == '\r' || c == '\n' || c == '\t' || c == ' ';
         }
@@ -168,21 +168,20 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public static class Json {
-        
-        public static object Parse(string s, out bool success) {
-            JsonReader reader = new JsonReader(s);
-            object obj = reader.Parse();    
-            success    = !reader.Failed;
-            return obj;
-        }
+    public sealed class JsonWriter {
+        private readonly TextWriter w;
+        public Action<object> SerialiseObject;
+        public JsonWriter(TextWriter dst) { w = dst; }
         
         static char Hex(char c, int shift) {
             int x = (c >> shift) & 0x0F;
             return (char)(x <= 9 ? ('0' + x) : ('a' + (x - 10)));
         }
         
-        static void WriteString(TextWriter w, string value) {
+        public void WriteNull() { w.Write("null"); }
+        public void Write(string value) { w.Write(value); }
+        
+        public void WriteString(string value) {
             w.Write('"');
             foreach (char c in value) {
                 if (c == '/')         { w.Write("\\/");
@@ -198,18 +197,44 @@ namespace MCGalaxy.Config {
             w.Write('"');
         }
         
-        static void WriteValue(TextWriter w, ConfigAttribute a, string value) {
+        public void WriteArray<T>(IList<T> array) {
+            w.Write("[\r\n");
+            string separator = "";
+            
+            for (int i = 0; i < array.Count; i++) {
+                w.Write(separator);
+                object value = array[i];
+                
+                if (value == null) {
+                    WriteNull();
+                } else {
+                    WriteObject(value);
+                }
+                separator = ",\r\n";
+            }
+            w.Write("]\r\n");
+        }
+        
+        public void WriteObject(object value) {
+            w.Write("{\r\n");
+            SerialiseObject(value);
+            w.Write("\r\n}");
+        }
+    }
+    
+    public static class JsonSerialisers {
+        
+        static void WriteConfigValue(JsonWriter w, ConfigAttribute a, string value) {
             if (String.IsNullOrEmpty(value)) {
-                w.Write("null");
+                w.WriteNull();
             } else if (a is ConfigBoolAttribute || a is ConfigIntegerAttribute || a is ConfigRealAttribute) {
                 w.Write(value);
             } else {
-                WriteString(w, value);
+                w.WriteString(value);
             }
         }
         
-        public static void Serialise(TextWriter w, ConfigElement[] elems, object instance) {
-            w.Write("{\r\n");
+        public static void WriteConfig(JsonWriter w, ConfigElement[] elems, object instance) {
             string separator = null;
             
             for (int i = 0; i < elems.Length; i++) {
@@ -217,14 +242,31 @@ namespace MCGalaxy.Config {
                 ConfigAttribute a = elem.Attrib;
                 w.Write(separator);
                 
-                w.Write("    "); WriteString(w, a.Name); w.Write(": ");
+                w.Write("    "); w.WriteString(a.Name); w.Write(": ");
                 object raw = elem.Field.GetValue(instance);
                 string value = elem.Attrib.Serialise(raw);
                 
-                WriteValue(w, a, value);
+                WriteConfigValue(w, a, value);
                 separator = ",\r\n";
             }
-            w.Write("\r\n}");
+        }
+    }
+    
+    public static class Json {
+        
+        [Obsolete("Use JsonReader instead")]
+        public static object Parse(string s, out bool success) {
+            JsonReader reader = new JsonReader(s);
+            object obj = reader.Parse();
+            success    = !reader.Failed;
+            return obj;
+        }
+        
+        [Obsolete("Use JsonWriter instead")]
+        public static void Serialise(TextWriter dst, ConfigElement[] elems, object instance) {
+            JsonWriter w = new JsonWriter(dst);
+            w.SerialiseObject = obj => JsonSerialisers.WriteConfig(w, elems, obj);
+            w.WriteObject(instance);
         }
     }
 }
