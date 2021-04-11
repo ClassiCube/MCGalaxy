@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)height);
+                double curRadius = Radius * (double)curHeight / (double)height;
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;               
                 output(Place(x, y, z, brush));
@@ -80,7 +80,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)height);
+                double curRadius = Radius * (double)curHeight / (double)height;
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1)) continue;              
                 output(Place(x, y, z, brush));
@@ -109,7 +109,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)height);
+                double curRadius = Radius * (double)curHeight / (double)height;
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
