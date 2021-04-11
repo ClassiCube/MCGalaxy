@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using MCGalaxy.Network;
 using Sharkbite.Irc;
 
@@ -122,19 +123,6 @@ namespace MCGalaxy {
             LoadBannedCommands();
         }
         
-        public static string ConvertMessage(string message) {
-            if (String.IsNullOrEmpty(message.Trim())) message = ".";
-            const string resetSignal = "\x03\x0F";
-            
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
-            message = message.Replace("%S", "&f"); // TODO remove
-            message = message.Replace("&S", "&f");
-            message = message.Replace("&f", resetSignal);
-            message = Colors.ConvertMCToIRC(message);
-            return message;
-        }
-        
         void UpdateState() {
             channels = Server.Config.IRCChannels.SplitComma();
             opchannels = Server.Config.IRCOpChannels.SplitComma();
@@ -165,6 +153,74 @@ namespace MCGalaxy {
             foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
                 if (!line.IsCommentLine()) BannedCommands.Add(line);
             }
+        }
+        
+        
+        static readonly string[] ircColors = new string[] {
+            "\u000300", "\u000301", "\u000302", "\u000303", "\u000304", "\u000305",
+            "\u000306", "\u000307", "\u000308", "\u000309", "\u000310", "\u000311",
+            "\u000312", "\u000313", "\u000314", "\u000315",
+        };
+        static readonly string[] ircSingle = new string[] {
+            "\u00030", "\u00031", "\u00032", "\u00033", "\u00034", "\u00035",
+            "\u00036", "\u00037", "\u00038", "\u00039",
+        };
+        static readonly string[] ircReplacements = new string[] {
+            "&f", "&0", "&1", "&2", "&c", "&4", "&5", "&6",
+            "&e", "&a", "&3", "&b", "&9", "&d", "&8", "&7",
+        };
+        static readonly Regex ircTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
+        
+        public static string ParseMessage(string input) {
+            // get rid of background color component of some IRC color codes.
+            input = ircTwoColorCode.Replace(input, "$1");
+            StringBuilder sb = new StringBuilder(input);
+            
+            for (int i = 0; i < ircColors.Length; i++) {
+                sb.Replace(ircColors[i], ircReplacements[i]);
+            }
+            for (int i = 0; i < ircSingle.Length; i++) {
+                sb.Replace(ircSingle[i], ircReplacements[i]);
+            }
+            
+            // simplify fancy quotes
+            sb.Replace("“", "\"");
+            sb.Replace("”", "\"");
+            sb.Replace("‘", "'");
+            sb.Replace("’", "'"); 
+            
+            // remove misc formatting chars
+            sb.Replace("\x02", ""); // bold
+            sb.Replace("\x1D", ""); // italic
+            sb.Replace("\x1F", ""); // underline
+            
+            sb.Replace("\x03", "&f"); // color reset
+            sb.Replace("\x0f", "&f"); // reset
+            return sb.ToString();
+        }
+        
+        public static string ConvertMessage(string message) {
+            if (String.IsNullOrEmpty(message.Trim())) message = ".";
+            const string resetSignal = "\x03\x0F";
+            
+            message = EmotesHandler.Replace(message);
+            message = ChatTokens.ApplyCustom(message);
+            message = message.Replace("%S", "&f"); // TODO remove
+            message = message.Replace("&S", "&f");
+            message = message.Replace("&f", resetSignal);
+            message = ToIRCColors(message);
+            return message;
+        }
+
+        static string ToIRCColors(string input) {
+            input = Colors.Escape(input);
+            input = LineWrapper.CleanupColors(input, true, false);
+            
+            StringBuilder sb = new StringBuilder(input);
+            for (int i = 0; i < ircColors.Length; i++) {
+                sb.Replace(ircReplacements[i], ircColors[i]);
+            }
+            return sb.ToString();
         }
     }
 }
