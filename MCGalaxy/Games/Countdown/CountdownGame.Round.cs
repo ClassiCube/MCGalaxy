@@ -124,11 +124,15 @@ namespace MCGalaxy.Games {
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)
             {
-                int index = Map.PosToInt((ushort)x, (ushort)y, (ushort)z);
-                if (Map.DoPhysicsBlockchange(index, block)) {
-                    bulk.Add(index, block);
-                }
+                TryChangeBlock(x, y, z, block);
             }
+        }
+        
+        void TryChangeBlock(int x, int y, int z, BlockID block) {
+            int index = Map.PosToInt((ushort)x, (ushort)y, (ushort)z);
+            if (!Map.DoPhysicsBlockchange(index, block)) return;
+            
+            bulk.Add(index, block);
         }
         
         void SpawnPlayers() {
@@ -210,39 +214,40 @@ namespace MCGalaxy.Games {
             // Remove glass borders, if neighbouring squares were previously removed
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
             if (Map.IsAirAt(x1, 4, (ushort)(z2 + 2))) {
-                Map.Blockchange(x1, 4, (ushort)(z2 + 1), Block.Air);
-                Map.Blockchange(x2, 4, (ushort)(z2 + 1), Block.Air);
+                TryChangeBlock(x1, 4, z2 + 1, Block.Air);
+                TryChangeBlock(x2, 4, z2 + 1, Block.Air);
                 airMaxZ = true;
             }
             if (Map.IsAirAt(x1, 4, (ushort)(z1 - 2))) {
-                Map.Blockchange(x1, 4, (ushort)(z1 - 1), Block.Air);
-                Map.Blockchange(x2, 4, (ushort)(z1 - 1), Block.Air);
+                TryChangeBlock(x1, 4, z1 - 1, Block.Air);
+                TryChangeBlock(x2, 4, z1 - 1, Block.Air);
                 airMinZ = true;
             }
             if (Map.IsAirAt((ushort)(x2 + 2), 4, z1)) {
-                Map.Blockchange((ushort)(x2 + 1), 4, z1, Block.Air);
-                Map.Blockchange((ushort)(x2 + 1), 4, z2, Block.Air);
+                TryChangeBlock(x2 + 1, 4, z1, Block.Air);
+                TryChangeBlock(x2 + 1, 4, z2, Block.Air);
                 airMaxX = true;
             }
             if (Map.IsAirAt((ushort)(x1 - 2), 4, z1)) {
-                Map.Blockchange((ushort)(x1 - 1), 4, z1, Block.Air);
-                Map.Blockchange((ushort)(x1 - 1), 4, z2, Block.Air);
+                TryChangeBlock(x1 - 1, 4, z1, Block.Air);
+                TryChangeBlock(x1 - 1, 4, z2, Block.Air);
                 airMinX = true;
             }
             
             // Remove glass borders, if all neighbours to this corner have been removed
             if (Map.IsAirAt((ushort)(x1 - 2), 4, (ushort)(z1 - 2)) && airMinX && airMinZ) {
-                Map.Blockchange((ushort)(x1 - 1), 4, (ushort)(z1 - 1), Block.Air);
+                TryChangeBlock(x1 - 1, 4, z1 - 1, Block.Air);
             }
             if (Map.IsAirAt((ushort)(x1 - 2), 4, (ushort)(z2 + 2)) && airMinX && airMaxZ) {
-                Map.Blockchange((ushort)(x1 - 1), 4, (ushort)(z2 + 1), Block.Air);
+                TryChangeBlock(x1 - 1, 4, z2 + 1, Block.Air);
             }
             if (Map.IsAirAt((ushort)(x2 + 2), 4, (ushort)(z1 - 2)) && airMaxX && airMinZ) {
-                Map.Blockchange((ushort)(x2 + 1), 4, (ushort)(z1 - 1), Block.Air);
+                TryChangeBlock(x2 + 1, 4, z1 - 1, Block.Air);
             }
             if (Map.IsAirAt((ushort)(x2 + 2), 4, (ushort)(z2 + 2)) && airMaxX && airMaxZ) {
-                Map.Blockchange((ushort)(x2 + 1), 4, (ushort)(z2 + 1), Block.Air);
+                TryChangeBlock(x2 + 1, 4, z2 + 1, Block.Air);
             }
+            bulk.Flush();
         }
 
         void OnPlayerDied(Player p) {
