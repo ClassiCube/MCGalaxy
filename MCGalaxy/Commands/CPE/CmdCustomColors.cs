@@ -45,20 +45,16 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         void AddHandler(Player p, string[] args) {
-            if (args.Length <= 4) { Help(p); return; }
-            
+            if (args.Length <= 4) { Help(p); return; }         
             char code = args[1][0];
-            if (Colors.IsStandard(code)) {
-                p.Message("You may only edit standard codes using &T/CustomColors edit"); return;
-            }
-            if (code == ' ' || code == '\0' || code == '\u00a0' || code == '%' || code == '&') {
-                p.Message("Colour code cannot be a space, percentage, or ampersand.");
-                return;
-            }
+            if (code >= 'A' && code <= 'F') code += ' ';
             
-            if (Colors.Lookup(code) != '\0') {
-                p.Message("There is already an existing or server defined color with the code " + code +
-                               ", you must either use a different code or use &T/CustomColors remove " + code);
+            if (code == ' ' || code == '\0' || code == '\u00a0' || code == '%' || code == '&') {
+                p.Message("&WColor code cannot be a space, percentage, or ampersand.");
+                return;
+            }            
+            if (Colors.IsSystem(code)) {
+                p.Message("&WCannot change system defined color codes using %T/CustomColors");
                 return;
             }
             
@@ -69,7 +65,7 @@ namespace MCGalaxy.Commands.CPE {
             
             col.Code = code; col.Fallback = fallback; col.Name = args[2];
             Colors.Update(col);
-            p.Message("Successfully added a color.");
+            p.Message("Successfully added '{0}' color", code);
         }
         
         void RemoveHandler(Player p, string[] args) {
@@ -79,7 +75,7 @@ namespace MCGalaxy.Commands.CPE {
             if (code == '\0') return;
             
             Colors.Update(Colors.DefaultCol(code));
-            p.Message("Successfully removed a color.");
+            p.Message("Successfully removed '{0}' color", code);
         }
         
         static void ListHandler(Player p, string cmd, string modifier) {
@@ -157,9 +153,8 @@ namespace MCGalaxy.Commands.CPE {
             if (!Colors.IsStandard(fallback)) {
                 p.Message("{0} must be a standard color code.", fallback); return false;
             }
-            if (Colors.IsStandard(code)) {
-                p.Message("Cannot change fallback of a standard color code."); return false;
-            }
+            // Can't change fallback of standard colour code
+            if (Colors.IsStandard(code)) fallback = code;
             
             if (fallback >= 'A' && fallback <= 'F') fallback += ' ';
             return true;

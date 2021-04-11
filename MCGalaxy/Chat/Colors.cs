@@ -146,6 +146,10 @@ namespace MCGalaxy {
             return IsDefined(col) ? col : '\0';
         }
         
+        public static bool IsSystem(char col) {
+            return col == 'S' || col == 'H' || col == 'T' || col == 'I'|| col == 'W';
+        }
+        
         
         /// <summary> Converts percentage color codes to their actual/real color codes. </summary>
         /// <remarks> Does not escape percentage codes that are part of urls. </remarks>
