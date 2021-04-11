@@ -6,6 +6,7 @@ namespace MCGalaxy {
     
     public static class EmotesHandler {
         
+        /// <summary> Mapping of emote keywords to unicode characters </summary>
         public static readonly Dictionary<string, char> Keywords = new Dictionary<string, char> {
             { "darksmile", '☺' },
             { "smile", '☻' },

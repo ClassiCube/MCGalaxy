@@ -156,22 +156,14 @@ namespace MCGalaxy {
         void LoadBannedCommands() {
             SetDefaultBannedCommands();
             
-            if (File.Exists("text/ircbancmd.txt")) { // Backwards compatibility
-                using (StreamWriter w = new StreamWriter("text/irccmdblacklist.txt")) {
-                    w.WriteLine("#Here you can put commands that cannot be used from the IRC bot.");
-                    w.WriteLine("#Lines starting with \"#\" are ignored.");
-                    foreach (string line in File.ReadAllLines("text/ircbancmd.txt"))
-                        w.WriteLine(line);
-                }
-                File.Delete("text/ircbancmd.txt");
-            } else {
-                if (!File.Exists("text/irccmdblacklist.txt"))
-                    File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
-                                           "#Here you can put commands that cannot be used from the IRC bot.",
-                                           "#Lines starting with \"#\" are ignored." });
-                foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
-                    if (!line.IsCommentLine()) BannedCommands.Add(line);
-                }
+            if (!File.Exists("text/irccmdblacklist.txt")) {
+                File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
+                                       "#Here you can put commands that cannot be used from the IRC bot.",
+                                       "#Lines starting with \"#\" are ignored." });
+            }
+            
+            foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
+                if (!line.IsCommentLine()) BannedCommands.Add(line);
             }
         }
     }

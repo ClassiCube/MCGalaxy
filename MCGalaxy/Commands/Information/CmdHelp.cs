@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.Info {
         
         static string FormatEmote(char emote) {
             List<string> keywords = new List<string>();
-            foreach (KeyValuePair<string, char> kvp in EmotesHandler.Keywords) {
+            foreach (var kvp in EmotesHandler.Keywords) {
                 if (kvp.Value == emote) keywords.Add("(&S" + kvp.Key + ")");
             }
             return "&f" + emote + " &S- " + keywords.Join();
