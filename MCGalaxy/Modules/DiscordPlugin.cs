@@ -79,7 +79,17 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         public void SendMessage(int opcode, JsonObject data) {
-            throw new NotImplementedException();
+        	JsonObject obj = new JsonObject();
+        	obj["op"] = opcode;
+        	obj["d"]  = data;
+            
+        	StringWriter dst  = new StringWriter();
+        	JsonWriter   w    = new JsonWriter(dst);
+        	w.SerialiseObject = raw => JsonSerialisers.WriteObject(w, raw);
+        	w.WriteObject(obj);
+        	
+        	string str = dst.ToString();
+        	SendRaw(Encoding.UTF8.GetBytes(str), SendFlags.None);
         }
         
         public void ReadLoop() {

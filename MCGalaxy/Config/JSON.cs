@@ -220,9 +220,39 @@ namespace MCGalaxy.Config {
             SerialiseObject(value);
             w.Write("\r\n}");
         }
+        
+        internal void WriteObjectKey(string name) {
+            Write("    "); WriteString(name); Write(": ");
+        }
     }
     
     public static class JsonSerialisers {
+        
+        public static void WriteObject(JsonWriter w, object instance) {
+            string separator = null;
+            JsonObject obj   = (JsonObject)instance;
+            
+            foreach (var kvp in obj) {
+                w.Write(separator);
+                w.WriteObjectKey(kvp.Key);
+                
+                // TODO this is awful code
+                if (kvp.Value == null) {
+                    w.WriteNull();
+                } else if (kvp.Value is int) {
+                    w.Write(kvp.Value.ToString());
+                } else if (kvp.Value is bool) {
+                    w.Write(kvp.Value.ToString());
+                } else if (kvp.Value is string) {
+                    w.WriteString((string)kvp.Value);
+                } else if (kvp.Value is JsonObject) {
+                    w.WriteObject(kvp.Value);
+                } else {
+                    throw new InvalidOperationException("Unknown datatype: " + kvp.Value.GetType());
+                }
+                separator = ",\r\n";
+            }
+        }
         
         static void WriteConfigValue(JsonWriter w, ConfigAttribute a, string value) {
             if (String.IsNullOrEmpty(value)) {
@@ -242,7 +272,7 @@ namespace MCGalaxy.Config {
                 ConfigAttribute a = elem.Attrib;
                 w.Write(separator);
                 
-                w.Write("    "); w.WriteString(a.Name); w.Write(": ");
+                w.WriteObjectKey(a.Name);
                 object raw = elem.Field.GetValue(instance);
                 string value = elem.Attrib.Serialise(raw);
                 
