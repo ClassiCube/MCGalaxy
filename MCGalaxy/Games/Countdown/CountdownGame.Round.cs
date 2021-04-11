@@ -32,6 +32,7 @@ namespace MCGalaxy.Games {
         BufferedBlockSender bulk = new BufferedBlockSender();
         
         protected override void DoRound() {
+            bulk.level = Map;
             SetBoardOpening(Block.Glass);
             ResetBoard();
             if (!Running) return;
@@ -90,6 +91,44 @@ namespace MCGalaxy.Games {
                 pl.Extras["MCG_CD_Z"] = pos.Z;
             }
             RemoveAllSquareBorders();
+        } 
+                
+        void ResetBoard() {
+            SetBoardOpening(Block.Glass);
+            int maxX = Map.Width - 1, maxZ = Map.Length - 1;
+            Cuboid(4, 4, 4, maxX - 4, 4, maxZ - 4, Block.Glass);          
+            squaresLeft.Clear();
+            
+            int begX, endX, begZ, endZ;
+            CountdownMap.CalcBoardExtents(Map.Width,  out begX, out endX);
+            CountdownMap.CalcBoardExtents(Map.Length, out begZ, out endZ);
+            
+            for (int z = begZ; z <= endZ; z += 3)
+                for (int x = begX; x <= endX; x += 3)
+            {
+                Cuboid(x, 4, z, x + 1, 4, z + 1, Block.Green);
+                squaresLeft.Add(new SquarePos(x, z));
+            }
+            
+            bulk.Flush();
+        }        
+        
+        void SetBoardOpening(BlockID block) {
+            int midX = Map.Width / 2, midY = Map.Height / 2, midZ = Map.Length / 2;
+            Cuboid(midX - 1, midY, midZ - 1, midX, midY, midZ, block);
+            bulk.Flush();
+        }
+        
+        void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block) {
+            for (int y = y1; y <= y2; y++)
+                for (int z = z1; z <= z2; z++)
+                    for (int x = x1; x <= x2; x++)
+            {
+                int index = Map.PosToInt((ushort)x, (ushort)y, (ushort)z);
+                if (Map.DoPhysicsBlockchange(index, block)) {
+                    bulk.Add(index, block);
+                }
+            }
         }
         
         void SpawnPlayers() {
