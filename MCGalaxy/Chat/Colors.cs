@@ -57,6 +57,8 @@ namespace MCGalaxy {
             return List[c.UnicodeToCp437()].Fallback != '\0';
         }
         
+        /// <summary> Returns whether the given color code is considered a standard color. </summary>
+        /// <remarks> Standard colors are 0-9, a-f, A-F </remarks>
         public static bool IsStandard(char c) {
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
@@ -87,7 +89,7 @@ namespace MCGalaxy {
             }
             
             ColorDesc col = default(ColorDesc);
-            col.Code = code;
+            col.Code      = code;
             return col;
         }
 

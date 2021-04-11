@@ -109,7 +109,7 @@ namespace MCGalaxy.Network {
         }
 
         public string FormatAll() {
-            return string.Format(" &A{0}&S:&7{1}&S:&C{2}",
+            return string.Format(" &a{0}&S:&7{1}&S:&c{2}",
                                  LowestPing(), AveragePing(), HighestPing());
         }
     }

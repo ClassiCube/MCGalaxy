@@ -45,10 +45,10 @@ namespace MCGalaxy.Commands.Info {
             string ip  = PlayerDB.FindIP(plName);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
-            if (!ipBanned && isBanned) msg += " &Sis &CBANNED";
+            if (!ipBanned && isBanned) msg += " &Sis &cBANNED";
             else if (!ipBanned && !isBanned) msg += " &Sis not banned";
-            else if (ipBanned && isBanned) msg += " &Sand their IP are &CBANNED";
-            else msg += " &Sis not banned, but their IP is &CBANNED";
+            else if (ipBanned && isBanned) msg += " &Sand their IP are &cBANNED";
+            else msg += " &Sis not banned, but their IP is &cBANNED";
             
             string banner, reason, prevRank;
             DateTime time;
