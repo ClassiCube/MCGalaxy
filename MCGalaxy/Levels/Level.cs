@@ -391,13 +391,13 @@ namespace MCGalaxy {
         
         void LoadDefaultProps() {
             for (int b = 0; b < Props.Length; b++) {
-                Props[b] = BlockOptions.DefaultProps(Props, this, (BlockID)b);
+                Props[b] = BlockProps.MakeDefault(Props, this, (BlockID)b);
             }
         }
         
         public void UpdateBlockProps() {
             LoadDefaultProps();
-            string propsPath = BlockProps.PropsPath("_" + MapName);
+            string propsPath = Paths.BlockPropsPath("_" + MapName);
             
             // backwards compatibility with older versions
             if (!File.Exists(propsPath)) {

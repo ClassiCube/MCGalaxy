@@ -164,7 +164,7 @@ namespace MCGalaxy {
             }
             
             SetDefaultNames();
-            string propsPath = BlockProps.PropsPath("default");
+            string propsPath = Paths.BlockPropsPath("default");
                 
             // backwards compatibility with older versions
             if (!File.Exists(propsPath)) {

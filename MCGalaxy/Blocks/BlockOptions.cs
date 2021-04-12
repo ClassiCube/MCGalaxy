@@ -76,45 +76,6 @@ namespace MCGalaxy.Blocks {
         }
         
         
-        internal static BlockProps DefaultProps(BlockProps[] scope, Level lvl, BlockID block) {
-            if (scope == Block.Props) return Block.MakeDefaultProps(block);
-            return UnchangedProps(lvl, block) ? Block.Props[block] : BlockProps.MakeEmpty();
-        }
-        
-        static bool UnchangedProps(Level lvl, BlockID b) {
-            return Block.IsPhysicsType(b) || lvl.CustomBlockDefs[b] == BlockDefinition.GlobalDefs[b];
-        }
-        
-        internal static void ApplyChanges(BlockProps[] scope, Level lvl_, BlockID block, bool save) {
-            byte scopeId = ScopeId(scope);
-            string path;
-            
-            if (scope == Block.Props) {
-                path = "default";
-                Level[] loaded = LevelInfo.Loaded.Items;
-                
-                foreach (Level lvl in loaded) {
-                    if ((lvl.Props[block].ChangedScope & 2) != 0) continue;
-                    if (!UnchangedProps(lvl, block)) continue;
-                    
-                    lvl.Props[block] = scope[block];
-                    lvl.UpdateBlockHandler(block);
-                }                
-            } else {
-                path = "_" + lvl_.name;
-                lvl_.UpdateBlockHandler(block);                
-            }
-            
-            if (save) BlockProps.Save(path, scope, scopeId);
-        }
-        
-        internal static byte ScopeId(BlockProps[] scope) { return scope == Block.Props ? (byte)1 : (byte)2; }
-        
-        internal static string Name(BlockProps[] scope, Player p, BlockID block) {
-            return scope == Block.Props ? Block.GetName(Player.Console, block) : Block.GetName(p, block);
-        }
-        
-        
         static void SetPortal(Player p, BlockProps[] s, BlockID b, string v) { ToggleBehaviour(p,s,b, "a portal",        ref s[b].IsPortal); }
         static void SetMB(Player p,     BlockProps[] s, BlockID b, string v) { ToggleBehaviour(p,s,b, "a message block", ref s[b].IsMessageBlock); }
         static void SetRails(Player p,  BlockProps[] s, BlockID b, string v) { Toggle(p,s,b, "train rails",     ref s[b].IsRails); }
@@ -144,7 +105,7 @@ namespace MCGalaxy.Blocks {
             // Check if this would make a block both a door and a portal for instance
             // If blocks have multiple behaviour, this would confuse users because only 1 behaviour works
             if (!on && (behaviour = CheckBehaviour(scope, block)) != null) {
-                string name = Name(scope, p, block);
+                string name = BlockProps.ScopedName(scope, p, block);
                 p.Message("&WBlock {0} cannot be made {1}, is it already a {2}", name, type, behaviour);
                 return;
             }         
@@ -153,7 +114,7 @@ namespace MCGalaxy.Blocks {
         
         static void Toggle(Player p, BlockProps[] scope, BlockID block, string type, ref bool on) {
             on = !on;
-            string name = Name(scope, p, block);
+            string name = BlockProps.ScopedName(scope, p, block);
             p.Message("Block {0} is {1}: {2}", name, type, on ? "&aYes" : "&cNo");
         }
         
@@ -162,12 +123,12 @@ namespace MCGalaxy.Blocks {
             if (!CommandParser.GetEnum(p, msg, "Animal AI", ref ai)) return;
             scope[block].AnimalAI = ai;
             
-            string name = Name(scope, p, block);
+            string name = BlockProps.ScopedName(scope, p, block);
             p.Message("Animal AI for {0} set to: {1}", name, ai);
         }
         
         static void SetDeathMsg(Player p, BlockProps[] scope, BlockID block, string msg) {
-            string name = Name(scope, p, block);
+            string name = BlockProps.ScopedName(scope, p, block);
             if (msg.Length == 0) {
                 scope[block].DeathMessage = null;
                 p.Message("Death message for {0} removed.", name);
@@ -186,18 +147,18 @@ namespace MCGalaxy.Blocks {
             }
             scope[block].StackBlock = stackBlock;
             
-            string name = Name(scope, p, block);
+            string name = BlockProps.ScopedName(scope, p, block);
             if (stackBlock == Block.Air) {
                 p.Message("Removed stack block for {0}", name);
             } else {
                 p.Message("Stack block for {0} set to: {1}",
-                          name, Name(scope, p, stackBlock));
+                          name, BlockProps.ScopedName(scope, p, stackBlock));
             }
         }
         
         static void SetBlock(Player p, BlockProps[] scope, BlockID block,
                              string msg, string type, ref BlockID target) {
-            string name = Name(scope, p, block);
+            string name = BlockProps.ScopedName(scope, p, block);
             if (msg.Length == 0) {
                 target = Block.Invalid;
                 p.Message("{1} for {0} removed.", name, type);
@@ -207,7 +168,8 @@ namespace MCGalaxy.Blocks {
                 if (other == block) { p.Message("ID of {0} must be different.", type); return; }
                 
                 target = other;
-                p.Message("{2} for {0} set to: {1}", name, Name(scope, p, other), type);
+                p.Message("{2} for {0} set to: {1}",
+                          name, BlockProps.ScopedName(scope, p, other), type);
             }
         }
     }

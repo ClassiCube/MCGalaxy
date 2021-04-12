@@ -118,12 +118,10 @@ namespace MCGalaxy.Blocks {
             }
         }
         
-        public static string PropsPath(string group) { return "blockprops/" + group + ".txt"; }
-        
         public static void Load(string group, BlockProps[] list, byte scope, bool mapOld) {
             lock (list) {
                 if (!Directory.Exists("blockprops")) return;
-                string path = PropsPath(group);
+                string path = Paths.BlockPropsPath(group);
                 if (File.Exists(path)) LoadCore(path, list, scope, mapOld);
             }
         }
@@ -190,6 +188,45 @@ namespace MCGalaxy.Blocks {
                     BlockID.TryParse(parts[16], out list[b].DirtBlock);
                 }
             }
+        }
+        
+        
+        public static BlockProps MakeDefault(BlockProps[] scope, Level lvl, BlockID block) {
+            if (scope == Block.Props) return Block.MakeDefaultProps(block);
+            return IsDefaultBlock(lvl, block) ? Block.Props[block] : MakeEmpty();
+        }
+        
+        static bool IsDefaultBlock(Level lvl, BlockID b) {
+            return Block.IsPhysicsType(b) || lvl.CustomBlockDefs[b] == BlockDefinition.GlobalDefs[b];
+        }
+        
+        public static void ApplyChanges(BlockProps[] scope, Level lvl_, BlockID block, bool save) {
+            byte scopeId = ScopeId(scope);
+            string path;
+            
+            if (scope == Block.Props) {
+                path = "default";
+                Level[] loaded = LevelInfo.Loaded.Items;
+                
+                foreach (Level lvl in loaded) {
+                    if ((lvl.Props[block].ChangedScope & 2) != 0) continue;
+                    if (!IsDefaultBlock(lvl, block)) continue;
+                    
+                    lvl.Props[block] = scope[block];
+                    lvl.UpdateBlockHandler(block);
+                }                
+            } else {
+                path = "_" + lvl_.name;
+                lvl_.UpdateBlockHandler(block);                
+            }
+            
+            if (save) Save(path, scope, scopeId);
+        }
+        
+        internal static byte ScopeId(BlockProps[] scope) { return scope == Block.Props ? (byte)1 : (byte)2; }
+        
+        internal static string ScopedName(BlockProps[] scope, Player p, BlockID block) {
+            return scope == Block.Props ? Block.GetName(Player.Console, block) : Block.GetName(p, block);
         }
     }
 }

@@ -59,5 +59,8 @@ namespace MCGalaxy {
         
         /// <summary> Relative path of a level's previous save map file. </summary>
         public static string PrevMapFile(string map) { return "levels/prev/" + map.ToLower() + ".lvl.prev"; }
+
+        /// <summary> Relative path of a block properties file. </summary>     
+        public static string BlockPropsPath(string group) { return "blockprops/" + group + ".txt"; }
     }
 }

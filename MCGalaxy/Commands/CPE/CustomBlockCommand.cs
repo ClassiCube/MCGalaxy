@@ -706,12 +706,12 @@ namespace MCGalaxy.Commands.CPE {
         
         static void ResetProps(bool global, Level lvl, BlockID block, Player p) {
             BlockProps[] scope = global ? Block.Props : lvl.Props;
-            int changed = scope[block].ChangedScope & BlockOptions.ScopeId(scope);
+            int changed = scope[block].ChangedScope & BlockProps.ScopeId(scope);
             if (changed != 0) return;
             
             // properties not manually modified, revert (e.g. make grass die in shadow again)
-            scope[block] = BlockOptions.DefaultProps(scope, lvl, block);
-            BlockOptions.ApplyChanges(scope, lvl, block, false);
+            scope[block] = BlockProps.MakeDefault(scope, lvl, block);
+            BlockProps.ApplyChanges(scope, lvl, block, false);
         }
         
         

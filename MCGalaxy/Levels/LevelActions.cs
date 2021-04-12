@@ -30,8 +30,8 @@ namespace MCGalaxy {
     
     public static class LevelActions {
         
-        static string BlockPropsLvlPath(string map) { return BlockProps.PropsPath("_" + map); }
-        static string BlockPropsOldPath(string map) { return BlockProps.PropsPath("lvl_" + map); }
+        static string BlockPropsLvlPath(string map) { return Paths.BlockPropsPath("_" + map); }
+        static string BlockPropsOldPath(string map) { return Paths.BlockPropsPath("lvl_" + map); }
         
         public static bool Backup(string map, string backupName) {
             string basePath = LevelInfo.BackupBasePath(map);
