@@ -735,14 +735,16 @@ namespace MCGalaxy.Commands.CPE {
         
         static void SendStepHelp(Player p, bool global) {
             int step = GetStep(p, global);
-            string[] help = helpSections[stepsHelp[step]];
+            string[] help = helpSections[stepsHelp[step]]; 
+            BlockDefinition bd = GetBD(p, global);       
             
-            BlockDefinition bd = GetBD(p, global);
-            if (step == 4 && bd.Shape == 0)
-                help[0] = help[0].Replace("top texture", "texture");
-            
-            for (int i = 0; i < help.Length; i++)
-                p.Message(help[i]);
+            for (int i = 0; i < help.Length; i++) {
+                string msg = help[i];
+                // TODO: Ugly hardcoding, but not really worth doing properly
+                if (step == 4 && bd.Shape == 0) msg = msg.Replace("top texture", "texture");
+                
+                p.Message(msg);
+            }
             p.Message("&f--------------------------");
         }
         
