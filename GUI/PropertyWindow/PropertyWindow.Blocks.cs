@@ -186,7 +186,7 @@ namespace MCGalaxy.Gui {
         
         void MarkBlockPropsChanged() {
             // don't mark props as changed when supressing events
-            int changed = blockItems.SupressEvents ? 0 : 1;
+            int changed = blockItems.SupressEvents ? 0 : BlockProps.SCOPE_GLOBAL;
             blockPropsChanged[curBlock].ChangedScope = (byte)changed;
         }
     }

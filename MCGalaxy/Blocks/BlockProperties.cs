@@ -74,9 +74,13 @@ namespace MCGalaxy.Blocks {
         /// <summary> Block ID this is changed into when no longer exposed to sunlight. </summary>
         public BlockID DirtBlock;
         
+        
         /// <summary> Whether the properties for this block have been modified and hence require saving. </summary>
         /// <remarks> bit 0 set means modified at global scope, bit 1 set means modified at level scope</remarks>
         public byte ChangedScope;
+        
+        public const byte SCOPE_GLOBAL = 0x01;
+        public const byte SCOPE_LEVEL  = 0x02;
         
         public static BlockProps MakeEmpty() {
             BlockProps props = default(BlockProps);
@@ -209,7 +213,7 @@ namespace MCGalaxy.Blocks {
                 Level[] loaded = LevelInfo.Loaded.Items;
                 
                 foreach (Level lvl in loaded) {
-                    if ((lvl.Props[block].ChangedScope & 2) != 0) continue;
+                    if ((lvl.Props[block].ChangedScope & SCOPE_LEVEL) != 0) continue;
                     if (!IsDefaultBlock(lvl, block)) continue;
                     
                     lvl.Props[block] = scope[block];
@@ -225,7 +229,7 @@ namespace MCGalaxy.Blocks {
         
         internal static byte ScopeId(BlockProps[] scope) { return scope == Block.Props ? (byte)1 : (byte)2; }
         
-        internal static string ScopedName(BlockProps[] scope, Player p, BlockID block) {
+        public static string ScopedName(BlockProps[] scope, Player p, BlockID block) {
             return scope == Block.Props ? Block.GetName(Player.Console, block) : Block.GetName(p, block);
         }
     }
