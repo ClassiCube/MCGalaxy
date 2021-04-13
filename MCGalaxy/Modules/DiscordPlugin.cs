@@ -27,31 +27,33 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Discord {
 
-    public static class DiscordConfig {
+    public sealed class DiscordConfig {
         [ConfigString("bot-token", null, "", true)]
-        public static string BotToken = "";
+        public string BotToken = "";
         [ConfigString("read-channel-ids", null, "", true)]
-        public static string ReadChannels = "";
+        public string ReadChannels = "";
         [ConfigString("send-channel-ids", null, "", true)]
-        public static string SendChannels = "";
+        public string SendChannels = "";
         
         [ConfigBool("enabled", null, false)]
-        public static bool Enabled;
+        public bool Enabled;
+        [ConfigString("status-message", null, "with {PLAYERS} players")]
+        public string Status = "with {PLAYERS} players";
         
         const string file = "properties/discordbot.properties";
         static ConfigElement[] cfg;
         
-        public static void Load() {
+        public void Load() {
             // create default config file
             if (!File.Exists(file)) Save();
 
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.ParseFile(cfg, file, null);
+            ConfigElement.ParseFile(cfg, file, this);
         }
         
-        public static void Save() {
+        public void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.SerialiseSimple(cfg, file, null);
+            ConfigElement.SerialiseSimple(cfg, file, this);
         }
     }
     
@@ -130,9 +132,11 @@ namespace MCGalaxy.Modules.Discord {
     }
     
     public sealed class DiscordBot {
-        Thread thread;
         DiscordWebsocket socket;
+        DiscordConfig config;
+        
         string lastSequence;
+        Thread thread;
         
         const int OPCODE_DISPATCH        = 0;
         const int OPCODE_HEARTBEAT       = 1;
@@ -184,12 +188,12 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         void HandleMessageEvent(JsonObject obj) {
-        	JsonObject data   = (JsonObject)obj["d"];
+            JsonObject data   = (JsonObject)obj["d"];
             JsonObject author = (JsonObject)data["author"];
             string message    = (string)data["content"];
             
             string user = (string)author["username"];
-            string msg  = "&I(Discord) " + user + " :&f" + message;
+            string msg  = "&I(Discord) " + user + ": &f" + message;
             Logger.Log(LogType.IRCChat, msg);
             Chat.Message(ChatScope.Global, msg, null, null);
         }
@@ -207,6 +211,8 @@ namespace MCGalaxy.Modules.Discord {
             socket.SendMessage(obj);
         }
         
+        const int INTENT_GUILD_MESSAGES = 1 << 9;
+        
         void SendIdentify() {
             JsonObject data = new JsonObject();
             
@@ -216,15 +222,38 @@ namespace MCGalaxy.Modules.Discord {
             props["$device"]  = "MCGRelayBot";
             
             data["token"]   = socket.Token;
-            data["intents"] = 1 << 9; // GUILD_MESSAGES
+            data["intents"] = INTENT_GUILD_MESSAGES;
             data["properties"] = props;
+            data["presence"]   = MakePresence();
             socket.SendMessage(OPCODE_IDENTIFY, data);
         }
         
+        void SendUpdateStatus() {
+        	JsonObject data = MakePresence();
+        	socket.SendMessage(OPCODE_STATUS_UPDATE, data);
+        }
         
-        public void RunAsync() {
+        JsonObject MakePresence() {
+        	string online = PlayerInfo.NonHiddenCount().ToString();
+            JsonObject activity = new JsonObject();
+        	activity["name"]    = config.Status.Replace("{PLAYERS}", online);
+            activity["type"]    = 0;
+            
+            JsonArray activites = new JsonArray();
+            activites.Add(activity);
+            
+            JsonObject obj = new JsonObject();
+            obj["activities"] = activites;
+            obj["status"]     = "online";
+            obj["afk"]        = false;
+            return obj;
+        }
+        
+        
+        public void RunAsync(DiscordConfig conf) {
+            config = conf;
             socket = new DiscordWebsocket();
-            socket.Token   = DiscordConfig.BotToken;
+            socket.Token   = config.BotToken;
             socket.Handler = HandlePacket;
                 
             thread      = new Thread(IOThread);
@@ -247,14 +276,16 @@ namespace MCGalaxy.Modules.Discord {
         public override string creator { get { return Server.SoftwareName + " team"; } }
         public override string MCGalaxy_Version { get { return Server.Version; } }
         public override string name { get { return "DiscordRelayPlugin"; } }
+        
+        public static DiscordConfig Config = new DiscordConfig();
         DiscordBot bot;
         
         public override void Load(bool startup) {
-            DiscordConfig.Load();
-            if (!DiscordConfig.Enabled) return;
+            Config.Load();
+            if (!Config.Enabled) return;
             
             bot = new DiscordBot();
-            bot.RunAsync();
+            bot.RunAsync(Config);
         }
         
         public override void Unload(bool shutdown) {

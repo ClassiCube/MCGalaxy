@@ -242,10 +242,13 @@ namespace MCGalaxy.Config {
                 } else if (kvp.Value is int) {
                     w.Write(kvp.Value.ToString());
                 } else if (kvp.Value is bool) {
-                    w.Write(kvp.Value.ToString());
+                    bool value = (bool)kvp.Value;
+                    w.Write(value ? "true" : "false");
                 } else if (kvp.Value is string) {
                     w.WriteString((string)kvp.Value);
-                } else if (kvp.Value is JsonObject) {
+                } else if (kvp.Value is JsonArray) {
+                    w.WriteArray((JsonArray)kvp.Value);
+                }  else if (kvp.Value is JsonObject) {
                     w.WriteObject(kvp.Value);
                 } else {
                     throw new InvalidOperationException("Unknown datatype: " + kvp.Value.GetType());
