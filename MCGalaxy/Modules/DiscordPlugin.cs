@@ -93,7 +93,7 @@ namespace MCGalaxy.Modules.Discord {
             w.WriteObject(obj);
             
             string str = dst.ToString();
-            SendRaw(Encoding.UTF8.GetBytes(str), SendFlags.None);
+            Send(Encoding.UTF8.GetBytes(str), SendFlags.None);
         }
         
         public void ReadLoop() {
@@ -134,7 +134,7 @@ namespace MCGalaxy.Modules.Discord {
         DiscordWebsocket socket;
         string lastSequence;
         
-        const int OPCODE_DISPATCH_EVENT  = 0;
+        const int OPCODE_DISPATCH        = 0;
         const int OPCODE_HEARTBEAT       = 1;
         const int OPCODE_IDENTIFY        = 2;
         const int OPCODE_STATUS_UPDATE   = 3;
@@ -157,7 +157,8 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         void DispatchPacket(int opcode, JsonObject obj) {
-            if (opcode == OPCODE_HELLO) HandleHello(obj);
+            if (opcode == OPCODE_DISPATCH) HandleDispatch(obj);
+            if (opcode == OPCODE_HELLO)    HandleHello(obj);
         }
         
         
@@ -169,6 +170,28 @@ namespace MCGalaxy.Modules.Discord {
             Server.Background.QueueRepeat(SendHeartbeat, null, 
                                           TimeSpan.FromMilliseconds(msInterval));
             SendIdentify();
+        }
+        
+        void HandleDispatch(JsonObject obj) {
+            // update last sequence number
+            object sequence;
+            if (obj.TryGetValue("s", out sequence)) 
+                lastSequence = (string)sequence;
+            
+            // actually handle the event
+            string eventName = (string)obj["t"];
+            if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
+        }
+        
+        void HandleMessageEvent(JsonObject obj) {
+        	JsonObject data   = (JsonObject)obj["d"];
+            JsonObject author = (JsonObject)data["author"];
+            string message    = (string)data["content"];
+            
+            string user = (string)author["username"];
+            string msg  = "&I(Discord) " + user + " :&f" + message;
+            Logger.Log(LogType.IRCChat, msg);
+            Chat.Message(ChatScope.Global, msg, null, null);
         }
         
         
@@ -185,18 +208,19 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         void SendIdentify() {
-        	JsonObject data = new JsonObject();
-        	
-        	JsonObject props = new JsonObject();
-        	props["$os"] = "linux";
-        	props["$browser"] = "MCGRelayBot";
-        	props["$device"]  = "MCGRelayBot";
-        	
-        	data["token"]   = socket.Token;
-        	data["intents"] = 1 << 9; // GUILD_MESSAGES
-        	data["properties"] = props;
-        	socket.SendMessage(OPCODE_IDENTIFY, data);
+            JsonObject data = new JsonObject();
+            
+            JsonObject props = new JsonObject();
+            props["$os"] = "linux";
+            props["$browser"] = "MCGRelayBot";
+            props["$device"]  = "MCGRelayBot";
+            
+            data["token"]   = socket.Token;
+            data["intents"] = 1 << 9; // GUILD_MESSAGES
+            data["properties"] = props;
+            socket.SendMessage(OPCODE_IDENTIFY, data);
         }
+        
         
         public void RunAsync() {
             socket = new DiscordWebsocket();
