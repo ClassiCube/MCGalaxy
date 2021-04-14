@@ -27,110 +27,6 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Discord {
 
-    public sealed class DiscordConfig {
-        [ConfigString("bot-token", null, "", true)]
-        public string BotToken = "";
-        [ConfigString("read-channel-ids", null, "", true)]
-        public string ReadChannels = "";
-        [ConfigString("send-channel-ids", null, "", true)]
-        public string SendChannels = "";
-        
-        [ConfigBool("enabled", null, false)]
-        public bool Enabled;
-        [ConfigString("status-message", null, "with {PLAYERS} players")]
-        public string Status = "with {PLAYERS} players";
-        
-        const string file = "properties/discordbot.properties";
-        static ConfigElement[] cfg;
-        
-        public void Load() {
-            // create default config file
-            if (!File.Exists(file)) Save();
-
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.ParseFile(cfg, file, this);
-        }
-        
-        public void Save() {
-            if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.SerialiseSimple(cfg, file, this);
-        }
-    }
-    
-    public sealed class DiscordWebsocket : ClientWebSocket {
-        public string Token;
-        public Action<string> Handler;
-        TcpClient client;
-        SslStream stream;
-        
-        public DiscordWebsocket() {
-            path = "/?v=6&encoding=json";
-        }
-        
-        const string host = "gateway.discord.gg";
-        // stubs
-        public override bool LowLatency { set { } }
-        public override string IP { get { return ""; } }
-        
-        public void Connect() {
-            client = new TcpClient();
-            client.Connect(host, 443);
-
-            stream   = HttpUtil.WrapSSLStream(client.GetStream(), host);
-            protocol = this;
-            Init();
-        }
-        
-        public void SendMessage(int opcode, JsonObject data) {
-            JsonObject obj = new JsonObject();
-            obj["op"] = opcode;
-            obj["d"]  = data;
-            SendMessage(obj);
-        }
-        
-        public void SendMessage(JsonObject obj) {
-            StringWriter dst  = new StringWriter();
-            JsonWriter   w    = new JsonWriter(dst);
-            w.SerialiseObject = raw => JsonSerialisers.WriteObject(w, raw);
-            w.WriteObject(obj);
-            
-            string str = dst.ToString();
-            Send(Encoding.UTF8.GetBytes(str), SendFlags.None);
-        }
-        
-        public void ReadLoop() {
-            byte[] data = new byte[4096];
-            for (;;) {
-                int len = stream.Read(data, 0, 4096);
-                if (len == 0) break; // disconnected
-                HandleReceived(data, len);
-            }
-        }
-        
-        protected override void HandleData(byte[] data, int len) {
-            string value = Encoding.UTF8.GetString(data, 0, len);
-            Handler(value);
-        }
-        
-        protected override void SendRaw(byte[] data, SendFlags flags) {
-            stream.Write(data);
-        }
-        
-        public override void Close() {
-            client.Close();
-        }
-        
-        protected override void Disconnect(int reason) {
-            base.Disconnect(reason);
-            Close();
-        }
-        
-        protected override void WriteCustomHeaders() {
-            WriteHeader("Authorization: Bot " + Token);
-            WriteHeader("Host: " + host);
-        }
-    }
-    
     public sealed class DiscordBot {
         DiscordWebsocket socket;
         DiscordConfig config;
@@ -260,7 +156,7 @@ namespace MCGalaxy.Modules.Discord {
             thread.Name = "MCG-DiscordRelay";
             thread.IsBackground = true;
             thread.Start();
-        }
+        } // todo hide / unhide
         
         void IOThread() {
             try {
@@ -269,27 +165,6 @@ namespace MCGalaxy.Modules.Discord {
             } catch (Exception ex) {
                 Logger.LogError("Discord relay error", ex);
             }
-        }
-    }
-    
-    public sealed class DiscordPlugin : Plugin {
-        public override string creator { get { return Server.SoftwareName + " team"; } }
-        public override string MCGalaxy_Version { get { return Server.Version; } }
-        public override string name { get { return "DiscordRelayPlugin"; } }
-        
-        public static DiscordConfig Config = new DiscordConfig();
-        DiscordBot bot;
-        
-        public override void Load(bool startup) {
-            Config.Load();
-            if (!Config.Enabled) return;
-            
-            bot = new DiscordBot();
-            bot.RunAsync(Config);
-        }
-        
-        public override void Unload(bool shutdown) {
-
         }
     }
 }
