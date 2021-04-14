@@ -301,5 +301,15 @@ namespace MCGalaxy.Config {
             w.SerialiseObject = obj => JsonSerialisers.WriteConfig(w, elems, obj);
             w.WriteObject(instance);
         }
+        
+        /// <summary> Shorthand for serialising an object to a JSON object </summary>
+        public static string SerialiseObject(object obj) {
+            StringWriter dst  = new StringWriter();
+            JsonWriter   w    = new JsonWriter(dst);
+            w.SerialiseObject = raw => JsonSerialisers.WriteObject(w, raw);
+            
+            w.WriteObject(obj);
+            return dst.ToString();
+        }
     }
 }

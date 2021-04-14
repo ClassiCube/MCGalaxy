@@ -143,12 +143,7 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         public void SendMessage(JsonObject obj) {
-            StringWriter dst  = new StringWriter();
-            JsonWriter   w    = new JsonWriter(dst);
-            w.SerialiseObject = raw => JsonSerialisers.WriteObject(w, raw);
-            w.WriteObject(obj);
-            
-            string str = dst.ToString();
+            string str = Json.SerialiseObject(obj);
             Send(Encoding.UTF8.GetBytes(str), SendFlags.None);
         }
         
@@ -175,8 +170,8 @@ namespace MCGalaxy.Modules.Discord {
             
             JsonObject props  = new JsonObject();
             props["$os"]      = "linux";
-            props["$browser"] = "MCGRelayBot";
-            props["$device"]  = "MCGRelayBot";
+            props["$browser"] = Server.SoftwareName;
+            props["$device"]  = Server.SoftwareName;
             
             data["token"]   = Token;
             data["intents"] = INTENT_GUILD_MESSAGES;

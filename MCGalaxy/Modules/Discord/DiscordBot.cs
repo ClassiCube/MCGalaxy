@@ -18,13 +18,16 @@
 using System;
 using System.Threading;
 using MCGalaxy.Config;
+using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Discord {
 
     public sealed class DiscordBot {
         public bool Disconnected;
         
+        DiscordApiClient api;
         DiscordWebsocket socket;
         DiscordConfig config;
         Thread thread;
@@ -51,8 +54,12 @@ namespace MCGalaxy.Modules.Discord {
             return config.Status.Replace("{PLAYERS}", online);
         }        
         
+        readonly Player ircDefault = new Player("Discord");
         void OnReady() {
-            // TODO init REST api
+            ircDefault.group = Group.DefaultRank;
+            
+            api = new DiscordApiClient();
+            api.Token = config.BotToken;
             RegisterEvents();
         }
         
@@ -60,15 +67,55 @@ namespace MCGalaxy.Modules.Discord {
         void RegisterEvents() {
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
+            OnGroupLoadEvent.Register(HandleGroupLoad, Priority.Low);
+            
+            OnChatEvent.Register(HandleChat, Priority.Low);
+            OnChatSysEvent.Register(HandleChatSys, Priority.Low);
+            OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
         }
         
         void UnregisterEvents() {
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
+            OnGroupLoadEvent.Unregister(HandleGroupLoad);
+            
+            OnChatEvent.Unregister(HandleChat);
+            OnChatSysEvent.Unregister(HandleChatSys);
+            OnChatFromEvent.Unregister(HandleChatFrom);
+        }
+        
+        string Unescape(Player p, string msg) {
+            string full = Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
+            return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
         }
         
         void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
         void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
+        void HandleGroupLoad() { ircDefault.group = Group.DefaultRank; }
+        
+        // TODO to much overlap with IRCHandlers
+        void MessageToIRC(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
+            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
+            
+            if (scopeFilter(ircDefault, arg) && (filter == null || filter(ircDefault, arg))) {
+            	api.SendMessage("678784831164776454", msg);
+            }
+        }
+        
+        void HandleChatSys(ChatScope scope, string msg, object arg,
+                           ref ChatMessageFilter filter, bool irc) {
+            if (irc) MessageToIRC(scope, msg, arg, filter);
+        }
+        
+        void HandleChatFrom(ChatScope scope, Player source, string msg,
+                            object arg, ref ChatMessageFilter filter, bool irc) {
+            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
+        }
+        
+        void HandleChat(ChatScope scope, Player source, string msg,
+                        object arg, ref ChatMessageFilter filter, bool irc) {
+            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
+        }
         
         
         public void RunAsync(DiscordConfig conf) {
@@ -84,7 +131,7 @@ namespace MCGalaxy.Modules.Discord {
             thread.Name = "DiscordRelayBot";
             thread.IsBackground = true;
             thread.Start();
-        } // todo hide / unhide
+        } // TODO hide / unhide
         
         void IOThread() {
             try {

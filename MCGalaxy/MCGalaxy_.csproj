@@ -583,6 +583,7 @@
     <Compile Include="Blocks\Physics\TntPhysics.cs" />
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Levels\Zone.cs" />
+    <Compile Include="Modules\Discord\DiscordApiClient.cs" />
     <Compile Include="Modules\Discord\DiscordBot.cs" />
     <Compile Include="Modules\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Discord\DiscordWebsocket.cs" />
