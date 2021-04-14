@@ -100,7 +100,8 @@ namespace MCGalaxy.Events.PlayerEvents {
     }
 
     public delegate void OnPlayerDeath(Player p, BlockID cause);
-    /// <summary> Called whenever a player dies in-game </summary>
+    /// <summary> Called whenever a player dies. </summary>
+    /// <remarks> Can be caused by e.g. walking into a deadly block like nerve_gas </remarks>
     public sealed class OnPlayerDeathEvent : IEvent<OnPlayerDeath> {
         
         public static void Call(Player p, BlockID block) {

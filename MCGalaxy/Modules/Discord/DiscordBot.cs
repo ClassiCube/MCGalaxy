@@ -16,18 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using MCGalaxy.Config;
-using MCGalaxy.Network;
-using MCGalaxy.Tasks;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Modules.Discord {
 
     public sealed class DiscordBot {
+        public bool Disconnected;
+        
         DiscordWebsocket socket;
         DiscordConfig config;
         Thread thread;
@@ -50,9 +47,28 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         string GetStatus() {
-        	string online = PlayerInfo.NonHiddenCount().ToString();
+            string online = PlayerInfo.NonHiddenCount().ToString();
             return config.Status.Replace("{PLAYERS}", online);
+        }        
+        
+        void OnReady() {
+            // TODO init REST api
+            RegisterEvents();
         }
+        
+        
+        void RegisterEvents() {
+            OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
+            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
+        }
+        
+        void UnregisterEvents() {
+            OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
+            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
+        }
+        
+        void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
+        void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
         
         
         public void RunAsync(DiscordConfig conf) {
@@ -62,9 +78,10 @@ namespace MCGalaxy.Modules.Discord {
             socket.Token     = config.BotToken;
             socket.Handler   = HandleEvent;
             socket.GetStatus = GetStatus;
+            socket.OnReady   = OnReady;
                 
             thread      = new Thread(IOThread);
-            thread.Name = "MCG-DiscordRelay";
+            thread.Name = "DiscordRelayBot";
             thread.IsBackground = true;
             thread.Start();
         } // todo hide / unhide
@@ -75,6 +92,19 @@ namespace MCGalaxy.Modules.Discord {
                 socket.ReadLoop();
             } catch (Exception ex) {
                 Logger.LogError("Discord relay error", ex);
+            }
+        }
+        
+        volatile bool disconnecting;
+        public void Stop() {
+            if (disconnecting) return;
+            disconnecting = true;
+            
+            try {
+                socket.Disconnect();
+            } finally {
+                Disconnected = true;
+                UnregisterEvents();
             }
         }
     }

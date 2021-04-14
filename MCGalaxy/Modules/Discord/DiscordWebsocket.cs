@@ -20,17 +20,23 @@ using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Discord {
     
+	/// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
+	/// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
+	/// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
     public sealed class DiscordWebsocket : ClientWebSocket {
         public string Token;
+        public Action OnReady;
         public Action<JsonObject> Handler;
         public Func<string> GetStatus;
+        
+        readonly object sendLock = new object();
+        SchedulerTask heartbeat;
         string lastSequence;
         TcpClient client;
         SslStream stream;
@@ -70,7 +76,10 @@ namespace MCGalaxy.Modules.Discord {
             WriteHeader("Host: " + host);
         }
         
-        public override void Close() { client.Close(); }
+        public override void Close() {
+            Server.MainScheduler.Cancel(heartbeat);
+            client.Close();
+        }
         
         protected override void Disconnect(int reason) {
             base.Disconnect(reason);
@@ -110,9 +119,10 @@ namespace MCGalaxy.Modules.Discord {
             string interval = (string)data["heartbeat_interval"];            
             int msInterval  = int.Parse(interval);
             
-            Server.Background.QueueRepeat(SendHeartbeat, null, 
+            heartbeat = Server.Background.QueueRepeat(SendHeartbeat, null, 
                                           TimeSpan.FromMilliseconds(msInterval));
             SendIdentify();
+            OnReady();
         }
         
         void HandleDispatch(JsonObject obj) {
@@ -122,17 +132,6 @@ namespace MCGalaxy.Modules.Discord {
                 lastSequence = (string)sequence;
             
             Handler(obj);
-        }
-        
-        void HandleMessageEvent(JsonObject obj) {
-            JsonObject data   = (JsonObject)obj["d"];
-            JsonObject author = (JsonObject)data["author"];
-            string message    = (string)data["content"];
-            
-            string user = (string)author["username"];
-            string msg  = "&I(Discord) " + user + ": &f" + message;
-            Logger.Log(LogType.IRCChat, msg);
-            Chat.Message(ChatScope.Global, msg, null, null);
         }
         
         
@@ -154,7 +153,7 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         protected override void SendRaw(byte[] data, SendFlags flags) {
-            stream.Write(data);
+            lock (sendLock) stream.Write(data);
         }
         
         void SendHeartbeat(SchedulerTask task) {
@@ -174,8 +173,8 @@ namespace MCGalaxy.Modules.Discord {
         public void SendIdentify() {
             JsonObject data = new JsonObject();
             
-            JsonObject props = new JsonObject();
-            props["$os"] = "linux";
+            JsonObject props  = new JsonObject();
+            props["$os"]      = "linux";
             props["$browser"] = "MCGRelayBot";
             props["$device"]  = "MCGRelayBot";
             
@@ -187,8 +186,8 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         public void SendUpdateStatus() {
-        	JsonObject data = MakePresence();
-        	SendMessage(OPCODE_STATUS_UPDATE, data);
+            JsonObject data = MakePresence();
+            SendMessage(OPCODE_STATUS_UPDATE, data);
         }
         
         JsonObject MakePresence() {
@@ -200,6 +199,7 @@ namespace MCGalaxy.Modules.Discord {
             activites.Add(activity);
             
             JsonObject obj = new JsonObject();
+            obj["since"]      = null;
             obj["activities"] = activites;
             obj["status"]     = "online";
             obj["afk"]        = false;

@@ -17,13 +17,7 @@
  */
 using System;
 using System.IO;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using MCGalaxy.Config;
-using MCGalaxy.Network;
-using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Discord {
 
@@ -75,14 +69,15 @@ namespace MCGalaxy.Modules.Discord {
         }
         
         public static void Connect() {
-            if (bot != null) return;
+            if (bot != null && !bot.Disconnected) return;
             bot = new DiscordBot();
             bot.RunAsync(Config);
         }
         
         public static void Disconnect() {
             if (bot == null) return;
-            // TODO: disconnect
+            bot.Stop();
+            bot = null;
         }
     }
 }
