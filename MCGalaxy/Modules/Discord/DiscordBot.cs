@@ -30,54 +30,9 @@ namespace MCGalaxy.Modules.Discord {
     public sealed class DiscordBot {
         DiscordWebsocket socket;
         DiscordConfig config;
-        
-        string lastSequence;
         Thread thread;
-        
-        const int OPCODE_DISPATCH        = 0;
-        const int OPCODE_HEARTBEAT       = 1;
-        const int OPCODE_IDENTIFY        = 2;
-        const int OPCODE_STATUS_UPDATE   = 3;
-        const int OPCODE_VOICE_STATE_UPDATE = 4;
-        const int OPCODE_RESUME          = 6;
-        const int OPCODE_REQUEST_SERVER_MEMBERS = 8;
-        const int OPCODE_INVALID_SESSION = 9;
-        const int OPCODE_HELLO           = 10;
-        const int OPCODE_HEARTBEAT_ACK   = 11;
-        
-        void HandlePacket(string value) {
-            JsonReader ctx = new JsonReader(value);
-            JsonObject obj = (JsonObject)ctx.Parse();
-            
-            Logger.Log(LogType.SystemActivity, value);
-            if (obj == null) return;
-            
-            int opcode = int.Parse((string)obj["op"]);
-            DispatchPacket(opcode, obj);
-        }
-        
-        void DispatchPacket(int opcode, JsonObject obj) {
-            if (opcode == OPCODE_DISPATCH) HandleDispatch(obj);
-            if (opcode == OPCODE_HELLO)    HandleHello(obj);
-        }
-        
-        
-        void HandleHello(JsonObject obj) {
-            JsonObject data = (JsonObject)obj["d"];
-            string interval = (string)data["heartbeat_interval"];            
-            int msInterval  = int.Parse(interval);
-            
-            Server.Background.QueueRepeat(SendHeartbeat, null, 
-                                          TimeSpan.FromMilliseconds(msInterval));
-            SendIdentify();
-        }
-        
-        void HandleDispatch(JsonObject obj) {
-            // update last sequence number
-            object sequence;
-            if (obj.TryGetValue("s", out sequence)) 
-                lastSequence = (string)sequence;
-            
+
+        void HandleEvent(JsonObject obj) {
             // actually handle the event
             string eventName = (string)obj["t"];
             if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
@@ -94,63 +49,19 @@ namespace MCGalaxy.Modules.Discord {
             Chat.Message(ChatScope.Global, msg, null, null);
         }
         
-        
-        void SendHeartbeat(SchedulerTask task) {
-            JsonObject obj = new JsonObject();
-            obj["op"] = OPCODE_HEARTBEAT;
-            
-            if (lastSequence != null) {
-                obj["d"] = int.Parse(lastSequence);
-            } else {
-                obj["d"] = null;
-            }
-            socket.SendMessage(obj);
-        }
-        
-        const int INTENT_GUILD_MESSAGES = 1 << 9;
-        
-        void SendIdentify() {
-            JsonObject data = new JsonObject();
-            
-            JsonObject props = new JsonObject();
-            props["$os"] = "linux";
-            props["$browser"] = "MCGRelayBot";
-            props["$device"]  = "MCGRelayBot";
-            
-            data["token"]   = socket.Token;
-            data["intents"] = INTENT_GUILD_MESSAGES;
-            data["properties"] = props;
-            data["presence"]   = MakePresence();
-            socket.SendMessage(OPCODE_IDENTIFY, data);
-        }
-        
-        void SendUpdateStatus() {
-        	JsonObject data = MakePresence();
-        	socket.SendMessage(OPCODE_STATUS_UPDATE, data);
-        }
-        
-        JsonObject MakePresence() {
+        string GetStatus() {
         	string online = PlayerInfo.NonHiddenCount().ToString();
-            JsonObject activity = new JsonObject();
-        	activity["name"]    = config.Status.Replace("{PLAYERS}", online);
-            activity["type"]    = 0;
-            
-            JsonArray activites = new JsonArray();
-            activites.Add(activity);
-            
-            JsonObject obj = new JsonObject();
-            obj["activities"] = activites;
-            obj["status"]     = "online";
-            obj["afk"]        = false;
-            return obj;
+            return config.Status.Replace("{PLAYERS}", online);
         }
         
         
         public void RunAsync(DiscordConfig conf) {
             config = conf;
             socket = new DiscordWebsocket();
-            socket.Token   = config.BotToken;
-            socket.Handler = HandlePacket;
+            
+            socket.Token     = config.BotToken;
+            socket.Handler   = HandleEvent;
+            socket.GetStatus = GetStatus;
                 
             thread      = new Thread(IOThread);
             thread.Name = "MCG-DiscordRelay";

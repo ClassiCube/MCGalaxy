@@ -63,18 +63,26 @@ namespace MCGalaxy.Modules.Discord {
         public override string name { get { return "DiscordRelayPlugin"; } }
         
         public static DiscordConfig Config = new DiscordConfig();
-        DiscordBot bot;
+        static DiscordBot bot;
         
         public override void Load(bool startup) {
             Config.Load();
-            if (!Config.Enabled) return;
-            
+            if (Config.Enabled) Connect();
+        }
+        
+        public override void Unload(bool shutdown) {
+            Disconnect();
+        }
+        
+        public static void Connect() {
+            if (bot != null) return;
             bot = new DiscordBot();
             bot.RunAsync(Config);
         }
         
-        public override void Unload(bool shutdown) {
-
+        public static void Disconnect() {
+            if (bot == null) return;
+            // TODO: disconnect
         }
     }
 }
