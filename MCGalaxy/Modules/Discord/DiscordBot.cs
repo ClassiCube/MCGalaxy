@@ -26,6 +26,8 @@ namespace MCGalaxy.Modules.Discord {
 
     public sealed class DiscordBot {
         public bool Disconnected;
+        string[] readChannels;
+        string[] sendChannels;
         
         DiscordApiClient api;
         DiscordWebsocket socket;
@@ -69,6 +71,7 @@ namespace MCGalaxy.Modules.Discord {
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
             OnGroupLoadEvent.Register(HandleGroupLoad, Priority.Low);
             
+            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
             OnChatEvent.Register(HandleChat, Priority.Low);
             OnChatSysEvent.Register(HandleChatSys, Priority.Low);
             OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
@@ -79,6 +82,7 @@ namespace MCGalaxy.Modules.Discord {
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnGroupLoadEvent.Unregister(HandleGroupLoad);
             
+            OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnChatEvent.Unregister(HandleChat);
             OnChatSysEvent.Unregister(HandleChatSys);
             OnChatFromEvent.Unregister(HandleChatFrom);
@@ -93,12 +97,23 @@ namespace MCGalaxy.Modules.Discord {
         void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
         void HandleGroupLoad() { ircDefault.group = Group.DefaultRank; }
         
-        // TODO to much overlap with IRCHandlers
+        
+        void DoSendMessage(string message) {
+            message = EmotesHandler.Replace(message);
+            message = ChatTokens.ApplyCustom(message);
+            message = Colors.StripUsed(message);
+            
+            foreach (string chan in sendChannels) {
+                api.SendMessage(chan, message);
+            }
+        }
+        
+        // TODO too much overlap with IRCHandlers
         void MessageToIRC(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
             ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
             
             if (scopeFilter(ircDefault, arg) && (filter == null || filter(ircDefault, arg))) {
-            	api.SendMessage("678784831164776454", msg);
+                DoSendMessage(msg);
             }
         }
         
@@ -117,10 +132,18 @@ namespace MCGalaxy.Modules.Discord {
             if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
         }
         
+        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
+            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
+            socket.SendUpdateStatus();
+        }
+        
         
         public void RunAsync(DiscordConfig conf) {
             config = conf;
             socket = new DiscordWebsocket();
+            
+            readChannels = conf.ReadChannels.SplitComma();
+            sendChannels = conf.SendChannels.SplitComma();
             
             socket.Token     = config.BotToken;
             socket.Handler   = HandleEvent;
