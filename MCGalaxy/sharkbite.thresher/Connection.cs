@@ -24,9 +24,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-using System.Net.Security;
 using System.Runtime.InteropServices;
-using System.Security.Authentication;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -288,20 +286,12 @@ namespace Sharkbite.Irc
 			}
 			command.Remove(0, command.Length );
 		}
-		
-		// these do not exist in .NET 4.0 and cause a compilation failure
-		const SslProtocols tls_11 = (SslProtocols)768;
-		const SslProtocols tls_12 = (SslProtocols)3072;
-		
+
 		Stream MakeDataStream() 
 		{
 			Stream raw = client.GetStream();
 			if (!connectionArgs.UseSSL) return raw;
-			
-			SslStream wrapped  = new SslStream( raw );
-			SslProtocols flags = SslProtocols.Tls | tls_11 | tls_12;
-			wrapped.AuthenticateAsClient( connectionArgs.Hostname, null, flags, false );
-			return wrapped;
+			return MCGalaxy.Network.HttpUtil.WrapSSLStream( raw, connectionArgs.Hostname );
 		}
 		
 		/// <summary>

@@ -45,11 +45,6 @@ namespace MCGalaxy.Events {
         /// <summary> Unregisters the given handler from this event. </summary>
         public static void Unregister(IMethod method) {
             IEvent<IMethod> handler = Find(method);
-            if (handler == null) {
-                string msg = MethodFormat("Method {0} was not registered as a {1} event handler", method);
-                throw new ArgumentException(msg);
-            }
-            
             handlers.Remove(handler);
         }
         

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
+using MCGalaxy.Modules.Discord;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
@@ -114,6 +115,7 @@ namespace MCGalaxy {
         public static void LoadAll() {
             LoadCorePlugin(new CorePlugin());
             LoadCorePlugin(new NotesPlugin());
+            LoadCorePlugin(new DiscordPlugin());
             IScripting.AutoloadPlugins();
         }
         

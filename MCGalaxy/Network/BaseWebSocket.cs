@@ -101,6 +101,7 @@ namespace MCGalaxy.Network {
                     // TODO: reply to ping frames
                 case OPCODE_CONTINUED:
                 case OPCODE_BINARY:
+                case OPCODE_TEXT:
                     if (frameLen == 0) return;
                     HandleData(frame, frameLen);
                     break;
@@ -122,7 +123,11 @@ namespace MCGalaxy.Network {
                     
                 case state_header2:
                     if (offset >= len) break;
-                    int flags = data[offset++] & 0x7F;
+                    int flags = data[offset] & 0x7F;
+                    // if mask bit is     zero: maskRead is set to 0x80 (therefore skipping reading the 4 bytes)
+                    // if mask bit is non-zero: maskRead is set to 0x00 (therefore actually reading the data)
+                    maskRead  = 0x80 - (data[offset] & 0x80);                    
+                    offset++;
                     
                     if (flags == 127) {
                         // unsupported 8 byte extended length
@@ -269,6 +274,7 @@ namespace MCGalaxy.Network {
     
     /// <summary> Abstracts a client side WebSocket </summary>
     public abstract class ClientWebSocket : BaseWebSocket {
+        protected string path = "/";
         string verKey;
         // TODO: use a random securely generated key
         const string key = "xTNDiuZRoMKtxrnJDWyLmA==";
@@ -278,7 +284,7 @@ namespace MCGalaxy.Network {
         }
         
         protected override void OnGotAllHeaders() {
-        	if (conn && upgrade && verKey == ComputeKey(key)) {
+            if (conn && upgrade && verKey == ComputeKey(key)) {
                 AcceptConnection();
             } else {
                 // don't pretend to be a http server (so IP:port isn't marked as one by bots)
@@ -310,17 +316,25 @@ namespace MCGalaxy.Network {
             return packet;
         }
         
+        public override void Send(byte[] buffer, SendFlags flags) {
+            SendRaw(WrapData(buffer), flags);
+        }
+        
+        
+        protected void WriteHeader(string header) {
+            SendRaw(Encoding.ASCII.GetBytes(header + "\r\n"), SendFlags.None);
+        }
+        
+        protected virtual void WriteCustomHeaders() { }
+        
         public override void Init() {
-            const string fmt =
-                "GET / HTTP/1.1\r\n" +
-                "Upgrade: websocket\r\n" +
-                "Connection: Upgrade\r\n" +
-                "Sec-WebSocket-Version: 13\r\n" +
-                "Sec-WebSocket-Key: {0}\r\n" +
-                "\r\n";
-            
-            string headers = String.Format(fmt, key);
-            SendRaw(Encoding.ASCII.GetBytes(headers), SendFlags.None);
+            WriteHeader("GET " + path + " HTTP/1.1");
+            WriteHeader("Upgrade: websocket");
+            WriteHeader("Connection: Upgrade");
+            WriteHeader("Sec-WebSocket-Version: 13");
+            WriteHeader("Sec-WebSocket-Key: " + key);
+            WriteCustomHeaders();
+            WriteHeader("");
         }
     }
 }

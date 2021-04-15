@@ -92,18 +92,13 @@ namespace MCGalaxy.Bots {
                 Logger.LogError("Error saving bots to " + path, ex);
             }
         }
-        
-        internal static void WriteAll(TextWriter w, List<BotProperties> props) {
-            w.WriteLine("[");
+
+        internal static void WriteAll(TextWriter dst, List<BotProperties> props) {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
-            string separator = null;
-            
-            for (int i = 0; i < props.Count; i++) {
-                w.Write(separator);
-                Json.Serialise(w, elems, props[i]);
-                separator = ",\r\n";
-            }
-            w.WriteLine("]");
+
+            JsonWriter w = new JsonWriter(dst);
+            w.SerialiseObject = bot => JsonSerialisers.WriteConfig(w, elems, bot);
+            w.WriteArray(props);
         }
         
         internal static void LoadAi(BotProperties props, PlayerBot bot) {

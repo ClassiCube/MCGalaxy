@@ -583,6 +583,10 @@
     <Compile Include="Blocks\Physics\TntPhysics.cs" />
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Levels\Zone.cs" />
+    <Compile Include="Modules\Discord\DiscordApiClient.cs" />
+    <Compile Include="Modules\Discord\DiscordBot.cs" />
+    <Compile Include="Modules\Discord\DiscordPlugin.cs" />
+    <Compile Include="Modules\Discord\DiscordWebsocket.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
@@ -719,11 +723,13 @@
     <Folder Include="Games\RoundsGame" />
     <Folder Include="Generator\LibNoise" />
     <Folder Include="Generator\Realistic" />
+    <Folder Include="Modules\Discord" />
     <Folder Include="Network\Heartbeat" />
     <Folder Include="Network\IRCPlugin" />
     <Folder Include="Network\Utils" />
     <Folder Include="Network\Packets" />
     <Folder Include="Entity" />
+    <Folder Include="Modules" />
     <Folder Include="Server\Maintenance" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />

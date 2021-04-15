@@ -17,6 +17,7 @@
  */
 using System.IO;
 using MCGalaxy.DB;
+using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdHide : Command2 {
@@ -62,6 +63,7 @@ namespace MCGalaxy.Commands.Moderation {
                 
                 if (!p.opchat) opchat.Use(p, "", data);
                 Server.hidden.Add(p.name);
+                OnPlayerActionEvent.Call(p, PlayerAction.Hide);
             } else {
                 AnnounceOps(p, "To Ops -λNICK&S- is now &fvisible");
                 p.hideRank = LevelPermission.Banned;
@@ -74,6 +76,7 @@ namespace MCGalaxy.Commands.Moderation {
                 if (p.opchat) opchat.Use(p, "", data);
                 if (p.adminchat) adminchat.Use(p, "", data);
                 Server.hidden.Remove(p.name);
+                OnPlayerActionEvent.Call(p, PlayerAction.Unhide);
             }
             
             Entities.GlobalSpawn(p, false);

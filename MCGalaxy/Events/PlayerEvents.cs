@@ -19,7 +19,7 @@ using System;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents {
-    public enum PlayerAction { Me, Referee, UnReferee, AFK, UnAFK };
+    public enum PlayerAction { Me, Referee, UnReferee, AFK, UnAFK, Hide, Unhide };
     public enum MouseButton { Left, Right, Middle }  
     public enum MouseAction { Pressed, Released }
     public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }
@@ -100,7 +100,8 @@ namespace MCGalaxy.Events.PlayerEvents {
     }
 
     public delegate void OnPlayerDeath(Player p, BlockID cause);
-    /// <summary> Called whenever a player dies in-game </summary>
+    /// <summary> Called whenever a player dies. </summary>
+    /// <remarks> Can be caused by e.g. walking into a deadly block like nerve_gas </remarks>
     public sealed class OnPlayerDeathEvent : IEvent<OnPlayerDeath> {
         
         public static void Call(Player p, BlockID block) {

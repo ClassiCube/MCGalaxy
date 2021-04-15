@@ -13,7 +13,11 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 using System.Net;
+using System.Net.Security;
+using System.Net.Sockets;
+using System.Security.Authentication;
 
 namespace MCGalaxy.Network {
     /// <summary> Static class for assisting with making web requests. </summary>
@@ -49,6 +53,18 @@ namespace MCGalaxy.Network {
             // can only use same family for local bind IP
             if (remoteEndPoint.AddressFamily != localIP.AddressFamily) return null;
             return new IPEndPoint(localIP, 0);
+        }
+        
+        
+		// these do not exist in .NET 4.0 and cause a compilation failure
+		const SslProtocols tls_11 = (SslProtocols)768;
+		const SslProtocols tls_12 = (SslProtocols)3072;
+		
+        public static SslStream WrapSSLStream(Stream source, string host) {
+        	SslStream wrapped  = new SslStream(source);
+			SslProtocols flags = SslProtocols.Tls | tls_11 | tls_12;
+			wrapped.AuthenticateAsClient(host, null, flags, false);
+			return wrapped;
         }
         
         public static bool IsPrivateIP(string ip) {
