@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
-using MCGalaxy.Modules.Discord;
+using MCGalaxy.Modules.Relay.Discord;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy {

@@ -21,7 +21,7 @@ using System.Net;
 using MCGalaxy.Config;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Modules.Discord {
+namespace MCGalaxy.Modules.Relay.Discord {
     
 	/// <summary> Implements a basic web client for communicating with Discord's API </summary>
 	/// <remarks> https://discord.com/developers/docs/reference </remarks>

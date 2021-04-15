@@ -24,7 +24,7 @@ using MCGalaxy.Config;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Modules.Discord {
+namespace MCGalaxy.Modules.Relay.Discord {
     
 	/// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
 	/// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>

@@ -19,7 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 
-namespace MCGalaxy.Modules.Discord {
+namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordConfig {
         [ConfigString("bot-token", null, "", true)]

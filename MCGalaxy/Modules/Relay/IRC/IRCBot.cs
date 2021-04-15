@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using MCGalaxy.Modules.Relay;
 using MCGalaxy.Network;
 using Sharkbite.Irc;
 
@@ -28,7 +29,7 @@ namespace MCGalaxy {
     public enum IRCControllerVerify { None, HalfOp, OpChannel };
     
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
-    public sealed class IRCBot {
+    public sealed class IRCBot : RelayBot {
         internal Connection connection;
         internal string[] channels, opchannels;
         internal string nick, server;
@@ -43,10 +44,6 @@ namespace MCGalaxy {
             UpdateState();
             InitConnectionState();
         }
-        
-        
-        /// <summary> List of commands that cannot be used by IRC controllers. </summary>
-        public List<string> BannedCommands;
         
 
         /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
@@ -82,6 +79,7 @@ namespace MCGalaxy {
         public void Connect() {
             if (!Server.Config.UseIRC || Connected || Server.shuttingDown) return;
             InitConnectionState();
+            if (!handlers.hookedEvents) HookEvents();
             handlers.Hook();
             
             Logger.Log(LogType.RelayActivity, "Connecting to IRC...");
@@ -99,6 +97,7 @@ namespace MCGalaxy {
         public void Disconnect(string reason) {
             if (!Connected) return;
             handlers.Unhook();
+            UnhookEvents();
             
             connection.Disconnect(reason);
             Logger.Log(LogType.RelayActivity, "Disconnected from IRC!");
@@ -116,6 +115,8 @@ namespace MCGalaxy {
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
         public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }
         
+        protected override void SendPublicMessage(string msg) { Say(msg, false); }
+        protected override void SendStaffMessage(string msg)  { Say(msg, true); }       
         
         void InitConnectionState() {
             if (!Server.Config.UseIRC || connection != null) return;
@@ -135,24 +136,6 @@ namespace MCGalaxy {
             args.UseSSL   = Server.Config.IRCSSL;
             bool usePass  = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
             args.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
-        }
-        
-        void SetDefaultBannedCommands() {
-            BannedCommands = new List<string>() { "resetbot", "resetirc", "oprules", "irccontrollers", "ircctrl" };
-        }
-        
-        void LoadBannedCommands() {
-            SetDefaultBannedCommands();
-            
-            if (!File.Exists("text/irccmdblacklist.txt")) {
-                File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
-                                       "#Here you can put commands that cannot be used from the IRC bot.",
-                                       "#Lines starting with \"#\" are ignored." });
-            }
-            
-            foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
-                if (!line.IsCommentLine()) BannedCommands.Add(line);
-            }
         }
         
         

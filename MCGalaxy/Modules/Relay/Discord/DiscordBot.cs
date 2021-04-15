@@ -22,9 +22,9 @@ using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 
-namespace MCGalaxy.Modules.Discord {
+namespace MCGalaxy.Modules.Relay.Discord {
 
-    public sealed class DiscordBot {
+    public sealed class DiscordBot : RelayBot {
         public bool Disconnected;
         string[] readChannels;
         string[] sendChannels;
@@ -56,10 +56,7 @@ namespace MCGalaxy.Modules.Discord {
             return config.Status.Replace("{PLAYERS}", online);
         }        
         
-        readonly Player ircDefault = new Player("Discord");
         void OnReady() {
-            ircDefault.group = Group.DefaultRank;
-            
             api = new DiscordApiClient();
             api.Token = config.BotToken;
             RegisterEvents();
@@ -69,68 +66,34 @@ namespace MCGalaxy.Modules.Discord {
         void RegisterEvents() {
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
-            OnGroupLoadEvent.Register(HandleGroupLoad, Priority.Low);
-            
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
-            OnChatEvent.Register(HandleChat, Priority.Low);
-            OnChatSysEvent.Register(HandleChatSys, Priority.Low);
-            OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
+            HookEvents();
         }
         
         void UnregisterEvents() {
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
-            OnGroupLoadEvent.Unregister(HandleGroupLoad);
-            
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
-            OnChatEvent.Unregister(HandleChat);
-            OnChatSysEvent.Unregister(HandleChatSys);
-            OnChatFromEvent.Unregister(HandleChatFrom);
-        }
-        
-        string Unescape(Player p, string msg) {
-            string full = Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
-            return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
+            UnhookEvents();
         }
         
         void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
         void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
-        void HandleGroupLoad() { ircDefault.group = Group.DefaultRank; }
         
         
-        void DoSendMessage(string message) {
+        void DoSendMessage(string message, string[] channels) {
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
             message = Colors.StripUsed(message);
             
-            foreach (string chan in sendChannels) {
+            foreach (string chan in channels) {
                 api.SendMessage(chan, message);
             }
         }
         
-        // TODO too much overlap with IRCHandlers
-        void MessageToIRC(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
-            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
-            
-            if (scopeFilter(ircDefault, arg) && (filter == null || filter(ircDefault, arg))) {
-                DoSendMessage(msg);
-            }
-        }
-        
-        void HandleChatSys(ChatScope scope, string msg, object arg,
-                           ref ChatMessageFilter filter, bool irc) {
-            if (irc) MessageToIRC(scope, msg, arg, filter);
-        }
-        
-        void HandleChatFrom(ChatScope scope, Player source, string msg,
-                            object arg, ref ChatMessageFilter filter, bool irc) {
-            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
-        }
-        
-        void HandleChat(ChatScope scope, Player source, string msg,
-                        object arg, ref ChatMessageFilter filter, bool irc) {
-            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
-        }
+        protected override void SendPublicMessage(string msg) { DoSendMessage(msg, sendChannels); }
+        // TODO implement this
+        protected override void SendStaffMessage(string msg) { }
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;

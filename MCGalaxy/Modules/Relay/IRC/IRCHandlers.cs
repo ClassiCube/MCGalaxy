@@ -31,15 +31,9 @@ namespace MCGalaxy.Network {
     public sealed class IRCHandlers {
         
         readonly IRCBot bot;
-        readonly Player ircDefault = new Player("IRC");
-        readonly Player ircOp = new Player("IRC");
+        public IRCHandlers(IRCBot bot) { this.bot = bot; }
         
-        public IRCHandlers(IRCBot bot) {
-            this.bot = bot;
-            ircDefault.group = Group.DefaultRank;
-        }
-        
-        volatile bool hookedEvents = false;
+        public volatile bool hookedEvents = false;
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();
         DateTime lastWho, lastOpWho;
         
@@ -59,11 +53,6 @@ namespace MCGalaxy.Network {
 
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
             OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
-            OnGroupLoadEvent.Register(HandleGroupLoad, Priority.Low);
-            
-            OnChatEvent.Register(HandleChat, Priority.Low);
-            OnChatSysEvent.Register(HandleChatSys, Priority.Low);
-            OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
 
             // Regster events for incoming
             bot.connection.Listener.OnNick += Listener_OnNick;
@@ -91,11 +80,6 @@ namespace MCGalaxy.Network {
             
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnShuttingDownEvent.Unregister(HandleShutdown);
-            OnGroupLoadEvent.Unregister(HandleGroupLoad);
-            
-            OnChatEvent.Unregister(HandleChat);
-            OnChatSysEvent.Unregister(HandleChatSys);
-            OnChatFromEvent.Unregister(HandleChatFrom);
             
             // Regster events for incoming
             bot.connection.Listener.OnNick -= Listener_OnNick;
@@ -116,52 +100,15 @@ namespace MCGalaxy.Network {
         }
 
         
-        string Unescape(Player p, string msg) {
-            string full = Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
-            return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
-        }
-        
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action  != PlayerAction.Me) return;
             if (p.level != null && !p.level.SeesServerWideChat) return;
             bot.Say("*" + p.DisplayName + " " + message, stealth);
         }
         
-        void MessageToIRC(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
-            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
-            
-            if (scopeFilter(ircDefault, arg) && (filter == null || filter(ircDefault, arg))) {
-                bot.Say(msg, false);
-            } else {
-                ircOp.group = Group.Find(Server.Config.IRCControllerRank);
-                if (ircOp.group == null) ircOp.group = Group.NobodyRank;
-                
-                if (scopeFilter(ircOp, arg) && (filter == null || filter(ircOp, arg))) {
-                    bot.Say(msg, true);
-                }
-            }
-        }
-
-        void HandleChatSys(ChatScope scope, string msg, object arg,
-                           ref ChatMessageFilter filter, bool irc) {
-            if (irc) MessageToIRC(scope, msg, arg, filter);
-        }
-        
-        void HandleChatFrom(ChatScope scope, Player source, string msg,
-                            object arg, ref ChatMessageFilter filter, bool irc) {
-            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
-        }
-        
-        void HandleChat(ChatScope scope, Player source, string msg,
-                        object arg, ref ChatMessageFilter filter, bool irc) {
-            if (irc) MessageToIRC(scope, Unescape(source, msg), arg, filter);
-        }
-        
         void HandleShutdown(bool restarting, string message) {
             bot.Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
         }
-        
-        void HandleGroupLoad() { ircDefault.group = Group.DefaultRank; }
         
         
         void Listener_OnAction(UserInfo user, string channel, string description) {
@@ -266,7 +213,8 @@ namespace MCGalaxy.Network {
             
             try {
                 Player p = new IRCPlayer(channel, user.Nick, bot);
-                Command.Find("Players").Use(p, "", ircDefault.DefaultCmdData);
+                p.group  = Group.DefaultRank;
+                Command.Find("Players").Use(p, "", p.DefaultCmdData);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
