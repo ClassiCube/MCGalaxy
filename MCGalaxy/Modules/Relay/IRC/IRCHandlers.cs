@@ -181,7 +181,7 @@ namespace MCGalaxy.Network {
         }
 
         void DoJoinLeaveMessage(string nick, string verb, string channel) {
-            Logger.Log(LogType.IRCCActivity, "{0} {1} channel {2}", nick, verb, channel);
+            Logger.Log(LogType.RelayActivity, "{0} {1} channel {2}", nick, verb, channel);
             string which = bot.opchannels.CaselessContains(channel) ? " operator" : "";
             MessageInGame(nick, string.Format("&I(IRC) {0} {1} the{2} channel", nick, verb, which));
         }
@@ -195,12 +195,12 @@ namespace MCGalaxy.Network {
             }
             
             if (user.Nick == bot.nick) return;
-            Logger.Log(LogType.IRCCActivity, user.Nick + " left IRC");
+            Logger.Log(LogType.RelayActivity, user.Nick + " left IRC");
             MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " left");
         }
 
         void Listener_OnError(ReplyCode code, string message) {
-            Logger.Log(LogType.IRCCActivity, "IRC Error: " + message);
+            Logger.Log(LogType.RelayActivity, "IRC Error: " + message);
         }
 
         void Listener_OnPrivate(UserInfo user, string message) {
@@ -352,12 +352,12 @@ namespace MCGalaxy.Network {
         }
         
         void Listener_OnRegistered() {
-            Logger.Log(LogType.IRCCActivity, "Connected to IRC!");
+            Logger.Log(LogType.RelayActivity, "Connected to IRC!");
             bot.resetting = false;
             bot.retries = 0;
             
             Authenticate();
-            Logger.Log(LogType.IRCCActivity, "Joining channels...");
+            Logger.Log(LogType.RelayActivity, "Joining channels...");
             JoinChannels();
         }
         
@@ -372,7 +372,7 @@ namespace MCGalaxy.Network {
         
         void Listener_OnPrivateNotice(UserInfo user, string notice) {
             if (!notice.CaselessStarts("You are now identified")) return;
-            Logger.Log(LogType.IRCCActivity, "Joining channels...");
+            Logger.Log(LogType.RelayActivity, "Joining channels...");
             JoinChannels();
         }
         
@@ -381,7 +381,7 @@ namespace MCGalaxy.Network {
             if (nickServ.Length == 0) return;
             
             if (Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0) {
-                Logger.Log(LogType.IRCCActivity, "Identifying with " + nickServ);
+                Logger.Log(LogType.RelayActivity, "Identifying with " + nickServ);
                 bot.connection.Sender.PrivateMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
@@ -426,7 +426,7 @@ namespace MCGalaxy.Network {
             RemoveNick(user.Nick, chanNicks);
             
             if (reason.Length > 0) reason = " (" + reason + ")";
-            Logger.Log(LogType.IRCCActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
+            Logger.Log(LogType.RelayActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
             MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }
         

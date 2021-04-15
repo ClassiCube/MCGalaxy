@@ -84,14 +84,14 @@ namespace MCGalaxy {
             InitConnectionState();
             handlers.Hook();
             
-            Logger.Log(LogType.IRCCActivity, "Connecting to IRC...");
+            Logger.Log(LogType.RelayActivity, "Connecting to IRC...");
             UpdateState();
             connection.connectionArgs = args;
             
             try {
                 connection.Connect();
             } catch (Exception e) {
-                Logger.Log(LogType.IRCCActivity, "Failed to connect to IRC!");
+                Logger.Log(LogType.RelayActivity, "Failed to connect to IRC!");
                 Logger.LogError(e);
             }
         }
@@ -101,7 +101,7 @@ namespace MCGalaxy {
             handlers.Unhook();
             
             connection.Disconnect(reason);
-            Logger.Log(LogType.IRCCActivity, "Disconnected from IRC!");
+            Logger.Log(LogType.RelayActivity, "Disconnected from IRC!");
         }
         
         public void Reset() {

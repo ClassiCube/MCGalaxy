@@ -38,8 +38,8 @@ namespace MCGalaxy {
         /// <summary> User performs a suspicious activity, such as triggering block spam kick, noclipping in a game, etc. </summary>
         SuspiciousActivity,
         
-        /// <summary> Activity on IRC. </summary>
-        IRCCActivity,
+        /// <summary> Activity on a relay bot (e.g. IRC or Discord) </summary>
+        RelayActivity,
         
         
         /// <summary> Warning message, such as failure to save a file. </summary>
