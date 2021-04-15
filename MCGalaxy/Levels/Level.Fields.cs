@@ -45,10 +45,10 @@ namespace MCGalaxy {
         public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(false);
         bool unloadedBots;
         
-        internal HandleDelete[] deleteHandlers = new HandleDelete[Block.ExtendedCount];
-        internal HandlePlace[] placeHandlers = new HandlePlace[Block.ExtendedCount];
-        internal HandleWalkthrough[] walkthroughHandlers = new HandleWalkthrough[Block.ExtendedCount];
-        internal HandlePhysics[] physicsHandlers = new HandlePhysics[Block.ExtendedCount];
+        public HandleDelete[] DeleteHandlers = new HandleDelete[Block.ExtendedCount];
+        public HandlePlace[] PlaceHandlers = new HandlePlace[Block.ExtendedCount];
+        public HandleWalkthrough[] WalkthroughHandlers = new HandleWalkthrough[Block.ExtendedCount];
+        public HandlePhysics[] PhysicsHandlers = new HandlePhysics[Block.ExtendedCount];
         internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.ExtendedCount];
         internal AABB[] blockAABBs = new AABB[Block.ExtendedCount];
         

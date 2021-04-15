@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Building {
             BlockID old = p.level.GetBlock(mark.X, mark.Y, mark.Z);
             if (!p.CheckManualChange(old, true)) return;
             
-            HandleDelete handler = p.level.deleteHandlers[old];
+            HandleDelete handler = p.level.DeleteHandlers[old];
             if (handler != null) {
                 handler(p, old, mark.X, mark.Y, mark.Z);
             } else {

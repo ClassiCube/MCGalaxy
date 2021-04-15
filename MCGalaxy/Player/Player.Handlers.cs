@@ -141,13 +141,13 @@ namespace MCGalaxy {
         ChangeResult DeleteBlock(BlockID old, ushort x, ushort y, ushort z) {
             if (deleteMode) return ChangeBlock(x, y, z, Block.Air);
 
-            HandleDelete handler = level.deleteHandlers[old];
+            HandleDelete handler = level.DeleteHandlers[old];
             if (handler != null) return handler(this, old, x, y, z);
             return ChangeBlock(x, y, z, Block.Air);
         }
 
         ChangeResult PlaceBlock(BlockID old, ushort x, ushort y, ushort z, BlockID block) {
-            HandlePlace handler = level.placeHandlers[block];
+            HandlePlace handler = level.PlaceHandlers[block];
             if (handler != null) return handler(this, block, x, y, z);
             return ChangeBlock(x, y, z, block);
         }

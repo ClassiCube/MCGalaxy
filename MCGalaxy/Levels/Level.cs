@@ -415,10 +415,10 @@ namespace MCGalaxy {
         
         public void UpdateBlockHandler(BlockID block) {
             bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));
-            deleteHandlers[block]       = BlockBehaviour.GetDeleteHandler(block, Props);
-            placeHandlers[block]        = BlockBehaviour.GetPlaceHandler(block, Props);
-            walkthroughHandlers[block]  = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
-            physicsHandlers[block]      = BlockBehaviour.GetPhysicsHandler(block, Props);
+            DeleteHandlers[block]       = BlockBehaviour.GetDeleteHandler(block, Props);
+            PlaceHandlers[block]        = BlockBehaviour.GetPlaceHandler(block, Props);
+            WalkthroughHandlers[block]  = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
+            PhysicsHandlers[block]      = BlockBehaviour.GetPhysicsHandler(block, Props);
             physicsDoorsHandlers[block] = BlockBehaviour.GetPhysicsDoorsHandler(block, Props);
         }
         

@@ -128,7 +128,7 @@ namespace MCGalaxy {
             lastCheck = ListCheck.Count;
             const uint mask = PhysicsArgs.TypeMask;
             
-            HandlePhysics[] handlers = physicsHandlers;
+            HandlePhysics[] handlers = PhysicsHandlers;
             ExtraInfoHandler extraHandler = ExtraInfoPhysics.normalHandler;
             if (physics == 5) {
                 handlers = physicsDoorsHandlers;
@@ -349,7 +349,7 @@ namespace MCGalaxy {
             if (Props[block].IsMessageBlock || Props[block].IsPortal) return false;
             if (Props[block].IsDoor || Props[block].IsTDoor) return false;
             if (Props[block].OPBlock) return false;
-            return physicsHandlers[block] != null;
+            return PhysicsHandlers[block] != null;
         }
         
         internal bool CheckSpongeWater(ushort x, ushort y, ushort z) {

@@ -40,7 +40,7 @@ namespace MCGalaxy.Blocks.Physics {
                 
                 // We can activate only one walkthrough block per movement
                 if (!hitWalkthrough) {
-                    HandleWalkthrough handler = p.level.walkthroughHandlers[block];
+                    HandleWalkthrough handler = p.level.WalkthroughHandlers[block];
                     if (handler != null && handler(p, block, xP, yP, zP)) {
                         p.lastWalkthrough = p.level.PosToInt(xP, yP, zP);
                         hitWalkthrough = true;
