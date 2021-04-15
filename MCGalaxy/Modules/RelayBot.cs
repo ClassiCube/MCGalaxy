@@ -34,7 +34,7 @@ namespace MCGalaxy.Modules.Relay {
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
         
-        protected class RelayUser { public string Nick; }
+        protected class RelayUser { public string Nick, UserID; }
         public abstract string RelayName { get; }
         
         
@@ -146,11 +146,11 @@ namespace MCGalaxy.Modules.Relay {
             }
 
             if (opchat) {
-                Logger.Log(LogType.RelayChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
+                Logger.Log(LogType.RelayChat, "(OPs): ({0}) {1}: {2}", RelayName, user.Nick, message);
                 Chat.MessageOps(string.Format("To Ops &f-&I(IRC) {0}&f- {1}", user.Nick,
                                               Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             } else {
-                Logger.Log(LogType.RelayChat, "(IRC) {0}: {1}", user.Nick, message);
+                Logger.Log(LogType.RelayChat, "({0}) {1}: {2}", RelayName, user.Nick, message);
                 MessageInGame(user.Nick, string.Format("&I(IRC) {0}: &f{1}", user.Nick,
                                                        Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
@@ -194,7 +194,7 @@ namespace MCGalaxy.Modules.Relay {
             if (cmd == null) { p.Message("Unknown command!"); return false; }
 
             string logCmd = cmdArgs.Length == 0 ? cmdName : cmdName + " " + cmdArgs;
-            Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
+            Logger.Log(LogType.CommandUsage, "/{0} (by {1} from {2})", logCmd, user.Nick, RelayName);
             
             try {
                 if (!p.CanUse(cmd)) {
@@ -223,7 +223,7 @@ namespace MCGalaxy.Modules.Relay {
             public readonly RelayUser User;
             public readonly RelayBot Bot;
             
-            public RelayPlayer(string channel, RelayUser user, RelayBot bot) : base("IRC") {
+            public RelayPlayer(string channel, RelayUser user, RelayBot bot) : base(bot.RelayName) {
                 group = Group.Find(Server.Config.IRCControllerRank);
                 if (group == null) group = Group.NobodyRank;
                 
@@ -233,9 +233,10 @@ namespace MCGalaxy.Modules.Relay {
                 Bot     = bot;
                 
                 if (user != null) {
-                    DatabaseID = NameConverter.InvalidNameID("(IRC " + user.Nick + ")");
+                    string nick = "(" + bot.RelayName + user.Nick + ")";
+                    DatabaseID = NameConverter.InvalidNameID(nick);
                 }
-                SuperName = "IRC";
+                SuperName = bot.RelayName;
             }
             
             public override void Message(byte type, string message) {

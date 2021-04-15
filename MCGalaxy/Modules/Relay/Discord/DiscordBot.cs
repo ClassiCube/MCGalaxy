@@ -28,6 +28,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public bool Disconnected;
         string[] readChannels;
         string[] sendChannels;
+        string[] operatorIds;
         
         DiscordApiClient api;
         DiscordWebsocket socket;
@@ -36,12 +37,14 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         public override string RelayName { get { return "Discord"; } }
         
+        
         public void RunAsync(DiscordConfig conf) {
             config = conf;
             socket = new DiscordWebsocket();
             
             readChannels = conf.ReadChannels.SplitComma();
             sendChannels = conf.SendChannels.SplitComma();
+            operatorIds  = conf.OperatorUsers.SplitComma();
             
             socket.Token     = config.BotToken;
             socket.Handler   = HandleEvent;
@@ -86,12 +89,14 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandleMessageEvent(JsonObject obj) {
             JsonObject data   = (JsonObject)obj["d"];
             JsonObject author = (JsonObject)data["author"];
+            string channel    = (string)data["channel_id"];
             string message    = (string)data["content"];
             
-            string user = (string)author["username"];
-            string msg  = "&I(Discord) " + user + ": &f" + message;
-            Logger.Log(LogType.RelayChat, msg);
-            Chat.Message(ChatScope.Global, msg, null, null);
+            RelayUser user = new RelayUser();
+            user.Nick   = (string)author["username"];
+            user.UserID = (string)author["id"];
+            
+            HandleChannelMessage(user, channel, message, false);
         }
         
         string GetStatus() {
@@ -151,7 +156,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
             error = null;
-            return false; // TODO: implement this
+            return user.UserID != null && 
+                operatorIds.CaselessContains(user.UserID);
         }
     }
 }

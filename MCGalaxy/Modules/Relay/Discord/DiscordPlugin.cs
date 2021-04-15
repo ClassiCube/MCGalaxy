@@ -28,6 +28,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public string ReadChannels = "";
         [ConfigString("send-channel-ids", null, "", true)]
         public string SendChannels = "";
+        [ConfigString("operator-user-ids", null, "", true)]
+        public string OperatorUsers = "";
         
         [ConfigBool("enabled", null, false)]
         public bool Enabled;
