@@ -18,11 +18,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
+using MCGalaxy.Commands;
+using MCGalaxy.DB;
 using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Network;
-using Sharkbite.Irc;
 
 namespace MCGalaxy.Modules.Relay {
     
@@ -34,6 +32,11 @@ namespace MCGalaxy.Modules.Relay {
         
         readonly Player fakeGuest = new Player("RelayBot");
         readonly Player fakeStaff = new Player("RelayBot");
+        DateTime lastWho, lastOpWho;
+        
+        protected class RelayUser { public string Nick; }
+        public abstract string RelayName { get; }
+        
         
         protected void SetDefaultBannedCommands() {
             BannedCommands = new List<string>() { "resetbot", "resetirc", "oprules", "irccontrollers", "ircctrl" };
@@ -66,14 +69,23 @@ namespace MCGalaxy.Modules.Relay {
             OnChatFromEvent.Unregister(HandleChatFrom);
         }
         
-        protected abstract void SendPublicMessage(string msg);
-        protected abstract void SendStaffMessage(string msg);
+        protected abstract void SendPublicMessage(string message);
+        protected abstract void SendStaffMessage(string message);
         
        
+        static bool FilterIRC(Player pl, object arg) {
+            return !pl.Ignores.IRC && !pl.Ignores.IRCNicks.Contains((string)arg);
+        } static ChatMessageFilter filterIRC = FilterIRC;
+        
+        public static void MessageInGame(string srcNick, string message) {
+            Chat.Message(ChatScope.Global, message, srcNick, filterIRC);
+        }
+        
         static string Unescape(Player p, string msg) {
             string full = Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
             return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
         }
+        
         
         void MessageToRelay(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
             ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];            
@@ -104,6 +116,135 @@ namespace MCGalaxy.Modules.Relay {
         void HandleChat(ChatScope scope, Player source, string msg,
                         object arg, ref ChatMessageFilter filter, bool relay) {
             if (relay) MessageToRelay(scope, Unescape(source, msg), arg, filter);
+        }
+        
+        
+        protected void HandleUserMessage(RelayUser user, string message) {
+            string[] parts = message.SplitSpaces(2);
+            string cmdName = parts[0].ToLower();
+            string cmdArgs = parts.Length > 1 ? parts[1] : "";
+            
+            if (HandleWhoCommand(user, null, cmdName, false)) return;
+            Command.Search(ref cmdName, ref cmdArgs);
+            
+            string error;
+            if (!CanUseCommands(user, cmdName, out error)) {
+                if (error != null) MessageUser(user, error);
+                return;
+            }
+            
+            HandleRelayCommand(user, null, cmdName, cmdArgs);
+        }       
+
+        protected void HandleChannelMessage(RelayUser user, string channel, string message, bool opchat) {
+            string[] parts = message.SplitSpaces(3);
+            string rawCmd  = parts[0].ToLower();
+            if (HandleWhoCommand(user, channel, rawCmd, opchat)) return;
+            
+            if (rawCmd.CaselessEq(Server.Config.IRCCommandPrefix)) {
+                if (!HandleChannelCommand(user, channel, message, parts)) return;
+            }
+
+            if (opchat) {
+                Logger.Log(LogType.RelayChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
+                Chat.MessageOps(string.Format("To Ops &f-&I(IRC) {0}&f- {1}", user.Nick,
+                                              Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+            } else {
+                Logger.Log(LogType.RelayChat, "(IRC) {0}: {1}", user.Nick, message);
+                MessageInGame(user.Nick, string.Format("&I(IRC) {0}: &f{1}", user.Nick,
+                                                       Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+            }
+        }
+        
+        bool HandleChannelCommand(RelayUser user, string channel, string message, string[] parts) {
+            string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
+            string cmdArgs = parts.Length > 2 ? parts[2] : "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            
+            string error;
+            if (!CanUseCommands(user, cmdName, out error)) {
+                if (error != null) MessageChannel(channel, error);
+                return false;
+            }
+            
+            return HandleRelayCommand(user, channel, cmdName, cmdArgs);
+        }
+        
+        bool HandleWhoCommand(RelayUser user, string channel, string cmd, bool opchat) {
+            bool isWho = cmd == ".who" || cmd == ".players" || cmd == "!players";
+            DateTime last = opchat ? lastOpWho : lastWho;
+            if (!isWho || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
+            
+            try {
+                Player p = new RelayPlayer(channel, user, this);
+                p.group  = Group.DefaultRank;
+                Command.Find("Players").Use(p, "", p.DefaultCmdData);
+            } catch (Exception e) {
+                Logger.LogError(e);
+            }
+            
+            if (opchat) lastOpWho = DateTime.UtcNow;
+            else lastWho = DateTime.UtcNow;
+            return true;
+        }
+        
+        bool HandleRelayCommand(RelayUser user, string channel, string cmdName, string cmdArgs) {
+            Command cmd = Command.Find(cmdName);
+            Player p = new RelayPlayer(channel, user, this);
+            if (cmd == null) { p.Message("Unknown command!"); return false; }
+
+            string logCmd = cmdArgs.Length == 0 ? cmdName : cmdName + " " + cmdArgs;
+            Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
+            
+            try {
+                if (!p.CanUse(cmd)) {
+                    CommandPerms.Find(cmd.name).MessageCannotUse(p);
+                    return false;
+                }
+                if (!cmd.SuperUseable) {
+                    p.Message(cmd.name + " can only be used in-game.");
+                    return false;
+                }
+                cmd.Use(p, cmdArgs);
+            } catch (Exception ex) {
+                p.Message("CMD Error: " + ex);
+                Logger.LogError(ex);
+            }
+            return true;
+        }
+
+        protected abstract bool CanUseCommands(RelayUser user, string cmdName, out string error);
+        protected abstract void MessageChannel(string channel, string message);
+        protected abstract void MessageUser(RelayUser user, string message);
+
+        
+        sealed class RelayPlayer : Player {
+            public readonly string Channel;
+            public readonly RelayUser User;
+            public readonly RelayBot Bot;
+            
+            public RelayPlayer(string channel, RelayUser user, RelayBot bot) : base("IRC") {
+                group = Group.Find(Server.Config.IRCControllerRank);
+                if (group == null) group = Group.NobodyRank;
+                
+                Channel = channel;
+                User    = user;
+                color   = "&a";
+                Bot     = bot;
+                
+                if (user != null) {
+                    DatabaseID = NameConverter.InvalidNameID("(IRC " + user.Nick + ")");
+                }
+                SuperName = "IRC";
+            }
+            
+            public override void Message(byte type, string message) {
+                if (Channel != null) {
+                    Bot.MessageChannel(Channel, message);
+                } else {
+                    Bot.MessageUser(User, message);
+                }
+            }
         }
     }
 }

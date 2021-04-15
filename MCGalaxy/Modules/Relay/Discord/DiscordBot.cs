@@ -33,73 +33,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         DiscordWebsocket socket;
         DiscordConfig config;
         Thread thread;
-
-        void HandleEvent(JsonObject obj) {
-            // actually handle the event
-            string eventName = (string)obj["t"];
-            if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
-        }
         
-        void HandleMessageEvent(JsonObject obj) {
-            JsonObject data   = (JsonObject)obj["d"];
-            JsonObject author = (JsonObject)data["author"];
-            string message    = (string)data["content"];
-            
-            string user = (string)author["username"];
-            string msg  = "&I(Discord) " + user + ": &f" + message;
-            Logger.Log(LogType.IRCChat, msg);
-            Chat.Message(ChatScope.Global, msg, null, null);
-        }
-        
-        string GetStatus() {
-            string online = PlayerInfo.NonHiddenCount().ToString();
-            return config.Status.Replace("{PLAYERS}", online);
-        }        
-        
-        void OnReady() {
-            api = new DiscordApiClient();
-            api.Token = config.BotToken;
-            RegisterEvents();
-        }
-        
-        
-        void RegisterEvents() {
-            OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
-            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
-            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
-            HookEvents();
-        }
-        
-        void UnregisterEvents() {
-            OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
-            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
-            OnPlayerActionEvent.Unregister(HandlePlayerAction);
-            UnhookEvents();
-        }
-        
-        void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
-        void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
-        
-        
-        void DoSendMessage(string message, string[] channels) {
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
-            message = Colors.StripUsed(message);
-            
-            foreach (string chan in channels) {
-                api.SendMessage(chan, message);
-            }
-        }
-        
-        protected override void SendPublicMessage(string msg) { DoSendMessage(msg, sendChannels); }
-        // TODO implement this
-        protected override void SendStaffMessage(string msg) { }
-        
-        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
-            socket.SendUpdateStatus();
-        }
-        
+        public override string RelayName { get { return "Discord"; } }
         
         public void RunAsync(DiscordConfig conf) {
             config = conf;
@@ -139,6 +74,84 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 Disconnected = true;
                 UnregisterEvents();
             }
+        }
+        
+        
+        void HandleEvent(JsonObject obj) {
+            // actually handle the event
+            string eventName = (string)obj["t"];
+            if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
+        }
+        
+        void HandleMessageEvent(JsonObject obj) {
+            JsonObject data   = (JsonObject)obj["d"];
+            JsonObject author = (JsonObject)data["author"];
+            string message    = (string)data["content"];
+            
+            string user = (string)author["username"];
+            string msg  = "&I(Discord) " + user + ": &f" + message;
+            Logger.Log(LogType.RelayChat, msg);
+            Chat.Message(ChatScope.Global, msg, null, null);
+        }
+        
+        string GetStatus() {
+            string online = PlayerInfo.NonHiddenCount().ToString();
+            return config.Status.Replace("{PLAYERS}", online);
+        }        
+        
+        void OnReady() {
+            api = new DiscordApiClient();
+            api.Token = config.BotToken;
+            RegisterEvents();
+        }
+        
+        
+        void RegisterEvents() {
+            OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
+            OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
+            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
+            HookEvents();
+        }
+        
+        void UnregisterEvents() {
+            OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
+            OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
+            OnPlayerActionEvent.Unregister(HandlePlayerAction);
+            UnhookEvents();
+        }
+        
+        void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
+        void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
+        
+        
+        protected override void MessageChannel(string channel, string message) {
+            message = EmotesHandler.Replace(message);
+            message = ChatTokens.ApplyCustom(message);
+            message = Colors.StripUsed(message);
+            api.SendMessage(channel, message);
+        }
+        
+        protected override void MessageUser(RelayUser user, string message) {
+            // TODO: implement this
+        }
+        
+        protected override void SendPublicMessage(string message) { 
+            foreach (string chan in sendChannels) {
+                MessageChannel(chan, message);
+            }
+        }
+        
+        // TODO implement this
+        protected override void SendStaffMessage(string message) { }
+        
+        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
+            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
+            socket.SendUpdateStatus();
+        } 
+        
+        protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
+            error = null;
+            return false; // TODO: implement this
         }
     }
 }

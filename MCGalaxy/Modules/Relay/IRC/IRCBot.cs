@@ -38,6 +38,8 @@ namespace MCGalaxy {
         IRCHandlers handlers;
         ConnectionArgs args;
         
+        public override string RelayName { get { return "IRC"; } }
+        
         public IRCBot() {
             handlers = new IRCHandlers(this);
             SetDefaultBannedCommands();
@@ -115,8 +117,8 @@ namespace MCGalaxy {
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
         public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }
         
-        protected override void SendPublicMessage(string msg) { Say(msg, false); }
-        protected override void SendStaffMessage(string msg)  { Say(msg, true); }       
+        protected override void SendPublicMessage(string message) { Say(message, false); }
+        protected override void SendStaffMessage(string message)  { Say(message, true); }       
         
         void InitConnectionState() {
             if (!Server.Config.UseIRC || connection != null) return;
@@ -204,6 +206,32 @@ namespace MCGalaxy {
                 sb.Replace(ircReplacements[i], ircColors[i]);
             }
             return sb.ToString();
+        }
+        
+      
+        protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
+            return handlers.CheckIRCCommand(user.Nick, cmdName, out error);
+        }
+        
+        protected override void MessageChannel(string channel, string message) {
+            Message(channel, message);
+        }
+        
+        protected override void MessageUser(RelayUser user, string message) {
+            Pm(user.Nick, message);
+        }
+        
+        // TODO remove
+        public void HandlePublic(string nick, string channel, string message, bool opchat) {
+            RelayUser user = new RelayUser();
+            user.Nick      = nick;
+            HandleChannelMessage(user, channel, message, opchat);
+        }
+        
+        public void HandlePrivate(string nick, string message) {
+            RelayUser user = new RelayUser();
+            user.Nick      = nick;
+            HandleUserMessage(user, message);
         }
     }
 }

@@ -55,8 +55,8 @@ namespace MCGalaxy {
         /// <summary> Chat globally or only on player's level. </summary>
         PlayerChat,
         
-        /// <summary> Chat from IRC. </summary>
-        IRCChat,
+        /// <summary> Chat relayed from an external communication service (e.g. IRC or Discord)  </summary>
+        RelayChat,
         
         /// <summary> Chat to all players in a particular chatroom, or across all chatrooms. </summary>
         ChatroomChat,

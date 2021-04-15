@@ -22,6 +22,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Modules.Relay;
 using MCGalaxy.DB;
 using Sharkbite.Irc;
 
@@ -35,15 +36,9 @@ namespace MCGalaxy.Network {
         
         public volatile bool hookedEvents = false;
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();
-        DateTime lastWho, lastOpWho;
-        
-        
-        static bool FilterIRC(Player pl, object arg) {
-            return !pl.Ignores.IRC && !pl.Ignores.IRCNicks.Contains((string)arg);
-        } static ChatMessageFilter filterIRC = FilterIRC;
-        
+
         static void MessageInGame(string srcNick, string message) {
-            Chat.Message(ChatScope.Global, message, srcNick, filterIRC);
+            RelayBot.MessageInGame(srcNick, message);
         }
         
         /// <summary> Hooks IRC events so they are handled. </summary>
@@ -152,22 +147,8 @@ namespace MCGalaxy.Network {
 
         void Listener_OnPrivate(UserInfo user, string message) {
             message = IRCBot.ParseMessage(message);
-            string[] parts = message.SplitSpaces(2);
-            string cmdName = parts[0].ToLower();
-            string cmdArgs = parts.Length > 1 ? parts[1] : "";
-            
-            if (HandleWhoCommand(user, null, cmdName, false)) return;
-            Command.Search(ref cmdName, ref cmdArgs);
-            
-            string error;
-            if (!CheckIRCCommand(user, cmdName, out error)) {
-                if (error != null) bot.Pm(user.Nick, error);
-                return;
-            }
-            
-            HandleIRCCommand(user, null, cmdName, cmdArgs);
-        }
-        
+            bot.HandlePrivate(user.Nick, message);
+        }        
 
         void Listener_OnPublic(UserInfo user, string channel, string message) {
             message = message.TrimEnd();
@@ -175,90 +156,19 @@ namespace MCGalaxy.Network {
             bool opchat = bot.opchannels.CaselessContains(channel);
             
             message = IRCBot.ParseMessage(message);
-            string[] parts = message.SplitSpaces(3);
-            string ircCmd = parts[0].ToLower();
-            if (HandleWhoCommand(user, channel, ircCmd, opchat)) return;
-            
-            if (ircCmd.CaselessEq(Server.Config.IRCCommandPrefix) && !HandleChannelCommand(user, channel, message, parts)) return;
-
-            if (opchat) {
-                Logger.Log(LogType.IRCChat, "(OPs): (IRC) {0}: {1}", user.Nick, message);
-                Chat.MessageOps(string.Format("To Ops &f-&I(IRC) {0}&f- {1}", user.Nick,
-                                              Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
-            } else {
-                Logger.Log(LogType.IRCChat, "(IRC) {0}: {1}", user.Nick, message);
-                MessageInGame(user.Nick, string.Format("&I(IRC) {0}: &f{1}", user.Nick,
-                                                       Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
-            }
-        }
-        
-        bool HandleChannelCommand(UserInfo user, string channel, string message, string[] parts) {
-            string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
-            string cmdArgs = parts.Length > 2 ? parts[2] : "";
-            Command.Search(ref cmdName, ref cmdArgs);
-            
-            string error;
-            if (!CheckIRCCommand(user, cmdName, out error)) {
-                if (error != null) bot.Message(channel, error);
-                return false;
-            }
-            
-            return HandleIRCCommand(user, channel, cmdName, cmdArgs);
-        }
-        
-        bool HandleWhoCommand(UserInfo user, string channel, string cmd, bool opchat) {
-            bool isWho = cmd == ".who" || cmd == ".players" || cmd == "!players";
-            DateTime last = opchat ? lastOpWho : lastWho;
-            if (!isWho || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
-            
-            try {
-                Player p = new IRCPlayer(channel, user.Nick, bot);
-                p.group  = Group.DefaultRank;
-                Command.Find("Players").Use(p, "", p.DefaultCmdData);
-            } catch (Exception e) {
-                Logger.LogError(e);
-            }
-            
-            if (opchat) lastOpWho = DateTime.UtcNow;
-            else lastWho = DateTime.UtcNow;
-            return true;
-        }
-        
-        bool HandleIRCCommand(UserInfo user, string channel, string cmdName, string cmdArgs) {
-            Command cmd = Command.Find(cmdName);
-            Player p = new IRCPlayer(channel, user.Nick, bot);
-            if (cmd == null) { p.Message("Unknown command!"); return false; }
-
-            string logCmd = cmdArgs.Length == 0 ? cmdName : cmdName + " " + cmdArgs;
-            Logger.Log(LogType.CommandUsage, "/{0} (by {1} from IRC)", logCmd, user.Nick);
-            
-            try {
-                if (!p.CanUse(cmd)) {
-                    CommandPerms.Find(cmd.name).MessageCannotUse(p);
-                    return false;
-                }
-                if (!cmd.SuperUseable) {
-                    p.Message(cmd.name + " can only be used in-game.");
-                    return false;
-                }
-                cmd.Use(p, cmdArgs);
-            } catch (Exception ex) {
-                p.Message("CMD Error: " + ex);
-                Logger.LogError(ex);
-            }
-            return true;
+            bot.HandlePublic(user.Nick, channel, message, opchat);
         }
 
-        bool CheckIRCCommand(UserInfo user, string cmdName, out string error) {
+        public bool CheckIRCCommand(string nick, string cmdName, out string error) {
             error = null;
-            if (!Server.ircControllers.Contains(user.Nick)) return false;
+            if (!Server.ircControllers.Contains(nick)) return false;
             
             bool foundAtAll = false;
             foreach (string chan in bot.channels) {
-                if (VerifyNick(chan, user.Nick, ref error, ref foundAtAll)) return true;
+                if (VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
             }
             foreach (string chan in bot.opchannels) {
-                if (VerifyNick(chan, user.Nick, ref error, ref foundAtAll)) return true;
+                if (VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
             }
             
             if (!foundAtAll) {
@@ -269,35 +179,7 @@ namespace MCGalaxy.Network {
             }
             return false;
         }
-
         
-        sealed class IRCPlayer : Player {
-            public readonly string IRCChannel, IRCNick;
-            public readonly IRCBot Bot;
-            
-            public IRCPlayer(string ircChannel, string ircNick, IRCBot bot) : base("IRC") {
-                group = Group.Find(Server.Config.IRCControllerRank);
-                if (group == null) group = Group.NobodyRank;
-                
-                IRCChannel = ircChannel;
-                IRCNick = ircNick;
-                color = "&a";
-                Bot = bot;
-                
-                if (ircNick != null) {
-                    DatabaseID = NameConverter.InvalidNameID("(IRC " + ircNick + ")");
-                }
-                SuperName = "IRC";
-            }
-            
-            public override void Message(byte type, string message) {
-                if (IRCChannel != null) {
-                    Bot.Message(IRCChannel, message);
-                } else {
-                    Bot.Pm(IRCNick, message);
-                }
-            }
-        }
         
         void Listener_OnRegistered() {
             Logger.Log(LogType.RelayActivity, "Connected to IRC!");
