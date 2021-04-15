@@ -24,6 +24,8 @@ using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Relay {
     
+	public class RelayUser { public string Nick, UserID; }
+	
     /// <summary> Manages a connection to an external communication service </summary>
     public abstract class RelayBot {
      
@@ -34,8 +36,21 @@ namespace MCGalaxy.Modules.Relay {
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
         
-        protected class RelayUser { public string Nick, UserID; }
+        /// <summary> The name of service this relay bot communicates with </summary>
+        /// <remarks> IRC, Discord, etc </remarks>
         public abstract string RelayName { get; }
+        
+        /// <summary> Sends a message to the given channel </summary>
+        public abstract void MessageChannel(string channel, string message);
+        
+        /// <summary> Sends a direct message to the given user </summary>
+        public abstract void MessageUser(RelayUser user, string message);
+        
+        /// <summary> Sends a message to all channels setup for general public chat </summary>
+        public abstract void SendPublicMessage(string message);
+        
+        /// <summary> Sends a message to all channels setup for staff chat only </summary>        	
+        public abstract void SendStaffMessage(string message);
         
         
         protected void SetDefaultBannedCommands() {
@@ -68,9 +83,6 @@ namespace MCGalaxy.Modules.Relay {
             OnChatSysEvent.Unregister(HandleChatSys);
             OnChatFromEvent.Unregister(HandleChatFrom);
         }
-        
-        protected abstract void SendPublicMessage(string message);
-        protected abstract void SendStaffMessage(string message);
         
        
         static bool FilterIRC(Player pl, object arg) {
@@ -214,9 +226,6 @@ namespace MCGalaxy.Modules.Relay {
         }
 
         protected abstract bool CanUseCommands(RelayUser user, string cmdName, out string error);
-        protected abstract void MessageChannel(string channel, string message);
-        protected abstract void MessageUser(RelayUser user, string message);
-
         
         sealed class RelayPlayer : Player {
             public readonly string Channel;

@@ -117,8 +117,8 @@ namespace MCGalaxy {
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
         public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }
         
-        protected override void SendPublicMessage(string message) { Say(message, false); }
-        protected override void SendStaffMessage(string message)  { Say(message, true); }       
+        public override void SendPublicMessage(string message) { Say(message, false); }
+        public override void SendStaffMessage(string message)  { Say(message, true); }       
         
         void InitConnectionState() {
             if (!Server.Config.UseIRC || connection != null) return;
@@ -213,11 +213,11 @@ namespace MCGalaxy {
             return handlers.CheckIRCCommand(user.Nick, cmdName, out error);
         }
         
-        protected override void MessageChannel(string channel, string message) {
+        public override void MessageChannel(string channel, string message) {
             Message(channel, message);
         }
         
-        protected override void MessageUser(RelayUser user, string message) {
+        public override void MessageUser(RelayUser user, string message) {
             Pm(user.Nick, message);
         }
         

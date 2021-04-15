@@ -129,25 +129,25 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
         
         
-        protected override void MessageChannel(string channel, string message) {
+        public override void MessageChannel(string channel, string message) {
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
             message = Colors.StripUsed(message);
             api.SendMessage(channel, message);
         }
         
-        protected override void MessageUser(RelayUser user, string message) {
+        public override void MessageUser(RelayUser user, string message) {
             // TODO: implement this
         }
         
-        protected override void SendPublicMessage(string message) { 
+        public override void SendPublicMessage(string message) { 
             foreach (string chan in sendChannels) {
                 MessageChannel(chan, message);
             }
         }
         
         // TODO implement this
-        protected override void SendStaffMessage(string message) { }
+        public override void SendStaffMessage(string message) { }
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
