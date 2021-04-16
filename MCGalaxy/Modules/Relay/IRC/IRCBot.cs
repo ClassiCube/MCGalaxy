@@ -360,10 +360,10 @@ namespace MCGalaxy {
             
             bool foundAtAll = false;
             foreach (string chan in channels) {
-                if (VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
+                if (nicks.VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
             }
             foreach (string chan in opchannels) {
-                if (VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
+                if (nicks.VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
             }
             
             if (!foundAtAll) {
@@ -382,18 +382,17 @@ namespace MCGalaxy {
             retries = 0;
             
             Authenticate();
-            Logger.Log(LogType.RelayActivity, "Joining channels...");
             JoinChannels();
         }
         
         void JoinChannels() {
+            Logger.Log(LogType.RelayActivity, "Joining IRC channels...");
             foreach (string chan in channels)   { Join(chan); }
             foreach (string chan in opchannels) { Join(chan); }
         }
         
         void Listener_OnPrivateNotice(UserInfo user, string notice) {
             if (!notice.CaselessStarts("You are now identified")) return;
-            Logger.Log(LogType.RelayActivity, "Joining channels...");
             JoinChannels();
         }
         
@@ -433,16 +432,12 @@ namespace MCGalaxy {
             nicks.OnLeftChannel(user, channel);
             
             if (reason.Length > 0) reason = " (" + reason + ")";
-            Logger.Log(LogType.RelayActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, user.Nick);
+            Logger.Log(LogType.RelayActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, reason);
             MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " kicked " + kickee + reason);
         }
         
         void Listener_OnKill(UserInfo user, string nick, string reason) {
             nicks.OnLeft(user);
-        }
-        
-        bool VerifyNick(string channel, string userNick, ref string error, ref bool foundAtAll) {
-            return nicks.VerifyNick(channel, userNick, ref error, ref foundAtAll);
         }
     }
 }
