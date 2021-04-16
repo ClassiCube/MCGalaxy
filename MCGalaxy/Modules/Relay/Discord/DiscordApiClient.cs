@@ -45,14 +45,10 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         public void SendMessage(string channelID, string message) {
-            JsonArray parse = new JsonArray();
-            parse.Add("users"); parse.Add("roles");
-            
             JsonObject allowed = new JsonObject()
             {
-                { "parse", parse },
-                { "users", new JsonArray() },     
-            };           
+                { "parse", new JsonArray() { "users", "roles" } }
+            };
             JsonObject obj = new JsonObject()
             {
                 { "content", message },

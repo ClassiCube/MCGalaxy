@@ -59,7 +59,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public override string name { get { return "DiscordRelayPlugin"; } }
         
         public static DiscordConfig Config = new DiscordConfig();
-        static DiscordBot bot;
+        public static DiscordBot Bot;
         
         public override void Load(bool startup) {
             Config.Load();
@@ -71,15 +71,15 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         public static void Connect() {
-            if (bot != null && !bot.Disconnected) return;
-            bot = new DiscordBot();
-            bot.RunAsync(Config);
+            if (Bot != null && !Bot.Disconnected) return;
+            Bot = new DiscordBot();
+            Bot.RunAsync(Config);
         }
         
         public static void Disconnect() {
-            if (bot == null) return;
-            bot.Stop();
-            bot = null;
+            if (Bot == null) return;
+            Bot.Stop();
+            Bot = null;
         }
     }
 }

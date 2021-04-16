@@ -588,11 +588,11 @@
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordWebsocket.cs" />
+    <Compile Include="Modules\Relay\IRC\IRCNickList.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
     <Compile Include="Modules\Relay\IRC\IRCBot.cs" />
-    <Compile Include="Modules\Relay\IRC\IRCHandlers.cs" />
     <Compile Include="Network\Listeners.cs" />
     <Compile Include="Network\Packets\Opcode.cs" />
     <Compile Include="Network\Packets\Packet.cs" />

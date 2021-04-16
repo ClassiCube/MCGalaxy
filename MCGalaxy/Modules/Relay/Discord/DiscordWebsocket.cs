@@ -195,14 +195,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
             {
                 { "name", GetStatus() },
                 { "type", 0 }
-            }; 
-            JsonArray activites = new JsonArray();
-            activites.Add(activity);
-            
+            };
             JsonObject obj = new JsonObject()
             {
                 { "since",      null },
-                { "activities", activites },
+                { "activities", new JsonArray() { activity } },
                 { "status",     "online" },
                 { "afk",        false }
             };
