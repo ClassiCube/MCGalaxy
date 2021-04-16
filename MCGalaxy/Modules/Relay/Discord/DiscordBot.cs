@@ -26,8 +26,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordBot : RelayBot {
         public bool Disconnected;
-        string[] readChannels;
-        string[] sendChannels;
         string[] operatorIds;
         
         DiscordApiClient api;
@@ -42,9 +40,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
             config = conf;
             socket = new DiscordWebsocket();
             
-            readChannels = conf.ReadChannels.SplitComma();
-            sendChannels = conf.SendChannels.SplitComma();
-            operatorIds  = conf.OperatorUsers.SplitComma();
+            Channels    = conf.Channels.SplitComma();
+            OpChannels  = conf.OpChannels.SplitComma();
+            operatorIds = conf.OperatorUsers.SplitComma();
             
             socket.Token     = config.BotToken;
             socket.Handler   = HandleEvent;
@@ -139,15 +137,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public override void MessageUser(RelayUser user, string message) {
             // TODO: implement this
         }
-        
-        public override void SendPublicMessage(string message) { 
-            foreach (string chan in sendChannels) {
-                MessageChannel(chan, message);
-            }
-        }
-        
-        // TODO implement this
-        public override void SendStaffMessage(string message) { }
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;

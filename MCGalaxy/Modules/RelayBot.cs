@@ -24,17 +24,24 @@ using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Relay {
     
-	public class RelayUser { public string Nick, UserID; }
-	
+    public class RelayUser { public string Nick, UserID; }
+    
     /// <summary> Manages a connection to an external communication service </summary>
     public abstract class RelayBot {
      
         /// <summary> List of commands that cannot be used by relay bot controllers. </summary>
         public List<string> BannedCommands;
         
+        /// <summary> List of channels to send public chat messages to </summary>
+        public string[] Channels;
+        
+        /// <summary> List of channels to send staff only messages to </summary>
+        public string[] OpChannels;
+        
         readonly Player fakeGuest = new Player("RelayBot");
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
+        
         
         /// <summary> The name of service this relay bot communicates with </summary>
         /// <remarks> IRC, Discord, etc </remarks>
@@ -47,10 +54,18 @@ namespace MCGalaxy.Modules.Relay {
         public abstract void MessageUser(RelayUser user, string message);
         
         /// <summary> Sends a message to all channels setup for general public chat </summary>
-        public abstract void SendPublicMessage(string message);
+        public void SendPublicMessage(string message) { 
+            foreach (string chan in Channels) {
+                MessageChannel(chan, message);
+            }
+        }
         
-        /// <summary> Sends a message to all channels setup for staff chat only </summary>        	
-        public abstract void SendStaffMessage(string message);
+        /// <summary> Sends a message to all channels setup for staff chat only </summary>            
+        public void SendStaffMessage(string message) {
+            foreach (string chan in OpChannels) {
+                MessageChannel(chan, message);
+            }
+        }
         
         
         protected void SetDefaultBannedCommands() {

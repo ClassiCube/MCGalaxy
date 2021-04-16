@@ -22,19 +22,19 @@ using MCGalaxy.Config;
 namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordConfig {
-        [ConfigString("bot-token", null, "", true)]
-        public string BotToken = "";
-        [ConfigString("read-channel-ids", null, "", true)]
-        public string ReadChannels = "";
-        [ConfigString("send-channel-ids", null, "", true)]
-        public string SendChannels = "";
-        [ConfigString("operator-user-ids", null, "", true)]
-        public string OperatorUsers = "";
-        
         [ConfigBool("enabled", null, false)]
         public bool Enabled;
+        [ConfigString("bot-token", null, "", true)]
+        public string BotToken = "";
         [ConfigString("status-message", null, "with {PLAYERS} players")]
         public string Status = "with {PLAYERS} players";
+        
+        [ConfigString("channel-ids", null, "", true)]
+        public string Channels = "";
+        [ConfigString("op-channel-ids", null, "", true)]
+        public string OpChannels = "";
+        [ConfigString("operator-user-ids", null, "", true)]
+        public string OperatorUsers = "";
         
         const string file = "properties/discordbot.properties";
         static ConfigElement[] cfg;

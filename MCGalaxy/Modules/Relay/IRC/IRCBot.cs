@@ -32,7 +32,6 @@ namespace MCGalaxy {
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
     public sealed class IRCBot : RelayBot {
         internal Connection connection;
-        internal string[] channels, opchannels;
         internal string nick, server;
         internal bool resetting;
         internal byte retries;
@@ -50,21 +49,14 @@ namespace MCGalaxy {
             InitConnectionState();
         }
         
-
-        /// <summary> Sends an IRC message to either the normal or operator IRC channel. </summary>
-        public void Say(string message, bool opchat) {
-            string[] chans = opchat ? opchannels : channels;
-            foreach (string chan in chans) { Message(chan, message); }
-        }
         
-        /// <summary> Sends an IRC private message to the given user. </summary>
-        public void Pm(string user, string message) {
+        public override void MessageUser(RelayUser user, string message) {
             if (!Enabled) return;
             message = ConvertMessage(message);
-            connection.Sender.PrivateMessage(user, message);
+            connection.Sender.PrivateMessage(user.Nick, message);
         }
         
-        public void Message(string channel, string message) {
+        public override void MessageChannel(string channel, string message) {
             if (!Enabled) return;
             message = ConvertMessage(message);
             connection.Sender.PublicMessage(channel, message);
@@ -117,10 +109,7 @@ namespace MCGalaxy {
         /// <summary> Returns whether this bot is connected to IRC. </summary>
         public bool Connected { get { return connection != null && connection.Connected; } }        
         /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
-        public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }
-        
-        public override void SendPublicMessage(string message) { Say(message, false); }
-        public override void SendStaffMessage(string message)  { Say(message, true); }       
+        public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }  
         
         void InitConnectionState() {
             if (!Server.Config.UseIRC || connection != null) return;
@@ -129,9 +118,9 @@ namespace MCGalaxy {
         }
         
         void UpdateState() {
-            channels = Server.Config.IRCChannels.SplitComma();
-            opchannels = Server.Config.IRCOpChannels.SplitComma();
-            nick = Server.Config.IRCNick.Replace(" ", "");
+            Channels   = Server.Config.IRCChannels.SplitComma();
+            OpChannels = Server.Config.IRCOpChannels.SplitComma();
+            nick   = Server.Config.IRCNick.Replace(" ", "");
             server = Server.Config.IRCServer;
             
             args = new ConnectionArgs(nick, server);
@@ -213,14 +202,6 @@ namespace MCGalaxy {
       
         protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
             return CheckIRCCommand(user.Nick, cmdName, out error);
-        }
-        
-        public override void MessageChannel(string channel, string message) {
-            Message(channel, message);
-        }
-        
-        public override void MessageUser(RelayUser user, string message) {
-            Pm(user.Nick, message);
         }
         
         // TODO remove
@@ -313,12 +294,12 @@ namespace MCGalaxy {
 
         void DoJoinLeaveMessage(string nick, string verb, string channel) {
             Logger.Log(LogType.RelayActivity, "{0} {1} channel {2}", nick, verb, channel);
-            string which = opchannels.CaselessContains(channel) ? " operator" : "";
+            string which = OpChannels.CaselessContains(channel) ? " operator" : "";
             MessageInGame(nick, string.Format("&I(IRC) {0} {1} the{2} channel", nick, verb, which));
         }
 
         void Listener_OnQuit(UserInfo user, string reason) {
-            // Old bot was disconnected, try to reclaim it.
+            // Old bot was disconnected, try to reclaim it
             if (user.Nick == nick) connection.Sender.Nick(nick);
             nicks.OnLeft(user);
             
@@ -339,7 +320,7 @@ namespace MCGalaxy {
         void Listener_OnPublic(UserInfo user, string channel, string message) {
             message = message.TrimEnd();
             if (message.Length == 0) return;
-            bool opchat = opchannels.CaselessContains(channel);
+            bool opchat = OpChannels.CaselessContains(channel);
             
             message = IRCBot.ParseMessage(message);
             HandlePublic(user.Nick, channel, message, opchat);
@@ -350,10 +331,10 @@ namespace MCGalaxy {
             if (!Server.ircControllers.Contains(nick)) return false;
             
             bool foundAtAll = false;
-            foreach (string chan in channels) {
+            foreach (string chan in Channels) {
                 if (nicks.VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
             }
-            foreach (string chan in opchannels) {
+            foreach (string chan in OpChannels) {
                 if (nicks.VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
             }
             
@@ -378,8 +359,8 @@ namespace MCGalaxy {
         
         void JoinChannels() {
             Logger.Log(LogType.RelayActivity, "Joining IRC channels...");
-            foreach (string chan in channels)   { Join(chan); }
-            foreach (string chan in opchannels) { Join(chan); }
+            foreach (string chan in Channels)   { Join(chan); }
+            foreach (string chan in OpChannels) { Join(chan); }
         }
         
         void Listener_OnPrivateNotice(UserInfo user, string notice) {

@@ -143,7 +143,7 @@ namespace MCGalaxy {
                 }
                 return true;
             } else {
-                foreach (string chan in bot.opchannels) {
+                foreach (string chan in bot.OpChannels) {
                     chanNicks = GetNicks(chan);
                     if (chanNicks.Count == 0) continue;
                     
