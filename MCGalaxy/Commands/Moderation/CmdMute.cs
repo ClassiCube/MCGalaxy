@@ -32,10 +32,10 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(3);
-
             string target;
 
             if (args[0].CaselessEq(UNMUTE_FLAG)) {
+                if (args.Length == 1) { Help(p); return; }
                 target = PlayerInfo.FindMatchesPreferOnline(p, args[1]);
                 if (target == null) return;
 
