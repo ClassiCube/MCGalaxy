@@ -233,7 +233,7 @@ namespace MCGalaxy.Network {
                     string prefix = GetPrefix(chans.Value[index]);
                     chans.Value[index] = prefix + newNick;
                 } else {
-                    // should never happen, but just in case.
+                    // should never happen, but just in case
                     bot.connection.Sender.Names(chans.Key);
                 }
             }

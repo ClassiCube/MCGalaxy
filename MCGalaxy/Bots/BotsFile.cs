@@ -96,8 +96,7 @@ namespace MCGalaxy.Bots {
         internal static void WriteAll(TextWriter dst, List<BotProperties> props) {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BotProperties));
 
-            JsonWriter w = new JsonWriter(dst);
-            w.SerialiseObject = bot => JsonSerialisers.WriteConfig(w, elems, bot);
+            JsonConfigWriter w = new JsonConfigWriter(dst, elems);
             w.WriteArray(props);
         }
         

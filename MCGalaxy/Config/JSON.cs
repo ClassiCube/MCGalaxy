@@ -168,9 +168,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class JsonWriter {
-        private readonly TextWriter w;
-        public Action<object> SerialiseObject;
+    public class JsonWriter {
+        readonly TextWriter w;
         public JsonWriter(TextWriter dst) { w = dst; }
         
         static char Hex(char c, int shift) {
@@ -203,13 +202,8 @@ namespace MCGalaxy.Config {
             
             for (int i = 0; i < array.Count; i++) {
                 w.Write(separator);
-                object value = array[i];
-                
-                if (value == null) {
-                    WriteNull();
-                } else {
-                    WriteObject(value);
-                }
+                object value = array[i];               
+                WriteValue(value);
                 separator = ",\r\n";
             }
             w.Write("]\r\n");
@@ -224,38 +218,77 @@ namespace MCGalaxy.Config {
         internal void WriteObjectKey(string name) {
             Write("    "); WriteString(name); Write(": ");
         }
-    }
-    
-    public static class JsonSerialisers {
         
-        public static void WriteObject(JsonWriter w, object instance) {
+        
+        protected virtual void WriteValue(object value) {
+            // TODO this is awful code
+            if (value == null) {
+                WriteNull();
+            } else if (value is int) {
+                Write(value.ToString());
+            } else if (value is bool) {
+                bool val = (bool)value;
+                Write(val ? "true" : "false");
+            } else if (value is string) {
+                WriteString((string)value);
+            } else if (value is JsonArray) {
+                WriteArray((JsonArray)value);
+            }  else if (value is JsonObject) {
+                WriteObject(value);
+            } else {
+                throw new InvalidOperationException("Unknown datatype: " + value.GetType());
+            }
+        }
+        
+        protected virtual void SerialiseObject(object value) {
             string separator = null;
-            JsonObject obj   = (JsonObject)instance;
+            JsonObject obj   = (JsonObject)value;
             
             foreach (var kvp in obj) {
-                w.Write(separator);
-                w.WriteObjectKey(kvp.Key);
-                
-                // TODO this is awful code
-                if (kvp.Value == null) {
-                    w.WriteNull();
-                } else if (kvp.Value is int) {
-                    w.Write(kvp.Value.ToString());
-                } else if (kvp.Value is bool) {
-                    bool value = (bool)kvp.Value;
-                    w.Write(value ? "true" : "false");
-                } else if (kvp.Value is string) {
-                    w.WriteString((string)kvp.Value);
-                } else if (kvp.Value is JsonArray) {
-                    w.WriteArray((JsonArray)kvp.Value);
-                }  else if (kvp.Value is JsonObject) {
-                    w.WriteObject(kvp.Value);
-                } else {
-                    throw new InvalidOperationException("Unknown datatype: " + kvp.Value.GetType());
-                }
+                Write(separator);
+                WriteObjectKey(kvp.Key);
+                WriteValue(kvp.Value);
                 separator = ",\r\n";
             }
         }
+    }
+    
+    public class JsonConfigWriter : JsonWriter {
+        ConfigElement[] elems;    
+        public JsonConfigWriter(TextWriter dst, ConfigElement[] cfg) : base(dst) { elems = cfg; }
+        
+        // Only ever write an object
+        protected override void WriteValue(object value) { WriteObject(value); }
+        
+        void WriteConfigValue(ConfigAttribute a, string value) {
+            if (String.IsNullOrEmpty(value)) {
+                WriteNull();
+            } else if (a is ConfigBoolAttribute || a is ConfigIntegerAttribute || a is ConfigRealAttribute) {
+                Write(value);
+            } else {
+                WriteString(value);
+            }
+        }
+        
+        protected override void SerialiseObject(object value) {
+            string separator = null;
+            
+            for (int i = 0; i < elems.Length; i++) {
+                ConfigElement elem = elems[i];
+                ConfigAttribute a  = elem.Attrib;
+                Write(separator);
+                
+                WriteObjectKey(a.Name);
+                object raw  = elem.Field.GetValue(value);
+                string text = elem.Attrib.Serialise(raw);
+                
+                WriteConfigValue(a, text);
+                separator = ",\r\n";
+            }
+        }
+    }
+    
+    public static class JsonSerialisers {
         
         static void WriteConfigValue(JsonWriter w, ConfigAttribute a, string value) {
             if (String.IsNullOrEmpty(value)) {
@@ -297,8 +330,7 @@ namespace MCGalaxy.Config {
         
         [Obsolete("Use JsonWriter instead")]
         public static void Serialise(TextWriter dst, ConfigElement[] elems, object instance) {
-            JsonWriter w = new JsonWriter(dst);
-            w.SerialiseObject = obj => JsonSerialisers.WriteConfig(w, elems, obj);
+            JsonConfigWriter w = new JsonConfigWriter(dst, elems);
             w.WriteObject(instance);
         }
         
@@ -306,7 +338,6 @@ namespace MCGalaxy.Config {
         public static string SerialiseObject(object obj) {
             StringWriter dst  = new StringWriter();
             JsonWriter   w    = new JsonWriter(dst);
-            w.SerialiseObject = raw => JsonSerialisers.WriteObject(w, raw);
             
             w.WriteObject(obj);
             return dst.ToString();
