@@ -98,5 +98,13 @@ namespace MCGalaxy.Games {
         protected void UpdateStatus3(Player p) {
             p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
         }
+        
+        
+        public static bool InRange(Player a, Player b, int dist) {
+            int dx = Math.Abs(a.Pos.X - b.Pos.X);
+            int dy = Math.Abs(a.Pos.Y - b.Pos.Y);
+            int dz = Math.Abs(a.Pos.Z - b.Pos.Z);
+            return dx <= dist && dy <= dist && dz <= dist;
+        }
     }
 }

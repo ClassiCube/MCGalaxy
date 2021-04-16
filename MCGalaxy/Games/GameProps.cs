@@ -36,9 +36,8 @@ namespace MCGalaxy.Games {
 
         //Zombie
         public bool Referee = false;
-
-        internal List<DateTime> NoclipLog = new List<DateTime>(5);
-        internal List<DateTime> SpeedhackLog = new List<DateTime>(5);
-        internal DateTime LastNoclipWarn, LastSpeedhackWarn;
+        
+        public NoclipDetector Noclip;
+        public SpeedhackDetector Speed;
     }
 }

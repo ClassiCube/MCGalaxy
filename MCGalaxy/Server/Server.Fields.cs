@@ -81,8 +81,8 @@ namespace MCGalaxy {
         // Extra storage for custom commands
         public static ExtrasCollection Extras = new ExtrasCollection();
         
-        public static int YesVotes = 0, NoVotes = 0;
-        public static bool voting = false;
+        public static int YesVotes, NoVotes;
+        public static bool voting;
         
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");
@@ -91,7 +91,7 @@ namespace MCGalaxy {
 
         public const byte version = 7;
         public static string salt = "";
-        public static bool chatmod = false, flipHead = false;
-        public static bool shuttingDown = false;
+        public static bool chatmod, flipHead;
+        public static bool shuttingDown;
     }
 }

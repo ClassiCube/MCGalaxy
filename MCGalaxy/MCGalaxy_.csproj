@@ -499,7 +499,7 @@
     <Compile Include="Games\LavaSurvival\LSGame.cs" />
     <Compile Include="Games\LavaSurvival\LSConfig.cs" />
     <Compile Include="Games\LavaSurvival\LSGame.Round.cs" />
-    <Compile Include="Games\MovementCheck.cs" />
+    <Compile Include="Games\HacksDetection.cs" />
     <Compile Include="Games\RoundsGame\LevelPicker.cs" />
     <Compile Include="Games\RoundsGame\RoundsGameConfig.cs" />
     <Compile Include="Games\RoundsGame\RoundsGame.cs" />

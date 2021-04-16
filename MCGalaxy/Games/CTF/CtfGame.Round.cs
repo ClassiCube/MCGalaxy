@@ -59,7 +59,7 @@ namespace MCGalaxy.Games {
                 
                 Player[] opponents = opposing.Members.Items;
                 foreach (Player other in opponents) {
-                    if (!MovementCheck.InRange(p, other, dist)) continue;
+                    if (!InRange(p, other, dist)) continue;
                     CtfData otherData = Get(other);
 
                     otherData.TagCooldown = true;

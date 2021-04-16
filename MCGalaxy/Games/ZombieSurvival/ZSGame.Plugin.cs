@@ -122,8 +122,11 @@ namespace MCGalaxy.Games {
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
             if (!RoundInProgress || p.level != Map) return;
             
-            bool reverted = MovementCheck.DetectNoclip(p, next)
-                || MovementCheck.DetectSpeedhack(p, next, Config.MaxMoveDist);
+            // TODO: Maybe tidy this up?
+            if (p.Game.Noclip == null) p.Game.Noclip = new NoclipDetector(p);
+            if (p.Game.Speed  == null) p.Game.Speed  = new SpeedhackDetector(p);
+            
+            bool reverted = p.Game.Noclip.Detect(next) || p.Game.Speed.Detect(next, Config.MaxMoveDist);
             if (reverted) p.cancelmove = true;
         }
         

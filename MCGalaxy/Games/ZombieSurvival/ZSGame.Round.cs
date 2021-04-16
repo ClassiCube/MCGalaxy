@@ -109,7 +109,7 @@ namespace MCGalaxy.Games {
 
                 foreach (Player alive in aliveList) {
                     if (alive == killer) continue;
-                    if (!MovementCheck.InRange(alive, killer, dist)) continue;
+                    if (!InRange(alive, killer, dist)) continue;
                     
                     if (killerData.Infected && !Get(alive).Infected
                         && !alive.Game.Referee && !killer.Game.Referee
