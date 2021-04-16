@@ -45,9 +45,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         public void SendMessage(string channelID, string message) {
+            JsonArray parse = new JsonArray();
+            parse.Add("users"); parse.Add("roles");
+            
+            JsonObject allowed = new JsonObject()
+            {
+                { "parse", parse },
+                { "users", new JsonArray() },     
+            };           
             JsonObject obj = new JsonObject()
             {
                 { "content", message },
+                { "allowed_mentions", allowed }
             };
             
             string path = "/channels/" + channelID + "/messages";
