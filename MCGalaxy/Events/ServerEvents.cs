@@ -46,42 +46,42 @@ namespace MCGalaxy.Events.ServerEvents {
     }
     
     public delegate void OnChatSys(ChatScope scope, string msg, object arg,
-                                   ref ChatMessageFilter filter, bool irc);
+                                   ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatSysEvent : IEvent<OnChatSys> {
         
         public static void Call(ChatScope scope, string msg, object arg, 
-                                ref ChatMessageFilter filter, bool irc) {
+                                ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChatSys>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(scope, msg, arg, ref filter, irc); } 
+                try { items[i].method(scope, msg, arg, ref filter, relay); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
     }
     
     public delegate void OnChatFrom(ChatScope scope, Player source, string msg, 
-                                    object arg, ref ChatMessageFilter filter, bool irc);
+                                    object arg, ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatFromEvent : IEvent<OnChatFrom> {
         
         public static void Call(ChatScope scope,Player source, string msg, 
-                                object arg, ref ChatMessageFilter filter, bool irc) {
+                                object arg, ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChatFrom>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(scope, source, msg, arg, ref filter, irc); } 
+                try { items[i].method(scope, source, msg, arg, ref filter, relay); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }        
     }
     
     public delegate void OnChat(ChatScope scope, Player source, string msg, 
-                                object arg, ref ChatMessageFilter filter, bool irc);
+                                object arg, ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatEvent : IEvent<OnChat> {
         
         public static void Call(ChatScope scope, Player source, string msg, 
-                                object arg, ref ChatMessageFilter filter, bool irc) {
+                                object arg, ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChat>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(scope, source, msg, arg, ref filter, irc); } 
+                try { items[i].method(scope, source, msg, arg, ref filter, relay); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }

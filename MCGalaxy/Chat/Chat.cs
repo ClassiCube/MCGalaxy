@@ -119,11 +119,11 @@ namespace MCGalaxy {
         }
         
         public static void Message(ChatScope scope, string msg, object arg,
-                                   ChatMessageFilter filter, bool irc = false) {
+                                   ChatMessageFilter filter, bool relay = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
-            OnChatSysEvent.Call(scope, msg, arg, ref filter, irc);
+            OnChatSysEvent.Call(scope, msg, arg, ref filter, relay);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
@@ -141,9 +141,9 @@ namespace MCGalaxy {
         }
         
         public static void MessageFrom(Player source, string msg,
-                                       ChatMessageFilter filter = null, bool irc = false) {
+                                       ChatMessageFilter filter = null, bool relay = false) {
             if (source.level == null || source.level.SeesServerWideChat) {
-                MessageFrom(ChatScope.Global, source, msg, null, filter, irc);
+                MessageFrom(ChatScope.Global, source, msg, null, filter, relay);
             } else {
                 string prefix = Server.Config.ServerWideChat ? "<Local>" : "";
                 MessageFrom(ChatScope.Level, source, prefix + msg, source.level, filter);
@@ -154,11 +154,11 @@ namespace MCGalaxy {
         /// <remarks> For player chat type messages, Chat.MessageChat is more appropriate to use. </remarks>
         /// <remarks> Only players not ignoring the given player will see this message. </remarks>
         public static void MessageFrom(ChatScope scope, Player source, string msg, object arg,
-                                       ChatMessageFilter filter, bool irc = false) {
+                                       ChatMessageFilter filter, bool relay = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
-            OnChatFromEvent.Call(scope, source, msg, arg, ref filter, irc);
+            OnChatFromEvent.Call(scope, source, msg, arg, ref filter, relay);
             foreach (Player pl in players) {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
@@ -170,9 +170,9 @@ namespace MCGalaxy {
         
 
         public static void MessageChat(Player source, string msg,
-                                       ChatMessageFilter filter = null, bool irc = false) {
+                                       ChatMessageFilter filter = null, bool relay = false) {
             if (source.level.SeesServerWideChat) {
-                MessageChat(ChatScope.Global, source, msg, null, filter, irc);
+                MessageChat(ChatScope.Global, source, msg, null, filter, relay);
             } else {
                 string prefix = Server.Config.ServerWideChat ? "<Local>" : "";
                 MessageChat(ChatScope.Level, source, prefix + msg, source.level, filter);
@@ -184,12 +184,12 @@ namespace MCGalaxy {
         /// and count towards triggering automute for chat spamming </remarks>
         /// <remarks> Only players not ignoring the given player will see this message. </remarks>
         public static void MessageChat(ChatScope scope, Player source, string msg, object arg,
-                                       ChatMessageFilter filter, bool irc = false) {
+                                       ChatMessageFilter filter, bool relay = false) {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             bool counted = false;
             
-            OnChatEvent.Call(scope, source, msg, arg, ref filter, irc);
+            OnChatEvent.Call(scope, source, msg, arg, ref filter, relay);
             foreach (Player pl in players) {
                 if (Ignoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)

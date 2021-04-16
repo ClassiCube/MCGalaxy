@@ -244,8 +244,6 @@ namespace MCGalaxy {
             if (hookedEvents) return;
             hookedEvents = true;
             HookEvents();
-
-            OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
             OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
 
             // Regster events for incoming
@@ -272,7 +270,6 @@ namespace MCGalaxy {
             hookedEvents = false;
             UnhookEvents();
             
-            OnPlayerActionEvent.Unregister(HandlePlayerAction);
             OnShuttingDownEvent.Unregister(HandleShutdown);
             
             // Regster events for incoming
@@ -293,12 +290,6 @@ namespace MCGalaxy {
             connection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
         }
 
-        
-        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (action  != PlayerAction.Me) return;
-            if (p.level != null && !p.level.SeesServerWideChat) return;
-            Say("*" + p.DisplayName + " " + message, stealth);
-        }
         
         void HandleShutdown(bool restarting, string message) {
             Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");

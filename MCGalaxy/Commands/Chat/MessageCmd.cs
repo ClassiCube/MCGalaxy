@@ -34,9 +34,11 @@ namespace MCGalaxy.Commands.Chatting {
             return true;
         }
         
-        protected bool TryMessage(Player p, string msg) {
+        protected bool TryMessage(Player p, string msg) { return TryMessage(p, msg, false); }
+        
+        protected bool TryMessage(Player p, string msg, bool relay) {
             if (!CanSpeak(p, name)) return false;
-            Chat.MessageFrom(p, msg, null);
+            Chat.MessageFrom(p, msg, null, relay);
             
             p.CheckForMessageSpam();
             return true;

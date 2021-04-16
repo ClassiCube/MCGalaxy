@@ -159,11 +159,11 @@ namespace MCGalaxy.Modules.Relay {
 
             if (opchat) {
                 Logger.Log(LogType.RelayChat, "(OPs): ({0}) {1}: {2}", RelayName, user.Nick, message);
-                Chat.MessageOps(string.Format("To Ops &f-&I(IRC) {0}&f- {1}", user.Nick,
+                Chat.MessageOps(string.Format("To Ops &f-&I({0}) {1}&f- {2}", RelayName, user.Nick,
                                               Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             } else {
                 Logger.Log(LogType.RelayChat, "({0}) {1}: {2}", RelayName, user.Nick, message);
-                MessageInGame(user.Nick, string.Format("&I(IRC) {0}: &f{1}", user.Nick,
+                MessageInGame(user.Nick, string.Format("&I({0}) {1}: &f{2}", RelayName, user.Nick,
                                                        Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
             }
         }
