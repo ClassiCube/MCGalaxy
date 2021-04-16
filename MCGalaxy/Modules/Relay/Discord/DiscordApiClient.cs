@@ -23,9 +23,9 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Modules.Relay.Discord {
     
-	/// <summary> Implements a basic web client for communicating with Discord's API </summary>
-	/// <remarks> https://discord.com/developers/docs/reference </remarks>
-	/// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
+    /// <summary> Implements a basic web client for communicating with Discord's API </summary>
+    /// <remarks> https://discord.com/developers/docs/reference </remarks>
+    /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
     public sealed class DiscordApiClient {
         public string Token;
         
@@ -35,21 +35,23 @@ namespace MCGalaxy.Modules.Relay.Discord {
             // TODO HttpWebRequest
             string data = Json.SerialiseObject(obj);
             
-        	using (WebClient client = HttpUtil.CreateWebClient()) {
-            	client.Headers[HttpRequestHeader.ContentType] = "application/json";
-            	client.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
+            using (WebClient client = HttpUtil.CreateWebClient()) {
+                client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                client.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
 
-            	string resp = client.UploadString(host + path, data);
-            	Logger.Log(LogType.SystemActivity, resp);
-        	}
+                string resp = client.UploadString(host + path, data);
+                Logger.Log(LogType.SystemActivity, resp);
+            }
         }
         
         public void SendMessage(string channelID, string message) {
-        	JsonObject obj = new JsonObject();
-        	obj["content"] = message;
-        	
-        	string path = "/channels/" + channelID + "/messages";
-        	MakeRequest(path, obj);
+            JsonObject obj = new JsonObject()
+            {
+                { "content", message },
+            };
+            
+            string path = "/channels/" + channelID + "/messages";
+            MakeRequest(path, obj);
         }
     }
 }

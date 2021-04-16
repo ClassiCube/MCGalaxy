@@ -26,9 +26,9 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Relay.Discord {
     
-	/// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
-	/// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
-	/// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
+    /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
+    /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
+    /// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
     public sealed class DiscordWebsocket : ClientWebSocket {
         public string Token;
         public Action OnReady;
@@ -136,9 +136,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         
         public void SendMessage(int opcode, JsonObject data) {
-            JsonObject obj = new JsonObject();
-            obj["op"] = opcode;
-            obj["d"]  = data;
+            JsonObject obj = new JsonObject()
+            {
+                { "op", opcode },
+                { "d",  data }
+            };
             SendMessage(obj);
         }
         
@@ -166,17 +168,20 @@ namespace MCGalaxy.Modules.Relay.Discord {
         const int INTENT_GUILD_MESSAGES = 1 << 9;
         
         public void SendIdentify() {
-            JsonObject data = new JsonObject();
+            JsonObject props = new JsonObject()
+            {
+                { "$os",      "linux" },
+                { "$browser", Server.SoftwareName },
+                { "$device",  Server.SoftwareName }
+            };
             
-            JsonObject props  = new JsonObject();
-            props["$os"]      = "linux";
-            props["$browser"] = Server.SoftwareName;
-            props["$device"]  = Server.SoftwareName;
-            
-            data["token"]   = Token;
-            data["intents"] = INTENT_GUILD_MESSAGES;
-            data["properties"] = props;
-            data["presence"]   = MakePresence();
+            JsonObject data = new JsonObject()
+            {
+                { "token",      Token },
+                { "intents",    INTENT_GUILD_MESSAGES },
+                { "properties", props },
+                { "presence",   MakePresence() }
+            };
             SendMessage(OPCODE_IDENTIFY, data);
         }
         
@@ -186,18 +191,21 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         JsonObject MakePresence() {
-            JsonObject activity = new JsonObject();
-            activity["name"]    = GetStatus();
-            activity["type"]    = 0;
-            
+            JsonObject activity = new JsonObject()
+            {
+                { "name", GetStatus() },
+                { "type", 0 }
+            }; 
             JsonArray activites = new JsonArray();
             activites.Add(activity);
             
-            JsonObject obj = new JsonObject();
-            obj["since"]      = null;
-            obj["activities"] = activites;
-            obj["status"]     = "online";
-            obj["afk"]        = false;
+            JsonObject obj = new JsonObject()
+            {
+                { "since",      null },
+                { "activities", activites },
+                { "status",     "online" },
+                { "afk",        false }
+            };
             return obj;
         }
     }
