@@ -58,8 +58,7 @@ namespace MCGalaxy.Games {
             return true;
         }
     }
-    
-    
+       
     public sealed class NoclipDetector : HacksDetector {
         
         public NoclipDetector(Player p) : base(p) { }

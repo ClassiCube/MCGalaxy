@@ -73,8 +73,11 @@ namespace MCGalaxy {
             if (!Utils.TryParseSingle(str, out scale)) scale = 1.0f;
             if (scale < 0.01f) scale = 0.01f;
             
-            // backwards compatibility
-            if (model.CaselessEq("giant")) scale *= 2;
+            // backwards compatibility for giant model
+            if (model.CaselessEq("giant")) scale *= 2;            
+            // special handling for hold model
+            if (model.CaselessStarts("hold|") && scale > 1) scale = 1;
+            
             return scale;
         }
         
@@ -87,9 +90,17 @@ namespace MCGalaxy {
             return DefaultMaxScale(GetRawModel(model));
         }
         
+        public static Vec3F32 CalcScale(Entity entity) {
+            float raw = GetRawScale(entity.Model);
+            return new Vec3F32(
+                entity.ScaleX != 0 ? entity.ScaleX : raw,
+                entity.ScaleY != 0 ? entity.ScaleY : raw,
+                entity.ScaleZ != 0 ? entity.ScaleZ : raw
+            );
+        }
+        
         public static AABB CalcAABB(Entity entity) {
             string model = GetRawModel(entity.Model);
-            float scale  = GetRawScale(entity.Model);
             
             AABB bb;
             BlockID raw;
@@ -102,33 +113,29 @@ namespace MCGalaxy {
             }
             bb = bb.Expand(-1); // adjust the model AABB inwards slightly
             
-            float scaleX = scale, scaleY = scale, scaleZ = scale;
-            if (entity.ScaleX != 0) scaleX = entity.ScaleX;
-            if (entity.ScaleY != 0) scaleY = entity.ScaleY;
-            if (entity.ScaleZ != 0) scaleZ = entity.ScaleZ;
-            
+            Vec3F32 scale = CalcScale(entity);
             // always limit max scale for collisions performance 
             float max = DefaultMaxScale(model);
-            scaleX = Math.Min(scaleX, max);
-            scaleY = Math.Min(scaleY, max);
-            scaleZ = Math.Min(scaleZ, max);
+            scale.X   = Math.Min(scale.X, max);
+            scale.Y   = Math.Min(scale.Y, max);
+            scale.Z   = Math.Min(scale.Z, max);
             
-            bb.Min.X = (int)(bb.Min.X * scaleX); bb.Max.X = (int)(bb.Max.X * scaleX);
-            bb.Min.Y = (int)(bb.Min.Y * scaleY); bb.Max.Y = (int)(bb.Max.Y * scaleY);
-            bb.Min.Z = (int)(bb.Min.Z * scaleZ); bb.Max.Z = (int)(bb.Max.Z * scaleZ);
+            bb.Min.X = (int)(bb.Min.X * scale.X); bb.Max.X = (int)(bb.Max.X * scale.X);
+            bb.Min.Y = (int)(bb.Min.Y * scale.Y); bb.Max.Y = (int)(bb.Max.Y * scale.Y);
+            bb.Min.Z = (int)(bb.Min.Z * scale.Z); bb.Max.Z = (int)(bb.Max.Z * scale.Z);
             
             return bb;
         }
         
         /// <summary> Gives distance (in half-pixel world units) from feet to camera height </summary>
         public static int CalcEyeHeight(Entity entity) {
-            float scale = (entity.ScaleY == 0) ? GetRawScale(entity.Model) : entity.ScaleY;
-            string model = GetRawModel(entity.Model);
+            Vec3F32 scale = CalcScale(entity);
+            string model  = GetRawModel(entity.Model);
             BlockID raw;
             if (BlockID.TryParse(model, out raw) && raw <= Block.MaxRaw) return 16; //lazily return middle of full block if it thinks it's a block ID.
             
             float eyeHeight = Get(model).EyeHeight;
-            eyeHeight *= scale;
+            eyeHeight *= scale.Y;
             eyeHeight *= 2f; //multiply by two because world positions are measured in half-pixels
             return (int)eyeHeight;
         }
