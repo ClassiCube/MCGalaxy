@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Moderation {
             List<Player> candidates = new List<Player>();
             ItemPerms except = CommandExtraPerms.Find(name, 1);
             Player[] players = PlayerInfo.Online.Items;
-            DateTime cutoff = DateTime.UtcNow.AddSeconds(-15);
+            DateTime cutoff  = DateTime.UtcNow.AddSeconds(-15);
             
             foreach (Player target in players) {
                 if (except.UsableBy(target.Rank) || !p.CanSee(target, data.Rank)) continue;

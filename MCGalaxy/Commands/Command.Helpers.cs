@@ -51,8 +51,12 @@ namespace MCGalaxy {
             p.Message("When using /{0} from {2}, you must provide a {1}.", cmd, type, p.SuperName);
         }
         
+        protected bool HasExtraPerm(Player p, string cmd, LevelPermission plRank, int num) {
+            return CommandExtraPerms.Find(cmd, num).UsableBy(plRank);
+        }
+        
         protected bool HasExtraPerm(Player p, LevelPermission plRank, int num) {
-            return CommandExtraPerms.Find(name, num).UsableBy(plRank);
+            return HasExtraPerm(p, name, plRank, num);
         }
         
         protected bool CheckExtraPerm(Player p, CommandData data, int num) {

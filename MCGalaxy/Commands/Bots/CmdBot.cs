@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Bots {
             } else if (IsDeleteCommand(args[0])) {
                 RemoveBot(p, bot, value);
             } else if (args[0].CaselessEq("text")) {
-                SetBotText(p, bot, value);
+                SetBotText(p, bot, value, data.Rank);
             } else if (args[0].CaselessEq("deathmsg") || args[0].CaselessEq("deathmessage")) {
                 SetDeathMessage(p, bot, value);
             } else if (args[0].CaselessEq("rename")) {
@@ -130,21 +130,25 @@ namespace MCGalaxy.Commands.Bots {
             } else {
                 PlayerBot bot = Matcher.FindBots(p, botName);
                 if (bot == null) return;
-                if (!bot.EditableBy(p, "remove")) { return; }
+                if (!bot.EditableBy(p, "remove")) return;
+                
                 PlayerBot.Remove(bot);
                 p.Message("Removed bot {0}", bot.ColoredName);
             }
         }
         
-        void SetBotText(Player p, string botName, string text) {
+        void SetBotText(Player p, string botName, string text, LevelPermission plRank) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!bot.EditableBy(p, "set the text of")) { return; }
+            if (!bot.EditableBy(p, "set the text of")) return;
+            
             if (text == null) {
                 p.Message("Removed text shown when bot {0} &Sclicked on", bot.ColoredName);
                 bot.ClickedOnText = null;
             } else {
-                if (!MessageBlock.Validate(p, text, false)) return;
+                bool allCmds = HasExtraPerm(p, "MB", plRank, 1);
+                if (!MessageBlock.Validate(p, text, allCmds)) return;
+                
                 p.Message("Set text shown when bot {0} &Sis clicked on to {1}", bot.ColoredName, text);
                 bot.ClickedOnText = text;
             }
@@ -154,12 +158,12 @@ namespace MCGalaxy.Commands.Bots {
         void SetDeathMessage(Player p, string botName, string text) {
             PlayerBot bot = Matcher.FindBots(p, botName);
             if (bot == null) return;
-            if (!bot.EditableBy(p, "set the death message of")) { return; }
+            if (!bot.EditableBy(p, "set the death message of")) return;
+            
             if (text == null) {
                 p.Message("Reset shown when bot {0} &Skills someone", bot.ColoredName);
                 bot.DeathMessage = null;
             } else {
-                if (!MessageBlock.Validate(p, text, false)) return;
                 p.Message("Set message shown when bot {0} &Skills someone to {1}", bot.ColoredName, text);
                 bot.DeathMessage = text;
             }
