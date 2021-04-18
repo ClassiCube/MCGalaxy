@@ -82,6 +82,7 @@ namespace MCGalaxy.Modules.Relay {
             Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
             
             try {
+                LoadBannedCommands();
                 DoConnect();
             } catch (Exception e) {
                 Logger.Log(LogType.RelayActivity, "Failed to connect to {0}!", RelayName);
@@ -103,15 +104,10 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         protected abstract void DoConnect();
-        protected abstract void DoDisconnect(string reason);
-        
-        
-        protected void SetDefaultBannedCommands() {
+        protected abstract void DoDisconnect(string reason);        
+
+        void LoadBannedCommands() {
             BannedCommands = new List<string>() { "resetbot", "resetirc", "oprules", "irccontrollers", "ircctrl" };
-        }
-        
-        protected void LoadBannedCommands() {
-            SetDefaultBannedCommands();
             
             if (!File.Exists("text/irccmdblacklist.txt")) {
                 File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
@@ -207,11 +203,12 @@ namespace MCGalaxy.Modules.Relay {
             HandleRelayCommand(user, null, cmdName, cmdArgs);
         }       
 
-        protected void HandleChannelMessage(RelayUser user, string channel, string message, bool opchat) {
+        protected void HandleChannelMessage(RelayUser user, string channel, string message) {
             string[] parts = message.SplitSpaces(3);
             string rawCmd  = parts[0].ToLower();
-            if (HandleWhoCommand(user, channel, rawCmd, opchat)) return;
+            bool opchat    = OpChannels.CaselessContains(channel);
             
+            if (HandleWhoCommand(user, channel, rawCmd, opchat)) return;
             if (rawCmd.CaselessEq(Server.Config.IRCCommandPrefix)) {
                 if (!HandleChannelCommand(user, channel, message, parts)) return;
             }

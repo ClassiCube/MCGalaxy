@@ -100,9 +100,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             
             RelayUser user = new RelayUser();
             user.Nick   = (string)author["username"];
-            user.UserID = (string)author["id"];
-            
-            HandleChannelMessage(user, channel, message, false);
+            user.UserID = (string)author["id"];            
+            HandleChannelMessage(user, channel, message);
         }
         
         string GetStatus() {
