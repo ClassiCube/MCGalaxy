@@ -25,7 +25,7 @@ using MCGalaxy.Events.ServerEvents;
 namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordBot : RelayBot {
-        public bool Disconnected;
+        bool disconnected;
         string[] operatorIds;
         
         DiscordApiClient api;
@@ -33,7 +33,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
         DiscordConfig config;
         Thread thread;
         
-        public override string RelayName { get { return "Discord"; } }
+        public override string RelayName { get { return "Discord"; } }        
+        public override bool Enabled { get { return config.Enabled; } }
+        public override bool Connected { get { return !disconnected; } }
         
         
         public void RunAsync(DiscordConfig conf) {
@@ -53,7 +55,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             thread.Name = "DiscordRelayBot";
             thread.IsBackground = true;
             thread.Start();
-        } // TODO hide / unhide
+        }
         
         void IOThread() {
             try {
@@ -64,15 +66,21 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
+        protected override void DoConnect() {
+            // TODO implement
+            disconnecting = false;
+            throw new NotImplementedException();
+        }
+        
         volatile bool disconnecting;
-        public void Stop() {
+        protected override void DoDisconnect(string reason) {
             if (disconnecting) return;
             disconnecting = true;
             
             try {
                 socket.Disconnect();
             } finally {
-                Disconnected = true;
+                disconnected = true;
                 UnregisterEvents();
             }
         }

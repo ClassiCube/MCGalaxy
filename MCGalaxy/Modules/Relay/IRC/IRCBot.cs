@@ -33,12 +33,12 @@ namespace MCGalaxy {
     public sealed class IRCBot : RelayBot {
         internal Connection connection;
         internal string nick, server;
-        internal bool resetting;
-        internal byte retries;
         ConnectionArgs args;
         IRCNickList nicks;
         
         public override string RelayName { get { return "IRC"; } }
+        public override bool Enabled { get { return Server.Config.UseIRC; } }
+        public override bool Connected { get { return connection != null && connection.Connected; } }
         
         public IRCBot() {
             nicks     = new IRCNickList();
@@ -51,13 +51,13 @@ namespace MCGalaxy {
         
         
         public override void MessageUser(RelayUser user, string message) {
-            if (!Enabled) return;
+            if (!Enabled || !Connected) return;
             message = ConvertMessage(message);
             connection.Sender.PrivateMessage(user.Nick, message);
         }
         
         public override void MessageChannel(string channel, string message) {
-            if (!Enabled) return;
+            if (!Enabled || !Connected) return;
             message = ConvertMessage(message);
             connection.Sender.PublicMessage(channel, message);
         }
@@ -68,48 +68,26 @@ namespace MCGalaxy {
         }
         
         public void Raw(string message) {
-            if (!Enabled) return;
+            if (!Enabled || !Connected) return;
             connection.Sender.Raw(message);
         }
         
         
-        public void Connect() {
-            if (!Server.Config.UseIRC || Connected || Server.shuttingDown) return;
+        protected override void DoConnect() {
             InitConnectionState();
             Hook();
-            
-            Logger.Log(LogType.RelayActivity, "Connecting to IRC...");
             UpdateState();
-            connection.connectionArgs = args;
             
-            try {
-                connection.Connect();
-            } catch (Exception e) {
-                Logger.Log(LogType.RelayActivity, "Failed to connect to IRC!");
-                Logger.LogError(e);
-            }
+            connection.connectionArgs = args;
+            connection.Connect();
         }
         
-        public void Disconnect(string reason) {
-            if (!Connected) return;
+        protected override void DoDisconnect(string reason) {
             Unhook();
             nicks.Clear();
-            
             connection.Disconnect(reason);
-            Logger.Log(LogType.RelayActivity, "Disconnected from IRC!");
         }
         
-        public void Reset() {
-            resetting = true;
-            retries = 0;
-            Disconnect("IRC Bot resetting...");
-            if (Server.Config.UseIRC) Connect();
-        }
-        
-        /// <summary> Returns whether this bot is connected to IRC. </summary>
-        public bool Connected { get { return connection != null && connection.Connected; } }        
-        /// <summary> Returns whether this bot is connected to IRC and is able to send messages. </summary>
-        public bool Enabled { get { return Server.Config.UseIRC && connection != null && connection.Connected; } }  
         
         void InitConnectionState() {
             if (!Server.Config.UseIRC || connection != null) return;
@@ -225,7 +203,6 @@ namespace MCGalaxy {
             if (hookedEvents) return;
             hookedEvents = true;
             HookEvents();
-            OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
 
             // Regster events for incoming
             connection.Listener.OnNick += Listener_OnNick;
@@ -251,8 +228,6 @@ namespace MCGalaxy {
             hookedEvents = false;
             UnhookEvents();
             
-            OnShuttingDownEvent.Unregister(HandleShutdown);
-            
             // Regster events for incoming
             connection.Listener.OnNick -= Listener_OnNick;
             connection.Listener.OnRegistered -= Listener_OnRegistered;
@@ -271,11 +246,6 @@ namespace MCGalaxy {
             connection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
         }
 
-        
-        void HandleShutdown(bool restarting, string message) {
-            Disconnect(restarting ? "Server is restarting." : "Server is shutting down.");
-        }
-        
         
         void Listener_OnAction(UserInfo user, string channel, string description) {
             MessageInGame(user.Nick, string.Format("&I(IRC) * {0} {1}", user.Nick, description));

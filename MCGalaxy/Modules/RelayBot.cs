@@ -41,11 +41,20 @@ namespace MCGalaxy.Modules.Relay {
         readonly Player fakeGuest = new Player("RelayBot");
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
+        protected bool resetting;
+        protected byte retries;
         
         
         /// <summary> The name of service this relay bot communicates with </summary>
         /// <remarks> IRC, Discord, etc </remarks>
         public abstract string RelayName { get; }
+        
+        /// <summary> Whether this relay bot is currently enabled </summary>
+        public abstract bool Enabled { get; }
+        
+        /// <summary> Wehther this relay bot is connected to the external communication service </summary>
+        public abstract bool Connected { get; }
+        
         
         /// <summary> Sends a message to the given channel </summary>
         public abstract void MessageChannel(string channel, string message);
@@ -66,6 +75,35 @@ namespace MCGalaxy.Modules.Relay {
                 MessageChannel(chan, message);
             }
         }
+  
+        
+        public void Connect() {
+            if (!Enabled || Connected || Server.shuttingDown) return;
+            Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
+            
+            try {
+                DoConnect();
+            } catch (Exception e) {
+                Logger.Log(LogType.RelayActivity, "Failed to connect to {0}!", RelayName);
+                Logger.LogError(e);
+            }
+        }
+        
+        public void Disconnect(string reason) {
+            if (!Connected) return;
+            DoDisconnect(reason);
+            Logger.Log(LogType.RelayActivity, "Disconnected from {0}!", RelayName);
+        }
+        
+        public void Reset() {
+            resetting = true;
+            retries   = 0;
+            Disconnect(RelayName + " Bot resetting...");
+            if (Enabled) Connect();
+        }
+        
+        protected abstract void DoConnect();
+        protected abstract void DoDisconnect(string reason);
         
         
         protected void SetDefaultBannedCommands() {
@@ -91,12 +129,14 @@ namespace MCGalaxy.Modules.Relay {
             OnChatEvent.Register(HandleChat, Priority.Low);
             OnChatSysEvent.Register(HandleChatSys, Priority.Low);
             OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
+            OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
         }
         
         protected void UnhookEvents() {
             OnChatEvent.Unregister(HandleChat);
             OnChatSysEvent.Unregister(HandleChatSys);
             OnChatFromEvent.Unregister(HandleChatFrom);
+            OnShuttingDownEvent.Unregister(HandleShutdown);
         }
         
        
@@ -143,6 +183,10 @@ namespace MCGalaxy.Modules.Relay {
         void HandleChat(ChatScope scope, Player source, string msg,
                         object arg, ref ChatMessageFilter filter, bool relay) {
             if (relay) MessageToRelay(scope, Unescape(source, msg), arg, filter);
+        }
+        
+        void HandleShutdown(bool restarting, string message) {
+            Disconnect(restarting ? "Server is restarting" : "Server is shutting down");
         }
         
         
