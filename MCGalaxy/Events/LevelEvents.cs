@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Blocks.Physics;
+using BlockID = System.UInt16;
    
 namespace MCGalaxy.Events.LevelEvents {
     
@@ -135,5 +136,14 @@ namespace MCGalaxy.Events.LevelEvents {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(map));
         }
-    }  
+    }
+        
+    public delegate void OnBlockHandlersUpdated(Level lvl, BlockID block);
+    public sealed class OnBlockHandlersUpdatedEvent : IEvent<OnBlockHandlersUpdated> {
+        
+        public static void Call(Level lvl, BlockID block) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(lvl, block));
+        }
+    }
 }

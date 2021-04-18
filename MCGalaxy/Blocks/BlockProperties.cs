@@ -217,11 +217,11 @@ namespace MCGalaxy.Blocks {
                     if (!IsDefaultBlock(lvl, block)) continue;
                     
                     lvl.Props[block] = scope[block];
-                    lvl.UpdateBlockHandler(block);
+                    lvl.UpdateBlockHandlers(block);
                 }                
             } else {
                 path = "_" + lvl_.name;
-                lvl_.UpdateBlockHandler(block);                
+                lvl_.UpdateBlockHandlers(block);
             }
             
             if (save) Save(path, scope, scopeId);

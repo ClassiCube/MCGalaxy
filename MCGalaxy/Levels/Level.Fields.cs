@@ -77,14 +77,7 @@ namespace MCGalaxy {
         public LevelAccessController VisitAccess, BuildAccess;
         
         // Physics fields and settings
-        public int physics {
-            get { return Physicsint; }
-            set {
-                if (value > 0 && Physicsint == 0) StartPhysics();
-                Physicsint = value;
-                Config.Physics = value;
-            }
-        }
+        public int physics { get { return Physicsint; } }
         int Physicsint;
         public int currentUndo;
         
@@ -102,7 +95,7 @@ namespace MCGalaxy {
         
         public List<C4Data> C4list = new List<C4Data>();
 
-        public bool CanPlace { get { return Config.Buildable && Config.BuildType != BuildType.NoModify; } }
+        public bool CanPlace  { get { return Config.Buildable && Config.BuildType != BuildType.NoModify; } }
         public bool CanDelete { get { return Config.Deletable && Config.BuildType != BuildType.NoModify; } }
 
         public int WinChance {

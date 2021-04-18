@@ -142,7 +142,7 @@ namespace MCGalaxy.Games {
             ResetTeams();
             
             // Reset block handlers
-            Map.UpdateBlockHandlers();
+            Map.UpdateAllBlockHandlers();
             Map.UpdateBlockProps();
         }
         

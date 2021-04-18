@@ -42,8 +42,10 @@ namespace MCGalaxy {
             }
             
             if (physics != level) OnPhysicsLevelChangedEvent.Call(this, level);
-            physics = level;
-            //StartPhysics(); This isnt needed, the physics will start when we set the new value above
+            if (level > 0 && physics == 0) StartPhysics();
+            
+            Physicsint     = level;
+            Config.Physics = level;
         }
         
         public void StartPhysics() {

@@ -67,7 +67,7 @@ namespace MCGalaxy {
             for (int i = 0; i < blockAABBs.Length; i++) {
                 blockAABBs[i] = Block.BlockAABB((ushort)i, this);
             }
-            UpdateBlockHandlers();
+            UpdateAllBlockHandlers();
             
             this.name = name; MapName = name.ToLower();
             BlockDB   = new BlockDB(this);
@@ -327,7 +327,7 @@ namespace MCGalaxy {
             }
             
             lvl.UpdateBlockProps();
-            lvl.UpdateBlockHandlers();
+            lvl.UpdateAllBlockHandlers();
         }
 
         public void Message(string message) {
@@ -407,24 +407,25 @@ namespace MCGalaxy {
             }
         }
         
-        public void UpdateBlockHandlers() {
+        public void UpdateAllBlockHandlers() {
             for (int i = 0; i < Props.Length; i++) {
-                UpdateBlockHandler((BlockID)i);
+                UpdateBlockHandlers((BlockID)i);
             }
         }
         
-        public void UpdateBlockHandler(BlockID block) {
+        public void UpdateBlockHandlers(BlockID block) {
             bool nonSolid = !MCGalaxy.Blocks.CollideType.IsSolid(CollideType(block));
             DeleteHandlers[block]       = BlockBehaviour.GetDeleteHandler(block, Props);
             PlaceHandlers[block]        = BlockBehaviour.GetPlaceHandler(block, Props);
             WalkthroughHandlers[block]  = BlockBehaviour.GetWalkthroughHandler(block, Props, nonSolid);
             PhysicsHandlers[block]      = BlockBehaviour.GetPhysicsHandler(block, Props);
             physicsDoorsHandlers[block] = BlockBehaviour.GetPhysicsDoorsHandler(block, Props);
+            OnBlockHandlersUpdatedEvent.Call(this, block);
         }
         
         public void UpdateCustomBlock(BlockID block, BlockDefinition def) {
             CustomBlockDefs[block] = def;
-            UpdateBlockHandler(block);
+            UpdateBlockHandlers(block);
             blockAABBs[block] = Block.BlockAABB(block, this);
         }
     }
