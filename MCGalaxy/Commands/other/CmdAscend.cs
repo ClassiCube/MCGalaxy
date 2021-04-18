@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Misc {
             if (!Hacks.CanUseHacks(p)) {
                 p.Message("You cannot use &T/Ascend &Son this map."); return;
             }
-            int x = p.Pos.FeetBlockCoords.X, y = p.Pos.FeetBlockCoords.Y, z = p.Pos.FeetBlockCoords.Z;
+            int x = p.Pos.BlockX, y = p.Pos.BlockY, z = p.Pos.BlockZ;
             if (y < 0) y = 0;
             
             int freeY = -1;
@@ -49,21 +49,17 @@ namespace MCGalaxy.Commands.Misc {
         }
         
         static int FindYAbove(Level lvl, ushort x, ushort y, ushort z) {
-            bool foundAnySolid = false;
-            for (ushort yCheck = y; yCheck < lvl.Height; yCheck++) {
-                BlockID block = lvl.GetBlock(x, yCheck, z);
-                if (block != Block.Invalid &&
-                    CollideType.IsSolid(lvl.CollideType(block))) { foundAnySolid = true; continue; }
+            for (; y <= lvl.Height; y++) {
+                BlockID block = lvl.GetBlock(x, y, z);
+                if (block != Block.Invalid && CollideType.IsSolid(lvl.CollideType(block))) continue;
                     
-                BlockID above = lvl.GetBlock(x, (ushort)(yCheck + 1), z);
-                if (above != Block.Invalid &&
-                    CollideType.IsSolid(lvl.CollideType(above))) { foundAnySolid = true; continue; }
+                BlockID above = lvl.GetBlock(x, (ushort)(y + 1), z);
+                if (above != Block.Invalid && CollideType.IsSolid(lvl.CollideType(above))) continue;
 
-                BlockID below = lvl.GetBlock(x, (ushort)(yCheck - 1), z);
-                if (below != Block.Invalid &&
-                    CollideType.IsSolid(lvl.CollideType(below)) && yCheck > y) return yCheck;
+                BlockID below = lvl.GetBlock(x, (ushort)(y - 1), z);
+                if (below != Block.Invalid && CollideType.IsSolid(lvl.CollideType(below))) return y;
             }
-            return foundAnySolid ? lvl.Height : -1;
+            return -1;
         }
         
         public override void Help(Player p) {
