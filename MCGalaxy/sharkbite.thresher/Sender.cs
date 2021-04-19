@@ -52,14 +52,68 @@ namespace Sharkbite.Irc
 	/// //No need to keep a separate reference to the Sender object
 	/// connection.Sender.PublicMessage("#thresher", "hello");
 	/// </code></example>
-	public class Sender : CommandBuilder
+	public class Sender
 	{
+		// Buffer to hold commands 
+		StringBuilder buffer;
+		//Containing conenction instance
+		Connection connection;
+
+		const char SPACE = ' ';
+		const string SPACE_COLON = " :";
+		const int MAX_COMMAND_SIZE = 512;
+		const int MAX_HOSTNAME_LEN = 63;
+		const int MAX_NICKNAME_LEN = 30;
+		
 		/// <summary>
 		/// Create a new Sender for a specific connection.
 		/// </summary>
-		internal Sender(Connection connection ) : base( connection) {}
+		internal Sender(Connection connection ) {
+			this.connection = connection;
+			buffer = new StringBuilder(MAX_COMMAND_SIZE);
+		}
 
-		private bool IsEmpty( string aString ) 
+		/// <summary>
+		/// This methods actually sends the notice and privmsg commands.
+		/// It assumes that the message has already been broken up
+		/// and has a valid target.
+		/// </summary>
+		void SendMessage(string type, string target, string message) {
+			buffer.Append(type);
+			buffer.Append(SPACE);
+			buffer.Append(target);
+			buffer.Append(SPACE_COLON);
+			buffer.Append(message);
+			connection.SendCommand( buffer );
+		}
+		
+		/// <summary>
+		/// Break up a large message into smaller peices that will fit within the IRC
+		/// max message size.
+		/// </summary>
+		/// <param name="message">The text to be broken up</param>
+		/// <param name="maxSize">The largest size a piece can be</param>
+		/// <returns>A string array holding the correctly sized messages.</returns>
+		string[] BreakUpMessage(string message, int maxSize) 
+		{
+			int pieces = (int) Math.Ceiling( (float)message.Length / (float)maxSize );
+			string[] parts = new string[ pieces ];
+			for( int i = 0; i < pieces; i++ ) 
+			{
+				int start = i * maxSize;
+				if( i == pieces - 1 ) 
+				{
+					parts[i] = message.Substring( start );	
+				}
+				else 
+				{
+					parts[i] = message.Substring( start , maxSize );	
+				}
+			}
+			return parts;
+		}
+
+		bool IsEmpty( string aString ) 
 		{
 			return aString == null || aString.Trim().Length == 0;
 		}
@@ -71,7 +125,7 @@ namespace Sharkbite.Irc
 		/// <param name="parameter">The command parameter</param>
 		/// <param name="commandLength">The length of the command plus whitespace</param>
 		/// <returns></returns>
-		private string Truncate( string parameter, int commandLength ) 
+		string Truncate( string parameter, int commandLength ) 
 		{
 			int max = MAX_COMMAND_SIZE - commandLength;
 			if (parameter.Length > max ) 
@@ -84,12 +138,6 @@ namespace Sharkbite.Irc
 			}
 		}
 
-		private bool TooLong( StringBuilder buffer ) 
-		{
-			//2 for CR LF
-			return (buffer.Length + 2) > MAX_COMMAND_SIZE;
-		}
-
 		/// <summary>
 		/// The USER command is only used at the beginning of Connection to specify
 		/// the username, hostname and realname of a new user.
@@ -99,17 +147,17 @@ namespace Sharkbite.Irc
 		{
 			lock( this )
 			{
-				Buffer.Append("USER");
-				Buffer.Append(SPACE);
-				Buffer.Append( args.UserName );
-				Buffer.Append(SPACE);
-				Buffer.Append( args.ModeMask );
-				Buffer.Append(SPACE);
-				Buffer.Append('*');
-				Buffer.Append(SPACE);
-				Buffer.Append(':');
-				Buffer.Append( args.RealName );
-				Connection.SendCommand( Buffer );
+				buffer.Append("USER");
+				buffer.Append(SPACE);
+				buffer.Append( args.UserName );
+				buffer.Append(SPACE);
+				buffer.Append( args.ModeMask );
+				buffer.Append(SPACE);
+				buffer.Append('*');
+				buffer.Append(SPACE);
+				buffer.Append(':');
+				buffer.Append( args.RealName );
+				connection.SendCommand( buffer );
 			}
 		}
 		/// <summary>
@@ -127,21 +175,20 @@ namespace Sharkbite.Irc
 		/// <param name="reason">Reason for quitting.</param>
 		internal void Quit(string reason) 
 		{
+			if ( IsEmpty( reason ) ) 
+				throw new ArgumentException("Quite reason cannot be null or empty.");
+			
 			lock( this ) 
 			{
-				Buffer.Append("QUIT");
-				if( IsEmpty( reason ) ) 
-				{
-					ClearBuffer();
-					throw new ArgumentException("Quite reason cannot be null or empty.");
-				}
-				Buffer.Append(SPACE_COLON);
+				buffer.Append("QUIT");
+				
+				buffer.Append(SPACE_COLON);
 				if (reason.Length > 502) 
 				{
 					reason = reason.Substring(0, 504);
 				}
-				Buffer.Append(reason);
-				Connection.SendCommand( Buffer );
+				buffer.Append(reason);
+				connection.SendCommand( buffer );
 			}
 		}
 			/// <summary>
@@ -160,10 +207,10 @@ namespace Sharkbite.Irc
 		{
 			//Not synchronized because it will only be called during on OnPing event by
 			//the dispatch thread
-			Buffer.Append("PONG");
-			Buffer.Append(SPACE);
-			Buffer.Append(message);
-			Connection.SendAutomaticReply( Buffer );
+			buffer.Append("PONG");
+			buffer.Append(SPACE);
+			buffer.Append(message);
+			connection.SendAutomaticReply( buffer );
 		}
 		/// <summary>
 		/// The PASS command is used to set a 'Connection password'. 
@@ -177,10 +224,10 @@ namespace Sharkbite.Irc
 		{
 			lock( this )
 			{
-				Buffer.Append("PASS");
-				Buffer.Append(SPACE);
-				Buffer.Append(password);
-				Connection.SendCommand( Buffer );
+				buffer.Append("PASS");
+				buffer.Append(SPACE);
+				buffer.Append(password);
+				connection.SendCommand( buffer );
 			}
 		}	
 		/// <summary>
@@ -237,20 +284,15 @@ namespace Sharkbite.Irc
 		/// <seealso cref="Listener.OnJoin"/>
 		public void Join( string channel ) 
 		{
+			if ( !Rfc2812Util.IsValidChannelName( channel ) ) 
+				throw new ArgumentException(channel + " is not a valid channel name.");
+			
 			lock( this ) 
 			{
-				if ( Rfc2812Util.IsValidChannelName( channel ) ) 
-				{
-					Buffer.Append("JOIN");
-					Buffer.Append(SPACE);
-					Buffer.Append(channel);
-					Connection.SendCommand( Buffer );
-				}
-				else 
-				{
-					ClearBuffer();
-					throw new ArgumentException(channel + " is not a valid channel name.");
-				}
+				buffer.Append("JOIN");
+				buffer.Append(SPACE);
+				buffer.Append(channel);
+				connection.SendCommand( buffer );
 			}
 		}
 		/// <summary>
@@ -262,29 +304,21 @@ namespace Sharkbite.Irc
 		/// <seealso cref="Listener.OnJoin"/>
 		public void Join(string channel, string password) 
 		{
+			if ( IsEmpty( password ) ) 
+				throw new ArgumentException("Password cannot be empty or null.");
+			if ( !Rfc2812Util.IsValidChannelName( channel ) )
+				throw new ArgumentException(channel + " is not a valid channel name.");
+			
 			lock( this ) 
 			{
-				if ( IsEmpty( password) ) 
-				{
-					ClearBuffer();
-					throw new ArgumentException("Password cannot be empty or null.");
-				}
-				if (Rfc2812Util.IsValidChannelName(channel)) 
-				{
-					Buffer.Append("JOIN");
-					Buffer.Append(SPACE);
-					Buffer.Append(channel);
-					Buffer.Append(SPACE);
-					//8 is the JOIN + 2 spaces + CR + LF
-					password = Truncate( password, 8 );
-					Buffer.Append(password);
-					Connection.SendCommand( Buffer );
-				}
-				else 
-				{
-					ClearBuffer();
-					throw new ArgumentException(channel + " is not a valid channel name.");
-				}
+				buffer.Append("JOIN");
+				buffer.Append(SPACE);
+				buffer.Append(channel);
+				buffer.Append(SPACE);
+				//8 is the JOIN + 2 spaces + CR + LF
+				password = Truncate( password, 8 );
+				buffer.Append(password);
+				connection.SendCommand( buffer );
 			}
 		}
 		/// <summary>
@@ -313,20 +347,15 @@ namespace Sharkbite.Irc
 		/// <seealso cref="Listener.OnNick"/>
 		public void Nick( string newNick ) 
 		{
+			if ( !Rfc2812Util.IsValidNick( newNick ) )
+				throw new ArgumentException(newNick + " is not a valid nickname.");
+				
 			lock( this ) 
 			{
-				if ( Rfc2812Util.IsValidNick(newNick) ) 
-				{
-					Buffer.Append("NICK");
-					Buffer.Append(SPACE);
-					Buffer.Append(newNick);
-					Connection.SendCommand( Buffer );
-				}
-				else 
-				{
-					ClearBuffer();
-					throw new ArgumentException(newNick + " is not a valid nickname.");
-				}
+				buffer.Append("NICK");
+				buffer.Append(SPACE);
+				buffer.Append(newNick);
+				connection.SendCommand( buffer );
 			}
 		}
 		/// <summary> 
@@ -342,32 +371,20 @@ namespace Sharkbite.Irc
 		/// <example><code>
 		/// //Make the request for a single channel
 		/// connection.Sender.Names( "#test" );
-		/// //Make the request for several channels at once
-		/// connection.Sender.Names( "#test","#alpha","#bravo" );
 		/// </code></example>
-		/// <exception cref="ArgumentException">If any of the channels are not valid.</exception> 
+		/// <exception cref="ArgumentException">If the channel name is not valid.</exception> 
 		/// <seealso cref="Listener.OnNames"/>
-		public void Names( params string[] channels ) 
+		public void Names( string channel ) 
 		{
+			if ( !Rfc2812Util.IsValidChannelName( channel ) ) 
+				throw new ArgumentException(channel + " is not a valid channel name.");
+			
 			lock( this ) 
 			{
-				if ( Rfc2812Util.IsValidChannelList( channels ) ) 
-				{
-					Buffer.Append("NAMES");
-					Buffer.Append(SPACE);
-					Buffer.Append( String.Join(",", channels) );
-					if( TooLong( Buffer ) ) 
-					{
-						ClearBuffer();
-						throw new ArgumentException("Channels are too long.");
-					}
-					Connection.SendCommand( Buffer );
-				}
-				else 
-				{
-					ClearBuffer();
-					throw new ArgumentException("One of the channel names is not valid.");
-				}
+				buffer.Append("NAMES");
+				buffer.Append(SPACE);
+				buffer.Append(channel);
+				connection.SendCommand( buffer );
 			}
 		}
 		/// <summary>
@@ -386,34 +403,26 @@ namespace Sharkbite.Irc
 		/// <seealso cref="Listener.OnPublic"/> 
 		public void PublicMessage(string channel, string message) 
 		{
+			if ( IsEmpty( message ) ) 
+				throw new ArgumentException("Public message cannot be null or empty.");
+			if ( !Rfc2812Util.IsValidChannelName( channel ) ) 
+				throw new ArgumentException(channel + " is not a valid channel name.");
+
 			lock( this )
 			{
-				if ( IsEmpty( message ) ) 
+				// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
+				int max = MAX_COMMAND_SIZE - 11 - channel.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
+				if (message.Length > max) 
 				{
-					ClearBuffer();
-					throw new ArgumentException("Public message cannot be null or empty.");
-				}
-				if (Rfc2812Util.IsValidChannelName(channel)) 
-				{
-					// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-					int max = MAX_COMMAND_SIZE - 11 - channel.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
-					if (message.Length > max) 
+					string[] parts = BreakUpMessage( message, max );
+					foreach( string part in parts )
 					{
-						string[] parts = BreakUpMessage( message, max );
-						foreach( string part in parts )
-						{
-							SendMessage("PRIVMSG", channel, part );
-						}
-					}
-					else 
-					{
-						SendMessage("PRIVMSG", channel, message);
+						SendMessage("PRIVMSG", channel, part );
 					}
 				}
 				else 
 				{
-					ClearBuffer();
-					throw new ArgumentException(channel + " is not a valid channel name.");
+					SendMessage("PRIVMSG", channel, message);
 				}
 			}
 		}
@@ -437,73 +446,26 @@ namespace Sharkbite.Irc
 		/// <seealso cref="Listener.OnPrivate"/> 
 		public void PrivateMessage(string nick, string message) 
 		{
+			if ( IsEmpty( message ) ) 
+				throw new ArgumentException("Private message cannot be null or empty.");
+			if ( !Rfc2812Util.IsValidNick( nick ) ) 
+				throw new ArgumentException(nick + " is not a valid nickname.");
+				
 			lock( this )
 			{
-				if ( IsEmpty( message ) ) 
+				// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
+				int max = MAX_COMMAND_SIZE - 11 - nick.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
+				if (message.Length > max) 
 				{
-					ClearBuffer();
-					throw new ArgumentException("Private message cannot be null or empty.");
-				}
-				if (Rfc2812Util.IsValidNick(nick)) 
-				{
-					// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-					int max = MAX_COMMAND_SIZE - 11 - nick.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
-					if (message.Length > max) 
+					string[] parts = BreakUpMessage( message, max );
+					foreach( string part in parts )
 					{
-						string[] parts = BreakUpMessage( message, max );
-						foreach( string part in parts )
-						{
-							SendMessage("PRIVMSG", nick, part );
-						}
-					}
-					else 
-					{
-						SendMessage("PRIVMSG", nick, message);
+						SendMessage("PRIVMSG", nick, part );
 					}
 				}
 				else 
 				{
-					ClearBuffer();
-					throw new ArgumentException(nick + " is not a valid nickname.");
-				}
-			}
-		}
-		/// <summary>
-		/// Send an action message to a channel.
-		/// </summary>
-		/// <remarks>
-		/// This is actually a CTCP command but it is so widely used
-		/// that it is included here. These are the '\me Laughs' type messages. 
-		/// </remarks>
-		/// <param name="channel">The target channel.</param>
-		/// <param name="description">A description of the action. If this is too long it will
-		/// be truncated.</param>
-		/// <example><code>
-		/// //Express an emotion...
-		/// connection.Sender.Action("#thresher", "Kicks down the door" );
-		/// </code></example>
-		/// <exception cref="ArgumentException">If the channel name is not valid. Will
-		/// also be thrown if the description is null or empty.</exception> 
-		/// <seealso cref="Listener.OnAction"/>
-		public void Action(string channel, string description ) 
-		{
-			lock( this )
-			{
-				if (IsEmpty( description ) ) 
-				{
-					ClearBuffer();
-					throw new ArgumentException("Action description cannot be null or empty.");
-				}
-				if (Rfc2812Util.IsValidChannelName(channel)) 
-				{
-					// 19 is PRIVMSG + 2 x Spaces + : + CR + LF + 2xCtcpQuote + ACTION
-					description = Truncate( description, 19 + channel.Length) ;
-					SendMessage("PRIVMSG", channel, CtcpQuote + "ACTION " + description + CtcpQuote );
-				}
-				else 
-				{
-					ClearBuffer();
-					throw new ArgumentException(channel + " is not a valid channel name.");
+					SendMessage("PRIVMSG", nick, message);
 				}
 			}
 		}
@@ -521,9 +483,9 @@ namespace Sharkbite.Irc
 		/// <seealso cref="NameGenerator"/>
 		public void Register( string newNick ) 
 		{
-			Connection.connectionArgs.Nick = newNick;
-			Nick( Connection.connectionArgs.Nick );
-			User( Connection.connectionArgs );
+			connection.connectionArgs.Nick = newNick;
+			Nick( connection.connectionArgs.Nick );
+			User( connection.connectionArgs );
 		}
 		/// <summary>
 		/// Send an arbitrary text message to the IRC server.
@@ -537,19 +499,17 @@ namespace Sharkbite.Irc
 		/// <exception cref="ArgumentException">If the message is null or empty.</exception> 
 		public void Raw( string message ) 
 		{
+			if ( IsEmpty( message ) ) 
+				throw new ArgumentException("Message cannot be null or empty.");
+			
 			lock( this )
 			{
-				if ( IsEmpty( message ) ) 
-				{
-					ClearBuffer();
-					throw new ArgumentException("Message cannot be null or empty.");
-				}
 				if (message.Length > MAX_COMMAND_SIZE ) 
 				{
 					message = message.Substring( 0, MAX_COMMAND_SIZE );
 				}
-				Buffer.Append( message );
-				Connection.SendCommand( Buffer );
+				buffer.Append( message );
+				connection.SendCommand( buffer );
 			}
 		}
 	}

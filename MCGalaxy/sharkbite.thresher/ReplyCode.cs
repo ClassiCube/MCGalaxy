@@ -128,12 +128,6 @@ namespace Sharkbite.Irc
 		/// reason.
 		/// </summary>
 		IrcServerError = 1001,
-		
-		/// <summary>
-		/// When the socket connection information sent
-		/// by the remote user in a DCC request is bad.
-		/// </summary>
-		BadDccEndpoint = 1002,
 
 		/// <summary>
 		/// A message from the IRC server that cannot be parsed. This may be because
@@ -142,40 +136,6 @@ namespace Sharkbite.Irc
 		/// it.
 		/// </summary>
 		UnparseableMessage = 1003,
-
-		/// <summary>
-		/// Normally a DCC Resume message is sent in response to
-		/// a DCC Send. This error is signaled when a DCC Resume message is
-		/// received without a previous Send or the Send session has timed out.
-		/// </summary>
-		UnableToResume = 1004,
-
-		/// <summary>
-		/// Signaled when a DCC Get or SEND contains an encryption
-		/// protocol that Thresher does not support.
-		/// </summary>
-		UnknownEncryptionProtocol = 1005,
-
-		/// <summary>
-		/// When trying to resume a DCC transfer the remote user is
-		/// supposed to send an Accept message with the same starting position
-		/// in the file. If these numbers differ this error is raised.
-		/// </summary>
-		BadDccAcceptValue = 1006,
-
-		/// <summary>
-		/// If the remote user sends a DCC resume request which
-		/// asks for a start position greater than or equals to the file
-		/// size then this error is raised.
-		/// </summary>
-		BadResumePosition = 1007,
-
-		/// <summary>
-		/// When attempting to connect to another
-		/// machine using DCC and the target machine
-		/// refuses the connection this error is raised.
-		/// </summary>
-		DccConnectionRefused = 1008
 
 	}
 

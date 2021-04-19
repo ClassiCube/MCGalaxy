@@ -667,7 +667,6 @@
     <Compile Include="util\Threading\VolatileArray.cs" />
     <Compile Include="util\UIHelpers.cs" />
     <Compile Include="util\Utils.cs" />
-    <Compile Include="sharkbite.thresher\CommandBuilder.cs" />
     <Compile Include="sharkbite.thresher\Connection.cs" />
     <Compile Include="sharkbite.thresher\ConnectionArgs.cs" />
     <Compile Include="sharkbite.thresher\Delegates.cs" />

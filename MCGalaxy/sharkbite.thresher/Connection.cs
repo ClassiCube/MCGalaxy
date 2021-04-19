@@ -143,12 +143,6 @@ namespace Sharkbite.Irc
 		public Listener Listener { get { return listener; } }
 
 		/// <summary>
-		/// The collection of data used to establish this connection.
-		/// </summary>
-		/// <value>Read only ConnectionArgs.</value>
-		public ConnectionArgs ConnectionData { get { return connectionArgs; } }		
-
-		/// <summary>
 		/// Respond to IRC keep-alives.
 		/// </summary>
 		/// <param name="message">The message that should be echoed back</param>

@@ -29,7 +29,7 @@ namespace Sharkbite.Irc
 	/// <summary>
 	/// RFC 2812 Utility methods.
 	/// </summary>
-	public sealed class Rfc2812Util 
+	public static class Rfc2812Util 
 	{
 		// Regex that matches a legal IRC nick 
 		private static readonly Regex nickRegex;
@@ -49,9 +49,6 @@ namespace Sharkbite.Irc
 			nickRegex = new Regex( Nick ); 
 			nameSplitterRegex = new Regex("[!@]",RegexOptions.Compiled | RegexOptions.Singleline );
 		}
-
-		//Should never be instantiated
-		private Rfc2812Util() {}
 
 		/// <summary>
 		/// Converts the user string sent by the IRC server
@@ -93,27 +90,6 @@ namespace Sharkbite.Irc
 			{
 				return new string[] { fullUserName, "","" };
 			}
-		}
-
-		/// <summary>
-		/// Using the rules set forth in RFC 2812 determine if
-		/// an array of channel names is valid.
-		/// </summary>
-		/// <returns>True if the channel names are all valid.</returns>
-		public static bool IsValidChannelList( string[] channels ) 
-		{
-			if( channels == null || channels.Length == 0 ) 
-			{
-				return false;
-			}
-			foreach( string channel in channels ) 
-			{
-				if( !IsValidChannelName( channel ) )
-				{
-					return false;
-				}
-			}
-			return true;
 		}
 
 		/// <summary>
