@@ -25,16 +25,13 @@
         	this.lblCommands = new System.Windows.Forms.Label();
         	this.lstCommands = new System.Windows.Forms.ListBox();
         	this.grpCreate = new System.Windows.Forms.GroupBox();
-        	this.radPanel = new System.Windows.Forms.Panel();
-        	this.radVB = new System.Windows.Forms.RadioButton();
-        	this.radCS = new System.Windows.Forms.RadioButton();
-        	this.btnCreate = new System.Windows.Forms.Button();
+        	this.btnCreateCS = new System.Windows.Forms.Button();
+        	this.btnCreateVB = new System.Windows.Forms.Button();
         	this.txtCmdName = new System.Windows.Forms.TextBox();
         	this.lblTxtName = new System.Windows.Forms.Label();
         	this.btnLoad = new System.Windows.Forms.Button();
         	this.btnUnload = new System.Windows.Forms.Button();
         	this.grpCreate.SuspendLayout();
-        	this.radPanel.SuspendLayout();
         	this.SuspendLayout();
         	// 
         	// lblCommands
@@ -59,8 +56,8 @@
         	// 
         	// grpCreate
         	// 
-        	this.grpCreate.Controls.Add(this.radPanel);
-        	this.grpCreate.Controls.Add(this.btnCreate);
+        	this.grpCreate.Controls.Add(this.btnCreateCS);
+        	this.grpCreate.Controls.Add(this.btnCreateVB);
         	this.grpCreate.Controls.Add(this.txtCmdName);
         	this.grpCreate.Controls.Add(this.lblTxtName);
         	this.grpCreate.Location = new System.Drawing.Point(12, 12);
@@ -68,56 +65,31 @@
         	this.grpCreate.Size = new System.Drawing.Size(459, 84);
         	this.grpCreate.TabIndex = 43;
         	this.grpCreate.TabStop = false;
-        	this.grpCreate.Text = "Create command";
+        	this.grpCreate.Text = "Create custom command";
         	// 
-        	// radPanel
+        	// btnCreateCS
         	// 
-        	this.radPanel.Controls.Add(this.radVB);
-        	this.radPanel.Controls.Add(this.radCS);
-        	this.radPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.radPanel.Location = new System.Drawing.Point(11, 44);
-        	this.radPanel.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-        	this.radPanel.Name = "radPanel";
-        	this.radPanel.Size = new System.Drawing.Size(84, 29);
-        	this.radPanel.TabIndex = 37;
+        	this.btnCreateCS.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.btnCreateCS.Location = new System.Drawing.Point(11, 48);
+        	this.btnCreateCS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreateCS.Name = "btnCreateCS";
+        	this.btnCreateCS.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreateCS.TabIndex = 29;
+        	this.btnCreateCS.Text = "Create C#";
+        	this.btnCreateCS.UseVisualStyleBackColor = true;
+        	this.btnCreateCS.Click += new System.EventHandler(this.btnCreateCS_Click);
         	// 
-        	// radVB
+        	// btnCreateVB
         	// 
-        	this.radVB.AutoSize = true;
-        	this.radVB.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.radVB.Location = new System.Drawing.Point(41, 6);
-        	this.radVB.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-        	this.radVB.Name = "radVB";
-        	this.radVB.Size = new System.Drawing.Size(36, 16);
-        	this.radVB.TabIndex = 27;
-        	this.radVB.Text = "VB";
-        	this.radVB.UseVisualStyleBackColor = true;
-        	// 
-        	// radCS
-        	// 
-        	this.radCS.AutoSize = true;
-        	this.radCS.Checked = true;
-        	this.radCS.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.radCS.Location = new System.Drawing.Point(2, 6);
-        	this.radCS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-        	this.radCS.Name = "radCS";
-        	this.radCS.Size = new System.Drawing.Size(35, 16);
-        	this.radCS.TabIndex = 0;
-        	this.radCS.TabStop = true;
-        	this.radCS.Text = "C#";
-        	this.radCS.UseVisualStyleBackColor = true;
-        	// 
-        	// btnCreate
-        	// 
-        	this.btnCreate.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.btnCreate.Location = new System.Drawing.Point(374, 48);
-        	this.btnCreate.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-        	this.btnCreate.Name = "btnCreate";
-        	this.btnCreate.Size = new System.Drawing.Size(80, 23);
-        	this.btnCreate.TabIndex = 29;
-        	this.btnCreate.Text = "Create command";
-        	this.btnCreate.UseVisualStyleBackColor = true;
-        	this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
+        	this.btnCreateVB.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.btnCreateVB.Location = new System.Drawing.Point(96, 48);
+        	this.btnCreateVB.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreateVB.Name = "btnCreateVB";
+        	this.btnCreateVB.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreateVB.TabIndex = 29;
+        	this.btnCreateVB.Text = "Create VB";
+        	this.btnCreateVB.UseVisualStyleBackColor = true;
+        	this.btnCreateVB.Click += new System.EventHandler(this.btnCreateVB_Click);
         	// 
         	// txtCmdName
         	// 
@@ -182,8 +154,6 @@
         	this.Text = "Custom commands";
         	this.grpCreate.ResumeLayout(false);
         	this.grpCreate.PerformLayout();
-        	this.radPanel.ResumeLayout(false);
-        	this.radPanel.PerformLayout();
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
@@ -191,10 +161,8 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Label lblTxtName;
         private System.Windows.Forms.TextBox txtCmdName;
-        private System.Windows.Forms.Button btnCreate;
-        private System.Windows.Forms.RadioButton radCS;
-        private System.Windows.Forms.RadioButton radVB;
-        private System.Windows.Forms.Panel radPanel;
+        private System.Windows.Forms.Button btnCreateCS;
+        private System.Windows.Forms.Button btnCreateVB;
         private System.Windows.Forms.GroupBox grpCreate;
         private System.Windows.Forms.ListBox lstCommands;
         private System.Windows.Forms.Label lblCommands;

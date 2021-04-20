@@ -102,6 +102,7 @@ namespace MCGalaxy.Gui {
                 Process.Start(url);
             } catch (Exception ex) {
                 Logger.LogError("Opening url in browser", ex);
+                Popup.Error("Failed to open " + url);
             }
         }
     }

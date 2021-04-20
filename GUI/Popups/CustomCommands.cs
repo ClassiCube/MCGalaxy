@@ -31,14 +31,13 @@ namespace MCGalaxy.Gui.Popups {
                 if (!Command.IsCore(cmd)) lstCommands.Items.Add(cmd.name);
             }
         }
-        
-        void btnCreate_Click(object sender, EventArgs e) {
+		
+		void CreateCommand(ICompiler engine) {
             string cmdName = txtCmdName.Text.Trim();
             if (cmdName.Length == 0) {
                 Popup.Warning("Command must have a name"); return;
             }
             
-            ICompiler engine = radVB.Checked ? ICompiler.VB : ICompiler.CS;
             string path = engine.CommandPath(cmdName);
             if (File.Exists(path)) {
                 Popup.Warning("Command already exists"); return;
@@ -54,7 +53,10 @@ namespace MCGalaxy.Gui.Popups {
             }
             Popup.Message("Command Cmd" + cmdName + engine.Ext + " created.");
         }
-
+        
+        void btnCreateCS_Click(object sender, EventArgs e) { CreateCommand(ICompiler.CS); }
+        void btnCreateVB_Click(object sender, EventArgs e) { CreateCommand(ICompiler.VB); }
+        
         void btnLoad_Click(object sender, EventArgs e) {
             string fileName;
             using (FileDialog dialog = new OpenFileDialog()) {
