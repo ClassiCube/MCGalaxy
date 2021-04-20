@@ -55,7 +55,6 @@
     <Compile Include="..\MCGalaxy\properties\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CLI.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
