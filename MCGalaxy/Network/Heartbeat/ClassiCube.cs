@@ -61,7 +61,7 @@ namespace MCGalaxy.Network {
         public override string GetHeartbeatData()  {
             string name = Server.Config.Name;
             OnSendingHeartbeatEvent.Call(this, ref name);
-            name = Colors.Strip(name);
+            name = Colors.StripUsed(name);
             
             return
                 "&port="     + Server.Config.Port +

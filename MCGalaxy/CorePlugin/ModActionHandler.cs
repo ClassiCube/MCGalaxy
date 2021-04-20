@@ -52,7 +52,7 @@ namespace MCGalaxy.Core {
                 Chat.MessageOps(e.FormatMessage(e.TargetName, action));
             }
             
-            action = Colors.Strip(action);
+            action = Colors.StripUsed(action);
             string suffix = "";
             if (e.Duration.Ticks != 0) suffix = " &Sfor " + e.Duration.Shorten();
             

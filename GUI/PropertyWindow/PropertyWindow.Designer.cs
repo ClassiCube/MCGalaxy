@@ -2120,7 +2120,7 @@ namespace MCGalaxy.Gui
             this.grpExtra.Controls.Add(this.chkSmile);
             this.grpExtra.Location = new System.Drawing.Point(10, 158);
             this.grpExtra.Name = "grpExtra";
-            this.grpExtra.Size = new System.Drawing.Size(332, 183);
+            this.grpExtra.Size = new System.Drawing.Size(332, 124);
             this.grpExtra.TabIndex = 40;
             this.grpExtra.TabStop = false;
             this.grpExtra.Text = "Extra";
@@ -2128,7 +2128,7 @@ namespace MCGalaxy.Gui
             // misc_numReview
             // 
             this.misc_numReview.BackColor = System.Drawing.SystemColors.Window;
-            this.misc_numReview.Location = new System.Drawing.Point(143, 157);
+            this.misc_numReview.Location = new System.Drawing.Point(126, 89);
             this.misc_numReview.Name = "misc_numReview";
             this.misc_numReview.Seconds = ((long)(300));
             this.misc_numReview.Size = new System.Drawing.Size(66, 21);
@@ -2139,7 +2139,7 @@ namespace MCGalaxy.Gui
             // chkRestart
             // 
             this.chkRestart.AutoSize = true;
-            this.chkRestart.Location = new System.Drawing.Point(6, 66);
+            this.chkRestart.Location = new System.Drawing.Point(190, 20);
             this.chkRestart.Name = "chkRestart";
             this.chkRestart.Size = new System.Drawing.Size(101, 17);
             this.chkRestart.TabIndex = 51;
@@ -2149,7 +2149,7 @@ namespace MCGalaxy.Gui
             // misc_lblReview
             // 
             this.misc_lblReview.AutoSize = true;
-            this.misc_lblReview.Location = new System.Drawing.Point(23, 159);
+            this.misc_lblReview.Location = new System.Drawing.Point(6, 91);
             this.misc_lblReview.Name = "misc_lblReview";
             this.misc_lblReview.Size = new System.Drawing.Size(115, 13);
             this.misc_lblReview.TabIndex = 49;
@@ -2158,7 +2158,7 @@ namespace MCGalaxy.Gui
             // chkRepeatMessages
             // 
             this.chkRepeatMessages.AutoSize = true;
-            this.chkRepeatMessages.Location = new System.Drawing.Point(6, 111);
+            this.chkRepeatMessages.Location = new System.Drawing.Point(190, 43);
             this.chkRepeatMessages.Name = "chkRepeatMessages";
             this.chkRepeatMessages.Size = new System.Drawing.Size(136, 17);
             this.chkRepeatMessages.TabIndex = 29;
@@ -2168,7 +2168,7 @@ namespace MCGalaxy.Gui
             // chk17Dollar
             // 
             this.chk17Dollar.AutoSize = true;
-            this.chk17Dollar.Location = new System.Drawing.Point(6, 90);
+            this.chk17Dollar.Location = new System.Drawing.Point(6, 66);
             this.chk17Dollar.Name = "chk17Dollar";
             this.chk17Dollar.Size = new System.Drawing.Size(100, 17);
             this.chk17Dollar.TabIndex = 22;
