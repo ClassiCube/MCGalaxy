@@ -77,6 +77,8 @@ namespace MCGalaxy.Modules.Relay {
         }
   
         
+        /// <summary> Attempts to connect to the external communication service </summary>
+        /// <remarks> Does nothing if disabled, already connected, or the server is shutting down </remarks>
         public void Connect() {
             if (!Enabled || Connected || Server.shuttingDown) return;
             Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
@@ -90,6 +92,8 @@ namespace MCGalaxy.Modules.Relay {
             }
         }
         
+        /// <summary> Attempts to disconnect from the external communication service </summary>
+        /// <remarks> Does nothing if not connected </remarks>
         public void Disconnect(string reason) {
             if (!Connected) return;
             DoDisconnect(reason);

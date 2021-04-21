@@ -29,33 +29,13 @@ namespace MCGalaxy.Modules.Relay.Discord {
         string[] operatorIds;
         
         DiscordApiClient api;
-        DiscordWebsocket socket;
-        DiscordConfig config;
+        DiscordWebsocket socket;        
         Thread thread;
         
         public override string RelayName { get { return "Discord"; } }        
-        public override bool Enabled { get { return config.Enabled; } }
-        public override bool Connected { get { return socket != null && !disconnected; } }
-        
-        
-        public void RunAsync(DiscordConfig conf) {
-            config = conf;
-            socket = new DiscordWebsocket();
-            
-            Channels    = conf.Channels.SplitComma();
-            OpChannels  = conf.OpChannels.SplitComma();
-            operatorIds = conf.OperatorUsers.SplitComma();
-            
-            socket.Token     = config.BotToken;
-            socket.Handler   = HandleEvent;
-            socket.GetStatus = GetStatus;
-            socket.OnReady   = OnReady;
-                
-            thread      = new Thread(IOThread);
-            thread.Name = "DiscordRelayBot";
-            thread.IsBackground = true;
-            thread.Start();
-        }
+        public override bool Enabled     { get { return Config.Enabled; } }
+        public override bool Connected   { get { return socket != null && !disconnected; } }
+        public DiscordConfig Config;
         
         void IOThread() {
             try {
@@ -67,9 +47,23 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         protected override void DoConnect() {
-            // TODO implement
+            // TODO implement properly
             disconnecting = false;
-            throw new NotImplementedException();
+            socket = new DiscordWebsocket();
+            
+            Channels    = Config.Channels.SplitComma();
+            OpChannels  = Config.OpChannels.SplitComma();
+            operatorIds = Config.OperatorUsers.SplitComma();
+            
+            socket.Token     = Config.BotToken;
+            socket.Handler   = HandleEvent;
+            socket.GetStatus = GetStatus;
+            socket.OnReady   = OnReady;
+                
+            thread      = new Thread(IOThread);
+            thread.Name = "DiscordRelayBot";
+            thread.IsBackground = true;
+            thread.Start();
         }
         
         volatile bool disconnecting;
@@ -106,12 +100,12 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         string GetStatus() {
             string online = PlayerInfo.NonHiddenCount().ToString();
-            return config.Status.Replace("{PLAYERS}", online);
+            return Config.Status.Replace("{PLAYERS}", online);
         }        
         
         void OnReady() {
             api = new DiscordApiClient();
-            api.Token = config.BotToken;
+            api.Token = Config.BotToken;
             RegisterEvents();
         }
         

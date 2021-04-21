@@ -62,17 +62,13 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public static DiscordBot Bot = new DiscordBot();
         
         public override void Load(bool startup) {
+            Bot.Config = Config;
             Config.Load();
-            if (Config.Enabled) Connect();
+            Bot.Connect();
         }
         
         public override void Unload(bool shutdown) {
             Bot.Disconnect("Disconnecting Discord bot");
-        }
-        
-        public static void Connect() {
-            if (Bot.Connected) return;
-            Bot.RunAsync(Config);
         }
     }
 }
