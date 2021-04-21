@@ -29,13 +29,13 @@ namespace MCGalaxy.Gui.Popups {
         readonly BackgroundWorker worker;
         int port;
         
-        public PortTools(string portStr) {
+        public PortTools(int port) {
             InitializeComponent();
             worker = new BackgroundWorker { WorkerSupportsCancellation = true };
             worker.DoWork += mWorkerForwarder_DoWork;
             worker.RunWorkerCompleted += mWorkerForwarder_RunWorkerCompleted;
             
-            if (!int.TryParse(portStr, out port)) port = 25565;
+            this.port = port;
             btnForward.Text = "Forward " + port;
         }
 

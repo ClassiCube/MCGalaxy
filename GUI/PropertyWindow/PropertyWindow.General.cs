@@ -85,7 +85,8 @@ namespace MCGalaxy.Gui {
         }
         
         void ChkPort_Click(object sender, EventArgs e) {
-            using (PortTools form = new PortTools(srv_numPort.Text)) {
+            int port = (int)srv_numPort.Value;
+            using (PortTools form = new PortTools(port)) {
                 form.ShowDialog();
             }
         }

@@ -35,7 +35,7 @@ namespace MCGalaxy.Gui {
         void LoadIRCProps() {
             irc_chkEnabled.Checked = Server.Config.UseIRC;
             irc_txtServer.Text = Server.Config.IRCServer;
-            irc_txtPort.Text = Server.Config.IRCPort.ToString();
+            irc_numPort.Value = Server.Config.IRCPort;
             irc_txtNick.Text = Server.Config.IRCNick;
             irc_txtChannel.Text = Server.Config.IRCChannels;
             irc_txtOpChannel.Text = Server.Config.IRCOpChannels;
@@ -57,7 +57,7 @@ namespace MCGalaxy.Gui {
         void ApplyIRCProps() {
             Server.Config.UseIRC = irc_chkEnabled.Checked;
             Server.Config.IRCServer = irc_txtServer.Text;
-            Server.Config.IRCPort = int.Parse(irc_txtPort.Text);
+            Server.Config.IRCPort = (int)irc_numPort.Value;
             Server.Config.IRCNick = irc_txtNick.Text;
             Server.Config.IRCChannels = irc_txtChannel.Text;
             Server.Config.IRCOpChannels = irc_txtOpChannel.Text;
@@ -75,7 +75,7 @@ namespace MCGalaxy.Gui {
                 
         void ToggleIrcSettings(bool enabled) {
             irc_txtServer.Enabled = enabled; irc_lblServer.Enabled = enabled;
-            irc_txtPort.Enabled = enabled; irc_lblPort.Enabled = enabled;
+            irc_numPort.Enabled = enabled; irc_lblPort.Enabled = enabled;
             irc_txtNick.Enabled = enabled; irc_lblNick.Enabled = enabled;
             irc_txtChannel.Enabled = enabled; irc_lblChannel.Enabled = enabled;
             irc_txtOpChannel.Enabled = enabled; irc_lblOpChannel.Enabled = enabled;    

@@ -235,7 +235,7 @@ namespace MCGalaxy.Gui
             this.irc_grp = new System.Windows.Forms.GroupBox();
             this.irc_lblServer = new System.Windows.Forms.Label();
             this.irc_lblPort = new System.Windows.Forms.Label();
-            this.irc_txtPort = new System.Windows.Forms.TextBox();
+            this.irc_numPort = new System.Windows.Forms.NumericUpDown();
             this.irc_lblNick = new System.Windows.Forms.Label();
             this.irc_lblChannel = new System.Windows.Forms.Label();
             this.irc_lblOpChannel = new System.Windows.Forms.Label();
@@ -2671,7 +2671,7 @@ namespace MCGalaxy.Gui
             this.irc_grp.Controls.Add(this.irc_lblServer);
             this.irc_grp.Controls.Add(this.irc_txtServer);
             this.irc_grp.Controls.Add(this.irc_lblPort);
-            this.irc_grp.Controls.Add(this.irc_txtPort);
+            this.irc_grp.Controls.Add(this.irc_numPort);
             this.irc_grp.Controls.Add(this.irc_lblNick);
             this.irc_grp.Controls.Add(this.irc_txtNick);
             this.irc_grp.Controls.Add(this.irc_lblChannel);
@@ -2705,13 +2705,23 @@ namespace MCGalaxy.Gui
             this.irc_lblPort.TabIndex = 30;
             this.irc_lblPort.Text = "Port:";
             // 
-            // irc_txtPort
+            // irc_numPort
             // 
-            this.irc_txtPort.BackColor = System.Drawing.SystemColors.Window;
-            this.irc_txtPort.Location = new System.Drawing.Point(82, 74);
-            this.irc_txtPort.Name = "irc_txtPort";
-            this.irc_txtPort.Size = new System.Drawing.Size(63, 21);
-            this.irc_txtPort.TabIndex = 31;
+            this.irc_numPort.BackColor = System.Drawing.SystemColors.Window;
+            this.irc_numPort.Location = new System.Drawing.Point(82, 74);
+            this.irc_numPort.Name = "irc_numPort";
+            this.irc_numPort.Size = new System.Drawing.Size(63, 21);
+            this.irc_numPort.TabIndex = 31;
+            this.irc_numPort.Maximum = new decimal(new int[] {
+                                    65535,
+                                    0,
+                                    0,
+                                    0});
+            this.irc_numPort.Value = new decimal(new int[] {
+                                    6667,
+                                    0,
+                                    0,
+                                    0});
             // 
             // irc_lblNick
             // 
@@ -5542,6 +5552,7 @@ namespace MCGalaxy.Gui
             this.chat_grpColors.ResumeLayout(false);
             this.chat_grpColors.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPort)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.irc_numPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numPerm)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numMaps)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numDraw)).EndInit();
@@ -6133,7 +6144,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox irc_chkPass;
         private System.Windows.Forms.CheckBox irc_cbTitles;
         private System.Windows.Forms.Label irc_lblPort;
-        private System.Windows.Forms.TextBox irc_txtPort;
+        private System.Windows.Forms.NumericUpDown irc_numPort;
         private System.Windows.Forms.CheckBox rank_cbEmpty;
         private System.Windows.Forms.GroupBox ls_grpMaps;
         private System.Windows.Forms.Label ls_lblNotUsed;
