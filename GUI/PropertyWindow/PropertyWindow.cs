@@ -63,7 +63,8 @@ namespace MCGalaxy.Gui {
             SrvProperties.Load();
             LoadGeneralProps();
             LoadChatProps();
-            LoadIrcSqlProps();
+            LoadRelayProps();
+            LoadSqlProps();
             LoadEcoProps();
             LoadMiscProps();
             LoadRankProps();
@@ -75,7 +76,8 @@ namespace MCGalaxy.Gui {
             try {
                 ApplyGeneralProps();
                 ApplyChatProps();
-                ApplyIrcSqlProps();
+                ApplyRelayProps();
+                ApplySqlProps();
                 ApplyEcoProps();
                 ApplyMiscProps();
                 ApplyRankProps();

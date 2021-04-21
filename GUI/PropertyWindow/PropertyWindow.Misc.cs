@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Windows.Forms;
 using MCGalaxy.Gui.Popups;
+using MCGalaxy.SQL;
 
 namespace MCGalaxy.Gui {
 
@@ -64,6 +65,46 @@ namespace MCGalaxy.Gui {
             using (Form form = new EditText()) {
                 form.ShowDialog();
             }
+        }
+		
+		
+        void LoadSqlProps() {
+            sql_chkUseSQL.Checked = Server.Config.UseMySQL;
+            sql_txtUser.Text = Server.Config.MySQLUsername;
+            sql_txtPass.Text = Server.Config.MySQLPassword;
+            sql_txtDBName.Text = Server.Config.MySQLDatabaseName;
+            sql_txtHost.Text = Server.Config.MySQLHost;
+            sql_txtPort.Text = Server.Config.MySQLPort;
+            ToggleMySQLSettings(Server.Config.UseMySQL);
+        }
+        
+        void ApplySqlProps() {
+            Server.Config.UseMySQL = sql_chkUseSQL.Checked;
+            Server.Config.MySQLUsername = sql_txtUser.Text;
+            Server.Config.MySQLPassword = sql_txtPass.Text;
+            Server.Config.MySQLDatabaseName = sql_txtDBName.Text;
+            Server.Config.MySQLHost = sql_txtHost.Text;
+            Server.Config.MySQLPort = sql_txtPort.Text;
+            
+            Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+            //Server.Config.MySQLPooling = ; // No setting for this?            
+        }
+
+
+        void ToggleMySQLSettings(bool enabled) {
+            sql_txtUser.Enabled = enabled; sql_lblUser.Enabled = enabled;
+            sql_txtPass.Enabled = enabled; sql_lblPass.Enabled = enabled;
+            sql_txtPort.Enabled = enabled; sql_lblPort.Enabled = enabled;
+            sql_txtHost.Enabled = enabled; sql_lblHost.Enabled = enabled;
+            sql_txtDBName.Enabled = enabled; sql_lblDBName.Enabled = enabled;
+        }
+
+        void sql_linkDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Program.OpenBrowser("https://dev.mysql.com/downloads/");
+        }
+
+        void sql_chkUseSQL_CheckedChanged(object sender, EventArgs e) {
+            ToggleMySQLSettings(sql_chkUseSQL.Checked);
         }
     }
 }

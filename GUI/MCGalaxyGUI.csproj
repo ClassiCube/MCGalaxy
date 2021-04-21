@@ -97,7 +97,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="PropertyWindow\PropertyWindow.General.cs" />
-    <Compile Include="PropertyWindow\PropertyWindow.IRCSql.cs" />
+    <Compile Include="PropertyWindow\PropertyWindow.Relay.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Misc.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Ranks.cs" />
     <Compile Include="PropertyWindow\PropertyWindow.Security.cs" />

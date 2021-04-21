@@ -20,7 +20,7 @@ namespace MCGalaxy.Gui {
 
     public partial class PropertyWindow : Form { 
         
-        void LoadIrcSqlProps() {
+        void LoadRelayProps() {
             irc_chkEnabled.Checked = Server.Config.UseIRC;
             irc_txtServer.Text = Server.Config.IRCServer;
             irc_txtPort.Text = Server.Config.IRCPort.ToString();
@@ -40,17 +40,9 @@ namespace MCGalaxy.Gui {
             irc_cmbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
             irc_cmbVerify.SelectedIndex = (int)Server.Config.IRCVerify;
             irc_txtPrefix.Text = Server.Config.IRCCommandPrefix;
-            
-            sql_chkUseSQL.Checked = Server.Config.UseMySQL;
-            sql_txtUser.Text = Server.Config.MySQLUsername;
-            sql_txtPass.Text = Server.Config.MySQLPassword;
-            sql_txtDBName.Text = Server.Config.MySQLDatabaseName;
-            sql_txtHost.Text = Server.Config.MySQLHost;
-            sql_txtPort.Text = Server.Config.MySQLPort;
-            ToggleMySQLSettings(Server.Config.UseMySQL);
         }
         
-        void ApplyIrcSqlProps() {
+        void ApplyRelayProps() {
             Server.Config.UseIRC = irc_chkEnabled.Checked;
             Server.Config.IRCServer = irc_txtServer.Text;
             Server.Config.IRCPort = int.Parse(irc_txtPort.Text);
@@ -66,19 +58,8 @@ namespace MCGalaxy.Gui {
             
             Server.Config.IRCControllerRank = GuiPerms.GetPermission(irc_cmbRank, LevelPermission.Admin);
             Server.Config.IRCVerify = (IRCControllerVerify)irc_cmbVerify.SelectedIndex;
-            Server.Config.IRCCommandPrefix = irc_txtPrefix.Text;
-            
-            Server.Config.UseMySQL = sql_chkUseSQL.Checked;
-            Server.Config.MySQLUsername = sql_txtUser.Text;
-            Server.Config.MySQLPassword = sql_txtPass.Text;
-            Server.Config.MySQLDatabaseName = sql_txtDBName.Text;
-            Server.Config.MySQLHost = sql_txtHost.Text;
-            Server.Config.MySQLPort = sql_txtPort.Text;
-            
-            Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
-            //Server.Config.MySQLPooling = ; // No setting for this?            
+            Server.Config.IRCCommandPrefix = irc_txtPrefix.Text;  
         }
-        
         
                 
         void ToggleIrcSettings(bool enabled) {
@@ -97,15 +78,6 @@ namespace MCGalaxy.Gui {
             irc_lblPrefix.Enabled = enabled; irc_txtPrefix.Enabled = enabled;
         }
 
-        void ToggleMySQLSettings(bool enabled) {
-            sql_txtUser.Enabled = enabled; sql_lblUser.Enabled = enabled;
-            sql_txtPass.Enabled = enabled; sql_lblPass.Enabled = enabled;
-            sql_txtPort.Enabled = enabled; sql_lblPort.Enabled = enabled;
-            sql_txtHost.Enabled = enabled; sql_lblHost.Enabled = enabled;
-            sql_txtDBName.Enabled = enabled; sql_lblDBName.Enabled = enabled;
-        }
-        
-        
         
         void irc_chkEnabled_CheckedChanged(object sender, EventArgs e) {
             ToggleIrcSettings(irc_chkEnabled.Checked);
@@ -113,14 +85,6 @@ namespace MCGalaxy.Gui {
         
         void irc_chkPass_CheckedChanged(object sender, EventArgs e) {
             irc_txtPass.Enabled = irc_chkEnabled.Checked && irc_chkPass.Checked;
-        }
-
-        void sql_linkDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Program.OpenBrowser("https://dev.mysql.com/downloads/");
-        }
-
-        void sql_chkUseSQL_CheckedChanged(object sender, EventArgs e) {
-            ToggleMySQLSettings(sql_chkUseSQL.Checked);
         }
     }
 }

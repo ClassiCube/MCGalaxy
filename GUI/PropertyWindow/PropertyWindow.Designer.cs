@@ -2336,7 +2336,7 @@ namespace MCGalaxy.Gui
             // 
             this.pageIRC.BackColor = System.Drawing.SystemColors.Control;
             this.pageIRC.Controls.Add(this.gb_ircSettings);
-            this.pageIRC.Controls.Add(this.sql_grp);
+            this.pageMisc.Controls.Add(this.sql_grp);
             this.pageIRC.Controls.Add(this.irc_grp);
             this.pageIRC.Location = new System.Drawing.Point(4, 22);
             this.pageIRC.Name = "pageIRC";
@@ -2460,7 +2460,7 @@ namespace MCGalaxy.Gui
             this.sql_grp.Controls.Add(this.sql_txtHost);
             this.sql_grp.Controls.Add(this.sql_lblPort);
             this.sql_grp.Controls.Add(this.sql_txtPort);
-            this.sql_grp.Location = new System.Drawing.Point(264, 3);
+            this.sql_grp.Location = new System.Drawing.Point(10, 288);
             this.sql_grp.Name = "sql_grp";
             this.sql_grp.Size = new System.Drawing.Size(227, 214);
             this.sql_grp.TabIndex = 29;
