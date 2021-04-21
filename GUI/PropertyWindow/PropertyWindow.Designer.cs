@@ -116,6 +116,14 @@ namespace MCGalaxy.Gui
             this.rank_numDraw = new System.Windows.Forms.NumericUpDown();
             this.rank_numGen = new System.Windows.Forms.NumericUpDown();
             this.rank_numCopy = new System.Windows.Forms.NumericUpDown();
+            this.dis_grp = new System.Windows.Forms.GroupBox();
+            this.dis_lblToken = new System.Windows.Forms.Label();
+            this.dis_lblChannel = new System.Windows.Forms.Label();
+            this.dis_txtChannel = new System.Windows.Forms.TextBox();
+            this.dis_lblOpChannel = new System.Windows.Forms.Label();
+            this.dis_chkEnabled = new System.Windows.Forms.CheckBox();
+            this.dis_txtToken = new System.Windows.Forms.TextBox();
+            this.dis_txtOpChannel = new System.Windows.Forms.TextBox();
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.eco_cmbItemRank = new System.Windows.Forms.ComboBox();
             this.rank_numUndo = new MCGalaxy.Gui.TimespanUpDown();
@@ -201,7 +209,7 @@ namespace MCGalaxy.Gui
             this.bak_lblLocation = new System.Windows.Forms.Label();
             this.bak_txtLocation = new System.Windows.Forms.TextBox();
             this.bak_lblTime = new System.Windows.Forms.Label();
-            this.pageIRC = new System.Windows.Forms.TabPage();
+            this.pageRelay = new System.Windows.Forms.TabPage();
             this.gb_ircSettings = new System.Windows.Forms.GroupBox();
             this.irc_txtPrefix = new System.Windows.Forms.TextBox();
             this.irc_lblPrefix = new System.Windows.Forms.Label();
@@ -519,7 +527,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.afk_numTimer)).BeginInit();
             this.bak_grp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bak_numTime)).BeginInit();
-            this.pageIRC.SuspendLayout();
+            this.pageRelay.SuspendLayout();
             this.gb_ircSettings.SuspendLayout();
             this.sql_grp.SuspendLayout();
             this.irc_grp.SuspendLayout();
@@ -2332,17 +2340,18 @@ namespace MCGalaxy.Gui
             this.bak_lblTime.TabIndex = 7;
             this.bak_lblTime.Text = "Backup time:";
             // 
-            // pageIRC
+            // pageRelay
             // 
-            this.pageIRC.BackColor = System.Drawing.SystemColors.Control;
-            this.pageIRC.Controls.Add(this.gb_ircSettings);
+            this.pageRelay.BackColor = System.Drawing.SystemColors.Control;
+            this.pageRelay.Controls.Add(this.dis_grp);
+            this.pageRelay.Controls.Add(this.gb_ircSettings);
             this.pageMisc.Controls.Add(this.sql_grp);
-            this.pageIRC.Controls.Add(this.irc_grp);
-            this.pageIRC.Location = new System.Drawing.Point(4, 22);
-            this.pageIRC.Name = "pageIRC";
-            this.pageIRC.Size = new System.Drawing.Size(498, 521);
-            this.pageIRC.TabIndex = 6;
-            this.pageIRC.Text = "IRC/SQL";
+            this.pageRelay.Controls.Add(this.irc_grp);
+            this.pageRelay.Location = new System.Drawing.Point(4, 22);
+            this.pageRelay.Name = "pageRelay";
+            this.pageRelay.Size = new System.Drawing.Size(498, 521);
+            this.pageRelay.TabIndex = 6;
+            this.pageRelay.Text = "IRC";
             // 
             // gb_ircSettings
             // 
@@ -2445,6 +2454,93 @@ namespace MCGalaxy.Gui
             this.irc_cbTitles.TabIndex = 32;
             this.irc_cbTitles.Text = "Show player\'s title in messages";
             this.irc_cbTitles.UseVisualStyleBackColor = true;
+            // 
+            // dis_grp
+            // 
+            this.dis_grp.Controls.Add(this.dis_chkEnabled);
+            this.dis_grp.Controls.Add(this.dis_lblToken);
+            this.dis_grp.Controls.Add(this.dis_txtToken);
+            this.dis_grp.Controls.Add(this.dis_lblChannel);
+            this.dis_grp.Controls.Add(this.dis_txtChannel);
+            this.dis_grp.Controls.Add(this.dis_lblOpChannel);
+            this.dis_grp.Controls.Add(this.dis_txtOpChannel);
+            this.dis_grp.Location = new System.Drawing.Point(241, 3);
+            this.dis_grp.Name = "dis_grp";
+            this.dis_grp.Size = new System.Drawing.Size(250, 131);
+            this.dis_grp.TabIndex = 34;
+            this.dis_grp.TabStop = false;
+            this.dis_grp.Text = "Discord";
+            // 
+            // dis_lblToken
+            // 
+            this.dis_lblToken.AutoSize = true;
+            this.dis_lblToken.Location = new System.Drawing.Point(6, 50);
+            this.dis_lblToken.Name = "dis_lblToken";
+            this.dis_lblToken.Size = new System.Drawing.Size(55, 13);
+            this.dis_lblToken.TabIndex = 19;
+            this.dis_lblToken.Text = "Bot token:";
+            // 
+            // dis_lblChannel
+            // 
+            this.dis_lblChannel.AutoSize = true;
+            this.dis_lblChannel.Location = new System.Drawing.Point(6, 77);
+            this.dis_lblChannel.Name = "dis_lblChannel";
+            this.dis_lblChannel.Size = new System.Drawing.Size(61, 13);
+            this.dis_lblChannel.TabIndex = 30;
+            this.dis_lblChannel.Text = "Channel ID:";
+            // 
+            // dis_txtChannel
+            // 
+            this.dis_txtChannel.BackColor = System.Drawing.SystemColors.Window;
+            this.dis_txtChannel.Location = new System.Drawing.Point(82, 74);
+            this.dis_txtChannel.Name = "dis_txtChannel";
+            this.dis_txtChannel.Size = new System.Drawing.Size(152, 21);
+            this.dis_txtChannel.TabIndex = 31;
+            this.toolTip.SetToolTip(this.dis_txtOpChannel, "The ID of the channel that chat is sent to and read from.\n\n" +
+                                    "To get the ID of a channel on Discord, right click it and then click Copy ID on the dropdown menu");
+            // 
+            // dis_lblOpChannel
+            // 
+            this.dis_lblOpChannel.AutoSize = true;
+            this.dis_lblOpChannel.Location = new System.Drawing.Point(6, 104);
+            this.dis_lblOpChannel.Name = "dis_lblOpChannel";
+            this.dis_lblOpChannel.Size = new System.Drawing.Size(67, 13);
+            this.dis_lblOpChannel.TabIndex = 20;
+            this.dis_lblOpChannel.Text = "Opchanel ID:";
+            // 
+            // dis_chkEnabled
+            // 
+            this.dis_chkEnabled.AutoSize = true;
+            this.dis_chkEnabled.Location = new System.Drawing.Point(9, 20);
+            this.dis_chkEnabled.Name = "dis_chkEnabled";
+            this.dis_chkEnabled.Size = new System.Drawing.Size(96, 17);
+            this.dis_chkEnabled.TabIndex = 22;
+            this.dis_chkEnabled.Text = "Enable Discord integration";
+            this.toolTip.SetToolTip(this.dis_chkEnabled, "Enables sending chat to and reading chat from Discord channel(s) using a bot account");
+            this.dis_chkEnabled.UseVisualStyleBackColor = true;
+            this.dis_chkEnabled.CheckedChanged += new System.EventHandler(this.dis_chkEnabled_CheckedChanged);
+            // 
+            // dis_txtToken
+            // 
+            this.dis_txtToken.BackColor = System.Drawing.SystemColors.Window;
+            this.dis_txtToken.Location = new System.Drawing.Point(82, 47);
+            this.dis_txtToken.Name = "dis_txtToken";
+            this.dis_txtToken.PasswordChar = '*';
+            this.dis_txtToken.Size = new System.Drawing.Size(152, 21);
+            this.dis_txtToken.TabIndex = 15;
+            this.toolTip.SetToolTip(this.dis_txtToken, "The token for the bot account. You can find this token by:\n" +
+                                    "Going to Developer portal -> go to the bot application -> Settings -> Bot -> click Copy under TOKEN\n\n" +
+                                    "Note: This token allows full access to the bot - NEVER SHARE THIS TOKEN WITH ANYONE ELSE");
+            // 
+            // dis_txtOpChannel
+            // 
+            this.dis_txtOpChannel.BackColor = System.Drawing.SystemColors.Window;
+            this.dis_txtOpChannel.Location = new System.Drawing.Point(82, 101);
+            this.dis_txtOpChannel.Name = "dis_txtOpChannel";
+            this.dis_txtOpChannel.Size = new System.Drawing.Size(152, 21);
+            this.dis_txtOpChannel.TabIndex = 16;
+            this.toolTip.SetToolTip(this.dis_txtOpChannel, "The ID of the channel that staff only chat is sent to and read from. Can be left blank.\n\n" +
+                                    "To get the ID of a channel on Discord, right click it and then click Copy ID on the dropdown menu");
             // 
             // sql_grp
             // 
@@ -2586,7 +2682,7 @@ namespace MCGalaxy.Gui
             this.irc_grp.Controls.Add(this.irc_txtOpChannel);
             this.irc_grp.Location = new System.Drawing.Point(8, 3);
             this.irc_grp.Name = "irc_grp";
-            this.irc_grp.Size = new System.Drawing.Size(250, 214);
+            this.irc_grp.Size = new System.Drawing.Size(225, 214);
             this.irc_grp.TabIndex = 27;
             this.irc_grp.TabStop = false;
             this.irc_grp.Text = "IRC";
@@ -2913,7 +3009,7 @@ namespace MCGalaxy.Gui
                                     | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.pageServer);
             this.tabControl.Controls.Add(this.pageChat);
-            this.tabControl.Controls.Add(this.pageIRC);
+            this.tabControl.Controls.Add(this.pageRelay);
             this.tabControl.Controls.Add(this.pageEco);
             this.tabControl.Controls.Add(this.pageMisc);
             this.tabControl.Controls.Add(this.pageGames);
@@ -5435,6 +5531,8 @@ namespace MCGalaxy.Gui
             this.Load += new System.EventHandler(this.PropertyWindow_Load);
             this.Disposed += new System.EventHandler(this.PropertyWindow_Unload);
             this.pageChat.ResumeLayout(false);
+            this.dis_grp.ResumeLayout(false);
+            this.dis_grp.PerformLayout();
             this.chat_grpTab.ResumeLayout(false);
             this.chat_grpTab.PerformLayout();
             this.chat_grpMessages.ResumeLayout(false);
@@ -5488,7 +5586,7 @@ namespace MCGalaxy.Gui
             this.bak_grp.ResumeLayout(false);
             this.bak_grp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bak_numTime)).EndInit();
-            this.pageIRC.ResumeLayout(false);
+            this.pageRelay.ResumeLayout(false);
             this.gb_ircSettings.ResumeLayout(false);
             this.gb_ircSettings.PerformLayout();
             this.sql_grp.ResumeLayout(false);
@@ -5840,6 +5938,14 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.GroupBox blk_grpPermissions;
         #endregion
         
+        private System.Windows.Forms.TextBox dis_txtOpChannel;
+        private System.Windows.Forms.Label dis_lblOpChannel;
+        private System.Windows.Forms.TextBox dis_txtChannel;
+        private System.Windows.Forms.Label dis_lblChannel;
+        private System.Windows.Forms.TextBox dis_txtToken;
+        private System.Windows.Forms.Label dis_lblToken;
+        private System.Windows.Forms.CheckBox dis_chkEnabled;
+        private System.Windows.Forms.GroupBox dis_grp;
         private System.Windows.Forms.ComboBox rank_cmbOsMap;
         private System.Windows.Forms.Label rank_lblOsMap;
         private System.Windows.Forms.TextBox rank_txtPrefix;
@@ -5960,7 +6066,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label afk_lblTimer;
         private System.Windows.Forms.Label bak_lblTime;
         private System.Windows.Forms.Label bak_lblLocation;
-        private System.Windows.Forms.TabPage pageIRC;
+        private System.Windows.Forms.TabPage pageRelay;
         private System.Windows.Forms.TextBox irc_txtOpChannel;
         private System.Windows.Forms.TextBox irc_txtChannel;
         private System.Windows.Forms.TextBox irc_txtServer;

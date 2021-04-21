@@ -71,8 +71,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         public static void Connect() {
-            if (Bot != null && Bot.Connected) return;
-            Bot = new DiscordBot();
+            if (Bot.Connected) return;
             Bot.RunAsync(Config);
         }
     }

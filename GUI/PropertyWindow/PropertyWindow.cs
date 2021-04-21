@@ -82,14 +82,15 @@ namespace MCGalaxy.Gui {
                 ApplyMiscProps();
                 ApplyRankProps();
                 ApplySecurityProps();
-                zsSettings.ApplyToServer();
                 
+                zsSettings.ApplyToServer();
                 SrvProperties.Save();
-                Economy.Save();
+                Economy.Save();                
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "SAVE FAILED! properties/server.properties");
             }
+            SaveDiscordProps();
         }
 
         void btnSave_Click(object sender, EventArgs e) { SaveChanges(); Dispose(); }

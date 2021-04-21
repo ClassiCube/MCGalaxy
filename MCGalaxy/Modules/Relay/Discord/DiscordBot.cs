@@ -35,7 +35,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         public override string RelayName { get { return "Discord"; } }        
         public override bool Enabled { get { return config.Enabled; } }
-        public override bool Connected { get { return !disconnected; } }
+        public override bool Connected { get { return socket != null && !disconnected; } }
         
         
         public void RunAsync(DiscordConfig conf) {
