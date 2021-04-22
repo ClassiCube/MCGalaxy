@@ -94,7 +94,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public void StopAsync() {
             terminating = true;
             WakeupWorker();
-        }       
+        }
+        
         
         public void MakeRequest(string path, JsonObject obj) {
             Request req = new Request();

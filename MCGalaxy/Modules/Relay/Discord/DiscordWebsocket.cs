@@ -78,11 +78,19 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         public override void Close() {
             Server.MainScheduler.Cancel(heartbeat);
-            client.Close();
+            try {
+                client.Close();
+            } catch {
+                // ignore errors when closing socket
+            }
         }
         
         protected override void Disconnect(int reason) {
-            base.Disconnect(reason);
+            try {
+                base.Disconnect(reason);
+            } catch {
+                // try to cleanly close connection when possible
+            }
             Close();
         }
         

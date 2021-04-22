@@ -107,6 +107,13 @@ namespace MCGalaxy.Modules.Relay {
             if (Enabled) Connect();
         }
         
+        protected void AutoReconnect() {
+            if (resetting || retries >= 3) return;
+            
+            retries++;
+            Connect();
+        }
+        
         protected abstract void DoConnect();
         protected abstract void DoDisconnect(string reason);        
 

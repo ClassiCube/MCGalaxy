@@ -25,17 +25,25 @@ using MCGalaxy.Events.ServerEvents;
 namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordBot : RelayBot {
-        bool disconnected;
+        bool disconnected, disconnecting;
         string[] operatorIds;
         
         DiscordApiClient api;
         DiscordWebsocket socket;        
-        Thread worker;
-        
+
         public override string RelayName { get { return "Discord"; } }        
         public override bool Enabled     { get { return Config.Enabled; } }
         public override bool Connected   { get { return socket != null && !disconnected; } }
         public DiscordConfig Config;
+        
+        void TryReconnect() {
+            try {
+                Disconnect("Attempting reconnect");
+                AutoReconnect();
+            } catch (Exception ex) {
+                Logger.LogError("Error reconnecting Discord relay", ex);
+            }
+        }
         
         void IOThread() {
             try {
@@ -43,13 +51,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 socket.ReadLoop();
             } catch (Exception ex) {
                 Logger.LogError("Discord relay error", ex);
+                if (disconnecting) return;
+                
+                // try to recover from dropped connection
+                TryReconnect();
             }
         }
         
         protected override void DoConnect() {
             // TODO implement properly
-            disconnecting = false;
             socket = new DiscordWebsocket();
+            disconnecting = false;
+            disconnected  = false;
             
             Channels    = Config.Channels.SplitComma();
             OpChannels  = Config.OpChannels.SplitComma();
@@ -60,19 +73,16 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.GetStatus = GetStatus;
             socket.OnReady   = OnReady;
                 
-            worker      = new Thread(IOThread);
+            Thread worker = new Thread(IOThread);
             worker.Name = "DiscordRelayBot";
             worker.IsBackground = true;
             worker.Start();
         }
         
-        volatile bool disconnecting;
         protected override void DoDisconnect(string reason) {
-            if (disconnecting) return;
             disconnecting = true;
-            
             try {
-            	if (api != null) api.StopAsync();
+                if (api != null) api.StopAsync();
                 socket.Disconnect();
             } finally {
                 disconnected = true;

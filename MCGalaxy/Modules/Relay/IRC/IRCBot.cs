@@ -318,9 +318,7 @@ namespace MCGalaxy {
             }
         }
 
-        void OnDisconnected() {
-            if (!resetting && retries < 3) { retries++; Connect(); }
-        }
+        void OnDisconnected() { AutoReconnect(); }
 
         void OnNick(UserInfo user, string newNick) {
             //Chat.MessageGlobal(Server.IRCColor + "(IRC) " + user.Nick + " changed nick to " + newNick);
