@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         DiscordApiClient api;
         DiscordWebsocket socket;        
-        Thread thread;
+        Thread worker;
         
         public override string RelayName { get { return "Discord"; } }        
         public override bool Enabled     { get { return Config.Enabled; } }
@@ -60,10 +60,10 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.GetStatus = GetStatus;
             socket.OnReady   = OnReady;
                 
-            thread      = new Thread(IOThread);
-            thread.Name = "DiscordRelayBot";
-            thread.IsBackground = true;
-            thread.Start();
+            worker      = new Thread(IOThread);
+            worker.Name = "DiscordRelayBot";
+            worker.IsBackground = true;
+            worker.Start();
         }
         
         volatile bool disconnecting;
@@ -72,6 +72,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             disconnecting = true;
             
             try {
+            	if (api != null) api.StopAsync();
                 socket.Disconnect();
             } finally {
                 disconnected = true;
@@ -106,6 +107,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void OnReady() {
             api = new DiscordApiClient();
             api.Token = Config.BotToken;
+            
+            api.RunAsync();
             RegisterEvents();
         }
         
