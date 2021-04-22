@@ -77,7 +77,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         public override void Close() {
-            Server.MainScheduler.Cancel(heartbeat);
+            Server.Background.Cancel(heartbeat);
             try {
                 client.Close();
             } catch {
