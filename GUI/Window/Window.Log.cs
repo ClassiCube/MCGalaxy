@@ -23,18 +23,18 @@ namespace MCGalaxy.Gui {
     public partial class Window : Form {
         
         void logs_dateGeneral_Changed(object sender, EventArgs e) {
-            string day = logs_dateGeneral.Value.Day.ToString().PadLeft(2, '0');
-            string year = logs_dateGeneral.Value.Year.ToString();
-            string month = logs_dateGeneral.Value.Month.ToString().PadLeft(2, '0');
-
-            string date = year + "-" + month + "-" + day;
+            string date = logs_dateGeneral.Value.ToString("yyyy-MM-dd").Replace("/", "-");
             string path = Path.Combine("logs", date + ".txt");
 
-            if (!File.Exists(path)) {
-                logs_txtGeneral.Text = "No logs found for: " + date;
-            } else {
-                logs_txtGeneral.Text = null;
+            try {
                 logs_txtGeneral.Text = File.ReadAllText(path);
+            } catch (FileNotFoundException) {
+                logs_txtGeneral.Text = "No logs found for: " + date;
+            } catch (Exception ex) {
+                logs_txtGeneral.Text = null;
+                
+                Logger.LogError("Opening " + path, ex);
+                Popup.Error("Failed to open logfile " + path);
             }
         }
     }

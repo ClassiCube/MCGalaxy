@@ -28,7 +28,7 @@ namespace MCGalaxy.Cli {
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            // If MCGalaxy_.dll is missing, .NET will throw a FileNotFoundException for MCGalaxy dll
+            // If MCGalaxy_.dll is missing, a FileNotFoundException will get thrown for MCGalaxy dll
             try {
                 EnableCLIMode();
             } catch (FileNotFoundException) {
