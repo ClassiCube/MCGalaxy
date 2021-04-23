@@ -28,13 +28,17 @@ namespace MCGalaxy.Cli {
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            if (!File.Exists("MCGalaxy_.dll")) {
+            // If MCGalaxy_.dll is missing, .NET will throw a FileNotFoundException for MCGalaxy dll
+            try {
+                EnableCLIMode();
+            } catch (FileNotFoundException) {
                 Console.WriteLine("Cannot start server as MCGalaxy_.dll is missing from " + Environment.CurrentDirectory);
                 Console.WriteLine("Download from " + Updater.UploadsURL);
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey(true);
                 return;
             }
+            
             // separate method, in case MCGalaxy_.dll is missing
             StartCLI();
         }
@@ -43,13 +47,13 @@ namespace MCGalaxy.Cli {
             try {
                 Server.CLIMode = true;
             } catch {
-                // in case user is running CLI with older MCGalaxy dll
+                // in case user is running CLI with older MCGalaxy dll which lacked CLIMode field
             }
+            Server.RestartPath = Path.GetFileName(Assembly.GetEntryAssembly().Location);
         }
         
         static void StartCLI() {
             FileLogger.Init();
-            Server.RestartPath = Path.GetFileName(Assembly.GetEntryAssembly().Location);
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             
             try {
