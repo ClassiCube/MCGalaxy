@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * (double)curHeight / (double)height;
+                int curRadius = Radius * curHeight / height;
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;               
                 output(Place(x, y, z, brush));
@@ -80,9 +80,12 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * (double)curHeight / (double)height;
+                int curRadius = Radius * curHeight / height;
+                int curRadius2 = Radius * (curHeight-1) / height;
                 int dist = xx * xx + zz * zz;
-                if (dist > curRadius * curRadius || dist < (curRadius - 1) * (curRadius - 1)) continue;              
+                if (dist > curRadius * curRadius ||
+                    (dist <= (curRadius - 1) * (curRadius - 1) &&
+                     dist <= (curRadius2) * (curRadius2) )) continue;
                 output(Place(x, y, z, brush));
             }
         }
@@ -109,11 +112,16 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * (double)curHeight / (double)height;
+                int curRadius = Radius * curHeight / height;
+                int curRadius2 = Radius * (curHeight-1) / height;
                 int dist = xx * xx + zz * zz;
                 if (dist > curRadius * curRadius) continue;
                 
-                bool layer = dist >= (curRadius - 1) * (curRadius - 1);
+                bool layer =
+                   !(dist <= (curRadius - 1) * (curRadius - 1) &&
+                     dist <= (curRadius2) * (curRadius2) )
+                     || curRadius == 0;
+
                 BlockID block = layer ? Block.Grass : Block.StillLava;
                 output(Place(x, y, z, block));
             }

@@ -79,9 +79,11 @@ namespace MCGalaxy.Drawing.Ops {
                 if (curHeight == 0) continue;
                 
                 int curRadius = Radius * curHeight / height;
+                int curRadius2 = Radius * (curHeight-1) / height;
                 int absx = Math.Abs(xx), absz = Math.Abs(zz);
                 if (absx > curRadius || absz > curRadius) continue;
-                if (absx < (curRadius - 1) && absz < (curRadius - 1)) continue;
+                if (absx <= (curRadius - 1) && absz <= (curRadius - 1) &&
+                    absx <= (curRadius2) && absz <= (curRadius2)) continue;
                 output(Place(x, y, z, brush));
             }
         }
