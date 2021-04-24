@@ -23,7 +23,7 @@ namespace MCGalaxy.Gui {
     public partial class Window : Form {
         
         void logs_dateGeneral_Changed(object sender, EventArgs e) {
-            string date = logs_dateGeneral.Value.ToString("yyyy-MM-dd").Replace("/", "-");
+            string date = logs_dateGeneral.Value.ToString("yyyy-MM-dd");
             string path = Path.Combine("logs", date + ".txt");
 
             try {
