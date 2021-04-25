@@ -24,7 +24,7 @@ using MCGalaxy.SQL;
 namespace MCGalaxy.Eco {
     public static partial class Economy {
         
-        static ColumnDesc[] createEconomy = new ColumnDesc[] {
+        static ColumnDesc[] ecoTable = new ColumnDesc[] {
             new ColumnDesc("player", ColumnType.VarChar, 20, priKey: true),
             new ColumnDesc("money", ColumnType.Int32),
             new ColumnDesc("total", ColumnType.Int32),
@@ -42,7 +42,7 @@ namespace MCGalaxy.Eco {
         }
         
         public static void LoadDatabase() {
-            Database.CreateTable("Economy", createEconomy);
+            Database.CreateTable("Economy", ecoTable);
             
             // money used to be in the Economy table, move it back to the Players table
             List<EcoStats> outdated = new List<EcoStats>();

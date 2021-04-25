@@ -27,7 +27,7 @@ namespace MCGalaxy.Games {
 
         struct CtfStats { public int Points, Captures, Tags; }
         
-        static ColumnDesc[] createSyntax = new ColumnDesc[] {
+        static ColumnDesc[] ctfTable = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Name", ColumnType.VarChar, 20),
             new ColumnDesc("Points", ColumnType.UInt24),

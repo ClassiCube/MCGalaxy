@@ -49,7 +49,7 @@ namespace MCGalaxy.Cli {
             } catch {
                 // in case user is running CLI with older MCGalaxy dll which lacked CLIMode field
             }
-            Server.RestartPath = Path.GetFileName(Assembly.GetEntryAssembly().Location);
+            Server.RestartPath = Assembly.GetEntryAssembly().Location;
         }
         
         static void StartCLI() {

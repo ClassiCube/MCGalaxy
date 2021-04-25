@@ -24,7 +24,7 @@ using MCGalaxy.SQL;
 namespace MCGalaxy {
     public sealed partial class Server {
         
-        static ColumnDesc[] createPlayers = new ColumnDesc[] {
+        static ColumnDesc[] playersTable = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Name", ColumnType.VarChar, 17),
             new ColumnDesc("IP", ColumnType.Char, 15),
@@ -43,7 +43,7 @@ namespace MCGalaxy {
             new ColumnDesc("Messages", ColumnType.UInt24),
         };
         
-        static ColumnDesc[] createOpstats = new ColumnDesc[] {
+        static ColumnDesc[] opstatsTable = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Time", ColumnType.DateTime),
             new ColumnDesc("Name", ColumnType.VarChar, 17),
@@ -62,8 +62,8 @@ namespace MCGalaxy {
                 return;
             }
 
-            Database.CreateTable("Opstats", createOpstats);
-            Database.CreateTable("Players", createPlayers);
+            Database.CreateTable("Opstats", opstatsTable);
+            Database.CreateTable("Players", playersTable);
             
             //since 5.5.11 we are cleaning up the table Playercmds
             //if Playercmds exists copy-filter to Opstats and remove Playercmds
