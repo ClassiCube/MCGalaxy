@@ -19,12 +19,23 @@
  */
 using System.CodeDom.Compiler;
 using System;
+#if NETSTANDARD
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+#endif
 
 namespace MCGalaxy.Scripting {
-    public sealed class CSCompiler : ICodeDomCompiler {    
+    public sealed class CSCompiler : ICodeDomCompiler {        
+        public override string FileExtension { get { return ".cs"; } }
+        public override string LanguageName  { get { return "CSharp"; } }        
+
+        protected override CodeDomProvider CreateProvider() {
+#if NETSTANDARD
+            return new CSharpCodeProvider();
+#else
+            return CodeDomProvider.CreateProvider("CSharp");
+#endif
+        }
         
-        public override string Ext { get { return ".cs"; } }        
-        public override string ProviderName { get { return "CSharp"; } }     
         protected override void PrepareArgs(CompilerParameters args) {
             args.CompilerOptions += " /unsafe";
         }
@@ -114,10 +125,18 @@ namespace MCGalaxy
         }
     }
     
-    public sealed class VBCompiler : ICodeDomCompiler {
+    public sealed class VBCompiler : ICodeDomCompiler {       
+        public override string FileExtension { get { return ".vb"; } }
+        public override string LanguageName  { get { return "Visual Basic"; } }
         
-        public override string Ext { get { return ".vb"; } }
-        public override string ProviderName { get { return "VisualBasic"; } }
+        protected override CodeDomProvider CreateProvider() {
+#if NETSTANDARD
+            return new VBCodeProvider();
+#else
+            return CodeDomProvider.CreateProvider("VisualBasic");
+#endif
+        }
+        
         protected override void PrepareArgs(CompilerParameters args) { }
         
         public override string CommandSkeleton {

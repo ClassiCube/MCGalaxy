@@ -138,17 +138,23 @@ namespace MCGalaxy.Scripting {
         }
     }
     
-    /// <summary> Compiles source code files from a particular language into a .dll file. </summary>
+    /// <summary> Compiles source code files for a particular programming language into a .dll </summary>
     public abstract class ICompiler {
         
         public const string SourceDir = "extra/commands/source/";
         public const string ErrorPath = "logs/errors/compiler.log";
-        public abstract string Ext { get; }
+        
+        /// <summary> Default file extension used for source code files (e.g. ".cs") </summary>
+        public abstract string FileExtension { get; }
+        /// <summary> The full name of this programming language (e.g. "CSharp") </summary>
+        public abstract string LanguageName { get; }
+        /// <summary> Returns source code for an example MCGalaxy command </summary>
         public abstract string CommandSkeleton { get; }
+        /// <summary> Returns source code for an example MCGalaxy plugin </summary>
         public abstract string PluginSkeleton { get; }
         
-        public string CommandPath(string name) { return SourceDir + "Cmd" + name + Ext; }
-        public string PluginPath(string name)  { return "plugins/" + name + Ext; }
+        public string CommandPath(string name) { return SourceDir + "Cmd" + name + FileExtension; }
+        public string PluginPath(string name)  { return "plugins/" + name + FileExtension; }
         
         /// <summary> C# compiler instance. </summary>
         public static ICompiler CS = new CSCompiler();
@@ -240,7 +246,8 @@ namespace MCGalaxy.Scripting {
         readonly object compilerLock = new object();
         CodeDomProvider compiler;
         
-        public abstract string ProviderName { get; }
+        /// <summary> Creates a CodeDomProvider instance for this programming language </summary>
+        protected abstract CodeDomProvider CreateProvider();
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
         
@@ -248,12 +255,12 @@ namespace MCGalaxy.Scripting {
         void InitCompiler() {
             lock (compilerLock) {
                 if (compiler != null) return;
-                compiler = CodeDomProvider.CreateProvider(ProviderName);
+                compiler = CreateProvider();
                 if (compiler != null) return;
                 
                 Logger.Log(LogType.Warning, 
                            "WARNING: {0} compiler is missing, you will be unable to compile {1} files.", 
-                           ProviderName, Ext);
+                           LanguageName, FileExtension);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
         }       

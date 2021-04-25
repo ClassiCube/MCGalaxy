@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Scripting {
             ICompiler engine = ICompiler.Lookup(language, p);
             if (engine == null) return;
             
-            string srcPath = "plugins/" + name + engine.Ext;
+            string srcPath = "plugins/" + name + engine.FileExtension;
             string dstPath = IScripting.PluginPath(name);  
             if (!File.Exists(srcPath)) {
                 p.Message("File &9{0} &Snot found.", srcPath); return;

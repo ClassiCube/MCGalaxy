@@ -51,7 +51,7 @@ namespace MCGalaxy.Gui.Popups {
                 Popup.Error("Failed to generate command. Check error logs for more details.");
                 return;
             }
-            Popup.Message("Command Cmd" + cmdName + engine.Ext + " created.");
+            Popup.Message("Command Cmd" + cmdName + engine.FileExtension + " created.");
         }
         
         void btnCreateCS_Click(object sender, EventArgs e) { CreateCommand(ICompiler.CS); }
