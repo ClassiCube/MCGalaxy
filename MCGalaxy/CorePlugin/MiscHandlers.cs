@@ -69,7 +69,7 @@ namespace MCGalaxy.Core {
             p.SendCurrentEnv();
             
             if (p.isFlying && !Hacks.CanUseFly(p)) {
-                p.Message("You cannot use &T/Fly &Sin this zone.");
+                p.Message("You cannot use &T/Fly &Son this map.");
                 p.isFlying = false;
             }
 
