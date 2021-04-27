@@ -47,7 +47,7 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;              
                 
-                double curRadius = Radius * ((double)curHeight / (double)height);
+                int curRadius = Radius * curHeight / height;
                 if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius) continue;            
                 output(Place(x, y, z, brush));
             }
@@ -78,10 +78,12 @@ namespace MCGalaxy.Drawing.Ops {
                 int curHeight = Invert ? yy : height - yy;
                 if (curHeight == 0) continue;
                 
-                double curRadius = Radius * ((double)curHeight / (double)height);
+                int curRadius = Radius * curHeight / height;
+                int curRadius2 = Radius * (curHeight-1) / height;
                 int absx = Math.Abs(xx), absz = Math.Abs(zz);
                 if (absx > curRadius || absz > curRadius) continue;
-                if (absx < (curRadius - 1) && absz < (curRadius - 1)) continue;
+                if (absx <= (curRadius - 1) && absz <= (curRadius - 1) &&
+                    absx <= (curRadius2) && absz <= (curRadius2)) continue;
                 output(Place(x, y, z, brush));
             }
         }
