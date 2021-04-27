@@ -64,13 +64,18 @@ namespace MCGalaxy.Core {
             }
         }
 		
-		internal static void HandleChangedZone(Player p) {
-			if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
+        internal static void HandleChangedZone(Player p) {
+            if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
             p.SendCurrentEnv();
             
             if (p.isFlying && !Hacks.CanUseFly(p)) {
-                p.Message("You cannot use &T/Fly &Son this map.");
+                p.Message("You cannot use &T/Fly &Sin this zone.");
                 p.isFlying = false;
+            }
+
+            Zone zone = p.ZoneIn;
+            if (zone != null && zone.Config.Text != "") {
+                MessageBlock.Execute(p, zone.Config.Text, p.Pos.FeetBlockCoords);
             }
         }
         
