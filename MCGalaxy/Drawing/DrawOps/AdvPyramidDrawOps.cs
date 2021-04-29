@@ -25,7 +25,7 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops {
-    public class AdvPyramidDrawOp : AdvDrawOp {        
+    public class AdvPyramidDrawOp : AdvDrawOp {
         public override string Name { get { return "Adv Pyramid"; } }
         public AdvPyramidDrawOp(bool invert = false) { Invert = invert; }
         
@@ -36,25 +36,28 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            Vec3S32 C = (Min + Max) / 2;
+            Vec3S32 C  = (Min + Max) / 2;
+            int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
+            {
+                int dy = y - Min.Y;
+                int curHeight = Invert ? dy : height - dy;
+                if (curHeight == 0) continue;
+                int curRadius = Radius * curHeight / height;
+                
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
-            {
-                int height = Max.Y - Min.Y;
-                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : height - yy;
-                if (curHeight == 0) continue;              
-                
-                int curRadius = Radius * curHeight / height;
-                if (Math.Abs(xx) > curRadius || Math.Abs(zz) > curRadius) continue;            
-                output(Place(x, y, z, brush));
+                {
+                    int dx = C.X - x, dz = C.Z - z;
+                    if (Math.Abs(dx) > curRadius || Math.Abs(dz) > curRadius) continue;
+                    output(Place(x, y, z, brush));
+                }
             }
         }
     }
     
-    public class AdvHollowPyramidDrawOp : AdvDrawOp {      
+    public class AdvHollowPyramidDrawOp : AdvDrawOp {
         public override string Name { get { return "Adv Hollow Pyramid"; } }
         public AdvHollowPyramidDrawOp(bool invert = false) { Invert = invert; }
         
@@ -67,24 +70,28 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            Vec3S32 C = (Min + Max) / 2;
+            Vec3S32 C  = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
-                for (ushort z = p1.Z; z <= p2.Z; z++)
-                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : height - yy;
+                int dy = y - Min.Y;
+                int curHeight = Invert ? dy : height - dy;
                 if (curHeight == 0) continue;
                 
-                int curRadius = Radius * curHeight / height;
-                int curRadius2 = Radius * (curHeight-1) / height;
-                int absx = Math.Abs(xx), absz = Math.Abs(zz);
-                if (absx > curRadius || absz > curRadius) continue;
-                if (absx <= (curRadius - 1) && absz <= (curRadius - 1) &&
-                    absx <= (curRadius2) && absz <= (curRadius2)) continue;
-                output(Place(x, y, z, brush));
+                int curRadius  = Radius * curHeight       / height;
+                int curRadius2 = Radius * (curHeight - 1) / height;
+                
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
+                {
+                    int xx = Math.Abs(C.X - x), zz = Math.Abs(C.Z - z);
+                    if (xx > curRadius || zz > curRadius) continue;
+                    
+                    if (xx <= (curRadius - 1) && zz <= (curRadius - 1) && 
+                        xx <= (curRadius2)    && zz <= (curRadius2)  ) continue;
+                    output(Place(x, y, z, brush));
+                }
             }
         }
     }

@@ -37,26 +37,29 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            Vec3S32 C = (Min + Max) / 2;
+            Vec3S32 C  = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
+            {
+                int dy = y - Min.Y;
+                int curHeight = Invert ? dy : height - dy;
+                if (curHeight == 0) continue;
+                int curRadius = Radius * curHeight / height;
+                
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
-            {
-                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : height - yy;
-                if (curHeight == 0) continue;
-                
-                int curRadius = Radius * curHeight / height;
-                int dist = xx * xx + zz * zz;
-                if (dist > curRadius * curRadius) continue;               
-                output(Place(x, y, z, brush));
+                {
+                    int dx   = C.X - x, dz = C.Z - z;
+                    int dist = dx * dx + dz * dz;
+                    if (dist > curRadius * curRadius) continue;
+                    output(Place(x, y, z, brush));
+                }
             }
         }
     }
     
-    public class AdvHollowConeDrawOp : AdvDrawOp {        
+    public class AdvHollowConeDrawOp : AdvDrawOp {
         public override string Name { get { return "Adv Hollow Cone"; } }
         public AdvHollowConeDrawOp(bool invert = false) { Invert = invert; }
         
@@ -69,29 +72,34 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            Vec3S32 C = (Min + Max) / 2;
+            Vec3S32 C  = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
-                for (ushort z = p1.Z; z <= p2.Z; z++)
-                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
-                int curHeight = Invert ? yy : height - yy;
+                int dy = y - Min.Y;
+                int curHeight = Invert ? dy : height - dy;
                 if (curHeight == 0) continue;
                 
-                int curRadius = Radius * curHeight / height;
-                int curRadius2 = Radius * (curHeight-1) / height;
-                int dist = xx * xx + zz * zz;
-                if (dist > curRadius * curRadius ||
-                    (dist <= (curRadius - 1) * (curRadius - 1) &&
-                     dist <= (curRadius2) * (curRadius2) )) continue;
-                output(Place(x, y, z, brush));
+                int curRadius  = Radius * curHeight       / height;
+                int curRadius2 = Radius * (curHeight - 1) / height;
+                
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
+                {
+                    int dx   = C.X - x, dz = C.Z - z;
+                    int dist = dx * dx + dz * dz;
+                    if (dist > curRadius * curRadius) continue;
+                    
+                    if (dist <= (curRadius - 1) * (curRadius - 1) &&
+                        dist <= (curRadius2)    * (curRadius2)  ) continue;
+                    output(Place(x, y, z, brush));
+                }
             }
         }
     }
     
-    public class AdvVolcanoDrawOp : AdvDrawOp {       
+    public class AdvVolcanoDrawOp : AdvDrawOp {
         public override string Name { get { return "Adv Volcano"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -101,29 +109,32 @@ namespace MCGalaxy.Drawing.Ops {
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            Vec3S32 C = (Min + Max) / 2;
+            Vec3S32 C  = (Min + Max) / 2;
             int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
-                for (ushort z = p1.Z; z <= p2.Z; z++)
-                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                int xx = C.X - x, yy = y - Min.Y, zz = C.Z - z;
+                int yy = y - Min.Y;
                 int curHeight = height - yy;
                 if (curHeight == 0) continue;
                 
-                int curRadius = Radius * curHeight / height;
-                int curRadius2 = Radius * (curHeight-1) / height;
-                int dist = xx * xx + zz * zz;
-                if (dist > curRadius * curRadius) continue;
+                int curRadius  = Radius * curHeight       / height;
+                int curRadius2 = Radius * (curHeight - 1) / height;
                 
-                bool layer =
-                   !(dist <= (curRadius - 1) * (curRadius - 1) &&
-                     dist <= (curRadius2) * (curRadius2) )
-                     || curRadius == 0;
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
+                {
+                    int dx   = C.X - x, dz = C.Z - z;
+                    int dist = dx * dx + dz * dz;
+                    if (dist > curRadius * curRadius) continue;
+                    
+                    bool layer = curRadius == 0 ||
+                        !(dist <= (curRadius - 1) * (curRadius - 1) &&
+                          dist <= (curRadius2   ) * (curRadius2   ) );
 
-                BlockID block = layer ? Block.Grass : Block.StillLava;
-                output(Place(x, y, z, block));
+                    BlockID block = layer ? Block.Grass : Block.StillLava;
+                    output(Place(x, y, z, block));
+                }
             }
         }
     }
