@@ -173,7 +173,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             SendMessage(obj);
         }
         
-        const int INTENT_GUILD_MESSAGES = 1 << 9;
+        const int INTENT_GUILD_MESSAGES  = 1 << 9;
+        const int INTENT_DIRECT_MESSAGES = 1 << 12;
         
         public void SendIdentify() {
             JsonObject props = new JsonObject()
@@ -186,7 +187,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             JsonObject data = new JsonObject()
             {
                 { "token",      Token },
-                { "intents",    INTENT_GUILD_MESSAGES },
+                { "intents",    INTENT_GUILD_MESSAGES | INTENT_DIRECT_MESSAGES },
                 { "properties", props },
                 { "presence",   MakePresence() }
             };
