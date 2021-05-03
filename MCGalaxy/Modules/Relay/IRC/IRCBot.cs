@@ -112,7 +112,7 @@ namespace MCGalaxy {
         };
         static readonly Regex ircTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
-        public static string ParseMessage(string input) {
+        string ParseMessage(string input) {
             // get rid of background color component of some IRC color codes.
             input = ircTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
@@ -123,12 +123,7 @@ namespace MCGalaxy {
             for (int i = 0; i < ircSingle.Length; i++) {
                 sb.Replace(ircSingle[i], ircReplacements[i]);
             }
-            
-            // simplify fancy quotes
-            sb.Replace("“", "\"");
-            sb.Replace("”", "\"");
-            sb.Replace("‘", "'");
-            sb.Replace("’", "'"); 
+            SimplifyCharacters(sb);
             
             // remove misc formatting chars
             sb.Replace("\x02", ""); // bold

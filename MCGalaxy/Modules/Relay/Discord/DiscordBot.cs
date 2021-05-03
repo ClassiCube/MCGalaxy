@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Text;
 using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
@@ -97,6 +98,15 @@ namespace MCGalaxy.Modules.Relay.Discord {
             if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
         }
         
+        string ParseMessage(string input) {
+            StringBuilder sb = new StringBuilder(input);
+            SimplifyCharacters(sb);
+            
+            // remove variant selector character used with some emotes
+            sb.Replace("\uFE0F", "");
+            return sb.ToString();
+        }
+        
         string GetNick(JsonObject data) {
             if (!Config.UseNicks) return null;
             object raw;
@@ -116,7 +126,10 @@ namespace MCGalaxy.Modules.Relay.Discord {
             string channel    = (string)data["channel_id"];
             string message    = (string)data["content"];
             
-            RelayUser user = new RelayUser();
+            RelayUser user;
+            message = ParseMessage(message);
+            user    = new RelayUser();
+            
             user.Nick   = GetNick(data) ?? (string)author["username"];
             user.UserID =                  (string)author["id"];            
             HandleChannelMessage(user, channel, message);

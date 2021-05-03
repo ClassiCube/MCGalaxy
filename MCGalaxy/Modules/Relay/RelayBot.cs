@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.ServerEvents;
@@ -196,6 +197,15 @@ namespace MCGalaxy.Modules.Relay {
             Disconnect(restarting ? "Server is restarting" : "Server is shutting down");
         }
         
+        
+        /// <summary> Simplifies some fancy characters (e.g. simplifies ” to ") </summary>
+        protected void SimplifyCharacters(StringBuilder sb) {
+            // simplify fancy quotes
+            sb.Replace("“", "\"");
+            sb.Replace("”", "\"");
+            sb.Replace("‘", "'");
+            sb.Replace("’", "'");
+        }
         
         protected void HandleUserMessage(RelayUser user, string message) {
             string[] parts = message.SplitSpaces(2);
