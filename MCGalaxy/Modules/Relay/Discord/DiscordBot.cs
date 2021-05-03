@@ -97,6 +97,19 @@ namespace MCGalaxy.Modules.Relay.Discord {
             if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
         }
         
+        string GetNick(JsonObject data) {
+            if (!Config.UseNicks) return null;
+            object raw;
+            if (!data.TryGetValue("member", out raw)) return null;
+            
+            // Make sure this is really a member object first
+            JsonObject member = raw as JsonObject;
+            if (member == null) return null;
+            
+            member.TryGetValue("nick", out raw);
+            return raw as string;
+        }
+        
         void HandleMessageEvent(JsonObject obj) {
             JsonObject data   = (JsonObject)obj["d"];
             JsonObject author = (JsonObject)data["author"];
@@ -104,8 +117,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             string message    = (string)data["content"];
             
             RelayUser user = new RelayUser();
-            user.Nick   = (string)author["username"];
-            user.UserID = (string)author["id"];            
+            user.Nick   = GetNick(data) ?? (string)author["username"];
+            user.UserID =                  (string)author["id"];            
             HandleChannelMessage(user, channel, message);
         }
         

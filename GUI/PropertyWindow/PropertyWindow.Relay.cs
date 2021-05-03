@@ -104,6 +104,7 @@ namespace MCGalaxy.Gui {
             dis_txtToken.Text      = cfg.BotToken;
             dis_txtChannel.Text    = cfg.Channels;
             dis_txtOpChannel.Text  = cfg.OpChannels;
+            dis_chkNicks.Checked   = cfg.UseNicks;
             ToggleDiscordSettings(cfg.Enabled);
         }
         
@@ -113,6 +114,7 @@ namespace MCGalaxy.Gui {
             cfg.BotToken   = dis_txtToken.Text;
             cfg.Channels   = dis_txtChannel.Text;
             cfg.OpChannels = dis_txtOpChannel.Text;
+            cfg.UseNicks   = dis_chkNicks.Checked;
         }
         
         void SaveDiscordProps() {
@@ -123,6 +125,7 @@ namespace MCGalaxy.Gui {
             dis_txtToken.Enabled = enabled; dis_lblToken.Enabled = enabled;
             dis_txtChannel.Enabled = enabled; dis_lblChannel.Enabled = enabled;
             dis_txtOpChannel.Enabled = enabled; dis_lblOpChannel.Enabled = enabled;
+            dis_chkNicks.Enabled = enabled;
         }
         
         void dis_chkEnabled_CheckedChanged(object sender, EventArgs e) {

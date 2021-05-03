@@ -122,6 +122,7 @@ namespace MCGalaxy.Gui
             this.dis_txtChannel = new System.Windows.Forms.TextBox();
             this.dis_lblOpChannel = new System.Windows.Forms.Label();
             this.dis_chkEnabled = new System.Windows.Forms.CheckBox();
+            this.dis_chkNicks = new System.Windows.Forms.CheckBox();
             this.dis_txtToken = new System.Windows.Forms.TextBox();
             this.dis_txtOpChannel = new System.Windows.Forms.TextBox();
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
@@ -2464,9 +2465,10 @@ namespace MCGalaxy.Gui
             this.dis_grp.Controls.Add(this.dis_txtChannel);
             this.dis_grp.Controls.Add(this.dis_lblOpChannel);
             this.dis_grp.Controls.Add(this.dis_txtOpChannel);
+            this.dis_grp.Controls.Add(this.dis_chkNicks);
             this.dis_grp.Location = new System.Drawing.Point(241, 3);
             this.dis_grp.Name = "dis_grp";
-            this.dis_grp.Size = new System.Drawing.Size(250, 131);
+            this.dis_grp.Size = new System.Drawing.Size(250, 158);
             this.dis_grp.TabIndex = 34;
             this.dis_grp.TabStop = false;
             this.dis_grp.Text = "Discord";
@@ -2541,6 +2543,16 @@ namespace MCGalaxy.Gui
             this.dis_txtOpChannel.TabIndex = 16;
             this.toolTip.SetToolTip(this.dis_txtOpChannel, "The ID of the channel that staff only chat is sent to and read from. Can be left blank.\n\n" +
                                     "To get the ID of a channel on Discord, right click it and then click Copy ID on the dropdown menu");
+            // 
+            // dis_chkNicks
+            // 
+            this.dis_chkNicks.AutoSize = true;
+            this.dis_chkNicks.Location = new System.Drawing.Point(9, 131);
+            this.dis_chkNicks.Name = "dis_chkNicks";
+            this.dis_chkNicks.Size = new System.Drawing.Size(171, 17);
+            this.dis_chkNicks.TabIndex = 32;
+            this.dis_chkNicks.Text = "Prefer nicknames to usernames";
+            this.dis_chkNicks.UseVisualStyleBackColor = true;
             // 
             // sql_grp
             // 
@@ -5956,6 +5968,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox dis_txtToken;
         private System.Windows.Forms.Label dis_lblToken;
         private System.Windows.Forms.CheckBox dis_chkEnabled;
+        private System.Windows.Forms.CheckBox dis_chkNicks;
         private System.Windows.Forms.GroupBox dis_grp;
         private System.Windows.Forms.ComboBox rank_cmbOsMap;
         private System.Windows.Forms.Label rank_lblOsMap;

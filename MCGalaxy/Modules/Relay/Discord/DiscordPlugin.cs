@@ -28,6 +28,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public string BotToken = "";
         [ConfigString("status-message", null, "with {PLAYERS} players")]
         public string Status = "with {PLAYERS} players";
+        [ConfigBool("use-nicknames", null, true)]
+        public bool UseNicks = true;
         
         [ConfigString("channel-ids", null, "", true)]
         public string Channels = "";

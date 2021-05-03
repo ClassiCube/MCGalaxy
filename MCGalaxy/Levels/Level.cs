@@ -133,7 +133,7 @@ namespace MCGalaxy {
                 // Wait up to 1 second for physics thread to finish
                 physThread.Join(1000);
             } catch {
-                // No physics thread, or physics thread is still busy
+                // No physics thread at all
             }
             
             Dispose();
