@@ -63,11 +63,15 @@ namespace MCGalaxy {
         void PhysicsLoop() {
             int wait = Config.PhysicsSpeed;
             while (true) {
-                if (PhysicsPaused) { Thread.Sleep(500); continue; }
-
                 try {
+                    
+                    if (PhysicsPaused) {
+                        if (physics == 0) break;
+                        Thread.Sleep(500); continue; 
+                    } 
+                    
                     if (wait > 0) Thread.Sleep(wait);
-                    if (physics == 0) { lastCheck = 0; break; }
+                    if (physics == 0) break;
                     
                     // No block calculations in this tick
                     if (ListCheck.Count == 0) {
@@ -110,6 +114,8 @@ namespace MCGalaxy {
                     wait = Config.PhysicsSpeed;
                 }
             }
+            
+            lastCheck = 0;
             physThreadStarted = false;
         }
 

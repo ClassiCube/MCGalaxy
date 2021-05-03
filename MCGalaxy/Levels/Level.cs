@@ -126,11 +126,14 @@ namespace MCGalaxy {
         }
         
         void Cleanup() {
-            // TODO: don't thread.Abort(), properly stop physics thread
+            Physicsint = 0;
             try {
-                physThread.Abort();
-                physThread.Join();
+                // Wake up physics thread from Thread.Sleep
+                physThread.Interrupt();
+                // Wait up to 1 second for physics thread to finish
+                physThread.Join(1000);
             } catch {
+                // No physics thread, or physics thread is still busy
             }
             
             Dispose();
