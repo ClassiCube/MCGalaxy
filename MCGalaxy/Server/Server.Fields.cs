@@ -72,10 +72,6 @@ namespace MCGalaxy {
 
         public static PlayerList reviewlist = new PlayerList();
         static string[] announcements = new string[0];
-        [Obsolete("Use &S or Server.Config.DefaultColor")]
-        public static string DefaultColor;
-        [Obsolete("Use Server.Config.Currency")]
-        public static string moneys;
         public static string RestartPath;
 
         // Extra storage for custom commands

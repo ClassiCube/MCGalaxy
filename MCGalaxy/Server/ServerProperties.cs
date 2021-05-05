@@ -37,10 +37,6 @@ namespace MCGalaxy {
             TWGame.Config.Load();
             
             Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
-            #pragma warning disable 0618
-            Server.DefaultColor = Server.Config.DefaultColor;
-            Server.moneys = Server.Config.Currency;
-            #pragma warning restore 0618
             
             if (!Directory.Exists(Server.Config.BackupDirectory))
                 Server.Config.BackupDirectory = "levels/backups";

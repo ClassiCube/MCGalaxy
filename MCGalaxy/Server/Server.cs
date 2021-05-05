@@ -45,9 +45,6 @@ namespace MCGalaxy {
             return cancelcommand;
         }
         
-        [Obsolete("Use Logger.LogError(Exception)", true)]
-        public static void ErrorLog(Exception ex) { Logger.LogError(ex); }
-        
         [Obsolete("Use Logger.Log(LogType, String)")]
         public void Log(string message) { Logger.Log(LogType.SystemActivity, message); }
         
