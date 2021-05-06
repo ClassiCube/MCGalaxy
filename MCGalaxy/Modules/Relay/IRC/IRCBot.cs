@@ -36,6 +36,10 @@ namespace MCGalaxy {
         public override bool Enabled { get { return Server.Config.UseIRC; } }
         public override bool Connected { get { return connection != null && connection.Connected; } }
         
+        public override void LoadControllers() {
+            Controllers = PlayerList.Load("ranks/IRC_Controllers.txt");
+        }
+        
         public IRCBot() {
             nicks     = new IRCNickList();
             nicks.bot = this;          
@@ -163,7 +167,7 @@ namespace MCGalaxy {
         protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
             error = null;
             string nick = user.Nick;
-            if (!Server.ircControllers.Contains(nick)) return false;
+            if (!Controllers.Contains(nick)) return false;
             
             bool foundAtAll = false;
             foreach (string chan in Channels) {

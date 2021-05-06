@@ -58,7 +58,7 @@ namespace MCGalaxy {
         //Other
         public static bool SetupFinished, CLIMode;
         
-        public static PlayerList bannedIP, whiteList, ircControllers, invalidIds;
+        public static PlayerList bannedIP, whiteList, invalidIds;
         public static PlayerList ignored, hidden, agreed, vip, noEmotes, lockdown;
         public static PlayerExtList models, skins, reach, rotations, modelScales;
         public static PlayerExtList frozen, muted, tempBans, tempRanks;

@@ -56,8 +56,12 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Wehther this relay bot is connected to the external communication service </summary>
         public abstract bool Connected { get; }
         
+        
         /// <summary> List of users allowed to run in-game commands from the external communication service </summary>
         public PlayerList Controllers;
+        
+        /// <summary> Loads the list of controller users from disc </summary>
+        public abstract void LoadControllers();
         
         
         /// <summary> Sends a message to the given channel </summary>

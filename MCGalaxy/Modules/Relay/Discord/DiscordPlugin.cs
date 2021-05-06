@@ -65,6 +65,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         public override void Load(bool startup) {
             Bot.Config = Config;
+            Bot.LoadControllers();
             Config.Load();
             Bot.Connect();
         }
@@ -72,5 +73,15 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public override void Unload(bool shutdown) {
             Bot.Disconnect("Disconnecting Discord bot");
         }
+    }
+	
+    public sealed class CmdDiscordBot : RelayBotCmd {
+        public override string name { get { return "DiscordBot"; } }
+        protected override RelayBot Bot { get { return DiscordPlugin.Bot; } }
+    }
+	
+    public sealed class CmdDiscordControllers : BotControllersCmd {
+        public override string name { get { return "DiscordControllers"; } }
+        protected override RelayBot Bot { get { return DiscordPlugin.Bot; } }
     }
 }

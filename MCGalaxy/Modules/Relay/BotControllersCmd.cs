@@ -23,16 +23,19 @@ namespace MCGalaxy.Modules.Relay {
     public abstract class BotControllersCmd : Command2 {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        protected abstract RelayBot Bot { get; }
 
-        protected void Use(Player p, string message, RelayBot bot, CommandData data) {
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] parts = message.SplitSpaces();
+            RelayBot bot   = Bot;
+            
             string cmd = parts[0].ToLower();
             string arg = parts.Length > 1 ? parts[1] : "";
             
-            switch (parts[0].ToLower()) {
+            switch (cmd) {
                 case "reload":
-                    bot.Controllers = PlayerList.Load("ranks/IRC_Controllers.txt");
+                    bot.LoadControllers();
                     p.Message("{0} Controllers reloaded!", bot.RelayName);
                     break;
                     
@@ -43,7 +46,7 @@ namespace MCGalaxy.Modules.Relay {
                         p.Message("{0} is already an {1} controller.", arg, bot.RelayName);
                     } else {
                         bot.Controllers.Save();
-                        p.Message("{0} added to the IRC controller list.", arg, bot.RelayName);
+                        p.Message("{0} added to the {1} controller list.", arg, bot.RelayName);
                     }
                     break;
                     
@@ -54,7 +57,7 @@ namespace MCGalaxy.Modules.Relay {
                         p.Message("{0} is not an {1} controller.", arg, bot.RelayName);
                     } else {
                         bot.Controllers.Save();
-                        p.Message("{0} removed from the {0} controller list.", arg, bot.RelayName);
+                        p.Message("{0} removed from the {1} controller list.", arg, bot.RelayName);
                     }
                     break;
                     
@@ -74,7 +77,7 @@ namespace MCGalaxy.Modules.Relay {
                     if (grp == null) return;
                     if (Server.Config.IRCControllerRank > data.Rank) {
                         p.Message("Cannot change the {0} controllers rank, " +
-                    	          "as it is currently a rank higher than yours.", bot.RelayName); return;
+                                  "as it is currently a rank higher than yours.", bot.RelayName); return;
                     }
                     if (grp.Permission > data.Rank) {
                         p.Message("Cannot set the {0} controllers rank to a rank higher than yours.", bot.RelayName); return;
@@ -88,15 +91,18 @@ namespace MCGalaxy.Modules.Relay {
                 default:
                     Help(p); break;
             }
-        }
+        }      
         
         public override void Help(Player p) {
-            p.Message("&T/IRCControllers add/remove [name]");
-            p.Message("&HAdds or removes [name] from list of IRC controllers");
-            p.Message("&T/IRCControllers reload/list");
-            p.Message("&HReloads or outputs list of IRC controllers");
-            p.Message("&T/IRCControllers rank [rank]");
-            p.Message("&HSets which rank IRC controllers are treated as having");
+            string cmd   = name;
+            string relay = Bot.RelayName;
+            
+            p.Message("&T/{0} add/remove [name]", cmd);
+            p.Message("&HAdds or removes [name] from list of {0} controllers", relay);
+            p.Message("&T/{0} reload/list", cmd);
+            p.Message("&HReloads or outputs list of {0} controllers", relay);
+            p.Message("&T/{0} rank [rank]", cmd);
+            p.Message("&HSets which rank {0} controllers are treated as having", relay);
         }
     }
 }

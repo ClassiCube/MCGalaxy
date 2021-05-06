@@ -23,11 +23,6 @@ namespace MCGalaxy.Modules.Relay.IRC {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("ResetBot", "reset"), new CommandAlias("ResetIRC", "reset") }; }
         }
-
-        public override void Use(Player p, string message, CommandData data) {
-            Use(p, message, Server.IRC);
-        }
-        
-        public override void Help(Player p) { Help(p, Server.IRC); }
+        protected override RelayBot Bot { get { return Server.IRC; } }
     }
 }

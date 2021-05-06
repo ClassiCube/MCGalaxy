@@ -582,7 +582,6 @@
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Levels\Zone.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
-    <Compile Include="Modules\Relay\Discord\CmdDiscordBot.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordApiClient.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />

@@ -37,6 +37,10 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public override bool Connected   { get { return socket != null && !disconnected; } }
         public DiscordConfig Config;
         
+        public override void LoadControllers() {
+            Controllers = PlayerList.Load("ranks/Discord_Controllers.txt");
+        }
+        
         void TryReconnect() {
             try {
                 Disconnect("Attempting reconnect");
