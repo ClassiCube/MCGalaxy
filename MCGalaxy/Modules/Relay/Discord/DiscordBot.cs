@@ -27,8 +27,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordBot : RelayBot {
         bool disconnected, disconnecting;
-        string[] operatorIds;
-        
         DiscordApiClient api;
         DiscordWebsocket socket;        
 
@@ -69,9 +67,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             disconnecting = false;
             disconnected  = false;
             
-            Channels    = Config.Channels.SplitComma();
-            OpChannels  = Config.OpChannels.SplitComma();
-            operatorIds = Config.OperatorUsers.SplitComma();
+            Channels   = Config.Channels.SplitComma();
+            OpChannels = Config.OpChannels.SplitComma();
             
             socket.Token     = Config.BotToken;
             socket.Handler   = HandleEvent;
@@ -134,8 +131,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             message = ParseMessage(message);
             user    = new RelayUser();
             
-            user.Nick   = GetNick(data) ?? (string)author["username"];
-            user.UserID =                  (string)author["id"];            
+            user.Nick = GetNick(data) ?? (string)author["username"];
+            user.ID   =                  (string)author["id"];            
             HandleChannelMessage(user, channel, message);
         }
         
@@ -187,10 +184,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.SendUpdateStatus();
         } 
         
-        protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
-            error = null;
-            return user.UserID != null && 
-                operatorIds.CaselessContains(user.UserID);
-        }
+        protected override bool CheckController(string userID, ref string error) { return true; }
     }
 }

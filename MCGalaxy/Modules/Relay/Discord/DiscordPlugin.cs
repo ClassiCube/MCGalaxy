@@ -35,8 +35,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public string Channels = "";
         [ConfigString("op-channel-ids", null, "", true)]
         public string OpChannels = "";
-        [ConfigString("operator-user-ids", null, "", true)]
-        public string OperatorUsers = "";
         
         const string file = "properties/discordbot.properties";
         static ConfigElement[] cfg;

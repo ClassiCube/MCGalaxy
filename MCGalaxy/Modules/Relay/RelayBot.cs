@@ -25,7 +25,7 @@ using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Relay {
     
-    public class RelayUser { public string Nick, UserID; }
+    public class RelayUser { public string ID, Nick; }
     
     /// <summary> Manages a connection to an external communication service </summary>
     public abstract class RelayBot {
@@ -126,7 +126,7 @@ namespace MCGalaxy.Modules.Relay {
         protected abstract void DoDisconnect(string reason);        
 
         void LoadBannedCommands() {
-            BannedCommands = new List<string>() { "resetbot", "resetirc", "oprules", "irccontrollers", "ircctrl" };
+            BannedCommands = new List<string>() { "IRCBot", "DiscordBot", "OpRules", "IRCControllers" };
             
             if (!File.Exists("text/irccmdblacklist.txt")) {
                 File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
@@ -223,7 +223,7 @@ namespace MCGalaxy.Modules.Relay {
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
-            if (!CanUseCommands(user, cmdName, out error)) {
+            if (!CanUseCommand(user, cmdName, out error)) {
                 if (error != null) MessageUser(user, error);
                 return;
             }
@@ -258,7 +258,7 @@ namespace MCGalaxy.Modules.Relay {
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
-            if (!CanUseCommands(user, cmdName, out error)) {
+            if (!CanUseCommand(user, cmdName, out error)) {
                 if (error != null) MessageChannel(channel, error);
                 return false;
             }
@@ -309,7 +309,24 @@ namespace MCGalaxy.Modules.Relay {
             return true;
         }
 
-        protected abstract bool CanUseCommands(RelayUser user, string cmdName, out string error);
+        /// <summary> Returns whether the given relay user is allowed to execute the given command </summary>
+        protected bool CanUseCommand(RelayUser user, string cmd, out string error) {
+            error = null;
+            // Intentionally show no message to non-controller users to avoid spam
+            if (!Controllers.Contains(user.ID)) return false;
+            // Make sure controller is actually allowed to execute commands right now
+            if (!CheckController(user.ID, ref error)) return false;
+
+            if (BannedCommands.CaselessContains(cmd)) {
+                error = "You are not allowed to use this command from " + RelayName + ".";
+                return false;
+            }
+            return true;
+        }
+        
+        /// <summary> Returns whether the given controller is currently allowed to execute commands </summary>
+        /// <remarks> e.g. a user may have to login before they are allowed to execute commands </remarks>
+        protected abstract bool CheckController(string userID, ref string error);
         
         sealed class RelayPlayer : Player {
             public readonly string Channel;

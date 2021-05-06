@@ -164,24 +164,17 @@ namespace MCGalaxy {
         }
         
       
-        protected override bool CanUseCommands(RelayUser user, string cmdName, out string error) {
-            error = null;
-            string nick = user.Nick;
-            if (!Controllers.Contains(nick)) return false;
-            
+        protected override bool CheckController(string userID, ref string error) {
             bool foundAtAll = false;
             foreach (string chan in Channels) {
-                if (nicks.VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
+                if (nicks.VerifyNick(chan, userID, ref error, ref foundAtAll)) return true;
             }
             foreach (string chan in OpChannels) {
-                if (nicks.VerifyNick(chan, nick, ref error, ref foundAtAll)) return true;
+                if (nicks.VerifyNick(chan, userID, ref error, ref foundAtAll)) return true;
             }
             
             if (!foundAtAll) {
-                error = "You are not on the bot's list of users for some reason, please leave and rejoin."; return false;
-            }
-            if (BannedCommands.CaselessContains(cmdName)) {
-                error = "You are not allowed to use this command from IRC.";
+                error = "You are not on the bot's list of users for some reason, please leave and rejoin.";
             }
             return false;
         }
@@ -271,6 +264,7 @@ namespace MCGalaxy {
 
         void OnPrivate(UserInfo user, string message) {
             RelayUser rUser = new RelayUser();
+            rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
             
             message = ParseMessage(message);
@@ -283,7 +277,8 @@ namespace MCGalaxy {
             message = ParseMessage(message);
             
             RelayUser rUser = new RelayUser();
-            rUser.Nick      = nick;
+            rUser.ID        = user.Nick;
+            rUser.Nick      = user.Nick;
             HandleChannelMessage(rUser, channel, message);
         }
         
