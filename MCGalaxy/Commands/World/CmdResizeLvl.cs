@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.World {
                       args[0], args[1], args[2], args[3]);
         }
         
-        public static bool DoResize(Player p, string[] args, CommandData data, out bool needConfirm) {
+        internal static bool DoResize(Player p, string[] args, CommandData data, out bool needConfirm) {
             needConfirm = false;
             Level lvl = Matcher.FindLevels(p, args[0]);
             
