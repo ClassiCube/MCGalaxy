@@ -48,7 +48,7 @@ namespace MCGalaxy.Games {
             
             BeginRound();
             SetBoardOpening(Block.Glass);
-            RemveBoardBorders();
+            RemoveBoardBorders();
             if (!Running) return;
             
             RoundInProgress = true;
@@ -152,7 +152,7 @@ namespace MCGalaxy.Games {
             }
         }
 
-        void RemveBoardBorders() {
+        void RemoveBoardBorders() {
             int minX1 = 4, maxX2 = (Map.Width  - 1) - 4;
             int minZ1 = 4, maxZ2 = (Map.Length - 1) - 4;
             
