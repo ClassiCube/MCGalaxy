@@ -59,64 +59,8 @@ namespace MCGalaxy.Commands.World {
                 return false;
             }
             
-            Level resized = ResizeLevel(lvl, x, y, z);
-            LevelActions.Replace(lvl, resized);
+            LevelActions.Resize(ref lvl, x, y, z);
             return true;
-        }
-        
-        static Level ResizeLevel(Level lvl, int width, int height, int length) {
-            Level res = new Level(lvl.name, (ushort)width, (ushort)height, (ushort)length);
-            res.hasPortals       = lvl.hasPortals;
-            res.hasMessageBlocks = lvl.hasMessageBlocks;
-            byte[] src = lvl.blocks, dst = res.blocks;
-            
-            // Copy blocks in bulk
-            width  = Math.Min(lvl.Width,  res.Width);
-            height = Math.Min(lvl.Height, res.Height);
-            length = Math.Min(lvl.Length, res.Length);
-            for (int y = 0; y < height; y++) {
-                for (int z = 0; z < length; z++) {
-                    int srcI = lvl.Width * (z + y * lvl.Length);
-                    int dstI = res.Width * (z + y * res.Length);
-                    Buffer.BlockCopy(src, srcI, dst, dstI, width);
-                }
-            }
-            
-            // Copy extended blocks in bulk
-            width  = Math.Min(lvl.ChunksX, res.ChunksX);
-            height = Math.Min(lvl.ChunksY, res.ChunksY);
-            length = Math.Min(lvl.ChunksZ, res.ChunksZ);
-            for (int cy = 0; cy < height; cy++)
-                for (int cz = 0; cz < length; cz++)
-                    for (int cx = 0; cx < width; cx++)
-            {
-                src = lvl.CustomBlocks[(cy * lvl.ChunksZ + cz) * lvl.ChunksX + cx];
-                if (src == null) continue;
-                
-                dst = new byte[16 * 16 * 16];
-                res.CustomBlocks[(cy * res.ChunksZ + cz) * res.ChunksX + cx] = dst;
-                Buffer.BlockCopy(src, 0, dst, 0, 16 * 16 * 16);
-            }
-            
-            // TODO: This copying is really ugly and probably not 100% right
-            res.spawnx = lvl.spawnx; res.spawny = lvl.spawny; res.spawnz = lvl.spawnz;
-            res.rotx = lvl.rotx; res.roty = lvl.roty;
-            
-            lock (lvl.saveLock) {
-                lvl.Backup(true);
-                
-                // Make sure zones are kept
-                res.Zones = lvl.Zones;
-                lvl.Zones = new VolatileArray<Zone>(false);
-            
-                IMapExporter.Formats[0].Write(LevelInfo.MapPath(lvl.name), res);
-                lvl.SaveChanges = false;
-            }
-            
-            res.backedup = true;
-            Level.LoadMetadata(res);
-            BotsFile.Load(res);
-            return res;
         }
         
         public override void Help(Player p) {

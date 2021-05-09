@@ -23,6 +23,7 @@ using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
 using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Levels.IO;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
@@ -102,9 +103,9 @@ namespace MCGalaxy {
             lock (srcLocker)
                 lock (dstLocker)
             {
-            	Portal.MoveAll(src, dst);
-            	MessageBlock.MoveAll(src, dst);
-            	
+                Portal.MoveAll(src, dst);
+                MessageBlock.MoveAll(src, dst);
+                
                 if (Database.TableExists("Zone" + src)) {
                     Database.RenameTable("Zone" + src, "Zone" + dst);
                 }
@@ -181,9 +182,9 @@ namespace MCGalaxy {
             
             object locker = ThreadSafeCache.DBCache.GetLocker(map);
             lock (locker) {
-            	Portal.DeleteAll(map);
-            	MessageBlock.DeleteAll(map);
-            	
+                Portal.DeleteAll(map);
+                MessageBlock.DeleteAll(map);
+                
                 if (Database.TableExists("Zone" + map)) {
                     Database.DeleteTable("Zone" + map);
                 }
@@ -240,8 +241,8 @@ namespace MCGalaxy {
             lock (srcLocker)
                 lock (dstLocker)
             {
-            	Portal.CopyAll(src, dst);
-            	MessageBlock.CopyAll(src, dst);
+                Portal.CopyAll(src, dst);
+                MessageBlock.CopyAll(src, dst);
             }
         }
 
@@ -361,6 +362,64 @@ namespace MCGalaxy {
                 p.Message("&WLatest backup of {0} does not exist.", map);
             }
             return lvl;
+        }
+        
+        
+        public static void Resize(ref Level lvl, int width, int height, int length) {
+            Level res = new Level(lvl.name, (ushort)width, (ushort)height, (ushort)length);
+            res.hasPortals       = lvl.hasPortals;
+            res.hasMessageBlocks = lvl.hasMessageBlocks;
+            byte[] src = lvl.blocks, dst = res.blocks;
+            
+            // Copy blocks in bulk
+            width  = Math.Min(lvl.Width,  res.Width);
+            height = Math.Min(lvl.Height, res.Height);
+            length = Math.Min(lvl.Length, res.Length);
+            for (int y = 0; y < height; y++) {
+                for (int z = 0; z < length; z++) {
+                    int srcI = lvl.Width * (z + y * lvl.Length);
+                    int dstI = res.Width * (z + y * res.Length);
+                    Buffer.BlockCopy(src, srcI, dst, dstI, width);
+                }
+            }
+            
+            // Copy extended blocks in bulk
+            width  = Math.Min(lvl.ChunksX, res.ChunksX);
+            height = Math.Min(lvl.ChunksY, res.ChunksY);
+            length = Math.Min(lvl.ChunksZ, res.ChunksZ);
+            for (int cy = 0; cy < height; cy++)
+                for (int cz = 0; cz < length; cz++)
+                    for (int cx = 0; cx < width; cx++)
+            {
+                src = lvl.CustomBlocks[(cy * lvl.ChunksZ + cz) * lvl.ChunksX + cx];
+                if (src == null) continue;
+                
+                dst = new byte[16 * 16 * 16];
+                res.CustomBlocks[(cy * res.ChunksZ + cz) * res.ChunksX + cx] = dst;
+                Buffer.BlockCopy(src, 0, dst, 0, 16 * 16 * 16);
+            }
+            
+            // TODO: This copying is really ugly and probably not 100% right
+            res.spawnx = lvl.spawnx; res.spawny = lvl.spawny; res.spawnz = lvl.spawnz;
+            res.rotx = lvl.rotx; res.roty = lvl.roty;
+            
+            lock (lvl.saveLock) {
+                lvl.Backup(true);
+                
+                // Make sure zones are kept
+                res.Zones = lvl.Zones;
+                lvl.Zones = new VolatileArray<Zone>(false);
+            
+                IMapExporter.Formats[0].Write(LevelInfo.MapPath(lvl.name), res);
+                lvl.SaveChanges = false;
+            }
+            
+            res.backedup = true;
+            Level.LoadMetadata(res);
+            BotsFile.Load(res);
+            
+            LevelActions.Replace(lvl, res);
+            lvl = res;
         }
     }
 }
