@@ -121,19 +121,44 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return raw as string;
         }
         
-        void HandleMessageEvent(JsonObject obj) {
-            JsonObject data   = (JsonObject)obj["d"];
+        RelayUser ExtractUser(JsonObject data) {
             JsonObject author = (JsonObject)data["author"];
             string channel    = (string)data["channel_id"];
             string message    = (string)data["content"];
             
-            RelayUser user;
-            message = ParseMessage(message);
-            user    = new RelayUser();
-            
+            RelayUser user = new RelayUser();
             user.Nick = GetNick(data) ?? (string)author["username"];
-            user.ID   =                  (string)author["id"];            
-            HandleChannelMessage(user, channel, message);
+            user.ID   =                  (string)author["id"]; 
+            return user;
+        }
+        
+        void PrintAttachments(JsonObject data, string channel) {
+            object raw;
+            if (!data.TryGetValue("attachments", out raw)) return;
+            
+            JsonArray list = raw as JsonArray;
+            if (list == null) return;
+            RelayUser user = ExtractUser(data);
+            
+            foreach (object entry in list) {
+                JsonObject attachment = entry as JsonObject;
+                if (attachment == null) continue;
+                
+                string url = (string)attachment["url"];
+                HandleChannelMessage(user, channel, url);
+            }
+        }
+        
+        void HandleMessageEvent(JsonObject obj) {
+            JsonObject data = (JsonObject)obj["d"];
+            string channel  = (string)data["channel_id"];
+            string message  = (string)data["content"];
+            
+            RelayUser user = ExtractUser(data);
+            message        = ParseMessage(message);
+            // TODO should message.Length > 0 this be moved to HandleChannelMessage
+            if (message.Length > 0) HandleChannelMessage(user, channel, message);
+            PrintAttachments(data, channel);
         }
         
         string GetStatus() {
