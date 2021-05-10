@@ -26,24 +26,23 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            List<PlayerInfo.ListEntry> all = PlayerInfo.GetOnlineList(p, data.Rank);
+            int total;
+            List<OnlineListEntry> all = PlayerInfo.GetOnlineList(p, data.Rank, out total);
             if (message.Length > 0) { ListOfRank(p, message, all); return; }
             
-            int total = 0;
-            foreach (PlayerInfo.ListEntry e in all) {
-                total += e.players.Count;
-            }
-            p.Message("There are &a{0} &Splayer{1} online.", total, total.Plural());
+            p.Message("There {0} &a{1} &Splayer{2} online.",
+                      total == 1 ? "is" : "are",
+                      total, total.Plural());
             
-            for (int i = all.Count - 1; i >= 0; i--) {
-                Output(all[i], p, Server.Config.ListEmptyRanks);
+            foreach (OnlineListEntry e in all) {
+                Output(e, p, Server.Config.ListEmptyRanks);
             }
         }
         
-        static void ListOfRank(Player p, string name, List<PlayerInfo.ListEntry> all) {
+        static void ListOfRank(Player p, string name, List<OnlineListEntry> all) {
             Group grp = Matcher.FindRanks(p, name);
             if (grp == null) return;
-            PlayerInfo.ListEntry rank = all.Find(e => e.group == grp);
+            OnlineListEntry rank = all.Find(e => e.group == grp);
             
             if (rank == null || rank.players.Count == 0) {
                 p.Message("There are no {0} &Sonline.", 
@@ -70,7 +69,7 @@ namespace MCGalaxy.Commands.Info {
             data.Append(" (").Append(lvlName).Append("),");
         }
         
-        static void Output(PlayerInfo.ListEntry e, Player p, bool showWhenEmpty) {            
+        static void Output(OnlineListEntry e, Player p, bool showWhenEmpty) {            
             if (e.players.Count == 0 && !showWhenEmpty) return;
             StringBuilder data = new StringBuilder();
             

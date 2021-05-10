@@ -38,7 +38,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
     public class ChannelSendMessage : DiscordApiMessage {
         public string Content;
         
-        public string CalcPath(string channelID) { return "/channels/" + channelID + "/messages"; }
+        public void SetChannel(string id) { Path = "/channels/" + id + "/messages"; }
         
         public override JsonObject ToJson() {
             // no pinging everyone
@@ -56,16 +56,33 @@ namespace MCGalaxy.Modules.Relay.Discord {
     }
     
     public class ChannelSendEmbed : ChannelSendMessage {
-
+        public string Title;
+        public Dictionary<string, string> Fields = new Dictionary<string, string>();
+        
+        JsonArray GetFields() {
+            JsonArray arr = new JsonArray();
+            foreach (var raw in Fields) {
+                
+                JsonObject field = new JsonObject()
+                {
+                    { "name",   raw.Key },
+                    { "value", raw.Value }
+                };
+                arr.Add(field);
+            }
+            return arr;
+        }
+        
         public override JsonObject ToJson() {
-            JsonObject embed = new JsonObject()
-            {
-                { "description", Content },
-            };
             JsonObject obj = base.ToJson();
             obj.Remove("content");
             
-            obj["embed"] = embed;
+            obj["embed"] = new JsonObject()
+            {
+                { "title", Title },
+                { "color", 9758051 },
+                { "fields", GetFields() }
+            };
             return obj;
         }
     }
@@ -148,7 +165,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         public void SendMessageAsync(string channelID, string message) {
             ChannelSendMessage msg = new ChannelSendMessage();
-            msg.Path    = msg.CalcPath(channelID);
+            msg.SetChannel(channelID);
             msg.Content = message;
             SendAsync(msg);
         }

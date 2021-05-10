@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using MCGalaxy.Config;
@@ -28,9 +29,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
     public sealed class DiscordBot : RelayBot {
         bool disconnected, disconnecting;
         DiscordApiClient api;
-        DiscordWebsocket socket;        
+        DiscordWebsocket socket;
 
-        public override string RelayName { get { return "Discord"; } }        
+        public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
         public override bool Connected   { get { return socket != null && !disconnected; } }
         public DiscordConfig Config;
@@ -74,7 +75,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.Handler   = HandleEvent;
             socket.GetStatus = GetStatus;
             socket.OnReady   = OnReady;
-                
+            
             Thread worker = new Thread(IOThread);
             worker.Name = "DiscordRelayBot";
             worker.IsBackground = true;
@@ -128,7 +129,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             
             RelayUser user = new RelayUser();
             user.Nick = GetNick(data) ?? (string)author["username"];
-            user.ID   =                  (string)author["id"]; 
+            user.ID   =                  (string)author["id"];
             return user;
         }
         
@@ -164,7 +165,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         string GetStatus() {
             string online = PlayerInfo.NonHiddenCount().ToString();
             return Config.Status.Replace("{PLAYERS}", online);
-        }        
+        }
         
         void OnReady() {
             api = new DiscordApiClient();
@@ -207,18 +208,40 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
             socket.SendUpdateStatus();
-        } 
+        }
         
         // all users are already verified by Discord
         protected override bool CheckController(string userID, ref string error) { return true; }
         
-		protected override void MessagePlayers(RelayBot.RelayPlayer p) {
-			base.MessagePlayers(p);
-			
-			ChannelSendEmbed embed = new ChannelSendEmbed();
-			embed.Path    = embed.CalcPath(p.ChannelID);
-			embed.Content = "Test";
-			api.SendAsync(embed);
-		}
+        static string FormatRank(OnlineListEntry e) {
+            return string.Format("__{0}__ (`{1}`)",
+                                 e.group.GetFormattedName(), e.players.Count);
+        }
+
+        // TODO: need to also print flags
+        static string FormatPlayers(Player p, OnlineListEntry e) {
+            return e.players.Join(
+                pl => string.Format("**{0}** (`{1}`)", p.FormatNick(pl), pl.level.name), ", ");
+        }
+        
+        protected override void MessagePlayers(RelayPlayer p) {
+            ChannelSendEmbed embed = new ChannelSendEmbed();
+            embed.SetChannel(p.ChannelID);
+            
+            int total;
+            List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
+            
+            embed.Title = string.Format("{0} player{1} currently online",
+                                        total, total.Plural());
+            foreach (OnlineListEntry e in entries) {
+                if (e.players.Count == 0) continue;
+                
+                embed.Fields.Add(
+                    Colors.StripUsed(FormatRank(e)),
+                    Colors.StripUsed(FormatPlayers(p, e))
+                );
+            }
+            api.SendAsync(embed);
+        }
     }
 }

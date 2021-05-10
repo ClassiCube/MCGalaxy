@@ -139,21 +139,26 @@ namespace MCGalaxy {
         }
         
         
-        public class ListEntry { public Group group; public List<Player> players; }
-        /// <summary> Returns all online players the given player can see, ordered by group </summary>
-        public static List<ListEntry> GetOnlineList(Player p, LevelPermission plRank) {
-            List<ListEntry> all = new List<ListEntry>();
+        /// <summary> Returns all online players that the given player can see, ordered by rank </summary>
+        public static List<OnlineListEntry> GetOnlineList(Player p, LevelPermission plRank, out int total) {
+            List<OnlineListEntry> all = new List<OnlineListEntry>();
+            total = 0;
             
             foreach (Group group in Group.GroupList) {
-                all.Add(OnlineOfRank(p, plRank, group));
+                OnlineListEntry e = OnlineOfRank(p, plRank, group);
+                total += e.players.Count;
+                all.Add(e);
             }
+            
+            // Highest ranks first
+            all.Reverse();
             return all;
         }
            
-        static ListEntry OnlineOfRank(Player p, LevelPermission plRank, Group group) {
-            ListEntry entry = new ListEntry();
-            entry.group     = group;
-            entry.players   = new List<Player>();
+        static OnlineListEntry OnlineOfRank(Player p, LevelPermission plRank, Group group) {
+            OnlineListEntry entry = new OnlineListEntry();
+            entry.group   = group;
+            entry.players = new List<Player>();
             
             Player[] online = PlayerInfo.Online.Items;
             foreach (Player pl in online) {
@@ -163,4 +168,6 @@ namespace MCGalaxy {
             return entry;
         }
     }
+	
+	public class OnlineListEntry { public Group group; public List<Player> players; }
 }
