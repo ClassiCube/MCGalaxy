@@ -33,8 +33,7 @@ namespace MCGalaxy.Commands.Info {
             foreach (PlayerInfo.ListEntry e in all) {
                 total += e.players.Count;
             }
-            p.Message("There are &a{0} &Splayer{1} online.", 
-                      total, total != 0 ? "s" : "");
+            p.Message("There are &a{0} &Splayer{1} online.", total, total.Plural());
             
             for (int i = all.Count - 1; i >= 0; i--) {
                 Output(all[i], p, Server.Config.ListEmptyRanks);

@@ -102,6 +102,8 @@ namespace MCGalaxy {
             suffix = index == -1 ? ""  : str.Substring(index + 1);
         }
         
+        public static string Plural(this int value) { return value != 1 ? "s" : ""; }
+        
         
         public static byte[] GZip(this byte[] bytes) {
             using (MemoryStream ms = new MemoryStream()) {

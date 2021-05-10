@@ -25,6 +25,51 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Modules.Relay.Discord {
     
+    /// <summary> Represents an abstract Discord API message </summary>
+    public abstract class DiscordApiMessage {
+        /// <summary> The path/route that will handle this message </summary>
+        public string Path;
+        
+        /// <summary> Converts this message into its JSON representation </summary>
+        public abstract JsonObject ToJson();
+    }
+    
+    /// <summary> Message for sending text to a channel </summary>
+    public class ChannelSendMessage : DiscordApiMessage {
+        public string Content;
+        
+        public string CalcPath(string channelID) { return "/channels/" + channelID + "/messages"; }
+        
+        public override JsonObject ToJson() {
+            // no pinging everyone
+            JsonObject allowed = new JsonObject()
+            {
+                { "parse", new JsonArray() { "users", "roles" } }
+            };
+            JsonObject obj = new JsonObject()
+            {
+                { "content", Content },
+                { "allowed_mentions", allowed }
+            };
+            return obj;
+        }
+    }
+    
+    public class ChannelSendEmbed : ChannelSendMessage {
+
+        public override JsonObject ToJson() {
+            JsonObject embed = new JsonObject()
+            {
+                { "description", Content },
+            };
+            JsonObject obj = base.ToJson();
+            obj.Remove("content");
+            
+            obj["embed"] = embed;
+            return obj;
+        }
+    }
+    
     /// <summary> Implements a basic web client for communicating with Discord's API </summary>
     /// <remarks> https://discord.com/developers/docs/reference </remarks>
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
@@ -34,24 +79,24 @@ namespace MCGalaxy.Modules.Relay.Discord {
         AutoResetEvent handle = new AutoResetEvent(false);
         volatile bool terminating;
         
-        class Request { public string Path, Data; }
-        Queue<Request> requests = new Queue<Request>();
+        Queue<DiscordApiMessage> requests = new Queue<DiscordApiMessage>();
         readonly object reqLock = new object();
             
         
         void HandleNext() {
-            Request req = null;
+            DiscordApiMessage msg = null;
             lock (reqLock) {
-                if (requests.Count > 0) req = requests.Dequeue();
+                if (requests.Count > 0) msg = requests.Dequeue();
             }
-            if (req == null) { handle.WaitOne(); return; }
+            if (msg == null) { handle.WaitOne(); return; }
             
             // TODO HttpWebRequest
             using (WebClient client = HttpUtil.CreateWebClient()) {
                 client.Headers[HttpRequestHeader.ContentType]   = "application/json";
                 client.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
 
-                string resp = client.UploadString(host + req.Path, req.Data);
+                string data = Json.SerialiseObject(msg.ToJson());
+                string resp = client.UploadString(host + msg.Path, data);
                 Logger.Log(LogType.SystemActivity, resp);
             }
         }
@@ -94,31 +139,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public void StopAsync() {
             terminating = true;
             WakeupWorker();
-        }
+        }       
         
-        
-        public void MakeRequest(string path, JsonObject obj) {
-            Request req = new Request();
-            req.Path = path;
-            req.Data = Json.SerialiseObject(obj);
-            
-            lock (reqLock) requests.Enqueue(req);
+        public void SendAsync(DiscordApiMessage msg) {
+            lock (reqLock) requests.Enqueue(msg);
             WakeupWorker();
         }
         
-        public void SendMessage(string channelID, string message) {
-            JsonObject allowed = new JsonObject()
-            {
-                { "parse", new JsonArray() { "users", "roles" } }
-            };
-            JsonObject obj = new JsonObject()
-            {
-                { "content", message },
-                { "allowed_mentions", allowed }
-            };
-            
-            string path = "/channels/" + channelID + "/messages";
-            MakeRequest(path, obj);
+        public void SendMessageAsync(string channelID, string message) {
+            ChannelSendMessage msg = new ChannelSendMessage();
+            msg.Path    = msg.CalcPath(channelID);
+            msg.Content = message;
+            SendAsync(msg);
         }
     }
 }

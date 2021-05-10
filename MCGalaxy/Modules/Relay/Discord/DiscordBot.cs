@@ -197,7 +197,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
             message = Colors.StripUsed(message);
-            api.SendMessage(channel, message);
+            api.SendMessageAsync(channel, message);
         }
         
         public override void MessageUser(RelayUser user, string message) {
@@ -209,6 +209,16 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.SendUpdateStatus();
         } 
         
+        // all users are already verified by Discord
         protected override bool CheckController(string userID, ref string error) { return true; }
+        
+		protected override void MessagePlayers(RelayBot.RelayPlayer p) {
+			base.MessagePlayers(p);
+			
+			ChannelSendEmbed embed = new ChannelSendEmbed();
+			embed.Path    = embed.CalcPath(p.ChannelID);
+			embed.Content = "Test";
+			api.SendAsync(embed);
+		}
     }
 }

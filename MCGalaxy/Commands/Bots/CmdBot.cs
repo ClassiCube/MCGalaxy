@@ -106,7 +106,7 @@ namespace MCGalaxy.Commands.Bots {
                         if (removedCount == 0) {
                             p.Message("There are no bots owned by {0}&S in this level.", p.FormatNick(ownerName));
                         } else {
-                            p.Message("Removed {0} bot{1} belonging to {2}&S.", removedCount, removedCount > 1 ? "s" : "", p.FormatNick(ownerName));
+                            p.Message("Removed {0} bot{1} belonging to {2}&S.", removedCount, removedCount.Plural(), p.FormatNick(ownerName));
                             BotsFile.Save(p.level);
                         }
                     } else {
@@ -120,7 +120,7 @@ namespace MCGalaxy.Commands.Bots {
                     if (removedCount == 0) {
                         p.Message("There are no bots in this level.");
                     } else {
-                        p.Message("Removed {0} bot{1}.", removedCount, removedCount > 1 ? "s" : "");
+                        p.Message("Removed {0} bot{1}.", removedCount, removedCount.Plural());
                         BotsFile.Save(p.level);
                     }
                 } else {

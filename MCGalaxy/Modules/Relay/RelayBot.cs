@@ -29,7 +29,7 @@ namespace MCGalaxy.Modules.Relay {
     
     /// <summary> Manages a connection to an external communication service </summary>
     public abstract class RelayBot {
-     
+        
         /// <summary> List of commands that cannot be used by relay bot controllers. </summary>
         public List<string> BannedCommands;
         
@@ -71,19 +71,19 @@ namespace MCGalaxy.Modules.Relay {
         public abstract void MessageUser(RelayUser user, string message);
         
         /// <summary> Sends a message to all channels setup for general public chat </summary>
-        public void SendPublicMessage(string message) { 
+        public void SendPublicMessage(string message) {
             foreach (string chan in Channels) {
                 MessageChannel(chan, message);
             }
         }
         
-        /// <summary> Sends a message to all channels setup for staff chat only </summary>            
+        /// <summary> Sends a message to all channels setup for staff chat only </summary>
         public void SendStaffMessage(string message) {
             foreach (string chan in OpChannels) {
                 MessageChannel(chan, message);
             }
         }
-  
+        
         
         /// <summary> Attempts to connect to the external communication service </summary>
         /// <remarks> Does nothing if disabled, already connected, or the server is shutting down </remarks>
@@ -123,7 +123,7 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         protected abstract void DoConnect();
-        protected abstract void DoDisconnect(string reason);        
+        protected abstract void DoDisconnect(string reason);
 
         void LoadBannedCommands() {
             BannedCommands = new List<string>() { "IRCBot", "DiscordBot", "OpRules", "IRCControllers" };
@@ -154,7 +154,7 @@ namespace MCGalaxy.Modules.Relay {
             OnShuttingDownEvent.Unregister(HandleShutdown);
         }
         
-       
+        
         static bool FilterIRC(Player pl, object arg) {
             return !pl.Ignores.IRC && !pl.Ignores.IRCNicks.Contains((string)arg);
         } static ChatMessageFilter filterIRC = FilterIRC;
@@ -170,7 +170,7 @@ namespace MCGalaxy.Modules.Relay {
         
         
         void MessageToRelay(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
-            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];            
+            ChatMessageFilter scopeFilter = Chat.scopeFilters[(int)scope];
             fakeGuest.group = Group.DefaultRank;
             
             if (scopeFilter(fakeGuest, arg) && (filter == null || filter(fakeGuest, arg))) {
@@ -214,6 +214,7 @@ namespace MCGalaxy.Modules.Relay {
             sb.Replace("’", "'");
         }
         
+        /// <summary> Handles a direct message written by the given user </summary>
         protected void HandleUserMessage(RelayUser user, string message) {
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
@@ -229,8 +230,9 @@ namespace MCGalaxy.Modules.Relay {
             }
             
             HandleRelayCommand(user, null, cmdName, cmdArgs);
-        }       
+        }
 
+        /// <summary> Handles a message written by the given user on the given channel </summary>
         protected void HandleChannelMessage(RelayUser user, string channel, string message) {
             string[] parts = message.SplitSpaces(3);
             string rawCmd  = parts[0].ToLower();
@@ -272,9 +274,9 @@ namespace MCGalaxy.Modules.Relay {
             if (!isWho || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
             try {
-                Player p = new RelayPlayer(channel, user, this);
+                RelayPlayer p = new RelayPlayer(channel, user, this);
                 p.group  = Group.DefaultRank;
-                Command.Find("Players").Use(p, "", p.DefaultCmdData);
+                MessagePlayers(p);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -282,6 +284,11 @@ namespace MCGalaxy.Modules.Relay {
             if (opchat) lastOpWho = DateTime.UtcNow;
             else lastWho = DateTime.UtcNow;
             return true;
+        }
+        
+        /// <summary> Outputs the list of online players to the given user </summary>
+        protected virtual void MessagePlayers(RelayPlayer p) {
+            Command.Find("Players").Use(p, "", p.DefaultCmdData);
         }
         
         bool HandleRelayCommand(RelayUser user, string channel, string cmdName, string cmdArgs) {
@@ -328,8 +335,8 @@ namespace MCGalaxy.Modules.Relay {
         /// <remarks> e.g. a user may have to login before they are allowed to execute commands </remarks>
         protected abstract bool CheckController(string userID, ref string error);
         
-        sealed class RelayPlayer : Player {
-            public readonly string Channel;
+        protected sealed class RelayPlayer : Player {
+            public readonly string ChannelID;
             public readonly RelayUser User;
             public readonly RelayBot Bot;
             
@@ -337,7 +344,7 @@ namespace MCGalaxy.Modules.Relay {
                 group = Group.Find(Server.Config.IRCControllerRank);
                 if (group == null) group = Group.NobodyRank;
                 
-                Channel = channel;
+                ChannelID = channel;
                 User    = user;
                 color   = "&a";
                 Bot     = bot;
@@ -350,8 +357,8 @@ namespace MCGalaxy.Modules.Relay {
             }
             
             public override void Message(byte type, string message) {
-                if (Channel != null) {
-                    Bot.MessageChannel(Channel, message);
+                if (ChannelID != null) {
+                    Bot.MessageChannel(ChannelID, message);
                 } else {
                     Bot.MessageUser(User, message);
                 }
