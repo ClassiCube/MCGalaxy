@@ -137,5 +137,30 @@ namespace MCGalaxy {
             }
             return list;
         }
+        
+        
+        public class ListEntry { public Group group; public List<Player> players; }
+        /// <summary> Returns all online players the given player can see, ordered by group </summary>
+        public static List<ListEntry> GetOnlineList(Player p, LevelPermission plRank) {
+            List<ListEntry> all = new List<ListEntry>();
+            
+            foreach (Group group in Group.GroupList) {
+                all.Add(OnlineOfRank(p, plRank, group));
+            }
+            return all;
+        }
+           
+        static ListEntry OnlineOfRank(Player p, LevelPermission plRank, Group group) {
+            ListEntry entry = new ListEntry();
+            entry.group     = group;
+            entry.players   = new List<Player>();
+            
+            Player[] online = PlayerInfo.Online.Items;
+            foreach (Player pl in online) {
+                if (pl.group != group || !p.CanSee(pl, plRank)) continue;
+                entry.players.Add(pl);
+            }
+            return entry;
+        }
     }
 }

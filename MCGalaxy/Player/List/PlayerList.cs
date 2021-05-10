@@ -91,7 +91,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Outputs list of players using MultiPageOutput.Output. </summary>
-        /// <remarks> Names are formatted using PlayerInfo.GetColoredName(). </remarks>
+        /// <remarks> Names are formatted using Player.FormatNick(). </remarks>
         public void Output(Player p, string group, string listCmd, string modifier) {
             List<string> list = All();
             if (list.Count == 0) {

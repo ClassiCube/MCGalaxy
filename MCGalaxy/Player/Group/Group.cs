@@ -147,6 +147,8 @@ namespace MCGalaxy {
             return "&f" + rankName;
         }
         
+        /// <summary> Returns the color of the group with the given permission level </summary>
+        /// <remarks> Returns white if no such group exists </remarks>
         public static string GetColor(LevelPermission perm) {
             Group grp = Find(perm);
             if (grp != null) return grp.Color;
@@ -163,6 +165,17 @@ namespace MCGalaxy {
             Group grp = Find(value);
             return grp != null ? grp.Permission : defPerm;
         }
+        
+        static string GetPlural(string name) {
+            if (name.Length < 2) return name;
+            
+            string last2 = name.Substring(name.Length - 2).ToLower();
+            if ((last2 != "ed" || name.Length <= 3) && last2[1] != 's')
+                return name + "s";
+            return name;
+        }
+        
+        public string GetFormattedName() { return Color + GetPlural(Name); }
         
         
         public static void Register(Group grp) {
