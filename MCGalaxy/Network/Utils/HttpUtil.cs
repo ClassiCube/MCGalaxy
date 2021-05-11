@@ -31,7 +31,20 @@ namespace MCGalaxy.Network {
             req.UserAgent = Server.SoftwareNameVersioned;
             return req;
         }
-
+        
+        public static void SetRequestData(WebRequest request, byte[] data) {
+            request.ContentLength = data.Length;
+            using (Stream w = request.GetRequestStream()) {
+                w.Write(data, 0, data.Length);
+            }
+        }
+        
+        public static string GetResponseData(WebResponse response) {
+            using (StreamReader r = new StreamReader(response.GetResponseStream())) {
+                return r.ReadToEnd().Trim();
+            }
+        }
+        
 
         class CustomWebClient : WebClient {
             protected override WebRequest GetWebRequest(Uri address) {
@@ -42,7 +55,7 @@ namespace MCGalaxy.Network {
             }
         }
         
-        static IPEndPoint BindIPEndPointCallback(ServicePoint servicePoint, IPEndPoint remoteEndPoint, int retryCount) {
+        static IPEndPoint BindIPEndPointCallback(ServicePoint servicePoint, IPEndPoint remoteEP, int retryCount) {
             IPAddress localIP = null;
             if (Server.Listener != null) {
                 localIP = Server.Listener.IP;
@@ -51,20 +64,20 @@ namespace MCGalaxy.Network {
             }
             
             // can only use same family for local bind IP
-            if (remoteEndPoint.AddressFamily != localIP.AddressFamily) return null;
+            if (remoteEP.AddressFamily != localIP.AddressFamily) return null;
             return new IPEndPoint(localIP, 0);
         }
         
         
-		// these do not exist in .NET 4.0 and cause a compilation failure
-		const SslProtocols tls_11 = (SslProtocols)768;
-		const SslProtocols tls_12 = (SslProtocols)3072;
-		
+        // these do not exist in .NET 4.0 and cause a compilation failure
+        const SslProtocols tls_11 = (SslProtocols)768;
+        const SslProtocols tls_12 = (SslProtocols)3072;
+        
         public static SslStream WrapSSLStream(Stream source, string host) {
-        	SslStream wrapped  = new SslStream(source);
-			SslProtocols flags = SslProtocols.Tls | tls_11 | tls_12;
-			wrapped.AuthenticateAsClient(host, null, flags, false);
-			return wrapped;
+            SslStream wrapped  = new SslStream(source);
+            SslProtocols flags = SslProtocols.Tls | tls_11 | tls_12;
+            wrapped.AuthenticateAsClient(host, null, flags, false);
+            return wrapped;
         }
         
         public static bool IsPrivateIP(string ip) {

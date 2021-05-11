@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Network;
@@ -112,15 +113,17 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
             if (msg == null) { handle.WaitOne(); return; }
             
-            // TODO HttpWebRequest
-            using (WebClient client = HttpUtil.CreateWebClient()) {
-                client.Headers[HttpRequestHeader.ContentType]   = "application/json";
-                client.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
-
-                string data = Json.SerialiseObject(msg.ToJson());
-                string resp = client.UploadString(host + msg.Path, data);
-                Logger.Log(LogType.SystemActivity, resp);
-            }
+            HttpWebRequest req = HttpUtil.CreateRequest(host + msg.Path);
+            req.Method         = "POST";
+            req.ContentType    = "application/json";
+            req.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
+            
+            string data = Json.SerialiseObject(msg.ToJson());
+            HttpUtil.SetRequestData(req, Encoding.UTF8.GetBytes(data));
+            WebResponse res = req.GetResponse();
+            
+            string response = HttpUtil.GetResponseData(res);
+            Logger.Log(LogType.SystemActivity, response);
         }
         
         void SendLoop() {
