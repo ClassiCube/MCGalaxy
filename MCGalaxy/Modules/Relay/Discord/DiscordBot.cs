@@ -218,15 +218,24 @@ namespace MCGalaxy.Modules.Relay.Discord {
         // all users are already verified by Discord
         protected override bool CheckController(string userID, ref string error) { return true; }
         
+        protected override string UnescapeFull(Player p) {
+            return "**" + base.UnescapeFull(p) + "**";
+        }
+        
+        protected override string UnescapeNick(Player p) {
+            return "**" + base.UnescapeNick(p) + "**";
+        }
+        
+        
         static string FormatRank(OnlineListEntry e) {
             return string.Format("__{0}__ (`{1}`)",
                                  e.group.GetFormattedName(), e.players.Count);
         }
 
         static string FormatNick(Player p, Player pl) {
-        	string flags  = OnlineListEntry.GetFlags(pl);
-        	string format = flags.Length > 0 ? "**{0}**_{2}_ (`{1}`)" : "**{0}** (`{1}`)";        	
-        	return string.Format(format, p.FormatNick(pl), pl.level.name, flags);
+            string flags  = OnlineListEntry.GetFlags(pl);
+            string format = flags.Length > 0 ? "**{0}**_{2}_ (`{1}`)" : "**{0}** (`{1}`)";            
+            return string.Format(format, p.FormatNick(pl), pl.level.name, flags);
         }
         
         static string FormatPlayers(Player p, OnlineListEntry e) {
