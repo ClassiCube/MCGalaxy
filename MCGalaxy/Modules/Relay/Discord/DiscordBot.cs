@@ -30,6 +30,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         bool disconnected, disconnecting;
         DiscordApiClient api;
         DiscordWebsocket socket;
+        string botUserID;
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
@@ -77,7 +78,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.OnReady   = OnReady;
             
             Thread worker = new Thread(IOThread);
-            worker.Name = "DiscordRelayBot";
+            worker.Name   = "DiscordRelayBot";
             worker.IsBackground = true;
             worker.Start();
         }
@@ -97,16 +98,17 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandleEvent(JsonObject obj) {
             // actually handle the event
             string eventName = (string)obj["t"];
+            
+            if (eventName == "READY")          HandleReadyEvent(obj);
             if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
         }
         
-        string ParseMessage(string input) {
-            StringBuilder sb = new StringBuilder(input);
-            SimplifyCharacters(sb);
+        
+        void HandleReadyEvent(JsonObject obj) {
+            JsonObject data = (JsonObject)obj["d"];
+            JsonObject user = (JsonObject)data["user"];
             
-            // remove variant selector character used with some emotes
-            sb.Replace("\uFE0F", "");
-            return sb.ToString();
+            botUserID = (string)user["id"];
         }
         
         string GetNick(JsonObject data) {
@@ -152,14 +154,26 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         void HandleMessageEvent(JsonObject obj) {
             JsonObject data = (JsonObject)obj["d"];
-            string channel  = (string)data["channel_id"];
-            string message  = (string)data["content"];
+            RelayUser user  = ExtractUser(data);           
+            // ignore messages from self
+            if (user.ID == botUserID) return;
             
-            RelayUser user = ExtractUser(data);
+            string channel = (string)data["channel_id"];
+            string message = (string)data["content"];
             message        = ParseMessage(message);
-            // TODO should message.Length > 0 this be moved to HandleChannelMessage
-            if (message.Length > 0) HandleChannelMessage(user, channel, message);
+            
+            HandleChannelMessage(user, channel, message);
             PrintAttachments(data, channel);
+        }
+        
+        
+        string ParseMessage(string input) {
+            StringBuilder sb = new StringBuilder(input);
+            SimplifyCharacters(sb);
+            
+            // remove variant selector character used with some emotes
+            sb.Replace("\uFE0F", "");
+            return sb.ToString();
         }
         
         string GetStatus() {

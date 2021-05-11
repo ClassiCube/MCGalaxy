@@ -182,9 +182,7 @@ namespace MCGalaxy.Modules.Relay {
             return Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
         }
         
-        protected virtual string UnescapeNick(Player p) {
-            return p.ColoredName;
-        }
+        protected virtual string UnescapeNick(Player p) { return p.ColoredName; }
         
         
         void MessageToRelay(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
@@ -252,6 +250,9 @@ namespace MCGalaxy.Modules.Relay {
 
         /// <summary> Handles a message written by the given user on the given channel </summary>
         protected void HandleChannelMessage(RelayUser user, string channel, string message) {
+            message = message.TrimEnd();
+            if (message.Length == 0) return;
+            
             string[] parts = message.SplitSpaces(3);
             string rawCmd  = parts[0].ToLower();
             bool opchat    = OpChannels.CaselessContains(channel);

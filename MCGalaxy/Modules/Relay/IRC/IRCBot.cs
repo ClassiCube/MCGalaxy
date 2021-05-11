@@ -268,13 +268,11 @@ namespace MCGalaxy {
         }        
 
         void OnPublic(UserInfo user, string channel, string message) {
-            message = message.TrimEnd();
-            if (message.Length == 0) return;
-            message = ParseMessage(message);
-            
             RelayUser rUser = new RelayUser();
             rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
+            
+            message = ParseMessage(message);
             HandleChannelMessage(rUser, channel, message);
         }
         

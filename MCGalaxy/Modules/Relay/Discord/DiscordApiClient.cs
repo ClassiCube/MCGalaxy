@@ -70,7 +70,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 
                 JsonObject field = new JsonObject()
                 {
-                    { "name",   raw.Key },
+                    { "name",   raw.Key  },
                     { "value", raw.Value }
                 };
                 arr.Add(field);
