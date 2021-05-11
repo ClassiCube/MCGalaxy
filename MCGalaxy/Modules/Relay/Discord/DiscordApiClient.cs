@@ -33,15 +33,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         /// <summary> Converts this message into its JSON representation </summary>
         public abstract JsonObject ToJson();
+        
+        /// <summary> Attempts to combine this message with a prior message to reduce API calls </summary>
+        public virtual bool CombineWith(DiscordApiMessage prior) { return false; }
     }
     
     /// <summary> Message for sending text to a channel </summary>
     public class ChannelSendMessage : DiscordApiMessage {
-        string content;
+        StringBuilder content;
         
         public ChannelSendMessage(string channelID, string message) {
             Path    = "/channels/" + channelID + "/messages";
-            content = message;
+            content = new StringBuilder(message);
         }
         
         public override JsonObject ToJson() {
@@ -52,10 +55,23 @@ namespace MCGalaxy.Modules.Relay.Discord {
             };
             JsonObject obj = new JsonObject()
             {
-                { "content", content },
+                { "content", content.ToString() },
                 { "allowed_mentions", allowed }
             };
             return obj;
+        }
+        
+        public override bool CombineWith(DiscordApiMessage prior) {
+            ChannelSendMessage msg = prior as ChannelSendMessage;
+            if (msg == null || msg.Path != Path) return false;
+            
+            if (content.Length + msg.content.Length > 1024) return false;
+            
+            // TODO: is stringbuilder even beneficial here
+            msg.content.Append('\n');
+            msg.content.Append(content.ToString());
+            content.Clear();
+            return true;
         }
     }
     
@@ -91,6 +107,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             };
             return obj;
         }
+        
+        public override bool CombineWith(DiscordApiMessage prior) { return false; }
     }
     
     /// <summary> Implements a basic web client for sending messages to the Discord API </summary>
@@ -98,19 +116,29 @@ namespace MCGalaxy.Modules.Relay.Discord {
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
     public sealed class DiscordApiClient {
         public string Token;
-        const string host = "https://discord.com/api";
+        const string host = "https://discord.com/api/v8";
         AutoResetEvent handle = new AutoResetEvent(false);
         volatile bool terminating;
         
         Queue<DiscordApiMessage> requests = new Queue<DiscordApiMessage>();
         readonly object reqLock = new object();
             
+        DiscordApiMessage GetNextRequest() {
+            if (requests.Count == 0) return null;
+            DiscordApiMessage first = requests.Dequeue();
+            
+            // try to combine messages to minimise API calls
+            while (requests.Count > 0) {
+                DiscordApiMessage next = requests.Peek();
+                if (!next.CombineWith(first)) break;
+                requests.Dequeue();
+            }
+            return first;
+        }
         
         void HandleNext() {
             DiscordApiMessage msg = null;
-            lock (reqLock) {
-                if (requests.Count > 0) msg = requests.Dequeue();
-            }
+            lock (reqLock)   { msg = GetNextRequest(); }
             if (msg == null) { handle.WaitOne(); return; }
             
             HttpWebRequest req = HttpUtil.CreateRequest(host + msg.Path);
