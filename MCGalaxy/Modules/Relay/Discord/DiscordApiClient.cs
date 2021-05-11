@@ -36,9 +36,12 @@ namespace MCGalaxy.Modules.Relay.Discord {
     
     /// <summary> Message for sending text to a channel </summary>
     public class ChannelSendMessage : DiscordApiMessage {
-        public string Content;
+        string content;
         
-        public void SetChannel(string id) { Path = "/channels/" + id + "/messages"; }
+        public ChannelSendMessage(string channelID, string message) {
+            Path    = "/channels/" + channelID + "/messages";
+            content = message;
+        }
         
         public override JsonObject ToJson() {
             // no pinging everyone
@@ -48,7 +51,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             };
             JsonObject obj = new JsonObject()
             {
-                { "content", Content },
+                { "content", content },
                 { "allowed_mentions", allowed }
             };
             return obj;
@@ -58,6 +61,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
     public class ChannelSendEmbed : ChannelSendMessage {
         public string Title;
         public Dictionary<string, string> Fields = new Dictionary<string, string>();
+        
+        public ChannelSendEmbed(string channelID) : base(channelID, null) { }
         
         JsonArray GetFields() {
             JsonArray arr = new JsonArray();
@@ -87,7 +92,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
     }
     
-    /// <summary> Implements a basic web client for communicating with Discord's API </summary>
+    /// <summary> Implements a basic web client for sending messages to the Discord API </summary>
     /// <remarks> https://discord.com/developers/docs/reference </remarks>
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
     public sealed class DiscordApiClient {
@@ -158,16 +163,14 @@ namespace MCGalaxy.Modules.Relay.Discord {
             WakeupWorker();
         }       
         
+        /// <summary> Asynchronously sends a message to the Discord API </summary>
         public void SendAsync(DiscordApiMessage msg) {
             lock (reqLock) requests.Enqueue(msg);
             WakeupWorker();
         }
         
         public void SendMessageAsync(string channelID, string message) {
-            ChannelSendMessage msg = new ChannelSendMessage();
-            msg.SetChannel(channelID);
-            msg.Content = message;
-            SendAsync(msg);
+            SendAsync(new ChannelSendMessage(channelID, message));
         }
     }
 }

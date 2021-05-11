@@ -101,7 +101,7 @@ namespace MCGalaxy.SQL {
         public static void AddColumn(string table, ColumnDesc col, string colAfter) {
             ValidateName(table);
             string sql = Backend.AddColumnSql(table, col, colAfter);
-            Execute(sql, null);            
+            Execute(sql, null);
         }
         #endregion
         

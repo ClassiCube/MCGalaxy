@@ -88,7 +88,7 @@ namespace MCGalaxy.SQL {
         /// <summary> Prints/dumps the table schema of the given table. </summary>
         public abstract void PrintSchema(string table, TextWriter w);
         
-        /// <summary> Returns SQL for adding a new coloumn to the given table. </summary>
+        /// <summary> Returns SQL for adding a new column to the given table. </summary>
         /// <remarks> Note colAfter is only a hint - some database backends ignore this. </remarks>
         public abstract string AddColumnSql(string table, ColumnDesc col, string colAfter);
 

@@ -55,20 +55,13 @@ namespace MCGalaxy.Modules.Relay {
         
         /// <summary> Wehther this relay bot is connected to the external communication service </summary>
         public abstract bool Connected { get; }
-        
-        
+
         /// <summary> List of users allowed to run in-game commands from the external communication service </summary>
         public PlayerList Controllers;
         
         /// <summary> Loads the list of controller users from disc </summary>
         public abstract void LoadControllers();
         
-        
-        /// <summary> Sends a message to the given channel </summary>
-        public abstract void MessageChannel(string channel, string message);
-        
-        /// <summary> Sends a direct message to the given user </summary>
-        public abstract void MessageUser(RelayUser user, string message);
         
         /// <summary> Sends a message to all channels setup for general public chat </summary>
         public void SendPublicMessage(string message) {
@@ -83,6 +76,22 @@ namespace MCGalaxy.Modules.Relay {
                 MessageChannel(chan, message);
             }
         }
+        
+        /// <summary> Sends a message to the given channel </summary>
+        public void MessageChannel(string channel, string message) {
+            if (!Enabled || !Connected) return;
+            DoMessageChannel(channel, ConvertMessage(message));
+        }
+        
+        /// <summary> Sends a direct message to the given user </summary>
+        public void MessageUser(RelayUser user, string message) {
+            if (!Enabled || !Connected) return;
+            DoMessageUser(user, ConvertMessage(message));
+        }
+        
+        protected abstract void DoMessageChannel(string channel, string message);
+        protected abstract void DoMessageUser(RelayUser user, string message);        
+        protected abstract string ConvertMessage(string message);
         
         
         /// <summary> Attempts to connect to the external communication service </summary>
@@ -163,9 +172,18 @@ namespace MCGalaxy.Modules.Relay {
             Chat.Message(ChatScope.Global, message, srcNick, filterIRC);
         }
         
-        static string Unescape(Player p, string msg) {
-            string full = Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
-            return msg.Replace("λFULL", full).Replace("λNICK", p.ColoredName);
+        string Unescape(Player p, string msg) {
+            return msg
+                .Replace("λFULL", UnescapeFull(p))
+                .Replace("λNICK", UnescapeNick(p));
+        }
+        
+        protected virtual string UnescapeFull(Player p) {
+            return Server.Config.IRCShowPlayerTitles ? p.FullName : p.group.Prefix + p.ColoredName;
+        }
+        
+        protected virtual string UnescapeNick(Player p) {
+            return p.ColoredName;
         }
         
         
@@ -275,7 +293,7 @@ namespace MCGalaxy.Modules.Relay {
             
             try {
                 RelayPlayer p = new RelayPlayer(channel, user, this);
-                p.group  = Group.DefaultRank;
+                p.group = Group.DefaultRank;
                 MessagePlayers(p);
             } catch (Exception e) {
                 Logger.LogError(e);

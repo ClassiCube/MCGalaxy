@@ -168,6 +168,20 @@ namespace MCGalaxy {
             return entry;
         }
     }
-	
-	public class OnlineListEntry { public Group group; public List<Player> players; }
+    
+    public class OnlineListEntry { 
+        public Group group; public List<Player> players;
+        
+        public static string GetFlags(Player p) {
+            string flags = "";
+                        
+            if (p.hidden)       flags += "-hidden";
+            if (p.muted)        flags += "-muted";
+            if (p.frozen)       flags += "-frozen";
+            if (p.Game.Referee) flags += "-ref";
+            if (p.IsAfk)        flags += "-afk";
+            if (p.Unverified)   flags += "-unverified";
+            return flags;
+        }
+    }
 }

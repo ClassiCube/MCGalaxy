@@ -57,16 +57,10 @@ namespace MCGalaxy.Commands.Info {
             data.Append(' ');
             if (p.voice) { data.Append("&f+").Append(group.Color); }
             data.Append(Colors.StripUsed(target.FormatNick(p)));
+            OnlineListEntry.GetFlags(p);
             
-            if (p.hidden)       data.Append("-hidden");
-            if (p.muted)        data.Append("-muted");
-            if (p.frozen)       data.Append("-frozen");
-            if (p.Game.Referee) data.Append("-ref");
-            if (p.IsAfk)        data.Append("-afk");
-            if (p.Unverified)   data.Append("-unverified");
-            
-            string lvlName = Colors.Strip(p.level.name); // for museums
-            data.Append(" (").Append(lvlName).Append("),");
+            string lvl = Colors.Strip(p.level.name); // for museums
+            data.Append(" (").Append(lvl).Append("),");
         }
         
         static void Output(OnlineListEntry e, Player p, bool showWhenEmpty) {            

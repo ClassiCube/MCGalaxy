@@ -42,21 +42,17 @@ namespace MCGalaxy {
         
         public IRCBot() {
             nicks     = new IRCNickList();
-            nicks.bot = this;          
+            nicks.bot = this;
             UpdateState();
         }
         
         
-        public override void MessageUser(RelayUser user, string message) {
-            if (!Enabled || !Connected) return;
-            message = ConvertMessage(message);
-            connection.Sender.PrivateMessage(user.Nick, message);
+        protected override void DoMessageChannel(string channel, string message) {
+            connection.Sender.PublicMessage(channel, message);
         }
         
-        public override void MessageChannel(string channel, string message) {
-            if (!Enabled || !Connected) return;
-            message = ConvertMessage(message);
-            connection.Sender.PublicMessage(channel, message);
+        protected override void DoMessageUser(RelayUser user, string message) {
+            connection.Sender.PrivateMessage(user.Nick, message);
         }
         
         public void Raw(string message) {
@@ -139,7 +135,7 @@ namespace MCGalaxy {
             return sb.ToString();
         }
         
-        public static string ConvertMessage(string message) {
+        protected override string ConvertMessage(string message) {
             if (String.IsNullOrEmpty(message.Trim())) message = ".";
             const string resetSignal = "\x03\x0F";
             

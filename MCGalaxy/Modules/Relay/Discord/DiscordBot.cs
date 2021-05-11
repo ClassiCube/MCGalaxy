@@ -194,21 +194,26 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
         
         
-        public override void MessageChannel(string channel, string message) {
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
-            message = Colors.StripUsed(message);
+        protected override void DoMessageChannel(string channel, string message) {
             api.SendMessageAsync(channel, message);
         }
         
-        public override void MessageUser(RelayUser user, string message) {
+        protected override void DoMessageUser(RelayUser user, string message) {
             // TODO: implement this
         }
+                       
+        protected override string ConvertMessage(string message) {
+            message = EmotesHandler.Replace(message);
+            message = ChatTokens.ApplyCustom(message);
+            message = Colors.StripUsed(message);
+            return message;
+        }        
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
             socket.SendUpdateStatus();
         }
+        
         
         // all users are already verified by Discord
         protected override bool CheckController(string userID, ref string error) { return true; }
@@ -218,16 +223,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
                                  e.group.GetFormattedName(), e.players.Count);
         }
 
-        // TODO: need to also print flags
+        static string FormatNick(Player p, Player pl) {
+        	string flags  = OnlineListEntry.GetFlags(pl);
+        	string format = flags.Length > 0 ? "**{0}**_{2}_ (`{1}`)" : "**{0}** (`{1}`)";        	
+        	return string.Format(format, p.FormatNick(pl), pl.level.name, flags);
+        }
+        
         static string FormatPlayers(Player p, OnlineListEntry e) {
-            return e.players.Join(
-                pl => string.Format("**{0}** (`{1}`)", p.FormatNick(pl), pl.level.name), ", ");
+            return e.players.Join(pl => FormatNick(p, pl), ", ");
         }
         
         protected override void MessagePlayers(RelayPlayer p) {
-            ChannelSendEmbed embed = new ChannelSendEmbed();
-            embed.SetChannel(p.ChannelID);
-            
+            ChannelSendEmbed embed = new ChannelSendEmbed(p.ChannelID);
             int total;
             List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
             
@@ -237,8 +244,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 if (e.players.Count == 0) continue;
                 
                 embed.Fields.Add(
-                    Colors.StripUsed(FormatRank(e)),
-                    Colors.StripUsed(FormatPlayers(p, e))
+                    ConvertMessage(FormatRank(e)),
+                    ConvertMessage(FormatPlayers(p, e))
                 );
             }
             api.SendAsync(embed);
