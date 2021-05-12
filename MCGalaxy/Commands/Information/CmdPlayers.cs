@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.Info {
             data.Append(' ');
             if (p.voice) { data.Append("&f+").Append(group.Color); }
             data.Append(Colors.StripUsed(target.FormatNick(p)));
-            OnlineListEntry.GetFlags(p);
+            data.Append(OnlineListEntry.GetFlags(p));
             
             string lvl = Colors.Strip(p.level.name); // for museums
             data.Append(" (").Append(lvl).Append("),");
