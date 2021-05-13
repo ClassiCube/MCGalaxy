@@ -28,12 +28,10 @@ namespace MCGalaxy.Commands.Chatting {
         internal static void ToggleAfk(Player p, string message) {
             if (p.joker) message = "";
             p.AutoAfk = false;
-            p.IsAfk = !p.IsAfk;
+            p.IsAfk   = !p.IsAfk;
             p.afkMessage = p.IsAfk ? message : null;
             TabList.Update(p, true);
             p.LastAction = DateTime.UtcNow;
-            
-            p.Send(MCGalaxy.Network.Packet.TextHotKey("TEST", "/help me\n", 22, 0, true));
 
             bool cantSend = !p.CanSpeak();
             if (p.IsAfk) {

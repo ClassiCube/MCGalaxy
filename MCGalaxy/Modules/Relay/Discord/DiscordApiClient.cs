@@ -162,6 +162,10 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     return;
                 }
             }
+            
+            // Avoid triggering HTTP 429 error if possible
+            string remaining = res.Headers["X-RateLimit-Remaining"];
+            if (remaining == "1") SleepForRetryPeriod(res);
         }
         
         
@@ -193,7 +197,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         
-        static void SleepForRetryPeriod(HttpWebResponse res) {
+        static void SleepForRetryPeriod(WebResponse res) {
             string resetAfter = res.Headers["X-RateLimit-Reset-After"];
             string retryAfter = res.Headers["Retry-After"];
             float delay;
