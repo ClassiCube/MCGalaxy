@@ -28,7 +28,7 @@ using Sharkbite.Irc;
 namespace MCGalaxy {
     
     /// <summary> Manages a list of IRC nicks and asssociated permissions </summary>
-    public sealed class IRCNickList {
+    sealed class IRCNickList {
         Dictionary<string, List<string>> userMap = new Dictionary<string, List<string>>();     
         public IRCBot bot;
         

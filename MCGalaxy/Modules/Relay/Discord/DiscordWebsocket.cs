@@ -37,7 +37,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public Action<JsonObject> Handler;
         /// <summary> Callback function to retrieve the activity status message </summary>
         public Func<string> GetStatus;
-        public bool CanReconnect;
+        public bool CanReconnect = true;
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
@@ -111,7 +111,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             byte[] data = new byte[4096];
             for (;;) {
                 int len = stream.Read(data, 0, 4096);
-                if (len == 0) break; // disconnected
+                if (len == 0) throw new EndOfStreamException("stream.Read returned 0");
+                
                 HandleReceived(data, len);
             }
         }
