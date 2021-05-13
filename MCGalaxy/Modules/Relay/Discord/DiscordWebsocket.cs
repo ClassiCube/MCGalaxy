@@ -96,6 +96,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         	    Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
         	    CanReconnect = false;
         	}
+            Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
             
             try {
                 base.Disconnect(reason);
