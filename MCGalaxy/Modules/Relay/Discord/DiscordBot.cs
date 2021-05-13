@@ -75,7 +75,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.Token     = Config.BotToken;
             socket.Handler   = HandleEvent;
             socket.GetStatus = GetStatus;
-            socket.OnReady   = OnReady;
             
             Thread worker = new Thread(IOThread);
             worker.Name   = "DiscordRelayBot";
@@ -107,8 +106,13 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandleReadyEvent(JsonObject obj) {
             JsonObject data = (JsonObject)obj["d"];
             JsonObject user = (JsonObject)data["user"];
+            botUserID       = (string)user["id"];
             
-            botUserID = (string)user["id"];
+            api = new DiscordApiClient();
+            api.Token = Config.BotToken;
+            
+            api.RunAsync();
+            RegisterEvents();
         }
         
         string GetNick(JsonObject data) {
@@ -179,14 +183,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
         string GetStatus() {
             string online = PlayerInfo.NonHiddenCount().ToString();
             return Config.Status.Replace("{PLAYERS}", online);
-        }
-        
-        void OnReady() {
-            api = new DiscordApiClient();
-            api.Token = Config.BotToken;
-            
-            api.RunAsync();
-            RegisterEvents();
         }
         
         

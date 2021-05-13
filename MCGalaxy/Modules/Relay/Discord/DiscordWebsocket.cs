@@ -33,8 +33,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
-        /// <summary> Delegate invoked when the bot has connected </summary>
-        public Action OnReady;
         /// <summary> Delegate invoked when a message has been received </summary>
         public Action<JsonObject> Handler;
         /// <summary> Callback function to retrieve the activity status message </summary>
@@ -96,7 +94,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         protected override void Disconnect(int reason) {
         	if (reason == REASON_INVALID_TOKEN) {
         	    Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
-        		CanReconnect = false;
+        	    CanReconnect = false;
         	}
             
             try {
@@ -143,7 +141,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             heartbeat = Server.Background.QueueRepeat(SendHeartbeat, null, 
                                           TimeSpan.FromMilliseconds(msInterval));
             SendIdentify();
-            OnReady();
         }
         
         void HandleDispatch(JsonObject obj) {
