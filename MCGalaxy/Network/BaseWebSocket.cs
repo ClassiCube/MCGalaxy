@@ -92,6 +92,19 @@ namespace MCGalaxy.Network {
         protected const int OPCODE_DISCONNECT = 8;        
         protected const int FIN = 0x80;
         
+        protected const int REASON_NORMAL         = 1000;
+        protected const int REASON_INVALID_DATA   = 1003;
+        protected const int REASON_EXCESSIVE_SIZE = 1009;
+        
+        int GetDisconnectReason() {
+            if (frameLen < 2) return REASON_NORMAL;
+            
+            // See section 5.5.1 of websockets specification:
+            //  "... If there is a body, the first two bytes of the body MUST 
+            //   be a 2-byte unsigned integer (in network byte order)..."
+            return (frame[0] << 8) | frame[1];
+        }
+        
         void DecodeFrame() {
             for (int i = 0; i < frameLen; i++) {
                 frame[i] ^= mask[i & 3];
@@ -107,9 +120,9 @@ namespace MCGalaxy.Network {
                     break;
                 case OPCODE_DISCONNECT:
                     // Connection is getting closed
-                    Disconnect(1000); break;
+                    Disconnect(GetDisconnectReason()); break;
                 default:
-                    Disconnect(1003); break;
+                    Disconnect(REASON_INVALID_DATA); break;
             }
         }
         
@@ -131,7 +144,7 @@ namespace MCGalaxy.Network {
                     
                     if (flags == 127) {
                         // unsupported 8 byte extended length
-                        Disconnect(1009);
+                        Disconnect(REASON_EXCESSIVE_SIZE);
                         return len;
                     } else if (flags == 126) {
                         // two byte extended length
@@ -214,7 +227,7 @@ namespace MCGalaxy.Network {
         /// <summary> Sends data to the underlying socket without wrapping the data in a websocket frame </summary>
         protected abstract void SendRaw(byte[] data, SendFlags flags);
         
-        public void Disconnect() { Disconnect(1000); }
+        public void Disconnect() { Disconnect(REASON_NORMAL); }
     }
     
     /// <summary> Abstracts a server side WebSocket </summary>

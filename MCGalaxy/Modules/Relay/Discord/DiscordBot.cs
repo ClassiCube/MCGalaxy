@@ -56,7 +56,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 socket.ReadLoop();
             } catch (Exception ex) {
                 Logger.LogError("Discord relay error", ex);
-                if (disconnecting) return;
+                if (disconnecting || !socket.CanReconnect) return;
                 
                 // try to recover from dropped connection
                 TryReconnect();
@@ -209,6 +209,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         
         protected override void DoMessageChannel(string channel, string message) {
+            if (api == null) return;
             api.SendMessageAsync(channel, message);
         }
         

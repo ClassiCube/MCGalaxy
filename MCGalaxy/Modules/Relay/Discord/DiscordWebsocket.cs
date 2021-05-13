@@ -30,10 +30,16 @@ namespace MCGalaxy.Modules.Relay.Discord {
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
     /// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
     public sealed class DiscordWebsocket : ClientWebSocket {
+        
+        /// <summary> Authorisation token for the bot account </summary>
         public string Token;
+        /// <summary> Delegate invoked when the bot has connected </summary>
         public Action OnReady;
+        /// <summary> Delegate invoked when a message has been received </summary>
         public Action<JsonObject> Handler;
+        /// <summary> Callback function to retrieve the activity status message </summary>
         public Func<string> GetStatus;
+        public bool CanReconnect;
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
@@ -85,7 +91,14 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
+        const int REASON_INVALID_TOKEN = 4004;
+        
         protected override void Disconnect(int reason) {
+        	if (reason == REASON_INVALID_TOKEN) {
+        	    Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
+        		CanReconnect = false;
+        	}
+            
             try {
                 base.Disconnect(reason);
             } catch {
