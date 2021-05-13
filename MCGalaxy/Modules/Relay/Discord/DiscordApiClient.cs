@@ -122,7 +122,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         Queue<DiscordApiMessage> requests = new Queue<DiscordApiMessage>();
         readonly object reqLock = new object();
-            
+        
         DiscordApiMessage GetNextRequest() {
             if (requests.Count == 0) return null;
             DiscordApiMessage first = requests.Dequeue();
@@ -138,21 +138,32 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         void HandleNext() {
             DiscordApiMessage msg = null;
+            WebResponse res = null;
+            
             lock (reqLock)   { msg = GetNextRequest(); }
             if (msg == null) { handle.WaitOne(); return; }
             
-            HttpWebRequest req = HttpUtil.CreateRequest(host + msg.Path);
-            req.Method         = "POST";
-            req.ContentType    = "application/json";
-            req.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
-            
-            string data = Json.SerialiseObject(msg.ToJson());
-            HttpUtil.SetRequestData(req, Encoding.UTF8.GetBytes(data));
-            WebResponse res = req.GetResponse();
-            
-            string response = HttpUtil.GetResponseData(res);
-            Logger.Log(LogType.SystemActivity, response);
+            for (int retry = 0; retry < 10; retry++) {
+                try {
+                    HttpWebRequest req = HttpUtil.CreateRequest(host + msg.Path);
+                    req.Method         = "POST";
+                    req.ContentType    = "application/json";
+                    req.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
+                    
+                    string data = Json.SerialiseObject(msg.ToJson());
+                    HttpUtil.SetRequestData(req, Encoding.UTF8.GetBytes(data));
+                    res = req.GetResponse();
+                    
+                    HttpUtil.GetResponseText(res);
+                    break;
+                } catch (Exception ex) {
+                    if (Handle429(ex)) continue;
+                    Logger.LogError(ex);
+                    return;
+                }
+            }
         }
+        
         
         void SendLoop() {
             for (;;) {
@@ -166,13 +177,12 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
             
             // cleanup state
-            try { 
+            try {
                 lock (reqLock) requests.Clear();
-                handle.Dispose(); 
+                handle.Dispose();
             } catch {
             }
-        }
-        
+        }      
         
         void WakeupWorker() {
             try {
@@ -181,6 +191,37 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 // for very rare case where handle's already been destroyed
             }
         }
+        
+        
+        static void SleepForRetryPeriod(HttpWebResponse res) {
+            string resetAfter = res.Headers["X-RateLimit-Reset-After"];
+            string retryAfter = res.Headers["Retry-After"];
+            float delay;
+            
+            if (Utils.TryParseSingle(resetAfter, out delay) && delay > 0) {
+                // Prefer Discord "X-RateLimit-Reset-After" (millisecond precision)
+            } else if (Utils.TryParseSingle(retryAfter, out delay) && delay > 0) {
+                // Fallback to general "Retry-After" header
+            } else {
+                // No recommended retry delay.. 30 seconds is a good bet
+                delay = 30;
+            }
+
+            Logger.Log(LogType.SystemActivity, "Discord bot ratelimited! Trying again in {0} seconds..", delay);
+            Thread.Sleep(TimeSpan.FromSeconds(delay + 0.5f));
+        }
+        
+        static bool Handle429(Exception ex) {
+            WebException webEx = ex as WebException;
+            if (webEx == null || webEx.Response == null) return false;
+            
+            HttpWebResponse res = (HttpWebResponse)webEx.Response;
+            if (res.StatusCode != (HttpStatusCode)429) return false;
+
+            SleepForRetryPeriod(res);
+            return true;
+        }
+        
         
         public void RunAsync() {
             Thread worker = new Thread(SendLoop);
@@ -192,7 +233,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public void StopAsync() {
             terminating = true;
             WakeupWorker();
-        }       
+        }
         
         /// <summary> Asynchronously sends a message to the Discord API </summary>
         public void SendAsync(DiscordApiMessage msg) {

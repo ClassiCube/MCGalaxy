@@ -92,7 +92,7 @@ namespace MCGalaxy.Network {
                     HttpUtil.SetRequestData(req, data);
                     WebResponse res = req.GetResponse();
                     
-                    string response = HttpUtil.GetResponseData(res);
+                    string response = HttpUtil.GetResponseText(res);
                     beat.OnResponse(response);
                     return;
                 } catch (Exception ex) {

@@ -39,7 +39,7 @@ namespace MCGalaxy.Network {
             }
         }
         
-        public static string GetResponseData(WebResponse response) {
+        public static string GetResponseText(WebResponse response) {
             using (StreamReader r = new StreamReader(response.GetResponseStream())) {
                 return r.ReadToEnd().Trim();
             }
