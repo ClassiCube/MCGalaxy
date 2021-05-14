@@ -698,6 +698,9 @@ namespace MCGalaxy {
         bool UseCommands(List<Command> commands, List<string> messages, CommandData data) {
             for (int i = 0; i < messages.Count; i++) {
                 if (!UseCommand(commands[i], messages[i], data)) return false;
+                
+                // No point running commands after disconnected
+                if (leftServer) return false;
             }
             return true;
         }
