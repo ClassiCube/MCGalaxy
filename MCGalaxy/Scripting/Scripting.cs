@@ -286,10 +286,7 @@ namespace MCGalaxy.Scripting {
             if (dstPath != null) args.OutputAssembly   = dstPath;
             if (dstPath == null) args.GenerateInMemory = true;
             
-            string source = lines.Join(Environment.NewLine)
-                                .Replace("MCLawl", "MCGalaxy")
-                                .Replace("MCForge", "MCGalaxy");
-            
+            string source = lines.Join(Environment.NewLine);
             AddReferences(lines, args);
             PrepareArgs(args);
             InitCompiler();
