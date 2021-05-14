@@ -28,8 +28,7 @@ namespace MCGalaxy {
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
     public sealed class IRCBot : RelayBot {
         internal Connection connection;
-        internal string nick, server;
-        ConnectionArgs args;
+        internal string nick;
         IRCNickList nicks;
         
         public override string RelayName { get { return "IRC"; } }
@@ -67,11 +66,20 @@ namespace MCGalaxy {
         
         
         protected override void DoConnect() {
-            if (connection == null) connection = new Connection(new UTF8Encoding(false), args);
+            if (connection == null) connection = new Connection(new UTF8Encoding(false));
             Hook();
             UpdateState();
             
-            connection.connectionArgs = args;
+            connection.Hostname = Server.Config.IRCServer;
+            connection.Port     = Server.Config.IRCPort;
+            connection.UseSSL   = Server.Config.IRCSSL;
+            
+            connection.Nick     = Server.Config.IRCNick.Replace(" ", "");
+            connection.UserName = connection.Nick;
+            connection.RealName = Server.SoftwareNameVersioned;
+            
+            bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
+            connection.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
             connection.Connect();
         }
         
@@ -85,15 +93,6 @@ namespace MCGalaxy {
         void UpdateState() {
             Channels   = Server.Config.IRCChannels.SplitComma();
             OpChannels = Server.Config.IRCOpChannels.SplitComma();
-            nick   = Server.Config.IRCNick.Replace(" ", "");
-            server = Server.Config.IRCServer;
-            
-            args = new ConnectionArgs(nick, server);
-            args.RealName = Server.SoftwareNameVersioned;
-            args.Port     = Server.Config.IRCPort;
-            args.UseSSL   = Server.Config.IRCSSL;
-            bool usePass  = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
-            args.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
         }
         
         

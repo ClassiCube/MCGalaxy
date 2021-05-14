@@ -28,19 +28,19 @@ namespace MCGalaxy.Generator.Foliage {
     /// <summary> Set up the interface for tree objects. Designed for subclassing. </summary>
     public abstract class ForesterTree : Tree {
 
-        public Vec3S32 pos = new Vec3S32(0, 0, 0);
+        public Vec3S32 pos;
         protected double random() { return rnd.NextDouble(); }
         protected const double none = double.MaxValue;
         TreeOutput output;
         
-        protected const float FOLIAGEDENSITY = 1.0f;
-        protected const float BRANCHDENSITY  = 1.0f;
-        protected const float TRUNKTHICKNESS = 1.0f;
-        protected const float TRUNKHEIGHT    = 0.7f;
-        protected const float EDGEHEIGHT     =  25f;
-        protected const bool  ROOTBUTTRESSES = true;
+        protected const float FOLIAGE_DENSITY = 1.0f;
+        protected const float BRANCH_DENSITY  = 1.0f;
+        protected const float TRUNK_THICKNESS = 1.0f;
+        protected const float TRUNK_HEIGHT    = 0.7f;
+        protected const float EDGE_HEIGHT     =  25f;
+        protected const bool  ROOT_BUTTRESSES = true;
         
-        public override int EstimateBlocksAffected() { return height * height * height; }
+        public override long EstimateBlocksAffected() { return (long)height * height * height; }
         
         public override void SetData(Random rnd, int value) { this.rnd = rnd; height = value; }
 
@@ -57,10 +57,10 @@ namespace MCGalaxy.Generator.Foliage {
         /// <summary> initialize the internal values for the Tree object. </summary>
         public virtual void Prepare() { }
         
-        /// <summary> Generate the trunk and enter it in mcmap. </summary>
+        /// <summary> Generates the trunk </summary>
         public virtual void MakeTrunk() { }
 
-        /// <summary> Generate the foliage and enter it in mcmap. </summary>
+        /// <summary> Generates the foliage </summary>
         public virtual void MakeFoliage() { }
 
         protected void Place(int x, int y, int z, byte block) {
@@ -183,7 +183,7 @@ namespace MCGalaxy.Generator.Foliage {
             }
         }
 
-        /// <summary> Generate the foliage for the tree in mcmap. </summary>
+        /// <summary> Generates the foliage for the tree </summary>
         public override void MakeFoliage() {
             foreach (Vec3S32 coord in foliage_coords) {
                 FoilageCluster(coord);
@@ -193,7 +193,7 @@ namespace MCGalaxy.Generator.Foliage {
             }
         }
 
-        /// <summary> Generate the branches and enter them in mcmap. </summary>
+        /// <summary> Generates the branches </summary>
         protected void MakeBranches() {
             Vec3S32 treeposition = pos;
             int topy = treeposition.Y + (int)(trunkheight + 0.5f);
@@ -243,7 +243,7 @@ namespace MCGalaxy.Generator.Foliage {
             }
         }
 
-        /// <summary> Generate the trunk, roots, and branches in mcmap. </summary>
+        /// <summary> Generates the trunk, roots, and branches </summary>
         public override void MakeTrunk() {
             Vec3S32 treeposition = pos;
             int starty = treeposition.Y;
@@ -261,7 +261,7 @@ namespace MCGalaxy.Generator.Foliage {
             
             bool mangrove = (this is MangroveTree);
             // Make the root buttresses, if indicated
-            if (ROOTBUTTRESSES || mangrove) {
+            if (ROOT_BUTTRESSES || mangrove) {
                 // The start radius of the trunk should be a little smaller if we are using root buttresses.
                 startrad = trunkradius * 0.8f;
                 float buttress_radius = trunkradius * 0.382f;
@@ -303,14 +303,14 @@ namespace MCGalaxy.Generator.Foliage {
         /// <remarks> Primarily, sets up the foliage cluster locations. </remarks>
         public override void Prepare() {
             Vec3S32 treeposition = pos;
-            trunkradius = (float)(Math.Sqrt(height * TRUNKTHICKNESS));
+            trunkradius = (float)(Math.Sqrt(height * TRUNK_THICKNESS));
             if (trunkradius < 1) trunkradius = 1;
             trunkheight = 0.618f * height;
             int ystart = treeposition.Y, yend = treeposition.Y + height;
             
-            branchdensity = BRANCHDENSITY / FOLIAGEDENSITY;
+            branchdensity = BRANCH_DENSITY / FOLIAGE_DENSITY;
             int topy = treeposition.Y + (int)(trunkheight + 0.5);
-            int num_of_clusters_per_y = (int)(1.5 + Math.Pow(FOLIAGEDENSITY * height / 19.0, 2));
+            int num_of_clusters_per_y = (int)(1.5 + Math.Pow(FOLIAGE_DENSITY * height / 19.0, 2));
             if (num_of_clusters_per_y < 1) num_of_clusters_per_y = 1;
             
             // TODO: fCraft is yEnd - 1, ????
@@ -342,7 +342,7 @@ namespace MCGalaxy.Generator.Foliage {
             branchslope = 0.382f;
             foliage_shape = new float[] { 2, 3, 3, 2.5f, 1.6f };
             trunkradius = trunkradius * 0.8f;
-            trunkheight = TRUNKHEIGHT * trunkheight;
+            trunkheight = TRUNK_HEIGHT * trunkheight;
         }
         
         protected override double ShapeFunc(int y) {
@@ -405,7 +405,7 @@ namespace MCGalaxy.Generator.Foliage {
         
         protected override double ShapeFunc(int y) {
             if (y < height * 0.8) {
-                if (EDGEHEIGHT < height) {
+                if (EDGE_HEIGHT < height) {
                     double twigs = base.ShapeFunc(y);
                     if (twigs != none && random() < 0.07f)
                         return twigs;
@@ -442,7 +442,7 @@ namespace MCGalaxy.Generator.Foliage {
     
     public sealed class BambooTree : Tree {
         
-        public override int EstimateBlocksAffected() { return height * 2; }
+        public override long EstimateBlocksAffected() { return height * 2; }
         
         public override int DefaultSize(Random rnd) { return rnd.Next(4, 8); }
         
@@ -468,7 +468,7 @@ namespace MCGalaxy.Generator.Foliage {
     
     public sealed class PalmTree : Tree {
         
-        public override int EstimateBlocksAffected() { return height + 8; }
+        public override long EstimateBlocksAffected() { return height + 8; }
         
         public override int DefaultSize(Random rnd) { return rnd.Next(4, 8); }
 

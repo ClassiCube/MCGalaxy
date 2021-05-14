@@ -38,7 +38,7 @@ namespace MCGalaxy.Generator.Foliage {
         public virtual int MaxSize { get { return 4096; } }
         
         /// <summary> Estimated the maximum number of blocks affected by this tree. </summary>
-        public abstract int EstimateBlocksAffected();
+        public abstract long EstimateBlocksAffected();
         
         /// <summary> Calculates a random default size (usually means height) for this tree. </summary>
         public abstract int DefaultSize(Random rnd);

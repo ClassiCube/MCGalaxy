@@ -30,7 +30,7 @@ namespace MCGalaxy.Generator.Foliage {
         const int maxExtent = 5, maxBranchHeight = 10, maxCluster = 3;
         List<Vec3S32> branch = new List<Vec3S32>();
         
-        public override int EstimateBlocksAffected() { return height * height * height; }
+        public override long EstimateBlocksAffected() { return (long)height * height * height; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(5, 10); }
         
@@ -44,7 +44,7 @@ namespace MCGalaxy.Generator.Foliage {
         }
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
-            // Do base trunk
+            // Generate base trunk
             Vec3S32 p1 = new Vec3S32(x, y, z);
             Vec3S32 p2 = new Vec3S32(x, y + height, z);
             Line(p1, p2, output);
@@ -58,12 +58,13 @@ namespace MCGalaxy.Generator.Foliage {
         void DoBranch(int x, int y, int z, TreeOutput output) {
             int dx = rnd.Next(-maxExtent, maxExtent);
             int dz = rnd.Next(-maxExtent, maxExtent);
+            
             int clusterSize = rnd.Next(1, maxCluster);
             int branchStart = rnd.Next(branchBaseHeight, height);
-            int branchMax = branchStart + rnd.Next(3, maxBranchHeight);
+            int branchMax   = branchStart + rnd.Next(3, maxBranchHeight);
             
-            Vec3S32 p1 = new Vec3S32(x, y + branchStart, z);
-            Vec3S32 p2 = new Vec3S32(x + dx, y + branchMax, z + dz);
+            Vec3S32 p1 = new Vec3S32(x,      y + branchStart, z     );
+            Vec3S32 p2 = new Vec3S32(x + dx, y + branchMax,   z + dz);
             Line(p1, p2, output);
             
             int R = clusterSize;

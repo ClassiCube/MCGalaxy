@@ -668,7 +668,6 @@
     <Compile Include="util\UIHelpers.cs" />
     <Compile Include="util\Utils.cs" />
     <Compile Include="sharkbite.thresher\Connection.cs" />
-    <Compile Include="sharkbite.thresher\ConnectionArgs.cs" />
     <Compile Include="sharkbite.thresher\Delegates.cs" />
     <Compile Include="sharkbite.thresher\Listener.cs" />
     <Compile Include="sharkbite.thresher\NameGenerator.cs" />

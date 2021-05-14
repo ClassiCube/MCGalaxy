@@ -29,7 +29,7 @@ using System;
 namespace MCGalaxy.Generator.Foliage {
     public sealed class CactusTree : Tree {
 
-        public override int EstimateBlocksAffected() { return height + 3 * 2; }
+        public override long EstimateBlocksAffected() { return height + 3 * 2; }
         
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 6); }
                 
@@ -59,7 +59,7 @@ namespace MCGalaxy.Generator.Foliage {
 
     public sealed class NormalTree : Tree {
 
-        public override int EstimateBlocksAffected() { return height + size * size * size; }
+        public override long EstimateBlocksAffected() { return height + size * size * size; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(5, 8); }
         
@@ -90,7 +90,7 @@ namespace MCGalaxy.Generator.Foliage {
 
     public sealed class ClassicTree : Tree {
         
-        public override int EstimateBlocksAffected() { return height + 65; }
+        public override long EstimateBlocksAffected() { return height + 65; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 7); }
         
@@ -125,7 +125,7 @@ namespace MCGalaxy.Generator.Foliage {
     
     public sealed class SwampTree : Tree {
         
-        public override int EstimateBlocksAffected() { return height + 145; }
+        public override long EstimateBlocksAffected() { return height + 145; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(4, 8); }
 

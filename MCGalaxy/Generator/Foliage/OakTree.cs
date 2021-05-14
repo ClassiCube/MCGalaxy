@@ -28,7 +28,7 @@ namespace MCGalaxy.Generator.Foliage {
         
         public override int MinSize { get { return 0; } }
                 
-        public override int EstimateBlocksAffected() { return height * height * height; }
+        public override long EstimateBlocksAffected() { return (long)height * height * height; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(0, 11); }
         

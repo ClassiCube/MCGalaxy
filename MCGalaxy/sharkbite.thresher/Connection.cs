@@ -61,36 +61,49 @@ namespace Sharkbite.Irc
 		bool handleNickFailure;
 		Encoding encoding;
 
-		internal ConnectionArgs connectionArgs;
-
 		/// <summary>
-		/// Prepare a connection to an IRC server but do not open it. This sets the text Encoding to Default.
+		/// Prepare a connection to an IRC server but do not open it.
 		/// </summary>
-		/// <param name="args">The set of information need to connect to an IRC server</param>
 		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
-		public Connection( Encoding textEncoding, ConnectionArgs args )
+		public Connection( Encoding textEncoding )
 		{
 			registered = false;
 			connected = false;
 			handleNickFailure = true;
-			connectionArgs = args;
 			sender = new Sender( this );
 			listener = new Listener( );
 			RegisterDelegates();
-			TextEncoding = textEncoding;
+			encoding = textEncoding;
 		}
-
 		
+		
+		/// <summary> The IRC server hostname </summary>
+		/// <value>The full hostname such as irc.gamesnet.net</value>
+		public string Hostname;
+		/// <summary> The TCP/IP port the IRC listens server listens on. </summary>
+		/// <value> Normally should be set to 6667. </value>
+		public int Port = 6667;	
+		/// <summary> Whether to connect using SSL or not </summary>		
+		public bool UseSSL;
 		/// <summary>
-		/// Sets the text encoding used by the read and write streams.
-		/// Must be set before Connect() is called and should not be changed
-		/// while the connection is processing messages.
+		/// Set's the user's initial IRC mode mask. Set to 0 to recieve wallops
+		/// and be invisible. Set to 4 to be invisible and not receive wallops.
 		/// </summary>
-		/// <value>An Encoding constant.</value>
-		public Encoding TextEncoding {
-			get { return encoding; }
-			set { encoding = value; }
-		}
+		/// <value>A number mask such as 0 or 4.</value>
+		public string ModeMask = "4";		
+		/// <summary> The user's nick name. </summary>
+		/// <value>A string which conforms to the IRC nick standard.</value>
+		public string Nick;	
+		/// <summary> The user's 'real' name. </summary>
+		/// <value>A short string with any legal characters.</value>
+		public string RealName;		
+		/// <summary> The user's machine logon name. </summary>
+		/// <value>A short string with any legal characters.</value>
+		public string UserName;		
+		/// <summary> The password for this server. These are seldomly used. Set to '*'  </summary>
+		/// <value>A short string with any legal characters.</value>
+		public string ServerPassword = "*";
+		
 		
 		/// <summary>
 		/// A read-only property indicating whether the connection
@@ -128,7 +141,7 @@ namespace Sharkbite.Irc
 		/// </summary>
 		/// <value>Read only string</value>
 		public string Name {
-			get { return connectionArgs.Nick + "@" + connectionArgs.Hostname; }
+			get { return Nick + "@" + Hostname; }
 		}
 
 		/// <summary>
@@ -158,9 +171,9 @@ namespace Sharkbite.Irc
 		/// <param name="newNick">The new nick name</param>
 		private void MyNickChanged(UserInfo user, string newNick)
 		{
-			if ( connectionArgs.Nick == user.Nick )
+			if ( Nick == user.Nick )
 			{
-				connectionArgs.Nick = newNick;
+				Nick = newNick;
 			}
 		}
 		private void OnRegistered()
@@ -284,8 +297,8 @@ namespace Sharkbite.Irc
 		Stream MakeDataStream() 
 		{
 			Stream raw = client.GetStream();
-			if (!connectionArgs.UseSSL) return raw;
-			return MCGalaxy.Network.HttpUtil.WrapSSLStream( raw, connectionArgs.Hostname );
+			if (!UseSSL) return raw;
+			return MCGalaxy.Network.HttpUtil.WrapSSLStream( raw, Hostname );
 		}
 		
 		/// <summary>
@@ -299,17 +312,17 @@ namespace Sharkbite.Irc
 			{
 				if( connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
 				client = new TcpClient();
-				client.Connect( connectionArgs.Hostname, connectionArgs.Port );
+				client.Connect( Hostname, Port );
 				Stream s  = MakeDataStream();
 				connected = true;
 				
-				writer = new StreamWriter( s, TextEncoding );
+				writer = new StreamWriter( s, encoding );
 				writer.AutoFlush = true;
-				reader = new StreamReader( s, TextEncoding );
+				reader = new StreamReader( s, encoding );
 				socketListenThread = new Thread(new ThreadStart( ReceiveIRCMessages ) );
 				socketListenThread.Name = Name;
 				socketListenThread.Start();
-				sender.RegisterConnection( connectionArgs );
+				sender.RegisterConnection();
 			}
 		}
 

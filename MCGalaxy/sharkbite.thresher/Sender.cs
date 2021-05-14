@@ -143,20 +143,20 @@ namespace Sharkbite.Irc
 		/// the username, hostname and realname of a new user.
 		/// </summary>
 		/// <param name="args">The user Connection data</param>
-		internal void User( ConnectionArgs args ) 
+		internal void User() 
 		{
 			lock( this )
 			{
 				buffer.Append("USER");
 				buffer.Append(SPACE);
-				buffer.Append( args.UserName );
+				buffer.Append( connection.UserName );
 				buffer.Append(SPACE);
-				buffer.Append( args.ModeMask );
+				buffer.Append( connection.ModeMask );
 				buffer.Append(SPACE);
 				buffer.Append('*');
 				buffer.Append(SPACE);
 				buffer.Append(':');
-				buffer.Append( args.RealName );
+				buffer.Append( connection.RealName );
 				connection.SendCommand( buffer );
 			}
 		}
@@ -239,11 +239,11 @@ namespace Sharkbite.Irc
 		/// which case the client will have to register by manually calling Nick
 		/// and User.
 		/// </summary>
-		internal void RegisterConnection( ConnectionArgs args ) 
+		internal void RegisterConnection() 
 		{
-			Pass( args.ServerPassword );
-			Nick( args.Nick );
-			User( args );
+			Pass( connection.ServerPassword );
+			Nick( connection.Nick );
+			User();
 		}
 
 		/// <summary>
@@ -483,9 +483,9 @@ namespace Sharkbite.Irc
 		/// <seealso cref="NameGenerator"/>
 		public void Register( string newNick ) 
 		{
-			connection.connectionArgs.Nick = newNick;
-			Nick( connection.connectionArgs.Nick );
-			User( connection.connectionArgs );
+			connection.Nick = newNick;
+			Nick( connection.Nick );
+			User();
 		}
 		/// <summary>
 		/// Send an arbitrary text message to the IRC server.
