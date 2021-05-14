@@ -17,7 +17,7 @@
  */
 using System;
 
-namespace MCGalaxy.Generator {
+namespace MCGalaxy.Generator.Realistic {
     public delegate ushort CalcLiquidLevel(ushort lvlHeight);
     
     public sealed class RealisticMapGenArgs {

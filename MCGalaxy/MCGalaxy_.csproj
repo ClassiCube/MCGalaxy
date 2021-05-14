@@ -516,6 +516,9 @@
     <Compile Include="Games\ZombieSurvival\ZSGame.Plugin.cs" />
     <Compile Include="Games\ZombieSurvival\ZSConfig.cs" />
     <Compile Include="Generator\AdvNoiseGen.cs" />
+    <Compile Include="Generator\Classic\ClassicGenerator.cs" />
+    <Compile Include="Generator\Classic\ClassicGenerator.Utils.cs" />
+    <Compile Include="Generator\Classic\Noise.cs" />
     <Compile Include="Generator\fCraft\MapGen.cs" />
     <Compile Include="Generator\fCraft\MapGenArgs.cs" />
     <Compile Include="Generator\fCraft\Noise.cs" />
@@ -723,6 +726,7 @@
     <Folder Include="Games\Weapons" />
     <Folder Include="Games\RoundsGame" />
     <Folder Include="Generator\LibNoise" />
+    <Folder Include="Generator\Classic" />
     <Folder Include="Generator\Realistic" />
     <Folder Include="Modules\Relay\Discord" />
     <Folder Include="Modules\Relay" />

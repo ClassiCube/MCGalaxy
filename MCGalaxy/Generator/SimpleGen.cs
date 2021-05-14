@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Generator.Realistic;
 
 namespace MCGalaxy.Generator {
     public static class SimpleGen {

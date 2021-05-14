@@ -3,7 +3,7 @@ using System;
 using MCGalaxy.Commands;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Generator {
+namespace MCGalaxy.Generator.fCraft {
 
     /// <summary> Map generator themes. A theme defines what type of blocks are used to fill the map. </summary>
     public enum MapGenBiome {

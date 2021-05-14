@@ -2,7 +2,7 @@
 using System;
 using MCGalaxy;
 
-namespace MCGalaxy.Generator {
+namespace MCGalaxy.Generator.fCraft {
     /// <summary> Contains parameters for advanced map generation. </summary>
     public sealed class fCraftMapGenArgs {
         public string MapName;

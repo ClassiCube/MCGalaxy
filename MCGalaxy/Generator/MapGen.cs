@@ -19,6 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Commands;
+using MCGalaxy.Generator.fCraft;
+using MCGalaxy.Generator.Realistic;
+using ClassicalSharp.Generator;
 
 namespace MCGalaxy.Generator {    
     public delegate bool MapGenFunc(Player p, Level lvl, string seed);
@@ -83,6 +86,7 @@ namespace MCGalaxy.Generator {
             SimpleGen.RegisterGenerators();
             fCraftMapGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
+            ClassicGenerator.RegisterGenerators();
             Register("Heightmap", GenType.Advanced, HeightmapGen.Generate,
                      "&HSeed specifies the URL of the heightmap image");
         }        

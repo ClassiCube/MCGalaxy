@@ -1,7 +1,7 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt //Copyright (c) 2011-2013 Jon Baker, Glenn Marien and Lao Tszy <Jonty800@gmail.com> //Copyright (c) <2012-2014> <LeChosenOne, DingusBungus> | ProCraft Copyright 2014-2016 Joseph Beauvais <123DMWM@gmail.com>
 using System;
 
-namespace MCGalaxy.Generator {
+namespace MCGalaxy.Generator.fCraft {
 
     /// <summary> Interpolation mode for perlin noise. </summary>
     public enum NoiseInterpolationMode {
@@ -193,7 +193,7 @@ namespace MCGalaxy.Generator {
                 if( x < 2 || y < 2 || x > width - 3 || y > length - 3 ) {
                     output[i] = heightmap[i];
                 } else {
-                    // NOTE: the wrong -X1 here is for compatibility with original incorrect code
+                    // NOTE: the wrong -X1 here| is for compatibility with original incorrect code
                     output[i] = (heightmap[i - X2 - Y2]     + heightmap[i - X1 - Y2] *  4 + heightmap[i - Y2] *  7 + heightmap[i + X1 - Y2] *  4 + heightmap[i + X2 - Y2] +
                                  heightmap[i - X1 - Y1] * 4 + heightmap[i - X1 - Y1] * 16 + heightmap[i - Y1] * 26 + heightmap[i + X1 - Y1] * 16 + heightmap[i + X2 - Y1] * 4 +
                                  heightmap[i - X2     ] * 7 + heightmap[i - X1     ] * 26 + heightmap[i     ] * 41 + heightmap[i + X1     ] * 26 + heightmap[i + X2     ] * 7 +

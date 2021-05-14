@@ -28,7 +28,7 @@ namespace MCGalaxy {
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
     public sealed class IRCBot : RelayBot {
         internal Connection connection;
-        internal string nick;
+        string nick;
         IRCNickList nicks;
         
         public override string RelayName { get { return "IRC"; } }
@@ -78,6 +78,7 @@ namespace MCGalaxy {
             connection.UserName = connection.Nick;
             connection.RealName = Server.SoftwareNameVersioned;
             
+            nick = connection.Nick;
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
             connection.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
             connection.Connect();

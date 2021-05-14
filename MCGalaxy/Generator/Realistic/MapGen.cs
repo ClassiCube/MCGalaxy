@@ -29,8 +29,8 @@ using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator.Foliage;
 
-namespace MCGalaxy.Generator {    
-    public sealed class RealisticMapGen {        
+namespace MCGalaxy.Generator.Realistic {    
+    public sealed class RealisticMapGen {
         float[] terrain, overlay, overlay2;
         float treeDens;
         short treeDist;
