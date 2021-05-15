@@ -249,6 +249,11 @@ namespace Sharkbite.Irc
 				//Trap a connection failure
 				listener.Error( ReplyCode.ConnectionFailed, "Connection to server unexpectedly failed.");
 			}
+			catch (Exception ex)
+			{
+				//Trap a connection failure
+				listener.Error( ReplyCode.ConnectionFailed, "Unhandled error: " + ex);
+			}
 			finally
 			{
 				//The connection to the IRC server has been closed either
