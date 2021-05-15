@@ -32,6 +32,7 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {        
             if (!message.CaselessEq("global")) {
+                if (p.IsSuper) { p.Message("Only in-game players can clear chat locally."); return; }
                 ClearChat(p);
                 p.Message("&4Chat cleared.");
             } else {
