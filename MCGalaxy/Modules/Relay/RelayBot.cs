@@ -66,32 +66,27 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Sends a message to all channels setup for general public chat </summary>
         public void SendPublicMessage(string message) {
             foreach (string chan in Channels) {
-                MessageChannel(chan, message);
+                SendMessage(chan, message);
             }
         }
         
         /// <summary> Sends a message to all channels setup for staff chat only </summary>
         public void SendStaffMessage(string message) {
             foreach (string chan in OpChannels) {
-                MessageChannel(chan, message);
+                SendMessage(chan, message);
             }
         }
         
         /// <summary> Sends a message to the given channel </summary>
-        public void MessageChannel(string channel, string message) {
+        /// <remarks> Channels can specify either group chat or direct messages </remarks>
+        public void SendMessage(string channel, string message) {
             if (!Enabled || !Connected) return;
-            DoMessageChannel(channel, ConvertMessage(message));
+            DoSendMessage(channel, ConvertMessage(message));
         }
         
-        /// <summary> Sends a direct message to the given user </summary>
-        public void MessageUser(RelayUser user, string message) {
-            if (!Enabled || !Connected) return;
-            DoMessageUser(user, ConvertMessage(message));
-        }
-        
-        protected abstract void DoMessageChannel(string channel, string message);
-        protected abstract void DoMessageUser(RelayUser user, string message);        
+        protected abstract void DoSendMessage(string channel, string message);
         protected abstract string ConvertMessage(string message);
+        protected abstract string ParseMessage(string message);
         
         
         /// <summary> Attempts to connect to the external communication service </summary>
@@ -231,25 +226,27 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         /// <summary> Handles a direct message written by the given user </summary>
-        protected void HandleUserMessage(RelayUser user, string message) {
+        protected void HandleUserMessage(RelayUser user, string channel, string message) {
+        	message        = ParseMessage(message);
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
             string cmdArgs = parts.Length > 1 ? parts[1] : "";
             
-            if (HandleWhoCommand(user, null, cmdName, false)) return;
+            if (HandleListPlayers(user, channel, cmdName, false)) return;
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
             if (!CanUseCommand(user, cmdName, out error)) {
-                if (error != null) MessageUser(user, error);
+                if (error != null) SendMessage(channel, error);
                 return;
             }
             
-            HandleRelayCommand(user, null, cmdName, cmdArgs);
+            ExecuteCommand(user, channel, cmdName, cmdArgs);
         }
 
         /// <summary> Handles a message written by the given user on the given channel </summary>
         protected void HandleChannelMessage(RelayUser user, string channel, string message) {
+            message = ParseMessage(message);
             message = message.TrimEnd();
             if (message.Length == 0) return;
             
@@ -257,9 +254,9 @@ namespace MCGalaxy.Modules.Relay {
             string rawCmd  = parts[0].ToLower();
             bool opchat    = OpChannels.CaselessContains(channel);
             
-            if (HandleWhoCommand(user, channel, rawCmd, opchat)) return;
+            if (HandleListPlayers(user, channel, rawCmd, opchat)) return;
             if (rawCmd.CaselessEq(Server.Config.IRCCommandPrefix)) {
-                if (!HandleChannelCommand(user, channel, message, parts)) return;
+                if (!HandleCommand(user, channel, message, parts)) return;
             }
 
             if (opchat) {
@@ -273,21 +270,21 @@ namespace MCGalaxy.Modules.Relay {
             }
         }
         
-        bool HandleChannelCommand(RelayUser user, string channel, string message, string[] parts) {
+        bool HandleCommand(RelayUser user, string channel, string message, string[] parts) {
             string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
             string cmdArgs = parts.Length > 2 ? parts[2] : "";
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;
             if (!CanUseCommand(user, cmdName, out error)) {
-                if (error != null) MessageChannel(channel, error);
+                if (error != null) SendMessage(channel, error);
                 return false;
             }
             
-            return HandleRelayCommand(user, channel, cmdName, cmdArgs);
+            return ExecuteCommand(user, channel, cmdName, cmdArgs);
         }
         
-        bool HandleWhoCommand(RelayUser user, string channel, string cmd, bool opchat) {
+        bool HandleListPlayers(RelayUser user, string channel, string cmd, bool opchat) {
             bool isWho = cmd == ".who" || cmd == ".players" || cmd == "!players";
             DateTime last = opchat ? lastOpWho : lastWho;
             if (!isWho || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
@@ -310,7 +307,7 @@ namespace MCGalaxy.Modules.Relay {
             Command.Find("Players").Use(p, "", p.DefaultCmdData);
         }
         
-        bool HandleRelayCommand(RelayUser user, string channel, string cmdName, string cmdArgs) {
+        bool ExecuteCommand(RelayUser user, string channel, string cmdName, string cmdArgs) {
             Command cmd = Command.Find(cmdName);
             Player p = new RelayPlayer(channel, user, this);
             if (cmd == null) { p.Message("Unknown command!"); return false; }
@@ -376,11 +373,7 @@ namespace MCGalaxy.Modules.Relay {
             }
             
             public override void Message(byte type, string message) {
-                if (ChannelID != null) {
-                    Bot.MessageChannel(ChannelID, message);
-                } else {
-                    Bot.MessageUser(User, message);
-                }
+                Bot.SendMessage(ChannelID, message);
             }
         }
     }

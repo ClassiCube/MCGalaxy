@@ -171,7 +171,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         
-        string ParseMessage(string input) {
+        protected override string ParseMessage(string input) {
             StringBuilder sb = new StringBuilder(input);
             SimplifyCharacters(sb);
             
@@ -204,13 +204,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
         void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
         
         
-        protected override void DoMessageChannel(string channel, string message) {
+        protected override void DoSendMessage(string channel, string message) {
             if (api == null) return;
             api.SendMessageAsync(channel, message);
-        }
-        
-        protected override void DoMessageUser(RelayUser user, string message) {
-            // TODO: implement this
         }
                        
         protected override string ConvertMessage(string message) {

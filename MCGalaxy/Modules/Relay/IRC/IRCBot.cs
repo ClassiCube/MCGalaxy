@@ -46,12 +46,8 @@ namespace MCGalaxy {
         }
         
         
-        protected override void DoMessageChannel(string channel, string message) {
+        protected override void DoSendMessage(string channel, string message) {
             connection.Sender.Message(channel, message);
-        }
-        
-        protected override void DoMessageUser(RelayUser user, string message) {
-            connection.Sender.Message(user.Nick, message);
         }
         
         public void Raw(string message) {
@@ -112,7 +108,7 @@ namespace MCGalaxy {
         };
         static readonly Regex ircTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
-        string ParseMessage(string input) {
+        protected override string ParseMessage(string input) {
             // get rid of background color component of some IRC color codes.
             input = ircTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
@@ -262,17 +258,13 @@ namespace MCGalaxy {
             RelayUser rUser = new RelayUser();
             rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
-            
-            message = ParseMessage(message);
-            HandleUserMessage(rUser, message);
+            HandleUserMessage(rUser, user.Nick, message);
         }        
 
         void OnPublic(UserInfo user, string channel, string message) {
             RelayUser rUser = new RelayUser();
             rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
-            
-            message = ParseMessage(message);
             HandleChannelMessage(rUser, channel, message);
         }
         
