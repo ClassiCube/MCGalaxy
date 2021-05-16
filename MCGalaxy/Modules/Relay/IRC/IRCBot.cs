@@ -47,11 +47,11 @@ namespace MCGalaxy {
         
         
         protected override void DoMessageChannel(string channel, string message) {
-            connection.Sender.PublicMessage(channel, message);
+            connection.Sender.Message(channel, message);
         }
         
         protected override void DoMessageUser(RelayUser user, string message) {
-            connection.Sender.PrivateMessage(user.Nick, message);
+            connection.Sender.Message(user.Nick, message);
         }
         
         public void Raw(string message) {
@@ -302,7 +302,7 @@ namespace MCGalaxy {
             
             if (Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0) {
                 Logger.Log(LogType.RelayActivity, "Identifying with " + nickServ);
-                connection.Sender.PrivateMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
+                connection.Sender.Message(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
 
