@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         DiscordApiClient api;
         DiscordWebsocket socket;
         string botUserID;
+        Dictionary<string, bool> isDMChannel = new Dictionary<string, bool>();
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
@@ -73,8 +74,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
             OpChannels = Config.OpChannels.SplitComma();
             
             socket.Token     = Config.BotToken;
-            socket.Handler   = HandleEvent;
             socket.GetStatus = GetStatus;
+            
+            socket.OnReady         = HandleReadyEvent;
+            socket.OnMessageCreate = HandleMessageEvent;
+            socket.OnChannelCreate = HandleChannelEvent;
             
             Thread worker = new Thread(IOThread);
             worker.Name   = "DiscordRelayBot";
@@ -93,27 +97,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
-        
-        void HandleEvent(JsonObject obj) {
-            // actually handle the event
-            string eventName = (string)obj["t"];
-            
-            if (eventName == "READY")          HandleReadyEvent(obj);
-            if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
-        }
-        
-        
-        void HandleReadyEvent(JsonObject obj) {
-            JsonObject data = (JsonObject)obj["d"];
-            JsonObject user = (JsonObject)data["user"];
-            botUserID       = (string)user["id"];
-            
-            api = new DiscordApiClient();
-            api.Token = Config.BotToken;
-            
-            api.RunAsync();
-            RegisterEvents();
-        }
         
         string GetNick(JsonObject data) {
             if (!Config.UseNicks) return null;
@@ -138,6 +121,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
             user.ID   =                  (string)author["id"];
             return user;
         }
+
+        
+        void HandleReadyEvent(JsonObject data) {
+            JsonObject user = (JsonObject)data["user"];
+            botUserID       = (string)user["id"];
+            
+            api = new DiscordApiClient();
+            api.Token = Config.BotToken;
+            
+            api.RunAsync();
+            RegisterEvents();
+        }
         
         void PrintAttachments(JsonObject data, string channel) {
             object raw;
@@ -156,18 +151,28 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
-        void HandleMessageEvent(JsonObject obj) {
-            JsonObject data = (JsonObject)obj["d"];
-            RelayUser user  = ExtractUser(data);           
+        void HandleMessageEvent(JsonObject data) {
+            RelayUser user = ExtractUser(data);
             // ignore messages from self
             if (user.ID == botUserID) return;
             
             string channel = (string)data["channel_id"];
             string message = (string)data["content"];
-            message        = ParseMessage(message);
+            bool isDM;
             
-            HandleChannelMessage(user, channel, message);
-            PrintAttachments(data, channel);
+            if (isDMChannel.TryGetValue(channel, out isDM)) {
+                HandleDirectMessage(user, channel, message);
+            } else {
+                HandleChannelMessage(user, channel, message);
+                PrintAttachments(data, channel);
+            }
+        }
+        
+        void HandleChannelEvent(JsonObject data) {
+            string channel = (string)data["id"];
+            string type    = (string)data["type"];
+            
+            if (type == "1") isDMChannel[channel] = true;
         }
         
         

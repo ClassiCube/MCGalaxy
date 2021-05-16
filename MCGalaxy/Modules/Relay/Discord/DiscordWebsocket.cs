@@ -33,11 +33,16 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
-        /// <summary> Delegate invoked when a message has been received </summary>
-        public Action<JsonObject> Handler;
         /// <summary> Callback function to retrieve the activity status message </summary>
         public Func<string> GetStatus;
         public bool CanReconnect = true;
+        
+        /// <summary> Callback invoked when a ready event has been received </summary>
+        public Action<JsonObject> OnReady;
+        /// <summary> Callback invoked when a message created event has been received </summary>
+        public Action<JsonObject> OnMessageCreate;
+        /// <summary> Callback invoked when a channel created event has been received </summary>
+        public Action<JsonObject> OnChannelCreate;
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
@@ -92,10 +97,10 @@ namespace MCGalaxy.Modules.Relay.Discord {
         const int REASON_INVALID_TOKEN = 4004;
         
         protected override void Disconnect(int reason) {
-        	if (reason == REASON_INVALID_TOKEN) {
-        	    Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
-        	    CanReconnect = false;
-        	}
+            if (reason == REASON_INVALID_TOKEN) {
+                Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
+                CanReconnect = false;
+            }
             Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
             
             try {
@@ -151,7 +156,19 @@ namespace MCGalaxy.Modules.Relay.Discord {
             if (obj.TryGetValue("s", out sequence)) 
                 lastSequence = (string)sequence;
             
-            Handler(obj);
+            string eventName = (string)obj["t"];
+            JsonObject data;
+            
+            if (eventName == "READY") {
+                data = (JsonObject)obj["d"];
+                OnReady(data);
+            } else if (eventName == "MESSAGE_CREATE") {
+                data = (JsonObject)obj["d"];
+                OnMessageCreate(data);
+            } else if (eventName == "CHANNEL_CREATE") {
+                data = (JsonObject)obj["d"];
+                OnChannelCreate(data);
+            }
         }
         
         

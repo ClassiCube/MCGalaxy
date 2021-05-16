@@ -258,7 +258,7 @@ namespace MCGalaxy {
             RelayUser rUser = new RelayUser();
             rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
-            HandleUserMessage(rUser, user.Nick, message);
+            HandleDirectMessage(rUser, user.Nick, message);
         }        
 
         void OnPublic(UserInfo user, string channel, string message) {

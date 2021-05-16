@@ -46,8 +46,8 @@ namespace MCGalaxy.Modules.Relay {
         protected byte retries;
         
         
-        /// <summary> The name of service this relay bot communicates with </summary>
-        /// <remarks> IRC, Discord, etc </remarks>
+        /// <summary> The name of the service this relay bot communicates with </summary>
+        /// <example> IRC, Discord </example>
         public abstract string RelayName { get; }
         
         /// <summary> Whether this relay bot is currently enabled </summary>
@@ -226,7 +226,7 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         /// <summary> Handles a direct message written by the given user </summary>
-        protected void HandleUserMessage(RelayUser user, string channel, string message) {
+        protected void HandleDirectMessage(RelayUser user, string channel, string message) {
         	message        = ParseMessage(message);
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();

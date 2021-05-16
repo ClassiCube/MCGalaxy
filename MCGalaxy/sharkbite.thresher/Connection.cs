@@ -251,7 +251,6 @@ namespace Sharkbite.Irc
 			}
 			catch (Exception ex)
 			{
-				//Trap a connection failure
 				listener.Error( ReplyCode.ConnectionFailed, "Unhandled error: " + ex);
 			}
 			finally
