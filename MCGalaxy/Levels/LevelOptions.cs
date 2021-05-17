@@ -102,7 +102,7 @@ namespace MCGalaxy {
         }
         
         static void SetOwner(Player p, Level lvl, string value) {
-            lvl.Config.RealmOwner = value.Replace(' ', ',');
+            lvl.Config.RealmOwner = value.Replace(", ", ",").Replace(" ", ",");
             if (value.Length == 0) p.Message("Removed realm owner for this level.");
             else p.Message("Set realm owner/owners of this level to {0}.", value);
         }
@@ -203,7 +203,7 @@ namespace MCGalaxy {
         }
         
         static void SetAuthors(Player p, Level lvl, string value) {
-            lvl.Config.Authors = value.Replace(" ", "&S, ");
+            lvl.Config.Authors = value.Replace(", ", ",").Replace(" ", ",");
             p.Message("Map authors set to: &b" + lvl.Config.Authors);
         }
         
