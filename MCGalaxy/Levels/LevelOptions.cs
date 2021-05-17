@@ -203,7 +203,7 @@ namespace MCGalaxy {
         }
         
         static void SetAuthors(Player p, Level lvl, string value) {
-            lvl.Config.Authors = value.Replace(" ", "&S, ");
+            lvl.Config.Authors = value.Replace(", ", ",").Replace(" ", ",");
             p.Message("Map authors set to: &b" + lvl.Config.Authors);
         }
         
