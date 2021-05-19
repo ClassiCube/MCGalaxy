@@ -42,7 +42,6 @@ namespace MCGalaxy {
         public IRCBot() {
             nicks     = new IRCNickList();
             nicks.bot = this;
-            UpdateState();
         }
         
         
@@ -64,7 +63,6 @@ namespace MCGalaxy {
         protected override void DoConnect() {
             if (connection == null) connection = new Connection(new UTF8Encoding(false));
             Hook();
-            UpdateState();
             
             connection.Hostname = Server.Config.IRCServer;
             connection.Port     = Server.Config.IRCPort;
@@ -84,12 +82,12 @@ namespace MCGalaxy {
             Unhook();
             nicks.Clear();
             connection.Disconnect(reason);
-        }
+        }       
         
-        
-        void UpdateState() {
-            Channels   = Server.Config.IRCChannels.SplitComma();
-            OpChannels = Server.Config.IRCOpChannels.SplitComma();
+        protected override void UpdateConfig() {
+            Channels     = Server.Config.IRCChannels.SplitComma();
+            OpChannels   = Server.Config.IRCOpChannels.SplitComma();
+            IgnoredUsers = Server.Config.IRCIgnored.SplitComma();
         }
         
         
@@ -301,7 +299,6 @@ namespace MCGalaxy {
         void OnDisconnected() { AutoReconnect(); }
 
         void OnNick(UserInfo user, string newNick) {
-            //Chat.MessageGlobal(Server.IRCColor + "(IRC) " + user.Nick + " changed nick to " + newNick);
             // We have successfully reclaimed our nick, so try to sign in again.
             if (newNick == nick) Authenticate();
             if (newNick.Trim().Length == 0) return;

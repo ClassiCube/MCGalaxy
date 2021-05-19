@@ -35,6 +35,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public string Channels = "";
         [ConfigString("op-channel-ids", null, "", true)]
         public string OpChannels = "";
+        [ConfigString("ignored-user-ids", null, "", true)]
+        public string IgnoredUsers = "";
         
         const string file = "properties/discordbot.properties";
         static ConfigElement[] cfg;

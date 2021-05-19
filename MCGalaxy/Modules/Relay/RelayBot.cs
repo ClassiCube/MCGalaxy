@@ -39,6 +39,9 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> List of channels to send staff only messages to </summary>
         public string[] OpChannels;
         
+        /// <summary> List of user IDs that all chat from is ignored </summary>
+        public string[] IgnoredUsers;
+        
         readonly Player fakeGuest = new Player("RelayBot");
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
@@ -96,6 +99,7 @@ namespace MCGalaxy.Modules.Relay {
             Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
             
             try {
+                UpdateConfig();
                 LoadBannedCommands();
                 DoConnect();
             } catch (Exception e) {
@@ -128,7 +132,8 @@ namespace MCGalaxy.Modules.Relay {
         
         protected abstract void DoConnect();
         protected abstract void DoDisconnect(string reason);
-
+        protected abstract void UpdateConfig();
+        
         void LoadBannedCommands() {
             BannedCommands = new List<string>() { "IRCBot", "DiscordBot", "OpRules", "IRCControllers" };
             
@@ -227,6 +232,8 @@ namespace MCGalaxy.Modules.Relay {
         
         /// <summary> Handles a direct message written by the given user </summary>
         protected void HandleDirectMessage(RelayUser user, string channel, string message) {
+            if (IgnoredUsers.CaselessContains(user.ID)) return;
+        	
         	message        = ParseMessage(message);
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
@@ -246,6 +253,8 @@ namespace MCGalaxy.Modules.Relay {
 
         /// <summary> Handles a message written by the given user on the given channel </summary>
         protected void HandleChannelMessage(RelayUser user, string channel, string message) {
+            if (IgnoredUsers.CaselessContains(user.ID)) return;
+        	
             message = ParseMessage(message);
             message = message.TrimEnd();
             if (message.Length == 0) return;

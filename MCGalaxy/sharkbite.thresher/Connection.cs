@@ -37,17 +37,6 @@ namespace Sharkbite.Irc
 	/// </summary>
 	public sealed class Connection
 	{
-		/// <summary>
-		/// Receive all the messages, unparsed, sent by the IRC server. This is not
-		/// normally needed but provided for those who are interested.
-		/// </summary>
-		public event RawMessageReceivedEventHandler OnRawMessageReceived;
-		/// <summary>
-		/// Receive all the raw messages sent to the IRC from this connection
-		/// </summary>
-		public event RawMessageSentEventHandler OnRawMessageSent;
-
-
 		TcpClient client;
 		Listener listener;
 		Sender sender;
@@ -229,10 +218,6 @@ namespace Sharkbite.Irc
 						if( IsCtcpMessage( line) ) continue;
 						
 						listener.Parse( line );
-						if( OnRawMessageReceived != null )
-						{
-							OnRawMessageReceived( line );
-						}
 					}
 					catch( ThreadAbortException )
 					{
@@ -274,10 +259,6 @@ namespace Sharkbite.Irc
 			}
 			catch( Exception )
 			{
-			}
-			if( OnRawMessageSent != null )
-			{
-				OnRawMessageSent( command.ToString() );
 			}
 			command.Remove(0, command.Length );
 		}
