@@ -101,6 +101,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             Channels     = Config.Channels.SplitComma();
             OpChannels   = Config.OpChannels.SplitComma();
             IgnoredUsers = Config.IgnoredUsers.SplitComma();
+            LoadBannedCommands();
         }
         
         

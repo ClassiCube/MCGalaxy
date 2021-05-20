@@ -200,6 +200,8 @@ namespace MCGalaxy {
                 if (Plugin.core.Contains(p)) continue;
                 Plugin.Load(p, false);
             }
+            
+            OnConfigUpdatedEvent.Call();
         }
         
         static readonly object stopLock = new object();

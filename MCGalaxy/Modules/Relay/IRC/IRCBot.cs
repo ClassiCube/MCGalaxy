@@ -88,6 +88,7 @@ namespace MCGalaxy {
             Channels     = Server.Config.IRCChannels.SplitComma();
             OpChannels   = Server.Config.IRCOpChannels.SplitComma();
             IgnoredUsers = Server.Config.IRCIgnored.SplitComma();
+            LoadBannedCommands();
         }
         
         

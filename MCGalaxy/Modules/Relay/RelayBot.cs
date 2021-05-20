@@ -62,9 +62,6 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> List of users allowed to run in-game commands from the external communication service </summary>
         public PlayerList Controllers;
         
-        /// <summary> Loads the list of controller users from disc </summary>
-        public abstract void LoadControllers();
-        
         
         /// <summary> Sends a message to all channels setup for general public chat </summary>
         public void SendPublicMessage(string message) {
@@ -107,7 +104,6 @@ namespace MCGalaxy.Modules.Relay {
             
             try {
                 UpdateConfig();
-                LoadBannedCommands();
                 DoConnect();
             } catch (Exception e) {
                 Logger.Log(LogType.RelayActivity, "Failed to connect to {0}!", RelayName);
@@ -139,15 +135,25 @@ namespace MCGalaxy.Modules.Relay {
         
         protected abstract void DoConnect();
         protected abstract void DoDisconnect(string reason);
+        
+        
+        /// <summary> Loads the list of controller users from disc </summary>
+        public abstract void LoadControllers();
+        
+        /// <summary> Reloads all configuration (including controllers list) </summary>
+        public virtual void ReloadConfig() {
+            UpdateConfig();
+        	LoadControllers();
+        }
         protected abstract void UpdateConfig();
         
-        void LoadBannedCommands() {
+        protected void LoadBannedCommands() {
             BannedCommands = new List<string>() { "IRCBot", "DiscordBot", "OpRules", "IRCControllers" };
             
             if (!File.Exists("text/irccmdblacklist.txt")) {
                 File.WriteAllLines("text/irccmdblacklist.txt", new string[] {
-                                       "#Here you can put commands that cannot be used from the IRC bot.",
-                                       "#Lines starting with \"#\" are ignored." });
+                                       "# Here you can put commands that cannot be used from the IRC bot.",
+                                       "# Lines starting with \"#\" are ignored." });
             }
             
             foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
@@ -157,17 +163,17 @@ namespace MCGalaxy.Modules.Relay {
         
         
         protected void HookEvents() {
-            OnChatEvent.Register(HandleChat, Priority.Low);
-            OnChatSysEvent.Register(HandleChatSys, Priority.Low);
-            OnChatFromEvent.Register(HandleChatFrom, Priority.Low);
-            OnShuttingDownEvent.Register(HandleShutdown, Priority.Low);
+            OnChatEvent.Register(OnChat, Priority.Low);
+            OnChatSysEvent.Register(OnChatSys, Priority.Low);
+            OnChatFromEvent.Register(OnChatFrom, Priority.Low);
+            OnShuttingDownEvent.Register(OnShutdown, Priority.Low);
         }
         
         protected void UnhookEvents() {
-            OnChatEvent.Unregister(HandleChat);
-            OnChatSysEvent.Unregister(HandleChatSys);
-            OnChatFromEvent.Unregister(HandleChatFrom);
-            OnShuttingDownEvent.Unregister(HandleShutdown);
+            OnChatEvent.Unregister(OnChat);
+            OnChatSysEvent.Unregister(OnChatSys);
+            OnChatFromEvent.Unregister(OnChatFrom);
+            OnShuttingDownEvent.Unregister(OnShutdown);
         }
         
         
@@ -209,7 +215,7 @@ namespace MCGalaxy.Modules.Relay {
             }
         }
 
-        void HandleChatSys(ChatScope scope, string msg, object arg,
+        void OnChatSys(ChatScope scope, string msg, object arg,
                            ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
@@ -217,7 +223,7 @@ namespace MCGalaxy.Modules.Relay {
             MessageToRelay(scope, msg, arg, filter);
         }
         
-        void HandleChatFrom(ChatScope scope, Player source, string msg,
+        void OnChatFrom(ChatScope scope, Player source, string msg,
                             object arg, ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
@@ -225,7 +231,7 @@ namespace MCGalaxy.Modules.Relay {
             MessageToRelay(scope, Unescape(source, msg), arg, filter);
         }
         
-        void HandleChat(ChatScope scope, Player source, string msg,
+        void OnChat(ChatScope scope, Player source, string msg,
                         object arg, ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
@@ -233,7 +239,7 @@ namespace MCGalaxy.Modules.Relay {
             MessageToRelay(scope, Unescape(source, msg), arg, filter);
         }
         
-        void HandleShutdown(bool restarting, string message) {
+        void OnShutdown(bool restarting, string message) {
             Disconnect(restarting ? "Server is restarting" : "Server is shutting down");
         }
         
@@ -297,20 +303,6 @@ namespace MCGalaxy.Modules.Relay {
             }
         }
         
-        bool HandleCommand(RelayUser user, string channel, string message, string[] parts) {
-            string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
-            string cmdArgs = parts.Length > 2 ? parts[2] : "";
-            Command.Search(ref cmdName, ref cmdArgs);
-            
-            string error;
-            if (!CanUseCommand(user, cmdName, out error)) {
-                if (error != null) SendMessage(channel, error);
-                return false;
-            }
-            
-            return ExecuteCommand(user, channel, cmdName, cmdArgs);
-        }
-        
         bool HandleListPlayers(RelayUser user, string channel, string cmd, bool opchat) {
             bool isWho = cmd == ".who" || cmd == ".players" || cmd == "!players";
             DateTime last = opchat ? lastOpWho : lastWho;
@@ -332,6 +324,21 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Outputs the list of online players to the given user </summary>
         protected virtual void MessagePlayers(RelayPlayer p) {
             Command.Find("Players").Use(p, "", p.DefaultCmdData);
+        }
+        
+                
+        bool HandleCommand(RelayUser user, string channel, string message, string[] parts) {
+            string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
+            string cmdArgs = parts.Length > 2 ? parts[2] : "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            
+            string error;
+            if (!CanUseCommand(user, cmdName, out error)) {
+                if (error != null) SendMessage(channel, error);
+                return false;
+            }
+            
+            return ExecuteCommand(user, channel, cmdName, cmdArgs);
         }
         
         bool ExecuteCommand(RelayUser user, string channel, string cmdName, string cmdArgs) {

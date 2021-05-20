@@ -45,6 +45,16 @@ namespace MCGalaxy.Events.ServerEvents {
         }
     }
     
+    public delegate void OnConfigUpdated();
+    /// <summary> Called when the server configuration has been updated. </summary>
+    public sealed class OnConfigUpdatedEvent : IEvent<OnConfigUpdated> {
+        
+    	public static void Call() {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl());
+        }
+    }
+    
     public delegate void OnChatSys(ChatScope scope, string msg, object arg,
                                    ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatSysEvent : IEvent<OnChatSys> {
