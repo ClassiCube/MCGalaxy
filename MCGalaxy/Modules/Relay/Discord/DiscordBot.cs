@@ -97,6 +97,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
+        public override void ReloadConfig() {
+            Config.Load();
+            base.ReloadConfig();
+        }
+        
         protected override void UpdateConfig() {
             Channels     = Config.Channels.SplitComma();
             OpChannels   = Config.OpChannels.SplitComma();

@@ -36,17 +36,17 @@ namespace MCGalaxy.Modules.Relay {
             switch (cmd) {
                 case "reload":
                     bot.LoadControllers();
-                    p.Message("{0} Controllers reloaded!", bot.RelayName);
+                    p.Message("{0} controllers reloaded!", bot.RelayName);
                     break;
                     
                 case "add":
                     if (arg.Length == 0) { p.Message("You need to provide a name to add."); return; }
                     
                     if (!bot.Controllers.Add(arg)) {
-                        p.Message("{0} is already an {1} controller.", arg, bot.RelayName);
+                        p.Message("{0} is already in the {1} controllers list.", arg, bot.RelayName);
                     } else {
                         bot.Controllers.Save();
-                        p.Message("{0} added to the {1} controller list.", arg, bot.RelayName);
+                        p.Message("{0} added to the {1} controllers list.", arg, bot.RelayName);
                     }
                     break;
                     
@@ -54,10 +54,10 @@ namespace MCGalaxy.Modules.Relay {
                     if (arg.Length == 0) { p.Message("You need to provide a name to remove."); return; }
                     
                     if (!bot.Controllers.Remove(arg)) {
-                        p.Message("{0} is not an {1} controller.", arg, bot.RelayName);
+                        p.Message("{0} is not in the {1} controllers list.", arg, bot.RelayName);
                     } else {
                         bot.Controllers.Save();
-                        p.Message("{0} removed from the {1} controller list.", arg, bot.RelayName);
+                        p.Message("{0} removed from the {1} controllers list.", arg, bot.RelayName);
                     }
                     break;
                     

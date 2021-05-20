@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Config;
+using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Relay.Discord {
 
@@ -65,21 +66,24 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         public override void Load(bool startup) {
             Bot.Config = Config;
-            Bot.LoadControllers();
-            Config.Load();
+            Bot.ReloadConfig();
             Bot.Connect();
+            OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
+            OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
             Bot.Disconnect("Disconnecting Discord bot");
         }
+        
+        void OnConfigUpdated() { Bot.ReloadConfig(); }
     }
-	
+    
     public sealed class CmdDiscordBot : RelayBotCmd {
         public override string name { get { return "DiscordBot"; } }
         protected override RelayBot Bot { get { return DiscordPlugin.Bot; } }
     }
-	
+    
     public sealed class CmdDiscordControllers : BotControllersCmd {
         public override string name { get { return "DiscordControllers"; } }
         protected override RelayBot Bot { get { return DiscordPlugin.Bot; } }

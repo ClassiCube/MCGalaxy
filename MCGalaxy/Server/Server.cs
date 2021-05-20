@@ -202,6 +202,7 @@ namespace MCGalaxy {
             }
             
             OnConfigUpdatedEvent.Call();
+            if (IRC != null) IRC.ReloadConfig();
         }
         
         static readonly object stopLock = new object();
