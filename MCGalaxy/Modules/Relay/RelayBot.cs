@@ -87,9 +87,16 @@ namespace MCGalaxy.Modules.Relay {
             DoSendMessage(channel, ConvertMessage(message));
         }
         
+        /// <summary> Formats a message for displaying on the external communication service </summary>
+        /// <example> IRC converts colors such as &amp;0 into IRC color codes </example>
+        protected virtual string ConvertMessage(string message) {
+            message = EmotesHandler.Replace(message);
+            message = ChatTokens.ApplyCustom(message);
+            return message;
+        }
+        /// <summary> Sends a chat message to the given channel </summary>
+        /// <remarks> The message has already been formatted using ConvertMessage </remarks>
         protected abstract void DoSendMessage(string channel, string message);
-        protected abstract string ConvertMessage(string message);
-        protected abstract string ParseMessage(string message);
         
         
         /// <summary> Attempts to connect to the external communication service </summary>
@@ -183,6 +190,7 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         protected virtual string UnescapeNick(Player p) { return p.ColoredName; }
+        protected virtual string PrepareMessage(string msg) { return msg; }
         
         
         void MessageToRelay(ChatScope scope, string msg, object arg, ChatMessageFilter filter) {
@@ -203,17 +211,26 @@ namespace MCGalaxy.Modules.Relay {
 
         void HandleChatSys(ChatScope scope, string msg, object arg,
                            ref ChatMessageFilter filter, bool relay) {
-            if (relay) MessageToRelay(scope, msg, arg, filter);
+            if (!relay) return;
+            
+            msg = PrepareMessage(msg);
+            MessageToRelay(scope, msg, arg, filter);
         }
         
         void HandleChatFrom(ChatScope scope, Player source, string msg,
                             object arg, ref ChatMessageFilter filter, bool relay) {
-            if (relay) MessageToRelay(scope, Unescape(source, msg), arg, filter);
+            if (!relay) return;
+            
+            msg = PrepareMessage(msg);
+            MessageToRelay(scope, Unescape(source, msg), arg, filter);
         }
         
         void HandleChat(ChatScope scope, Player source, string msg,
                         object arg, ref ChatMessageFilter filter, bool relay) {
-            if (relay) MessageToRelay(scope, Unescape(source, msg), arg, filter);
+            if (!relay) return;
+            
+            msg = PrepareMessage(msg);
+            MessageToRelay(scope, Unescape(source, msg), arg, filter);
         }
         
         void HandleShutdown(bool restarting, string message) {
@@ -229,6 +246,7 @@ namespace MCGalaxy.Modules.Relay {
             sb.Replace("‘", "'");
             sb.Replace("’", "'");
         }
+        protected abstract string ParseMessage(string message);
         
         /// <summary> Handles a direct message written by the given user </summary>
         protected void HandleDirectMessage(RelayUser user, string channel, string message) {

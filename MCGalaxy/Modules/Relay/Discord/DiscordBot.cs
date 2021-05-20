@@ -219,13 +219,22 @@ namespace MCGalaxy.Modules.Relay.Discord {
             if (api == null) return;
             api.SendMessageAsync(channel, message);
         }
-                       
+        
         protected override string ConvertMessage(string message) {
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
+            message = base.ConvertMessage(message);
             message = Colors.StripUsed(message);
             return message;
-        }        
+        }
+        
+        readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
+        readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
+        protected override string PrepareMessage(string message) {
+            // don't let user use bold/italic etc markdown
+            for (int i = 0; i < markdown_special.Length; i++) {
+                message = message.Replace(markdown_special[i], markdown_escaped[i]);
+            }
+            return message;
+        }  
         
         void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;

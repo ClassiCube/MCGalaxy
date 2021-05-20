@@ -133,8 +133,7 @@ namespace MCGalaxy {
             if (String.IsNullOrEmpty(message.Trim())) message = ".";
             const string resetSignal = "\x03\x0F";
             
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
+            message = base.ConvertMessage(message);
             message = message.Replace("%S", "&f"); // TODO remove
             message = message.Replace("&S", "&f");
             message = message.Replace("&f", resetSignal);
