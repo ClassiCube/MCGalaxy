@@ -148,7 +148,7 @@ namespace MCGalaxy.Modules.Relay {
         protected abstract void UpdateConfig();
         
         protected void LoadBannedCommands() {
-            BannedCommands = new List<string>() { "IRCBot", "DiscordBot", "OpRules", "IRCControllers" };
+            BannedCommands = new List<string>() { "IRCBot", "DiscordBot", "OpRules", "IRCControllers", "DiscordControllers" };
             
             if (!File.Exists("text/irccmdblacklist.txt")) {
                 File.WriteAllLines("text/irccmdblacklist.txt", new string[] {

@@ -23,6 +23,7 @@ using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Modules.Relay.Discord {
 
@@ -31,16 +32,23 @@ namespace MCGalaxy.Modules.Relay.Discord {
         DiscordApiClient api;
         DiscordWebsocket socket;
         string botUserID;
+        
         Dictionary<string, bool> isDMChannel = new Dictionary<string, bool>();
+        List<string> filter_triggers = new List<string>();
+        List<string> filter_replacements = new List<string>();
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
         public override bool Connected   { get { return socket != null && !disconnected; } }
         public DiscordConfig Config;
+
         
-        public override void LoadControllers() {
-            Controllers = PlayerList.Load("ranks/Discord_Controllers.txt");
-        }
+        TextFile replacementsFile = new TextFile("text/discord/replacements.txt",
+                                        "// This file is used to replace words/phrases sent to discord",
+                                        "// Lines starting with // are ignored",
+                                        "// Lines should be formatted like this:",
+                                        "// example:http://example.org",
+                                        "// That would replace 'example' in messages sent with 'http://example.org'");
         
         void TryReconnect() {
             try {
@@ -97,9 +105,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
+        
         public override void ReloadConfig() {
             Config.Load();
             base.ReloadConfig();
+            LoadReplacements();
         }
         
         protected override void UpdateConfig() {
@@ -107,6 +117,24 @@ namespace MCGalaxy.Modules.Relay.Discord {
             OpChannels   = Config.OpChannels.SplitComma();
             IgnoredUsers = Config.IgnoredUsers.SplitComma();
             LoadBannedCommands();
+        }
+        
+        void LoadReplacements() {
+            replacementsFile.EnsureExists();            
+            string[] lines = replacementsFile.GetText();
+            
+            filter_triggers.Clear();
+            filter_replacements.Clear();
+            
+            ChatTokens.LoadTokens(lines, (phrase, replacement) => 
+                                  {
+                                      filter_triggers.Add(phrase);
+                                      filter_replacements.Add(replacement);
+                                  });
+        }
+        
+        public override void LoadControllers() {
+            Controllers = PlayerList.Load("text/discord/controllers.txt");
         }
         
         
@@ -238,6 +266,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
             // don't let user use bold/italic etc markdown
             for (int i = 0; i < markdown_special.Length; i++) {
                 message = message.Replace(markdown_special[i], markdown_escaped[i]);
+            }
+            
+            // allow uses to do things like replacing '+' with ':green_square:'
+            for (int i = 0; i < filter_triggers.Count; i++) {
+                message = message.Replace(filter_triggers[i], filter_replacements[i]);
             }
             return message;
         }  

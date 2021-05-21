@@ -139,17 +139,17 @@ namespace MCGalaxy {
 
         public static List<ChatToken> Custom = new List<ChatToken>();
         static bool hookedCustom;        
-        internal static void LoadCustom() {
-            Custom.Clear();
+        internal static void LoadCustom() {            
             TextFile tokensFile = TextFile.Files["Custom $s"];
             tokensFile.EnsureExists();
             
             if (!hookedCustom) {
                 hookedCustom = true;
                 tokensFile.OnTextChanged += LoadCustom;
-            }
-            
+            }           
             string[] lines = tokensFile.GetText();
+            
+            Custom.Clear();
             LoadTokens(lines, 
                        (key, value) => Custom.Add(new ChatToken(key, value, null)));
         }
