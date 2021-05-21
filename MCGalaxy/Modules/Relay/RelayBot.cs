@@ -296,7 +296,8 @@ namespace MCGalaxy.Modules.Relay {
                 Logger.Log(LogType.RelayChat, "(OPs): ({0}) {1}: {2}", RelayName, user.Nick, message);
                 Chat.MessageOps(string.Format("To Ops &f-&I({0}) {1}&f- {2}", RelayName, user.Nick,
                                               Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
-            } else {
+            } else if (Channels.CaselessContains(channel)) {
+                // ignore message if it is not from a configured channel
                 Logger.Log(LogType.RelayChat, "({0}) {1}: {2}", RelayName, user.Nick, message);
                 MessageInGame(user.Nick, string.Format("&I({0}) {1}: &f{2}", RelayName, user.Nick,
                                                        Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));

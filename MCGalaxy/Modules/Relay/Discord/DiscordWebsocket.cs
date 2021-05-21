@@ -126,8 +126,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             string value   = Encoding.UTF8.GetString(data, 0, len);
             JsonReader ctx = new JsonReader(value);
             JsonObject obj = (JsonObject)ctx.Parse();
-            
-            Logger.Log(LogType.SystemActivity, value);
             if (obj == null) return;
             
             int opcode = int.Parse((string)obj["op"]);

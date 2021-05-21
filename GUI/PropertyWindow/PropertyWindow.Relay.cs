@@ -131,5 +131,9 @@ namespace MCGalaxy.Gui {
         void dis_chkEnabled_CheckedChanged(object sender, EventArgs e) {
             ToggleDiscordSettings(dis_chkEnabled.Checked);
         }
+
+        void dis_lnkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Program.OpenBrowser("https://github.com/UnknownShadow200/MCGalaxy/wiki/Discord-relay-bot/");
+        }
     }
 }
