@@ -2510,7 +2510,7 @@ namespace MCGalaxy.Gui
             this.dis_lblOpChannel.Name = "dis_lblOpChannel";
             this.dis_lblOpChannel.Size = new System.Drawing.Size(67, 13);
             this.dis_lblOpChannel.TabIndex = 20;
-            this.dis_lblOpChannel.Text = "Opchanel ID:";
+            this.dis_lblOpChannel.Text = "OpChannel ID:";
             // 
             // dis_chkEnabled
             // 
