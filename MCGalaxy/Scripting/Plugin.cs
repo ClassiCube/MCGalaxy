@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
 using MCGalaxy.Modules.Relay.Discord;
+using MCGalaxy.Modules.Relay.IRC;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy {
@@ -116,6 +117,7 @@ namespace MCGalaxy {
             LoadCorePlugin(new CorePlugin());
             LoadCorePlugin(new NotesPlugin());
             LoadCorePlugin(new DiscordPlugin());
+            LoadCorePlugin(new IRCPlugin());
             IScripting.AutoloadPlugins();
         }
         

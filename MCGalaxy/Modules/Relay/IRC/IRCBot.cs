@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using MCGalaxy.Modules.Relay;
 using Sharkbite.Irc;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Modules.Relay.IRC {
     
     public enum IRCControllerVerify { None, HalfOp, OpChannel };
     

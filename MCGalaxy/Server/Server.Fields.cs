@@ -31,8 +31,6 @@ namespace MCGalaxy {
         public static event MessageEventHandler OnURLChange;
         public static event VoidHandler OnSettingsUpdate;
         public static ServerConfig Config = new ServerConfig();
-        
-        public static IRCBot IRC;
         public static DateTime StartTime;
         
         public static PlayerExtList AutoloadMaps;

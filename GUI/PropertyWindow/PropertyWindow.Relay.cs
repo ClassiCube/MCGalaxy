@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Windows.Forms;
 using MCGalaxy.Modules.Relay.Discord;
+using MCGalaxy.Modules.Relay.IRC;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Gui {

@@ -589,9 +589,8 @@
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordWebsocket.cs" />
-    <Compile Include="Modules\Relay\IRC\CmdIRCBot.cs" />
-    <Compile Include="Modules\Relay\IRC\CmdIrcControllers.cs" />
     <Compile Include="Modules\Relay\IRC\IRCNickList.cs" />
+    <Compile Include="Modules\Relay\IRC\IRCPlugin.cs" />
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />

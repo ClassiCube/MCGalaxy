@@ -121,10 +121,6 @@ namespace MCGalaxy {
         }
         
         static void InitRest(SchedulerTask task) {
-            IRC = new IRCBot();
-            IRC.LoadControllers();
-            IRC.Connect();
-             
             CountdownGame.Instance.AutoStart();
             ZSGame.Instance.AutoStart();
             LSGame.Instance.AutoStart();
