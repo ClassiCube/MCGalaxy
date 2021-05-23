@@ -117,12 +117,16 @@ namespace MCGalaxy.Modules.Relay {
             }
         }
         
-        /// <summary> Attempts to disconnect from the external communication service </summary>
+        /// <summary> Forcefully disconnects from the external communication service </summary>
         /// <remarks> Does nothing if not connected </remarks>
         public void Disconnect(string reason) {
             if (!Connected) return;
             canReconnect = false;
-            TryDisconnect(reason);
+            
+            // silent, as otherwise it'll duplicate disconnect messages with IOThread
+            try { DoDisconnect(reason); } catch { }    
+            // wait for worker to completely finish
+            try { worker.Join(); } catch { }
         }
         
         public void Reset() {
@@ -135,15 +139,6 @@ namespace MCGalaxy.Modules.Relay {
             retries  = 0;
         }
         
-        
-        void TryDisconnect(string reason) {
-            try {
-                DoDisconnect(reason);
-            } catch (Exception ex) {
-                Logger.LogError("Disconnecting from " + RelayName, ex);
-            }
-            Logger.Log(LogType.RelayActivity, "Disconnected from {0}!", RelayName);
-        }      
 
         void IOThreadCore() {
             OnStart();
@@ -155,10 +150,15 @@ namespace MCGalaxy.Modules.Relay {
                     DoReadLoop();
                 } catch (Exception ex) {
                     Logger.LogError(RelayName + " relay error", ex);
+                }               
+                retries++;
+                
+                try {
+                    DoDisconnect("Reconnecting");
+                } catch (Exception ex) {
+                    Logger.LogError("Disconnecting from " + RelayName, ex);
                 }
-            	
-            	retries++;
-                TryDisconnect("Reconnecting");
+                Logger.Log(LogType.RelayActivity, "Disconnected from {0}!", RelayName);
             }
             OnStop();
         }
