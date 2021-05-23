@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using MCGalaxy.Commands;
@@ -148,6 +149,13 @@ namespace MCGalaxy.Modules.Relay {
                     Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
                     DoConnect();
                     DoReadLoop();
+                } catch (SocketException ex) {
+                    Logger.Log(LogType.Warning, "Disconnected from {0} ({1}), retrying in {2} seconds..",
+                               RelayName, ex.Message, 30);
+                    
+                    // SocketException is usually due to complete connection dropout
+                    retries = 0;
+                    Thread.Sleep(30 * 1000);
                 } catch (Exception ex) {
                     Logger.LogError(RelayName + " relay error", ex);
                 }               
