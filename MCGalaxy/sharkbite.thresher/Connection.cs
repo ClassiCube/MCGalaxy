@@ -40,7 +40,6 @@ namespace Sharkbite.Irc
 		TcpClient client;
 		Listener listener;
 		Sender sender;
-		Thread socketListenThread;
 		StreamReader reader;
 		StreamWriter writer;
 		//Connected and registered with IRC server
@@ -105,13 +104,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		/// <value>True if the client is connected.</value>
 		public bool Connected { get { return connected; } }
-		/// <summary>
-		/// A user friendly name of this Connection in the form 'nick@host'
-		/// </summary>
-		/// <value>Read only string</value>
-		public string Name {
-			get { return Nick + "@" + Hostname; }
-		}
 
 		/// <summary>
 		/// The object used to send commands to the IRC server.
@@ -173,12 +165,10 @@ namespace Sharkbite.Irc
 		}
 
 		/// <summary>
-		/// Read in message lines from the IRC server
-		/// and send them to a parser for processing.
-		/// Discard CTCP and DCC messages if these protocols
-		/// are not enabled.
+		/// Read in message lines from the IRC server and send them to a parser for processing.
+		/// Discards CTCP and DCC messages if these protocols are not enabled.
 		/// </summary>
-		void ReceiveIRCMessages()
+		public void ReceiveIRCMessages()
 		{
 			string line;
 			try
@@ -260,36 +250,18 @@ namespace Sharkbite.Irc
 				writer = new StreamWriter( s, encoding );
 				writer.AutoFlush = true;
 				reader = new StreamReader( s, encoding );
-				socketListenThread = new Thread(new ThreadStart( ReceiveIRCMessages ) );
-				socketListenThread.Name = Name;
-				socketListenThread.Start();
 				sender.RegisterConnection();
 			}
 		}
 
-		/// <summary>
-		/// Sends a 'Quit' message to the server, closes the connection,
-		/// and stops the listening thread.
-		/// </summary>
-		/// <remarks>The state of the connection will remain the same even after a disconnect,
-		/// so the connection can be reopened. All the event handlers will remain registered.</remarks>
-		/// <param name="reason">A message displayed to IRC users upon disconnect.</param>
 		public void Disconnect( string reason )
 		{
 			lock ( this )
 			{
-				if( !connected ) throw new InvalidOperationException("Not connected to IRC server.");
 				sender.Quit( reason );
-				listener.Disconnected();
-				//Thanks to Thomas for this next block
-				if ( !socketListenThread.Join( TimeSpan.FromSeconds( 1 ) ) )
-					socketListenThread.Abort();
+				client.Close();
 			}
 		}
-		
-		/// <summary> A friendly name for this connection. </summary>
-		/// <returns>The Name property</returns>
-		public override string ToString() { return Name; }
 
 		const string ctcpTypes = "(FINGER|USERINFO|VERSION|SOURCE|CLIENTINFO|ERRMSG|PING|TIME)";
 		static Regex ctcpRegex = new Regex(":([^ ]+) [A-Z]+ [^:]+:\u0001" + ctcpTypes + "([^\u0001]*)\u0001", RegexOptions.Compiled | RegexOptions.Singleline );

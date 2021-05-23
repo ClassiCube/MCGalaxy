@@ -30,10 +30,10 @@ namespace MCGalaxy.Modules.Relay.IRC {
         internal Connection connection;
         string nick;
         IRCNickList nicks;
+        bool ready;
         
         public override string RelayName { get { return "IRC"; } }
         public override bool Enabled { get { return Server.Config.UseIRC; } }
-        public override bool Connected { get { return connection != null && connection.Connected; } }
         
         public override void LoadControllers() {
             Controllers = PlayerList.Load("ranks/IRC_Controllers.txt");
@@ -46,7 +46,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
         
         
         protected override void DoSendMessage(string channel, string message) {
-            connection.Sender.Message(channel, message);
+            if (ready) connection.Sender.Message(channel, message);
         }
         
         public void Raw(string message) {
@@ -60,10 +60,12 @@ namespace MCGalaxy.Modules.Relay.IRC {
         }
         
         
+        protected override bool CanReconnect { get { return canReconnect; } }
+        
         protected override void DoConnect() {
-            if (connection == null) connection = new Connection(new UTF8Encoding(false));
-            Hook();
+            ready = false;
             
+            if (connection == null) connection = new Connection(new UTF8Encoding(false));
             connection.Hostname = Server.Config.IRCServer;
             connection.Port     = Server.Config.IRCPort;
             connection.UseSSL   = Server.Config.IRCSSL;
@@ -71,6 +73,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
             connection.Nick     = Server.Config.IRCNick.Replace(" ", "");
             connection.UserName = connection.Nick;
             connection.RealName = Server.SoftwareNameVersioned;
+            HookIRCEvents();
             
             nick = connection.Nick;
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
@@ -78,10 +81,18 @@ namespace MCGalaxy.Modules.Relay.IRC {
             connection.Connect();
         }
         
+        protected override void DoReadLoop() {
+            connection.ReceiveIRCMessages();
+        }
+        
         protected override void DoDisconnect(string reason) {
-            Unhook();
             nicks.Clear();
-            connection.Disconnect(reason);
+            try {
+                connection.Disconnect(reason);
+            } catch {
+                // no point logging disconnect failures
+            }
+            UnhookIRCEvents();
         }       
         
         protected override void UpdateConfig() {
@@ -169,12 +180,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
             return false;
         }
 
-        volatile bool hookedEvents = false;
-        void Hook() {
-            if (hookedEvents) return;
-            hookedEvents = true;
-            HookEvents();
-
+        void HookIRCEvents() {
             // Regster events for incoming
             connection.Listener.OnNick += OnNick;
             connection.Listener.OnRegistered += OnRegistered;
@@ -185,7 +191,6 @@ namespace MCGalaxy.Modules.Relay.IRC {
             connection.Listener.OnQuit += OnQuit;
             connection.Listener.OnJoin += OnJoin;
             connection.Listener.OnPart += OnPart;
-            connection.Listener.OnDisconnected += OnDisconnected;
             connection.Listener.OnChannelModeChange += OnChannelModeChange;
             connection.Listener.OnNames += OnNames;
             connection.Listener.OnKick += OnKick;
@@ -193,11 +198,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
             connection.Listener.OnPrivateNotice += OnPrivateNotice;
         }
 
-        void Unhook() {
-            if (!hookedEvents) return;
-            hookedEvents = false;
-            UnhookEvents();
-            
+        void UnhookIRCEvents() {
             // Regster events for incoming
             connection.Listener.OnNick -= OnNick;
             connection.Listener.OnRegistered -= OnRegistered;
@@ -208,7 +209,6 @@ namespace MCGalaxy.Modules.Relay.IRC {
             connection.Listener.OnQuit -= OnQuit;
             connection.Listener.OnJoin -= OnJoin;
             connection.Listener.OnPart -= OnPart;
-            connection.Listener.OnDisconnected -= OnDisconnected;
             connection.Listener.OnChannelModeChange -= OnChannelModeChange;
             connection.Listener.OnNames -= OnNames;
             connection.Listener.OnKick -= OnKick;
@@ -276,6 +276,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
             Logger.Log(LogType.RelayActivity, "Joining IRC channels...");
             foreach (string chan in Channels)   { Join(chan); }
             foreach (string chan in OpChannels) { Join(chan); }
+            ready = true;
         }
         
         void OnPrivateNotice(UserInfo user, string notice) {
@@ -292,8 +293,6 @@ namespace MCGalaxy.Modules.Relay.IRC {
                 connection.Sender.Message(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
-
-        void OnDisconnected() { AutoReconnect(); }
 
         void OnNick(UserInfo user, string newNick) {
             // We have successfully reclaimed our nick, so try to sign in again.

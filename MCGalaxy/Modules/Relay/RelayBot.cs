@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.ServerEvents;
@@ -45,8 +46,12 @@ namespace MCGalaxy.Modules.Relay {
         readonly Player fakeGuest = new Player("RelayBot");
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
-        protected bool resetting;
+        
+        protected bool canReconnect;
         protected byte retries;
+        volatile Thread worker;
+        /// <summary> Whether this relay bot can automatically reconnect </summary>
+        protected abstract bool CanReconnect { get; }
         
         
         /// <summary> The name of the service this relay bot communicates with </summary>
@@ -57,7 +62,7 @@ namespace MCGalaxy.Modules.Relay {
         public abstract bool Enabled { get; }
         
         /// <summary> Wehther this relay bot is connected to the external communication service </summary>
-        public abstract bool Connected { get; }
+        public bool Connected { get { return worker != null; } }
 
         /// <summary> List of users allowed to run in-game commands from the external communication service </summary>
         public PlayerList Controllers;
@@ -100,11 +105,12 @@ namespace MCGalaxy.Modules.Relay {
         /// <remarks> Does nothing if disabled, already connected, or the server is shutting down </remarks>
         public void Connect() {
             if (!Enabled || Connected || Server.shuttingDown) return;
-            Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
+            canReconnect = true;
+            retries      = 0;
             
             try {
                 UpdateConfig();
-                DoConnect();
+                RunAsync();
             } catch (Exception e) {
                 Logger.Log(LogType.RelayActivity, "Failed to connect to {0}!", RelayName);
                 Logger.LogError(e);
@@ -115,31 +121,66 @@ namespace MCGalaxy.Modules.Relay {
         /// <remarks> Does nothing if not connected </remarks>
         public void Disconnect(string reason) {
             if (!Connected) return;
-            DoDisconnect(reason);
-            Logger.Log(LogType.RelayActivity, "Disconnected from {0}!", RelayName);
+            canReconnect = false;
+            TryDisconnect(reason);
         }
         
         public void Reset() {
-            resetting = true;
-            retries   = 0;
             Disconnect(RelayName + " Bot resetting...");
-            if (Enabled) Connect();
+            Connect();
         }
         
         protected void OnReady() {
             Logger.Log(LogType.RelayActivity, "Connected to {0}!", RelayName);
-            resetting = false;
-            retries   = 0;
+            retries  = 0;
         }
         
-        protected void AutoReconnect() {
-            if (resetting || retries >= 3) return;
+        
+        void TryDisconnect(string reason) {
+            try {
+                DoDisconnect(reason);
+            } catch (Exception ex) {
+                Logger.LogError("Disconnecting from " + RelayName, ex);
+            }
+            Logger.Log(LogType.RelayActivity, "Disconnected from {0}!", RelayName);
+        }      
+
+        void IOThreadCore() {
+            OnStart();
             
-            retries++;
-            Connect();
+            while (CanReconnect && retries < 3) {
+                try {
+                    Logger.Log(LogType.RelayActivity, "Connecting to {0}...", RelayName);
+                    DoConnect();
+                    DoReadLoop();
+                } catch (Exception ex) {
+                    Logger.LogError(RelayName + " relay error", ex);
+                }
+            	
+            	retries++;
+                TryDisconnect("Reconnecting");
+            }
+            OnStop();
+        }
+        
+        void IOThread() {
+            try {
+                IOThreadCore();
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+            }
+            worker = null;
+        }
+        
+        void RunAsync() {
+            worker      = new Thread(IOThread);
+            worker.Name = RelayName + "-RelayBot";
+            worker.IsBackground = true;
+            worker.Start();
         }
         
         protected abstract void DoConnect();
+        protected abstract void DoReadLoop();
         protected abstract void DoDisconnect(string reason);
         
         
@@ -149,7 +190,7 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Reloads all configuration (including controllers list) </summary>
         public virtual void ReloadConfig() {
             UpdateConfig();
-        	LoadControllers();
+            LoadControllers();
         }
         protected abstract void UpdateConfig();
         
@@ -168,14 +209,14 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         
-        protected void HookEvents() {
+        protected virtual void OnStart() {
             OnChatEvent.Register(OnChat, Priority.Low);
             OnChatSysEvent.Register(OnChatSys, Priority.Low);
             OnChatFromEvent.Register(OnChatFrom, Priority.Low);
             OnShuttingDownEvent.Register(OnShutdown, Priority.Low);
         }
         
-        protected void UnhookEvents() {
+        protected virtual void OnStop() {
             OnChatEvent.Unregister(OnChat);
             OnChatSysEvent.Unregister(OnChatSys);
             OnChatFromEvent.Unregister(OnChatFrom);
@@ -263,8 +304,8 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Handles a direct message written by the given user </summary>
         protected void HandleDirectMessage(RelayUser user, string channel, string message) {
             if (IgnoredUsers.CaselessContains(user.ID)) return;
-        	
-        	message        = ParseMessage(message);
+            
+            message        = ParseMessage(message);
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
             string cmdArgs = parts.Length > 1 ? parts[1] : "";
@@ -284,7 +325,7 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Handles a message written by the given user on the given channel </summary>
         protected void HandleChannelMessage(RelayUser user, string channel, string message) {
             if (IgnoredUsers.CaselessContains(user.ID)) return;
-        	
+            
             message = ParseMessage(message);
             message = message.TrimEnd();
             if (message.Length == 0) return;
