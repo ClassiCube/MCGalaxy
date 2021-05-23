@@ -126,6 +126,12 @@ namespace MCGalaxy.Modules.Relay {
             if (Enabled) Connect();
         }
         
+        protected void OnReady() {
+            Logger.Log(LogType.RelayActivity, "Connected to {0}!", RelayName);
+            resetting = false;
+            retries   = 0;
+        }
+        
         protected void AutoReconnect() {
             if (resetting || retries >= 3) return;
             

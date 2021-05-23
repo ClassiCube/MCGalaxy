@@ -172,6 +172,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             
             api.RunAsync();
             RegisterEvents();
+            OnReady();
         }
         
         void PrintAttachments(JsonObject data, string channel) {

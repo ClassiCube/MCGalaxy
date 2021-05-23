@@ -267,10 +267,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
         }
         
         void OnRegistered() {
-            Logger.Log(LogType.RelayActivity, "Connected to IRC!");
-            resetting = false;
-            retries   = 0;
-            
+            OnReady();
             Authenticate();
             JoinChannels();
         }
