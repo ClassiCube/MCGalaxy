@@ -210,7 +210,7 @@ namespace Sharkbite.Irc
 			buffer.Append("PONG");
 			buffer.Append(SPACE);
 			buffer.Append(message);
-			connection.SendAutomaticReply( buffer );
+			connection.SendCommand( buffer );
 		}
 		/// <summary>
 		/// The PASS command is used to set a 'Connection password'. 
