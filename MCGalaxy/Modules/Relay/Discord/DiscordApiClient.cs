@@ -153,7 +153,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     HttpUtil.GetResponseText(res);
                     break;
                 } catch (Exception ex) {
+            	    HttpUtil.DisposeErrorResponse(ex);
                     if (Handle429(ex)) continue;
+                    
                     Logger.LogError(ex);
                     return;
                 }

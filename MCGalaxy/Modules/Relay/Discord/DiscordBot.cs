@@ -28,7 +28,6 @@ using MCGalaxy.Util;
 namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordBot : RelayBot {
-        bool disconnected, disconnecting;
         DiscordApiClient api;
         DiscordWebsocket socket;
         string botUserID;
@@ -39,9 +38,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
-        public override bool Connected   { get { return socket != null && !disconnected; } }
         public DiscordConfig Config;
-
         
         TextFile replacementsFile = new TextFile("text/discord/replacements.txt",
                                         "// This file is used to replace words/phrases sent to discord",
@@ -50,58 +47,31 @@ namespace MCGalaxy.Modules.Relay.Discord {
                                         "// example:http://example.org",
                                         "// That would replace 'example' in messages sent with 'http://example.org'");
         
-        void TryReconnect() {
-            try {
-                Disconnect("Attempting reconnect");
-                AutoReconnect();
-            } catch (Exception ex) {
-                Logger.LogError("Error reconnecting Discord relay", ex);
-            }
-        }
         
-        void IOThread() {
-            try {
-                socket.Connect();
-                socket.ReadLoop();
-            } catch (Exception ex) {
-                Logger.LogError("Discord relay error", ex);
-                if (disconnecting || !socket.CanReconnect) return;
-                
-                // try to recover from dropped connection
-                TryReconnect();
-            }
+        protected override bool CanReconnect {
+            get { return canReconnect && (socket == null || socket.CanReconnect); }
         }
         
         protected override void DoConnect() {
-            // TODO implement properly
-            socket = new DiscordWebsocket();
-            disconnecting = false;
-            disconnected  = false;
-            
-            Channels   = Config.Channels.SplitComma();
-            OpChannels = Config.OpChannels.SplitComma();
-            
+            socket = new DiscordWebsocket(); 
             socket.Token     = Config.BotToken;
             socket.GetStatus = GetStatus;
             
             socket.OnReady         = HandleReadyEvent;
             socket.OnMessageCreate = HandleMessageEvent;
             socket.OnChannelCreate = HandleChannelEvent;
-            
-            Thread worker = new Thread(IOThread);
-            worker.Name   = "DiscordRelayBot";
-            worker.IsBackground = true;
-            worker.Start();
+            socket.Connect();
+        }
+        
+        protected override void DoReadLoop() {
+            socket.ReadLoop();
         }
         
         protected override void DoDisconnect(string reason) {
-            disconnecting = true;
             try {
-                if (api != null) api.StopAsync();
                 socket.Disconnect();
-            } finally {
-                disconnected = true;
-                UnregisterEvents();
+            } catch {
+                // no point logging disconnect failures
             }
         }
         
@@ -167,11 +137,12 @@ namespace MCGalaxy.Modules.Relay.Discord {
             JsonObject user = (JsonObject)data["user"];
             botUserID       = (string)user["id"];
             
-            api = new DiscordApiClient();
-            api.Token = Config.BotToken;
-            
-            api.RunAsync();
-            RegisterEvents();
+            // May not be null when reconnecting
+            if (api == null) {
+                api = new DiscordApiClient();
+                api.Token = Config.BotToken;
+                api.RunAsync();
+            }
             OnReady();
         }
         
@@ -231,23 +202,37 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return Config.Status.Replace("{PLAYERS}", online);
         }
         
+        void UpdateDiscordStatus() {
+            try { socket.SendUpdateStatus(); } catch { }
+        }
         
-        void RegisterEvents() {
+        
+        protected override void OnStart() {
+            base.OnStart();          
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
-            HookEvents();
         }
         
-        void UnregisterEvents() {
+        protected override void OnStop() {
+            if (api != null) {
+                api.StopAsync();
+                api = null;
+            }
+            base.OnStop();
+            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
-            UnhookEvents();
         }
         
-        void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
-        void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
+        void HandlePlayerConnect(Player p) { UpdateDiscordStatus(); }
+        void HandlePlayerDisconnect(Player p, string reason) { UpdateDiscordStatus(); }
+        
+        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
+            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
+            UpdateDiscordStatus();
+        }
         
         
         protected override void DoSendMessage(string channel, string message) {
@@ -274,11 +259,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 message = message.Replace(filter_triggers[i], filter_replacements[i]);
             }
             return message;
-        }  
-        
-        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
-            socket.SendUpdateStatus();
         }
         
         
