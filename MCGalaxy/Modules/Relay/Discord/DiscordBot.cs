@@ -215,6 +215,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         protected override void OnStop() {
+            socket = null;
             if (api != null) {
                 api.StopAsync();
                 api = null;
