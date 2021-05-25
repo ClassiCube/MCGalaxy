@@ -45,6 +45,15 @@ namespace MCGalaxy.Network {
             }
         }
         
+        /// <summary> Disposes the WebResponse in the given exception 
+        /// (if there is one) to avoid resource leakage </summary>
+        public static void DisposeErrorResponse(Exception ex) {
+            try {
+                WebException webEx = ex as WebException;
+                if (webEx != null && webEx.Response != null) webEx.Response.Close();
+            } catch { }
+        }
+        
 
         class CustomWebClient : WebClient {
             protected override WebRequest GetWebRequest(Uri address) {

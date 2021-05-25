@@ -95,13 +95,8 @@ namespace MCGalaxy.Network {
                     string response = HttpUtil.GetResponseText(res);
                     beat.OnResponse(response);
                     return;
-                } catch (Exception ex) {
-                    // Make sure to dispose response to prevent resource leak on mono
-                    if (ex is WebException) {
-                        WebException webEx = (WebException)ex;
-                        if (webEx.Response != null) webEx.Response.Close();                        
-                    }
-                    
+            	} catch (Exception ex) {
+                    HttpUtil.DisposeErrorResponse(ex);
                     lastEx = ex;
                     continue;
                 }
