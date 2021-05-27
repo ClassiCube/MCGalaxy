@@ -17,6 +17,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using MCGalaxy.Scripting;
 
@@ -31,8 +32,8 @@ namespace MCGalaxy.Gui.Popups {
                 if (!Command.IsCore(cmd)) lstCommands.Items.Add(cmd.name);
             }
         }
-		
-		void CreateCommand(ICompiler engine) {
+        
+        void CreateCommand(ICompiler engine) {
             string cmdName = txtCmdName.Text.Trim();
             if (cmdName.Length == 0) {
                 Popup.Warning("Command must have a name"); return;
@@ -58,33 +59,26 @@ namespace MCGalaxy.Gui.Popups {
         void btnCreateVB_Click(object sender, EventArgs e) { CreateCommand(ICompiler.VB); }
         
         void btnLoad_Click(object sender, EventArgs e) {
-            string fileName;
+            Assembly lib;
+            string path;
+            
             using (FileDialog dialog = new OpenFileDialog()) {
                 dialog.RestoreDirectory = true;
-                dialog.Filter = "Accepted File Types (*.cs, *.vb, *.dll)|*.cs;*.vb;*.dll|C# Source (*.cs)|*.cs|Visual Basic Source (*.vb)|*.vb|.NET Assemblies (*.dll)|*.dll";
+                dialog.Filter = GetFilterText();
+                
                 if (dialog.ShowDialog() != DialogResult.OK) return;
-                fileName = dialog.FileName;
+                path = dialog.FileName;
+            }
+            if (!File.Exists(path)) return;
+            
+            if (path.CaselessEnds(".dll")) {
+                lib = IScripting.LoadAssembly(path);
+            } else {
+                lib = CompileCommands(path);
             }
             
-            if (fileName.CaselessEnds(".dll")) {
-                Assembly lib = IScripting.LoadAssembly(fileName);
-                LoadCommands(lib);
-                return;
-            }
-            
-            ICompiler engine = fileName.CaselessEnds(".cs") ? ICompiler.CS : ICompiler.VB;
-            if (!File.Exists(fileName)) return;
-            
-            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();          
-            CompilerResults result = engine.Compile(fileName, null);
-
-            if (result.Errors.HasErrors) {
-                ICompiler.SummariseErrors(result, p);
-                string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
-                Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
-                return;
-            }
-            LoadCommands(result.CompiledAssembly);            
+            if (lib == null) return;
+            LoadCommands(lib);
         }
 
         void btnUnload_Click(object sender, EventArgs e) {
@@ -104,6 +98,30 @@ namespace MCGalaxy.Gui.Popups {
         }
         
         
+        static ICompiler GetCompiler(string path) {
+            foreach (ICompiler c in ICompiler.Compilers) {
+                if (path.CaselessEnds(c.FileExtension)) return c;
+            }
+            return null;
+        }
+        
+        Assembly CompileCommands(string path) {
+            ICompiler compiler = GetCompiler(path);
+            if (compiler == null) {
+                Popup.Warning("Unsupported file '" + path + "'");
+                return null;
+            }
+            
+            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
+            CompilerResults result = compiler.Compile(path, null);
+            if (!result.Errors.HasErrors) return result.CompiledAssembly;
+            
+            ICompiler.SummariseErrors(result, p);
+            string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
+            Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
+            return null;
+        }
+        
         void LoadCommands(Assembly assembly) {
             List<Command> commands = IScripting.LoadTypes<Command>(assembly);
             if (commands == null) {
@@ -122,6 +140,26 @@ namespace MCGalaxy.Gui.Popups {
                 Command.Register(cmd);
                 Logger.Log(LogType.SystemActivity, "Added " + cmd.name + " to commands");
             }
+        }
+        
+        
+        static string ListCompilers(StringFormatter<ICompiler> formatter) {
+            return ICompiler.Compilers.Join(formatter, "");
+        }
+               
+        static string GetFilterText() {
+            StringBuilder sb = new StringBuilder();
+            // Returns e.g. "Accepted File Types (*.cs, *.dll)|*.cs;*.dll|C# Source (*.cs)|*.cs|.NET Assemblies (*.dll)|*.dll";
+            
+            sb.AppendFormat("Accepted File Types ({0}*.dll)|",
+                            ListCompilers(c => string.Format("*{0}, ", c.FileExtension)));
+            
+            sb.AppendFormat("{0}*.dll|",
+                            ListCompilers(c => string.Format("*{0};", c.FileExtension)));
+            
+            sb.AppendFormat("{0}.NET Assemblies (*.dll)|*.dll",
+                            ListCompilers(c => string.Format("{0} Source (*{1})|*{1}|", c.FullName, c.FileExtension)));
+            return sb.ToString();
         }
     }
 }
