@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands.CPE {
             
             char code = ParseColor(p, args[1]);
             if (code == '\0') return;
-            ColorDesc col = Colors.List[code];
+            ColorDesc col = Colors.Get(code);
             
             if (args[2].CaselessEq("name")) {
                 if (!CheckName(p, args[3])) return;
