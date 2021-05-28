@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 namespace MCGalaxy.Commands.World {
     public sealed class CmdReload : Command2 {
         public override string name { get { return "Reload"; } }
@@ -31,6 +32,13 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message, CommandData data) {
+            IGame game = IGame.GameOn(p.level);
+            if (game != null) {
+                p.Message("You can only reload levels outside of a game."); return;
+            }
+            if (!Hacks.CanUseNoclip(p)) {
+                p.Message("You cannot use &T/Reload &Son this map."); return;
+            }
             if (CheckSuper(p, message, "player or level name")) return;
             if (message.Length == 0) message = p.name;
             string[] parts = message.SplitSpaces();
