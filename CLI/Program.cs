@@ -102,19 +102,24 @@ namespace MCGalaxy.Cli {
         static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
             LogAndRestart((Exception)e.ExceptionObject);
         }
+        
+        static string CurrentDate() { return DateTime.Now.ToString("(HH:mm:ss) "); }
 
         static void LogMessage(LogType type, string message) {
             if (!Server.Config.ConsoleLogging[(int)type]) return;
             
             switch (type) {
                 case LogType.Error:
-                    Write("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
+                    Write("&c!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
                     break;
                 case LogType.BackgroundActivity:
+                    // ignore these messages
+                    break;
+                case LogType.Warning:
+                    Write("&e" + CurrentDate() + message);
                     break;
                 default:
-                    string now = DateTime.Now.ToString("(HH:mm:ss) ");
-                    Write(now + message);
+                    Write(CurrentDate() + message);
                     break;
             }
         }

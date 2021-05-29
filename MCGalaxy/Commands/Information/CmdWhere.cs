@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Help(Player p) {
             p.Message("&T/Where [name]");
-            p.Message("&HDisplays level, position, and orienatation of that player.");
+            p.Message("&HDisplays level, position, and orientation of that player.");
         }
     }
 }

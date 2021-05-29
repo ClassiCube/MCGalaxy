@@ -122,7 +122,7 @@ namespace MCGalaxy.Gui {
             
             switch (type) {
                 case LogType.Error:
-                    main_txtLog.AppendLog("!!!Error! See " + FileLogger.ErrorLogPath + " for more information." + newline);
+                    main_txtLog.AppendLog("&c!!!Error! See " + FileLogger.ErrorLogPath + " for more information." + newline);
                     message = FormatError(message);
                     logs_txtError.AppendText(message + newline);
                     break;
