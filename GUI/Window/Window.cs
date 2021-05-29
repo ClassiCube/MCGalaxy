@@ -69,7 +69,7 @@ namespace MCGalaxy.Gui {
         
         void LoadIcon() {
             // Normally this code would be in InitializeComponent method in Window.Designer.cs,
-        	//  however that doesn't work properly with some WINE versions (you get WINE icon instead)
+            //  however that doesn't work properly with some WINE versions (you get WINE icon instead)
             try {
                 ComponentResourceManager resources = new ComponentResourceManager(typeof(Window));
                 Icon = (Icon)(resources.GetObject("$this.Icon"));
@@ -122,7 +122,8 @@ namespace MCGalaxy.Gui {
             
             switch (type) {
                 case LogType.Error:
-                    main_txtLog.AppendLog("&c!!!Error! See " + FileLogger.ErrorLogPath + " for more information." + newline);
+                    main_txtLog.AppendLog("&c!!!Error" + ExtractErrorMessage(message) 
+                                          + " - See Logs tab for more details" + newline);
                     message = FormatError(message);
                     logs_txtError.AppendText(message + newline);
                     break;
@@ -144,6 +145,24 @@ namespace MCGalaxy.Gui {
             string date = "----" + DateTime.Now + "----";
             return date + Environment.NewLine + message + Environment.NewLine + "-------------------------";
         }
+        
+        static string msgPrefix = Environment.NewLine + "Message: ";
+        static string ExtractErrorMessage(string raw) {
+            // Error messages are usually structured like so:
+            //   Type: whatever
+            //   Message: whatever
+            //   Something: whatever
+            // this code extracts the Message line from the raw message
+            int beg = raw.IndexOf(msgPrefix);
+            if (beg == -1) return "";
+            
+            beg += msgPrefix.Length;
+            int end = raw.IndexOf(Environment.NewLine, beg);
+            if (end == -1) return "";
+            
+            return " (" + raw.Substring(beg, end - beg) + ")";
+        }
+        
 
         static volatile bool msgOpen = false;
         static void LogNewerVersionDetected(object sender, EventArgs e) {

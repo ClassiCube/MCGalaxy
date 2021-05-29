@@ -103,6 +103,7 @@ namespace MCGalaxy.Cli {
             LogAndRestart((Exception)e.ExceptionObject);
         }
         
+        
         static string CurrentDate() { return DateTime.Now.ToString("(HH:mm:ss) "); }
 
         static void LogMessage(LogType type, string message) {
@@ -110,7 +111,8 @@ namespace MCGalaxy.Cli {
             
             switch (type) {
                 case LogType.Error:
-                    Write("&c!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
+                    Write("&c!!!Error" + ExtractErrorMessage(message)
+                          + " - See " + FileLogger.ErrorLogPath + " for more details.");
                     break;
                 case LogType.BackgroundActivity:
                     // ignore these messages
@@ -123,11 +125,29 @@ namespace MCGalaxy.Cli {
                     break;
             }
         }
+        
+        static string msgPrefix = Environment.NewLine + "Message: ";
+        static string ExtractErrorMessage(string raw) {
+            // Error messages are usually structured like so:
+            //   Type: whatever
+            //   Message: whatever
+            //   Something: whatever
+            // this code extracts the Message line from the raw message
+            int beg = raw.IndexOf(msgPrefix);
+            if (beg == -1) return "";
+            
+            beg += msgPrefix.Length;
+            int end = raw.IndexOf(Environment.NewLine, beg);
+            if (end == -1) return "";
+            
+            return " (" + raw.Substring(beg, end - beg) + ")";
+        }
+        
 
         static void LogNewerVersionDetected(object sender, EventArgs e) {
             Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
-
+        
         static void ConsoleLoop() {
             int eofs = 0;
             while (true) {
