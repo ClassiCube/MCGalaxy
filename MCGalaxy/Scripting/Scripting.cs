@@ -115,8 +115,9 @@ namespace MCGalaxy.Scripting {
         
         
         public static void AutoloadPlugins() {
-            if (Directory.Exists("plugins")) {
-                string[] files = Directory.GetFiles("plugins", "*.dll");
+            string[] files = AtomicIO.TryGetFiles("plugins", "*.dll");
+            
+            if (files != null) {
                 foreach (string path in files) { LoadPlugin(path, true); }
             } else {
                 Directory.CreateDirectory("plugins");

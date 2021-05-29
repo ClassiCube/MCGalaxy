@@ -110,9 +110,10 @@ namespace MCGalaxy.Commands.CPE {
         static void MessagePresets(Player p) {
             p.Message("&T/Env preset [type] &H- Applies an env preset on the map");
             p.Message("&HPresets: &f{0}", EnvPreset.Presets.Join(pr => pr.Key));
-            if (!Directory.Exists("presets")) return;
             
-            string[] files = Directory.GetFiles("presets", "*.env");
+            string[] files = AtomicIO.TryGetFiles("presets", "*.env");
+            if (files == null) return;
+            
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
             if (all.Length > 0) p.Message("&HCustom presets: &f" + all);
         }
