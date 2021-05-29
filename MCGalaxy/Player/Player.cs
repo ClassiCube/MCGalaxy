@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.DB;
@@ -54,16 +55,21 @@ namespace MCGalaxy {
         //This is so that plugin devs can declare a player without needing a socket..
         //They would still have to do p.Dispose()..
         public Player(string playername) { 
-            name = playername;
-            truename = playername;
+            name        = playername;
+            truename    = playername;
             DisplayName = playername;
+            
+            IP        = IPAddress.Loopback;
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            IsSuper = true;
+            IsSuper   = true;
         }
 
-        internal Player() {
+        internal Player(INetSocket socket) {
+        	Socket      = socket;
+        	IP          = socket.IP;
             spamChecker = new SpamChecker(this);
-            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            SessionID   = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            
             for (int b = 0; b < BlockBindings.Length; b++) {
                 BlockBindings[b] = (BlockID)b;
             }

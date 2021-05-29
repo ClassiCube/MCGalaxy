@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
@@ -69,7 +70,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         const string host = "gateway.discord.gg";
         // stubs
         public override bool LowLatency { set { } }
-        public override string IP { get { return ""; } }
+        public override IPAddress IP { get { return null; } }
         
         public void Connect() {
             client = new TcpClient();

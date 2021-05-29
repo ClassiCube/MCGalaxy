@@ -38,7 +38,7 @@ namespace MCGalaxy.Network {
         public bool Disconnected;
         
         /// <summary> Gets the IP address of the remote end (i.e. client) of the socket. </summary>
-        public abstract string IP { get; }      
+        public abstract IPAddress IP { get; }      
         /// <summary> Sets whether this socket operates in low-latency mode (e.g. for TCP, disabes nagle's algorithm). </summary>
         public abstract bool LowLatency { set; }
         
@@ -54,7 +54,7 @@ namespace MCGalaxy.Network {
         INetProtocol IdentifyProtocol(byte opcode) {
             if (opcode == Opcode.Handshake) {
                 pending.Remove(this);
-                return new Player() { ip = IP, Socket = this };
+                return new Player(this);
             } else if (opcode == 'G' && Server.Config.WebClient) {
                 pending.Remove(this);
                 return new WebSocket(this);
@@ -142,8 +142,8 @@ namespace MCGalaxy.Network {
             ReceiveNextAsync();
         }
         
-        public override string IP {
-            get { return ((IPEndPoint)socket.RemoteEndPoint).Address.ToString(); }
+        public override IPAddress IP {
+            get { return ((IPEndPoint)socket.RemoteEndPoint).Address; }
         }        
         public override bool LowLatency { set { socket.NoDelay = value; } }
         
@@ -279,7 +279,7 @@ namespace MCGalaxy.Network {
         
         // Init taken care by underlying socket
         public override void Init() { }
-        public override string IP { get { return s.IP; } }
+        public override IPAddress IP { get { return s.IP; } }
         public override bool LowLatency { set { s.LowLatency = value; } }
 
         protected override void SendRaw(byte[] data, SendFlags flags) {
@@ -321,7 +321,7 @@ namespace MCGalaxy.Network {
         
         // Init taken care by underlying socket
         public override void Init() { }        
-        public override string IP { get { return raw.IP; } }
+        public override IPAddress IP { get { return raw.IP; } }
         public override bool LowLatency { set { raw.LowLatency = value; } }
         public override void Close() { raw.Close(); }
         public void Disconnect() { Close(); }
