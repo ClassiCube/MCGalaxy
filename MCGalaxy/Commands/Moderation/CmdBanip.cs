@@ -38,9 +38,10 @@ namespace MCGalaxy.Commands.Moderation {
 
             IPAddress ip;
             if (!IPAddress.TryParse(addr, out ip)) { p.Message("\"{0}\" is not a valid IP.", addr); return; }
-            if (IPAddress.IsLoopback(ip)) { p.Message("You cannot IP ban the server."); return; }
-            if (p.ip == addr) { p.Message("You cannot IP ban yourself."); return; }
-            if (Server.bannedIP.Contains(addr)) { p.Message("{0} is already IP banned.", addr); return; }
+            if (IPAddress.IsLoopback(ip))          { p.Message("You cannot IP ban the server."); return; }
+            if (ip.Equals(p.IP))                   { p.Message("You cannot IP ban yourself."); return; }
+            if (Server.bannedIP.Contains(addr))    { p.Message("{0} is already IP banned.", addr); return; }
+            
             // Check if IP is shared by any other higher ranked accounts
             if (!CheckIP(p, data, addr)) return;
             

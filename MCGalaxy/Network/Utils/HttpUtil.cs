@@ -89,28 +89,32 @@ namespace MCGalaxy.Network {
             return wrapped;
         }
         
-        public static bool IsPrivateIP(string ip) {
-            //range of 172.16.0.0 - 172.31.255.255
-            if (ip.StartsWith("172.") && (int.Parse(ip.Split('.')[1]) >= 16 && int.Parse(ip.Split('.')[1]) <= 31))
-                return true;
-            return IPAddress.IsLoopback(IPAddress.Parse(ip)) || ip.StartsWith("192.168.") || ip.StartsWith("10.");
+        public static bool IsPrivateIP(IPAddress ip) {
+            if (IPAddress.IsLoopback(ip)) return true;
+            
+            if (ip.AddressFamily == AddressFamily.InterNetwork) {
+                byte[] addr = ip.GetAddressBytes();
+                //range of 172.16.0.0 - 172.31.255.255
+                if (addr[0] == 172 && (addr[1] >= 16 && addr[1] <= 31)) return true;
+                
+                // range of 192.168.0.0 to 192.168.255.255
+                if (addr[0] == 192 && addr[1] == 168) return true;
+                // range of 10.0.0.0 to 10.255.255.255
+                if (addr[0] == 10) return true;
+            }
+            
+            // TODO: support IPV6 link local IP addresses too
             //return IsLocalIpAddress(ip);
+            return false;
         }
 
-        public static bool IsLocalIP(string ip) {
-            try { // get host IP addresses
-                IPAddress[] hostIPs = Dns.GetHostAddresses(ip);
-                // get local IP addresses
+        public static bool IsLocalIP(IPAddress ip) {
+            try {
+                if (IPAddress.IsLoopback(ip)) return true;
+                
                 IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-
-                // test if any host IP equals to any local IP or to localhost
-                foreach ( IPAddress hostIP in hostIPs ) {
-                    // is localhost
-                    if ( IPAddress.IsLoopback(hostIP) ) return true;
-                    // is local address
-                    foreach ( IPAddress localIP in localIPs ) {
-                        if ( hostIP.Equals(localIP) ) return true;
-                    }
+                foreach (IPAddress localIP in localIPs) {
+                    if (ip.Equals(localIP)) return true;
                 }
             }
             catch { }
