@@ -28,9 +28,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            if (!Directory.Exists(Paths.ImportsDir)) {
-                Directory.CreateDirectory(Paths.ImportsDir);
-            }
+            UnsafeIO.CreateDirectory(Paths.ImportsDir);
             
             if (message.CaselessEq("all")) {
                 string[] maps = Directory.GetFiles(Paths.ImportsDir);

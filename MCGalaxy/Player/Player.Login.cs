@@ -100,8 +100,7 @@ namespace MCGalaxy {
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
             
-            if (!Directory.Exists("players"))
-                Directory.CreateDirectory("players");
+            UnsafeIO.CreateDirectory("players");
             PlayerDB.LoadNick(this);
             Game.Team = Team.TeamIn(this);
             SetPrefix();

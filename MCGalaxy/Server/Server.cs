@@ -134,26 +134,22 @@ namespace MCGalaxy {
         }
         
         static void EnsureFilesExist() {
-            EnsureDirectoryExists("properties");
-            EnsureDirectoryExists("levels");
-            EnsureDirectoryExists("bots");
-            EnsureDirectoryExists("text");
-            EnsureDirectoryExists("ranks");
+            UnsafeIO.CreateDirectory("properties");
+            UnsafeIO.CreateDirectory("levels");
+            UnsafeIO.CreateDirectory("bots");
+            UnsafeIO.CreateDirectory("text");
+            UnsafeIO.CreateDirectory("ranks");
             RankInfo.EnsureExists();
             Ban.EnsureExists();
 
-            EnsureDirectoryExists("extra");
-            EnsureDirectoryExists(Paths.WaypointsDir);
-            EnsureDirectoryExists("extra/bots");
-            EnsureDirectoryExists(Paths.ImportsDir);
-            EnsureDirectoryExists("blockdefs");
-            EnsureDirectoryExists(IScripting.DllDir);
-            EnsureDirectoryExists(ICompiler.SourceDir);
-            EnsureDirectoryExists("text/discord"); // TODO move to discord plugin
-        }
-        
-        static void EnsureDirectoryExists(string dir) {
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            UnsafeIO.CreateDirectory("extra");
+            UnsafeIO.CreateDirectory(Paths.WaypointsDir);
+            UnsafeIO.CreateDirectory("extra/bots");
+            UnsafeIO.CreateDirectory(Paths.ImportsDir);
+            UnsafeIO.CreateDirectory("blockdefs");
+            UnsafeIO.CreateDirectory(IScripting.DllDir);
+            UnsafeIO.CreateDirectory(ICompiler.SourceDir);
+            UnsafeIO.CreateDirectory("text/discord"); // TODO move to discord plugin
         }
         
         static void MoveOutdatedFiles() {

@@ -36,8 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
-            if (!Directory.Exists("extra/reported"))
-                Directory.CreateDirectory("extra/reported");
+            UnsafeIO.CreateDirectory("extra/reported");
 
             string cmd = args[0];
             if (IsListCommand(cmd)) {
@@ -113,8 +112,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!File.Exists("extra/reported/" + target + ".txt")) {
                 p.Message("The player you specified has not been reported."); return;
             }
-            if (!Directory.Exists("extra/reportedbackups"))
-                Directory.CreateDirectory("extra/reportedbackups");
+            UnsafeIO.CreateDirectory("extra/reportedbackups");
             
             DeleteReport(target);
             string nick = p.FormatNick(target);
@@ -125,8 +123,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         void HandleClear(Player p, string[] args, CommandData data) {
             if (!CheckExtraPerm(p, data, 1)) return;
-            if (!Directory.Exists("extra/reportedbackups"))
-                Directory.CreateDirectory("extra/reportedbackups");
+            UnsafeIO.CreateDirectory("extra/reportedbackups");
             
             string[] users = GetReportedUsers();
             foreach (string user in users) { DeleteReport(user); }

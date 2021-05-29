@@ -37,8 +37,8 @@ namespace MCGalaxy {
         static SchedulerTask logTask;
 
         public static void Init() {
-            if (!Directory.Exists("logs")) Directory.CreateDirectory("logs");
-            if (!Directory.Exists("logs/errors")) Directory.CreateDirectory("logs/errors");
+            UnsafeIO.CreateDirectory("logs");
+            UnsafeIO.CreateDirectory("logs/errors");
             UpdatePaths();
             Logger.LogHandler += LogMessage;
             

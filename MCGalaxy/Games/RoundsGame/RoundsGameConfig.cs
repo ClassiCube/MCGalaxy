@@ -37,7 +37,7 @@ namespace MCGalaxy.Games {
         
         protected void SaveTo(ConfigElement[] cfg, string propsDir, string map) {
             string path = propsDir + map + ".properties";
-            if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
+            UnsafeIO.CreateDirectory(propsDir);
             ConfigElement.SerialiseSimple(cfg, path, this);
         }
         

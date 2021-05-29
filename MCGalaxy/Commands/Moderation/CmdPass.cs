@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (!Server.Config.verifyadmins) { p.Message("Admin verification is not currently enabled."); return; }
             if (message.Length == 0) { Help(p); return; }
-            if (!Directory.Exists(passDir)) Directory.CreateDirectory(passDir);
+            UnsafeIO.CreateDirectory(passDir);
             
             string[] args = message.SplitSpaces(2);
             if (args.Length == 2 && args[0].CaselessEq("set")) {

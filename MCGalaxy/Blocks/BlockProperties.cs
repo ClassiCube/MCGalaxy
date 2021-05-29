@@ -93,9 +93,7 @@ namespace MCGalaxy.Blocks {
         
         public static void Save(string group, BlockProps[] list, byte scope) {
             lock (list) {
-                if (!Directory.Exists("blockprops")) {
-                    Directory.CreateDirectory("blockprops");
-        	    }
+                UnsafeIO.CreateDirectory("blockprops");
                 SaveCore(group, list, scope);
             }
         }

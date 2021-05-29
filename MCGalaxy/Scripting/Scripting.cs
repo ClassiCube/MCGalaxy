@@ -120,7 +120,7 @@ namespace MCGalaxy.Scripting {
             if (files != null) {
                 foreach (string path in files) { LoadPlugin(path, true); }
             } else {
-                Directory.CreateDirectory("plugins");
+                UnsafeIO.CreateDirectory("plugins");
             }
         }
         

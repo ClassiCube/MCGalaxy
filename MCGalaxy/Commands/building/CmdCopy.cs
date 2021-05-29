@@ -168,10 +168,9 @@ namespace MCGalaxy.Commands.Building {
         class CopyArgs { public int offsetIndex; public bool cut, air; }
         
         void SaveCopy(Player p, string file) {
-            if (!Directory.Exists("extra/savecopy"))
-                Directory.CreateDirectory("extra/savecopy");
-            if (!Directory.Exists("extra/savecopy/" + p.name))
-                Directory.CreateDirectory("extra/savecopy/" + p.name);
+            UnsafeIO.CreateDirectory("extra/savecopy");
+            UnsafeIO.CreateDirectory("extra/savecopy/" + p.name);
+            
             if (Directory.GetFiles("extra/savecopy/" + p.name).Length > 15) {
                 p.Message("You can only save a maxmium of 15 copies. /copy delete some.");
                 return;

@@ -36,9 +36,9 @@ namespace MCGalaxy {
         
         public static bool Backup(string map, string backupName) {
             string basePath = LevelInfo.BackupBasePath(map);
-            if (!Directory.Exists(basePath)) Directory.CreateDirectory(basePath);
+            UnsafeIO.CreateDirectory(basePath);
             string path = Path.Combine(basePath, backupName);
-            Directory.CreateDirectory(path);
+            UnsafeIO.CreateDirectory(path);
             
             bool lvl    = DoAction(LevelInfo.MapPath(map),   Path.Combine(path, map + ".lvl"),     action_copy);
             bool props  = DoAction(LevelInfo.PropsPath(map), Path.Combine(path, "map.properties"), action_copy);
@@ -156,8 +156,7 @@ namespace MCGalaxy {
             }
             
             p.Message("Created backup.");
-            if (!Directory.Exists("levels/deleted"))
-                Directory.CreateDirectory("levels/deleted");
+            UnsafeIO.CreateDirectory("levels/deleted");
             
             if (File.Exists(Paths.DeletedMapFile(map))) {
                 int num = 0;

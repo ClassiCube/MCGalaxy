@@ -42,8 +42,7 @@ namespace MCGalaxy.Commands.Building {
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (!Directory.Exists("extra/images/"))
-                Directory.CreateDirectory("extra/images/");
+            UnsafeIO.CreateDirectory("extra/images/");
             if (message.Length == 0) { Help(p); return; }
             string[] parts = message.SplitSpaces(5);
             

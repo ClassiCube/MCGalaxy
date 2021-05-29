@@ -20,7 +20,7 @@ using System.IO;
 
 namespace MCGalaxy {
     
-    /// <summary> Provides utility methods for atomic File I/O operations. </summary>
+    /// <summary> Provides methods for atomic File I/O operations. </summary>
     public static class AtomicIO {
         
         /// <summary> Attempts to delete a file from disc, if it exists </summary>
@@ -54,6 +54,20 @@ namespace MCGalaxy {
                 return Directory.GetFiles(directory, searchPattern);
             } catch (DirectoryNotFoundException) {
                 return null;
+            }
+        }
+    }
+    
+    /// <summary> Provides File I/O methods that log errors instead of throwing exceptions on failure </summary>
+    public static class UnsafeIO {
+        
+        public static bool CreateDirectory(string directory) {
+            try {
+                Directory.CreateDirectory(directory);
+                return true;
+            } catch (Exception ex) {
+                Logger.LogError("Creating directory " + directory, ex);
+                return false;
             }
         }
     }

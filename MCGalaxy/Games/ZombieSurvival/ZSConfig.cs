@@ -128,8 +128,7 @@ namespace MCGalaxy.Games {
         }
         
         public static void AppendPlayerInfectMessage(string name, string msg) {
-            if (!Directory.Exists("text/infect"))
-                Directory.CreateDirectory("text/infect");
+            UnsafeIO.CreateDirectory("text/infect");
             
             string path = InfectPath(name);
             File.AppendAllText(path, msg + Environment.NewLine);

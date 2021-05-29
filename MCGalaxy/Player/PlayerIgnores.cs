@@ -61,8 +61,7 @@ namespace MCGalaxy {
         
         public void Save(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
-            if (!Directory.Exists("ranks/ignore"))
-                Directory.CreateDirectory("ranks/ignore");
+            UnsafeIO.CreateDirectory("ranks/ignore");
             
             try {
                 using (StreamWriter w = new StreamWriter(path)) {

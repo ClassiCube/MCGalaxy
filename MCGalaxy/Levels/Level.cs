@@ -211,9 +211,9 @@ namespace MCGalaxy {
             if (cancel) return false;
             
             try {
-                if (!Directory.Exists("levels")) Directory.CreateDirectory("levels");
-                if (!Directory.Exists("levels/level properties")) Directory.CreateDirectory("levels/level properties");
-                if (!Directory.Exists("levels/prev")) Directory.CreateDirectory("levels/prev");
+                UnsafeIO.CreateDirectory("levels");
+                UnsafeIO.CreateDirectory("levels/level properties");
+                UnsafeIO.CreateDirectory("levels/prev");
                 
                 if (Changed || force || !File.Exists(path)) {
                     lock (saveLock) SaveCore(path);
@@ -255,7 +255,7 @@ namespace MCGalaxy {
         public string Backup(bool force = false, string backup = "") {
             if (!backedup || force) {
                 string backupPath = LevelInfo.BackupBasePath(name);
-                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);
+                UnsafeIO.CreateDirectory(backupPath);
                 int next = LevelInfo.LatestBackup(name) + 1;
                 if (backup.Length == 0) backup = next.ToString();
 

@@ -53,8 +53,7 @@ namespace MCGalaxy.DB {
         
         
         public static string GetLoginMessage(Player p) {
-            if (!Directory.Exists("text/login"))
-                Directory.CreateDirectory("text/login");
+            UnsafeIO.CreateDirectory("text/login");
             
             string path = LoginPath(p.name);
             if (File.Exists(path)) return File.ReadAllText(path);
@@ -65,8 +64,7 @@ namespace MCGalaxy.DB {
 
         public static string GetLogoutMessage(Player p) {
             if (p.name == null) return "disconnected";
-            if (!Directory.Exists("text/logout"))
-                Directory.CreateDirectory("text/logout");
+            UnsafeIO.CreateDirectory("text/logout");
             
             string path = LogoutPath(p.name);
             if (File.Exists(path)) return File.ReadAllText(path);

@@ -48,8 +48,7 @@ namespace MCGalaxy.Drawing {
             Palettes.Add(new ImagePalette("BlackWhite", BlackWhite));
             Palettes.Add(new ImagePalette("SimpleGrayscale", GrayscaleSimple));
             
-            if (!Directory.Exists("extra/palettes"))
-                Directory.CreateDirectory("extra/palettes");
+            UnsafeIO.CreateDirectory("extra/palettes");
             string[] files = Directory.GetFiles("extra/palettes");
             foreach (string file in files)
                 LoadPalette(file);

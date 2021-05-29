@@ -52,7 +52,7 @@ namespace MCGalaxy {
         };
                 
         static void InitDatabase() {
-            if (!Directory.Exists("blockdb")) Directory.CreateDirectory("blockdb");
+            UnsafeIO.CreateDirectory("blockdb");
             
             try {
                 Database.Backend.CreateDatabase();
