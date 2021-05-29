@@ -89,12 +89,13 @@ namespace MCGalaxy.Network {
             return wrapped;
         }
         
+        /// <summary> Returns whether the given IP is a loopback or a LAN address </summary>
         public static bool IsPrivateIP(IPAddress ip) {
             if (IPAddress.IsLoopback(ip)) return true;
             
             if (ip.AddressFamily == AddressFamily.InterNetwork) {
                 byte[] addr = ip.GetAddressBytes();
-                //range of 172.16.0.0 - 172.31.255.255
+                // range of 172.16.0.0 - 172.31.255.255
                 if (addr[0] == 172 && (addr[1] >= 16 && addr[1] <= 31)) return true;
                 
                 // range of 192.168.0.0 to 192.168.255.255
@@ -103,11 +104,12 @@ namespace MCGalaxy.Network {
                 if (addr[0] == 10) return true;
             }
             
-            // TODO: support IPV6 link local IP addresses too
-            //return IsLocalIpAddress(ip);
-            return false;
+            // TODO: Are there more IPv6 address ranges than just this?
+            return ip.IsIPv6LinkLocal;
         }
 
+        /// <summary> Returns whether the given IP is a loopback address 
+        /// or an address mapped to this computer's host </summary>
         public static bool IsLocalIP(IPAddress ip) {
             try {
                 if (IPAddress.IsLoopback(ip)) return true;

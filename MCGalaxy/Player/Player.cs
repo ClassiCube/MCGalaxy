@@ -65,8 +65,8 @@ namespace MCGalaxy {
         }
 
         internal Player(INetSocket socket) {
-        	Socket      = socket;
-        	IP          = socket.IP;
+            Socket      = socket;
+            IP          = socket.IP;
             spamChecker = new SpamChecker(this);
             SessionID   = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
             
@@ -162,7 +162,7 @@ namespace MCGalaxy {
         }
 
         public void SaveStats() {
-            bool cancel = false;      	
+            bool cancel = false;          
             OnInfoSaveEvent.Call(this, ref cancel);
             if (cancel) return;
 
