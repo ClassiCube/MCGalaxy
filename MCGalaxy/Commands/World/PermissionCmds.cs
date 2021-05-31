@@ -113,10 +113,12 @@ namespace MCGalaxy.Commands.World {
             p.Message("&HSets the lowest rank able to {0} the given level.", action);
             p.Message("&T/{0} -max [level] [Rank]", name);
             p.Message("&HSets the highest rank able to {0} the given level.", action);
-            p.Message("&T/{0} [level] +[name]", name);
+            p.Message("&T/{0} [level] +[name] <+[name] ...>", name);
             p.Message("&HAllows [name] to {0}, even if their rank cannot.", action2);
-            p.Message("&T/{0} [level] -[name]", name);
+            p.Message("&T/{0} [level] -[name] <-[name] ...>", name);
             p.Message("&HPrevents [name] from {0}ing, even if their rank can.", action2);
+            p.Message("&T/{0} [level] -*", name);
+            p.Message("&HRemoves everyone from the whitelist.", name);
         }
     }
     
