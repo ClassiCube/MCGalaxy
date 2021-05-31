@@ -26,19 +26,32 @@ namespace MCGalaxy.Commands.World {
         
         public static bool Do(Player p, string[] args, int offset, bool max, 
                               AccessController access, CommandData data, Level lvl) {
+            bool hasErrors = false;
+            int errorCount = 0;
             for (int i = offset; i < args.Length; i++) {
                 string arg = args[i];
-                if (arg[0] == '+' || arg[0] == '-') {
-                    if (!SetList(p, arg, access, data, lvl)) return false;
+                if (arg[0] == '-' && arg[1] == '*') {
+                    int WhitelistedCount = access.Whitelisted.Count;
+                    for (int i2 = 0; i2 < WhitelistedCount; i2++) {
+                        access.Blacklist(p, data.Rank, lvl, access.Whitelisted[0]);
+                    }
+                } else if (arg[0] == '+' || arg[0] == '-') {
+                    if (!SetList(p, arg, access, data, lvl)) hasErrors = true; errorCount++;
                 } else if (max) {
                     Group grp = Matcher.FindRanks(p, arg);
-                    if (grp == null) return false;
+                    if (grp == null) hasErrors = true; errorCount++;
                     access.SetMax(p, data.Rank, lvl, grp);
                 } else {
                     Group grp = Matcher.FindRanks(p, arg);
-                    if (grp == null) return false;
+                    if (grp == null) hasErrors = true; errorCount++;
                     access.SetMin(p, data.Rank, lvl, grp);
                 }
+            }
+            if (hasErrors) {
+                p.Message("One or more errors occurred while executing this command.");
+                if (errorCount == args.Length) {
+                    return false;
+                }   
             }
             return true;
         }
@@ -49,7 +62,7 @@ namespace MCGalaxy.Commands.World {
             if (max) message = message.Substring(maxPrefix.Length);
             
             string[] args = message.SplitSpaces();
-            if (message.Length == 0 || args.Length > 2) { Help(p); return; }
+            if (message.Length == 0) { Help(p); return; }
             if (args.Length == 1 && p.IsSuper) {
                 Command.SuperRequiresArgs(name, p, "level"); return;
             }
