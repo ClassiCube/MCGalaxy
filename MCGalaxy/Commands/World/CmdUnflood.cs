@@ -32,16 +32,20 @@ namespace MCGalaxy.Commands.World {
             if (!message.CaselessEq("all") && !CommandParser.GetBlock(p, message, out block)) return;
             
             Level lvl = p.level;
-            if (!LevelInfo.Check(p, data.Rank, lvl, "unflood this level")) return;           
-            int phys  = lvl.physics;
-            CmdPhysics.SetPhysics(lvl, 0);
+            if (!LevelInfo.Check(p, data.Rank, lvl, "unflood this level")) return;
+            // TODO: Probably should look at lvl.physTickLock here
+            bool paused = lvl.PhysicsPaused;
+            lvl.PhysicsPaused = true;
             
-            Command cmd = Command.Find("ReplaceAll");
-            string args = !message.CaselessEq("all") ? message : 
-                "8 10 lavafall waterfall lava_fast active_hot_lava active_cold_water fast_hot_lava magma geyser";
-            cmd.Use(p, args + " air", data);
-
-            CmdPhysics.SetPhysics(lvl, phys);
+            try {
+                Command cmd = Command.Find("ReplaceAll");
+                string args = !message.CaselessEq("all") ? message :
+                    "8 10 lavafall waterfall lava_fast active_hot_lava active_cold_water fast_hot_lava magma geyser";
+                cmd.Use(p, args + " air", data);
+            } finally {
+                // always restore paused state, even some if ReplaceAll somehow fails
+                lvl.PhysicsPaused = paused;
+            }
             lvl.Message("Unflooded!");
         }
         

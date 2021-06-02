@@ -74,6 +74,11 @@ namespace MCGalaxy.Levels.IO {
             byte[] blocks = lvl.blocks;
             for (int i = 0; i < blocks.Length; i += bufferSize) {
                 int len = Math.Min(bufferSize, blocks.Length - i);
+                // Can't just write lvl.blocks here - another thread 
+                //  may be modifying lvl.blocks, which can cause 
+                //  the calculated GZIP checksum to be incorrect
+                //  (thus meaning the level will fail to load)
+                // Copying to a separate buffer first avoids this issue
                 Buffer.BlockCopy(blocks, i, buffer, 0, len);
                 gs.Write(buffer, 0, len);
             }
@@ -92,6 +97,7 @@ namespace MCGalaxy.Levels.IO {
                     gs.WriteByte(0);
                 } else {
                     gs.WriteByte(1);
+                    // see comment in WriteBlocksSection
                     Buffer.BlockCopy(chunk, 0, buffer, 0, chunk.Length);
                     gs.Write(buffer, 0, chunk.Length);
                 }

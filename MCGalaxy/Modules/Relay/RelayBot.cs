@@ -362,7 +362,7 @@ namespace MCGalaxy.Modules.Relay {
         }
         
         bool HandleListPlayers(RelayUser user, string channel, string cmd, bool opchat) {
-            bool isWho = cmd == ".who" || cmd == ".players" || cmd == "!players";
+            bool isWho    = cmd == ".who" || cmd == ".players" || cmd == "!players";
             DateTime last = opchat ? lastOpWho : lastWho;
             if (!isWho || (DateTime.UtcNow - last).TotalSeconds <= 5) return false;
             
