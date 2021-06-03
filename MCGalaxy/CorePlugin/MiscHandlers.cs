@@ -79,6 +79,7 @@ namespace MCGalaxy.Core {
             if (action != MouseAction.Pressed) return;           
             if (entity != Entities.SelfID && ClickOnBot(p, entity)) return;
             
+            // if Deletable is enabled, handle MBs/Portals in SetBlock instead
             if (p.level.Config.Deletable || !p.level.IsValidPos(x, y, z)) return;
             BlockID block = p.level.GetBlock(x, y, z);
             bool isMB     = p.level.Props[block].IsMessageBlock;
