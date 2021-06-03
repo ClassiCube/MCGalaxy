@@ -57,7 +57,7 @@ namespace MCGalaxy {
         public int warn = 0;
         public byte id;
         public IPAddress IP;
-        public string ip { get { return IP.ToString(); } }
+        public string ip;
         public string color;
         public Group group;
         public LevelPermission hideRank = LevelPermission.Banned;

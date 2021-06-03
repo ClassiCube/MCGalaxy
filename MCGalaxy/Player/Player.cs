@@ -59,14 +59,15 @@ namespace MCGalaxy {
             truename    = playername;
             DisplayName = playername;
             
-            IP        = IPAddress.Loopback;
+            SetIP(IPAddress.Loopback);
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
             IsSuper   = true;
         }
 
         internal Player(INetSocket socket) {
-            Socket      = socket;
-            IP          = socket.IP;
+            Socket = socket;
+            SetIP(Socket.IP);
+            
             spamChecker = new SpamChecker(this);
             SessionID   = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
             
@@ -177,6 +178,11 @@ namespace MCGalaxy {
                                 drawn, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
         }
         
+        public void SetIP(IPAddress addr) {
+            IP = addr;
+            ip = addr.ToString();
+        }
+        
         public bool CanUse(Command cmd) { return group.Commands.Contains(cmd); }
         public bool CanUse(string cmdName) {
             Command cmd = Command.Find(cmdName);
@@ -242,7 +248,7 @@ namespace MCGalaxy {
             // Disconnected before sent handshake
             if (name == null) {
                 if (Socket != null) Socket.Close();
-                Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
+                Logger.Log(LogType.UserActivity, "{0} disconnected.", IP);
                 return;
             }
             
@@ -269,8 +275,7 @@ namespace MCGalaxy {
                 
                 if (!loggedIn) {
                     PlayerInfo.Online.Remove(this);
-                    string user = truename + " (" + ip + ")";
-                    Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
+                    Logger.Log(LogType.UserActivity, "{0} ({1}) disconnected. ({2})", truename, IP, discMsg);
                     return;
                 }
 
