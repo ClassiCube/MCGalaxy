@@ -179,6 +179,10 @@ namespace MCGalaxy {
         }
         
         public void SetIP(IPAddress addr) {
+            // Convert IPv4 mapped addresses to IPv4 addresses for consistency
+            //  (e.g. so IPv4 mapped LAN IPs are treated as LAN IPs)
+            if (IPUtil.IsIPv4Mapped(addr)) addr = IPUtil.MapToIPV4(addr);
+            
             IP = addr;
             ip = addr.ToString();
         }

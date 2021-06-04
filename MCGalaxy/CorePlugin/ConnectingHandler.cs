@@ -53,7 +53,7 @@ namespace MCGalaxy.Core {
             string calculated = Server.CalcMppass(p.truename);
             
             if (!mppass.CaselessEq(calculated)) {
-                if (!HttpUtil.IsPrivateIP(p.IP)) {
+                if (!IPUtil.IsPrivate(p.IP)) {
                     p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
                 }
             } else {
@@ -89,7 +89,7 @@ namespace MCGalaxy.Core {
             if (Server.vip.Contains(p.name)) return true;
             
             Player[] online = PlayerInfo.Online.Items;
-            if (online.Length >= Server.Config.MaxPlayers && !HttpUtil.IsPrivateIP(p.IP)) {
+            if (online.Length >= Server.Config.MaxPlayers && !IPUtil.IsPrivate(p.IP)) {
                 p.Leave(null, "Server full!", true); return false;
             }
             if (p.Rank > LevelPermission.Guest) return true;

@@ -604,6 +604,7 @@
     <Compile Include="Network\Sockets.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
     <Compile Include="Network\Utils\HttpUtil.cs" />
+    <Compile Include="Network\Utils\IPUtil.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
     <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Network\Utils\PingList.cs" />

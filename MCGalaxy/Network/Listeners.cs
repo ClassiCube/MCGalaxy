@@ -47,7 +47,7 @@ namespace MCGalaxy.Network {
                 socket.SetSocketOption(SocketOptionLevel.IPv6, ipv6Only, false);
             } catch (Exception ex) {
                 Logger.LogError(ex);
-                Logger.Log(LogType.Warning, "Failed to allow IPv4 connections to IPv6 listener ({0})", ex.Message);
+                Logger.Log(LogType.Warning, "Failed to disable IPv6 only listener setting");
             }
         }
         
