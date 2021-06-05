@@ -70,7 +70,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             // TODO: is stringbuilder even beneficial here
             msg.content.Append('\n');
             msg.content.Append(content.ToString());
-            content.Clear();
+            content.Length = 0; // clear this
             return true;
         }
     }

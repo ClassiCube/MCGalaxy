@@ -39,6 +39,7 @@ namespace MCGalaxy.Network {
         
         void DisableIPV6OnlyListener() {
             if (socket.AddressFamily != AddressFamily.InterNetworkV6) return;
+            // TODO: Make windows only?
 
             // NOTE: SocketOptionName.IPv6Only is not defined in Mono, but apparently
             //  macOS and Linux default to dual stack by default already

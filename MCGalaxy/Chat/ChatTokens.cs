@@ -154,7 +154,8 @@ namespace MCGalaxy {
                        (key, value) => Custom.Add(new ChatToken(key, value, null)));
         }
         
-        public static void LoadTokens(string[] lines, Action<string, string> addToken) {
+        public delegate void TokenLineProcessor(string phrase, string replacement);
+        public static void LoadTokens(string[] lines, TokenLineProcessor addToken) {
             foreach (string line in lines) {
                 if (line.StartsWith("//") || line.Length == 0) continue;
                 // Need to handle special case of :discord: emotes

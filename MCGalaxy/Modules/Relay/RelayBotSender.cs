@@ -47,7 +47,7 @@ namespace MCGalaxy.Modules.Relay {
             // cleanup state
             try {
                 lock (reqLock) requests.Clear();
-                handle.Dispose();
+                handle.Close();
             } catch {
             }
         }      
