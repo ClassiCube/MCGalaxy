@@ -101,7 +101,7 @@ namespace MCGalaxy {
             Economy.LoadDatabase();
 
             Background.QueueOnce(LoadMainLevel);
-            Plugin.LoadAll();
+            Background.QueueOnce(LoadAllPlugins);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);

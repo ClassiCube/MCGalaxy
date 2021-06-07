@@ -48,6 +48,8 @@ namespace MCGalaxy {
             Level.LoadMetadata(mainLevel);
             LevelInfo.Add(mainLevel);
         }
+
+        static void LoadAllPlugins(SchedulerTask task) { Plugin.LoadAll(); }
         
         static void InitPlayerLists(SchedulerTask task) {
             try {
