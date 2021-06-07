@@ -210,7 +210,7 @@ namespace Sharkbite.Irc
 			buffer.Append("PONG");
 			buffer.Append(SPACE);
 			buffer.Append(message);
-			connection.SendAutomaticReply( buffer );
+			connection.SendCommand( buffer );
 		}
 		/// <summary>
 		/// The PASS command is used to set a 'Connection password'. 
@@ -246,45 +246,9 @@ namespace Sharkbite.Irc
 			User();
 		}
 
-		/// <summary>
-		/// Join the specified channel. 
-		/// </summary>
-		/// <remarks>
-		/// <para>Once a user has joined a channel, he receives information about
-		/// all commands his server receives affecting the channel. This
-		/// includes JOIN, MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE.
-		/// This allows channel members to keep track of the other channel
-		/// members, as well as channel modes.</para>
-		/// <para>If a JOIN is successful, the user receives a JOIN message as
-		/// confirmation and is then sent the channel's topic ( <see cref="Listener.OnTopicRequest"/> and
-		/// the list of users who are on the channel ( <see cref="Listener.OnNames"/> ), which
-		/// MUST include the user joining.</para>
-		/// 
-		/// Possible Errors
-		/// <list type="bullet">
-		/// 	<item><description>ERR_NEEDMOREPARAMS</description></item>
-		/// 	<item><description>ERR_BANNEDFROMCHAN</description></item>
-		/// 	<item><description>ERR_INVITEONLYCHAN</description></item>
-		/// 	<item><description>ERR_BADCHANNELKEY</description></item>
-		/// 	<item><description>ERR_CHANNELISFULL</description></item>
-		/// 	<item><description>ERR_BADCHANMASK</description></item>
-		/// 	<item><description>ERR_NOSUCHCHANNEL</description></item>
-		/// 	<item><description>ERR_TOOMANYCHANNELS</description></item>
-		/// 	<item><description>ERR_TOOMANYTARGETS</description></item>
-		/// 	<item><description>ERR_UNAVAILRESOURCE</description></item>
-		/// </list>
-		/// </remarks>
-		/// <param name="channel">The channel to join. Channel names must begin with '&amp;', '#', '+' or '!'.</param>
-		/// <example><code>
-		/// //Most channels you will see begin with the '#'. The others are reserved
-		/// //for special channels and may not even be available on a particular server.
-		/// connection.Sender.Join("#thresher");
-		/// </code></example>
-		/// <exception cref="ArgumentException">If the channel name is not valid.</exception>
-		/// <seealso cref="Listener.OnJoin"/>
 		public void Join( string channel ) 
 		{
-			if ( !Rfc2812Util.IsValidChannelName( channel ) ) 
+			if ( IsEmpty( channel ) )
 				throw new ArgumentException(channel + " is not a valid channel name.");
 			
 			lock( this ) 
@@ -295,19 +259,13 @@ namespace Sharkbite.Irc
 				connection.SendCommand( buffer );
 			}
 		}
-		/// <summary>
-		/// Join a passworded channel.
-		/// </summary>
-		/// <param name="channel">Channel to join</param>
-		/// <param name="password">The channel's pasword. Cannot be null or empty.</param>
-		/// <exception cref="ArgumentException">If the channel name is not valid or the password is null.</exception> 
-		/// <seealso cref="Listener.OnJoin"/>
+
 		public void Join(string channel, string password) 
 		{
 			if ( IsEmpty( password ) ) 
 				throw new ArgumentException("Password cannot be empty or null.");
-			if ( !Rfc2812Util.IsValidChannelName( channel ) )
-				throw new ArgumentException(channel + " is not a valid channel name.");
+			if ( IsEmpty( channel ) )
+				throw new ArgumentException("Channel name cannot be empty or null.");
 			
 			lock( this ) 
 			{
@@ -321,30 +279,7 @@ namespace Sharkbite.Irc
 				connection.SendCommand( buffer );
 			}
 		}
-		/// <summary>
-		/// Change the user's nickname.
-		/// </summary>
-		/// <remarks>
-		/// Possible Errors
-		/// 	<list type="bullet">
-		/// 		<item><description>ERR_NONICKNAMEGIVEN</description></item>
-		/// 		<item><description>ERR_ERRONEUSNICKNAME</description></item>
-		/// 		<item><description>ERR_NICKNAMEINUSE</description></item>
-		/// 		<item><description>ERR_NICKCOLLISION</description></item>
-		/// 		<item><description>ERR_UNAVAILRESOURCE</description></item>
-		/// 		<item><description>ERR_RESTRICTED</description></item>
-		/// 	</list>
-		/// </remarks>
-		/// <param name="newNick"> The new nickname</param>
-		/// <example><code>
-		/// //Make sure and verify that the nick is valid and of the right length
-		/// string nick = GetUserInput();
-		/// if( Rfc2812Util.IsValidNick( connection, nick) ) { 
-		/// connection.Sender.Nick( nick );
-		/// }
-		/// </code></example>
-		/// <exception cref="ArgumentException">If the nickname is not valid.</exception> 
-		/// <seealso cref="Listener.OnNick"/>
+
 		public void Nick( string newNick ) 
 		{
 			if ( !Rfc2812Util.IsValidNick( newNick ) )
@@ -358,26 +293,11 @@ namespace Sharkbite.Irc
 				connection.SendCommand( buffer );
 			}
 		}
-		/// <summary> 
-		/// Request a list of all nicknames on a given channel.
-		/// </summary>
-		/// <remarks>
-		/// Possible Errors
-		/// <list type="bullet">
-		/// 		<item><description>ERR_TOOMANYMATCHES</description></item>
-		/// </list>
-		/// </remarks>
-		/// <param name="channels">One or more channel names.</param>
-		/// <example><code>
-		/// //Make the request for a single channel
-		/// connection.Sender.Names( "#test" );
-		/// </code></example>
-		/// <exception cref="ArgumentException">If the channel name is not valid.</exception> 
-		/// <seealso cref="Listener.OnNames"/>
+
 		public void Names( string channel ) 
 		{
-			if ( !Rfc2812Util.IsValidChannelName( channel ) ) 
-				throw new ArgumentException(channel + " is not a valid channel name.");
+			if ( IsEmpty( channel ) ) 
+				throw new ArgumentException("Channel name cannot be null or empty.");
 			
 			lock( this ) 
 			{
@@ -387,88 +307,34 @@ namespace Sharkbite.Irc
 				connection.SendCommand( buffer );
 			}
 		}
-		/// <summary>
-		/// Send a message to all the users in a channel.</summary>
-		/// <remarks>
-		/// Possible Errors
-		/// <list type="bullet">
-		/// 		<item><description>ERR_CANNOTSENDTOCHAN</description></item>
-		/// 		<item><description>ERR_NOTEXTTOSEND</description></item>
-		/// </list>
-		/// </remarks>
-		/// <param name="channel">The target channel.</param>
-		/// <param name="message">A message. If the message is too long it will be broken
-		/// up into smaller piecese which will be sent sequentially.</param>
-		/// <exception cref="ArgumentException">If the channel name is not valid or if the message is null.</exception> 
-		/// <seealso cref="Listener.OnPublic"/> 
-		public void PublicMessage(string channel, string message) 
+
+		public void Message(string target, string message) 
 		{
+			// target is either a channel name or user nickname
 			if ( IsEmpty( message ) ) 
 				throw new ArgumentException("Public message cannot be null or empty.");
-			if ( !Rfc2812Util.IsValidChannelName( channel ) ) 
-				throw new ArgumentException(channel + " is not a valid channel name.");
+			if ( IsEmpty( target ) )
+				throw new ArgumentException("Channel/Nick name cannot be null or empty.");
 
 			lock( this )
 			{
 				// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-				int max = MAX_COMMAND_SIZE - 11 - channel.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
+				int max = MAX_COMMAND_SIZE - 11 - target.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
 				if (message.Length > max) 
 				{
 					string[] parts = BreakUpMessage( message, max );
 					foreach( string part in parts )
 					{
-						SendMessage("PRIVMSG", channel, part );
+						SendMessage("PRIVMSG", target, part );
 					}
 				}
 				else 
 				{
-					SendMessage("PRIVMSG", channel, message);
+					SendMessage("PRIVMSG", target, message);
 				}
 			}
 		}
-		/// <summary>
-		/// Send a message to a user.</summary>
-		/// <remarks>
-		/// <para>If the target user status is away, the <see cref="Listener.OnAway"/> event will be
-		/// called along with the away message if any.
-		/// </para>
-		/// Possible Errors
-		/// <list type="bullet">
-		/// 		<item><description>ERR_NORECIPIENT</description></item>
-		/// 		<item><description>ERR_NOTEXTTOSEND</description></item>
-		/// 		<item><description>ERR_NOSUCHNICK</description></item>
-		/// </list>
-		/// </remarks>
-		/// <param name="nick">The target user.</param>
-		/// <param name="message">A message. If the message is too long it will be broken
-		/// up into smaller piecese which will be sent sequentially.</param>
-		/// <exception cref="ArgumentException">If the nickname is not valid or if the message is null or empty.</exception> 
-		/// <seealso cref="Listener.OnPrivate"/> 
-		public void PrivateMessage(string nick, string message) 
-		{
-			if ( IsEmpty( message ) ) 
-				throw new ArgumentException("Private message cannot be null or empty.");
-			if ( !Rfc2812Util.IsValidNick( nick ) ) 
-				throw new ArgumentException(nick + " is not a valid nickname.");
-				
-			lock( this )
-			{
-				// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-				int max = MAX_COMMAND_SIZE - 11 - nick.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
-				if (message.Length > max) 
-				{
-					string[] parts = BreakUpMessage( message, max );
-					foreach( string part in parts )
-					{
-						SendMessage("PRIVMSG", nick, part );
-					}
-				}
-				else 
-				{
-					SendMessage("PRIVMSG", nick, message);
-				}
-			}
-		}
+
 		/// <summary>Register this connection with the IRC server.</summary>
 		/// <remarks>
 		/// This method should be called when the initial attempt

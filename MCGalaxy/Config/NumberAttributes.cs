@@ -28,7 +28,7 @@ namespace MCGalaxy.Config {
         protected int ParseInteger(string raw, int def, int min, int max) {
             int value;
             if (!int.TryParse(raw, out value)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid integer, using default of {1}", Name, def);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid integer '{2}', using default of {1}", Name, def, raw);
                 value = def;
             }
             
@@ -108,7 +108,7 @@ namespace MCGalaxy.Config {
         protected double ParseReal(string raw, double def, double min, double max) {
             double value;
             if (!Utils.TryParseDouble(raw, out value)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid number, using default of {1}", Name, def);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid number '{2}', using default of {1}", Name, def, raw);
                 value = def;
             }
             

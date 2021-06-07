@@ -70,7 +70,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             // TODO: is stringbuilder even beneficial here
             msg.content.Append('\n');
             msg.content.Append(content.ToString());
-            content.Clear();
+            content.Length = 0; // clear this
             return true;
         }
     }
@@ -114,14 +114,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
     /// <summary> Implements a basic web client for sending messages to the Discord API </summary>
     /// <remarks> https://discord.com/developers/docs/reference </remarks>
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
-    public sealed class DiscordApiClient {
+    public sealed class DiscordApiClient : RelayBotSender<DiscordApiMessage> {
         public string Token;
         const string host = "https://discord.com/api/v8";
-        AutoResetEvent handle = new AutoResetEvent(false);
-        volatile bool terminating;
-        
-        Queue<DiscordApiMessage> requests = new Queue<DiscordApiMessage>();
-        readonly object reqLock = new object();
         
         DiscordApiMessage GetNextRequest() {
             if (requests.Count == 0) return null;
@@ -136,12 +131,13 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return first;
         }
         
-        void HandleNext() {
+        protected override string ThreadName { get { return "Discord-ApiClient"; } }
+        protected override void HandleNext() {
             DiscordApiMessage msg = null;
             WebResponse res = null;
             
             lock (reqLock)   { msg = GetNextRequest(); }
-            if (msg == null) { handle.WaitOne(); return; }
+            if (msg == null) { WaitForWork(); return; }
             
             for (int retry = 0; retry < 10; retry++) {
                 try {
@@ -157,7 +153,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     HttpUtil.GetResponseText(res);
                     break;
                 } catch (Exception ex) {
+            	    HttpUtil.DisposeErrorResponse(ex);
                     if (Handle429(ex)) continue;
+                    
                     Logger.LogError(ex);
                     return;
                 }
@@ -166,34 +164,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             // Avoid triggering HTTP 429 error if possible
             string remaining = res.Headers["X-RateLimit-Remaining"];
             if (remaining == "1") SleepForRetryPeriod(res);
-        }
-        
-        
-        void SendLoop() {
-            for (;;) {
-                if (terminating) break;
-                
-                try {
-                    HandleNext();
-                } catch (Exception ex) {
-                    Logger.LogError(ex);
-                }
-            }
-            
-            // cleanup state
-            try {
-                lock (reqLock) requests.Clear();
-                handle.Dispose();
-            } catch {
-            }
-        }      
-        
-        void WakeupWorker() {
-            try {
-                handle.Set();
-            } catch (ObjectDisposedException) {
-                // for very rare case where handle's already been destroyed
-            }
         }
         
         
@@ -226,24 +196,6 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return true;
         }
         
-        
-        public void RunAsync() {
-            Thread worker = new Thread(SendLoop);
-            worker.Name   = "Discord-ApiClient";
-            worker.IsBackground = true;
-            worker.Start();
-        }
-        
-        public void StopAsync() {
-            terminating = true;
-            WakeupWorker();
-        }
-        
-        /// <summary> Asynchronously sends a message to the Discord API </summary>
-        public void SendAsync(DiscordApiMessage msg) {
-            lock (reqLock) requests.Enqueue(msg);
-            WakeupWorker();
-        }
         
         public void SendMessageAsync(string channelID, string message) {
             SendAsync(new ChannelSendMessage(channelID, message));

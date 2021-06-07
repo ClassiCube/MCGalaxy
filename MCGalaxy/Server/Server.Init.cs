@@ -48,6 +48,8 @@ namespace MCGalaxy {
             Level.LoadMetadata(mainLevel);
             LevelInfo.Add(mainLevel);
         }
+
+        static void LoadAllPlugins(SchedulerTask task) { Plugin.LoadAll(); }
         
         static void InitPlayerLists(SchedulerTask task) {
             try {
@@ -121,10 +123,6 @@ namespace MCGalaxy {
         }
         
         static void InitRest(SchedulerTask task) {
-            IRC = new IRCBot();
-            IRC.LoadControllers();
-            IRC.Connect();
-             
             CountdownGame.Instance.AutoStart();
             ZSGame.Instance.AutoStart();
             LSGame.Instance.AutoStart();

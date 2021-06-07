@@ -103,7 +103,7 @@ namespace MCGalaxy {
 
         static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
         static string TokenTime(Player p) { return DateTime.Now.ToString("hh:mm tt"); }
-        static string TokenIRC(Player p) { return Server.Config.IRCServer + " > " + Server.Config.IRCChannels; }
+        static string TokenIRC(Player p)  { return Server.Config.IRCServer + " > " + Server.Config.IRCChannels; }
         static string TokenBanned(Player p) { return Group.BannedRank.Players.Count.ToString(); }
         static string TokenServerName(Player p) { return Server.Config.Name; }
         static string TokenServerMOTD(Player p) { return Server.Config.MOTD; }
@@ -118,39 +118,44 @@ namespace MCGalaxy {
             return count.ToString();
         }
         
-        static string TokenName(Player p) { return (Server.Config.DollarNames ? "$" : "") + Colors.StripUsed(p.DisplayName); }
-        static string TokenTrueName(Player p) { return (Server.Config.DollarNames ? "$" : "") + p.truename; }
-        static string TokenColor(Player p) { return p.color; }
-        static string TokenRank(Player p) { return p.group.Name; }
-        static string TokenDeaths(Player p) { return p.TimesDied.ToString(); }
-        static string TokenMoney(Player p) { return p.money.ToString(); }
-        static string TokenBlocks(Player p) { return p.TotalModified.ToString(); }
-        static string TokenPlaced(Player p) { return p.TotalPlaced.ToString(); }
+        static string TokenName(Player p)    { return (Server.Config.DollarNames ? "$" : "") + Colors.StripUsed(p.DisplayName); }
+        static string TokenTrueName(Player p){ return (Server.Config.DollarNames ? "$" : "") + p.truename; }
+        static string TokenColor(Player p)   { return p.color; }
+        static string TokenRank(Player p)    { return p.group.Name; }
+        static string TokenDeaths(Player p)  { return p.TimesDied.ToString(); }
+        static string TokenMoney(Player p)   { return p.money.ToString(); }
+        static string TokenBlocks(Player p)  { return p.TotalModified.ToString(); }
+        static string TokenPlaced(Player p)  { return p.TotalPlaced.ToString(); }
         static string TokenDeleted(Player p) { return p.TotalDeleted.ToString(); }
-        static string TokenDrawn(Player p) { return p.TotalDrawn.ToString(); }
-        static string TokenPlaytime(Player p) { return p.TotalTime.Shorten(); }
-        static string TokenFirst(Player p) { return p.FirstLogin.ToString(); }
-        static string TokenVisits(Player p) { return p.TimesVisited.ToString(); }
-        static string TokenKicked(Player p) { return p.TimesBeenKicked.ToString(); }
-        static string TokenIP(Player p) { return p.ip; }
-        static string TokenModel(Player p) { return p.Model; }
-        static string TokenSkin(Player p) { return p.SkinName; }
-        static string TokenLevel(Player p) { return p.level == null ? null : p.level.name; }
+        static string TokenDrawn(Player p)   { return p.TotalDrawn.ToString(); }
+        static string TokenPlaytime(Player p){ return p.TotalTime.Shorten(); }
+        static string TokenFirst(Player p)   { return p.FirstLogin.ToString(); }
+        static string TokenVisits(Player p)  { return p.TimesVisited.ToString(); }
+        static string TokenKicked(Player p)  { return p.TimesBeenKicked.ToString(); }
+        static string TokenIP(Player p)      { return p.ip; }
+        static string TokenModel(Player p)   { return p.Model; }
+        static string TokenSkin(Player p)    { return p.SkinName; }
+        static string TokenLevel(Player p)   { return p.level == null ? null : p.level.name; }
 
         public static List<ChatToken> Custom = new List<ChatToken>();
         static bool hookedCustom;        
-        internal static void LoadCustom() {
-            Custom.Clear();
+        internal static void LoadCustom() {            
             TextFile tokensFile = TextFile.Files["Custom $s"];
             tokensFile.EnsureExists();
             
             if (!hookedCustom) {
                 hookedCustom = true;
                 tokensFile.OnTextChanged += LoadCustom;
-            }
-            
+            }           
             string[] lines = tokensFile.GetText();
             
+            Custom.Clear();
+            LoadTokens(lines, 
+                       (key, value) => Custom.Add(new ChatToken(key, value, null)));
+        }
+        
+        public delegate void TokenLineProcessor(string phrase, string replacement);
+        public static void LoadTokens(string[] lines, TokenLineProcessor addToken) {
             foreach (string line in lines) {
                 if (line.StartsWith("//") || line.Length == 0) continue;
                 // Need to handle special case of :discord: emotes
@@ -164,10 +169,10 @@ namespace MCGalaxy {
                 int separator = FindColon(line, offset);
                 if (separator == -1) continue; // not a proper line
                 
-                string key = line.Substring(0, separator).Trim().Replace("\\:", ":");
+                string key   = line.Substring(0, separator).Trim().Replace("\\:", ":");
                 string value = line.Substring(separator + 1).Trim();
                 if (key.Length == 0) continue;
-                Custom.Add(new ChatToken(key, value, null));
+                addToken(key, value);
             }
         }
        

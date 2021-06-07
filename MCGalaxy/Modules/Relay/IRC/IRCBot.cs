@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using MCGalaxy.Modules.Relay;
 using Sharkbite.Irc;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Modules.Relay.IRC {
     
     public enum IRCControllerVerify { None, HalfOp, OpChannel };
     
@@ -30,10 +30,10 @@ namespace MCGalaxy {
         internal Connection connection;
         string nick;
         IRCNickList nicks;
+        bool ready;
         
         public override string RelayName { get { return "IRC"; } }
         public override bool Enabled { get { return Server.Config.UseIRC; } }
-        public override bool Connected { get { return connection != null && connection.Connected; } }
         
         public override void LoadControllers() {
             Controllers = PlayerList.Load("ranks/IRC_Controllers.txt");
@@ -42,16 +42,11 @@ namespace MCGalaxy {
         public IRCBot() {
             nicks     = new IRCNickList();
             nicks.bot = this;
-            UpdateState();
         }
         
         
-        protected override void DoMessageChannel(string channel, string message) {
-            connection.Sender.PublicMessage(channel, message);
-        }
-        
-        protected override void DoMessageUser(RelayUser user, string message) {
-            connection.Sender.PrivateMessage(user.Nick, message);
+        protected override void DoSendMessage(string channel, string message) {
+            if (ready) connection.Sender.Message(channel, message);
         }
         
         public void Raw(string message) {
@@ -65,11 +60,12 @@ namespace MCGalaxy {
         }
         
         
+        protected override bool CanReconnect { get { return canReconnect; } }
+        
         protected override void DoConnect() {
-            if (connection == null) connection = new Connection(new UTF8Encoding(false));
-            Hook();
-            UpdateState();
+            ready = false;
             
+            if (connection == null) connection = new Connection(new UTF8Encoding(false));
             connection.Hostname = Server.Config.IRCServer;
             connection.Port     = Server.Config.IRCPort;
             connection.UseSSL   = Server.Config.IRCSSL;
@@ -77,6 +73,7 @@ namespace MCGalaxy {
             connection.Nick     = Server.Config.IRCNick.Replace(" ", "");
             connection.UserName = connection.Nick;
             connection.RealName = Server.SoftwareNameVersioned;
+            HookIRCEvents();
             
             nick = connection.Nick;
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
@@ -84,16 +81,25 @@ namespace MCGalaxy {
             connection.Connect();
         }
         
-        protected override void DoDisconnect(string reason) {
-            Unhook();
-            nicks.Clear();
-            connection.Disconnect(reason);
+        protected override void DoReadLoop() {
+            connection.ReceiveIRCMessages();
         }
         
+        protected override void DoDisconnect(string reason) {
+            nicks.Clear();
+            try {
+                connection.Disconnect(reason);
+            } catch {
+                // no point logging disconnect failures
+            }
+            UnhookIRCEvents();
+        }       
         
-        void UpdateState() {
-            Channels   = Server.Config.IRCChannels.SplitComma();
-            OpChannels = Server.Config.IRCOpChannels.SplitComma();
+        protected override void UpdateConfig() {
+            Channels     = Server.Config.IRCChannels.SplitComma();
+            OpChannels   = Server.Config.IRCOpChannels.SplitComma();
+            IgnoredUsers = Server.Config.IRCIgnored.SplitComma();
+            LoadBannedCommands();
         }
         
         
@@ -112,7 +118,7 @@ namespace MCGalaxy {
         };
         static readonly Regex ircTwoColorCode = new Regex("(\x03\\d{1,2}),\\d{1,2}");
         
-        string ParseMessage(string input) {
+        protected override string ParseMessage(string input) {
             // get rid of background color component of some IRC color codes.
             input = ircTwoColorCode.Replace(input, "$1");
             StringBuilder sb = new StringBuilder(input);
@@ -139,8 +145,7 @@ namespace MCGalaxy {
             if (String.IsNullOrEmpty(message.Trim())) message = ".";
             const string resetSignal = "\x03\x0F";
             
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
+            message = base.ConvertMessage(message);
             message = message.Replace("%S", "&f"); // TODO remove
             message = message.Replace("&S", "&f");
             message = message.Replace("&f", resetSignal);
@@ -175,12 +180,7 @@ namespace MCGalaxy {
             return false;
         }
 
-        volatile bool hookedEvents = false;
-        void Hook() {
-            if (hookedEvents) return;
-            hookedEvents = true;
-            HookEvents();
-
+        void HookIRCEvents() {
             // Regster events for incoming
             connection.Listener.OnNick += OnNick;
             connection.Listener.OnRegistered += OnRegistered;
@@ -191,7 +191,6 @@ namespace MCGalaxy {
             connection.Listener.OnQuit += OnQuit;
             connection.Listener.OnJoin += OnJoin;
             connection.Listener.OnPart += OnPart;
-            connection.Listener.OnDisconnected += OnDisconnected;
             connection.Listener.OnChannelModeChange += OnChannelModeChange;
             connection.Listener.OnNames += OnNames;
             connection.Listener.OnKick += OnKick;
@@ -199,11 +198,7 @@ namespace MCGalaxy {
             connection.Listener.OnPrivateNotice += OnPrivateNotice;
         }
 
-        void Unhook() {
-            if (!hookedEvents) return;
-            hookedEvents = false;
-            UnhookEvents();
-            
+        void UnhookIRCEvents() {
             // Regster events for incoming
             connection.Listener.OnNick -= OnNick;
             connection.Listener.OnRegistered -= OnRegistered;
@@ -214,7 +209,6 @@ namespace MCGalaxy {
             connection.Listener.OnQuit -= OnQuit;
             connection.Listener.OnJoin -= OnJoin;
             connection.Listener.OnPart -= OnPart;
-            connection.Listener.OnDisconnected -= OnDisconnected;
             connection.Listener.OnChannelModeChange -= OnChannelModeChange;
             connection.Listener.OnNames -= OnNames;
             connection.Listener.OnKick -= OnKick;
@@ -262,25 +256,18 @@ namespace MCGalaxy {
             RelayUser rUser = new RelayUser();
             rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
-            
-            message = ParseMessage(message);
-            HandleUserMessage(rUser, message);
+            HandleDirectMessage(rUser, user.Nick, message);
         }        
 
         void OnPublic(UserInfo user, string channel, string message) {
             RelayUser rUser = new RelayUser();
             rUser.ID        = user.Nick;
             rUser.Nick      = user.Nick;
-            
-            message = ParseMessage(message);
             HandleChannelMessage(rUser, channel, message);
         }
         
         void OnRegistered() {
-            Logger.Log(LogType.RelayActivity, "Connected to IRC!");
-            resetting = false;
-            retries   = 0;
-            
+            OnReady();
             Authenticate();
             JoinChannels();
         }
@@ -289,6 +276,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.RelayActivity, "Joining IRC channels...");
             foreach (string chan in Channels)   { Join(chan); }
             foreach (string chan in OpChannels) { Join(chan); }
+            ready = true;
         }
         
         void OnPrivateNotice(UserInfo user, string notice) {
@@ -302,14 +290,11 @@ namespace MCGalaxy {
             
             if (Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0) {
                 Logger.Log(LogType.RelayActivity, "Identifying with " + nickServ);
-                connection.Sender.PrivateMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
+                connection.Sender.Message(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
 
-        void OnDisconnected() { AutoReconnect(); }
-
         void OnNick(UserInfo user, string newNick) {
-            //Chat.MessageGlobal(Server.IRCColor + "(IRC) " + user.Nick + " changed nick to " + newNick);
             // We have successfully reclaimed our nick, so try to sign in again.
             if (newNick == nick) Authenticate();
             if (newNick.Trim().Length == 0) return;

@@ -102,27 +102,52 @@ namespace MCGalaxy.Cli {
         static void GlobalExHandler(object sender, UnhandledExceptionEventArgs e) {
             LogAndRestart((Exception)e.ExceptionObject);
         }
+        
+        
+        static string CurrentDate() { return DateTime.Now.ToString("(HH:mm:ss) "); }
 
         static void LogMessage(LogType type, string message) {
             if (!Server.Config.ConsoleLogging[(int)type]) return;
             
             switch (type) {
                 case LogType.Error:
-                    Write("!!!Error! See " + FileLogger.ErrorLogPath + " for more information.");
+                    Write("&c!!!Error" + ExtractErrorMessage(message)
+                          + " - See " + FileLogger.ErrorLogPath + " for more details.");
                     break;
                 case LogType.BackgroundActivity:
+                    // ignore these messages
+                    break;
+                case LogType.Warning:
+                    Write("&e" + CurrentDate() + message);
                     break;
                 default:
-                    string now = DateTime.Now.ToString("(HH:mm:ss) ");
-                    Write(now + message);
+                    Write(CurrentDate() + message);
                     break;
             }
         }
+        
+        static string msgPrefix = Environment.NewLine + "Message: ";
+        static string ExtractErrorMessage(string raw) {
+            // Error messages are usually structured like so:
+            //   Type: whatever
+            //   Message: whatever
+            //   Something: whatever
+            // this code extracts the Message line from the raw message
+            int beg = raw.IndexOf(msgPrefix);
+            if (beg == -1) return "";
+            
+            beg += msgPrefix.Length;
+            int end = raw.IndexOf(Environment.NewLine, beg);
+            if (end == -1) return "";
+            
+            return " (" + raw.Substring(beg, end - beg) + ")";
+        }
+        
 
         static void LogNewerVersionDetected(object sender, EventArgs e) {
             Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
-
+        
         static void ConsoleLoop() {
             int eofs = 0;
             while (true) {

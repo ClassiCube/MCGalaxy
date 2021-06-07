@@ -176,7 +176,10 @@ namespace MCGalaxy {
             for (int i = 0; i < count; i++) {
                 BlockID block = Block.FromRaw((BlockID)i);
                 bool place  = group.Blocks[block] && level.CanPlace;
-                bool delete = group.Blocks[block] && level.CanDelete;
+                // NOTE: If you can't delete air, then you're no longer able to place blocks
+                // (see ClassiCube client #815)
+                // TODO: Maybe better solution than this?
+                bool delete = group.Blocks[block] && (level.CanDelete || i == Block.Air);
                 
                 // Placing air is the same as deleting existing block at that position in the world
                 if (block == Block.Air) place &= delete;

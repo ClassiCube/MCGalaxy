@@ -23,97 +23,90 @@ using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Modules.Relay.Discord {
 
     public sealed class DiscordBot : RelayBot {
-        bool disconnected, disconnecting;
         DiscordApiClient api;
         DiscordWebsocket socket;
         string botUserID;
+        
+        Dictionary<string, bool> isDMChannel = new Dictionary<string, bool>();
+        List<string> filter_triggers = new List<string>();
+        List<string> filter_replacements = new List<string>();
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
-        public override bool Connected   { get { return socket != null && !disconnected; } }
         public DiscordConfig Config;
         
-        public override void LoadControllers() {
-            Controllers = PlayerList.Load("ranks/Discord_Controllers.txt");
-        }
+        TextFile replacementsFile = new TextFile("text/discord/replacements.txt",
+                                        "// This file is used to replace words/phrases sent to discord",
+                                        "// Lines starting with // are ignored",
+                                        "// Lines should be formatted like this:",
+                                        "// example:http://example.org",
+                                        "// That would replace 'example' in messages sent with 'http://example.org'");
         
-        void TryReconnect() {
-            try {
-                Disconnect("Attempting reconnect");
-                AutoReconnect();
-            } catch (Exception ex) {
-                Logger.LogError("Error reconnecting Discord relay", ex);
-            }
-        }
         
-        void IOThread() {
-            try {
-                socket.Connect();
-                socket.ReadLoop();
-            } catch (Exception ex) {
-                Logger.LogError("Discord relay error", ex);
-                if (disconnecting || !socket.CanReconnect) return;
-                
-                // try to recover from dropped connection
-                TryReconnect();
-            }
+        protected override bool CanReconnect {
+            get { return canReconnect && (socket == null || socket.CanReconnect); }
         }
         
         protected override void DoConnect() {
-            // TODO implement properly
-            socket = new DiscordWebsocket();
-            disconnecting = false;
-            disconnected  = false;
-            
-            Channels   = Config.Channels.SplitComma();
-            OpChannels = Config.OpChannels.SplitComma();
-            
+            socket = new DiscordWebsocket(); 
             socket.Token     = Config.BotToken;
-            socket.Handler   = HandleEvent;
             socket.GetStatus = GetStatus;
             
-            Thread worker = new Thread(IOThread);
-            worker.Name   = "DiscordRelayBot";
-            worker.IsBackground = true;
-            worker.Start();
+            socket.OnReady         = HandleReadyEvent;
+            socket.OnMessageCreate = HandleMessageEvent;
+            socket.OnChannelCreate = HandleChannelEvent;
+            socket.Connect();
+        }
+        
+        protected override void DoReadLoop() {
+            socket.ReadLoop();
         }
         
         protected override void DoDisconnect(string reason) {
-            disconnecting = true;
             try {
-                if (api != null) api.StopAsync();
                 socket.Disconnect();
-            } finally {
-                disconnected = true;
-                UnregisterEvents();
+            } catch {
+                // no point logging disconnect failures
             }
         }
         
         
-        void HandleEvent(JsonObject obj) {
-            // actually handle the event
-            string eventName = (string)obj["t"];
-            
-            if (eventName == "READY")          HandleReadyEvent(obj);
-            if (eventName == "MESSAGE_CREATE") HandleMessageEvent(obj);
+        public override void ReloadConfig() {
+            Config.Load();
+            base.ReloadConfig();
+            LoadReplacements();
         }
         
-        
-        void HandleReadyEvent(JsonObject obj) {
-            JsonObject data = (JsonObject)obj["d"];
-            JsonObject user = (JsonObject)data["user"];
-            botUserID       = (string)user["id"];
-            
-            api = new DiscordApiClient();
-            api.Token = Config.BotToken;
-            
-            api.RunAsync();
-            RegisterEvents();
+        protected override void UpdateConfig() {
+            Channels     = Config.Channels.SplitComma();
+            OpChannels   = Config.OpChannels.SplitComma();
+            IgnoredUsers = Config.IgnoredUsers.SplitComma();
+            LoadBannedCommands();
         }
+        
+        void LoadReplacements() {
+            replacementsFile.EnsureExists();            
+            string[] lines = replacementsFile.GetText();
+            
+            filter_triggers.Clear();
+            filter_replacements.Clear();
+            
+            ChatTokens.LoadTokens(lines, (phrase, replacement) => 
+                                  {
+                                      filter_triggers.Add(phrase);
+                                      filter_replacements.Add(replacement);
+                                  });
+        }
+        
+        public override void LoadControllers() {
+            Controllers = PlayerList.Load("text/discord/controllers.txt");
+        }
+        
         
         string GetNick(JsonObject data) {
             if (!Config.UseNicks) return null;
@@ -138,6 +131,20 @@ namespace MCGalaxy.Modules.Relay.Discord {
             user.ID   =                  (string)author["id"];
             return user;
         }
+
+        
+        void HandleReadyEvent(JsonObject data) {
+            JsonObject user = (JsonObject)data["user"];
+            botUserID       = (string)user["id"];
+            
+            // May not be null when reconnecting
+            if (api == null) {
+                api = new DiscordApiClient();
+                api.Token = Config.BotToken;
+                api.RunAsync();
+            }
+            OnReady();
+        }
         
         void PrintAttachments(JsonObject data, string channel) {
             object raw;
@@ -156,22 +163,32 @@ namespace MCGalaxy.Modules.Relay.Discord {
             }
         }
         
-        void HandleMessageEvent(JsonObject obj) {
-            JsonObject data = (JsonObject)obj["d"];
-            RelayUser user  = ExtractUser(data);           
+        void HandleMessageEvent(JsonObject data) {
+            RelayUser user = ExtractUser(data);
             // ignore messages from self
             if (user.ID == botUserID) return;
             
             string channel = (string)data["channel_id"];
             string message = (string)data["content"];
-            message        = ParseMessage(message);
+            bool isDM;
             
-            HandleChannelMessage(user, channel, message);
-            PrintAttachments(data, channel);
+            if (isDMChannel.TryGetValue(channel, out isDM)) {
+                HandleDirectMessage(user, channel, message);
+            } else {
+                HandleChannelMessage(user, channel, message);
+                PrintAttachments(data, channel);
+            }
+        }
+        
+        void HandleChannelEvent(JsonObject data) {
+            string channel = (string)data["id"];
+            string type    = (string)data["type"];
+            
+            if (type == "1") isDMChannel[channel] = true;
         }
         
         
-        string ParseMessage(string input) {
+        protected override string ParseMessage(string input) {
             StringBuilder sb = new StringBuilder(input);
             SimplifyCharacters(sb);
             
@@ -185,44 +202,64 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return Config.Status.Replace("{PLAYERS}", online);
         }
         
+        void UpdateDiscordStatus() {
+            try { socket.SendUpdateStatus(); } catch { }
+        }
         
-        void RegisterEvents() {
+        
+        protected override void OnStart() {
+            base.OnStart();          
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
-            HookEvents();
         }
         
-        void UnregisterEvents() {
+        protected override void OnStop() {
+            socket = null;
+            if (api != null) {
+                api.StopAsync();
+                api = null;
+            }
+            base.OnStop();
+            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
             OnPlayerActionEvent.Unregister(HandlePlayerAction);
-            UnhookEvents();
         }
         
-        void HandlePlayerConnect(Player p) { socket.SendUpdateStatus(); }
-        void HandlePlayerDisconnect(Player p, string reason) { socket.SendUpdateStatus(); }
+        void HandlePlayerConnect(Player p) { UpdateDiscordStatus(); }
+        void HandlePlayerDisconnect(Player p, string reason) { UpdateDiscordStatus(); }
+        
+        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
+            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
+            UpdateDiscordStatus();
+        }
         
         
-        protected override void DoMessageChannel(string channel, string message) {
+        protected override void DoSendMessage(string channel, string message) {
             if (api == null) return;
             api.SendMessageAsync(channel, message);
         }
         
-        protected override void DoMessageUser(RelayUser user, string message) {
-            // TODO: implement this
-        }
-                       
         protected override string ConvertMessage(string message) {
-            message = EmotesHandler.Replace(message);
-            message = ChatTokens.ApplyCustom(message);
+            message = base.ConvertMessage(message);
             message = Colors.StripUsed(message);
             return message;
-        }        
+        }
         
-        void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
-            if (action != PlayerAction.Hide && action != PlayerAction.Unhide) return;
-            socket.SendUpdateStatus();
+        readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
+        readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
+        protected override string PrepareMessage(string message) {
+            // don't let user use bold/italic etc markdown
+            for (int i = 0; i < markdown_special.Length; i++) {
+                message = message.Replace(markdown_special[i], markdown_escaped[i]);
+            }
+            
+            // allow uses to do things like replacing '+' with ':green_square:'
+            for (int i = 0; i < filter_triggers.Count; i++) {
+                message = message.Replace(filter_triggers[i], filter_replacements[i]);
+            }
+            return message;
         }
         
         

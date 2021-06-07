@@ -28,6 +28,28 @@ using System.Threading;
 
 namespace Sharkbite.Irc
 {
+	public delegate void ReplyEventHandler( ReplyCode code, string message );
+	public delegate void ErrorMessageEventHandler( ReplyCode code, string message );
+	public delegate void NickErrorEventHandler( string badNick, string reason ) ;
+	public delegate void PingEventHandler( string message );
+	public delegate void RegisteredEventHandler();
+	public delegate void DisconnectedEventHandler();
+	public delegate void PublicNoticeEventHandler( UserInfo user, string channel, string notice );
+	public delegate void PrivateNoticeEventHandler( UserInfo user, string notice );
+	public delegate void JoinEventHandler( UserInfo user, string channel );
+	public delegate void PublicActionEventHandler( UserInfo user, string channel, string description );
+	public delegate void PrivateActionEventHandler( UserInfo user, string description );
+	public delegate void PublicMessageEventHandler( UserInfo user, string channel, string message );
+	public delegate void PrivateMessageEventHandler( UserInfo user, string message );
+	public delegate void NickEventHandler( UserInfo user, string newNick );
+	public delegate void PartEventHandler( UserInfo user, string channel, string reason);
+	public delegate void QuitEventHandler( UserInfo user, string reason);
+	public delegate void InviteEventHandler( UserInfo user, string channel );
+	public delegate void KickEventHandler( UserInfo user, string channel, string kickee, string reason );
+	public delegate void NamesEventHandler( string channel, string[] nicks, bool last );
+	public delegate void ChannelModeChangeEventHandler( UserInfo who, string channel );
+	public delegate void KillEventHandler( UserInfo user, string nick, string reason );
+	
 	/// <summary>
 	/// This class parses messages received from the IRC server and
 	/// raises the appropriate event. 
@@ -55,10 +77,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event RegisteredEventHandler OnRegistered;
 		/// <summary>
-		/// This connection is about to be closed. 
-		/// </summary>
-		public event DisconnectingEventHandler OnDisconnecting;
-		/// <summary>
 		/// This connection has been closed. 
 		/// </summary>
 		public event DisconnectedEventHandler OnDisconnected;
@@ -81,7 +99,7 @@ namespace Sharkbite.Irc
 		/// <summary>
 		/// An action message was sent to a channel.
 		/// </summary>
-		public event ActionEventHandler OnAction;
+		public event PublicActionEventHandler OnAction;
 		/// <summary>
 		/// A private action message was sent to the user.
 		/// </summary>
@@ -151,10 +169,6 @@ namespace Sharkbite.Irc
 			replyRegex = new Regex("^:([^\\s]*) ([\\d]{3}) ([^\\s]*) (.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="message"></param>
 		internal void Parse(string message ) 
 		{
 			string[] tokens = message.Split( Separator );
@@ -190,16 +204,6 @@ namespace Sharkbite.Irc
 			}
 		}
 		/// <summary>
-		/// Warn listeners that we are about to close this connection
-		/// </summary>
-		internal void Disconnecting() 
-		{
-			if( OnDisconnecting != null ) 
-			{
-				OnDisconnecting();
-			}
-		}
-		/// <summary>
 		/// Tell listeners that this connection is closed
 		/// </summary>
 		internal void Disconnected() 
@@ -221,12 +225,10 @@ namespace Sharkbite.Irc
 		}
 
 		/// <summary>
-		/// Parse the message and call the callback methods
-		/// on the listeners.
-		/// 
+		/// Parse the message and call the callback methods on the listeners.
 		/// </summary>
 		/// <param name="tokens">The text received from the IRC server</param>
-		private void ParseCommand(string[] tokens ) 
+		void ParseCommand(string[] tokens ) 
 		{	
 			//Remove colon user info string
 			tokens[0] = RemoveLeadingColon( tokens[0] );
@@ -364,7 +366,8 @@ namespace Sharkbite.Irc
 					break;
 			}
 		}
-		private void ParseReply( string[] tokens ) 
+		
+		void ParseReply( string[] tokens ) 
 		{
 			ReplyCode code = (ReplyCode) int.Parse( tokens[1], CultureInfo.InvariantCulture );
 			tokens[3] = RemoveLeadingColon( tokens[3] );
@@ -409,12 +412,8 @@ namespace Sharkbite.Irc
 					break;
 			}
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="code"></param>
-		/// <param name="tokens"></param>
-		private void HandleDefaultReply( ReplyCode code, string[] tokens ) 
+
+		void HandleDefaultReply( ReplyCode code, string[] tokens ) 
 		{
 			if (code >= ReplyCode.ERR_NOSUCHNICK && code <= ReplyCode.ERR_USERSDONTMATCH) 
 			{
@@ -428,13 +427,11 @@ namespace Sharkbite.Irc
 				OnReply(code, CondenseStrings( tokens, 3) );
 			}
 		}
+		
 		/// <summary>
 		/// Turn an array of strings back into a single string.
 		/// </summary>
-		/// <param name="strings"></param>
-		/// <param name="start"></param>
-		/// <returns></returns>
-		private string CondenseStrings( string[] strings, int start ) 
+		string CondenseStrings( string[] strings, int start ) 
 		{
 			if( strings.Length == start + 1 ) 
 			{
@@ -445,7 +442,8 @@ namespace Sharkbite.Irc
 				return String.Join(" ", strings, start, (strings.Length - start) );
 			}
 		}
-		private string RemoveLeadingColon( string text ) 
+		
+		string RemoveLeadingColon( string text ) 
 		{
 			if( text[0] == ':' )
 			{
@@ -453,12 +451,11 @@ namespace Sharkbite.Irc
 			}
 			return text;
 		}
+		
 		/// <summary>
 		/// Strip off the trailing CTCP quote.
 		/// </summary>
-		/// <param name="text"></param>
-		/// <returns></returns>
-		private string RemoveTrailingQuote( string text ) 
+		string RemoveTrailingQuote( string text ) 
 		{
 			return text.Substring(0, text.Length -1 );		
 		}

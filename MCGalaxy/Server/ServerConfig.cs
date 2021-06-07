@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Config;
+using MCGalaxy.Modules.Relay.IRC;
 
 namespace MCGalaxy {
     public sealed class ServerConfig : EnvConfig {
@@ -164,7 +165,9 @@ namespace MCGalaxy {
         public string IRCPassword = "";
         [ConfigBool("irc-ssl", "IRC bot", false)]
         public bool IRCSSL = false;
-
+        [ConfigString("irc-ignored-nicks", "IRC bot", "", true)]
+        public string IRCIgnored = "";
+        
         [ConfigBool("UseMySQL", "Database", false)]
         public bool UseMySQL = false;
         [ConfigString("host", "Database", "127.0.0.1")]

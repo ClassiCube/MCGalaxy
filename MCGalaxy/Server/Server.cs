@@ -101,7 +101,7 @@ namespace MCGalaxy {
             Economy.LoadDatabase();
 
             Background.QueueOnce(LoadMainLevel);
-            Plugin.LoadAll();
+            Background.QueueOnce(LoadAllPlugins);
             Background.QueueOnce(LoadAutoloadMaps);
             Background.QueueOnce(UpgradeTasks.UpgradeOldTempranks);
             Background.QueueOnce(UpgradeTasks.UpgradeDBTimeSpent);
@@ -149,6 +149,7 @@ namespace MCGalaxy {
             EnsureDirectoryExists("blockdefs");
             EnsureDirectoryExists(IScripting.DllDir);
             EnsureDirectoryExists(ICompiler.SourceDir);
+            EnsureDirectoryExists("text/discord"); // TODO move to discord plugin
         }
         
         static void EnsureDirectoryExists(string dir) {
@@ -158,14 +159,6 @@ namespace MCGalaxy {
         static void MoveOutdatedFiles() {
             try {
                 if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
-                if (File.Exists("server.properties")) File.Move("server.properties", Paths.ServerPropsFile);
-                if (File.Exists("rules.txt")) File.Move("rules.txt", Paths.RulesFile);
-                if (File.Exists("welcome.txt")) File.Move("welcome.txt", Paths.WelcomeFile);
-                if (File.Exists("messages.txt")) File.Move("messages.txt", Paths.AnnouncementsFile);
-                if (File.Exists("externalurl.txt")) File.Move("externalurl.txt", "text/externalurl.txt");
-                if (File.Exists("autoload.txt")) File.Move("autoload.txt", "text/autoload.txt");
-                if (File.Exists("IRC_Controllers.txt")) File.Move("IRC_Controllers.txt", "ranks/IRC_Controllers.txt");
-                if (Server.Config.WhitelistedOnly && File.Exists("whitelist.txt")) File.Move("whitelist.txt", "ranks/whitelist.txt");
             }
             catch { }
         }        
@@ -208,6 +201,8 @@ namespace MCGalaxy {
                 if (Plugin.core.Contains(p)) continue;
                 Plugin.Load(p, false);
             }
+            
+            OnConfigUpdatedEvent.Call();
         }
         
         static readonly object stopLock = new object();

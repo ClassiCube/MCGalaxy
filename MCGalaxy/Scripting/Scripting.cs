@@ -32,7 +32,9 @@ namespace MCGalaxy.Scripting {
         public const string AutoloadFile = "text/cmdautoload.txt";
         public const string DllDir = "extra/commands/dll/";
         
+        /// <summary> Returns the default .dll path for the custom command with the given name </summary>
         public static string CommandPath(string name) { return DllDir + "Cmd" + name + ".dll"; }
+        /// <summary> Returns the default .dll path for the plugin with the given name </summary>
         public static string PluginPath(string name)  { return "plugins/" + name + ".dll"; }
         
         /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
@@ -113,8 +115,9 @@ namespace MCGalaxy.Scripting {
         
         
         public static void AutoloadPlugins() {
-            if (Directory.Exists("plugins")) {
-                string[] files = Directory.GetFiles("plugins", "*.dll");
+            string[] files = AtomicIO.TryGetFiles("plugins", "*.dll");
+            
+            if (files != null) {
                 foreach (string path in files) { LoadPlugin(path, true); }
             } else {
                 Directory.CreateDirectory("plugins");
@@ -144,10 +147,15 @@ namespace MCGalaxy.Scripting {
         public const string SourceDir = "extra/commands/source/";
         public const string ErrorPath = "logs/errors/compiler.log";
         
-        /// <summary> Default file extension used for source code files (e.g. ".cs") </summary>
+        /// <summary> Default file extension used for source code files </summary>
+        /// <example> .cs, .vb </example>
         public abstract string FileExtension { get; }
-        /// <summary> The full name of this programming language (e.g. "CSharp") </summary>
-        public abstract string LanguageName { get; }
+        /// <summary> The full name of this programming language </summary>
+        /// <example> CS, VB </example>
+        public abstract string ShortName { get; }
+        /// <summary> The full name of this programming language </summary>
+        /// <example> CSharp, Visual Basic </example>
+        public abstract string FullName { get; }
         /// <summary> Returns source code for an example MCGalaxy command </summary>
         public abstract string CommandSkeleton { get; }
         /// <summary> Returns source code for an example MCGalaxy plugin </summary>
@@ -161,12 +169,18 @@ namespace MCGalaxy.Scripting {
         /// <summary> Visual Basic compiler instance. </summary>
         public static ICompiler VB = new VBCompiler();
         
+        public static List<ICompiler> Compilers = new List<ICompiler>() { CS, VB };
+        
         public static ICompiler Lookup(string name, Player p) {
-            if (name.Length == 0) return CS;
-            if (name.CaselessEq("CS")) return CS;
-            if (name.CaselessEq("VB")) return VB;
+            if (name.Length == 0) return Compilers[0];
+            
+            foreach (ICompiler comp in Compilers) {
+                if (comp.ShortName.CaselessEq(name)) return comp;
+            }
             
             p.Message("&WUnknown language \"{0}\"", name);
+            p.Message("&HAvailable languages: &f{0}",
+                      Compilers.Join(c => c.ShortName + " (" + c.FullName + ")"));
             return null;
         }
 
@@ -260,7 +274,7 @@ namespace MCGalaxy.Scripting {
                 
                 Logger.Log(LogType.Warning, 
                            "WARNING: {0} compiler is missing, you will be unable to compile {1} files.", 
-                           LanguageName, FileExtension);
+                           FullName, FileExtension);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
         }       

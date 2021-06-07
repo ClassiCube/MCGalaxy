@@ -27,13 +27,13 @@ namespace MCGalaxy.Config {
         public ConfigBoolAttribute(string name, string section, bool def)
             : base(name, section) { defValue = def; }
         
-        public override object Parse(string value) {
-            bool boolValue;
-            if (!bool.TryParse(value, out boolValue)) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid boolean, using default of {1}", Name, defValue);
+        public override object Parse(string raw) {
+            bool value;
+            if (!bool.TryParse(raw, out value)) {
+                Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid boolean '{2}', using default of {1}", Name, defValue, raw);
                 return defValue;
             }
-            return boolValue;
+            return value;
         }
         
         public override string Serialise(object value) {
@@ -51,7 +51,7 @@ namespace MCGalaxy.Config {
         public override object Parse(string raw) {
             LevelPermission perm = Group.ParsePermOrName(raw, LevelPermission.Null);
             if (perm == LevelPermission.Null) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" is not a valid permission, using default of {1}", Name, defPerm);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid permission '{2}', using default of {1}", Name, defPerm, raw);
                 perm = defPerm;
             }
             

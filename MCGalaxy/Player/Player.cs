@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using MCGalaxy.DB;
@@ -54,16 +55,22 @@ namespace MCGalaxy {
         //This is so that plugin devs can declare a player without needing a socket..
         //They would still have to do p.Dispose()..
         public Player(string playername) { 
-            name = playername;
-            truename = playername;
+            name        = playername;
+            truename    = playername;
             DisplayName = playername;
+            
+            SetIP(IPAddress.Loopback);
             SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
-            IsSuper = true;
+            IsSuper   = true;
         }
 
-        internal Player() {
+        internal Player(INetSocket socket) {
+            Socket = socket;
+            SetIP(Socket.IP);
+            
             spamChecker = new SpamChecker(this);
-            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            SessionID   = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            
             for (int b = 0; b < BlockBindings.Length; b++) {
                 BlockBindings[b] = (BlockID)b;
             }
@@ -156,7 +163,7 @@ namespace MCGalaxy {
         }
 
         public void SaveStats() {
-            bool cancel = false;      	
+            bool cancel = false;          
             OnInfoSaveEvent.Call(this, ref cancel);
             if (cancel) return;
 
@@ -169,6 +176,15 @@ namespace MCGalaxy {
                                 ip, LastLogin.ToString(Database.DateFormat),
                                 TimesVisited, TimesDied, money, blocks,
                                 drawn, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
+        }
+        
+        public void SetIP(IPAddress addr) {
+            // Convert IPv4 mapped addresses to IPv4 addresses for consistency
+            //  (e.g. so IPv4 mapped LAN IPs are treated as LAN IPs)
+            if (IPUtil.IsIPv4Mapped(addr)) addr = IPUtil.MapToIPV4(addr);
+            
+            IP = addr;
+            ip = addr.ToString();
         }
         
         public bool CanUse(Command cmd) { return group.Commands.Contains(cmd); }
@@ -236,7 +252,7 @@ namespace MCGalaxy {
             // Disconnected before sent handshake
             if (name == null) {
                 if (Socket != null) Socket.Close();
-                Logger.Log(LogType.UserActivity, "{0} disconnected.", ip);
+                Logger.Log(LogType.UserActivity, "{0} disconnected.", IP);
                 return;
             }
             
@@ -263,8 +279,7 @@ namespace MCGalaxy {
                 
                 if (!loggedIn) {
                     PlayerInfo.Online.Remove(this);
-                    string user = truename + " (" + ip + ")";
-                    Logger.Log(LogType.UserActivity, "{0} disconnected. ({1})", user, discMsg);
+                    Logger.Log(LogType.UserActivity, "{0} ({1}) disconnected. ({2})", truename, IP, discMsg);
                     return;
                 }
 

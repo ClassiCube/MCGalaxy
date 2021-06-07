@@ -28,7 +28,7 @@ namespace MCGalaxy.Core {
         static readonly object ipsLock = new object();
         
         internal static bool CheckIP(Player p) {
-            if (!Server.Config.IPSpamCheck || HttpUtil.IsLocalIP(p.ip)) return true;
+            if (!Server.Config.IPSpamCheck || IPUtil.IsLocal(p.IP)) return true;
             DateTime blockedUntil, now = DateTime.UtcNow;
             
             lock (ipsLock) {

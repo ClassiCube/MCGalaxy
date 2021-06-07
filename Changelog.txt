@@ -1,3 +1,38 @@
+v 1.9.3.2
+Fixed: Discord bot not reconnecting after 3 websocket dropouts
+Fixed: Discord bot not sending messages to Discord during websocket reconnect
+Improved: Discord bot now tries to periodically reconnect during internet dropout
+Improved: IRC bot now tries to periodically reconnect during internet dropout
+
+v 1.9.3.1
+Added: Discord relay bot
+Added: Preliminary support for .NET core
+Added: Classic/Vanilla map generator
+Added: OnConfigUpdated event for when server config is reloaded
+Improved: Allow changing map change message in round games
+Improved: Countdown supports multiple maps 
+Improved: Allow using /ccols add with standard colour codes
+Fixed: lb/gb help saying 'Type a number for the texture' instead of 'Type a number for the top texture'
+Fixed: Doing /unmute without a name erroring
+Fixed: Hold model hitbox being too large 
+Fixed: /ascend not teleporting you to next gap up
+Fixed: Not being able to use restricted commands in /bot text even when you should be able to
+Fixed: /hide shouldn't update /last
+Fixed: /ref shouldn't reveal hidden players
+Fixed: Wonky pyramids/cones (Thanks rdebath)
+Fixed: Don't crash if unable to open logfile in GUI General Logs tab
+Fixed: Packet.TextHotkey should auto convert \n
+Fixed: Invalid IRC channel name should not take down whole server
+Fixed: Ampersands not showing in GUI 'insert token' popup dialog
+Improved: Allow IRC relay bot to ignore certain users
+Improved: Better parsing for /map authors/realmowner (Thanks fam0r)
+Improved: Cleaned up custom commands GUI
+Improved: IRC port in GUI should be numericupdown, not a textbox
+Improved: /seen outputs yyyy-mm-dd for consistency with /i instead now
+Improved: Use absolute path for restart file
+Improved: Don't run commands in MBs after disconnected,
+Removed: Viewmode.cfg support (Doesn't even work on Windows, obsolete since over 3.25 years ago)
+
 v 1.9.3.0
 Fixed: Errors when BlockDB file is > 32 GB
 Improved: For /img (and heightmap gen, import, etc) don't log to error logs for simple known errors like 404, website address can't be resolved, etc

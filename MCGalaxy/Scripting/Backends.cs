@@ -26,7 +26,8 @@ using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 namespace MCGalaxy.Scripting {
     public sealed class CSCompiler : ICodeDomCompiler {        
         public override string FileExtension { get { return ".cs"; } }
-        public override string LanguageName  { get { return "CSharp"; } }        
+        public override string ShortName     { get { return "CS"; } }  
+        public override string FullName  { get { return "CSharp"; } }        
 
         protected override CodeDomProvider CreateProvider() {
 #if NETSTANDARD
@@ -127,7 +128,8 @@ namespace MCGalaxy
     
     public sealed class VBCompiler : ICodeDomCompiler {       
         public override string FileExtension { get { return ".vb"; } }
-        public override string LanguageName  { get { return "Visual Basic"; } }
+        public override string ShortName     { get { return "VB"; } }
+        public override string FullName  { get { return "Visual Basic"; } }
         
         protected override CodeDomProvider CreateProvider() {
 #if NETSTANDARD

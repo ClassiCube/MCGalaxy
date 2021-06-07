@@ -45,6 +45,15 @@ namespace MCGalaxy.Network {
             }
         }
         
+        /// <summary> Disposes the WebResponse in the given exception 
+        /// (if there is one) to avoid resource leakage </summary>
+        public static void DisposeErrorResponse(Exception ex) {
+            try {
+                WebException webEx = ex as WebException;
+                if (webEx != null && webEx.Response != null) webEx.Response.Close();
+            } catch { }
+        }
+        
 
         class CustomWebClient : WebClient {
             protected override WebRequest GetWebRequest(Uri address) {
@@ -78,34 +87,6 @@ namespace MCGalaxy.Network {
             SslProtocols flags = SslProtocols.Tls | tls_11 | tls_12;
             wrapped.AuthenticateAsClient(host, null, flags, false);
             return wrapped;
-        }
-        
-        public static bool IsPrivateIP(string ip) {
-            //range of 172.16.0.0 - 172.31.255.255
-            if (ip.StartsWith("172.") && (int.Parse(ip.Split('.')[1]) >= 16 && int.Parse(ip.Split('.')[1]) <= 31))
-                return true;
-            return IPAddress.IsLoopback(IPAddress.Parse(ip)) || ip.StartsWith("192.168.") || ip.StartsWith("10.");
-            //return IsLocalIpAddress(ip);
-        }
-
-        public static bool IsLocalIP(string ip) {
-            try { // get host IP addresses
-                IPAddress[] hostIPs = Dns.GetHostAddresses(ip);
-                // get local IP addresses
-                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-
-                // test if any host IP equals to any local IP or to localhost
-                foreach ( IPAddress hostIP in hostIPs ) {
-                    // is localhost
-                    if ( IPAddress.IsLoopback(hostIP) ) return true;
-                    // is local address
-                    foreach ( IPAddress localIP in localIPs ) {
-                        if ( hostIP.Equals(localIP) ) return true;
-                    }
-                }
-            }
-            catch { }
-            return false;
         }
         
         /// <summary> Prefixes a URL by http:// if needed, and converts dropbox webpages to direct links. </summary>

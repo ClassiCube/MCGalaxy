@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
 */
 using System;
 using System.Collections.Generic;
+using System.Net;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Transforms;
 using MCGalaxy.Events.PlayerEvents;
@@ -55,6 +56,7 @@ namespace MCGalaxy {
         public string DisplayName;
         public int warn = 0;
         public byte id;
+        public IPAddress IP;
         public string ip;
         public string color;
         public Group group;

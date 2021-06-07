@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.Maintenance {
                     p.Message("&W\"{0}\" is not a valid IP address.", args[2]); return;
                 }
                 
-                if (who != null) who.ip = args[2];
+                if (who != null) who.SetIP(ip);
                 PlayerDB.Update(args[0], PlayerData.ColumnIP, args[2]);
                 MessageDataChanged(p, args[0], args[1], args[2]);
             }  else if (opt == "modified") {

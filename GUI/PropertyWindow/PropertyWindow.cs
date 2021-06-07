@@ -118,8 +118,8 @@ namespace MCGalaxy.Gui {
             Popup.Message(Colors.StripUsed(p.Messages), "Help for /" + toHelp);
         }
     }
-	
-	sealed class ConsoleHelpPlayer : Player {
+    
+    sealed class ConsoleHelpPlayer : Player {
         public string Messages = "";
             
         public ConsoleHelpPlayer() : base("(console)") {

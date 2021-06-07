@@ -39,7 +39,7 @@ namespace MCGalaxy.Commands.Moderation {
             string name, ip = ModActionCmd.FindIP(p, message, "Location", out name);
             if (ip == null) return;
             
-            if (HttpUtil.IsPrivateIP(ip)) {
+            if (IPUtil.IsPrivate(IPAddress.Parse(ip))) {
                 p.Message("&WPlayer has an internal IP, cannot trace"); return;
             }
 

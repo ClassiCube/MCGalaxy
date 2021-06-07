@@ -25,7 +25,7 @@ using MCGalaxy.Modules.Relay;
 using MCGalaxy.Network;
 using Sharkbite.Irc;
 
-namespace MCGalaxy {
+namespace MCGalaxy.Modules.Relay.IRC {
     
     /// <summary> Manages a list of IRC nicks and asssociated permissions </summary>
     sealed class IRCNickList {

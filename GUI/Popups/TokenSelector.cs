@@ -37,9 +37,10 @@ namespace MCGalaxy.Gui.Popups {
             btn.TabIndex = index;
             toolTip.SetToolTip(btn, token.Description);
             
-            btn.Text = token.Trigger;
+            btn.Text   = token.Trigger;
             btn.Click += delegate { Token = token.Trigger; DialogResult = DialogResult.OK; Close(); };
             btn.Margin = new Padding(0);
+            btn.UseMnemonic = false;
             btn.UseVisualStyleBackColor = false;
             btn.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Controls.Add(btn);

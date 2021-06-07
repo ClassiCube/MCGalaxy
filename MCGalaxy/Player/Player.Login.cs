@@ -14,8 +14,8 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
+using System.Net;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
@@ -145,9 +145,9 @@ namespace MCGalaxy {
                 Message("Lowlag mode is currently &aON.");
 
             if (String.IsNullOrEmpty(appName)) {
-                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", truename, ip);
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", truename, IP);
             } else {
-                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", truename, ip, appName);
+                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", truename, IP, appName);
             }
             
             PlayerActions.PostSentMap(this, null, level, false);
@@ -236,8 +236,11 @@ namespace MCGalaxy {
         
         static void ShowAltsTask(SchedulerTask task) {
             string name = (string)task.State;
-            Player p = PlayerInfo.FindExact(name);
-            if (p == null || p.ip == "127.0.0.1" || p.Socket.Disconnected) return;
+            Player p    = PlayerInfo.FindExact(name);
+            if (p == null || p.Socket.Disconnected) return;
+            
+            // Server host is exempt from alt listing
+            if (IPAddress.IsLoopback(p.IP)) return;
             
             List<string> alts = PlayerInfo.FindAccounts(p.ip);
             // in older versions it was possible for your name to appear multiple times in DB

@@ -184,6 +184,11 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         
+        static bool ValidIP(string str) {
+            // IPAddress.TryParse returns "0.0.0.123" for "123", we do not want that behaviour
+            return str.IndexOf(':') >= 0 || str.Split('.').Length == 4;
+        }
+        
         /// <summary> Attempts to either parse the message directly as an IP,
         /// or finds the IP of the account whose name matches the message. </summary>
         /// <remarks> "@input" can be used to always find IP by matching account name. <br/>
@@ -192,8 +197,7 @@ namespace MCGalaxy.Commands.Moderation {
             IPAddress ip;
             name = null;
             
-            // TryParse returns "0.0.0.123" for "123", we do not want that behaviour
-            if (IPAddress.TryParse(message, out ip) && message.Split('.').Length == 4) {
+            if (IPAddress.TryParse(message, out ip) && ValidIP(message)) {
                 string account = Server.Config.ClassicubeAccountPlus ? message + "+" : message;
                 if (PlayerDB.FindName(account) == null) return message;
 

@@ -37,28 +37,16 @@ namespace Sharkbite.Irc
 	/// </summary>
 	public sealed class Connection
 	{
-		/// <summary>
-		/// Receive all the messages, unparsed, sent by the IRC server. This is not
-		/// normally needed but provided for those who are interested.
-		/// </summary>
-		public event RawMessageReceivedEventHandler OnRawMessageReceived;
-		/// <summary>
-		/// Receive all the raw messages sent to the IRC from this connection
-		/// </summary>
-		public event RawMessageSentEventHandler OnRawMessageSent;
-
-
 		TcpClient client;
 		Listener listener;
 		Sender sender;
-		Thread socketListenThread;
 		StreamReader reader;
 		StreamWriter writer;
 		//Connected and registered with IRC server
 		bool registered;
 		//TCP/IP connection established with IRC server
 		bool connected;
-		bool handleNickFailure;
+		bool handleNickFailure = true;
 		Encoding encoding;
 
 		/// <summary>
@@ -67,9 +55,6 @@ namespace Sharkbite.Irc
 		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
 		public Connection( Encoding textEncoding )
 		{
-			registered = false;
-			connected = false;
-			handleNickFailure = true;
 			sender = new Sender( this );
 			listener = new Listener( );
 			RegisterDelegates();
@@ -119,30 +104,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		/// <value>True if the client is connected.</value>
 		public bool Connected { get { return connected; } }
-		/// <summary>
-		/// By default the connection itself will handle the case
-		/// where, while attempting to register the client's nick
-		/// is already in use. It does this by simply appending
-		/// 2 random numbers to the end of the nick.
-		/// </summary>
-		/// <remarks>
-		/// The NickError event is shows that the nick collision has happened
-		/// and it is fixed by calling Sender's Register() method passing
-		/// in the replacement nickname.
-		/// </remarks>
-		/// <value>True if the connection should handle this case and
-		/// false if the client will handle it itself.</value>
-		public bool HandleNickTaken {
-			get { return handleNickFailure; }
-			set { handleNickFailure = value; }
-		}
-		/// <summary>
-		/// A user friendly name of this Connection in the form 'nick@host'
-		/// </summary>
-		/// <value>Read only string</value>
-		public string Name {
-			get { return Nick + "@" + Hostname; }
-		}
 
 		/// <summary>
 		/// The object used to send commands to the IRC server.
@@ -159,34 +120,26 @@ namespace Sharkbite.Irc
 		/// Respond to IRC keep-alives.
 		/// </summary>
 		/// <param name="message">The message that should be echoed back</param>
-		private void KeepAlive(string message)
+		void KeepAlive(string message)
 		{
 			sender.Pong( message );
 		}
-		/// <summary>
-		/// Update the ConnectionArgs object when the user
-		/// changes his nick.
-		/// </summary>
-		/// <param name="user">Who changed their nick</param>
-		/// <param name="newNick">The new nick name</param>
-		private void MyNickChanged(UserInfo user, string newNick)
+
+		void MyNickChanged(UserInfo user, string newNick)
 		{
 			if ( Nick == user.Nick )
 			{
 				Nick = newNick;
 			}
 		}
-		private void OnRegistered()
+		
+		void OnRegistered()
 		{
 			registered = true;
-			listener.OnRegistered -= new RegisteredEventHandler( OnRegistered );
+			listener.OnRegistered -= OnRegistered;
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="badNick"></param>
-		/// <param name="reason"></param>
-		private void OnNickError( string badNick, string reason )
+		
+		void OnNickError( string badNick, string reason )
 		{
 			//If this is our initial connection attempt
 			if( !registered && handleNickFailure )
@@ -202,21 +155,20 @@ namespace Sharkbite.Irc
 				Sender.Register(nick);
 			}
 		}
-		private void RegisterDelegates()
+		
+		void RegisterDelegates()
 		{
-			listener.OnPing += new PingEventHandler( KeepAlive );
-			listener.OnNick += new NickEventHandler( MyNickChanged );
-			listener.OnNickError += new NickErrorEventHandler( OnNickError );
-			listener.OnRegistered += new RegisteredEventHandler( OnRegistered );
+			listener.OnPing += KeepAlive;
+			listener.OnNick += MyNickChanged;
+			listener.OnNickError += OnNickError;
+			listener.OnRegistered += OnRegistered;
 		}
 
 		/// <summary>
-		/// Read in message lines from the IRC server
-		/// and send them to a parser for processing.
-		/// Discard CTCP and DCC messages if these protocols
-		/// are not enabled.
+		/// Read in message lines from the IRC server and send them to a parser for processing.
+		/// Discards CTCP and DCC messages if these protocols are not enabled.
 		/// </summary>
-		internal void ReceiveIRCMessages()
+		public void ReceiveIRCMessages()
 		{
 			string line;
 			try
@@ -229,10 +181,6 @@ namespace Sharkbite.Irc
 						if( IsCtcpMessage( line) ) continue;
 						
 						listener.Parse( line );
-						if( OnRawMessageReceived != null )
-						{
-							OnRawMessageReceived( line );
-						}
 					}
 					catch( ThreadAbortException )
 					{
@@ -251,7 +199,6 @@ namespace Sharkbite.Irc
 			}
 			catch (Exception ex)
 			{
-				//Trap a connection failure
 				listener.Error( ReplyCode.ConnectionFailed, "Unhandled error: " + ex);
 			}
 			finally
@@ -276,26 +223,6 @@ namespace Sharkbite.Irc
 			catch( Exception )
 			{
 			}
-			if( OnRawMessageSent != null )
-			{
-				OnRawMessageSent( command.ToString() );
-			}
-			command.Remove(0, command.Length );
-		}
-		/// <summary>
-		/// Send a message to the IRC server which does
-		/// not affect the client's idle time. Used for automatic replies
-		/// such as PONG or Ctcp repsones.
-		/// </summary>
-		internal void SendAutomaticReply( StringBuilder command)
-		{
-			try
-			{
-				writer.WriteLine( command.ToString() );
-			}
-			catch( Exception )
-			{
-			}
 			command.Remove(0, command.Length );
 		}
 
@@ -307,8 +234,7 @@ namespace Sharkbite.Irc
 		}
 		
 		/// <summary>
-		/// Connect to the IRC server and start listening for messages
-		/// on a new thread.
+		/// Connect to the IRC server and start listening for messages on a new thread.
 		/// </summary>
 		/// <exception cref="SocketException">If a connection cannot be established with the IRC server</exception>
 		public void Connect()
@@ -324,38 +250,17 @@ namespace Sharkbite.Irc
 				writer = new StreamWriter( s, encoding );
 				writer.AutoFlush = true;
 				reader = new StreamReader( s, encoding );
-				socketListenThread = new Thread(new ThreadStart( ReceiveIRCMessages ) );
-				socketListenThread.Name = Name;
-				socketListenThread.Start();
 				sender.RegisterConnection();
 			}
 		}
 
-		/// <summary>
-		/// Sends a 'Quit' message to the server, closes the connection,
-		/// and stops the listening thread.
-		/// </summary>
-		/// <remarks>The state of the connection will remain the same even after a disconnect,
-		/// so the connection can be reopened. All the event handlers will remain registered.</remarks>
-		/// <param name="reason">A message displayed to IRC users upon disconnect.</param>
 		public void Disconnect( string reason )
 		{
 			lock ( this )
 			{
-				if( !connected ) throw new InvalidOperationException("Not connected to IRC server.");
-				listener.Disconnecting();
 				sender.Quit( reason );
-				listener.Disconnected();
-				//Thanks to Thomas for this next block
-				if ( !socketListenThread.Join( TimeSpan.FromSeconds( 1 ) ) )
-					socketListenThread.Abort();
+				client.Close();
 			}
-		}
-		
-		/// <summary> A friendly name for this connection. </summary>
-		/// <returns>The Name property</returns>
-		public override string ToString() {
-			return Name;
 		}
 
 		const string ctcpTypes = "(FINGER|USERINFO|VERSION|SOURCE|CLIENTINFO|ERRMSG|PING|TIME)";

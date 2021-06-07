@@ -589,11 +589,11 @@
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordWebsocket.cs" />
-    <Compile Include="Modules\Relay\IRC\CmdIRCBot.cs" />
-    <Compile Include="Modules\Relay\IRC\CmdIrcControllers.cs" />
     <Compile Include="Modules\Relay\IRC\IRCNickList.cs" />
+    <Compile Include="Modules\Relay\IRC\IRCPlugin.cs" />
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
+    <Compile Include="Modules\Relay\RelayBotSender.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
@@ -604,6 +604,7 @@
     <Compile Include="Network\Sockets.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
     <Compile Include="Network\Utils\HttpUtil.cs" />
+    <Compile Include="Network\Utils\IPUtil.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
     <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Network\Utils\PingList.cs" />
@@ -671,7 +672,6 @@
     <Compile Include="util\UIHelpers.cs" />
     <Compile Include="util\Utils.cs" />
     <Compile Include="sharkbite.thresher\Connection.cs" />
-    <Compile Include="sharkbite.thresher\Delegates.cs" />
     <Compile Include="sharkbite.thresher\Listener.cs" />
     <Compile Include="sharkbite.thresher\NameGenerator.cs" />
     <Compile Include="sharkbite.thresher\ReplyCode.cs" />

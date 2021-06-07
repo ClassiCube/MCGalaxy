@@ -37,13 +37,29 @@ namespace MCGalaxy.Network {
     public sealed class TcpListen : INetListen {
         Socket socket;
         
+        void DisableIPV6OnlyListener() {
+            if (socket.AddressFamily != AddressFamily.InterNetworkV6) return;
+            // TODO: Make windows only?
+
+            // NOTE: SocketOptionName.IPv6Only is not defined in Mono, but apparently
+            //  macOS and Linux default to dual stack by default already
+            const SocketOptionName ipv6Only = (SocketOptionName)27;
+            try {
+                socket.SetSocketOption(SocketOptionLevel.IPv6, ipv6Only, false);
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+                Logger.Log(LogType.Warning, "Failed to disable IPv6 only listener setting");
+            }
+        }
+        
         public override void Listen(IPAddress ip, int port) {
             if (IP == ip && Port == port) return;
             Close();
             IP = ip; Port = port;
             
             try {
-                socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);           
+                socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                DisableIPV6OnlyListener();
                 socket.Bind(new IPEndPoint(ip, port));
                 
                 socket.Listen((int)SocketOptionName.MaxConnections);

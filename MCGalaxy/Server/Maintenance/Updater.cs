@@ -31,7 +31,7 @@ namespace MCGalaxy {
         public const string BaseURL    = "https://raw.githubusercontent.com/UnknownShadow200/MCGalaxy/master/";
         public const string UploadsURL = "https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads";
         
-        const string CurrentVersionFile = BaseURL + "Uploads/current_version.txt";
+        const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
         #if TEN_BIT_BLOCKS
         const string dllURL = BaseURL + "Uploads/MCGalaxy_infid.dll?raw=true";
         #else
@@ -53,7 +53,7 @@ namespace MCGalaxy {
             WebClient client = HttpUtil.CreateWebClient();
 
             try {
-                string latest = client.DownloadString(CurrentVersionFile);
+                string latest = client.DownloadString(CurrentVersionURL);
                 
                 if (new Version(Server.Version) >= new Version(latest)) {
                     Logger.Log(LogType.SystemActivity, "No update found!");
@@ -93,9 +93,9 @@ namespace MCGalaxy {
                 
                 // Move current files to previous files (by moving instead of copying, 
                 //  can overwrite original the files without breaking the server)
-                FileIO.TryMove("MCGalaxy_.dll",   "prev_MCGalaxy_.dll");
-                FileIO.TryMove("MCGalaxy.exe",    "prev_MCGalaxy.exe");
-                FileIO.TryMove("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
+                AtomicIO.TryMove("MCGalaxy_.dll",   "prev_MCGalaxy_.dll");
+                AtomicIO.TryMove("MCGalaxy.exe",    "prev_MCGalaxy.exe");
+                AtomicIO.TryMove("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
                 
                 // Move update files to current files
                 File.Move("MCGalaxy_.update",   "MCGalaxy_.dll");
@@ -109,7 +109,7 @@ namespace MCGalaxy {
         }
         
         static void DeleteFiles(params string[] paths) {
-            foreach (string path in paths) { FileIO.TryDelete(path); }
+            foreach (string path in paths) { AtomicIO.TryDelete(path); }
         }
     }
 }

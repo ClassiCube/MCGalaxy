@@ -125,6 +125,7 @@ namespace MCGalaxy.Gui
             this.dis_chkNicks = new System.Windows.Forms.CheckBox();
             this.dis_txtToken = new System.Windows.Forms.TextBox();
             this.dis_txtOpChannel = new System.Windows.Forms.TextBox();
+            this.dis_linkHelp = new System.Windows.Forms.LinkLabel();
             this.adv_chkCPE = new System.Windows.Forms.CheckBox();
             this.eco_cmbItemRank = new System.Windows.Forms.ComboBox();
             this.rank_numUndo = new MCGalaxy.Gui.TimespanUpDown();
@@ -2458,6 +2459,7 @@ namespace MCGalaxy.Gui
             // 
             // dis_grp
             // 
+            this.dis_grp.Controls.Add(this.dis_linkHelp);
             this.dis_grp.Controls.Add(this.dis_chkEnabled);
             this.dis_grp.Controls.Add(this.dis_lblToken);
             this.dis_grp.Controls.Add(this.dis_txtToken);
@@ -2508,7 +2510,7 @@ namespace MCGalaxy.Gui
             this.dis_lblOpChannel.Name = "dis_lblOpChannel";
             this.dis_lblOpChannel.Size = new System.Drawing.Size(67, 13);
             this.dis_lblOpChannel.TabIndex = 20;
-            this.dis_lblOpChannel.Text = "Opchanel ID:";
+            this.dis_lblOpChannel.Text = "OpChannel ID:";
             // 
             // dis_chkEnabled
             // 
@@ -2530,8 +2532,8 @@ namespace MCGalaxy.Gui
             this.dis_txtToken.PasswordChar = '*';
             this.dis_txtToken.Size = new System.Drawing.Size(152, 21);
             this.dis_txtToken.TabIndex = 15;
-            this.toolTip.SetToolTip(this.dis_txtToken, "The token for the bot account. You can find this token by:\n" +
-                                    "Going to Developer portal -> go to the bot application -> Settings -> Bot -> click Copy under TOKEN\n\n" +
+            this.toolTip.SetToolTip(this.dis_txtToken, "The token for the bot account. To find this token:\n" +
+                                    "Go to Developer portal -> go to the bot application -> Settings -> Bot -> click Copy under TOKEN\n\n" +
                                     "Note: This token allows full access to the bot - NEVER SHARE THIS TOKEN WITH ANYONE ELSE");
             // 
             // dis_txtOpChannel
@@ -2553,6 +2555,17 @@ namespace MCGalaxy.Gui
             this.dis_chkNicks.TabIndex = 32;
             this.dis_chkNicks.Text = "Prefer nicknames to usernames";
             this.dis_chkNicks.UseVisualStyleBackColor = true;
+            // 
+            // dis_linkHelp
+            // 
+            this.dis_linkHelp.AutoSize = true;
+            this.dis_linkHelp.Location = new System.Drawing.Point(207, 21);
+            this.dis_linkHelp.Name = "dis_linkHelp";
+            this.dis_linkHelp.Size = new System.Drawing.Size(28, 13);
+            this.dis_linkHelp.TabIndex = 33;
+            this.dis_linkHelp.TabStop = true;
+            this.dis_linkHelp.Text = "Help";
+            this.dis_linkHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dis_lnkHelp_LinkClicked);
             // 
             // sql_grp
             // 
@@ -5970,6 +5983,7 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox dis_chkEnabled;
         private System.Windows.Forms.CheckBox dis_chkNicks;
         private System.Windows.Forms.GroupBox dis_grp;
+        private System.Windows.Forms.LinkLabel dis_linkHelp;
         private System.Windows.Forms.ComboBox rank_cmbOsMap;
         private System.Windows.Forms.Label rank_lblOsMap;
         private System.Windows.Forms.TextBox rank_txtPrefix;

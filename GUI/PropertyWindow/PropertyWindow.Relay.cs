@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Windows.Forms;
 using MCGalaxy.Modules.Relay.Discord;
+using MCGalaxy.Modules.Relay.IRC;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Gui {
@@ -130,6 +131,10 @@ namespace MCGalaxy.Gui {
         
         void dis_chkEnabled_CheckedChanged(object sender, EventArgs e) {
             ToggleDiscordSettings(dis_chkEnabled.Checked);
+        }
+
+        void dis_lnkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Program.OpenBrowser(Updater.SourceURL + "/wiki/Discord-relay-bot/");
         }
     }
 }
