@@ -150,15 +150,15 @@ namespace MCGalaxy.Scripting {
         /// <summary> Default file extension used for source code files </summary>
         /// <example> .cs, .vb </example>
         public abstract string FileExtension { get; }
-        /// <summary> The full name of this programming language </summary>
+        /// <summary> The short name of this programming language </summary>
         /// <example> CS, VB </example>
         public abstract string ShortName { get; }
         /// <summary> The full name of this programming language </summary>
         /// <example> CSharp, Visual Basic </example>
         public abstract string FullName { get; }
-        /// <summary> Returns source code for an example MCGalaxy command </summary>
+        /// <summary> Returns source code for an example Command </summary>
         public abstract string CommandSkeleton { get; }
-        /// <summary> Returns source code for an example MCGalaxy plugin </summary>
+        /// <summary> Returns source code for an example Plugin </summary>
         public abstract string PluginSkeleton { get; }
         
         public string CommandPath(string name) { return SourceDir + "Cmd" + name + FileExtension; }

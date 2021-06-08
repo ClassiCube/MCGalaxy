@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy {
@@ -183,6 +184,32 @@ namespace MCGalaxy {
             
             p.Message(count + group + " match \"" + name + "\":");
             p.Message(names);
+        }
+
+        
+        /// <summary> Filters the given list of items to matching item names. Accepts * and ? wildcard tokens. </summary>
+        public static List<string> Filter<T>(IList<T> input, string keyword, StringFormatter<T> nameGetter,
+                                          Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
+            List<string> matches = new List<string>();
+            Regex regex = null;
+            // wildcard matching
+            if (keyword.Contains("*") || keyword.Contains("?")) {
+                string pattern = "^" + Regex.Escape(keyword).Replace("\\?", ".").Replace("\\*", ".*") + "$";
+                regex = new Regex(pattern, RegexOptions.IgnoreCase);
+            }
+            
+            foreach (T item in input) {
+                if (filter != null && !filter(item)) continue;
+                string name = nameGetter(item);
+                
+                if (regex != null) { if (!regex.IsMatch(name)) continue; }
+                else { if (!name.CaselessContains(keyword))    continue; }
+                
+                // format this item for display
+                if (listFormatter != null) name = listFormatter(item);
+                matches.Add(name);
+            }
+            return matches;
         }
     }
 }

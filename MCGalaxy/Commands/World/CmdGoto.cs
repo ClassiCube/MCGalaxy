@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.World {
                 
                 // randomly only visit certain number of maps
                 if (args.Length > 1) {
-                    List<string> maps = CmdSearch.FilterList(files, args[1],
-                                                             mapFile => Path.GetFileNameWithoutExtension(mapFile));
+                    List<string> maps = Matcher.Filter(files, args[1],
+                                                       mapFile => Path.GetFileNameWithoutExtension(mapFile));
                     if (maps.Count == 0) {
                         p.Message("No maps found containing \"{0}\"", args[1]);
                         return;

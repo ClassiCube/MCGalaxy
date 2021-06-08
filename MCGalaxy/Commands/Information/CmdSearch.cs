@@ -55,18 +55,18 @@ namespace MCGalaxy.Commands.Info {
                 if (Block.ExistsFor(p, block)) blocks.Add(block);
             }
 
-            List<string> blockNames = FilterList(blocks, keyword, 
-                                                 b => Block.GetName(p, b), null,
-                                                 b => CmdBlocks.FormatBlockName(p, b));
+            List<string> blockNames = Matcher.Filter(blocks, keyword, 
+                                                     b => Block.GetName(p, b), null,
+                                                     b => CmdBlocks.FormatBlockName(p, b));
             OutputList(p, keyword, "search blocks", "blocks", modifier, blockNames);
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
-            List<string> commands = FilterList(Command.allCmds, keyword, cmd => cmd.name,
-                                               null, cmd => CmdHelp.GetColor(cmd) + cmd.name);
-            List<string> shortcuts = FilterList(Command.allCmds, keyword, cmd => cmd.shortcut,
-                                                cmd => !String.IsNullOrEmpty(cmd.shortcut), 
-                                                cmd => CmdHelp.GetColor(cmd) + cmd.name);
+            List<string> commands = Matcher.Filter(Command.allCmds, keyword, cmd => cmd.name,
+                                                   null, cmd => CmdHelp.GetColor(cmd) + cmd.name);
+            List<string> shortcuts = Matcher.Filter(Command.allCmds, keyword, cmd => cmd.shortcut,
+                                                    cmd => !String.IsNullOrEmpty(cmd.shortcut), 
+                                                    cmd => CmdHelp.GetColor(cmd) + cmd.name);
             
             // Match both names and shortcuts
             foreach (string shortcutCmd in shortcuts) {
@@ -78,52 +78,28 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void SearchRanks(Player p, string keyword, string modifier) {
-            List<string> ranks = FilterList(Group.GroupList, keyword, grp => grp.Name,
-                                            null, grp => grp.ColoredName);
+            List<string> ranks = Matcher.Filter(Group.GroupList, keyword, grp => grp.Name,
+                                                null, grp => grp.ColoredName);
             OutputList(p, keyword, "search ranks", "ranks", modifier, ranks);
         }
         
         static void SearchPlayers(Player p, string keyword, string modifier) {
             Player[] online = PlayerInfo.Online.Items;
-            List<string> players = FilterList(online, keyword, pl => pl.name,
-                                              pl => p.CanSee(pl), pl => pl.ColoredName);
+            List<string> players = Matcher.Filter(online, keyword, pl => pl.name,
+                                                  pl => p.CanSee(pl), pl => pl.ColoredName);
             OutputList(p, keyword, "search players", "players", modifier, players);
         }
         
         static void SearchLoaded(Player p, string keyword, string modifier) {
             Level[] loaded = LevelInfo.Loaded.Items;
-            List<string> levels = FilterList(loaded, keyword, level => level.name);
+            List<string> levels = Matcher.Filter(loaded, keyword, level => level.name);
             OutputList(p, keyword, "search loaded", "loaded levels", modifier, levels);
         }
         
         static void SearchMaps(Player p, string keyword, string modifier) {
             string[] allMaps = LevelInfo.AllMapNames();
-            List<string> maps = FilterList(allMaps, keyword, map => map);
+            List<string> maps = Matcher.Filter(allMaps, keyword, map => map);
             OutputList(p, keyword, "search levels", "maps", modifier, maps);
-        }
-        
-        internal static List<string> FilterList<T>(IList<T> input, string keyword, StringFormatter<T> nameGetter,
-                                          Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
-            List<string> matches = new List<string>();
-            Regex regex = null;
-            // wildcard matching
-            if (keyword.Contains("*") || keyword.Contains("?")) {
-                string pattern = "^" + Regex.Escape(keyword).Replace("\\?", ".").Replace("\\*", ".*") + "$";
-                regex = new Regex(pattern, RegexOptions.IgnoreCase);
-            }
-            
-            foreach (T item in input) {
-                if (filter != null && !filter(item)) continue;
-                string name = nameGetter(item);
-                
-                if (regex != null) { if (!regex.IsMatch(name)) continue; }
-                else { if (!name.CaselessContains(keyword))    continue; }
-                
-                // format this item for display
-                if (listFormatter != null) name = listFormatter(item);
-                matches.Add(name);
-            }
-            return matches;
         }
         
         static void OutputList(Player p, string keyword, string cmd, string type, string modifier, List<string> items) {
