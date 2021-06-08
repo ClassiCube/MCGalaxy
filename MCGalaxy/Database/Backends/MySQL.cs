@@ -27,7 +27,8 @@ namespace MCGalaxy.SQL {
     public sealed class MySQLBackend : IDatabaseBackend {
         public static IDatabaseBackend Instance = new MySQLBackend();
         public MySQLBackend() {
-            CaselessWhereSuffix = " COLLATE utf8_general_ci";
+            // MySQL uses case insensitive collation by default
+            CaselessWhereSuffix = "";
             CaselessLikeSuffix  = "";
         }
         
