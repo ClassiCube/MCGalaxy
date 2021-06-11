@@ -43,19 +43,23 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("&WPlayer has an internal IP, cannot trace"); return;
             }
 
-            string json, region = null, country = null;
-            using (WebClient client = HttpUtil.CreateWebClient()) {
-                json = client.DownloadString("http://ipinfo.io/" + ip + "/geo");
+            string json;
+            try {
+                WebRequest req  = HttpUtil.CreateRequest("http://ipinfo.io/" + ip + "/geo");
+                WebResponse res = req.GetResponse();
+                json = HttpUtil.GetResponseText(res);
+            } catch (Exception ex) {
+                HttpUtil.DisposeErrorResponse(ex);
+                throw;
             }
             
             JsonReader reader = new JsonReader(json);
-            reader.OnMember   = (obj, key, value) => {
-            	if (key == "region")  region  = (string)value;
-            	if (key == "country") country = (string)value;
-            };
+            JsonObject obj    = (JsonObject)reader.Parse();
+            if (obj == null) { p.Message("&WError parsing GeoIP info"); return; }
             
-            reader.Parse();
-            if (reader.Failed) { p.Message("&WError parsing GeoIP info"); return; }           
+            object region = null, country = null;
+            obj.TryGetValue("region",   out region);
+            obj.TryGetValue("country", out country);
             
             string suffix = HasExtraPerm(p, data.Rank, 1) ? "&b{1}&S/&b{2}" : "&b{2}";
             string nick   = name == null ? ip : "of " + p.FormatNick(name);
