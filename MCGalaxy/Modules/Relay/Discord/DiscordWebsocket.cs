@@ -34,6 +34,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
+        /// <summary> Presence status (E.g. online) </summary>
+        public PresenceStatus Status;
         /// <summary> Callback function to retrieve the activity status message </summary>
         public Func<string> GetStatus;
         public bool CanReconnect = true;
@@ -237,7 +239,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             {
                 { "since",      null },
                 { "activities", new JsonArray() { activity } },
-                { "status",     "online" },
+                { "status",     Status.ToString() },
                 { "afk",        false }
             };
             return obj;

@@ -55,7 +55,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         protected override void DoConnect() {
             socket = new DiscordWebsocket(); 
             socket.Token     = Config.BotToken;
-            socket.GetStatus = GetStatus;
+            socket.Status    = Config.Status;
+            socket.GetStatus = GetStatusMessage;
             
             socket.OnReady         = HandleReadyEvent;
             socket.OnMessageCreate = HandleMessageEvent;
@@ -197,9 +198,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return sb.ToString();
         }
         
-        string GetStatus() {
+        string GetStatusMessage() {
             string online = PlayerInfo.NonHiddenCount().ToString();
-            return Config.Status.Replace("{PLAYERS}", online);
+            return Config.StatusMessage.Replace("{PLAYERS}", online);
         }
         
         void UpdateDiscordStatus() {

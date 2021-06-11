@@ -28,7 +28,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         [ConfigString("bot-token", null, "", true)]
         public string BotToken = "";
         [ConfigString("status-message", null, "with {PLAYERS} players")]
-        public string Status = "with {PLAYERS} players";
+        public string StatusMessage = "with {PLAYERS} players";
         [ConfigBool("use-nicknames", null, true)]
         public bool UseNicks = true;
         
@@ -38,6 +38,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public string OpChannels = "";
         [ConfigString("ignored-user-ids", null, "", true)]
         public string IgnoredUsers = "";
+        
+        [ConfigEnum("presence-status", null, PresenceStatus.online, typeof(PresenceStatus))]
+        public PresenceStatus Status = PresenceStatus.online;
         
         const string file = "properties/discordbot.properties";
         static ConfigElement[] cfg;
@@ -55,6 +58,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
             ConfigElement.SerialiseSimple(cfg, file, this);
         }
     }
+    
+    public enum PresenceStatus { online, dnd, idle, invisible }
     
     public sealed class DiscordPlugin : Plugin {
         public override string creator { get { return Server.SoftwareName + " team"; } }
