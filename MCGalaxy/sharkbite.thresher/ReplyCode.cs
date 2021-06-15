@@ -119,11 +119,6 @@ namespace Sharkbite.Irc
 		ERR_USERSDONTMATCH = 502,
 
 		/// <summary>
-		/// When the TCP/IP connection unexpectedly fails.
-		/// </summary>
-		ConnectionFailed = 1000,
-
-		/// <summary>
 		/// The IRC server sent an 'ERROR' message for some
 		/// reason.
 		/// </summary>

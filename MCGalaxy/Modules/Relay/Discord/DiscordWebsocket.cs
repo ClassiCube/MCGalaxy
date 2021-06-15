@@ -116,7 +116,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             byte[] data = new byte[4096];
             for (;;) {
                 int len = stream.Read(data, 0, 4096);
-                if (len == 0) throw new EndOfStreamException("stream.Read returned 0");
+                if (len == 0) throw new IOException("stream.Read returned 0");
                 
                 HandleReceived(data, len);
             }

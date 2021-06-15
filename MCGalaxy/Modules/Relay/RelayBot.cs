@@ -156,7 +156,10 @@ namespace MCGalaxy.Modules.Relay {
                     // SocketException is usually due to complete connection dropout
                     retries = 0;
                     Thread.Sleep(30 * 1000);
-                } catch (Exception ex) {
+                } catch (IOException ex) {
+                    // IOException is an expected error, so don't log full details
+                    Logger.Log(LogType.Warning, "{0} read error ({1})", RelayName, ex.Message);
+                }  catch (Exception ex) {
                     Logger.LogError(RelayName + " relay error", ex);
                 }               
                 retries++;

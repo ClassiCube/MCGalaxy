@@ -77,10 +77,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event RegisteredEventHandler OnRegistered;
 		/// <summary>
-		/// This connection has been closed. 
-		/// </summary>
-		public event DisconnectedEventHandler OnDisconnected;
-		/// <summary>
 		/// A Notice type message was sent to a channel.
 		/// </summary>
 		public event PublicNoticeEventHandler OnPublicNotice;
@@ -201,16 +197,6 @@ namespace Sharkbite.Irc
 			else 
 			{
 				ParseCommand( tokens );
-			}
-		}
-		/// <summary>
-		/// Tell listeners that this connection is closed
-		/// </summary>
-		internal void Disconnected() 
-		{
-			if( OnDisconnected != null )
-			{
-				OnDisconnected();
 			}
 		}
 		/// <summary>

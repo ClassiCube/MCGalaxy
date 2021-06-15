@@ -192,23 +192,13 @@ namespace Sharkbite.Irc
 					}
 				}
 			}
-			catch (IOException)
-			{
-				//Trap a connection failure
-				listener.Error( ReplyCode.ConnectionFailed, "Connection to server unexpectedly failed.");
-			}
-			catch (Exception ex)
-			{
-				listener.Error( ReplyCode.ConnectionFailed, "Unhandled error: " + ex);
-			}
 			finally
 			{
 				//The connection to the IRC server has been closed either
 				//by client request or the server itself closed the connection.
 				client.Close();
 				registered = false;
-				connected = false;
-				listener.Disconnected();
+				connected  = false;
 			}
 		}
 		/// <summary>
