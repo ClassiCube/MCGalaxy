@@ -36,6 +36,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         public string Token;
         /// <summary> Presence status (E.g. online) </summary>
         public PresenceStatus Status;
+        /// <summary> Presence activity (e.g. Playing) </summary>
+        public PresenceActivity Activity;
         /// <summary> Callback function to retrieve the activity status message </summary>
         public Func<string> GetStatus;
         public bool CanReconnect = true;
@@ -233,7 +235,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             JsonObject activity = new JsonObject()
             {
                 { "name", GetStatus() },
-                { "type", 0 }
+                { "type", (int)Activity }
             };
             JsonObject obj = new JsonObject()
             {
