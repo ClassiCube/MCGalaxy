@@ -293,8 +293,7 @@ namespace MCGalaxy.Network {
             HandleReceived(data, len);
         }
         
-        protected override void Disconnect(int reason) {
-            base.Disconnect(reason);
+        protected override void OnDisconnected(int reason) {
             if (protocol != null) protocol.Disconnect();
             s.Close();
         }

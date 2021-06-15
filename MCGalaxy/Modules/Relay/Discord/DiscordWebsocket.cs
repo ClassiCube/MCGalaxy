@@ -101,18 +101,13 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         const int REASON_INVALID_TOKEN = 4004;
         
-        protected override void Disconnect(int reason) {
+        protected override void OnDisconnected(int reason) {
             if (reason == REASON_INVALID_TOKEN) {
                 Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
                 CanReconnect = false;
             }
+        	
             Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
-            
-            try {
-                base.Disconnect(reason);
-            } catch {
-                // try to cleanly close connection when possible
-            }
             Close();
         }
         

@@ -218,16 +218,23 @@ namespace MCGalaxy.Network {
             return packet;
         }
         
-        protected virtual void Disconnect(int reason) {
-            SendRaw(WrapDisconnect(reason), SendFlags.Synchronous);
+        public void Disconnect() { Disconnect(REASON_NORMAL); }
+        protected void Disconnect(int reason) {
+            try {
+                SendRaw(WrapDisconnect(reason), SendFlags.Synchronous);
+            } catch {
+                // try to cleanly close connection if possible
+            }
+            OnDisconnected(reason);
         }
+        
+        /// <summary> Called when either side ends the connection for the given reason </summary>
+        protected abstract void OnDisconnected(int reason);
         
         protected abstract void HandleData(byte[] data, int len);
         
         /// <summary> Sends data to the underlying socket without wrapping the data in a websocket frame </summary>
         protected abstract void SendRaw(byte[] data, SendFlags flags);
-        
-        public void Disconnect() { Disconnect(REASON_NORMAL); }
     }
     
     /// <summary> Abstracts a server side WebSocket </summary>
