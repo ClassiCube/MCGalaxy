@@ -49,18 +49,22 @@ namespace MCGalaxy.Commands.Chatting {
         
         protected override void SetPlayerData(Player p, string target, string colName) {
             string col = "";
-            Player who = PlayerInfo.FindExact(target);
+            Player who; string editee; bool globalMessage;
+            GetPlayerDataMessageInfo(p, target, out who, out editee, out globalMessage);
             
+            string message;
             if (colName.Length == 0) {
                 col = Group.GroupIn(target).Color;
-                MessageFrom(target, who, "had their color removed");
+                message = p.ColoredName+" &Sremoved "+editee+" color";
                 PlayerDB.Update(target, PlayerData.ColumnColor, "");
             } else {
                 col = Matcher.FindColor(p, colName);
                 if (col == null) return;
-                MessageFrom(target, who, "had their color changed to " + col + Colors.Name(col));
+                message = p.ColoredName+" &Schanged "+editee+" color to " + col + Colors.Name(col);
                 PlayerDB.Update(target, PlayerData.ColumnColor, col);
             }
+            if (globalMessage) { Chat.MessageAll(message); }
+            else { Chat.MessageFrom(p, message); }
             
             if (who != null) who.UpdateColor(col);
         }

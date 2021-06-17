@@ -88,5 +88,17 @@ namespace MCGalaxy.Commands {
                 Chat.MessageFrom(who, "λNICK &S" + message);
             }
         }
+        
+        protected void GetPlayerDataMessageInfo(Player p, string target, out Player who, out string editee, out bool globalMessage) {
+            who = PlayerInfo.FindExact(target);
+            editee = "&S's";
+            if (who != null) {
+                editee = (who.name == p.name) ? "their" : who.ColoredName+editee;
+                globalMessage = p.IsSuper || (!p.level.SeesServerWideChat && who.level != p.level);
+            } else {
+                editee = Player.Console.FormatNick(target)+editee;
+                globalMessage = false;
+            }
+        }
     }
 }

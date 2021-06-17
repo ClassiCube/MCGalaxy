@@ -58,16 +58,20 @@ namespace MCGalaxy.Commands.Chatting {
         
         protected override void SetPlayerData(Player p, string target, string nick) {
             if (Colors.Strip(nick).Length >= 30) { p.Message("Nick must be under 30 letters."); return; }
-            Player who = PlayerInfo.FindExact(target);
+            Player who; string editee; bool globalMessage;
+            GetPlayerDataMessageInfo(p, target, out who, out editee, out globalMessage);
             
+            string message;
             if (nick.Length == 0) {
-                MessageFrom(target, who, "had their custom nick reset");
+                message = p.ColoredName+" &Sremoved "+editee+" nick";
                 nick = target.RemoveLastPlus();
             } else {
                 // TODO: select color from database?
                 string color = who != null ? who.color : Group.GroupIn(target).Color;
-                MessageFrom(target, who, "had their nick set to " + color + nick);
+                message = p.ColoredName+" &Schanged "+editee+" nick to " + color + nick;
             }
+            if (globalMessage) { Chat.MessageAll(message); }
+            else { Chat.MessageFrom(p, message); }
             
             if (who != null) who.DisplayName = nick;
             if (who != null) TabList.Update(who, true);
