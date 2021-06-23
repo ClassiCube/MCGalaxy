@@ -646,7 +646,7 @@ namespace MCGalaxy {
                     command = Command.Find("Mode");
                 } else {
                     Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmdName, cmdArgs);
-                    Message("Unknown command \"" + cmdName + "\"."); return null;
+                    Message("Unknown command \"{0}\".", cmdName); return null;
                 }
             }
 

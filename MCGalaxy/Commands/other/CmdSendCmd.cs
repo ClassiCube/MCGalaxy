@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Misc {
             
             Command cmd = Command.Find(cmdName);
             if (cmd == null) {
-                p.Message("Unknown command \"" + cmdName + "\"."); return;
+                p.Message("Unknown command \"{0}\".", cmdName); return;
             }
             
             data.Context = CommandContext.SendCmd;

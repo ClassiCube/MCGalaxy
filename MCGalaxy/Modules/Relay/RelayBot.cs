@@ -405,7 +405,7 @@ namespace MCGalaxy.Modules.Relay {
         bool ExecuteCommand(RelayUser user, string channel, string cmdName, string cmdArgs) {
             Command cmd = Command.Find(cmdName);
             Player p = new RelayPlayer(channel, user, this);
-            if (cmd == null) { p.Message("Unknown command!"); return false; }
+            if (cmd == null) { p.Message("Unknown command \"{0}\"", cmdName); return false; }
 
             string logCmd = cmdArgs.Length == 0 ? cmdName : cmdName + " " + cmdArgs;
             Logger.Log(LogType.CommandUsage, "/{0} (by {1} from {2})", logCmd, user.Nick, RelayName);

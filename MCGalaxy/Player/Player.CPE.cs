@@ -230,7 +230,7 @@ namespace MCGalaxy {
     public enum CpeMessageType : byte {
         Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
         BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
-        Announcement = 100,
+        Announcement = 100, BigAnnouncement = 101, SmallAnnouncement = 102 
     }
     
     public enum EnvProp : byte {
