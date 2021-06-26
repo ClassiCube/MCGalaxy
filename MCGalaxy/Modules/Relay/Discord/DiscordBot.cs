@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 using MCGalaxy.Config;
@@ -64,9 +65,34 @@ namespace MCGalaxy.Modules.Relay.Discord {
             socket.OnChannelCreate = HandleChannelEvent;
             socket.Connect();
         }
+                
+        // mono wraps exceptions from reading in an AggregateException, e.g:
+        //   * AggregateException - One or more errors occurred.
+        //      * ObjectDisposedException - Cannot access a disposed object.
+        // .NET sometimes wraps exceptions from reading in an IOException, e.g.:
+        //   * IOException - The read operation failed, see inner exception.
+        //      * ObjectDisposedException - Cannot access a disposed object.
+        static Exception UnpackError(Exception ex) {
+            if (ex.InnerException is ObjectDisposedException)
+                return ex.InnerException;
+            if (ex.InnerException is IOException)
+                return ex.InnerException;
+            
+            // TODO can we ever get an IOException wrapping an IOException?
+            return null;
+        }
         
         protected override void DoReadLoop() {
-            socket.ReadLoop();
+            try {
+                socket.ReadLoop();
+            } catch (Exception ex) {
+                Exception unpacked = UnpackError(ex);
+                // throw a more specific exception if possible
+                if (unpacked != null) throw unpacked;
+                
+                // rethrow original exception otherwise
+                throw;
+            }
         }
         
         protected override void DoDisconnect(string reason) {

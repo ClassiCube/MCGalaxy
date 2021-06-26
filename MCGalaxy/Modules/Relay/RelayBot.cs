@@ -159,7 +159,10 @@ namespace MCGalaxy.Modules.Relay {
                 } catch (IOException ex) {
                     // IOException is an expected error, so don't log full details
                     Logger.Log(LogType.Warning, "{0} read error ({1})", RelayName, ex.Message);
-                }  catch (Exception ex) {
+                } catch (ObjectDisposedException ex) {
+                    // ObjectDisposedException is an expected error, so don't log full details
+                    Logger.Log(LogType.Warning, "{0} read error ({1})", RelayName, ex.Message);
+                } catch (Exception ex) {
                     Logger.LogError(RelayName + " relay error", ex);
                 }               
                 retries++;

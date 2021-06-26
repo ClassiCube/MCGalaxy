@@ -56,8 +56,8 @@ namespace MCGalaxy.Gui {
 
 Trying to mix two versions is unsupported - you may experience issues";
             string msg = string.Format(fmt, Server.SoftwareName, 
-                                       gui_version, AssemblyFile(typeof(Window), "AMCGalaxy.exe"),
-                                       dll_version, AssemblyFile(typeof(Server), "AMCGalaxy_.dll"));
+                                       gui_version, AssemblyFile(typeof(Window), "MCGalaxy.exe"),
+                                       dll_version, AssemblyFile(typeof(Server), "MCGalaxy_.dll"));
             RunAsync(() => Popup.Warning(msg));
         }
         
