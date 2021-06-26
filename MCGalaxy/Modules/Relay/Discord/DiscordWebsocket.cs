@@ -51,7 +51,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
-        string lastSequence;
+        string lastSequence, sessionID;
         TcpClient client;
         SslStream stream;
         
@@ -106,7 +106,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
                 CanReconnect = false;
             }
-        	
+            
             Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
             Close();
         }
@@ -133,8 +133,14 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         void DispatchPacket(int opcode, JsonObject obj) {
-            if (opcode == OPCODE_DISPATCH) HandleDispatch(obj);
-            if (opcode == OPCODE_HELLO)    HandleHello(obj);
+            if (opcode == OPCODE_DISPATCH) {
+                HandleDispatch(obj);
+            } else if (opcode == OPCODE_HELLO) {
+                HandleHello(obj);
+            } else if (opcode == OPCODE_INVALID_SESSION) {
+                // session no longer valid for whatever reason
+                sessionID = null;
+            }
         }
         
         
@@ -159,6 +165,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             
             if (eventName == "READY") {
                 data = (JsonObject)obj["d"];
+                HandleReady(data);
                 OnReady(data);
             } else if (eventName == "MESSAGE_CREATE") {
                 data = (JsonObject)obj["d"];
@@ -167,6 +174,12 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 data = (JsonObject)obj["d"];
                 OnChannelCreate(data);
             }
+        }
+        
+        void HandleReady(JsonObject data) {
+            object session;
+            if (data.TryGetValue("session_id", out session)) 
+                sessionID = (string)session;
         }
         
         
