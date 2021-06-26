@@ -361,7 +361,8 @@ namespace MCGalaxy {
                 Message("Cannot {0} &Swhile chat moderation is on without &T/Voice&S", action); return false; 
             }
             if (Unverified) {
-                Message("&WYou must first verify with &T/Pass [Password]"); return false;
+                Authenticator.Current.RequiresVerification(this, action);
+                return false;
             }
             return true;
         }

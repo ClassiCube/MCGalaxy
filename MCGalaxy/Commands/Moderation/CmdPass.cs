@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Moderation {
         static void SetPassword(Player p, string password) {
             string curPath = FindHashPath(p.name);
             if (p.Unverified && curPath != null) {
-                p.Message("&WYou must first verify with &T/pass [Password] &Wbefore you can change your password.");
+                Authenticator.Current.RequiresVerification(p, "can change your password");
                 p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
                 return;
             }
@@ -121,7 +121,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             
             if (!p.IsConsole && p.Unverified) {
-                p.Message("&WYou must first verify with &T/Pass [Password]"); return;
+                Authenticator.Current.RequiresVerification(p, "can reset passwords");
+                return;
             }
             if (!p.IsConsole && !Server.Config.OwnerName.CaselessEq(p.name))  {
                 p.Message("&WOnly console and the server owner may reset passwords."); return;

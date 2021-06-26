@@ -33,7 +33,10 @@ namespace MCGalaxy.Core {
                 p.Leave(null, "Invalid player name", true); return false;
             }
             
-            if (!VerifyName(p, mppass)) return false;
+            if (!Authenticator.Current.VerifyLogin(p, mppass)) {
+                p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
+            }
+            
             if (!IPThrottler.CheckIP(p)) return false;
             if (!CheckTempban(p)) return false;
 
@@ -45,20 +48,6 @@ namespace MCGalaxy.Core {
             p.group = Group.GroupIn(p.name);
             if (!CheckBanned(p)) return false;
             if (!CheckPlayersCount(p)) return false;
-            return true;
-        }
-
-        static bool VerifyName(Player p, string mppass) {
-            if (!Server.Config.VerifyNames) return true;
-            string calculated = Server.CalcMppass(p.truename);
-            
-            if (!mppass.CaselessEq(calculated)) {
-                if (!IPUtil.IsPrivate(p.IP)) {
-                    p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
-                }
-            } else {
-                p.verifiedName = true;
-            }
             return true;
         }
         

@@ -61,7 +61,7 @@ namespace MCGalaxy {
             bool deletingBlock = !painting && !placing;
 
             if (Unverified) {
-                Message("&WYou must first verify with &T/Pass [Password]");
+                Authenticator.Current.RequiresVerification(this, "modify blocks");
                 RevertBlock(x, y, z); return;
             }
 
@@ -611,7 +611,8 @@ namespace MCGalaxy {
                 Message("You cannot use any commands while jailed."); return false;
             }
             if (Unverified && !(cmd == "pass" || cmd == "setpass")) {
-                Message("&WYou must verify first with &T/Pass [Password]"); return false;
+                Authenticator.Current.RequiresVerification(this, "use /" + cmd);
+                return false;
             }
             
             TimeSpan delta = cmdUnblocked - DateTime.UtcNow;
