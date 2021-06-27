@@ -54,13 +54,8 @@ namespace Sharkbite.Irc
 	/// </code></example>
 	public class Sender
 	{
-		// Buffer to hold commands 
-		StringBuilder buffer;
 		//Containing conenction instance
 		Connection connection;
-
-		const char SPACE = ' ';
-		const string SPACE_COLON = " :";
 		const int MAX_COMMAND_SIZE = 512;
 		const int MAX_HOSTNAME_LEN = 63;
 		const int MAX_NICKNAME_LEN = 30;
@@ -70,21 +65,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		internal Sender(Connection connection ) {
 			this.connection = connection;
-			buffer = new StringBuilder(MAX_COMMAND_SIZE);
-		}
-
-		/// <summary>
-		/// This methods actually sends the notice and privmsg commands.
-		/// It assumes that the message has already been broken up
-		/// and has a valid target.
-		/// </summary>
-		void SendMessage(string type, string target, string message) {
-			buffer.Append(type);
-			buffer.Append(SPACE);
-			buffer.Append(target);
-			buffer.Append(SPACE_COLON);
-			buffer.Append(message);
-			connection.SendCommand( buffer );
 		}
 		
 		/// <summary>
@@ -119,98 +99,45 @@ namespace Sharkbite.Irc
 		}
 
 		/// <summary>
-		/// Truncate parameters which cause a command line
-		/// to be too long.
+		/// Truncate parameters which cause a command line to be too long.
 		/// </summary>
 		/// <param name="parameter">The command parameter</param>
 		/// <param name="commandLength">The length of the command plus whitespace</param>
-		/// <returns></returns>
 		string Truncate( string parameter, int commandLength ) 
 		{
 			int max = MAX_COMMAND_SIZE - commandLength;
-			if (parameter.Length > max ) 
-			{
-				return parameter.Substring(0, max);
-			}
-			else 
-			{
-				return parameter;
-			}
+			if (parameter.Length < max) return parameter;
+			
+			return parameter.Substring(0, max);
 		}
 
-		/// <summary>
-		/// The USER command is only used at the beginning of Connection to specify
-		/// the username, hostname and realname of a new user.
-		/// </summary>
-		/// <param name="args">The user Connection data</param>
 		internal void User() 
 		{
 			lock( this )
 			{
-				buffer.Append("USER");
-				buffer.Append(SPACE);
-				buffer.Append( connection.UserName );
-				buffer.Append(SPACE);
-				buffer.Append( connection.ModeMask );
-				buffer.Append(SPACE);
-				buffer.Append('*');
-				buffer.Append(SPACE);
-				buffer.Append(':');
-				buffer.Append( connection.RealName );
-				connection.SendCommand( buffer );
+				// 4 = IRC mode mask (invisible and not receive wallops)
+				connection.SendCommand("USER " + connection.UserName + " 4 * :" + connection.RealName );
 			}
 		}
-		/// <summary>
-		/// A client session is terminated with a quit message.
-		/// </summary>
-		/// <remarks> 
-		/// <para>The server
-		/// acknowledges this by sending an ERROR message to the client. 
-		/// </para>
-		/// <para>Before closing the Connection with the IRC server this method
-		/// will call <c>Listener.beforeDisconnect()</c> and after
-		/// the Connection is closed it will call <c> Listener.OnDisconnect()</c>
-		/// </para>
-		/// </remarks>
-		/// <param name="reason">Reason for quitting.</param>
+
 		internal void Quit(string reason) 
 		{
 			if ( IsEmpty( reason ) ) 
-				throw new ArgumentException("Quite reason cannot be null or empty.");
+				throw new ArgumentException("Quit reason cannot be null or empty.");						
+			// 10 = "QUIT :" + 2 spaces + CR + LF
+			reason = Truncate(reason, 10);
 			
 			lock( this ) 
 			{
-				buffer.Append("QUIT");
-				
-				buffer.Append(SPACE_COLON);
-				if (reason.Length > 502) 
-				{
-					reason = reason.Substring(0, 504);
-				}
-				buffer.Append(reason);
-				connection.SendCommand( buffer );
+				connection.SendCommand("QUIT :" + reason);
 			}
 		}
-			/// <summary>
-		/// A PONG message is a reply to server PING message. Only called by
-		/// the Connection object to keep the Connection alive.
-		/// </summary>
-		/// <remarks>
-		/// Possible Errors
-		/// <list type="bullet">
-		/// 			<item><description>ERR_NOORIGIN</description></item>
-		/// 			<item><description>ERR_NOSUCHSERVER</description></item>
-		/// </list>
-		/// </remarks>
-		/// <param name="message">The text sent by the IRC server in the PING message.</param>
+
 		internal void Pong(string message) 
 		{
 			//Not synchronized because it will only be called during on OnPing event by
 			//the dispatch thread
-			buffer.Append("PONG");
-			buffer.Append(SPACE);
-			buffer.Append(message);
-			connection.SendCommand( buffer );
+			connection.SendCommand("PONG " + message);
 		}
 		/// <summary>
 		/// The PASS command is used to set a 'Connection password'. 
@@ -224,10 +151,7 @@ namespace Sharkbite.Irc
 		{
 			lock( this )
 			{
-				buffer.Append("PASS");
-				buffer.Append(SPACE);
-				buffer.Append(password);
-				connection.SendCommand( buffer );
+				connection.SendCommand("PASS " + password);
 			}
 		}	
 		/// <summary>
@@ -246,17 +170,14 @@ namespace Sharkbite.Irc
 			User();
 		}
 
-		public void Join( string channel ) 
+		public void Join(string channel) 
 		{
 			if ( IsEmpty( channel ) )
 				throw new ArgumentException(channel + " is not a valid channel name.");
 			
 			lock( this ) 
 			{
-				buffer.Append("JOIN");
-				buffer.Append(SPACE);
-				buffer.Append(channel);
-				connection.SendCommand( buffer );
+				connection.SendCommand("JOIN " + channel);
 			}
 		}
 
@@ -265,46 +186,35 @@ namespace Sharkbite.Irc
 			if ( IsEmpty( password ) ) 
 				throw new ArgumentException("Password cannot be empty or null.");
 			if ( IsEmpty( channel ) )
-				throw new ArgumentException("Channel name cannot be empty or null.");
-			
-			lock( this ) 
-			{
-				buffer.Append("JOIN");
-				buffer.Append(SPACE);
-				buffer.Append(channel);
-				buffer.Append(SPACE);
-				//8 is the JOIN + 2 spaces + CR + LF
-				password = Truncate( password, 8 );
-				buffer.Append(password);
-				connection.SendCommand( buffer );
-			}
-		}
-
-		public void Nick( string newNick ) 
-		{
-			if ( !Rfc2812Util.IsValidNick( newNick ) )
-				throw new ArgumentException(newNick + " is not a valid nickname.");
+				throw new ArgumentException("Channel name cannot be empty or null.");			
+			// 8 = "JOIN" + 2 spaces + CR + LF
+			password = Truncate(password, 8);
 				
 			lock( this ) 
 			{
-				buffer.Append("NICK");
-				buffer.Append(SPACE);
-				buffer.Append(newNick);
-				connection.SendCommand( buffer );
+				connection.SendCommand("JOIN " + channel + " " + password);
 			}
 		}
 
-		public void Names( string channel ) 
+		public void Nick(string nick) 
+		{
+			if ( !Rfc2812Util.IsValidNick( nick ) )
+				throw new ArgumentException(nick + " is not a valid nickname.");
+				
+			lock( this ) 
+			{
+				connection.SendCommand("NICK " + nick);
+			}
+		}
+
+		public void Names(string channel) 
 		{
 			if ( IsEmpty( channel ) ) 
 				throw new ArgumentException("Channel name cannot be null or empty.");
 			
 			lock( this ) 
 			{
-				buffer.Append("NAMES");
-				buffer.Append(SPACE);
-				buffer.Append(channel);
-				connection.SendCommand( buffer );
+				connection.SendCommand("NAMES " + channel);
 			}
 		}
 
@@ -325,12 +235,12 @@ namespace Sharkbite.Irc
 					string[] parts = BreakUpMessage( message, max );
 					foreach( string part in parts )
 					{
-						SendMessage("PRIVMSG", target, part );
+						connection.SendCommand("PRIVMSG " + target + " :" + part);
 					}
 				}
 				else 
 				{
-					SendMessage("PRIVMSG", target, message);
+					connection.SendCommand("PRIVMSG " + target + " :" + message);
 				}
 			}
 		}
@@ -353,29 +263,18 @@ namespace Sharkbite.Irc
 			Nick( connection.Nick );
 			User();
 		}
-		/// <summary>
-		/// Send an arbitrary text message to the IRC server.
-		/// </summary>
-		/// <remarks>
-		/// Messages that are too long will be truncated. There is no corresponding 
-		/// events so it will be necessary to check for standard reply codes and possibly
-		/// errors.
-		/// </remarks>
-		/// <param name="message">A text message.</param>
-		/// <exception cref="ArgumentException">If the message is null or empty.</exception> 
-		public void Raw( string message ) 
+
+		public void Raw(string message) 
 		{
 			if ( IsEmpty( message ) ) 
 				throw new ArgumentException("Message cannot be null or empty.");
 			
+			if ( message.Length > MAX_COMMAND_SIZE ) 
+				message = message.Substring( 0, MAX_COMMAND_SIZE );
+			
 			lock( this )
 			{
-				if (message.Length > MAX_COMMAND_SIZE ) 
-				{
-					message = message.Substring( 0, MAX_COMMAND_SIZE );
-				}
-				buffer.Append( message );
-				connection.SendCommand( buffer );
+				connection.SendCommand( message );
 			}
 		}
 	}

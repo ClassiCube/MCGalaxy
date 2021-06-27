@@ -64,12 +64,6 @@ namespace Sharkbite.Irc
 		public int Port = 6667;	
 		/// <summary> Whether to connect using SSL or not </summary>		
 		public bool UseSSL;
-		/// <summary>
-		/// Set's the user's initial IRC mode mask. Set to 0 to recieve wallops
-		/// and be invisible. Set to 4 to be invisible and not receive wallops.
-		/// </summary>
-		/// <value>A number mask such as 0 or 4.</value>
-		public string ModeMask = "4";		
 		/// <summary> The user's nick name. </summary>
 		/// <value>A string which conforms to the IRC nick standard.</value>
 		public string Nick;	
@@ -168,12 +162,6 @@ namespace Sharkbite.Irc
 			}
 		}
 		
-		/// <summary> Send a message to the IRC server and clear the command buffer. </summary>
-		internal void SendCommand( StringBuilder command)
-		{
-			SendCommand( command.ToString() );
-			command.Remove(0, command.Length );
-		}
 		/// <summary> Send a message to the IRC server and clear the command buffer. </summary>
 		internal void SendCommand( string command)
 		{
