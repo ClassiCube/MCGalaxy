@@ -52,22 +52,10 @@ namespace MCGalaxy.Commands.Moderation {
                 VerifyPassword(p, message);
             }
         }
-        
-        static void OnVerified(Player p) {
-            p.Message("You are now &averified &Sand have &aaccess to admin commands and features.");
-            p.verifiedPass = true;
-            p.Unverified   = false;
-        }
-        
-        static void OnFailed(Player p) {
-            p.passtries++;
-            p.Message("&WWrong Password. &SRemember your password is &Wcase sensitive.");
-            p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
-        }
-        
+
         static void StorePassword(string curPath, string name, string pass) {
             byte[] hash = ComputeNewHash(name, pass);
-        	
+            
             // In case was using .dat password before
             if (curPath != null) File.Delete(curPath);
             File.WriteAllBytes(NewHashPath(name), hash);
@@ -78,40 +66,31 @@ namespace MCGalaxy.Commands.Moderation {
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
             if (password.IndexOf(' ') >= 0) { p.Message("Your password must be &Wone &Sword!"); return; }
 
-            string path = NewHashPath(p.name);
-            // If new format exists, that is always used
-            if (File.Exists(path)) {
-                if (CheckNewHash(path, p.name, password)) {
-                    OnVerified(p);
-                } else {
-                    OnFailed(p);
-                }
-                return;
-            }
-
-            // Fallback onto old format
-            path = FindOldHashPath(p.name);
-            if (path == null) {
+            if (!Authenticator.Current.HasPassword(p.name)) {
                 p.Message("You have not &Wset a password, &Suse &T/SetPass [Password] &Wto set one!");
-            } else if (!CheckOldHash(path, p.name, password)) {
-                OnFailed(p);
+                return;
+            } 
+            
+            if (Authenticator.Current.VerifyPassword(p.name, password)) {
+                p.Message("You are now &averified &Sand have &aaccess to admin commands and features.");
+                p.verifiedPass = true;
+                p.Unverified   = false;
             } else {
-                OnVerified(p);
-                // Switch password to new format
-                StorePassword(path, p.name, password);
+                p.passtries++;
+                p.Message("&WWrong Password. &SRemember your password is &Wcase sensitive.");
+                p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
             }
         }
         
         static void SetPassword(Player p, string password) {
-            string curPath = FindHashPath(p.name);
-            if (p.Unverified && curPath != null) {
+            if (p.Unverified && Authenticator.Current.HasPassword(p.name)) {
                 Authenticator.Current.RequiresVerification(p, "can change your password");
                 p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
                 return;
             }
             
             if (password.IndexOf(' ') >= 0) { p.Message("&WPassword must be one word."); return; }
-            StorePassword(curPath, p.name, password);
+            Authenticator.Current.StorePassword(p.name, password);
             p.Message("Your password was &aset to: &c" + password);
         }
         
@@ -128,12 +107,10 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("&WOnly console and the server owner may reset passwords."); return;
             }
             
-            string path = FindHashPath(target.name);
-            if (path == null) {
-                p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));
-            } else {
-                File.Delete(path);
+            if (Authenticator.Current.ResetPassword(target.name)) {
                 p.Message("Reset password for {0}", p.FormatNick(target));
+            } else {
+                p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));
             }
         }
 
