@@ -38,14 +38,8 @@ namespace Sharkbite.Irc
 	public sealed class Connection
 	{
 		TcpClient client;
-		Listener listener;
-		Sender sender;
 		StreamReader reader;
 		StreamWriter writer;
-		//Connected and registered with IRC server
-		bool registered;
-		//TCP/IP connection established with IRC server
-		bool connected;
 		bool handleNickFailure = true;
 		Encoding encoding;
 
@@ -55,8 +49,8 @@ namespace Sharkbite.Irc
 		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
 		public Connection( Encoding textEncoding )
 		{
-			sender = new Sender( this );
-			listener = new Listener( );
+			Sender = new Sender( this );
+			Listener = new Listener( );
 			RegisterDelegates();
 			encoding = textEncoding;
 		}
@@ -88,33 +82,16 @@ namespace Sharkbite.Irc
 		/// <summary> The password for this server. These are seldomly used. Set to '*'  </summary>
 		/// <value>A short string with any legal characters.</value>
 		public string ServerPassword = "*";
-		
-		
-		/// <summary>
-		/// A read-only property indicating whether the connection
-		/// has been opened with the IRC server and the
-		/// client has been successfully registered.
-		/// </summary>
-		/// <value>True if the client is connected and registered.</value>
-		public bool Registered { get { return registered; } }
-		/// <summary>
-		/// A read-only property indicating whether a connection
-		/// has been opened with the IRC server (but not whether
-		/// registration has succeeded).
-		/// </summary>
-		/// <value>True if the client is connected.</value>
-		public bool Connected { get { return connected; } }
+				
+		/// <summary> Whether this client is connected and has successfully registered. </summary>
+		public bool Registered;
+		/// <summary> Whether a TCP/IP connection has been established with the IRC server. </summary>
+		public bool Connected;
 
-		/// <summary>
-		/// The object used to send commands to the IRC server.
-		/// </summary>
-		/// <value>Read-only Sender.</value>
-		public Sender Sender { get { return sender; } }
-		/// <summary>
-		/// The object that parses messages and notifies the appropriate delegate.
-		/// </summary>
-		/// <value>Read only Listener.</value>
-		public Listener Listener { get { return listener; } }
+		/// <summary> The object used to send commands to the IRC server.</summary>
+		public Sender Sender;
+		/// <summary> The object that parses messages and notifies the appropriate delegate.
+		public Listener Listener;
 
 		/// <summary>
 		/// Respond to IRC keep-alives.
@@ -122,7 +99,7 @@ namespace Sharkbite.Irc
 		/// <param name="message">The message that should be echoed back</param>
 		void KeepAlive(string message)
 		{
-			sender.Pong( message );
+			Sender.Pong( message );
 		}
 
 		void MyNickChanged(UserInfo user, string newNick)
@@ -135,14 +112,14 @@ namespace Sharkbite.Irc
 		
 		void OnRegistered()
 		{
-			registered = true;
-			listener.OnRegistered -= OnRegistered;
+			Registered = true;
+			Listener.OnRegistered -= OnRegistered;
 		}
 		
 		void OnNickError( string badNick, string reason )
 		{
 			//If this is our initial connection attempt
-			if( !registered && handleNickFailure )
+			if( !Registered && handleNickFailure )
 			{
 				NameGenerator generator = new NameGenerator();
 				string nick;
@@ -158,10 +135,10 @@ namespace Sharkbite.Irc
 		
 		void RegisterDelegates()
 		{
-			listener.OnPing += KeepAlive;
-			listener.OnNick += MyNickChanged;
-			listener.OnNickError += OnNickError;
-			listener.OnRegistered += OnRegistered;
+			Listener.OnPing += KeepAlive;
+			Listener.OnNick += MyNickChanged;
+			Listener.OnNickError += OnNickError;
+			Listener.OnRegistered += OnRegistered;
 		}
 
 		/// <summary>
@@ -175,21 +152,10 @@ namespace Sharkbite.Irc
 			{
 				while ( (line = reader.ReadLine() ) != null )
 				{
-					try
-					{
-						if( IsDccRequest( line ) ) continue;
-						if( IsCtcpMessage( line) ) continue;
+					if( IsDccRequest( line ) ) continue;
+					if( IsCtcpMessage( line) ) continue;
 						
-						listener.Parse( line );
-					}
-					catch( ThreadAbortException )
-					{
-						Thread.ResetAbort();
-						//This exception is raised when the Thread
-						//is stopped at user request, i.e. via Disconnect()
-						//This will stop the read loop and close the connection.
-						break;
-					}
+					Listener.Parse( line );
 				}
 			}
 			finally
@@ -197,25 +163,29 @@ namespace Sharkbite.Irc
 				//The connection to the IRC server has been closed either
 				//by client request or the server itself closed the connection.
 				client.Close();
-				registered = false;
-				connected  = false;
+				Registered = false;
+				Connected  = false;
 			}
 		}
-		/// <summary>
-		/// Send a message to the IRC server and clear the command buffer.
-		/// </summary>
+		
+		/// <summary> Send a message to the IRC server and clear the command buffer. </summary>
 		internal void SendCommand( StringBuilder command)
+		{
+			SendCommand( command.ToString() );
+			command.Remove(0, command.Length );
+		}
+		/// <summary> Send a message to the IRC server and clear the command buffer. </summary>
+		internal void SendCommand( string command)
 		{
 			try
 			{
-				writer.WriteLine( command.ToString() );
+				writer.WriteLine( command );
 			}
 			catch( Exception )
 			{
 			}
-			command.Remove(0, command.Length );
 		}
-
+		
 		Stream MakeDataStream() 
 		{
 			Stream raw = client.GetStream();
@@ -223,24 +193,22 @@ namespace Sharkbite.Irc
 			return MCGalaxy.Network.HttpUtil.WrapSSLStream( raw, Hostname );
 		}
 		
-		/// <summary>
-		/// Connect to the IRC server and start listening for messages on a new thread.
-		/// </summary>
+		/// <summary> Connect to the IRC server and start listening for messages on a new thread. </summary>
 		/// <exception cref="SocketException">If a connection cannot be established with the IRC server</exception>
 		public void Connect()
 		{
 			lock ( this )
 			{
-				if( connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
+				if( Connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
 				client = new TcpClient();
 				client.Connect( Hostname, Port );
 				Stream s  = MakeDataStream();
-				connected = true;
+				Connected = true;
 				
 				writer = new StreamWriter( s, encoding );
 				writer.AutoFlush = true;
 				reader = new StreamReader( s, encoding );
-				sender.RegisterConnection();
+				Sender.RegisterConnection();
 			}
 		}
 
@@ -248,7 +216,7 @@ namespace Sharkbite.Irc
 		{
 			lock ( this )
 			{
-				sender.Quit( reason );
+				Sender.Quit( reason );
 				client.Close();
 			}
 		}

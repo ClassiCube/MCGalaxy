@@ -155,10 +155,7 @@ namespace Sharkbite.Irc
 		private readonly Regex channelPattern;
 		private readonly Regex replyRegex;
 
-		/// <summary>
-		/// Create an instance ready to parse
-		/// incoming messages.
-		/// </summary>
+		/// <summary> Create an instance ready to parse incoming messages. </summary>
 		public Listener() 
 		{
 			channelPattern = new Regex( "([#!+&]\\w+)", RegexOptions.Compiled | RegexOptions.Singleline);
