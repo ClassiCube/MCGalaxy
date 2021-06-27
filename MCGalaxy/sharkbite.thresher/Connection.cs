@@ -62,17 +62,13 @@ namespace Sharkbite.Irc
 		public int Port = 6667;	
 		/// <summary> Whether to connect using SSL or not </summary>		
 		public bool UseSSL;
-		/// <summary> The user's nick name. </summary>
-		/// <value>A string which conforms to the IRC nick standard.</value>
+		/// <summary> The user's current nick name. </summary>
 		public string Nick;	
 		/// <summary> The user's 'real' name. </summary>
-		/// <value>A short string with any legal characters.</value>
 		public string RealName;		
 		/// <summary> The user's machine logon name. </summary>
-		/// <value>A short string with any legal characters.</value>
 		public string UserName;		
 		/// <summary> The password for this server. These are seldomly used. Set to '*'  </summary>
-		/// <value>A short string with any legal characters.</value>
 		public string ServerPassword = "*";
 				
 		/// <summary> Whether this client is connected and has successfully registered. </summary>
@@ -83,9 +79,7 @@ namespace Sharkbite.Irc
 		/// <summary> The object that parses messages and notifies the appropriate delegate.
 		public Listener Listener;
 
-		/// <summary>
-		/// Respond to IRC keep-alives.
-		/// </summary>
+		/// <summary> Respond to IRC keep-alives. </summary>
 		/// <param name="message">The message that should be echoed back</param>
 		void KeepAlive(string message)
 		{
@@ -108,6 +102,9 @@ namespace Sharkbite.Irc
 		
 		string GetNewNick()
 		{
+			// prefer just adding _ to end of real nick
+			if (Nick.Length < MAX_NICKNAME_LEN) return Nick + "_";
+			
 			NameGenerator generator = new NameGenerator();
 			string name;
 			do
@@ -122,14 +119,12 @@ namespace Sharkbite.Irc
 		
 		void OnNickError( string badNick, string reason )
 		{
-			//If this is our initial connection attempt
-			if( !Registered )
-			{
-				//Try to reconnect
-				Nick = GetNewNick();
-				SendNick(Nick);
-				SendUser();
-			}
+			if( Registered ) return;
+			
+			// If this is our initial connection attempt
+			Nick = GetNewNick();
+			SendNick(Nick);
+			SendUser();
 		}
 		
 		void RegisterDelegates()
@@ -190,10 +185,10 @@ namespace Sharkbite.Irc
 				writer.AutoFlush = true;
 				reader = new StreamReader( s, encoding );
 				
-				SendPass( ServerPassword );
+				SendPass(ServerPassword);
 				// NOTE: The following two commands may fail if
 				//   nick is already in use by another IRC user
-				SendNick( Nick );
+				SendNick(Nick);
 				SendUser();
 			}
 		}
