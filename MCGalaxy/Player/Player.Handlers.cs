@@ -205,7 +205,9 @@ namespace MCGalaxy {
                 ClientHeldBlock = held;
                 
                 if ((action == 0 || held == Block.Air) && !level.Config.Deletable) {
-                    Message("Deleting blocks is disabled in this level.");
+                    // otherwise if you're holding air and try to place a block, this message would show
+                    if (!level.IsAirAt(x, y, z)) Message("Deleting blocks is disabled in this level.");
+                    
                     RevertBlock(x, y, z); return;
                 } else if (action == 1 && !level.Config.Buildable) {
                     Message("Placing blocks is disabled in this level.");
