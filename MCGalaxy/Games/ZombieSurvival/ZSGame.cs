@@ -222,11 +222,6 @@ namespace MCGalaxy.Games {
             InfectPlayer(zombie, null);
         }
         
-        public override bool HandlesChatMessage(Player p, string message) {
-            if (!Running || p.level != Map) return false;
-            return Picker.HandlesMessage(p, message);
-        }
-        
         void RemoveAssociatedBounties(Player p) {
             BountyData[] bounties = Bounties.Items;
             foreach (BountyData b in bounties) {

@@ -109,10 +109,5 @@ namespace MCGalaxy.Games {
             bool announce = false;
             HandleJoinedLevel(p, Map, Map, ref announce);
         }
-        
-        public override bool HandlesChatMessage(Player p, string message) {
-            if (!Running || p.level != Map) return false;
-            return Picker.HandlesMessage(p, message);
-        }
     }
 }

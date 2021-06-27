@@ -45,6 +45,11 @@ namespace MCGalaxy.Games {
         /// <summary> Saves stats to the database for the given player. </summary>
         protected virtual void SaveStats(Player pl) { }
         
+        public override bool HandlesChatMessage(Player p, string message) {
+            if (!Running || p.level != Map) return false;
+            return Picker.HandlesMessage(p, message);
+        }
+        
         protected abstract void StartGame();
         public virtual void Start(Player p, string map, int rounds) {
             map = GetStartMap(p, map);

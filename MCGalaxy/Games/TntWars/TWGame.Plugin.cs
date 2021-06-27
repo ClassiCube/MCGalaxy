@@ -58,7 +58,6 @@ namespace MCGalaxy.Games {
         }
         
         void HandlePlayerChat(Player p, string message) {
-            if (Picker.HandlesMessage(p, message)) { p.cancelchat = true; return; }
             if (p.level != Map || message.Length == 0 || message[0] != ':') return;
             
             TWTeam team = TeamOf(p);
