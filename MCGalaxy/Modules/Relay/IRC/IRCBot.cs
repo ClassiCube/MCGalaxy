@@ -46,17 +46,17 @@ namespace MCGalaxy.Modules.Relay.IRC {
         
         
         protected override void DoSendMessage(string channel, string message) {
-            if (ready) connection.Sender.Message(channel, message);
+            if (ready) connection.SendMessage(channel, message);
         }
         
         public void Raw(string message) {
             if (!Enabled || !Connected) return;
-            connection.Sender.Raw(message);
+            connection.SendRaw(message);
         }
 
         void Join(string channel) {
             if (String.IsNullOrEmpty(channel)) return;
-            connection.Sender.Join(channel);
+            connection.SendJoin(channel);
         }
         
         
@@ -64,18 +64,18 @@ namespace MCGalaxy.Modules.Relay.IRC {
         
         protected override void DoConnect() {
             ready = false;
+            nick  = Server.Config.IRCNick.Replace(" ", "");
             
             if (connection == null) connection = new Connection(new UTF8Encoding(false));
             connection.Hostname = Server.Config.IRCServer;
             connection.Port     = Server.Config.IRCPort;
             connection.UseSSL   = Server.Config.IRCSSL;
             
-            connection.Nick     = Server.Config.IRCNick.Replace(" ", "");
-            connection.UserName = connection.Nick;
+            connection.Nick     = nick;
+            connection.UserName = nick;
             connection.RealName = Server.SoftwareNameVersioned;
             HookIRCEvents();
             
-            nick = connection.Nick;
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
             connection.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
             connection.Connect();
@@ -222,7 +222,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
         }
         
         void OnJoin(UserInfo user, string channel) {
-            connection.Sender.Names(channel);
+            connection.SendNames(channel);
             AnnounceJoinLeave(user.Nick, "joined", channel);
         }
         
@@ -240,7 +240,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
 
         void OnQuit(UserInfo user, string reason) {
             // Old bot was disconnected, try to reclaim it
-            if (user.Nick == nick) connection.Sender.Nick(nick);
+            if (user.Nick == nick) connection.SendNick(nick);
             nicks.OnLeft(user);
             
             if (user.Nick == nick) return;
@@ -290,7 +290,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
             
             if (Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0) {
                 Logger.Log(LogType.RelayActivity, "Identifying with " + nickServ);
-                connection.Sender.Message(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
+                connection.SendMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
 
@@ -308,7 +308,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
         }
         
         void OnChannelModeChange(UserInfo who, string channel) {
-            connection.Sender.Names(channel);
+            connection.SendNames(channel);
         }
         
         void OnKick(UserInfo user, string channel, string kickee, string reason) {

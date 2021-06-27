@@ -53,7 +53,7 @@ namespace MCGalaxy.Modules.Relay.IRC {
                     chans.Value[index] = prefix + newNick;
                 } else {
                     // should never happen, but just in case
-                    bot.connection.Sender.Names(chans.Key);
+                    bot.connection.SendNames(chans.Key);
                 }
             }
         }

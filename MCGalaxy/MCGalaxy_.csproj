@@ -677,7 +677,6 @@
     <Compile Include="sharkbite.thresher\NameGenerator.cs" />
     <Compile Include="sharkbite.thresher\ReplyCode.cs" />
     <Compile Include="sharkbite.thresher\Rfc2812Util.cs" />
-    <Compile Include="sharkbite.thresher\Sender.cs" />
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
