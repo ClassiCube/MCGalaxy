@@ -32,7 +32,10 @@ namespace MCGalaxy.Commands.Info {
         }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) message = p.name;
+            if (message.Length == 0) {
+                if (p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
+                message = p.name;
+            }
             if (!Formatter.ValidName(p, message, "player")) return;
             
             int matches;
@@ -55,7 +58,7 @@ namespace MCGalaxy.Commands.Info {
         }
 
         public override void Help(Player p) {
-            p.Message("&T/WhoIs [name]");
+            p.Message("&T/WhoIs [player]");
             p.Message("&HDisplays information about that player.");
             p.Message("&HNote: Works for both online and offline players.");
         }

@@ -25,7 +25,11 @@ namespace MCGalaxy.Commands.Info {
         public override bool UseableWhenFrozen { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
+            if (message.Length == 0) {
+                if (p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
+                message = p.name;
+            }
+            if (!Formatter.ValidName(p, message, "player")) return;
 
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);
