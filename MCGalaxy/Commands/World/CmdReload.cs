@@ -58,7 +58,6 @@ namespace MCGalaxy.Commands.World {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 LevelActions.ReloadAll(lvl, p, true);
             }
-            Server.DoGC();
         }
         
         public override void Help(Player p) {

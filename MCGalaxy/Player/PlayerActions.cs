@@ -109,7 +109,9 @@ namespace MCGalaxy {
             return true;
         }
         
-        internal static void ReloadMap(Player p) {
+        /// <summary> Reloads the current level for the given player </summary>
+        /// <remarks> The player's spawn position is changed to their current position </remarks>
+        public static void ReloadMap(Player p) {
             p.Loading = true;
             Entities.DespawnEntities(p);
             p.SendRawMap(p.level, p.level);
