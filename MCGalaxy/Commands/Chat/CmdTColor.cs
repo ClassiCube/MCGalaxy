@@ -37,11 +37,11 @@ namespace MCGalaxy.Commands.Chatting {
             Player who = PlayerInfo.FindExact(target);
             
             if (colName.Length == 0) {
-                MessageFrom(target, who, "had their title color removed");
+                MessageAction(p, target, who, "λACTOR &Sremoved λTARGET title color");
             } else  {
                 col = Matcher.FindColor(p, colName);
                 if (col == null) return;
-                MessageFrom(target, who, "had their title color changed to " + col + Colors.Name(col));
+                MessageAction(p, target, who, "λACTOR &Schanged λTARGET title color" + col + Colors.Name(col));
             }
             
             if (who != null) who.titlecolor = col;

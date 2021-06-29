@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands {
                 UsePlayer(p, data, message, type);
             }
         }
-		
+        
         void UseBot(Player p, CommandData data, string message, string type) {
             string[] args = message.SplitSpaces(3);
             PlayerBot bot = Matcher.FindBots(p, args[1]);
@@ -80,24 +80,26 @@ namespace MCGalaxy.Commands {
         protected virtual void SetOnlineData(Player p, Player who,    string args) { }       
         protected virtual void SetPlayerData(Player p, string target, string args) { }
         
-        protected void MessageFrom(string target, Player who, string message) {
-            if (who == null) {
-                string nick = Player.Console.FormatNick(target);
-                Chat.MessageGlobal(nick + " &S" + message);
+        /// <remarks> λACTOR is replaced with nick of player performing the action </remarks>
+        /// <remarks> λTARGET is replaced with either "their" or "[target nick]'s", depending 
+        /// on whether the actor is the same player as the target or not </remarks>
+        protected void MessageAction(Player actor, string target, Player who, string message) {
+            // TODO: this needs to be compoletely rethought
+            bool global = who == null || actor.IsSuper 
+                            || (!actor.level.SeesServerWideChat && actor.level != who.level);
+            
+            if (actor == who) {
+                message = message.Replace("λACTOR",  "λNICK")
+                                 .Replace("λTARGET", "their");
+                Chat.MessageFrom(who, message);
+            } else if (!global) {
+                message = message.Replace("λACTOR",  actor.ColoredName)
+                                 .Replace("λTARGET", "λNICK&S's");
+                Chat.MessageFrom(who, message);
             } else {
-                Chat.MessageFrom(who, "λNICK &S" + message);
-            }
-        }
-        
-        protected void GetPlayerDataMessageInfo(Player p, string target, out Player who, out string editee, out bool globalMessage) {
-            who = PlayerInfo.FindExact(target);
-            editee = "&S's";
-            if (who != null) {
-                editee = (who.name == p.name) ? "their" : who.ColoredName+editee;
-                globalMessage = p.IsSuper || (!p.level.SeesServerWideChat && who.level != p.level);
-            } else {
-                editee = Player.Console.FormatNick(target)+editee;
-                globalMessage = false;
+                message = message.Replace("λACTOR",  actor.ColoredName)
+                                 .Replace("λTARGET", Player.Console.FormatNick(target) + "&S's");
+                Chat.MessageAll(message);
             }
         }
     }
