@@ -25,8 +25,13 @@ namespace MCGalaxy.Blocks.Physics {
         
         public static void DoWater(Level lvl, ref PhysInfo C) {
             if (lvl.Config.FiniteLiquids) {
-                FinitePhysics.DoWaterOrLava(lvl, ref C);
-            } else if (lvl.Config.RandomFlow) {
+                ushort y = C.Y;
+                if (y >= lvl.Config.EdgeLevel || !lvl.Config.EdgeWater) {
+                    FinitePhysics.DoWaterOrLava(lvl, ref C);
+                    return;
+                }
+            }
+            if (lvl.Config.RandomFlow) {
                 DoWaterRandowFlow(lvl, ref C);
             } else {
                 DoWaterUniformFlow(lvl, ref C);
