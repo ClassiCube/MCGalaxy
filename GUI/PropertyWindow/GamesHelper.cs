@@ -96,8 +96,7 @@ namespace MCGalaxy.Gui {
                 if (selected == null) { Popup.Warning("No map selected"); return; }
                 string map = (string)selected;
 
-                Level lvl;
-                LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
+                LevelConfig lvlCfg = LevelInfo.GetConfig(map);
                 RoundsGameConfig.AddMap(Player.Console, map, lvlCfg, game);
             } catch (Exception ex) { 
                 Logger.LogError("Error adding map to game", ex); 
@@ -110,8 +109,7 @@ namespace MCGalaxy.Gui {
                 if (selected == null) { Popup.Warning("No map selected"); return; }
                 string map = (string)selected;
 
-                Level lvl;
-                LevelConfig lvlCfg = LevelInfo.GetConfig(map, out lvl);
+                LevelConfig lvlCfg = LevelInfo.GetConfig(map);
                 RoundsGameConfig.RemoveMap(Player.Console, map, lvlCfg, game);
             } catch (Exception ex) { 
                 Logger.LogError("Error removing map from game", ex); 

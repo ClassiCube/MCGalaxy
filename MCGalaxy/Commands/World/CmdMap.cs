@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.World {
                 string map = Matcher.FindMaps(p, args[0]);
                 if (map == null) return;
                 
-                PrintMapInfo(p, LevelInfo.GetConfig(map, out lvl));
+                PrintMapInfo(p, LevelInfo.GetConfig(map));
                 return;
             } else {
                 lvl = Matcher.FindLevels(p, args[0]);

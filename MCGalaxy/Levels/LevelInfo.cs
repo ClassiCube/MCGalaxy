@@ -111,7 +111,11 @@ namespace MCGalaxy {
             return "levels/level properties/" + name + ".properties";
         }
         
-        public static LevelConfig GetConfig(string map, out Level lvl) {
+        public static LevelConfig GetConfig(string map) {
+            Level lvl; return GetConfig(map, out lvl);
+        }
+        
+        internal static LevelConfig GetConfig(string map, out Level lvl) {
             lvl = FindExact(map);
             if (lvl != null) return lvl.Config;
             
@@ -155,8 +159,7 @@ namespace MCGalaxy {
         }
         
         public static bool IsRealmOwner(string name, string map) {
-            Level lvl = null;
-            LevelConfig cfg = GetConfig(map, out lvl); 
+            LevelConfig cfg = GetConfig(map); 
             return IsRealmOwner(map, cfg, name);
         }
         

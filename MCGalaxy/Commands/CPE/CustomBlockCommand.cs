@@ -112,8 +112,7 @@ namespace MCGalaxy.Commands.CPE {
             map = Matcher.FindMaps(p, map);
             if (map == null) return null;
             
-            Level lvl = null;
-            LevelConfig cfg = LevelInfo.GetConfig(map, out lvl); 
+            LevelConfig cfg = LevelInfo.GetConfig(map);
             AccessController visit = new LevelAccessController(cfg, map, true);
             
             if (!visit.CheckDetailed(p, data.Rank)) {
