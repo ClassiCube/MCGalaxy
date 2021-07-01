@@ -19,8 +19,9 @@ using System;
 using MCGalaxy.Eco;
 
 namespace MCGalaxy.Commands.Chatting {  
-    public sealed class CmdEat : MessageCmd {
+    public sealed class CmdEat : Command2 {
         public override string name { get { return "Eat"; } }
+        public override string type { get { return CommandTypes.Chat; } }
         
         // Custom command, so can still be used even when economy is disabled
         public override void Use(Player p, string message, CommandData data) {

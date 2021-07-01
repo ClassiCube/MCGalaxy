@@ -189,6 +189,9 @@ namespace MCGalaxy {
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             bool counted = false;
             
+            // Filter out bad words
+            if (Server.Config.ProfanityFiltering) msg = ProfanityFilter.Parse(msg);
+            
             OnChatEvent.Call(scope, source, msg, arg, ref filter, relay);
             foreach (Player pl in players) {
                 if (Ignoring(pl, source)) continue;

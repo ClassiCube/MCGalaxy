@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdAfk : MessageCmd {
+    public sealed class CmdAfk : Command2 {
         public override string name { get { return "AFK"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool SuperUseable { get { return false; } }

@@ -457,9 +457,6 @@ namespace MCGalaxy {
             
             // Put this after vote collection so that people can vote even when chat is moderated
             if (!CheckCanSpeak("speak")) return;
-            
-            // Filter out bad words
-            if (Server.Config.ProfanityFiltering) text = ProfanityFilter.Parse(text);
 
             if (ChatModes.Handle(this, text)) return;
             text = HandleJoker(text);
