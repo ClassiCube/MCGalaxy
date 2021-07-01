@@ -19,7 +19,7 @@ using System;
 using MCGalaxy.Events.PlayerEvents;
 
 namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdMe : MessageCmd {
+    public sealed class CmdMe : Command2 {
         public override string name { get { return "Me"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool MessageBlockRestricted { get { return true; } }
@@ -27,10 +27,11 @@ namespace MCGalaxy.Commands.Chatting {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { p.Message("You"); return; }
-            if (p.joker) { p.Message("Cannot use /me while jokered."); return; }
+            if (p.joker) { p.Message("Cannot use /me while jokered."); return; }         
+            if (!MessageCmd.CanSpeak(p, "Me")) return;
             
             string msg = p.color + "*" + Colors.StripUsed(p.DisplayName) + " " + message;
-            TryMessage(p, msg, true);
+            Chat.MessageChat(p, msg, null, true);
         }
         
         public override void Help(Player p) {
