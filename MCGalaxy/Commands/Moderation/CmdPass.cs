@@ -52,14 +52,6 @@ namespace MCGalaxy.Commands.Moderation {
                 VerifyPassword(p, message);
             }
         }
-
-        static void StorePassword(string curPath, string name, string pass) {
-            byte[] hash = ComputeNewHash(name, pass);
-            
-            // In case was using .dat password before
-            if (curPath != null) File.Delete(curPath);
-            File.WriteAllBytes(NewHashPath(name), hash);
-        }
         
         static void VerifyPassword(Player p, string password) {
             if (!p.Unverified) { p.Message("&WYou are already verified."); return; }
@@ -113,87 +105,6 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));
             }
         }
-
-        
-        static byte[] ComputeOldHash(string name, string pass) {
-            // Pointless, but kept for backwards compatibility
-            pass = pass.Replace("<", "(");
-            pass = pass.Replace(">", ")");
-
-            MD5 hash = MD5.Create();
-            byte[] nameB = hash.ComputeHash(Encoding.ASCII.GetBytes(name));
-            // This line means that non-ASCII characters in passwords are
-            // all encoded as the "?" character.
-            byte[] dataB = hash.ComputeHash(Encoding.ASCII.GetBytes(pass));
-            
-            byte[] result = new byte[nameB.Length + dataB.Length];
-            Array.Copy(nameB, 0, result, 0,            nameB.Length);
-            Array.Copy(dataB, 0, result, nameB.Length, dataB.Length);
-            return hash.ComputeHash(result);
-        }
-
-        static byte[] ComputeNewHash(string name, string pass) {
-            // The constant string added to the username salt is to mitigate
-            // rainbox tables. We should really have a unique salt for each
-            // user, but this is close enough.
-            byte[] data = Encoding.UTF8.GetBytes("0bec662b-416f-450c-8f50-664fd4a41d49" + name.ToLower() + " " + pass);
-            return SHA256.Create().ComputeHash(data);
-        }
-        
-        static bool ArraysEqual(byte[] a, byte[] b) {
-            if (a.Length != b.Length) return false;
-            
-            for (int i = 0; i < a.Length; i++) {
-                if (a[i] != b[i]) return false;
-            }
-            return true;
-        }
-
-        static bool CheckNewHash(string path, string name, string pass) {
-            byte[] stored   = File.ReadAllBytes(path);
-            byte[] computed = ComputeNewHash(name, pass);
-            return ArraysEqual(computed, stored);
-        }
-        
-        static bool CheckOldHash(string path, string name, string pass) {
-            byte[] stored   = File.ReadAllBytes(path);
-            byte[] computed = ComputeOldHash(name, pass);
-
-            // Old passwords stored UTF8 string instead of just the raw 16 byte hashes
-            // We need to support both since this behaviour was accidentally changed
-            if (stored.Length != computed.Length) {
-                return Encoding.UTF8.GetString(stored) == Encoding.UTF8.GetString(computed);
-            }
-            return ArraysEqual(computed, stored);
-        }
-
-        
-        static string NewHashPath(string name) {
-            // don't want '+' at end of names
-            return passDir + name.RemoveLastPlus().ToLower() + ".pwd";
-        }
-        
-        static string FindOldHashPath(string name) {
-            string path = passDir + name + ".dat";
-            if (File.Exists(path)) return path;
-
-            // Have to fallback on this for case sensitive file systems
-            string[] files = AtomicIO.TryGetFiles(passDir, "*.dat");
-            if (files == null) return null;
-            
-            foreach (string file in files) {
-                if (file.CaselessEq(path)) return file;
-            }
-            return null;
-        }
-        
-        static string FindHashPath(string name) {
-            string path = NewHashPath(name);
-            if (File.Exists(path)) return path;
-            return FindOldHashPath(name);
-        }
-
-        public static bool HasPassword(string name) { return FindHashPath(name) != null; }
         
         public override void Help(Player p) {
             p.Message("&T/Pass reset [player] &H- Resets the password for that player");

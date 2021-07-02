@@ -373,11 +373,7 @@ namespace MCGalaxy {
             Unverified = Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank;
             if (!Unverified) return;
             
-            if (!Commands.Moderation.CmdPass.HasPassword(name)) {
-                Message("&WPlease set your admin verification password with &T/SetPass [password]!");
-            } else {
-                Message("&WPlease complete admin verification with &T/Pass [password]!");
-            }
+            Authenticator.Current.NeedVerification(this);
         }
         
           

@@ -164,7 +164,7 @@ namespace MCGalaxy {
         }
         
         static void LogSocketErrors(SocketException ex, StringBuilder sb) {
-            sb.AppendLine("Error: " + ex.SocketErrorCode + " (" + ex.NativeErrorCode + ")");
+            sb.AppendLine("Error: " + ex.SocketErrorCode);
         }
     }
 }

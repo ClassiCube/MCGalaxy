@@ -52,7 +52,7 @@ namespace MCGalaxy {
         /// <summary> Informs the given player that they should verify, 
         /// otherwise they will be unable to perform some actions </summary>
         public virtual void NeedVerification(Player p) {
-            if (!Commands.Moderation.CmdPass.HasPassword(p.name)) {
+            if (!HasPassword(p.name)) {
                 p.Message("&WPlease set your admin verification password with &T/SetPass [password]!");
             } else {
                 p.Message("&WPlease complete admin verification with &T/Pass [password]!");

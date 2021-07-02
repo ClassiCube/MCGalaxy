@@ -265,7 +265,7 @@ namespace MCGalaxy {
             
             if (restarting) {
                 // first try to use excevp to restart in CLI mode under mono 
-                // - see detailed comment in Excvp_Hack for why this is required
+                // - see detailed comment in HACK_Execvp for why this is required
                 if (HACK_TryExecvp()) HACK_Execvp();
                 Process.Start(RestartPath);
             }
@@ -285,9 +285,7 @@ namespace MCGalaxy {
             //  is called, all FDs (including standard input) are also closed.
             // Unfortunately, this causes the new server process to constantly error with
             //   Type: IOException
-            //   Source: mscorlib
             //   Message: Invalid handle to path "server_folder_path/[Unknown]"
-            //   Target: ReadData
             //   Trace:   at System.IO.FileStream.ReadData (System.Runtime.InteropServices.SafeHandle safeHandle, System.Byte[] buf, System.Int32 offset, System.Int32 count) [0x0002d]
             //     at System.IO.FileStream.ReadInternal (System.Byte[] dest, System.Int32 offset, System.Int32 count) [0x00026]
             //     at System.IO.FileStream.Read (System.Byte[] array, System.Int32 offset, System.Int32 count) [0x000a1] 
