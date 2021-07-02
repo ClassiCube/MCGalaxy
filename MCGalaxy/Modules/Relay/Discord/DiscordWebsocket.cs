@@ -34,13 +34,16 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
+        public bool CanReconnect = true;
+        
+        /// <summary> Whether presence support is enabled </summary>
+        public bool Presence = true;
         /// <summary> Presence status (E.g. online) </summary>
         public PresenceStatus Status;
         /// <summary> Presence activity (e.g. Playing) </summary>
         public PresenceActivity Activity;
         /// <summary> Callback function to retrieve the activity status message </summary>
         public Func<string> GetStatus;
-        public bool CanReconnect = true;
         
         /// <summary> Callback invoked when a ready event has been received </summary>
         public Action<JsonObject> OnReady;
@@ -240,6 +243,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         JsonObject MakePresence() {
+            if (!Presence) return null;
+        	
             JsonObject activity = new JsonObject()
             {
                 { "name", GetStatus() },

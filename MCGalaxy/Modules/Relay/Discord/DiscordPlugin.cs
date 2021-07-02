@@ -40,6 +40,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         [ConfigString("ignored-user-ids", null, "", true)]
         public string IgnoredUsers = "";
         
+        [ConfigBool("presence-enabled", null, true)]
+        public bool PresenceEnabled = true;
         [ConfigEnum("presence-status", null, PresenceStatus.online, typeof(PresenceStatus))]
         public PresenceStatus Status = PresenceStatus.online;        
         [ConfigEnum("presence-activity", null, PresenceActivity.Playing, typeof(PresenceActivity))]

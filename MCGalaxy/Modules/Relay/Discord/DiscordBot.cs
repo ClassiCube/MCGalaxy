@@ -55,7 +55,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
         
         protected override void DoConnect() {
             socket = new DiscordWebsocket(); 
-            socket.Token     = Config.BotToken;
+            socket.Token     = Config.BotToken;            
+            socket.Presence  = Config.PresenceEnabled;
             socket.Status    = Config.Status;
             socket.Activity  = Config.Activity;
             socket.GetStatus = GetStatusMessage;
