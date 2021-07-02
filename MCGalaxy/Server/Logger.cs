@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 
@@ -139,17 +140,31 @@ namespace MCGalaxy {
             try { sb.AppendLine("Target: " + ex.TargetSite.Name); } catch { }
             try { sb.AppendLine("Trace: " + ex.StackTrace); } catch { }
             
+            // Exception-specific extra details
+            try {
+                ReflectionTypeLoadException refEx = ex as ReflectionTypeLoadException;
+                if (refEx != null) LogLoaderErrors(refEx, sb);
+            } catch { }
+            
+            try {
+                SocketException sockEx = ex as SocketException;
+                if (sockEx != null) LogSocketErrors(sockEx, sb);
+            } catch { }
+        }
+        
+        static void LogLoaderErrors(ReflectionTypeLoadException ex, StringBuilder sb) {
             // For errors with loading plugins (e.g. missing dependancy) you get a 
             //   Message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
             // which is pretty useless by itself, so specifically handle this case
-            try {
-                ReflectionTypeLoadException refEx = ex as ReflectionTypeLoadException;
-                if (refEx == null) return;
-                
-                sb.AppendLine("## Loader exceptions ##");
-                foreach (Exception loadEx in refEx.LoaderExceptions)
-                    DescribeError(loadEx, sb);
-            } catch { }
+            sb.AppendLine("## Loader exceptions ##");
+            
+            foreach (Exception loadEx in ex.LoaderExceptions) {
+                DescribeError(loadEx, sb);
+            }
+        }
+        
+        static void LogSocketErrors(SocketException ex, StringBuilder sb) {
+            sb.AppendLine("Error: " + ex.SocketErrorCode + " (" + ex.NativeErrorCode + ")");
         }
     }
 }
