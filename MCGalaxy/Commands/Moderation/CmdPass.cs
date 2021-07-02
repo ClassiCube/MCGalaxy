@@ -18,9 +18,6 @@
  
  */
 using System;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command2 {
@@ -33,7 +30,6 @@ namespace MCGalaxy.Commands.Moderation {
             get { return new[] { new CommandAlias("SetPass", "set"), new CommandAlias("ResetPass", "reset") }; }
         }
 
-        const string passDir = "extra/passwords/";
         public override void Use(Player p, string message, CommandData data) {
             if (data.Rank < Server.Config.VerifyAdminsRank) {
                 Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", Server.Config.VerifyAdminsRank); return;
@@ -41,7 +37,6 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (!Server.Config.verifyadmins) { p.Message("Admin verification is not currently enabled."); return; }
             if (message.Length == 0) { Help(p); return; }
-            if (!Directory.Exists(passDir)) Directory.CreateDirectory(passDir);
             
             string[] args = message.SplitSpaces(2);
             if (args.Length == 2 && args[0].CaselessEq("set")) {

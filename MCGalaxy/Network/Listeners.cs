@@ -51,24 +51,6 @@ namespace MCGalaxy.Network {
             }
         }
         
-        void EnableAddressReuse() {
-        	// https://stackoverflow.com/questions/3229860/what-is-the-meaning-of-so-reuseaddr-setsockopt-option-linux
-        	// http://www.softlab.ntua.gr/facilities/documentation/unix/unix-socket-faq/unix-socket-faq-4.html#ss4.2
-        	// https://docs.microsoft.com/en-us/windows/win32/winsock/graceful-shutdown-linger-options-and-socket-closure-2
-        	// https://stackoverflow.com/questions/45535077/address-in-use-on-tcp-socket-bind
-        	// https://stackoverflow.com/questions/3757289/when-is-tcp-option-so-linger-0-required
-        	// https://superuser.com/questions/173535/what-are-close-wait-and-time-wait-states
-        	// http://www.serverframework.com/asynchronousevents/2011/01/time-wait-and-its-design-implications-for-protocols-and-scalable-servers.html
-        	// https://superuser.com/questions/173535/what-are-close-wait-and-time-wait-states
-        	// https://stackoverflow.com/questions/35322550/is-there-a-way-to-enable-the-so-reuseaddr-socket-option-when-using-system-net-ht
-        	try {
-        		socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-            } catch {
-                // not really a critical issue if this fails to work
-                // TODO only do this on Mono
-            }
-        }
-        
         public override void Listen(IPAddress ip, int port) {
             if (IP == ip && Port == port) return;
             Close();
@@ -77,7 +59,6 @@ namespace MCGalaxy.Network {
             try {
                 socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 DisableIPV6OnlyListener();
-                EnableAddressReuse();
                 
                 socket.Bind(new IPEndPoint(ip, port));
                 socket.Listen((int)SocketOptionName.MaxConnections);
