@@ -19,12 +19,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Xml;
-
+using MCGalaxy.Network;
 //This upnp class comes from http://www.codeproject.com/Articles/27992/NAT-Traversal-with-UPnP-in-C, Modified for use with MCForge
 
-namespace MCGalaxy.Core {
-
-    public sealed class UPnP {
+namespace MCGalaxy {
+    public static class UPnP {
 
         public static TimeSpan Timeout = TimeSpan.FromSeconds(3);
         
@@ -85,7 +84,7 @@ namespace MCGalaxy.Core {
             if (String.IsNullOrEmpty(_serviceUrl) )
                 throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             
-            XmlDocument xdoc = SOAPRequest(_serviceUrl, 
+            string xdoc = SOAPRequest(_serviceUrl, 
                 "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
                 "<NewRemoteHost></NewRemoteHost>" +
                 "<NewExternalPort>" + port + "</NewExternalPort>" +
@@ -102,7 +101,7 @@ namespace MCGalaxy.Core {
             if (String.IsNullOrEmpty(_serviceUrl) )
                 throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             
-            XmlDocument xdoc = SOAPRequest(_serviceUrl,
+            string xdoc = SOAPRequest(_serviceUrl,
             "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
             "<NewRemoteHost></NewRemoteHost>" +
             "<NewExternalPort>" + port + "</NewExternalPort>" +
@@ -156,11 +155,14 @@ namespace MCGalaxy.Core {
             return "?";
         }        
 
-        static XmlDocument SOAPRequest(string url, string soap, string function) {
-            string req = "<?xml version=\"1.0\"?>" +
-            "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-            "<s:Body>" + soap + "</s:Body>" +
-            "</s:Envelope>";
+        /// <summary> Performs a XML SOAP request </summary>
+        /// <returns> XML response from the service </returns>
+        static string SOAPRequest(string url, string soap, string function) {
+            string req = 
+                "<?xml version=\"1.0\"?>" +
+                "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                "<s:Body>" + soap + "</s:Body>" +
+                "</s:Envelope>";
             
             WebRequest r = HttpWebRequest.Create(url);
             r.Method = "POST";            
@@ -168,13 +170,10 @@ namespace MCGalaxy.Core {
             r.ContentType = "text/xml; charset=\"utf-8\"";
             
             byte[] data = Encoding.UTF8.GetBytes(req);
-            r.ContentLength = data.Length;
-            r.GetRequestStream().Write(data, 0, data.Length);
+            HttpUtil.SetRequestData(r, data);
             
-            XmlDocument doc = new XmlDocument();
             WebResponse res = r.GetResponse();
-            doc.Load(res.GetResponseStream());
-            return doc;
+            return HttpUtil.GetResponseText(res);
         }
     }
 }

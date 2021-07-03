@@ -133,11 +133,10 @@ namespace MCGalaxy {
         }
 
         static void DescribeError(Exception ex, StringBuilder sb) {
-            // Attempt to gather this info.  Skip anything that you can't read for whatever reason
+            // Attempt to gather this info. Skip anything that you can't read for whatever reason
             try { sb.AppendLine("Type: " + ex.GetType().Name); } catch { }
             try { sb.AppendLine("Source: " + ex.Source); } catch { }
             try { sb.AppendLine("Message: " + ex.Message); } catch { }
-            try { sb.AppendLine("Target: " + ex.TargetSite.Name); } catch { }
             try { sb.AppendLine("Trace: " + ex.StackTrace); } catch { }
             
             // Exception-specific extra details
