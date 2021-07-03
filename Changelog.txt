@@ -1,3 +1,34 @@
+v 1.9.3.3
+Added: Allow overriding default authentication mechanisms
+Fixed: /ccols edit not working with non-ascii colour codes
+Fixed: Can still vote in all games when muted now
+Fixed: Prevent players using /reload inside of games (thanks forkiesassds)
+Fixed: Discord bot shouldn't reply to .who if the given channel is not specified as a channel to listen on
+Fixed: IPv6 link local addresses not getting treated as LAN addresses
+Fixed: /map deletable also not letting you place blocks
+Fixed: can't /banip IPv6 addresses
+Fixed: /baninfo erroring with MySQL
+Fixed: /me not incrementing messages written in /info
+Fixed: Profanity filtering not consistently apply to all methods of player chat
+Fixed: When map has deletable off, and you right click while holding air, a 'deleting blocks has been disabled in this level' message would show
+Improved: When logging invalid config keys, it helps to also log the invalid value
+Improved: Allow adding custom compilers for scripting
+Improved: Colour error/warning messages in CLI/GUI log
+Improved: Include exception message when logging errors to console/GUI
+Improved: Unflood should pause instead of stopping physics
+Improved: enable dual stack IPv4/IPv6 listener on Window when possible
+Improved: Convert IPv4 mapped addresses to IPv4 addresses
+Improved: Plugins should always load after main level has been loaded
+Improved: If GUI .exe version differs from .dll version, show a warning message box
+Improved: Allow changing Discord bot presence status and activity type
+Improved: IRC logs unhandled errors properly now
+Improved: Discord bot doesn't log I/O errors to server error logs
+Improved: /Color, /Nick, /Title now say who changed them and also works better with localchat 
+Improved: Discord/IRC bot shows name of unknown command now
+Improved: Try to add _ to end of IRC bot nick when nick collision occurs
+Improved: Allow disabling Discord bot presence
+Improved: /seen should default to showing your first/last login
+
 v 1.9.3.2
 Fixed: Discord bot not reconnecting after 3 websocket dropouts
 Fixed: Discord bot not sending messages to Discord during websocket reconnect
