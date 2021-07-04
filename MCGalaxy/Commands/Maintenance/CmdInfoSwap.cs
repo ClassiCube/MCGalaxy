@@ -69,11 +69,10 @@ namespace MCGalaxy.Commands.Maintenance {
         
         static void SwapGroups(string src, string dst, Group srcGroup, Group dstGroup) {
             srcGroup.Players.Remove(src);
-            srcGroup.Players.Add(dst);
-            srcGroup.Players.Save();
-            
             dstGroup.Players.Remove(dst);
+            srcGroup.Players.Add(dst);
             dstGroup.Players.Add(src);
+            srcGroup.Players.Save();
             dstGroup.Players.Save();
         }
         
