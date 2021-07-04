@@ -58,7 +58,8 @@ namespace MCGalaxy.Network {
             //   https://superuser.com/questions/173535/what-are-close-wait-and-time-wait-states
             //   https://stackoverflow.com/questions/14388706/how-do-so-reuseaddr-and-so-reuseport-differ
             // SO_REUSEADDR behaves differently on Windows though, so don't enable it there
-            //  (note that this code is required for WINE, therefore check if running in mono)
+            //  (note that this code is required for WINE, therefore just check if running in mono)
+            //  (see WS_SO_REUSEADDR case handling in WS_setsockopt in WINE/dlls/ws2_32/socket.c)
             if (!Server.RunningOnMono()) return;
             
             try {

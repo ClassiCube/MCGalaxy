@@ -65,8 +65,8 @@ namespace MCGalaxy {
                 if (File.Exists(file)) {
                     Logger.Log(LogType.SystemActivity, file + " download succesful!");
                 }
-            } catch {
-                Logger.Log(LogType.Warning, "Downloading {0} failed, please try again later", file);
+            } catch (Exception ex) {
+                Logger.LogError("Downloading " + file +" failed, try again later", ex);
             }
         }
         
