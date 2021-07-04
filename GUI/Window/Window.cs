@@ -144,8 +144,14 @@ Trying to mix two versions is unsupported - you may experience issues";
             if (!Server.Config.FileLogging[(int)type]) return;
             
             if (InvokeRequired) {
-                BeginInvoke(logCallback, type, message); return;
-            }           
+                try {
+                    BeginInvoke(logCallback, type, message); 
+                } catch (InvalidOperationException) {
+                    // This exception is thrown when trying to log
+                    //  messages after window has already been closed
+                }
+                return;
+            }
             if (Server.shuttingDown) return;
             string newline = Environment.NewLine;
             
