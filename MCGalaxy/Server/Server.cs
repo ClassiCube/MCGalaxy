@@ -277,7 +277,7 @@ namespace MCGalaxy {
         
         static bool HACK_TryExecvp() {
             return CLIMode && Environment.OSVersion.Platform == PlatformID.Unix 
-                && Type.GetType("Mono.Runtime") != null;
+                && RunningOnMono();
         }
         
         static void HACK_Execvp() {
@@ -306,6 +306,10 @@ namespace MCGalaxy {
                 execvp("mono", new string[] { "mono", RestartPath });
             } catch {
             }
+        }
+        
+        public static bool RunningOnMono() {
+            return Type.GetType("Mono.Runtime") != null;
         }
 
         public static void UpdateUrl(string url) {

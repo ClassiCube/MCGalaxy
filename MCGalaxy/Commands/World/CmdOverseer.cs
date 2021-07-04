@@ -111,8 +111,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static string NextLevel(Player p) {
-            string level = p.name.ToLower();
-            int realms   = p.group.OverseerMaps;
+            int realms = p.group.OverseerMaps;
             
             for (int i = 1; realms > 0; i++) {
             	string map = GetLevelName(p, i);

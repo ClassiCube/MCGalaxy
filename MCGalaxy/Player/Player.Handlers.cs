@@ -467,9 +467,8 @@ namespace MCGalaxy {
         }
         
         bool FilterChat(ref string text, byte continued) {
-            // handles the /womid client message, which displays the WoM vrersion
+            // Handle /womid [version] which informs the server of the WoM client version
             if (text.StartsWith("/womid")) {
-                string version = (text.Length <= 21 ? text.Substring(text.IndexOf(' ') + 1) : text.Substring(7, 15));
                 UsingWom = true;
                 return true;
             }
