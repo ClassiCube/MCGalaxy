@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using MCGalaxy.Commands;
 using MCGalaxy.Eco;
@@ -22,7 +23,8 @@ using MCGalaxy.Games;
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {
         ZombieProperties zsSettings = new ZombieProperties();
-
+        internal Icon _icon;
+        
         public PropertyWindow() {
             InitializeComponent();
             zsSettings.LoadFromServer();
@@ -32,6 +34,9 @@ namespace MCGalaxy.Gui {
         public void RunOnUI_Async(Action act) { BeginInvoke(act); }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
+            // try to use same icon as main window
+            try { Icon = _icon; } catch { }
+            
             OnMapsChangedEvent.Register(HandleMapsChanged, Priority.Low);
             OnStateChangedEvent.Register(HandleStateChanged, Priority.Low);
             GuiPerms.UpdateRankNames();
