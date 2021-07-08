@@ -206,24 +206,19 @@ namespace MCGalaxy.Scripting {
         const int maxLog = 2;
         /// <summary> Attempts to compile the given source code file to a .dll file. </summary>
         /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
-        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>      
+        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
         public CompilerResults Compile(string srcPath, string dstPath) {
             return Compile(new [] { srcPath }, dstPath);
         }
         
         /// <summary> Attempts to compile the given source code files to a .dll file. </summary>
         /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
-        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>      
+        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
         public CompilerResults Compile(string[] srcPaths, string dstPath) {
-            List<List<string>> sources = new List<List<string>>();
-            foreach (string path in srcPaths) {
-                sources.Add(Utils.ReadAllLinesList(path));
-            }
-            
-            CompilerResults results = Compile(sources, dstPath);
+            CompilerResults results = DoCompile(srcPaths, dstPath);
             if (!results.Errors.HasErrors) return results;
             
-            List<string> source = sources[0]; // TODO fix
+            List<string> source = Utils.ReadAllLinesList(srcPaths[0]); // TODO fix
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("############################################################");
             sb.AppendLine("Errors when compiling " + srcPaths.Join());
@@ -231,7 +226,7 @@ namespace MCGalaxy.Scripting {
             sb.AppendLine();
             
             foreach (CompilerError err in results.Errors) {
-                string type = err.IsWarning ? "Warning" : "Error";                
+                string type = err.IsWarning ? "Warning" : "Error";
                 sb.AppendLine(type + " on line " + err.Line + ":");
                 
                 if (err.Line > 0) sb.AppendLine(source[err.Line - 1]);
@@ -250,7 +245,7 @@ namespace MCGalaxy.Scripting {
         }
         
         /// <summary> Compiles the given source code. </summary>
-        protected abstract CompilerResults Compile(List<List<string>> sources, string dstPath);
+        protected abstract CompilerResults DoCompile(string[] srcPaths, string dstPath);
         
         
         public bool TryCompile(Player p, string type, string[] srcs, string dst) {
@@ -298,44 +293,50 @@ namespace MCGalaxy.Scripting {
                 compiler = CreateProvider();
                 if (compiler != null) return;
                 
-                Logger.Log(LogType.Warning, 
-                           "WARNING: {0} compiler is missing, you will be unable to compile {1} files.", 
+                Logger.Log(LogType.Warning,
+                           "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
                            FullName, FileExtension);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
             }
-        }       
-        
-        static void AddReferences(List<string> lines, CompilerParameters args) {
-            // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
-            for (int i = 0; i < lines.Count; i++) {
-                string line = lines[i];
-                if (!line.CaselessStarts("//reference ")) break;
-                
-                int index = line.IndexOf(' ') + 1;
-                // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
-                string assem = line.Substring(index).Replace(";", "");
-                
-                args.ReferencedAssemblies.Add(assem);
-            }
-            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
         }
         
-        protected override CompilerResults Compile(List<List<string>> lines, string dstPath) {
+        static void AddReferences(string path, CompilerParameters args) {
+            // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
+            using (StreamReader r = new StreamReader(path)) {
+                string line;
+                
+                while ((line = r.ReadLine()) != null) {
+                    if (!line.CaselessStarts("//reference ")) break;
+                    
+                    int index = line.IndexOf(' ') + 1;
+                    // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
+                    string assem = line.Substring(index).Replace(";", "");
+                    
+                    args.ReferencedAssemblies.Add(assem);
+                }
+            }
+        }
+        
+        protected override CompilerResults DoCompile(string[] srcPaths, string dstPath) {
             CompilerParameters args = new CompilerParameters();
-            args.GenerateExecutable = false;
+            args.GenerateExecutable      = false;
+            args.IncludeDebugInformation = true;
+            
             if (dstPath != null) args.OutputAssembly   = dstPath;
             if (dstPath == null) args.GenerateInMemory = true;
             
-            string[] sources = new string[lines.Count];
-            for (int i = 0; i < sources.Length; i++) {
-                string source = lines[i].Join(Environment.NewLine);
-                AddReferences(lines[i], args);
-                sources[i] = source;
+            for (int i = 0; i < srcPaths.Length; i++) {
+                // CodeDomProvider doesn't work properly with relative paths
+                string path = Path.GetFullPath(srcPaths[i]);
+                
+                AddReferences(path, args);
+                srcPaths[i] = path;
             }
+            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
             
             PrepareArgs(args);
             InitCompiler();
-            return compiler.CompileAssemblyFromSource(args, sources);
+            return compiler.CompileAssemblyFromFile(args, srcPaths);
         }
     }
 }
