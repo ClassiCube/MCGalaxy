@@ -321,7 +321,7 @@ Trying to mix two versions is unsupported - you may experience issues";
         void btnProperties_Click(object sender, EventArgs e) {
             if (!hasPropsForm) {
                 propsForm = new PropertyWindow();
-                // just doing propForms.Icon = Icon; here doesn't show on Mono
+                // just doing 'propForms.Icon = Icon;' doesn't show on Mono
                 try { propsForm._icon = Icon; } catch { }
                 hasPropsForm = true; 
             }

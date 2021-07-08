@@ -171,6 +171,7 @@ namespace MCGalaxy.Scripting {
         
         public static List<ICompiler> Compilers = new List<ICompiler>() { CS, VB };
         
+        
         public static ICompiler Lookup(string name, Player p) {
             if (name.Length == 0) return Compilers[0];
             
@@ -183,7 +184,6 @@ namespace MCGalaxy.Scripting {
                       Compilers.Join(c => c.ShortName + " (" + c.FullName + ")"));
             return null;
         }
-
 
         static string FormatSource(string source, params string[] args) {
             // Make sure we use the OS's line endings
@@ -202,18 +202,31 @@ namespace MCGalaxy.Scripting {
             return FormatSource(PluginSkeleton, plugin, creator, Server.Version);
         }
         
+        
         const int maxLog = 2;
         /// <summary> Attempts to compile the given source code file to a .dll file. </summary>
         /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
         /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>      
         public CompilerResults Compile(string srcPath, string dstPath) {
-            List<string> source     = Utils.ReadAllLinesList(srcPath);
-            CompilerResults results = Compile(source, dstPath);
+            return Compile(new [] { srcPath }, dstPath);
+        }
+        
+        /// <summary> Attempts to compile the given source code files to a .dll file. </summary>
+        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
+        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>      
+        public CompilerResults Compile(string[] srcPaths, string dstPath) {
+            List<List<string>> sources = new List<List<string>>();
+            foreach (string path in srcPaths) {
+                sources.Add(Utils.ReadAllLinesList(path));
+            }
+            
+            CompilerResults results = Compile(sources, dstPath);
             if (!results.Errors.HasErrors) return results;
             
+            List<string> source = sources[0]; // TODO fix
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("############################################################");
-            sb.AppendLine("Errors when compiling " + srcPath);
+            sb.AppendLine("Errors when compiling " + srcPaths.Join());
             sb.AppendLine("############################################################");
             sb.AppendLine();
             
@@ -236,6 +249,22 @@ namespace MCGalaxy.Scripting {
             return results;
         }
         
+        /// <summary> Compiles the given source code. </summary>
+        protected abstract CompilerResults Compile(List<List<string>> sources, string dstPath);
+        
+        
+        public bool TryCompile(Player p, string type, string[] srcs, string dst) {
+            CompilerResults results = Compile(srcs, dst);
+            if (!results.Errors.HasErrors) {
+                p.Message("{0} compiled successfully.", type);
+                return true;
+            }
+            
+            SummariseErrors(results, p);
+            p.Message("&WCompilation error. See " + ErrorPath + " for more information.");
+            return false;
+        }
+        
         /// <summary> Messages a summary of warnings and errors to the given player. </summary>
         public static void SummariseErrors(CompilerResults results, Player p) {
             int logged = 0;
@@ -250,9 +279,6 @@ namespace MCGalaxy.Scripting {
             if (results.Errors.Count <= maxLog) return;
             p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
         }
-        
-        /// <summary> Compiles the given source code. </summary>
-        protected abstract CompilerResults Compile(List<string> source, string dstPath);
     }
     
     /// <summary> Compiles source code files from a particular language into a .dll file, using a CodeDomProvider for the compiler. </summary>
@@ -294,17 +320,22 @@ namespace MCGalaxy.Scripting {
             args.ReferencedAssemblies.Add("MCGalaxy_.dll");
         }
         
-        protected override CompilerResults Compile(List<string> lines, string dstPath) {
+        protected override CompilerResults Compile(List<List<string>> lines, string dstPath) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable = false;
             if (dstPath != null) args.OutputAssembly   = dstPath;
             if (dstPath == null) args.GenerateInMemory = true;
             
-            string source = lines.Join(Environment.NewLine);
-            AddReferences(lines, args);
+            string[] sources = new string[lines.Count];
+            for (int i = 0; i < sources.Length; i++) {
+                string source = lines[i].Join(Environment.NewLine);
+                AddReferences(lines[i], args);
+                sources[i] = source;
+            }
+            
             PrepareArgs(args);
             InitCompiler();
-            return compiler.CompileAssemblyFromSource(args, source);
+            return compiler.CompileAssemblyFromSource(args, sources);
         }
     }
 }

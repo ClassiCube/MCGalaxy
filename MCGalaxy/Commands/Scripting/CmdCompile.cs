@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.CodeDom.Compiler;
 using System.IO;
 using MCGalaxy.Scripting;
 
@@ -34,20 +33,19 @@ namespace MCGalaxy.Commands.Scripting {
             string language  = args.Length > 1 ? args[1] : "";
             ICompiler engine = ICompiler.Lookup(language, p);
             if (engine == null) return;
-
-            string srcPath = engine.CommandPath(args[0]);
-            string dstPath = IScripting.CommandPath(args[0]);
-            if (!File.Exists(srcPath)) {
-                p.Message("File &9{0} &Snot found.", srcPath); return;
-            }
+ 
+            // either "source" or "source1,source2,source3"
+            string[] paths = args[0].SplitComma();
+            string dstPath = IScripting.CommandPath(paths[0]);
             
-            CompilerResults results = engine.Compile(srcPath, dstPath);
-            if (!results.Errors.HasErrors) {
-                p.Message("Command compiled successfully.");
-            } else {
-                ICompiler.SummariseErrors(results, p);
-                p.Message("&WCompilation error. See " + ICompiler.ErrorPath + " for more information.");
+            for (int i = 0; i < paths.Length; i++) {
+                string srcPath = engine.CommandPath(paths[i]);
+                if (File.Exists(srcPath)) { paths[i] = srcPath; continue; }
+                
+                p.Message("File &9{0} &Snot found.", srcPath);
+                return;
             }
+            engine.TryCompile(p, "Command", paths, dstPath);
         }
 
         public override void Help(Player p) {

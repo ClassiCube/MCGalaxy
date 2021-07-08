@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.CodeDom.Compiler;
 using System.IO;
 using MCGalaxy.Scripting;
 
@@ -62,19 +61,18 @@ namespace MCGalaxy.Commands.Scripting {
             ICompiler engine = ICompiler.Lookup(language, p);
             if (engine == null) return;
             
-            string srcPath = "plugins/" + name + engine.FileExtension;
-            string dstPath = IScripting.PluginPath(name);  
-            if (!File.Exists(srcPath)) {
-                p.Message("File &9{0} &Snot found.", srcPath); return;
+            // either "source" or "source1,source2,source3"
+            string[] paths = name.SplitComma();
+            string dstPath = IScripting.CommandPath(name);
+            
+            for (int i = 0; i < paths.Length; i++) {
+                string srcPath = engine.PluginPath(paths[i]);
+                if (File.Exists(srcPath)) { paths[i] = srcPath; continue; }
+                
+                p.Message("File &9{0} &Snot found.", srcPath);
+                return;
             }
-               
-            CompilerResults results = engine.Compile(srcPath, dstPath);
-            if (!results.Errors.HasErrors) {
-                p.Message("Plugin compiled successfully.");
-            } else {
-                ICompiler.SummariseErrors(results, p);
-                p.Message("&WCompilation error. See " + ICompiler.ErrorPath + " for more information.");
-            }
+            engine.TryCompile(p, "Plugin", paths, dstPath);
         }
         
         static void LoadPlugin(Player p, string name) {
