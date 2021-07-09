@@ -186,10 +186,9 @@ namespace MCGalaxy.Scripting {
         }
 
         static string FormatSource(string source, params string[] args) {
-            // Make sure we use the OS's line endings
+            // Always use \r\n line endings so it looks correct in Notepad
             source = source.Replace(@"\t", "\t");
-            source = source.Replace("\r\n", "\n");
-            source = source.Replace("\n", Environment.NewLine);
+            source = source.Replace("\n", "\r\n");
             return string.Format(source, args);
         }
         
@@ -218,8 +217,8 @@ namespace MCGalaxy.Scripting {
             CompilerResults results = DoCompile(srcPaths, dstPath);
             if (!results.Errors.HasErrors) return results;
             
-            List<string> source = Utils.ReadAllLinesList(srcPaths[0]); // TODO fix
-            StringBuilder sb = new StringBuilder();
+            SourceMap sources = new SourceMap(srcPaths);
+            StringBuilder sb  = new StringBuilder();
             sb.AppendLine("############################################################");
             sb.AppendLine("Errors when compiling " + srcPaths.Join());
             sb.AppendLine("############################################################");
@@ -229,7 +228,7 @@ namespace MCGalaxy.Scripting {
                 string type = err.IsWarning ? "Warning" : "Error";
                 sb.AppendLine(type + " on line " + err.Line + ":");
                 
-                if (err.Line > 0) sb.AppendLine(source[err.Line - 1]);
+                if (err.Line > 0) sb.AppendLine(sources.Get(err.FileName, err.Line - 1));
                 if (err.Column > 0) sb.Append(' ', err.Column - 1);
                 sb.AppendLine("^-- " + type + " #" + err.ErrorNumber + " - " + err.ErrorText);
                 
@@ -337,6 +336,40 @@ namespace MCGalaxy.Scripting {
             PrepareArgs(args);
             InitCompiler();
             return compiler.CompileAssemblyFromFile(args, srcPaths);
+        }
+    }
+    
+    class SourceMap {
+        readonly string[] files;
+        readonly List<string>[] sources;
+        
+        public SourceMap(string[] paths) {
+            files   = paths;
+            sources = new List<string>[paths.Length];
+        }
+        
+        int FindFile(string file) {
+            for (int i = 0; i < files.Length; i++) {
+                if (file.CaselessEq(files[i])) return i;
+            }
+            return -1;
+        }
+        
+        /// <summary> Returns the given line in the given source code file </summary>
+        public string Get(string file, int line) {
+            int i = FindFile(file);
+            if (i == -1) return "";
+            
+            List<string> source = sources[i];
+            if (source == null) {
+                try {
+                    source = Utils.ReadAllLinesList(file);
+                } catch {
+                    source = new List<string>();
+                }
+                sources[i] = source;
+            }            
+            return line < source.Count ? source[line] : "";
         }
     }
 }

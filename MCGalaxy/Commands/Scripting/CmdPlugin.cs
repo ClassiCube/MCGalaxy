@@ -63,7 +63,7 @@ namespace MCGalaxy.Commands.Scripting {
             
             // either "source" or "source1,source2,source3"
             string[] paths = name.SplitComma();
-            string dstPath = IScripting.CommandPath(name);
+            string dstPath = IScripting.PluginPath(name);
             
             for (int i = 0; i < paths.Length; i++) {
                 string srcPath = engine.PluginPath(paths[i]);
