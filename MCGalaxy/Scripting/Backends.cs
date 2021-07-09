@@ -77,7 +77,7 @@ namespace MCGalaxy
 
 \t\t// This is for when a player executes this command by doing /{0}
 \t\t//   p is the player object for the player executing the command. 
-\t\t//   message is the arguments given to the command. (e.g. for '/update this', message is ""this"")
+\t\t//   message is the arguments given to the command. (e.g. for '/{0} this', message is ""this"")
 \t\tpublic override void Use(Player p, string message)
 \t\t{{
 \t\t\tp.Message(""Hello World!"");
@@ -126,7 +126,7 @@ namespace MCGalaxy
         }
     }
     
-    public sealed class VBCompiler : ICodeDomCompiler {       
+    public sealed class VBCompiler : ICodeDomCompiler {
         public override string FileExtension { get { return ".vb"; } }
         public override string ShortName     { get { return "VB"; } }
         public override string FullName  { get { return "Visual Basic"; } }
@@ -140,6 +140,7 @@ namespace MCGalaxy
         }
         
         protected override void PrepareArgs(CompilerParameters args) { }
+        protected override string ReferenceLine { get { return "'reference "; } }
         
         public override string CommandSkeleton {
             get {
@@ -197,7 +198,7 @@ Namespace MCGalaxy
 
 \t\t' This is for when a player executes this command by doing /{0}
 \t\t'   p is the player object for the player executing the command.
-\t\t'   message is the arguments given to the command. (e.g. for '/update this', message is ""this"")
+\t\t'   message is the arguments given to the command. (e.g. for '/{0} this', message is ""this"")
 \t\tPublic Overrides Sub Use(p As Player, message As String)
 \t\t\tp.Message(""Hello World!"")
 \t\tEnd Sub

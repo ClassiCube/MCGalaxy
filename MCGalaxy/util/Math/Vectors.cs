@@ -68,7 +68,7 @@ namespace MCGalaxy.Maths {
         public override string ToString() { return X + ", " + Y + ", " + Z; }
     }
     
-    public struct Vec3S32 : IEquatable<Vec3S32> {        
+    public struct Vec3S32 : IEquatable<Vec3S32> {
         public int X, Y, Z;
         public static Vec3S32 Zero = new Vec3S32(0);
         
@@ -163,7 +163,7 @@ namespace MCGalaxy.Maths {
         }
     }
     
-    public struct Vec3F32 : IEquatable<Vec3F32> {        
+    public struct Vec3F32 : IEquatable<Vec3F32> {
         public float X, Y, Z;
         
         public Vec3F32(float x, float y, float z) {

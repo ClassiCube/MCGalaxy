@@ -35,7 +35,7 @@ namespace MCGalaxy {
     }
   
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
-    public abstract partial class Plugin {
+    public abstract class Plugin {
 
         /// <summary> Hooks into events and initalises states/resources etc </summary>
         /// <param name="auto"> True if plugin is being automatically loaded (e.g. on server startup), false if manually. </param>

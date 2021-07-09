@@ -37,11 +37,11 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        protected struct Metadata { public short Seconds, Speed; }
+        protected class Metadata { public short Seconds, Speed; }
         
         public override InstructionData Parse(string[] args) {
             InstructionData data = default(InstructionData);
-            Metadata meta;
+            Metadata meta = new Metadata();
             meta.Seconds  = short.Parse(args[1]);
             meta.Speed    = short.Parse(args[2]);
             data.Metadata = meta;

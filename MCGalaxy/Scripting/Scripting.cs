@@ -55,7 +55,7 @@ namespace MCGalaxy.Scripting {
             return instances;
         }
         
-        static byte[] GetDebugData(string path) {
+        static byte[] GetDebugPDB(string path) {
             path = Path.ChangeExtension(path, ".pdb");
             if (!File.Exists(path)) return null;
             
@@ -70,7 +70,7 @@ namespace MCGalaxy.Scripting {
         /// <summary> Loads the given assembly from disc (and associated .pdb debug data) </summary>
         public static Assembly LoadAssembly(string path) {
             byte[] data  = File.ReadAllBytes(path);
-            byte[] debug = GetDebugData(path);
+            byte[] debug = GetDebugPDB(path);
             return Assembly.Load(data, debug);
         }
         
@@ -284,6 +284,9 @@ namespace MCGalaxy.Scripting {
         protected abstract CodeDomProvider CreateProvider();
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
+        /// <summary> Returns the prefix for an assembly reference line </summary>
+        /// <example> For C# this prefix is "//reference "" </example>
+        protected virtual string ReferenceLine { get { return "//reference "; } }
         
         // Lazy init compiler when it's actually needed
         void InitCompiler() {
@@ -299,13 +302,14 @@ namespace MCGalaxy.Scripting {
             }
         }
         
-        static void AddReferences(string path, CompilerParameters args) {
+        void AddReferences(string path, CompilerParameters args) {
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
-            using (StreamReader r = new StreamReader(path)) {
+            using (StreamReader r = new StreamReader(path)) {               
+                string refPrefix = ReferenceLine;
                 string line;
                 
                 while ((line = r.ReadLine()) != null) {
-                    if (!line.CaselessStarts("//reference ")) break;
+                    if (!line.CaselessStarts(refPrefix)) break;
                     
                     int index = line.IndexOf(' ') + 1;
                     // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
