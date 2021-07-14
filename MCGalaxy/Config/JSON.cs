@@ -288,36 +288,6 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public static class JsonSerialisers {
-        
-        static void WriteConfigValue(JsonWriter w, ConfigAttribute a, string value) {
-            if (String.IsNullOrEmpty(value)) {
-                w.WriteNull();
-            } else if (a is ConfigBoolAttribute || a is ConfigIntegerAttribute || a is ConfigRealAttribute) {
-                w.Write(value);
-            } else {
-                w.WriteString(value);
-            }
-        }
-        
-        public static void WriteConfig(JsonWriter w, ConfigElement[] elems, object instance) {
-            string separator = null;
-            
-            for (int i = 0; i < elems.Length; i++) {
-                ConfigElement elem = elems[i];
-                ConfigAttribute a = elem.Attrib;
-                w.Write(separator);
-                
-                w.WriteObjectKey(a.Name);
-                object raw = elem.Field.GetValue(instance);
-                string value = elem.Attrib.Serialise(raw);
-                
-                WriteConfigValue(w, a, value);
-                separator = ",\r\n";
-            }
-        }
-    }
-    
     public static class Json {
         
         [Obsolete("Use JsonReader instead")]
