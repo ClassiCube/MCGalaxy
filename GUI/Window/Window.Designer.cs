@@ -159,6 +159,60 @@ namespace MCGalaxy.Gui
             this.pl_statusBox = new System.Windows.Forms.TextBox();
             this.pl_listBox = new System.Windows.Forms.ListBox();
             this.pl_lblOnline = new System.Windows.Forms.Label();
+            this.tb_games = new System.Windows.Forms.TabPage();
+            this.tabGames = new System.Windows.Forms.TabControl();
+            this.tabLS = new System.Windows.Forms.TabPage();
+            this.tabZS = new System.Windows.Forms.TabPage();
+            this.zs_separator = new System.Windows.Forms.Panel();
+            this.zs_grpInvZombie = new System.Windows.Forms.GroupBox();
+            this.zs_numInvZombieSecs = new MCGalaxy.Gui.TimespanUpDown();
+            this.zs_numInvZombieMax = new System.Windows.Forms.NumericUpDown();
+            this.zs_lblInvZombieDur = new System.Windows.Forms.Label();
+            this.zs_lblInvZombieMax = new System.Windows.Forms.Label();
+            this.zs_grpZombie = new System.Windows.Forms.GroupBox();
+            this.zs_txtModel = new System.Windows.Forms.TextBox();
+            this.zs_txtName = new System.Windows.Forms.TextBox();
+            this.zs_lblModel = new System.Windows.Forms.Label();
+            this.zs_lblName = new System.Windows.Forms.Label();
+            this.zs_grpRevive = new System.Windows.Forms.GroupBox();
+            this.zs_numReviveLimit = new MCGalaxy.Gui.TimespanUpDown();
+            this.zs_lblSuccess = new System.Windows.Forms.Label();
+            this.zs_numSuccess = new System.Windows.Forms.NumericUpDown();
+            this.zs_lblReviveRound = new System.Windows.Forms.Label();
+            this.zs_lblReviveLimitFtr = new System.Windows.Forms.Label();
+            this.zs_lblReviveLimitHdr = new System.Windows.Forms.Label();
+            this.zs_numReviveMax = new System.Windows.Forms.NumericUpDown();
+            this.zs_lblReviveMax = new System.Windows.Forms.Label();
+            this.zs_grpInvHuman = new System.Windows.Forms.GroupBox();
+            this.zs_numInvHumanSecs = new MCGalaxy.Gui.TimespanUpDown();
+            this.zs_numInvHumanMax = new System.Windows.Forms.NumericUpDown();
+            this.zs_lblInvHumanDur = new System.Windows.Forms.Label();
+            this.zs_lblInvHumanMax = new System.Windows.Forms.Label();
+            this.zs_grpControls = new System.Windows.Forms.GroupBox();
+            this.zs_btnEnd = new System.Windows.Forms.Button();
+            this.zs_btnStop = new System.Windows.Forms.Button();
+            this.zs_btnStart = new System.Windows.Forms.Button();
+            this.zs_grpMap = new System.Windows.Forms.GroupBox();
+            this.zs_grpTime = new System.Windows.Forms.GroupBox();
+            this.zs_numFloodTime = new MCGalaxy.Gui.TimespanUpDown();
+            this.zs_numLayerTime = new MCGalaxy.Gui.TimespanUpDown();
+            this.zs_numRoundTime = new MCGalaxy.Gui.TimespanUpDown();
+            this.zs_lblLayerTime = new System.Windows.Forms.Label();
+            this.zs_lblFloodTime = new System.Windows.Forms.Label();
+            this.zs_lblRoundTime = new System.Windows.Forms.Label();
+            this.zs_grpSettings = new System.Windows.Forms.GroupBox();
+            this.zs_cbMain = new System.Windows.Forms.CheckBox();
+            this.zs_cbMap = new System.Windows.Forms.CheckBox();
+            this.zs_cbStart = new System.Windows.Forms.CheckBox();
+            this.zs_grpMaps = new System.Windows.Forms.GroupBox();
+            this.zs_lblNotUsed = new System.Windows.Forms.Label();
+            this.zs_lblUsed = new System.Windows.Forms.Label();
+            this.zs_btnAdd = new System.Windows.Forms.Button();
+            this.zs_btnRemove = new System.Windows.Forms.Button();
+            this.zs_lstNotUsed = new System.Windows.Forms.ListBox();
+            this.zs_lstUsed = new System.Windows.Forms.ListBox();
+            this.tabCTF = new System.Windows.Forms.TabPage();
+            this.tabTW = new System.Windows.Forms.TabPage();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tsMap.SuspendLayout();
             this.tsPlayer.SuspendLayout();
@@ -620,9 +674,9 @@ namespace MCGalaxy.Gui
             this.main_Maps.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.main_Maps.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.main_Maps.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-        	        	        	this.main_colLvlName,
-        	        	        	this.main_colLvlPlayers,
-        	        	        	this.main_colLvlPhysics});
+                                    this.main_colLvlName,
+                                    this.main_colLvlPlayers,
+                                    this.main_colLvlPhysics});
             this.main_Maps.ContextMenuStrip = this.tsMap;
             this.main_Maps.Location = new System.Drawing.Point(512, 292);
             this.main_Maps.MultiSelect = false;
@@ -776,9 +830,9 @@ namespace MCGalaxy.Gui
             this.main_Players.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.main_Players.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.main_Players.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-        	        	        	this.main_colPlName,
-        	        	        	this.main_colPlMap,
-        	        	        	this.main_colPlRank});
+                                    this.main_colPlName,
+                                    this.main_colPlMap,
+                                    this.main_colPlRank});
             this.main_Players.ContextMenuStrip = this.tsPlayer;
             this.main_Players.Location = new System.Drawing.Point(512, 7);
             this.main_Players.MultiSelect = false;
@@ -796,6 +850,7 @@ namespace MCGalaxy.Gui
             this.tabs.Controls.Add(this.logs_tp);
             this.tabs.Controls.Add(this.tp_Maps);
             this.tabs.Controls.Add(this.tp_Players);
+            this.tabs.Controls.Add(this.tb_games);
             this.tabs.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabs.Font = new System.Drawing.Font("Calibri", 8.25F);
             this.tabs.Location = new System.Drawing.Point(1, 11);
@@ -1285,6 +1340,571 @@ namespace MCGalaxy.Gui
             this.pl_listBox.TabIndex = 62;
             this.pl_listBox.Click += new System.EventHandler(this.pl_listBox_Click);
             // 
+            // tb_gaames
+            // 
+            this.tb_games.BackColor = System.Drawing.SystemColors.Control;
+            this.tb_games.Controls.Add(this.tabGames);
+            this.tb_games.Location = new System.Drawing.Point(4, 22);
+            this.tb_games.Name = "tb_gaames";
+            this.tb_games.Size = new System.Drawing.Size(767, 488);
+            this.tb_games.TabIndex = 10;
+            this.tb_games.Text = "Games";
+            // 
+            // tabGames
+            // 
+            this.tabGames.Controls.Add(this.tabLS);
+            this.tabGames.Controls.Add(this.tabZS);
+            this.tabGames.Controls.Add(this.tabCTF);
+            this.tabGames.Controls.Add(this.tabTW);
+            this.tabGames.Location = new System.Drawing.Point(3, 3);
+            this.tabGames.Name = "tabGames";
+            this.tabGames.SelectedIndex = 0;
+            this.tabGames.Size = new System.Drawing.Size(761, 515);
+            this.tabGames.TabIndex = 1;
+            // 
+            // tabLS
+            // 
+            this.tabLS.BackColor = System.Drawing.SystemColors.Control;
+            this.tabLS.Location = new System.Drawing.Point(4, 22);
+            this.tabLS.Name = "tabLS";
+            this.tabLS.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLS.Size = new System.Drawing.Size(753, 489);
+            this.tabLS.TabIndex = 0;
+            this.tabLS.Text = "Lava Survival";
+            // 
+            // tabZS
+            // 
+            this.tabZS.BackColor = System.Drawing.SystemColors.Control;
+            this.tabZS.Controls.Add(this.zs_separator);
+            this.tabZS.Controls.Add(this.zs_grpInvZombie);
+            this.tabZS.Controls.Add(this.zs_grpZombie);
+            this.tabZS.Controls.Add(this.zs_grpRevive);
+            this.tabZS.Controls.Add(this.zs_grpInvHuman);
+            this.tabZS.Controls.Add(this.zs_grpControls);
+            this.tabZS.Controls.Add(this.zs_grpMap);
+            this.tabZS.Controls.Add(this.zs_grpSettings);
+            this.tabZS.Controls.Add(this.zs_grpMaps);
+            this.tabZS.Location = new System.Drawing.Point(4, 22);
+            this.tabZS.Name = "tabZS";
+            this.tabZS.Padding = new System.Windows.Forms.Padding(3);
+            this.tabZS.Size = new System.Drawing.Size(753, 489);
+            this.tabZS.TabIndex = 6;
+            this.tabZS.Text = "Zombie Survival";
+            // 
+            // zs_separator
+            // 
+            this.zs_separator.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.zs_separator.Location = new System.Drawing.Point(257, 72);
+            this.zs_separator.Name = "zs_separator";
+            this.zs_separator.Size = new System.Drawing.Size(1, 451);
+            this.zs_separator.TabIndex = 45;
+            // 
+            // zs_grpInvZombie
+            // 
+            this.zs_grpInvZombie.Controls.Add(this.zs_numInvZombieSecs);
+            this.zs_grpInvZombie.Controls.Add(this.zs_numInvZombieMax);
+            this.zs_grpInvZombie.Controls.Add(this.zs_lblInvZombieDur);
+            this.zs_grpInvZombie.Controls.Add(this.zs_lblInvZombieMax);
+            this.zs_grpInvZombie.Location = new System.Drawing.Point(6, 212);
+            this.zs_grpInvZombie.Name = "zs_grpInvZombie";
+            this.zs_grpInvZombie.Size = new System.Drawing.Size(245, 49);
+            this.zs_grpInvZombie.TabIndex = 43;
+            this.zs_grpInvZombie.TabStop = false;
+            this.zs_grpInvZombie.Text = "Zombie invisibility settings";
+            // 
+            // zs_numInvZombieSecs
+            // 
+            this.zs_numInvZombieSecs.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numInvZombieSecs.Location = new System.Drawing.Point(186, 20);
+            this.zs_numInvZombieSecs.Name = "zs_numInvZombieSecs";
+            this.zs_numInvZombieSecs.Seconds = ((long)(0));
+            this.zs_numInvZombieSecs.Size = new System.Drawing.Size(52, 21);
+            this.zs_numInvZombieSecs.TabIndex = 47;
+            this.zs_numInvZombieSecs.Text = "0s";
+            this.zs_numInvZombieSecs.Value = System.TimeSpan.Parse("00:00:00");
+            // 
+            // zs_numInvZombieMax
+            // 
+            this.zs_numInvZombieMax.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numInvZombieMax.Location = new System.Drawing.Point(35, 20);
+            this.zs_numInvZombieMax.Name = "zs_numInvZombieMax";
+            this.zs_numInvZombieMax.Size = new System.Drawing.Size(52, 21);
+            this.zs_numInvZombieMax.TabIndex = 27;
+            this.toolTip.SetToolTip(this.zs_numInvZombieMax, "Maximum number of times a human can use /buy invisibility in a round");
+            // 
+            // zs_lblInvZombieDur
+            // 
+            this.zs_lblInvZombieDur.AutoSize = true;
+            this.zs_lblInvZombieDur.Location = new System.Drawing.Point(87, 22);
+            this.zs_lblInvZombieDur.Name = "zs_lblInvZombieDur";
+            this.zs_lblInvZombieDur.Size = new System.Drawing.Size(101, 13);
+            this.zs_lblInvZombieDur.TabIndex = 28;
+            this.zs_lblInvZombieDur.Text = "times, which last for";
+            // 
+            // zs_lblInvZombieMax
+            // 
+            this.zs_lblInvZombieMax.AutoSize = true;
+            this.zs_lblInvZombieMax.Location = new System.Drawing.Point(7, 23);
+            this.zs_lblInvZombieMax.Name = "zs_lblInvZombieMax";
+            this.zs_lblInvZombieMax.Size = new System.Drawing.Size(27, 13);
+            this.zs_lblInvZombieMax.TabIndex = 27;
+            this.zs_lblInvZombieMax.Text = "Max";
+            // 
+            // zs_grpZombie
+            // 
+            this.zs_grpZombie.Controls.Add(this.zs_txtModel);
+            this.zs_grpZombie.Controls.Add(this.zs_txtName);
+            this.zs_grpZombie.Controls.Add(this.zs_lblModel);
+            this.zs_grpZombie.Controls.Add(this.zs_lblName);
+            this.zs_grpZombie.Location = new System.Drawing.Point(6, 376);
+            this.zs_grpZombie.Name = "zs_grpZombie";
+            this.zs_grpZombie.Size = new System.Drawing.Size(245, 77);
+            this.zs_grpZombie.TabIndex = 44;
+            this.zs_grpZombie.TabStop = false;
+            this.zs_grpZombie.Text = "Zombie settings";
+            // 
+            // zs_txtModel
+            // 
+            this.zs_txtModel.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_txtModel.Location = new System.Drawing.Point(49, 46);
+            this.zs_txtModel.Name = "zs_txtModel";
+            this.zs_txtModel.Size = new System.Drawing.Size(188, 21);
+            this.zs_txtModel.TabIndex = 39;
+            this.toolTip.SetToolTip(this.zs_txtModel, "Model to use for infected players.\nIf left blank, then \'zombie\' model is used.");
+            // 
+            // zs_txtName
+            // 
+            this.zs_txtName.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_txtName.Location = new System.Drawing.Point(49, 19);
+            this.zs_txtName.Name = "zs_txtName";
+            this.zs_txtName.Size = new System.Drawing.Size(188, 21);
+            this.zs_txtName.TabIndex = 38;
+            this.toolTip.SetToolTip(this.zs_txtName, "Name to show above head of infected players.\nIf left blank, then the player\'s nam" +
+                        "e is shown instead.");
+            // 
+            // zs_lblModel
+            // 
+            this.zs_lblModel.AutoSize = true;
+            this.zs_lblModel.Location = new System.Drawing.Point(5, 49);
+            this.zs_lblModel.Name = "zs_lblModel";
+            this.zs_lblModel.Size = new System.Drawing.Size(40, 13);
+            this.zs_lblModel.TabIndex = 35;
+            this.zs_lblModel.Text = "Model:";
+            // 
+            // zs_lblName
+            // 
+            this.zs_lblName.AutoSize = true;
+            this.zs_lblName.Location = new System.Drawing.Point(5, 22);
+            this.zs_lblName.Name = "zs_lblName";
+            this.zs_lblName.Size = new System.Drawing.Size(38, 13);
+            this.zs_lblName.TabIndex = 34;
+            this.zs_lblName.Text = "Name:";
+            // 
+            // zs_grpRevive
+            // 
+            this.zs_grpRevive.Controls.Add(this.zs_numReviveLimit);
+            this.zs_grpRevive.Controls.Add(this.zs_lblSuccess);
+            this.zs_grpRevive.Controls.Add(this.zs_numSuccess);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveRound);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveLimitFtr);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveLimitHdr);
+            this.zs_grpRevive.Controls.Add(this.zs_numReviveMax);
+            this.zs_grpRevive.Controls.Add(this.zs_lblReviveMax);
+            this.zs_grpRevive.Location = new System.Drawing.Point(6, 263);
+            this.zs_grpRevive.Name = "zs_grpRevive";
+            this.zs_grpRevive.Size = new System.Drawing.Size(245, 107);
+            this.zs_grpRevive.TabIndex = 42;
+            this.zs_grpRevive.TabStop = false;
+            this.zs_grpRevive.Text = "Revive settings";
+            // 
+            // zs_numReviveLimit
+            // 
+            this.zs_numReviveLimit.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numReviveLimit.Location = new System.Drawing.Point(109, 44);
+            this.zs_numReviveLimit.Name = "zs_numReviveLimit";
+            this.zs_numReviveLimit.Seconds = ((long)(10));
+            this.zs_numReviveLimit.Size = new System.Drawing.Size(52, 21);
+            this.zs_numReviveLimit.TabIndex = 48;
+            this.zs_numReviveLimit.Text = "10s";
+            this.zs_numReviveLimit.Value = System.TimeSpan.Parse("00:00:10");
+            // 
+            // zs_lblSuccess
+            // 
+            this.zs_lblSuccess.AutoSize = true;
+            this.zs_lblSuccess.Location = new System.Drawing.Point(62, 77);
+            this.zs_lblSuccess.Name = "zs_lblSuccess";
+            this.zs_lblSuccess.Size = new System.Drawing.Size(76, 13);
+            this.zs_lblSuccess.TabIndex = 45;
+            this.zs_lblSuccess.Text = "% success rate";
+            // 
+            // zs_numSuccess
+            // 
+            this.zs_numSuccess.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numSuccess.Location = new System.Drawing.Point(10, 73);
+            this.zs_numSuccess.Maximum = new decimal(new int[] {
+                                    1000000,
+                                    0,
+                                    0,
+                                    0});
+            this.zs_numSuccess.Name = "zs_numSuccess";
+            this.zs_numSuccess.Size = new System.Drawing.Size(52, 21);
+            this.zs_numSuccess.TabIndex = 44;
+            this.toolTip.SetToolTip(this.zs_numSuccess, "Likelihood that /buy revive will disinfect a zombie");
+            this.zs_numSuccess.Value = new decimal(new int[] {
+                                    3,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // zs_lblReviveRound
+            // 
+            this.zs_lblReviveRound.AutoSize = true;
+            this.zs_lblReviveRound.Location = new System.Drawing.Point(88, 19);
+            this.zs_lblReviveRound.Name = "zs_lblReviveRound";
+            this.zs_lblReviveRound.Size = new System.Drawing.Size(81, 13);
+            this.zs_lblReviveRound.TabIndex = 34;
+            this.zs_lblReviveRound.Text = "times per round";
+            // 
+            // zs_lblReviveLimitFtr
+            // 
+            this.zs_lblReviveLimitFtr.AutoSize = true;
+            this.zs_lblReviveLimitFtr.Location = new System.Drawing.Point(161, 46);
+            this.zs_lblReviveLimitFtr.Name = "zs_lblReviveLimitFtr";
+            this.zs_lblReviveLimitFtr.Size = new System.Drawing.Size(59, 13);
+            this.zs_lblReviveLimitFtr.TabIndex = 38;
+            this.zs_lblReviveLimitFtr.Text = "of infection";
+            // 
+            // zs_lblReviveLimitHdr
+            // 
+            this.zs_lblReviveLimitHdr.AutoSize = true;
+            this.zs_lblReviveLimitHdr.Location = new System.Drawing.Point(7, 46);
+            this.zs_lblReviveLimitHdr.Name = "zs_lblReviveLimitHdr";
+            this.zs_lblReviveLimitHdr.Size = new System.Drawing.Size(102, 13);
+            this.zs_lblReviveLimitHdr.TabIndex = 36;
+            this.zs_lblReviveLimitHdr.Text = "Must be used within";
+            // 
+            // zs_numReviveMax
+            // 
+            this.zs_numReviveMax.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numReviveMax.Location = new System.Drawing.Point(35, 17);
+            this.zs_numReviveMax.Name = "zs_numReviveMax";
+            this.zs_numReviveMax.Size = new System.Drawing.Size(52, 21);
+            this.zs_numReviveMax.TabIndex = 34;
+            // 
+            // zs_lblReviveMax
+            // 
+            this.zs_lblReviveMax.AutoSize = true;
+            this.zs_lblReviveMax.Location = new System.Drawing.Point(6, 20);
+            this.zs_lblReviveMax.Name = "zs_lblReviveMax";
+            this.zs_lblReviveMax.Size = new System.Drawing.Size(27, 13);
+            this.zs_lblReviveMax.TabIndex = 34;
+            this.zs_lblReviveMax.Text = "Max";
+            // 
+            // zs_grpInvHuman
+            // 
+            this.zs_grpInvHuman.Controls.Add(this.zs_numInvHumanSecs);
+            this.zs_grpInvHuman.Controls.Add(this.zs_numInvHumanMax);
+            this.zs_grpInvHuman.Controls.Add(this.zs_lblInvHumanDur);
+            this.zs_grpInvHuman.Controls.Add(this.zs_lblInvHumanMax);
+            this.zs_grpInvHuman.Location = new System.Drawing.Point(6, 157);
+            this.zs_grpInvHuman.Name = "zs_grpInvHuman";
+            this.zs_grpInvHuman.Size = new System.Drawing.Size(245, 49);
+            this.zs_grpInvHuman.TabIndex = 41;
+            this.zs_grpInvHuman.TabStop = false;
+            this.zs_grpInvHuman.Text = "Human invisibility settings";
+            // 
+            // zs_numInvHumanSecs
+            // 
+            this.zs_numInvHumanSecs.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numInvHumanSecs.Location = new System.Drawing.Point(186, 20);
+            this.zs_numInvHumanSecs.Name = "zs_numInvHumanSecs";
+            this.zs_numInvHumanSecs.Seconds = ((long)(0));
+            this.zs_numInvHumanSecs.Size = new System.Drawing.Size(52, 21);
+            this.zs_numInvHumanSecs.TabIndex = 46;
+            this.zs_numInvHumanSecs.Text = "0s";
+            this.zs_numInvHumanSecs.Value = System.TimeSpan.Parse("00:00:00");
+            // 
+            // zs_numInvHumanMax
+            // 
+            this.zs_numInvHumanMax.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numInvHumanMax.Location = new System.Drawing.Point(35, 20);
+            this.zs_numInvHumanMax.Name = "zs_numInvHumanMax";
+            this.zs_numInvHumanMax.Size = new System.Drawing.Size(52, 21);
+            this.zs_numInvHumanMax.TabIndex = 27;
+            this.toolTip.SetToolTip(this.zs_numInvHumanMax, "Maximum number of times a human can use /buy invisibility in a round");
+            // 
+            // zs_lblInvHumanDur
+            // 
+            this.zs_lblInvHumanDur.AutoSize = true;
+            this.zs_lblInvHumanDur.Location = new System.Drawing.Point(87, 22);
+            this.zs_lblInvHumanDur.Name = "zs_lblInvHumanDur";
+            this.zs_lblInvHumanDur.Size = new System.Drawing.Size(101, 13);
+            this.zs_lblInvHumanDur.TabIndex = 28;
+            this.zs_lblInvHumanDur.Text = "times, which last for";
+            // 
+            // zs_lblInvHumanMax
+            // 
+            this.zs_lblInvHumanMax.AutoSize = true;
+            this.zs_lblInvHumanMax.Location = new System.Drawing.Point(7, 23);
+            this.zs_lblInvHumanMax.Name = "zs_lblInvHumanMax";
+            this.zs_lblInvHumanMax.Size = new System.Drawing.Size(27, 13);
+            this.zs_lblInvHumanMax.TabIndex = 27;
+            this.zs_lblInvHumanMax.Text = "Max";
+            // 
+            // zs_grpControls
+            // 
+            this.zs_grpControls.Controls.Add(this.zs_btnEnd);
+            this.zs_grpControls.Controls.Add(this.zs_btnStop);
+            this.zs_grpControls.Controls.Add(this.zs_btnStart);
+            this.zs_grpControls.Location = new System.Drawing.Point(196, 5);
+            this.zs_grpControls.Name = "zs_grpControls";
+            this.zs_grpControls.Size = new System.Drawing.Size(279, 51);
+            this.zs_grpControls.TabIndex = 4;
+            this.zs_grpControls.TabStop = false;
+            this.zs_grpControls.Text = "Controls";
+            // 
+            // zs_btnEnd
+            // 
+            this.zs_btnEnd.Location = new System.Drawing.Point(190, 19);
+            this.zs_btnEnd.Name = "zs_btnEnd";
+            this.zs_btnEnd.Size = new System.Drawing.Size(80, 23);
+            this.zs_btnEnd.TabIndex = 2;
+            this.zs_btnEnd.Text = "End Round";
+            this.zs_btnEnd.UseVisualStyleBackColor = true;
+            // 
+            // zs_btnStop
+            // 
+            this.zs_btnStop.Location = new System.Drawing.Point(100, 19);
+            this.zs_btnStop.Name = "zs_btnStop";
+            this.zs_btnStop.Size = new System.Drawing.Size(80, 23);
+            this.zs_btnStop.TabIndex = 1;
+            this.zs_btnStop.Text = "Stop Game";
+            this.zs_btnStop.UseVisualStyleBackColor = true;
+            // 
+            // zs_btnStart
+            // 
+            this.zs_btnStart.Location = new System.Drawing.Point(10, 19);
+            this.zs_btnStart.Name = "zs_btnStart";
+            this.zs_btnStart.Size = new System.Drawing.Size(80, 23);
+            this.zs_btnStart.TabIndex = 0;
+            this.zs_btnStart.Text = "Start Game";
+            this.zs_btnStart.UseVisualStyleBackColor = true;
+            // 
+            // zs_grpMap
+            // 
+            this.zs_grpMap.Controls.Add(this.zs_grpTime);
+            this.zs_grpMap.Enabled = false;
+            this.zs_grpMap.Location = new System.Drawing.Point(440, 65);
+            this.zs_grpMap.Name = "zs_grpMap";
+            this.zs_grpMap.Size = new System.Drawing.Size(307, 97);
+            this.zs_grpMap.TabIndex = 3;
+            this.zs_grpMap.TabStop = false;
+            this.zs_grpMap.Text = "Settings for (none selected)";
+            // 
+            // zs_grpTime
+            // 
+            this.zs_grpTime.Controls.Add(this.zs_numFloodTime);
+            this.zs_grpTime.Controls.Add(this.zs_numLayerTime);
+            this.zs_grpTime.Controls.Add(this.zs_numRoundTime);
+            this.zs_grpTime.Controls.Add(this.zs_lblLayerTime);
+            this.zs_grpTime.Controls.Add(this.zs_lblFloodTime);
+            this.zs_grpTime.Controls.Add(this.zs_lblRoundTime);
+            this.zs_grpTime.Location = new System.Drawing.Point(6, 16);
+            this.zs_grpTime.Name = "zs_grpTime";
+            this.zs_grpTime.Size = new System.Drawing.Size(295, 71);
+            this.zs_grpTime.TabIndex = 39;
+            this.zs_grpTime.TabStop = false;
+            this.zs_grpTime.Text = "Time settings";
+            // 
+            // zs_numFloodTime
+            // 
+            this.zs_numFloodTime.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numFloodTime.Location = new System.Drawing.Point(69, 43);
+            this.zs_numFloodTime.Name = "zs_numFloodTime";
+            this.zs_numFloodTime.Seconds = ((long)(300));
+            this.zs_numFloodTime.Size = new System.Drawing.Size(62, 21);
+            this.zs_numFloodTime.TabIndex = 38;
+            this.zs_numFloodTime.Text = "5m";
+            this.zs_numFloodTime.Value = System.TimeSpan.Parse("00:05:00");
+            // 
+            // zs_numLayerTime
+            // 
+            this.zs_numLayerTime.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numLayerTime.Location = new System.Drawing.Point(225, 16);
+            this.zs_numLayerTime.Name = "zs_numLayerTime";
+            this.zs_numLayerTime.Seconds = ((long)(120));
+            this.zs_numLayerTime.Size = new System.Drawing.Size(62, 21);
+            this.zs_numLayerTime.TabIndex = 37;
+            this.zs_numLayerTime.Text = "2m";
+            this.zs_numLayerTime.Value = System.TimeSpan.Parse("00:02:00");
+            // 
+            // zs_numRoundTime
+            // 
+            this.zs_numRoundTime.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_numRoundTime.Location = new System.Drawing.Point(69, 16);
+            this.zs_numRoundTime.Name = "zs_numRoundTime";
+            this.zs_numRoundTime.Seconds = ((long)(900));
+            this.zs_numRoundTime.Size = new System.Drawing.Size(62, 21);
+            this.zs_numRoundTime.TabIndex = 36;
+            this.zs_numRoundTime.Text = "15m";
+            this.zs_numRoundTime.Value = System.TimeSpan.Parse("00:15:00");
+            // 
+            // zs_lblLayerTime
+            // 
+            this.zs_lblLayerTime.AutoSize = true;
+            this.zs_lblLayerTime.Location = new System.Drawing.Point(160, 20);
+            this.zs_lblLayerTime.Name = "zs_lblLayerTime";
+            this.zs_lblLayerTime.Size = new System.Drawing.Size(59, 13);
+            this.zs_lblLayerTime.TabIndex = 35;
+            this.zs_lblLayerTime.Text = "Layer time:";
+            // 
+            // zs_lblFloodTime
+            // 
+            this.zs_lblFloodTime.AutoSize = true;
+            this.zs_lblFloodTime.Location = new System.Drawing.Point(8, 46);
+            this.zs_lblFloodTime.Name = "zs_lblFloodTime";
+            this.zs_lblFloodTime.Size = new System.Drawing.Size(59, 13);
+            this.zs_lblFloodTime.TabIndex = 34;
+            this.zs_lblFloodTime.Text = "Flood time:";
+            // 
+            // zs_lblRoundTime
+            // 
+            this.zs_lblRoundTime.AutoSize = true;
+            this.zs_lblRoundTime.Location = new System.Drawing.Point(5, 20);
+            this.zs_lblRoundTime.Name = "zs_lblRoundTime";
+            this.zs_lblRoundTime.Size = new System.Drawing.Size(63, 13);
+            this.zs_lblRoundTime.TabIndex = 34;
+            this.zs_lblRoundTime.Text = "Round time:";
+            // 
+            // zs_grpSettings
+            // 
+            this.zs_grpSettings.Controls.Add(this.zs_cbMain);
+            this.zs_grpSettings.Controls.Add(this.zs_cbMap);
+            this.zs_grpSettings.Controls.Add(this.zs_cbStart);
+            this.zs_grpSettings.Location = new System.Drawing.Point(3, 65);
+            this.zs_grpSettings.Name = "zs_grpSettings";
+            this.zs_grpSettings.Size = new System.Drawing.Size(248, 88);
+            this.zs_grpSettings.TabIndex = 2;
+            this.zs_grpSettings.TabStop = false;
+            this.zs_grpSettings.Text = "General settings";
+            // 
+            // zs_cbMain
+            // 
+            this.zs_cbMain.AutoSize = true;
+            this.zs_cbMain.Location = new System.Drawing.Point(11, 66);
+            this.zs_cbMain.Name = "zs_cbMain";
+            this.zs_cbMain.Size = new System.Drawing.Size(112, 17);
+            this.zs_cbMain.TabIndex = 24;
+            this.zs_cbMain.Text = "Change main level";
+            this.zs_cbMain.UseVisualStyleBackColor = true;
+            // 
+            // zs_cbMap
+            // 
+            this.zs_cbMap.AutoSize = true;
+            this.zs_cbMap.Location = new System.Drawing.Point(11, 43);
+            this.zs_cbMap.Name = "zs_cbMap";
+            this.zs_cbMap.Size = new System.Drawing.Size(136, 17);
+            this.zs_cbMap.TabIndex = 23;
+            this.zs_cbMap.Text = "Map name in server list";
+            this.zs_cbMap.UseVisualStyleBackColor = true;
+            // 
+            // zs_cbStart
+            // 
+            this.zs_cbStart.AutoSize = true;
+            this.zs_cbStart.Location = new System.Drawing.Point(11, 20);
+            this.zs_cbStart.Name = "zs_cbStart";
+            this.zs_cbStart.Size = new System.Drawing.Size(139, 17);
+            this.zs_cbStart.TabIndex = 22;
+            this.zs_cbStart.Text = "Start when server starts";
+            this.zs_cbStart.UseVisualStyleBackColor = true;
+            // 
+            // zs_grpMaps
+            // 
+            this.zs_grpMaps.Controls.Add(this.zs_lblNotUsed);
+            this.zs_grpMaps.Controls.Add(this.zs_lblUsed);
+            this.zs_grpMaps.Controls.Add(this.zs_btnAdd);
+            this.zs_grpMaps.Controls.Add(this.zs_btnRemove);
+            this.zs_grpMaps.Controls.Add(this.zs_lstNotUsed);
+            this.zs_grpMaps.Controls.Add(this.zs_lstUsed);
+            this.zs_grpMaps.Location = new System.Drawing.Point(264, 65);
+            this.zs_grpMaps.Name = "zs_grpMaps";
+            this.zs_grpMaps.Size = new System.Drawing.Size(170, 388);
+            this.zs_grpMaps.TabIndex = 1;
+            this.zs_grpMaps.TabStop = false;
+            this.zs_grpMaps.Text = "Maps";
+            // 
+            // zs_lblNotUsed
+            // 
+            this.zs_lblNotUsed.AutoSize = true;
+            this.zs_lblNotUsed.Location = new System.Drawing.Point(187, 17);
+            this.zs_lblNotUsed.Name = "zs_lblNotUsed";
+            this.zs_lblNotUsed.Size = new System.Drawing.Size(83, 13);
+            this.zs_lblNotUsed.TabIndex = 6;
+            this.zs_lblNotUsed.Text = "Maps Not In Use";
+            // 
+            // zs_lblUsed
+            // 
+            this.zs_lblUsed.AutoSize = true;
+            this.zs_lblUsed.Location = new System.Drawing.Point(6, 17);
+            this.zs_lblUsed.Name = "zs_lblUsed";
+            this.zs_lblUsed.Size = new System.Drawing.Size(38, 13);
+            this.zs_lblUsed.TabIndex = 5;
+            this.zs_lblUsed.Text = "In use:";
+            // 
+            // zs_btnAdd
+            // 
+            this.zs_btnAdd.Location = new System.Drawing.Point(6, 188);
+            this.zs_btnAdd.Name = "zs_btnAdd";
+            this.zs_btnAdd.Size = new System.Drawing.Size(77, 23);
+            this.zs_btnAdd.TabIndex = 4;
+            this.zs_btnAdd.Text = "<< Add";
+            this.zs_btnAdd.UseVisualStyleBackColor = true;
+            // 
+            // zs_btnRemove
+            // 
+            this.zs_btnRemove.Location = new System.Drawing.Point(89, 188);
+            this.zs_btnRemove.Name = "zs_btnRemove";
+            this.zs_btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.zs_btnRemove.TabIndex = 3;
+            this.zs_btnRemove.Text = "Remove >>";
+            this.zs_btnRemove.UseVisualStyleBackColor = true;
+            // 
+            // zs_lstNotUsed
+            // 
+            this.zs_lstNotUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_lstNotUsed.FormattingEnabled = true;
+            this.zs_lstNotUsed.Location = new System.Drawing.Point(6, 219);
+            this.zs_lstNotUsed.Name = "zs_lstNotUsed";
+            this.zs_lstNotUsed.Size = new System.Drawing.Size(158, 160);
+            this.zs_lstNotUsed.TabIndex = 2;
+            // 
+            // zs_lstUsed
+            // 
+            this.zs_lstUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_lstUsed.FormattingEnabled = true;
+            this.zs_lstUsed.Location = new System.Drawing.Point(6, 33);
+            this.zs_lstUsed.Name = "zs_lstUsed";
+            this.zs_lstUsed.Size = new System.Drawing.Size(158, 147);
+            this.zs_lstUsed.TabIndex = 0;
+            // 
+            // tabCTF
+            // 
+            this.tabCTF.BackColor = System.Drawing.SystemColors.Control;
+            this.tabCTF.Location = new System.Drawing.Point(4, 22);
+            this.tabCTF.Name = "tabCTF";
+            this.tabCTF.Size = new System.Drawing.Size(753, 489);
+            this.tabCTF.TabIndex = 3;
+            this.tabCTF.Text = "CTF";
+            // 
+            // tabTW
+            // 
+            this.tabTW.BackColor = System.Drawing.SystemColors.Control;
+            this.tabTW.Location = new System.Drawing.Point(4, 22);
+            this.tabTW.Name = "tabTW";
+            this.tabTW.Size = new System.Drawing.Size(753, 489);
+            this.tabTW.TabIndex = 4;
+            this.tabTW.Text = "TNT Wars";
+            // 
             // toolTip
             // 
             this.toolTip.AutoPopDelay = 8000;
@@ -1339,8 +1959,91 @@ namespace MCGalaxy.Gui
             this.pl_gbOther.PerformLayout();
             this.pl_gbActions.ResumeLayout(false);
             this.pl_gbActions.PerformLayout();
+            this.tb_games.ResumeLayout(false);
+            this.tabGames.ResumeLayout(false);
+            this.tabZS.ResumeLayout(false);
+            this.zs_grpInvZombie.ResumeLayout(false);
+            this.zs_grpInvZombie.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numInvZombieSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numInvZombieMax)).EndInit();
+            this.zs_grpZombie.ResumeLayout(false);
+            this.zs_grpZombie.PerformLayout();
+            this.zs_grpRevive.ResumeLayout(false);
+            this.zs_grpRevive.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numReviveLimit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numSuccess)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numReviveMax)).EndInit();
+            this.zs_grpInvHuman.ResumeLayout(false);
+            this.zs_grpInvHuman.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numInvHumanSecs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numInvHumanMax)).EndInit();
+            this.zs_grpControls.ResumeLayout(false);
+            this.zs_grpMap.ResumeLayout(false);
+            this.zs_grpTime.ResumeLayout(false);
+            this.zs_grpTime.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numFloodTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numLayerTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.zs_numRoundTime)).EndInit();
+            this.zs_grpSettings.ResumeLayout(false);
+            this.zs_grpSettings.PerformLayout();
+            this.zs_grpMaps.ResumeLayout(false);
+            this.zs_grpMaps.PerformLayout();
             this.ResumeLayout(false);
         }
+        private MCGalaxy.Gui.TimespanUpDown zs_numInvHumanSecs;
+        private MCGalaxy.Gui.TimespanUpDown zs_numReviveLimit;
+        private MCGalaxy.Gui.TimespanUpDown zs_numInvZombieSecs;
+        private System.Windows.Forms.Panel zs_separator;
+        private System.Windows.Forms.Label zs_lblInvZombieMax;
+        private System.Windows.Forms.Label zs_lblInvZombieDur;
+        private System.Windows.Forms.NumericUpDown zs_numInvZombieMax;
+        private System.Windows.Forms.GroupBox zs_grpInvZombie;
+        private System.Windows.Forms.NumericUpDown zs_numSuccess;
+        private System.Windows.Forms.Label zs_lblSuccess;
+        private System.Windows.Forms.TabPage tabTW;
+        private System.Windows.Forms.TabPage tabCTF;
+        private System.Windows.Forms.ListBox zs_lstUsed;
+        private System.Windows.Forms.ListBox zs_lstNotUsed;
+        private System.Windows.Forms.Button zs_btnRemove;
+        private System.Windows.Forms.Button zs_btnAdd;
+        private System.Windows.Forms.Label zs_lblUsed;
+        private System.Windows.Forms.Label zs_lblNotUsed;
+        private System.Windows.Forms.GroupBox zs_grpMaps;
+        private System.Windows.Forms.CheckBox zs_cbStart;
+        private System.Windows.Forms.Label zs_lblInvHumanMax;
+        private System.Windows.Forms.Label zs_lblInvHumanDur;
+        private System.Windows.Forms.NumericUpDown zs_numInvHumanMax;
+        private System.Windows.Forms.GroupBox zs_grpInvHuman;
+        private System.Windows.Forms.CheckBox zs_cbMap;
+        private System.Windows.Forms.CheckBox zs_cbMain;
+        private System.Windows.Forms.Label zs_lblReviveMax;
+        private System.Windows.Forms.NumericUpDown zs_numReviveMax;
+        private System.Windows.Forms.Label zs_lblReviveLimitHdr;
+        private System.Windows.Forms.Label zs_lblReviveLimitFtr;
+        private System.Windows.Forms.Label zs_lblReviveRound;
+        private System.Windows.Forms.GroupBox zs_grpRevive;
+        private System.Windows.Forms.Label zs_lblName;
+        private System.Windows.Forms.Label zs_lblModel;
+        private System.Windows.Forms.TextBox zs_txtName;
+        private System.Windows.Forms.TextBox zs_txtModel;
+        private System.Windows.Forms.GroupBox zs_grpZombie;
+        private System.Windows.Forms.GroupBox zs_grpSettings;
+        private System.Windows.Forms.Label zs_lblRoundTime;
+        private System.Windows.Forms.Label zs_lblFloodTime;
+        private System.Windows.Forms.Label zs_lblLayerTime;
+        private MCGalaxy.Gui.TimespanUpDown zs_numRoundTime;
+        private MCGalaxy.Gui.TimespanUpDown zs_numLayerTime;
+        private MCGalaxy.Gui.TimespanUpDown zs_numFloodTime;
+        private System.Windows.Forms.GroupBox zs_grpTime;
+        private System.Windows.Forms.GroupBox zs_grpMap;
+        private System.Windows.Forms.Button zs_btnStart;
+        private System.Windows.Forms.Button zs_btnStop;
+        private System.Windows.Forms.Button zs_btnEnd;
+        private System.Windows.Forms.GroupBox zs_grpControls;
+        private System.Windows.Forms.TabPage tabZS;
+        private System.Windows.Forms.TabPage tabLS;
+        private System.Windows.Forms.TabControl tabGames;
+        private System.Windows.Forms.TabPage tb_games;
         private System.Windows.Forms.DataGridViewTextBoxColumn main_colPlName;
         private System.Windows.Forms.DataGridViewTextBoxColumn main_colPlMap;
         private System.Windows.Forms.DataGridViewTextBoxColumn main_colPlRank;
