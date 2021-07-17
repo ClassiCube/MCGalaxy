@@ -15,7 +15,6 @@ permissions and limitations under the Licenses.
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
@@ -104,7 +103,7 @@ namespace MCGalaxy {
         }
 
         
-        static object ReadAccounts(IDataRecord record, object arg) {
+        static object ReadAccounts(ISqlRecord record, object arg) {
             List<string> names = (List<string>)arg;
             string name = record.GetText(0);
             

@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using System.IO;
 
 namespace MCGalaxy.SQL {
@@ -39,7 +38,7 @@ namespace MCGalaxy.SQL {
             }
         }
         
-        void MakeInsertFormat(IDataRecord record) {
+        void MakeInsertFormat(ISqlRecord record) {
             sql.WriteLine("--");
             sql.WriteLine("-- Dumping data for table `{0}`", table);
             sql.WriteLine("--");
@@ -55,7 +54,7 @@ namespace MCGalaxy.SQL {
             gottenRows = true;
         }
         
-        object DumpRow(IDataRecord record, object arg) {
+        object DumpRow(ISqlRecord record, object arg) {
             if (!gottenRows) MakeInsertFormat(record);
             sql.WriteLine(insertCols);
 

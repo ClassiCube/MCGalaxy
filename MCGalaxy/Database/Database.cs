@@ -22,14 +22,14 @@ using System.IO;
 
 namespace MCGalaxy.SQL {
     /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
-    public delegate object ReaderCallback(IDataRecord record, object arg);
+    public delegate object ReaderCallback(ISqlRecord record, object arg);
     
     /// <summary> Abstracts a SQL database management engine. </summary>
     public static class Database {
         public static IDatabaseBackend Backend;
         public const string DateFormat = "yyyy-MM-dd HH:mm:ss";        
 
-        static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
+        static object ReadInt(ISqlRecord record, object arg) { return record.GetInt32(0); }
         /// <summary> Counts rows in the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are counted. </param>
         public static int CountRows(string table, string modifier = "", params object[] args) {
@@ -37,7 +37,7 @@ namespace MCGalaxy.SQL {
             return raw == null ? 0 : (int)raw;
         }
         
-        static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
+        static object ReadString(ISqlRecord record, object arg) { return record.GetText(0); }
         /// <summary> Returns value of first column in last row read from the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are read. </param>
         public static string ReadString(string table, string column,
@@ -45,11 +45,11 @@ namespace MCGalaxy.SQL {
             return (string)ReadRows(table, column, null, ReadString, modifier, args);
         }
         
-        internal static object ReadList(IDataRecord record, object arg) {
+        internal static object ReadList(ISqlRecord record, object arg) {
             ((List<string>)arg).Add(record.GetText(0)); return arg;
         }
         
-        internal static object ReadFields(IDataRecord record, object arg) {
+        internal static object ReadFields(ISqlRecord record, object arg) {
             string[] field = new string[record.FieldCount];
             for (int i = 0; i < field.Length; i++) { field[i] = record.GetStringValue(i); }
             ((List<string[]>)arg).Add(field);
@@ -212,26 +212,26 @@ namespace MCGalaxy.SQL {
     }
     
     internal static class DatabaseExts {
-        internal static string GetText(this IDataRecord record, int col) {
+        internal static string GetText(this ISqlRecord record, int col) {
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
         
-        internal static string GetText(this IDataRecord record, string name) {
+        internal static string GetText(this ISqlRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
         
-        internal static int GetInt(this IDataRecord record, string name) {
+        internal static int GetInt(this ISqlRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? 0 : record.GetInt32(col);
         }
         
-        internal static long GetLong(this IDataRecord record, string name) {
+        internal static long GetLong(this ISqlRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? 0 : record.GetInt64(col);
         }
         
-        internal static string GetStringValue(this IDataRecord record, int col) {
+        internal static string GetStringValue(this ISqlRecord record, int col) {
             if (record.IsDBNull(col)) return "";
             Type type = record.GetFieldType(col);
             

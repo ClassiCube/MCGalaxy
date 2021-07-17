@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
@@ -38,7 +37,7 @@ namespace MCGalaxy.DB {
             return name != null ? name : "ID#" + id;
         }
         
-        static object ListIds(IDataRecord record, object arg) {
+        static object ListIds(ISqlRecord record, object arg) {
             ((List<int>)arg).Add(record.GetInt32(0));
             return arg;
         }

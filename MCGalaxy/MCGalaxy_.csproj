@@ -388,6 +388,7 @@
     <Compile Include="CorePlugin\MiscHandlers.cs" />
     <Compile Include="CorePlugin\ModActionHandler.cs" />
     <Compile Include="CorePlugin\NotesPlugin.cs" />
+    <Compile Include="Database\Backends\Interfaces.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
     <Compile Include="Database\Backends\SQLiteBackend.cs" />
     <Compile Include="Database\BlockDB\BlockDB.cs" />

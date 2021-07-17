@@ -26,12 +26,12 @@ namespace MCGalaxy.SQL {
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, object[] parameters, bool createDB) {
             IDatabaseBackend db = Database.Backend;
-            using (IDbConnection conn = db.CreateConnection()) {
+            using (ISqlConnection conn = db.CreateConnection()) {
                 conn.Open();
                 if (!createDB && db.MultipleSchema)
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
                     cmd.ExecuteNonQuery();
                 }
@@ -42,14 +42,14 @@ namespace MCGalaxy.SQL {
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public static object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
             IDatabaseBackend db = Database.Backend;
-            using (IDbConnection conn = db.CreateConnection()) {
+            using (ISqlConnection conn = db.CreateConnection()) {
                 conn.Open();
                 if (db.MultipleSchema)
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
-                    using (IDataReader reader = cmd.ExecuteReader()) {
+                    using (ISqlReader reader = cmd.ExecuteReader()) {
                         while (reader.Read()) { arg = callback(reader, arg); }
                     }
                 }
@@ -60,16 +60,13 @@ namespace MCGalaxy.SQL {
         
         
         /// <summary> Adds IDbDataParameter for each argument to the given command. </summary>
-        public static void FillParams(IDbCommand cmd, object[] parameters) {
+        public static void FillParams(ISqlCommand cmd, object[] parameters) {
             if (parameters == null || parameters.Length == 0) return;
-            IDatabaseBackend db = Database.Backend;
-            
+            IDatabaseBackend db = Database.Backend;           
             string[] names = GetNames(parameters.Length);
+            
             for (int i = 0; i < parameters.Length; i++) {
-                IDbDataParameter arg = db.CreateParameter();
-                arg.ParameterName = names[i];
-                arg.Value = parameters[i];
-                cmd.Parameters.Add(arg);
+                cmd.AddParameter(names[i], parameters[i]);
             }
         }
         

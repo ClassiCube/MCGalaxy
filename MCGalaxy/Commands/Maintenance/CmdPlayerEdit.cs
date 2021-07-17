@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using System.Net;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
@@ -177,7 +176,7 @@ namespace MCGalaxy.Commands.Maintenance {
             MessageDataChanged(p, args[0], args[1], span.Shorten(true));
         }
         
-        static object ReadLong(IDataRecord record, object arg) { return record.GetInt64(0); }
+        static object ReadLong(ISqlRecord record, object arg) { return record.GetInt64(0); }
         static long GetLong(string name, string column) {
             return (long)Database.ReadRows("Players", column, null, ReadLong,
         	                               "WHERE Name=@0", name);

@@ -7,7 +7,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -100,28 +99,21 @@ namespace MCGalaxy.SQL {
         internal static extern IntPtr sqlite3_errstr(SQLiteErrorCode rc); /* 3.7.15+ */
     }
 
-    public abstract class SQLiteConnection : IDbConnection {
-        ConnectionState state = ConnectionState.Closed;
+    public abstract class SQLiteConnection : ISqlConnection 
+    {
+        public bool Closed = true;
         internal int _transactionLevel;
         IntPtr handle;
         
         protected abstract bool ConnectionPooling { get; }
         protected abstract string DBPath { get; }
 
-        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel) {
-            return new SQLiteTransaction(this);
-        }
-
-        public IDbTransaction BeginTransaction() {
+        public ISqlTransaction BeginTransaction() {
             return new SQLiteTransaction(this);
         }
 
         public void ChangeDatabase(string databaseName) { }
-        public int ConnectionTimeout { get { return SQLiteConvert.Timeout; } }     
-        public string ConnectionString { get { return ""; } set { } }
-
-        public IDbCommand CreateCommand() { return new SQLiteCommand(this); }
-        public string Database { get { return "main"; } }
+        public ISqlCommand CreateCommand(string sql) { return new SQLiteCommand(sql, this); }
 
         public long LastInsertRowId {
             get {
@@ -143,8 +135,6 @@ namespace MCGalaxy.SQL {
                 return Interop.sqlite3_get_autocommit(handle) == 1;
             }
         }
-
-        public ConnectionState State { get { return state; } }
         
         public SQLiteErrorCode ResultCode() {
             if (handle == IntPtr.Zero) throw new InvalidOperationException("Database connection closed");
@@ -183,7 +173,7 @@ namespace MCGalaxy.SQL {
         }
         
         public void Open() {
-            if (state != ConnectionState.Closed) throw new InvalidOperationException();
+            if (!Closed) throw new InvalidOperationException();
             Close();
 
             try {
@@ -200,7 +190,7 @@ namespace MCGalaxy.SQL {
                 }
                 
                 SetTimeout(0);
-                state = ConnectionState.Open;
+                Closed = false;
             } catch (SQLiteException) {
                 Close();
                 throw;
@@ -216,7 +206,7 @@ namespace MCGalaxy.SQL {
         internal static void Check(SQLiteConnection connection) {
             if (connection == null)
                 throw new ArgumentNullException("connection");
-            if (connection.state != ConnectionState.Open)
+            if (connection.Closed)
                 throw new InvalidOperationException("The connection is not open.");
             if (connection.handle == IntPtr.Zero)
                 throw new InvalidOperationException("The connection handle is invalid.");
@@ -289,16 +279,17 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    public sealed class SQLiteCommand : IDbCommand {
+    public sealed class SQLiteCommand : ISqlCommand {
         string strCmdText, strRemaining;
-        SQLiteConnection conn;
-        SQLiteParameterCollection parameters = new SQLiteParameterCollection();
+        internal SQLiteConnection conn;
         SQLiteStatement stmt;
+        List<string> param_names  = new List<string>();
+        List<object> param_values = new List<object>();
         
-        public SQLiteCommand(SQLiteConnection connection) : this(null, connection) { }
-        public SQLiteCommand(string commandText, SQLiteConnection connection) {
-            if (commandText != null) CommandText = commandText;
-            if (connection != null)   Connection = connection;
+        public SQLiteCommand(string sql, SQLiteConnection connection) {
+            strCmdText   = sql;
+            strRemaining = sql;
+            conn = connection;
         }
         
         void DisposeStatement() {
@@ -308,7 +299,8 @@ namespace MCGalaxy.SQL {
         
         public void Dispose() {
             conn = null;
-            parameters.Clear();
+            param_names.Clear();
+            param_values.Clear();
             strCmdText = null;
             strRemaining = null;
             DisposeStatement();
@@ -327,56 +319,286 @@ namespace MCGalaxy.SQL {
                 throw;
             }
             
-            if (stmt != null) stmt.BindAll(parameters);
+            if (stmt != null) stmt.BindAll(param_names, param_values);
             return stmt;
         }
 
-        public void Cancel() { }
-        public string CommandText {
-            get { return strCmdText; }
-            set { strCmdText = value; strRemaining = value; }
-        }
+        public void Associate(ISqlTransaction transaction) { }
+        public void Prepare() { }
 
-        public int CommandTimeout {
-            get { return SQLiteConvert.Timeout; } set { }
+        public void ClearParameters() {
+            param_names.Clear();
+            param_values.Clear();
         }
         
-        public IDbConnection Connection {
-            get { return conn; } set { conn = (SQLiteConnection)value; }
+        public void AddParameter(string name, object value) {
+            param_names.Add(name);
+            param_values.Add(value);
         }
 
-        public CommandType CommandType { get { return CommandType.Text; } set { } }
-        public IDbDataParameter CreateParameter() { return new SQLiteParameter(); }
-        public IDataParameterCollection Parameters { get { return parameters; } }
-        public IDbTransaction Transaction { get { return null; } set { } }
-
-        public IDataReader ExecuteReader(CommandBehavior behavior) {
+        public ISqlReader ExecuteReader() {
             SQLiteConnection.Check(conn);
             return new SQLiteDataReader(this);
         }
-        public IDataReader ExecuteReader() { return ExecuteReader(0); }
 
         public int ExecuteNonQuery() {
-            using (IDataReader reader = ExecuteReader()) {
+            using (ISqlReader reader = ExecuteReader()) {
                 while (reader.NextResult()) { }
                 return reader.RecordsAffected;
             }
         }
+    }
 
-        public object ExecuteScalar() {
-            using (IDataReader reader = ExecuteReader()) {
-                if (reader.Read()) return reader[0];
-            }
-            return null;
+    public sealed class SQLiteDataReader : ISqlReader {
+        SQLiteCommand _command;
+        SQLiteStatement stmt;
+        int readState, rowsAffected, columns;
+        string[] fieldNames;
+        SQLiteType[] fieldTypes;
+
+        internal SQLiteDataReader(SQLiteCommand cmd) {
+            _command = cmd;
+            NextResult();
+        }
+        
+        
+        void CheckClosed() {
+            if (_command == null)
+                throw new InvalidOperationException("DataReader has been closed");
+            if (_command.conn.Closed)
+                throw new InvalidOperationException("Connection was closed, statement was terminated");
         }
 
-        public void Prepare() { }
+        public int FieldCount { get { return columns; } }
 
-        public UpdateRowSource UpdatedRowSource {
-            get { return UpdateRowSource.None; } set { }
+        void VerifyForGet() {
+            CheckClosed();
+            if (readState != 0) throw new InvalidOperationException("No current row");
+        }
+
+        public bool GetBoolean(int i) { return GetInt32(i) != 0; }
+
+        public byte[] GetBytes(int i) {
+            if (CheckAffinity(i) == TypeAffinity.Blob)
+                return stmt.GetBytes(i);
+            throw new InvalidCastException();
+        }
+
+        public DateTime GetDateTime(int i) {
+            TypeAffinity aff = CheckAffinity(i);
+            if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double || aff == TypeAffinity.Text)
+                return stmt.GetDateTime(i);
+            throw new NotSupportedException();
+        }
+        
+        public double GetDouble(int i) {
+            TypeAffinity aff = CheckAffinity(i);
+            if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double)
+                return stmt.GetDouble(i);
+            throw new NotSupportedException();
+        }
+
+        public Type GetFieldType(int i) {
+            SQLiteType t = GetSQLiteType(i);
+            if (t.Type == DbType.Object)
+                return SQLiteConvert.affinity_to_type[(int)t.Affinity];
+            else
+                return SQLiteConvert.dbtype_to_type[(int)t.Type];
+        }
+        public string GetName(int i) { return stmt.ColumnName(i); }
+
+        public int GetInt32(int i) {
+            if (CheckAffinity(i) == TypeAffinity.Int64)
+                return stmt.GetInt32(i);
+            throw new InvalidCastException();
+        }
+
+        public long GetInt64(int i) {
+            if (CheckAffinity(i) == TypeAffinity.Int64)
+                return stmt.GetInt64(i);
+            throw new InvalidCastException();
+        }
+
+        public int GetOrdinal(string name) {
+            VerifyForGet();
+            if (fieldNames == null) fieldNames = new string[columns];
+
+            for (int i = 0; i < columns; i++) {
+                string field = fieldNames[i];
+                if (field == null) {
+                    field = stmt.ColumnName(i);
+                    fieldNames[i] = field;
+                }
+                if (name.Equals(field, StringComparison.OrdinalIgnoreCase)) return i;
+            }
+            return -1;
+        }
+
+        public string GetString(int i) { return stmt.GetText(i); }
+        
+        public bool IsDBNull(int i) {
+            VerifyForGet();
+            return stmt.ColumnAffinity(i) == TypeAffinity.Null;
+        }
+
+        public object GetValue(int i) {
+            VerifyForGet();
+            SQLiteType t = GetSQLiteType(i);
+            return stmt.GetValue(i, t);
+        }
+        
+        public object this[string name] { get { return GetValue(GetOrdinal(name)); } }
+        public object this[int i] { get { return GetValue(i); } }
+        
+        
+        public int RecordsAffected { get { return rowsAffected; } }
+        
+        public void Dispose() { Close(); }
+        public void Close() {
+            _command = null;
+            stmt = null;
+            fieldNames = null;
+            fieldTypes = null;
+        }
+        
+        public bool NextResult() {
+            CheckClosed();
+
+            while (true) {
+                stmt = _command.NextStatement(); // next statement to execute
+                readState = 1; // set the state to "done reading"
+                
+                // reached the end of the statements, no more resultsets
+                if (stmt == null) return false;
+                
+                columns = stmt.ColumnCount();
+                if (stmt.Step()) {
+                    readState = -1;
+                } else if (columns == 0) {
+                    // No rows or columns returned, move to the next statement
+                    rowsAffected += stmt.conn.Changes;
+                    continue;
+                } else {
+                    // This statement returned columns but no rows
+                }
+
+                // Found a row-returning resultset eligible to be returned!
+                fieldTypes = new SQLiteType[columns];
+                fieldNames = null;
+                return true;
+            }
+        }
+
+        TypeAffinity CheckAffinity(int i) {
+            VerifyForGet();
+            return GetSQLiteType(i).Affinity;
+        }
+        
+        SQLiteType GetSQLiteType(int i) {
+            SQLiteType typ = fieldTypes[i];
+            TypeAffinity affinity = stmt.ColumnAffinity(i);
+            // NOTE: affinity of a column can change (e.g. NULL when null string, STRING for when has value)
+            if (affinity == typ.Affinity) return typ;
+
+            // Fetch the declared column datatype and attempt to convert it to a known DbType.
+            typ.Affinity = affinity;
+            string typeName = stmt.ColumnType(i);
+            typ.Type = SQLiteConvert.TypeNameToDbType(typeName);
+            
+            fieldTypes[i] = typ;
+            return typ;
+        }
+
+        public bool Read() {
+            CheckClosed();
+
+            // First Row was already read at NextResult() level, so don't step again here
+            if (readState == -1) {
+                readState = 0; return true;
+            } else if (readState == 0) { // Actively reading rows
+                if (stmt.Step()) return true;
+                readState = 1; // Finished reading rows
+            }
+            return false;
         }
     }
 
+    public sealed class SQLiteTransaction : ISqlTransaction {
+        SQLiteConnection conn;
+        
+        internal SQLiteTransaction(SQLiteConnection connection) {
+            conn = connection;
+            if (conn._transactionLevel++ == 0) {
+                try {
+                    using (ISqlCommand cmd = conn.CreateCommand("BEGIN IMMEDIATE")) {
+                        cmd.ExecuteNonQuery();
+                    }
+                } catch (SQLiteException) {
+                    conn._transactionLevel--;
+                    conn = null;
+                    throw;
+                }
+            }
+        }
+        
+        bool disposed;
+        public void Dispose() {
+            if (disposed) return;
+            if (IsValid(false)) IssueRollback(false);
+            disposed = true;
+        }
+        
+        public void Commit() {
+            SQLiteConnection.Check(conn);
+            IsValid(true);
+
+            if (--conn._transactionLevel == 0) {
+                using (ISqlCommand cmd = conn.CreateCommand("COMMIT")) {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            conn = null;
+        }
+
+        public void Rollback() {
+            SQLiteConnection.Check(conn);
+            IsValid(true);
+            IssueRollback(true);
+        }
+
+        void IssueRollback(bool throwError) {
+            if (conn == null) return;
+            
+            try {
+                using (ISqlCommand cmd = conn.CreateCommand("ROLLBACK")) {
+                    cmd.ExecuteNonQuery();
+                }
+            } catch {
+                if (throwError) throw;
+            }
+            conn._transactionLevel = 0;
+        }
+
+        bool IsValid(bool throwError) {
+            if (conn == null) {
+                if (throwError) throw new ArgumentNullException("No connection associated with this transaction");
+                return false;
+            }
+
+            if (conn.Closed) {
+                if (throwError) throw new SQLiteException("Connection was closed");
+                return false;
+            }
+
+            if (conn._transactionLevel == 0 || conn.AutoCommit) {
+                conn._transactionLevel = 0; // Make sure the transaction level is reset before returning
+                if (throwError) throw new SQLiteException("No transaction is active on this connection");
+                return false;
+            }
+            return true;
+        }
+    }
+    
     static class SQLiteConvert {
         static string[] _datetimeFormats = new string[] {
             "yyyy-MM-dd HH:mm:ss.FFFFFFFK", /* NOTE: UTC default (0). */
@@ -566,209 +788,18 @@ namespace MCGalaxy.SQL {
         Null = 5,
         DateTime = 10,
     }
+    
+    enum DbType {
+        DateTime, Boolean,
+        String, Object, Binary,
+        Single, Double, Decimal,
+        Byte, Int16, Int32, Int64,
+        SByte, UInt16, UInt32, UInt64,
+    }
 
     struct SQLiteType {
         public DbType Type;
         public TypeAffinity Affinity;
-    }
-
-    public sealed class SQLiteDataReader : IDataReader {
-        SQLiteCommand _command;
-        SQLiteStatement stmt;
-        int readState, rowsAffected, columns;
-        string[] fieldNames;
-        SQLiteType[] fieldTypes;
-
-        internal SQLiteDataReader(SQLiteCommand cmd) {
-            _command = cmd;
-            NextResult();
-        }
-        
-        public void Dispose() { Close(); }
-        public void Close() {
-            _command = null;
-            stmt = null;
-            fieldNames = null;
-            fieldTypes = null;
-        }
-        
-        void CheckClosed() {
-            if (_command == null)
-                throw new InvalidOperationException("DataReader has been closed");
-            if (_command.Connection.State != ConnectionState.Open)
-                throw new InvalidOperationException("Connection was closed, statement was terminated");
-        }
-
-        public int Depth { get { return 0; } }
-        public int FieldCount { get { return columns; } }
-
-        void VerifyForGet() {
-            CheckClosed();
-            if (readState != 0) throw new InvalidOperationException("No current row");
-        }
-        
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length) {
-            throw new NotSupportedException();
-        }
-        
-        public IDataReader GetData(int i) { throw new NotSupportedException(); }
-        public decimal GetDecimal(int i) { throw new NotSupportedException(); }
-        public Guid GetGuid(int i) { throw new NotSupportedException(); }
-        public DataTable GetSchemaTable() { throw new NotSupportedException(); }
-
-        public bool GetBoolean(int i) { return GetInt32(i) != 0; }
-        public byte GetByte(int i) { return (byte)GetInt32(i); }
-        public char GetChar(int i) { return (char)GetInt32(i); }
-
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length) {
-            if (CheckAffinity(i) == TypeAffinity.Blob)
-                return stmt.GetBytes(i, (int)fieldOffset, buffer, bufferoffset, length);
-            throw new InvalidCastException();
-        }
-
-        public string GetDataTypeName(int i) {
-            VerifyForGet();
-            return stmt.ColumnType(i);
-        }
-
-        public DateTime GetDateTime(int i) {
-            TypeAffinity aff = CheckAffinity(i);
-            if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double || aff == TypeAffinity.Text)
-                return stmt.GetDateTime(i);
-            throw new NotSupportedException();
-        }
-        
-        public double GetDouble(int i) {
-            TypeAffinity aff = CheckAffinity(i);
-            if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double)
-                return stmt.GetDouble(i);
-            throw new NotSupportedException();
-        }
-
-        public Type GetFieldType(int i) {
-            SQLiteType t = GetSQLiteType(i);
-            if (t.Type == DbType.Object)
-                return SQLiteConvert.affinity_to_type[(int)t.Affinity];
-            else
-                return SQLiteConvert.dbtype_to_type[(int)t.Type];
-        }
-
-        public float GetFloat(int i) { return (float)GetDouble(i); }
-        public short GetInt16(int i) { return (short)GetInt32(i); }
-        public string GetName(int i) { return stmt.ColumnName(i); }
-
-        public int GetInt32(int i) {
-            if (CheckAffinity(i) == TypeAffinity.Int64)
-                return stmt.GetInt32(i);
-            throw new InvalidCastException();
-        }
-
-        public long GetInt64(int i) {
-            if (CheckAffinity(i) == TypeAffinity.Int64)
-                return stmt.GetInt64(i);
-            throw new InvalidCastException();
-        }
-
-        public int GetOrdinal(string name) {
-            VerifyForGet();
-            if (fieldNames == null) fieldNames = new string[columns];
-
-            for (int i = 0; i < columns; i++) {
-                string field = fieldNames[i];
-                if (field == null) {
-                    field = stmt.ColumnName(i);
-                    fieldNames[i] = field;
-                }
-                if (name.Equals(field, StringComparison.OrdinalIgnoreCase)) return i;
-            }
-            return -1;
-        }
-
-        public string GetString(int i) { return stmt.GetText(i); }
-
-        public object GetValue(int i) {
-            VerifyForGet();
-            SQLiteType t = GetSQLiteType(i);
-            return stmt.GetValue(i, t);
-        }
-
-        public int GetValues(object[] values) {
-            int count = Math.Min(columns, values.Length);
-            for (int i = 0; i < count; i++) { values[i] = GetValue(i); }
-            return count;
-        }
-
-        public bool IsClosed { get { return _command == null; } }
-
-        public bool IsDBNull(int i) {
-            VerifyForGet();
-            return stmt.ColumnAffinity(i) == TypeAffinity.Null;
-        }
-
-        public bool NextResult() {
-            CheckClosed();
-
-            while (true) {
-                stmt = _command.NextStatement(); // next statement to execute
-                readState = 1; // set the state to "done reading"
-                
-                // reached the end of the statements, no more resultsets
-                if (stmt == null) return false;
-                
-                columns = stmt.ColumnCount();
-                if (stmt.Step()) {
-                    readState = -1;
-                } else if (columns == 0) {
-                    // No rows or columns returned, move to the next statement
-                    rowsAffected += stmt.conn.Changes;
-                    continue;
-                } else {
-                    // This statement returned columns but no rows
-                }
-
-                // Found a row-returning resultset eligible to be returned!
-                fieldTypes = new SQLiteType[columns];
-                fieldNames = null;
-                return true;
-            }
-        }
-
-        TypeAffinity CheckAffinity(int i) {
-            VerifyForGet();
-            return GetSQLiteType(i).Affinity;
-        }
-        
-        SQLiteType GetSQLiteType(int i) {
-            SQLiteType typ = fieldTypes[i];
-            TypeAffinity affinity = stmt.ColumnAffinity(i);
-            // NOTE: affinity of a column can change (e.g. NULL when null string, STRING for when has value)
-            if (affinity == typ.Affinity) return typ;
-
-            // Fetch the declared column datatype and attempt to convert it to a known DbType.
-            typ.Affinity = affinity;
-            string typeName = stmt.ColumnType(i);
-            typ.Type = SQLiteConvert.TypeNameToDbType(typeName);
-            
-            fieldTypes[i] = typ;
-            return typ;
-        }
-
-        public bool Read() {
-            CheckClosed();
-
-            // First Row was already read at NextResult() level, so don't step again here
-            if (readState == -1) {
-                readState = 0; return true;
-            } else if (readState == 0) { // Actively reading rows
-                if (stmt.Step()) return true;
-                readState = 1; // Finished reading rows
-            }
-            return false;
-        }
-
-        public int RecordsAffected { get { return rowsAffected; } }
-        public object this[string name] { get { return GetValue(GetOrdinal(name)); } }
-        public object this[int i] { get { return GetValue(i); } }
     }
 
     sealed class SQLiteException : ExternalException {
@@ -843,78 +874,6 @@ namespace MCGalaxy.SQL {
         public const int Done = 101;
     }
 
-    public sealed class SQLiteParameter : IDbDataParameter {
-        int type = -1;
-        object value;
-        string name;
-
-        public DbType DbType {
-            get {
-                if (type == -1) {
-                    if (value != null && value != DBNull.Value) {
-                        return SQLiteConvert.TypeToDbType(value.GetType());
-                    }
-                    return DbType.String; // Unassigned default value is String
-                }
-                return (DbType)type;
-            }
-            set { type = (int)value; }
-        }
-
-        public string ParameterName { get { return name; } set { name = value; } }
-        
-        public object Value {
-            get { return value; }
-            set {
-                this.value = value;
-                // If the DbType has never been assigned, try to glean one from the value's datatype
-                if (type == -1 && value != null && value != DBNull.Value)
-                    type = (int)SQLiteConvert.TypeToDbType(value.GetType());
-            }
-        }
-        
-        public bool IsNullable { get { return true; } set { } }
-        public string SourceColumn { get { return ""; } set { } }
-        public ParameterDirection Direction { get { return 0; } set { } }
-        public DataRowVersion SourceVersion { get { return 0; } set { } }
-        
-        public byte Precision { get { return 0; } set { } }
-        public byte Scale { get { return 0; } set { } }
-        public int Size { get { return 0; } set { } }
-    }
-
-    public sealed class SQLiteParameterCollection : IDataParameterCollection {
-        internal List<SQLiteParameter> list = new List<SQLiteParameter>();
-        public bool IsSynchronized { get { return false; } }
-        public bool IsFixedSize { get { return false; } }
-        public bool IsReadOnly { get { return false; } }
-        public object SyncRoot { get { return null; } }
-        public IEnumerator GetEnumerator() { return null; }
-
-        public int Add(object value) {
-            list.Add((SQLiteParameter)value);
-            return list.Count - 1;
-        }
-
-        public void Clear() { list.Clear(); }
-        public int Count { get { return list.Count; } }
-        
-        public bool Contains(string name) { return false; }
-        public bool Contains(object value) { return false; }
-        public void CopyTo(Array array, int index) { }
-        
-        public object this[string name] { get {return null; } set { } }
-        public object this[int index] { get {return null; } set { } }
-        
-        public int IndexOf(string name) { return -1; }
-        public int IndexOf(object value) { return -1; }
-        public void Insert(int index, object value) { }
-
-        public void Remove(object value) { }
-        public void RemoveAt(string name) { }
-        public void RemoveAt(int index) { }
-    }
-
     sealed class SQLiteStatement : IDisposable {
         IntPtr handle;
         internal SQLiteConnection conn;
@@ -980,14 +939,14 @@ namespace MCGalaxy.SQL {
             return SQLiteConvert.FromUTF8(p, -1);
         }
 
-        internal void BindAll(SQLiteParameterCollection args) {
-            if (paramNames == null || args.list.Count == 0) return;
+        internal void BindAll(List<string> names, List<object> values) {
+            if (paramNames == null || names.Count == 0) return;
             
-            foreach (SQLiteParameter arg in args.list) {
-                int i = FindParameter(arg.ParameterName);
+            for (int idx = 0; idx < names.Count; idx++) {
+                int i = FindParameter(names[idx]);
                 if (i == -1) continue;
                 
-                SQLiteErrorCode n = BindParameter(i + 1, arg);
+                SQLiteErrorCode n = BindParameter(i + 1, values[idx]);
                 if (n != SQLiteErrorCodes.Ok) throw new SQLiteException(n, conn.GetLastError());
             }
         }
@@ -1000,10 +959,9 @@ namespace MCGalaxy.SQL {
             return -1;
         }
 
-        SQLiteErrorCode BindParameter(int i, SQLiteParameter param) {
-            object obj  = param.Value;
-            DbType type = param.DbType;
-            if (obj != null && type == DbType.Object)
+        SQLiteErrorCode BindParameter(int i, object obj) {
+            DbType type = DbType.String;
+            if (obj != null)
                 type = SQLiteConvert.TypeToDbType(obj.GetType());
             
             if (obj == null || obj == DBNull.Value) {
@@ -1071,10 +1029,7 @@ namespace MCGalaxy.SQL {
 
             switch (typ.Affinity) {
                 case TypeAffinity.Blob:
-                    int n = Interop.sqlite3_column_bytes(handle, index);
-                    byte[] b = new byte[n];
-                    GetBytes(index, 0, b, 0, n);
-                    return b;
+                    return GetBytes(index);
                 case TypeAffinity.Double:
                     return GetDouble(index);
                 case TypeAffinity.Int64:
@@ -1106,100 +1061,14 @@ namespace MCGalaxy.SQL {
             return SQLiteConvert.ToDateTime(GetText(index));
         }
 
-        internal long GetBytes(int index, int srcOffset, byte[] dst, int dstOffset, int dstLen) {
-            int srcLen = Interop.sqlite3_column_bytes(handle, index);
-            if (dst == null) return srcLen;
-
-            int count = dstLen;
-            if (count + dstOffset > dst.Length) count = dst.Length - dstOffset;
-            if (count + srcOffset > srcLen) count = srcLen - srcOffset;
-
-            if (count <= 0) return 0;
-            IntPtr src = Interop.sqlite3_column_blob(handle, index);
-            Marshal.Copy((IntPtr)(src.ToInt64() + srcOffset), dst, dstOffset, count);
-            return count;
-        }
-    }
-
-    public sealed class SQLiteTransaction : IDbTransaction {
-        SQLiteConnection conn;
-        
-        internal SQLiteTransaction(SQLiteConnection connection) {
-            conn = connection;
-            if (conn._transactionLevel++ == 0) {
-                try {
-                    using (IDbCommand cmd = conn.CreateCommand()) {
-                        cmd.CommandText = "BEGIN IMMEDIATE";
-                        cmd.ExecuteNonQuery();
-                    }
-                } catch (SQLiteException) {
-                    conn._transactionLevel--;
-                    conn = null;
-                    throw;
-                }
-            }
-        }
-        
-        bool disposed;
-        public void Dispose() {
-            if (disposed) return;
-            if (IsValid(false)) IssueRollback(false);
-            disposed = true;
-        }
-        
-        public void Commit() {
-            SQLiteConnection.Check(conn);
-            IsValid(true);
-
-            if (--conn._transactionLevel == 0) {
-                using (IDbCommand cmd = conn.CreateCommand()) {
-                    cmd.CommandText = "COMMIT";
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            conn = null;
-        }
-
-        public IDbConnection Connection { get { return conn; } }
-        public IsolationLevel IsolationLevel { get { return IsolationLevel.Serializable; } }
-
-        public void Rollback() {
-            SQLiteConnection.Check(conn);
-            IsValid(true);
-            IssueRollback(true);
-        }
-
-        void IssueRollback(bool throwError) {
-            if (conn == null) return;
+        internal byte[] GetBytes(int index) {
+            int len = Interop.sqlite3_column_bytes(handle, index);
+            if (len <= 0) return new byte[0];
             
-            try {
-                using (IDbCommand cmd = conn.CreateCommand()) {
-                    cmd.CommandText = "ROLLBACK";
-                    cmd.ExecuteNonQuery();
-                }
-            } catch {
-                if (throwError) throw;
-            }
-            conn._transactionLevel = 0;
-        }
-
-        bool IsValid(bool throwError) {
-            if (conn == null) {
-                if (throwError) throw new ArgumentNullException("No connection associated with this transaction");
-                return false;
-            }
-
-            if (conn.State != ConnectionState.Open) {
-                if (throwError) throw new SQLiteException("Connection was closed");
-                return false;
-            }
-
-            if (conn._transactionLevel == 0 || conn.AutoCommit) {
-                conn._transactionLevel = 0; // Make sure the transaction level is reset before returning
-                if (throwError) throw new SQLiteException("No transaction is active on this connection");
-                return false;
-            }
-            return true;
+            byte[] dst = new byte[len];
+            IntPtr src = Interop.sqlite3_column_blob(handle, index);
+            Marshal.Copy(src, dst, 0, len);
+            return dst;
         }
     }
 }

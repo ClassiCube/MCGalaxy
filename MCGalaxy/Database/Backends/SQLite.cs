@@ -27,28 +27,19 @@ namespace MCGalaxy.SQL {
         public static IDatabaseBackend Instance = new SQLiteBackend();
         public SQLiteBackend() {
             CaselessWhereSuffix = " COLLATE NOCASE";
-            CaselessLikeSuffix = " COLLATE NOCASE";
+            CaselessLikeSuffix  = " COLLATE NOCASE";
         }
         
         public override bool EnforcesTextLength { get { return false; } }
         public override bool MultipleSchema { get { return false; } }
         
-        internal override IDbConnection CreateConnection() {
+        internal override ISqlConnection CreateConnection() {
             return new MCGSQLiteConnection();
-        }
-        
-        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
-            return new SQLiteCommand(sql, (SQLiteConnection)conn);
-        }
-        
-        internal override IDbDataParameter CreateParameter() {
-            return new SQLiteParameter();
-        }
-        
+        }        
         
         public override void CreateDatabase() { }
         
-        public override string RawGetDateTime(IDataRecord record, int col) {
+        public override string RawGetDateTime(ISqlRecord record, int col) {
             return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
         }
         
@@ -68,7 +59,7 @@ namespace MCGalaxy.SQL {
             return tables;
         }
         
-        static object IterateColumnNames(IDataRecord record, object arg) {
+        static object IterateColumnNames(ISqlRecord record, object arg) {
             List<string> columns = (List<string>)arg;
             columns.Add(record.GetText("name"));
             return arg;

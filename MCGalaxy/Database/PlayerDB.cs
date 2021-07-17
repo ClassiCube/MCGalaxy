@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using MCGalaxy.SQL;
 
@@ -145,7 +144,7 @@ namespace MCGalaxy.DB {
                                 null, n => n[0], "players", 20);
         }       
                 
-        static object ReadStats(IDataRecord record, object arg) {
+        static object ReadStats(ISqlRecord record, object arg) {
             PlayerData stats = PlayerData.Parse(record);
             ((List<PlayerData>)arg).Add(stats); return arg;
         }

@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
@@ -58,7 +57,7 @@ namespace MCGalaxy.DB {
             Database.DeleteTable(table);
         }
         
-        object DumpRow(IDataRecord record, object arg) {
+        object DumpRow(ISqlRecord record, object arg) {
             if (errorOccurred) return arg;
             
             try {
@@ -124,10 +123,10 @@ namespace MCGalaxy.DB {
         }
         
         
-        void UpdateBlock(IDataRecord record) {
+        void UpdateBlock(ISqlRecord record) {
             entry.OldRaw = Block.Invalid;
-            entry.NewRaw = record.GetByte(5);
-            byte blockFlags = record.GetByte(6);
+            entry.NewRaw = (byte)record.GetInt32(5);
+            byte blockFlags = (byte)record.GetInt32(6);
             entry.Flags = BlockDBFlags.ManualPlace;
             
             if ((blockFlags & 1) != 0) { // deleted block
@@ -138,14 +137,14 @@ namespace MCGalaxy.DB {
             }
         }
         
-        void UpdateCoords(IDataRecord record) {
+        void UpdateCoords(ISqlRecord record) {
             int x = record.GetInt32(2);
             int y = record.GetInt32(3);
             int z = record.GetInt32(4);
             entry.Index = x + dims.X * (z + dims.Z * y);
         }
         
-        void UpdatePlayerID(IDataRecord record) {
+        void UpdatePlayerID(ISqlRecord record) {
             int id;
             string user = record.GetString(0);
             if (!nameCache.TryGetValue(user, out id)) {
@@ -159,7 +158,7 @@ namespace MCGalaxy.DB {
             entry.PlayerID = id;
         }
         
-        void UpdateTimestamp(IDataRecord record) {
+        void UpdateTimestamp(ISqlRecord record) {
             // date is in format yyyy-MM-dd hh:mm:ss
             string date = Database.Backend.RawGetDateTime(record, 1);
             int year =  (date[0] - '0') * 1000 + (date[1] - '0') * 100 + (date[2] - '0') * 10 + (date[3] - '0');

@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 
@@ -55,7 +54,7 @@ namespace MCGalaxy.Blocks.Extended {
         }
         
         
-        internal static object ReadCoords(IDataRecord record, object arg) {
+        internal static object ReadCoords(ISqlRecord record, object arg) {
             Vec3U16 pos;
             pos.X = (ushort)record.GetInt32(0);
             pos.Y = (ushort)record.GetInt32(1);
@@ -65,8 +64,8 @@ namespace MCGalaxy.Blocks.Extended {
             return arg;
         }
         
-        static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
-        static PortalExit ParseExit(IDataRecord record) {
+        static object ReadExit(ISqlRecord record, object arg) { return ParseExit(record); }
+        static PortalExit ParseExit(ISqlRecord record) {
             PortalExit data = new PortalExit();
             data.Map = record.GetText(0);
             
@@ -76,7 +75,7 @@ namespace MCGalaxy.Blocks.Extended {
             return data;
         }
         
-        static object ReadAllExits(IDataRecord record, object arg) {
+        static object ReadAllExits(ISqlRecord record, object arg) {
             ((List<PortalExit>)arg).Add(ParseExit(record));
             return arg;
         }

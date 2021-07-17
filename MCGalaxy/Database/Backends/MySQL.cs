@@ -35,28 +35,21 @@ namespace MCGalaxy.SQL {
         public override bool EnforcesTextLength { get { return true; } }
         public override bool MultipleSchema { get { return true; } }     
         
-        internal override IDbConnection CreateConnection() {
+        internal override ISqlConnection CreateConnection() {
             const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
             string str = string.Format(format, Server.Config.MySQLHost, Server.Config.MySQLPort,
                                        Server.Config.MySQLUsername, Server.Config.MySQLPassword, Server.Config.DatabasePooling);
-            return new MySqlConnection(str);
+            
+            MySqlConnection conn = new MySqlConnection(str);
+            return new MySQLConnection(conn);
         }
-        
-        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
-            return new MySqlCommand(sql, (MySqlConnection)conn);
-        }
-        
-        internal override IDbDataParameter CreateParameter() {
-            return new MySqlParameter();
-        }
-
         
         public override void CreateDatabase() {
             string sql = "CREATE DATABASE if not exists `" + Server.Config.MySQLDatabaseName + "`";
             Database.Do(sql, true, null, null);
         }
         
-        public override string RawGetDateTime(IDataRecord record, int col) {
+        public override string RawGetDateTime(ISqlRecord record, int col) {
             DateTime date = record.GetDateTime(col);
             return date.ToString(Database.DateFormat);
         }
@@ -83,7 +76,7 @@ namespace MCGalaxy.SQL {
         }
         
 
-        static object IterateExists(IDataRecord record, object arg) { return ""; }
+        static object IterateExists(ISqlRecord record, object arg) { return ""; }
         public override bool TableExists(string table) {
             return Database.Iterate("SHOW TABLES LIKE '" + table + "'",
                                     null, IterateExists) != null;
@@ -154,5 +147,93 @@ namespace MCGalaxy.SQL {
         public override string AddOrReplaceRowSql(string table, string columns, object[] args) {
             return InsertSql("REPLACE INTO", table, columns, args);
         }
+    }
+    
+    sealed class MySQLConnection : ISqlConnection 
+    {
+        internal readonly MySqlConnection conn;        
+        public MySQLConnection(MySqlConnection conn) { this.conn = conn; }
+        
+        public ISqlTransaction BeginTransaction() {
+            MySqlTransaction trn = conn.BeginTransaction();
+            return new MySQLTransaction(trn);
+        }
+        
+        public ISqlCommand CreateCommand(string sql) {
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            return new MySQLCommand(cmd);
+        }
+        
+        public void Open() { conn.Open(); }
+        public void ChangeDatabase(string name) { conn.ChangeDatabase(name); }
+        public void Close() { conn.Close(); }
+        public void Dispose() { conn.Dispose(); }
+    }
+    
+    sealed class MySQLCommand : ISqlCommand
+    {        
+        internal readonly MySqlCommand cmd;
+        public MySQLCommand(MySqlCommand cmd) { this.cmd = cmd; }
+        
+        public void Associate(ISqlTransaction transaction) {
+            cmd.Transaction = ((MySQLTransaction)transaction).trn;
+        }
+        
+        public void ClearParameters() { 
+            cmd.Parameters.Clear(); 
+        }
+        public void AddParameter(string name, object value) {
+            cmd.Parameters.AddWithValue(name, value);
+        }
+        
+        public void Dispose() { cmd.Dispose(); }
+        public void Prepare() { cmd.Prepare(); }
+        public int ExecuteNonQuery() { return cmd.ExecuteNonQuery(); }
+        
+        public ISqlReader ExecuteReader() { 
+        	MySqlDataReader rdr = cmd.ExecuteReader();
+        	return new MySQLReader(rdr);
+        }
+    }
+
+    sealed class MySQLTransaction : ISqlTransaction
+    {
+        internal readonly MySqlTransaction trn;
+        public MySQLTransaction(MySqlTransaction trn) { this.trn = trn; }        
+        
+        public void Commit() { trn.Commit(); }
+        public void Rollback() { trn.Rollback(); }
+        public void Dispose() { trn.Dispose(); }
+    }
+    
+    sealed class MySQLReader : ISqlReader
+    {
+    	internal readonly MySqlDataReader rdr;
+    	public MySQLReader(MySqlDataReader rdr) { this.rdr = rdr; }
+    	
+    	public int RecordsAffected { get { return rdr.RecordsAffected; } }
+    	public void Close()   { rdr.Close(); }
+		public void Dispose() { rdr.Dispose(); }
+		public bool NextResult() { return rdr.NextResult(); }
+		public bool Read()    { return rdr.Read(); }
+		
+		
+		public int FieldCount { get  { return rdr.FieldCount; } }
+		public string GetName(int i) { return rdr.GetName(i); }
+		public Type GetFieldType(int i) { return rdr.GetFieldType(i); }
+		public int GetOrdinal(string name) { return rdr.GetOrdinal(name); }
+		
+		public object this[int i] { get { return rdr[i]; } }
+		public object this[string name] { get { return rdr[name]; } }
+		public object GetValue(int i)   { return rdr.GetValue(i); }
+		
+		public bool GetBoolean(int i)  { return rdr.GetBoolean(i); }
+		public byte[] GetBytes(int i)  { return null; }
+		public int GetInt32(int i)     { return rdr.GetInt32(i); }
+		public long GetInt64(int i)    { return rdr.GetInt64(i); }
+		public double GetDouble(int i) { return rdr.GetDouble(i); }
+		public string GetString(int i) { return rdr.GetString(i); }
+		public DateTime GetDateTime(int i) { return rdr.GetDateTime(i); }
+		public bool IsDBNull(int i) { return rdr.IsDBNull(i); }
     }
 }
