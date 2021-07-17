@@ -280,16 +280,15 @@ namespace MCGalaxy.SQL {
     }
 
     public sealed class SQLiteCommand : ISqlCommand {
-        string strCmdText, strRemaining;
+        string sqlCmd;
         internal SQLiteConnection conn;
         SQLiteStatement stmt;
         List<string> param_names  = new List<string>();
         List<object> param_values = new List<object>();
         
         public SQLiteCommand(string sql, SQLiteConnection connection) {
-            strCmdText   = sql;
-            strRemaining = sql;
-            conn = connection;
+            sqlCmd = sql;
+            conn   = connection;
         }
         
         void DisposeStatement() {
@@ -301,29 +300,27 @@ namespace MCGalaxy.SQL {
             conn = null;
             param_names.Clear();
             param_values.Clear();
-            strCmdText = null;
-            strRemaining = null;
+            sqlCmd = null;
             DisposeStatement();
         }
 
         internal SQLiteStatement NextStatement() {
             if (stmt != null) DisposeStatement();
-            if (String.IsNullOrEmpty(strRemaining)) return null;
+            if (String.IsNullOrEmpty(sqlCmd)) return null;
             
             try {
-                stmt = conn.Prepare(strRemaining, ref strRemaining);
+                stmt = conn.Prepare(sqlCmd, ref sqlCmd);
             } catch (Exception) {
                 DisposeStatement();
                 // Cannot continue on, so set the remaining text to null.
-                strRemaining = null;
+                sqlCmd = null;
                 throw;
             }
             
             if (stmt != null) stmt.BindAll(param_names, param_values);
             return stmt;
         }
-
-        public void Associate(ISqlTransaction transaction) { }
+        
         public void Prepare() { }
 
         public void ClearParameters() {

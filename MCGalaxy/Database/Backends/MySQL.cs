@@ -150,7 +150,7 @@ namespace MCGalaxy.SQL {
     
     sealed class MySQLConnection : ISqlConnection 
     {
-        internal readonly MySqlConnection conn;        
+        readonly MySqlConnection conn;        
         public MySQLConnection(MySqlConnection conn) { this.conn = conn; }
         
         public ISqlTransaction BeginTransaction() {
@@ -171,12 +171,8 @@ namespace MCGalaxy.SQL {
     
     sealed class MySQLCommand : ISqlCommand
     {        
-        internal readonly MySqlCommand cmd;
+        readonly MySqlCommand cmd;
         public MySQLCommand(MySqlCommand cmd) { this.cmd = cmd; }
-        
-        public void Associate(ISqlTransaction transaction) {
-            cmd.Transaction = ((MySQLTransaction)transaction).trn;
-        }
         
         public void ClearParameters() { 
             cmd.Parameters.Clear(); 
@@ -190,49 +186,49 @@ namespace MCGalaxy.SQL {
         public int ExecuteNonQuery() { return cmd.ExecuteNonQuery(); }
         
         public ISqlReader ExecuteReader() { 
-        	MySqlDataReader rdr = cmd.ExecuteReader();
-        	return new MySQLReader(rdr);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            return new MySQLReader(rdr);
         }
     }
 
     sealed class MySQLTransaction : ISqlTransaction
     {
-        internal readonly MySqlTransaction trn;
+        readonly MySqlTransaction trn;
         public MySQLTransaction(MySqlTransaction trn) { this.trn = trn; }        
         
-        public void Commit() { trn.Commit(); }
+        public void Commit()   { trn.Commit(); }
         public void Rollback() { trn.Rollback(); }
-        public void Dispose() { trn.Dispose(); }
+        public void Dispose()  { trn.Dispose(); }
     }
     
     sealed class MySQLReader : ISqlReader
     {
-    	internal readonly MySqlDataReader rdr;
-    	public MySQLReader(MySqlDataReader rdr) { this.rdr = rdr; }
-    	
-    	public int RecordsAffected { get { return rdr.RecordsAffected; } }
-    	public void Close()   { rdr.Close(); }
-		public void Dispose() { rdr.Dispose(); }
-		public bool NextResult() { return rdr.NextResult(); }
-		public bool Read()    { return rdr.Read(); }
-		
-		
-		public int FieldCount { get  { return rdr.FieldCount; } }
-		public string GetName(int i) { return rdr.GetName(i); }
-		public Type GetFieldType(int i) { return rdr.GetFieldType(i); }
-		public int GetOrdinal(string name) { return rdr.GetOrdinal(name); }
-		
-		public object this[int i] { get { return rdr[i]; } }
-		public object this[string name] { get { return rdr[name]; } }
-		public object GetValue(int i)   { return rdr.GetValue(i); }
-		
-		public bool GetBoolean(int i)  { return rdr.GetBoolean(i); }
-		public byte[] GetBytes(int i)  { return null; }
-		public int GetInt32(int i)     { return rdr.GetInt32(i); }
-		public long GetInt64(int i)    { return rdr.GetInt64(i); }
-		public double GetDouble(int i) { return rdr.GetDouble(i); }
-		public string GetString(int i) { return rdr.GetString(i); }
-		public DateTime GetDateTime(int i) { return rdr.GetDateTime(i); }
-		public bool IsDBNull(int i) { return rdr.IsDBNull(i); }
+        readonly MySqlDataReader rdr;
+        public MySQLReader(MySqlDataReader rdr) { this.rdr = rdr; }
+        
+        public int RecordsAffected { get { return rdr.RecordsAffected; } }
+        public void Close()   { rdr.Close(); }
+        public void Dispose() { rdr.Dispose(); }
+        public bool NextResult() { return rdr.NextResult(); }
+        public bool Read()    { return rdr.Read(); }
+        
+        
+        public int FieldCount { get  { return rdr.FieldCount; } }
+        public string GetName(int i) { return rdr.GetName(i); }
+        public Type GetFieldType(int i) { return rdr.GetFieldType(i); }
+        public int GetOrdinal(string name) { return rdr.GetOrdinal(name); }
+        
+        public object this[int i] { get { return rdr[i]; } }
+        public object this[string name] { get { return rdr[name]; } }
+        public object GetValue(int i)   { return rdr.GetValue(i); }
+        
+        public bool GetBoolean(int i)  { return rdr.GetBoolean(i); }
+        public byte[] GetBytes(int i)  { return null; }
+        public int GetInt32(int i)     { return rdr.GetInt32(i); }
+        public long GetInt64(int i)    { return rdr.GetInt64(i); }
+        public double GetDouble(int i) { return rdr.GetDouble(i); }
+        public string GetString(int i) { return rdr.GetString(i); }
+        public DateTime GetDateTime(int i) { return rdr.GetDateTime(i); }
+        public bool IsDBNull(int i)    { return rdr.IsDBNull(i); }
     }
 }

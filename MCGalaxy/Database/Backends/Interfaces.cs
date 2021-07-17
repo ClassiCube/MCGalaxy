@@ -33,7 +33,6 @@ namespace MCGalaxy.SQL
 
 	public interface ISqlCommand : IDisposable
 	{
-		void Associate(ISqlTransaction transaction);
 		void ClearParameters();
 		void AddParameter(string name, object value);
 		
