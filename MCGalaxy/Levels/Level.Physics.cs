@@ -54,7 +54,7 @@ namespace MCGalaxy {
                 if (ListCheck.Count == 0 || physThreadStarted) return;
                 
                 physThread = new Thread(PhysicsLoop);
-                physThread.Name = "MCG_Physics_" + name;
+                physThread.Name = "Physics_" + name;
                 physThread.Start();
                 physThreadStarted = true;
             }

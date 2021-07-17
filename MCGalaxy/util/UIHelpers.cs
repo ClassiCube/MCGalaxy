@@ -80,7 +80,7 @@ namespace MCGalaxy.UI {
                         Logger.Log(LogType.CommandUsage, "(console): FAILED COMMAND");
                     }
                 });
-            thread.Name = "MCG_ConsoleCommand";
+            thread.Name = "ConsoleCMD_" + name;
             thread.IsBackground = true;
             thread.Start();
         }

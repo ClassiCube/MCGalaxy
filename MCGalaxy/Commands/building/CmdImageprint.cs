@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.Building {
             if (m[0].X == m[1].X && m[0].Z == m[1].Z) { p.Message("No direction was selected"); return false; }
 
             Thread thread = new Thread(() => DoDrawImage(p, m, (DrawArgs)state));
-            thread.Name = "MCG_ImagePrint";
+            thread.Name = "ImagePrint";
             thread.Start();
             return false;
         }

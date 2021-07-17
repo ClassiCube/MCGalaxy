@@ -77,7 +77,7 @@ namespace MCGalaxy.Games {
             }
             
             Thread t = new Thread(RunGame);
-            t.Name = "MCG_" + GameName;
+            t.Name = "Game_" + GameName;
             t.Start();
         }
 

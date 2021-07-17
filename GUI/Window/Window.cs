@@ -208,7 +208,7 @@ Trying to mix two versions is unsupported - you may experience issues";
         
         static void RunAsync(ThreadStart func) {
             Thread thread = new Thread(func);
-            thread.Name = "MCGalaxy_MsgBox";
+            thread.Name = "MsgBox";
             thread.Start();
         }
         

@@ -549,7 +549,7 @@ namespace MCGalaxy {
                 if (command == null) return;
                 
                 Thread thread = new Thread(() => UseCommand(command, args, data));
-                try { thread.Name = "MCG_CMD_" + cmd; } catch { }
+                try { thread.Name = "CMD_" + cmd; } catch { }
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
@@ -576,7 +576,7 @@ namespace MCGalaxy {
                 }
 
                 Thread thread = new Thread(() => UseCommands(commands, messages, data));
-                thread.Name = "MCG_CMDS_";
+                thread.Name = "CMDS_";
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {

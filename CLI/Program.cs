@@ -48,10 +48,10 @@ namespace MCGalaxy.Cli {
             try {
                 Environment.CurrentDirectory = path;
             } catch {
-                // assembly.Location usually gives full path of te .exe, but has issues with mkbundle
+                // assembly.Location usually gives full path of the .exe, but has issues with mkbundle
                 //   https://mono-devel-list.ximian.narkive.com/KfCAxY1F/mkbundle-assembly-getentryassembly
                 //   https://stackoverflow.com/questions/57648241/reliably-get-location-of-bundled-executable-on-linux
-                // Rather than tringy to guess if this issue has happened, just don't bother at all
+                // Rather than trying to guess when this issue happens, just don't bother at all
                 //  (since most users will not be trying to run .exe from a different folder anyways)
                 Console.WriteLine("Failed to set working directory to '{0}', running in current directory..", path);
             }

@@ -188,7 +188,7 @@ namespace MCGalaxy.Modules.Relay {
         
         void RunAsync() {
             worker      = new Thread(IOThread);
-            worker.Name = RelayName + "-RelayBot";
+            worker.Name = RelayName + "_RelayBot";
             worker.IsBackground = true;
             worker.Start();
         }

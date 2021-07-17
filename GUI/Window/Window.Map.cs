@@ -44,7 +44,7 @@ namespace MCGalaxy.Gui {
             if (!String.IsNullOrEmpty(seed)) args += " " + seed;
             
             Thread genThread = new Thread(() => DoGen(name, args));
-            genThread.Name = "MCG_GuiGenMap";
+            genThread.Name = "GuiGenMap";
             genThread.Start();
         }
         
