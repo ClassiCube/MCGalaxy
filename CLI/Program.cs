@@ -26,7 +26,7 @@ namespace MCGalaxy.Cli {
 
         [STAThread]
         public static void Main(string[] args) {
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.CurrentDirectory = GetFolderIn(Assembly.GetExecutingAssembly());
 
             // If MCGalaxy_.dll is missing, a FileNotFoundException will get thrown for MCGalaxy dll
             try {
@@ -51,6 +51,23 @@ namespace MCGalaxy.Cli {
             }
             Server.RestartPath = Assembly.GetEntryAssembly().Location;
         }
+        
+        const string FILE_PREFIX = "file://";
+        static string GetFolderIn(Assembly assembly) {
+            // assembly.Location usually gives full path, but sometimes is just .exe filename
+            //  (e.g. with mkbundle compiled executables https://mono-devel-list.ximian.narkive.com/KfCAxY1F/mkbundle-assembly-getentryassembly)
+            string dir = Path.GetDirectoryName(assembly.Location);
+            if (!String.IsNullOrEmpty(dir)) return dir;
+            Console.WriteLine("Invalid path '{0}', falling back to Codebase path..", dir);
+            
+            // assembly.Codebase is usually a "file://[path]" URL
+            dir = assembly.CodeBase;
+            if (!dir.StartsWith(FILE_PREFIX)) return "";
+            
+            dir = dir.Substring(FILE_PREFIX.Length);
+            return Path.GetDirectoryName(dir);
+        }
+        
         
         static void StartCLI() {
             FileLogger.Init();
