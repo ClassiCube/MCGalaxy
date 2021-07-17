@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Text;
 
@@ -133,7 +132,7 @@ namespace MCGalaxy.SQL {
             sql.Append(" `").Append(table).Append("` ");
             sql.Append('(').Append(columns).Append(')');
             
-            string[] names = SqlQuery.GetNames(args.Length);
+            string[] names = GetNames(args.Length);
             sql.Append(" VALUES (");
             for (int i = 0; i < args.Length; i++) {
                 sql.Append(names[i]);
@@ -142,5 +141,64 @@ namespace MCGalaxy.SQL {
             }
             return sql.ToString();
         }
+        
+        
+        /// <summary> Executes an SQL command that does not return any results. </summary>
+        /// <remarks> This should not be manually called - use Database.Execute instead </remarks>
+        public void Execute(string sql, object[] parameters, bool createDB) {
+            using (ISqlConnection conn = CreateConnection()) {
+                conn.Open();
+                if (!createDB && MultipleSchema)
+                    conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
+                
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
+                    FillParams(cmd, parameters);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
+
+        /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>   
+        /// <remarks> This should not be manually called - use Database.Iterate instead </remarks>     
+        public object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
+            using (ISqlConnection conn = CreateConnection()) {
+                conn.Open();
+                if (MultipleSchema)
+                    conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
+                
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
+                    FillParams(cmd, parameters);
+                    using (ISqlReader reader = cmd.ExecuteReader()) {
+                        while (reader.Read()) { arg = callback(reader, arg); }
+                    }
+                }
+                conn.Close();
+            }
+            return arg;
+        }
+        
+        
+        /// <summary> Adds the given arguments to the given command. </summary>
+        public static void FillParams(ISqlCommand cmd, object[] parameters) {
+            if (parameters == null || parameters.Length == 0) return;
+            string[] names = GetNames(parameters.Length);
+            
+            for (int i = 0; i < parameters.Length; i++) {
+                cmd.AddParameter(names[i], parameters[i]);
+            }
+        }
+        
+        volatile static string[] ids;
+        internal static string[] GetNames(int count) {
+            // Avoid allocation overhead from string concat every query by caching
+            string[] names = ids;
+            if (names == null || count > names.Length) {
+                names = new string[count];
+                for (int i = 0; i < names.Length; i++) { names[i] = "@" + i; }
+                ids = names;
+            }
+            return names;
+        } 
     }
 }

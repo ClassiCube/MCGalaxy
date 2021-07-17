@@ -76,7 +76,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blocks\Behaviour\BlockBehaviour.cs" />
@@ -404,7 +403,6 @@
     <Compile Include="Database\ColumnDesc.cs" />
     <Compile Include="Database\IDatabaseBackend.cs" />
     <Compile Include="Database\Backends\MySQL.cs" />
-    <Compile Include="Database\SqlQuery.cs" />
     <Compile Include="Database\PlayerData.cs" />
     <Compile Include="Database\Stats\OfflineStat.cs" />
     <Compile Include="Database\Stats\OnlineStat.cs" />

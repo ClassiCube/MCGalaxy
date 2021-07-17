@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 
 namespace MCGalaxy.SQL {
@@ -175,13 +174,15 @@ namespace MCGalaxy.SQL {
 
         internal static object Do(string sql, bool createDB, object arg,
                                   ReaderCallback callback, params object[] args) {
+            IDatabaseBackend db = Backend;
             Exception e = null;
+            
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
-                        arg = SqlQuery.Iterate(sql, args, arg, callback);
+                        arg = db.Iterate(sql, args, arg, callback);
                     } else {
-                        SqlQuery.Execute(sql, args, createDB);
+                        db.Execute(sql, args, createDB);
                     }
                     
                     return arg;

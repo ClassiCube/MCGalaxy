@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 
 namespace MCGalaxy.SQL {
     
@@ -65,7 +64,7 @@ namespace MCGalaxy.SQL {
             try {
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
         			cmd.Associate(transaction);
-                    SqlQuery.FillParams(cmd, args);
+                    IDatabaseBackend.FillParams(cmd, args);
                     cmd.ExecuteNonQuery();
                     return true;
                 }
