@@ -17,7 +17,8 @@ using SQLiteErrorCode = System.Int32;
 namespace MCGalaxy.SQL {
 
     [SuppressUnmanagedCodeSecurity]
-    internal static class Interop {
+    internal static class Interop 
+    {
         const string lib = "sqlite3";
         
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
@@ -212,7 +213,7 @@ namespace MCGalaxy.SQL {
                 throw new InvalidOperationException("The connection handle is invalid.");
         }
         
-        internal bool Reset(bool canThrow) {
+        bool Reset(bool canThrow) {
             if (handle == IntPtr.Zero) return false;
             IntPtr stmt = IntPtr.Zero;
 
@@ -279,7 +280,8 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    public sealed class SQLiteCommand : ISqlCommand {
+    sealed class SQLiteCommand : ISqlCommand 
+    {
         string sqlCmd;
         internal SQLiteConnection conn;
         SQLiteStatement stmt;
@@ -335,28 +337,28 @@ namespace MCGalaxy.SQL {
 
         public ISqlReader ExecuteReader() {
             SQLiteConnection.Check(conn);
-            return new SQLiteDataReader(this);
+            
+            SQLiteDataReader reader = new SQLiteDataReader(this);
+            reader.NextResult();
+            return reader;
         }
 
         public int ExecuteNonQuery() {
             using (ISqlReader reader = ExecuteReader()) {
-                while (reader.NextResult()) { }
-                return reader.RecordsAffected;
+                return reader.RowsAffected;
             }
         }
     }
 
-    public sealed class SQLiteDataReader : ISqlReader {
+    sealed class SQLiteDataReader : ISqlReader 
+    {
         SQLiteCommand _command;
         SQLiteStatement stmt;
         int readState, rowsAffected, columns;
         string[] fieldNames;
         SQLiteType[] fieldTypes;
 
-        internal SQLiteDataReader(SQLiteCommand cmd) {
-            _command = cmd;
-            NextResult();
-        }
+        public SQLiteDataReader(SQLiteCommand cmd) { _command = cmd; }
         
         
         void CheckClosed() {
@@ -448,7 +450,7 @@ namespace MCGalaxy.SQL {
         public object this[int i] { get { return GetValue(i); } }
         
         
-        public int RecordsAffected { get { return rowsAffected; } }
+        public int RowsAffected { get { return rowsAffected; } }
         
         public void Dispose() { Close(); }
         public void Close() {
@@ -486,6 +488,20 @@ namespace MCGalaxy.SQL {
             }
         }
 
+        public bool Read() {
+            CheckClosed();
+
+            // First Row was already read at NextResult() level, so don't step again here
+            if (readState == -1) {
+                readState = 0; return true;
+            } else if (readState == 0) { // Actively reading rows
+                if (stmt.Step()) return true;
+                readState = 1; // Finished reading rows
+            }
+            return false;
+        }
+        
+
         TypeAffinity CheckAffinity(int i) {
             VerifyForGet();
             return GetSQLiteType(i).Affinity;
@@ -505,25 +521,13 @@ namespace MCGalaxy.SQL {
             fieldTypes[i] = typ;
             return typ;
         }
-
-        public bool Read() {
-            CheckClosed();
-
-            // First Row was already read at NextResult() level, so don't step again here
-            if (readState == -1) {
-                readState = 0; return true;
-            } else if (readState == 0) { // Actively reading rows
-                if (stmt.Step()) return true;
-                readState = 1; // Finished reading rows
-            }
-            return false;
-        }
     }
 
-    public sealed class SQLiteTransaction : ISqlTransaction {
+    sealed class SQLiteTransaction : ISqlTransaction 
+    {
         SQLiteConnection conn;
         
-        internal SQLiteTransaction(SQLiteConnection connection) {
+        public SQLiteTransaction(SQLiteConnection connection) {
             conn = connection;
             if (conn._transactionLevel++ == 0) {
                 try {
@@ -596,7 +600,8 @@ namespace MCGalaxy.SQL {
         }
     }
     
-    static class SQLiteConvert {
+    static class SQLiteConvert 
+    {
         static string[] _datetimeFormats = new string[] {
             "yyyy-MM-dd HH:mm:ss.FFFFFFFK", /* NOTE: UTC default (0). */
             "yyyy-MM-dd HH:mm:ssK",
@@ -776,7 +781,8 @@ namespace MCGalaxy.SQL {
         };
     }
 
-    enum TypeAffinity {
+    enum TypeAffinity 
+    {
         Uninitialized = 0,
         Int64 = 1,
         Double = 2,
@@ -786,7 +792,8 @@ namespace MCGalaxy.SQL {
         DateTime = 10,
     }
     
-    enum DbType {
+    enum DbType 
+    {
         DateTime, Boolean,
         String, Object, Binary,
         Single, Double, Decimal,
@@ -799,7 +806,8 @@ namespace MCGalaxy.SQL {
         public TypeAffinity Affinity;
     }
 
-    sealed class SQLiteException : ExternalException {
+    sealed class SQLiteException : ExternalException 
+    {
         SQLiteErrorCode _code;
 
         public SQLiteException(SQLiteErrorCode code, string message)
@@ -861,7 +869,8 @@ namespace MCGalaxy.SQL {
         }
     }
 
-    static class SQLiteErrorCodes {
+    static class SQLiteErrorCodes 
+    {
         public const int Unknown = -1;
         public const int Ok = 0;
         public const int Error = 1;
@@ -871,7 +880,8 @@ namespace MCGalaxy.SQL {
         public const int Done = 101;
     }
 
-    sealed class SQLiteStatement : IDisposable {
+    sealed class SQLiteStatement : IDisposable 
+    {
         IntPtr handle;
         internal SQLiteConnection conn;
         string[] paramNames;

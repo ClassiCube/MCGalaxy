@@ -23,7 +23,8 @@ using MySql.Data.MySqlClient;
 
 namespace MCGalaxy.SQL {
 
-    public sealed class MySQLBackend : IDatabaseBackend {
+    public sealed class MySQLBackend : IDatabaseBackend 
+    {
         public static IDatabaseBackend Instance = new MySQLBackend();
         public MySQLBackend() {
             // MySQL uses case insensitive collation by default
@@ -206,10 +207,9 @@ namespace MCGalaxy.SQL {
         readonly MySqlDataReader rdr;
         public MySQLReader(MySqlDataReader rdr) { this.rdr = rdr; }
         
-        public int RecordsAffected { get { return rdr.RecordsAffected; } }
+        public int RowsAffected { get { return rdr.RecordsAffected; } }
         public void Close()   { rdr.Close(); }
         public void Dispose() { rdr.Dispose(); }
-        public bool NextResult() { return rdr.NextResult(); }
         public bool Read()    { return rdr.Read(); }
         
         

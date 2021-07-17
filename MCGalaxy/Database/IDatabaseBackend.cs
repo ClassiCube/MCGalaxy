@@ -22,9 +22,9 @@ using System.Text;
 
 namespace MCGalaxy.SQL {
     
-    /// <summary> Simple abstraction for a database management system. </summary>
-    public abstract class IDatabaseBackend {
-        
+    /// <summary> Abstracts a SQL based database management system. </summary>
+    public abstract class IDatabaseBackend 
+    {
         /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
         public abstract bool EnforcesTextLength { get; }        
         /// <summary> Whether this backend supports multiple database schemas. </summary>
@@ -143,7 +143,7 @@ namespace MCGalaxy.SQL {
         }
         
         
-        /// <summary> Executes an SQL command that does not return any results. </summary>
+        /// <summary> Executes a SQL command that does not return any results. </summary>
         /// <remarks> This should not be manually called - use Database.Execute instead </remarks>
         public void Execute(string sql, object[] parameters, bool createDB) {
             using (ISqlConnection conn = CreateConnection()) {
@@ -159,7 +159,7 @@ namespace MCGalaxy.SQL {
             }
         }
 
-        /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>   
+        /// <summary> Excecutes a SQL query, invoking a callback on the returned rows one by one. </summary>   
         /// <remarks> This should not be manually called - use Database.Iterate instead </remarks>     
         public object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
             using (ISqlConnection conn = CreateConnection()) {

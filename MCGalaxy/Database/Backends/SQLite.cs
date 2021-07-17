@@ -22,7 +22,8 @@ using System.Text;
 
 namespace MCGalaxy.SQL {
 
-    public sealed class SQLiteBackend : IDatabaseBackend {
+    public sealed class SQLiteBackend : IDatabaseBackend 
+    {
         public static IDatabaseBackend Instance = new SQLiteBackend();
         public SQLiteBackend() {
             CaselessWhereSuffix = " COLLATE NOCASE";
@@ -122,7 +123,8 @@ namespace MCGalaxy.SQL {
         }
     }
     
-    public sealed class MCGSQLiteConnection : SQLiteConnection {
+    public sealed class MCGSQLiteConnection : SQLiteConnection 
+    {
         protected override bool ConnectionPooling { get { return Server.Config.DatabasePooling; } }
         protected override string DBPath { get { return "MCGalaxy.db"; } }
     }

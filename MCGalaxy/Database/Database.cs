@@ -24,7 +24,8 @@ namespace MCGalaxy.SQL {
     public delegate object ReaderCallback(ISqlRecord record, object arg);
     
     /// <summary> Abstracts a SQL database management engine. </summary>
-    public static class Database {
+    public static class Database 
+    {
         public static IDatabaseBackend Backend;
         public const string DateFormat = "yyyy-MM-dd HH:mm:ss";        
 
@@ -212,7 +213,8 @@ namespace MCGalaxy.SQL {
         }
     }
     
-    internal static class DatabaseExts {
+    internal static class DatabaseExts 
+    {
         internal static string GetText(this ISqlRecord record, int col) {
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
