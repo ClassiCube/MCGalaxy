@@ -26,7 +26,7 @@ namespace MCGalaxy.Cli {
 
         [STAThread]
         public static void Main(string[] args) {
-            Environment.CurrentDirectory = GetFolderIn(Assembly.GetExecutingAssembly());
+            SetCurrentDirectory();
 
             // If MCGalaxy_.dll is missing, a FileNotFoundException will get thrown for MCGalaxy dll
             try {
@@ -43,6 +43,20 @@ namespace MCGalaxy.Cli {
             StartCLI();
         }
         
+        static void SetCurrentDirectory() {
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            try {
+                Environment.CurrentDirectory = path;
+            } catch {
+                // assembly.Location usually gives full path of te .exe, but has issues with mkbundle
+                //   https://mono-devel-list.ximian.narkive.com/KfCAxY1F/mkbundle-assembly-getentryassembly
+                //   https://stackoverflow.com/questions/57648241/reliably-get-location-of-bundled-executable-on-linux
+                // Rather than tringy to guess if this issue has happened, just don't bother at all
+                //  (since most users will not be trying to run .exe from a different folder anyways)
+                Console.WriteLine("Failed to set working directory to '{0}', running in current directory..", path);
+            }
+        }
+        
         static void EnableCLIMode() {
             try {
                 Server.CLIMode = true;
@@ -50,22 +64,6 @@ namespace MCGalaxy.Cli {
                 // in case user is running CLI with older MCGalaxy dll which lacked CLIMode field
             }
             Server.RestartPath = Assembly.GetEntryAssembly().Location;
-        }
-        
-        const string FILE_PREFIX = "file://";
-        static string GetFolderIn(Assembly assembly) {
-            // assembly.Location usually gives full path, but sometimes is just .exe filename
-            //  (e.g. with mkbundle compiled executables https://mono-devel-list.ximian.narkive.com/KfCAxY1F/mkbundle-assembly-getentryassembly)
-            string dir = Path.GetDirectoryName(assembly.Location);
-            if (!String.IsNullOrEmpty(dir)) return dir;
-            Console.WriteLine("Invalid path '{0}', falling back to Codebase path..", dir);
-            
-            // assembly.Codebase is usually a "file://[path]" URL
-            dir = assembly.CodeBase;
-            if (!dir.StartsWith(FILE_PREFIX)) return "";
-            
-            dir = dir.Substring(FILE_PREFIX.Length);
-            return Path.GetDirectoryName(dir);
         }
         
         
