@@ -33,20 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         protected override void SetPlayerData(Player p, string target, string colName) {
-            string col = "";
-            Player who = PlayerInfo.FindExact(target);
-            
-            if (colName.Length == 0) {
-                MessageAction(p, target, who, "λACTOR &Sremoved λTARGET title color");
-            } else  {
-                col = Matcher.FindColor(p, colName);
-                if (col == null) return;
-                MessageAction(p, target, who, "λACTOR &Schanged λTARGET title color" + col + Colors.Name(col));
-            }
-            
-            if (who != null) who.titlecolor = col;
-            if (who != null) who.SetPrefix();
-            PlayerDB.Update(target, PlayerData.ColumnTColor, col);
+            PlayerOperations.SetTitleColor(p, target, colName);
         }
 
         public override void Help(Player p) {

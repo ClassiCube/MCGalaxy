@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.CPE {
             if (p == who) {
                 p.Message("Changed your own skin to &c" + skin);
             } else {
-                MessageAction(p, target, who, "λACTOR &Schanged λTARGET skin to &c" + skin);
+                PlayerOperations.MessageAction(p, target, who, "λACTOR &Schanged λTARGET skin to &c" + skin);
             }
             
             if (who != null) who.SkinName = skin;

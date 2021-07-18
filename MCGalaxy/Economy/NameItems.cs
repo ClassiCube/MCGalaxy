@@ -29,19 +29,16 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnPurchase(Player p, string title) {
             if (title.Length == 0) {
-                UseCommand(p, "Title", "-own");
+                PlayerOperations.SetTitle(p, p.name, "");
                 p.Message("&aYour title was removed for free."); return;
             }
             
-        	if (!CheckPrice(p)) return;
+            if (!CheckPrice(p)) return;
             if (title == p.title) {
                 p.Message("&WYou already have that title."); return;
             }
-            if (title.Length >= 20) {
-                p.Message("&WTitles must be under 20 characters."); return;
-            }
-            
-            UseCommand(p, "Title", "-own " + title);
+
+            if (!PlayerOperations.SetTitle(p, p.name, title)) return;
             Economy.MakePurchase(p, Price, "%3Title: %f" + title);
         }
     }
@@ -56,11 +53,11 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnPurchase(Player p, string nick) {
             if (nick.Length == 0) {
-                UseCommand(p, "Nick", "-own");
+                PlayerOperations.SetNick(p, p.name, "");
                 p.Message("&aYour nickname was removed for free."); return;
             }
             
-        	if (!CheckPrice(p)) return;
+            if (!CheckPrice(p)) return;
             if (nick == p.DisplayName) {
                 p.Message("&WYou already have that nickname."); return;
             }
@@ -68,7 +65,7 @@ namespace MCGalaxy.Eco {
                 p.Message("&WNicknames must be under 30 characters."); return;
             }
             
-            UseCommand(p, "Nick", "-own " + nick);
+            if (!PlayerOperations.SetNick(p, p.name, nick)) return;
             Economy.MakePurchase(p, Price, "%3Nickname: %f" + nick);
         }
     }
@@ -86,15 +83,15 @@ namespace MCGalaxy.Eco {
             string color = Matcher.FindColor(p, args);
             
             if (color == null) return;
-            string colName = Colors.Name(color);
+            string name = Colors.Name(color);
             if (!CheckPrice(p)) return;
             
             if (color == p.titlecolor) {
-                p.Message("&WYour title color is already " + color + colName); return;
+                p.Message("&WYour title color is already " + color + name); return;
             }
             
-            UseCommand(p, "TColor", "-own " + colName);
-            Economy.MakePurchase(p, Price, "%3Titlecolor: " + color + colName);
+            if (!PlayerOperations.SetTitleColor(p, p.name, name)) return;
+            Economy.MakePurchase(p, Price, "%3Titlecolor: " + color + name);
         }
     }
     
@@ -111,15 +108,15 @@ namespace MCGalaxy.Eco {
             string color = Matcher.FindColor(p, args);
             
             if (color == null) return;
-            string colName = Colors.Name(color);
+            string name = Colors.Name(color);
             if (!CheckPrice(p)) return;
             
             if (color == p.color) {
-                p.Message("&WYour color is already " + color + colName); return;
+                p.Message("&WYour color is already " + color + name); return;
             }
             
-            UseCommand(p, "Color", "-own " + colName);
-            Economy.MakePurchase(p, Price, "%3Color: " + color + colName);
+            if (!PlayerOperations.SetColor(p, p.name, name)) return;
+            Economy.MakePurchase(p, Price, "%3Color: " + color + name);
         }
     }
 }

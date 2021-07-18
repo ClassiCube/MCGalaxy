@@ -30,23 +30,11 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (!MessageCmd.CanSpeak(p, name)) return;
             UsePlayer(p, data, message, "title");
         }
         
         protected override void SetPlayerData(Player p, string target, string title) {
-            if (title.Length >= 20) { p.Message("Title must be under 20 letters."); return; } 
-            Player who = PlayerInfo.FindExact(target);
-            
-            if (title.Length == 0) {
-                MessageAction(p, target, who, "λACTOR &Sremoved λTARGET title");
-            } else {
-            	MessageAction(p, target, who, "λACTOR &Schanged λTARGET title to &b[" + title + "&b]");
-            }
-            
-            if (who != null) who.title = title;
-            if (who != null) who.SetPrefix();
-            PlayerDB.Update(target, PlayerData.ColumnTitle, title.UnicodeToCp437());
+            PlayerOperations.SetTitle(p, target, title);
         }
         
         public override void Help(Player p) {

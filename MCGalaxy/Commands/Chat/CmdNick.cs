@@ -35,11 +35,12 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (!MessageCmd.CanSpeak(p, name)) return;
             UseBotOrPlayer(p, data, message, "nick");
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string nick) {
+            if (!MessageCmd.CanSpeak(p, name)) return;
+            
             if (nick.Length == 0) {
                 bot.DisplayName = bot.name;
                 p.level.Message("Bot " + bot.ColoredName + " &Sreverted to their original name.");
@@ -57,21 +58,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         protected override void SetPlayerData(Player p, string target, string nick) {
-            if (Colors.Strip(nick).Length >= 30) { p.Message("Nick must be under 30 letters."); return; }
-            Player who = PlayerInfo.FindExact(target);
-            
-            if (nick.Length == 0) {
-                MessageAction(p, target, who, "λACTOR &Sremoved λTARGET nick");
-                nick = target.RemoveLastPlus();
-            } else {
-                // TODO: select color from database?
-                string color = who != null ? who.color : Group.GroupIn(target).Color;
-                MessageAction(p, target, who, "λACTOR &Schanged λTARGET nick to " + color + nick);
-            }
-            
-            if (who != null) who.DisplayName = nick;
-            if (who != null) TabList.Update(who, true);
-            PlayerDB.SetNick(target, nick);
+            PlayerOperations.SetNick(p, target, nick);
         }
         
         public override void Help(Player p) {

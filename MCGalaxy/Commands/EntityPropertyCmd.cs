@@ -80,27 +80,6 @@ namespace MCGalaxy.Commands {
         protected virtual void SetOnlineData(Player p, Player who,    string args) { }       
         protected virtual void SetPlayerData(Player p, string target, string args) { }
         
-        /// <remarks> λACTOR is replaced with nick of player performing the action </remarks>
-        /// <remarks> λTARGET is replaced with either "their" or "[target nick]'s", depending 
-        /// on whether the actor is the same player as the target or not </remarks>
-        protected void MessageAction(Player actor, string target, Player who, string message) {
-            // TODO: this needs to be compoletely rethought
-            bool global = who == null || actor.IsSuper 
-                            || (!actor.level.SeesServerWideChat && actor.level != who.level);
-            
-            if (actor == who) {
-                message = message.Replace("λACTOR",  "λNICK")
-                                 .Replace("λTARGET", "their");
-                Chat.MessageFrom(who, message);
-            } else if (!global) {
-                message = message.Replace("λACTOR",  actor.ColoredName)
-                                 .Replace("λTARGET", "λNICK&S's");
-                Chat.MessageFrom(who, message);
-            } else {
-                message = message.Replace("λACTOR",  actor.ColoredName)
-                                 .Replace("λTARGET", Player.Console.FormatNick(target) + "&S's");
-                Chat.MessageAll(message);
-            }
-        }
+        
     }
 }

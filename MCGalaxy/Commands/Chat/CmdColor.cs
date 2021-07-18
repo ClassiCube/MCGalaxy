@@ -48,22 +48,7 @@ namespace MCGalaxy.Commands.Chatting {
         }
         
         protected override void SetPlayerData(Player p, string target, string colName) {
-            string col = "";
-            Player who = PlayerInfo.FindExact(target);
-            
-            if (colName.Length == 0) {
-                col = Group.GroupIn(target).Color;
-                
-                PlayerDB.Update(target, PlayerData.ColumnColor, "");
-                MessageAction(p, target, who, "λACTOR &Sremoved λTARGET color");
-            } else {
-                col = Matcher.FindColor(p, colName);
-                if (col == null) return;
-                
-                PlayerDB.Update(target, PlayerData.ColumnColor, col);
-                MessageAction(p, target, who, "λACTOR &Schanged λTARGET color to " + col + Colors.Name(col));
-            }
-            if (who != null) who.UpdateColor(col);
+            PlayerOperations.SetColor(p, target, colName);
         }
         
         public override void Help(Player p) {
