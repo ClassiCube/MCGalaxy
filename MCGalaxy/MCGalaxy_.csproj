@@ -620,6 +620,7 @@
     <Compile Include="Player\PlayerActions.cs" />
     <Compile Include="Player\PlayerIgnores.cs" />
     <Compile Include="Player\PlayerInfo.cs" />
+    <Compile Include="Player\PlayerOperations.cs" />
     <Compile Include="Player\PlayerPhysics.cs" />
     <Compile Include="Player\SpamChecker.cs" />
     <Compile Include="Player\Warp.cs" />

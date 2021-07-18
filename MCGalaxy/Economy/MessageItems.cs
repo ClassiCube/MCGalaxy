@@ -35,7 +35,7 @@ namespace MCGalaxy.Eco {
                 return;
             }
             
-        	if (!CheckPrice(p)) return;
+            if (!CheckPrice(p)) return;
             if (msg == PlayerDB.GetLoginMessage(p)) {
                 p.Message("&WYou already have that login message."); return;
             }
@@ -43,7 +43,7 @@ namespace MCGalaxy.Eco {
                 p.Message("&WLogin message must be 64 characters or less."); return;
             }
             
-            UseCommand(p, "LoginMessage", "-own " + msg);
+            if (!PlayerOperations.SetLoginMessage(p, p.name, msg)) return;
             Economy.MakePurchase(p, Price, "%3LoginMessage: %f" + msg);
         }
     }
@@ -61,17 +61,17 @@ namespace MCGalaxy.Eco {
                 PlayerDB.SetLogoutMessage(p.name, "");
                 p.Message("&aYour logout message was removed for free.");
                 return;
-        	}
+            }
             
-        	if (!CheckPrice(p)) return;    
+            if (!CheckPrice(p)) return;
             if (msg == PlayerDB.GetLogoutMessage(p)) {
                 p.Message("&WYou already have that logout message."); return;
-            }       
+            }
             if (msg.Length > NetUtils.StringSize) {
                 p.Message("&WLogin message must be 64 characters or less."); return;
             }
             
-            UseCommand(p, "LogoutMessage", "-own " + msg);
+            if (!PlayerOperations.SetLogoutMessage(p, p.name, msg)) return;
             Economy.MakePurchase(p, Price, "%3LogoutMessage: %f" + msg);
         }
     }
