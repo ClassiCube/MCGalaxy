@@ -89,13 +89,6 @@ namespace MCGalaxy.Eco {
             }
         }
         
-        protected static void UseCommand(Player p, string cmd, string args) {
-            CommandData data = default(CommandData);
-            data.Rank    = LevelPermission.Nobody;
-            data.Context = CommandContext.Purchase;
-            Command.Find(cmd).Use(p, args, data);
-        }
-        
         protected static bool CheckPrice(Player p, int price, string item) {
             if (p.money < price) {
                 p.Message("&WYou don't have enough &3{1} &Wto buy {0}.", item, Server.Config.Currency); 

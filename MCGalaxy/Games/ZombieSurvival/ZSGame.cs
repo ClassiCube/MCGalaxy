@@ -298,5 +298,28 @@ namespace MCGalaxy.Games {
             string state = ", you are " + (Get(p).Infected ? "&cdead" : "&aalive");
             return money + state;
         }
+        
+        
+        public bool SetQueuedZombie(Player p, string name) {
+            Player target = PlayerInfo.FindMatches(p, name);
+            if (target == null) return false;
+            
+            p.Message("{0} was queued.", p.FormatNick(target));
+            QueuedZombie = target.name;
+            
+            if (Map != null) Map.Message(target.ColoredName + " &Swas queued as the next zombie.");
+            return true;
+        }
+        
+        public bool SetQueuedLevel(Player p, string name) {
+            string map = Matcher.FindMaps(p, name);
+            if (map == null) return false;
+                
+            p.Message(map + " was queued.");
+            Picker.QueuedMap = map.ToLower();
+            
+            if (Map != null) Map.Message(map + " was queued as the next map.");
+            return true;
+        }
     }
 }

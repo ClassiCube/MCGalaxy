@@ -66,12 +66,10 @@ namespace MCGalaxy.Eco {
             }
         	
         	if (args.Length == 0) { OnStoreCommand(p); return; }
-            string map = Matcher.FindMaps(p, args);
-            if (map == null) return;
-            
             if (!CheckPrice(p)) return;
-            UseCommand(p, "Queue", "level " + map);
-            Economy.MakePurchase(p, Price, "%3QueueLevel: " + map);
+            
+            if (!ZSGame.Instance.SetQueuedLevel(p, args)) return;
+            Economy.MakePurchase(p, Price, "%3QueueLevel: " + args);
         }
         
         protected internal override void OnStoreCommand(Player p) {

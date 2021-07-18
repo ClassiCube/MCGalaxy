@@ -32,21 +32,9 @@ namespace MCGalaxy.Commands.Fun {
             string value = args[1];
             
             if (args[0].CaselessEq("zombie")) {
-                Player who = PlayerInfo.FindMatches(p, value);
-                if (who == null) return;
-                
-                p.Message(value + " was queued.");
-                ZSGame.Instance.QueuedZombie = who.name;
-                if (ZSGame.Instance.Map != null)
-                    ZSGame.Instance.Map.Message(who.ColoredName + " &Swas queued as the next zombie.");
+                ZSGame.Instance.SetQueuedZombie(p, value);
             } else if (args[0].CaselessEq("level")) {
-                string map = Matcher.FindMaps(p, value);
-                if (map == null) return;
-                
-                p.Message(map + " was queued.");
-                ZSGame.Instance.Picker.QueuedMap = map.ToLower();
-                if (ZSGame.Instance.Map != null)
-                    ZSGame.Instance.Map.Message(map + " was queued as the next map.");
+                ZSGame.Instance.SetQueuedLevel(p, value);
             } else {
                 Help(p);
             }
