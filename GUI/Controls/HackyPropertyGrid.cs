@@ -41,7 +41,6 @@ namespace MCGalaxy.Gui {
 Type: IndexOutOfRangeException
 Source: System.Windows.Forms
 Message: Index was outside the bounds of the array.
-Target: UpdatePropertiesViewTabVisibility
 Trace:   at System.Windows.Forms.PropertyGrid.UpdatePropertiesViewTabVisibility ()
   at System.Windows.Forms.PropertyGrid.ShowEventsButton (System.Boolean value)
   at System.Windows.Forms.PropertyGrid.set_SelectedObjects (System.Object[] value)
@@ -58,7 +57,6 @@ Trace:   at System.Windows.Forms.PropertyGrid.UpdatePropertiesViewTabVisibility 
 Type: IndexOutOfRangeException
 Source: System.Windows.Forms
 Message: Index was outside the bounds of the array.
-Target: RefreshProperties
 Trace:   at System.Windows.Forms.PropertyGrid.RefreshProperties (System.Boolean clearCached)
   at System.Windows.Forms.PropertyGrid.Refresh (System.Boolean clearCached)
   at System.Windows.Forms.PropertyGrid.Refresh ()

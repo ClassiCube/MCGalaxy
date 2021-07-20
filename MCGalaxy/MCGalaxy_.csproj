@@ -137,6 +137,7 @@
     <Compile Include="Commands\building\CmdMaze.cs" />
     <Compile Include="Commands\building\CmdMeasure.cs" />
     <Compile Include="Commands\building\CmdMessageBlock.cs" />
+    <Compile Include="Commands\building\CmdMirror.cs" />
     <Compile Include="Commands\building\CmdMode.cs" />
     <Compile Include="Commands\building\CmdOutline.cs" />
     <Compile Include="Commands\building\CmdPaint.cs" />

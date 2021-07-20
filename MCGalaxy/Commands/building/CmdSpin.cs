@@ -25,7 +25,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
         public override CommandAlias[] Aliases {
-            get { return new [] { new CommandAlias("Mirror", "mirror"), new CommandAlias("Rotate") }; }
+            get { return new [] { new CommandAlias("Rotate") }; }
         }
 
         public override void Use(Player p, string message, CommandData data) {
@@ -38,38 +38,26 @@ namespace MCGalaxy.Commands.Building {
             string opt = message.ToLower();
             BlockDefinition[] defs = p.level.CustomBlockDefs;
             
-            // Mirroring
-            if (opt == "mirrorx" || opt == "mirror x") {
-                Flip.MirrorX(cState, defs);
-                p.Message("Flipped copy across the X (east/west) axis.");
-            } else if (opt == "mirrory" || opt == "mirror y" || opt == "u") {
-                Flip.MirrorY(cState, defs);
-                p.Message("Flipped copy across the Y (vertical) axis.");
-            } else if (opt == "mirrorz" || opt == "mirror z" || opt == "m") {
-                Flip.MirrorZ(cState, defs);
-                p.Message("Flipped copy across the Z (north/south) axis.");
-            } else {
-                string[] args = opt.SplitSpaces();
-                char axis = 'Y';
-                int angle = 90;
-                if (!Handle(ref axis, ref angle, args[0])) { Help(p); return; }
-                if (args.Length > 1 && !Handle(ref axis, ref angle, args[1])) { Help(p); return; }
-                
-                CopyState newState = cState;
-                if (angle == 0) {
-                } else if (axis == 'X') {
-                    newState = Flip.RotateX(cState, angle, defs);
-                } else if (axis == 'Y') {
-                    newState = Flip.RotateY(cState, angle, defs);
-                } else if (axis == 'Z') {
-                    newState = Flip.RotateZ(cState, angle, defs);
-                }
+            string[] args = opt.SplitSpaces();
+            char axis = 'Y';
+            int angle = 90;
+            if (!Handle(ref axis, ref angle, args[0])) { Help(p); return; }
+            if (args.Length > 1 && !Handle(ref axis, ref angle, args[1])) { Help(p); return; }
+            
+            CopyState newState = cState;
+            if (angle == 0) {
+            } else if (axis == 'X') {
+                newState = Flip.RotateX(cState, angle, defs);
+            } else if (axis == 'Y') {
+                newState = Flip.RotateY(cState, angle, defs);
+            } else if (axis == 'Z') {
+                newState = Flip.RotateZ(cState, angle, defs);
+            }
 
-                newState.CopySource = cState.CopySource;
-                newState.CopyTime   = cState.CopyTime;
-                p.CurrentCopy = newState;
-                p.Message("Rotated copy {0} degrees around the {1} axis", angle, axis);
-            }            
+            newState.CopySource = cState.CopySource;
+            newState.CopyTime   = cState.CopyTime;
+            p.CurrentCopy = newState;
+            p.Message("Rotated copy {0} degrees around the {1} axis", angle, axis);       
         }
         
         bool Handle(ref char axis, ref int angle, string arg) {
@@ -87,8 +75,6 @@ namespace MCGalaxy.Commands.Building {
         }
         
         public override void Help(Player p) {
-            p.Message("&T/Spin mirrorx/mirrory/mirrorz");
-            p.Message("&HFlips/Mirrors the copied object around that axis.");
             p.Message("&T/Spin X/Y/Z 90/180/270");
             p.Message("&HRotates the copied object around that axis by the given angle. " +
                            "If no angle is given, 90 degrees is used.");

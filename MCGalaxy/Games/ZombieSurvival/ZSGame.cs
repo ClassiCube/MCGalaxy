@@ -304,7 +304,7 @@ namespace MCGalaxy.Games {
             Player target = PlayerInfo.FindMatches(p, name);
             if (target == null) return false;
             
-            p.Message("{0} was queued.", p.FormatNick(target));
+            p.Message("{0} &Swas queued.", p.FormatNick(target));
             QueuedZombie = target.name;
             
             if (Map != null) Map.Message(target.ColoredName + " &Swas queued as the next zombie.");
