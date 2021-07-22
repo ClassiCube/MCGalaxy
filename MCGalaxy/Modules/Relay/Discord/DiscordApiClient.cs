@@ -153,10 +153,13 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     HttpUtil.GetResponseText(res);
                     break;
                 } catch (Exception ex) {
-            	    HttpUtil.DisposeErrorResponse(ex);
+                    string err = HttpUtil.GetErrorResponse(ex);
+                    HttpUtil.DisposeErrorResponse(ex);
                     if (Handle429(ex)) continue;
                     
-                    Logger.LogError(ex);
+                    Logger.LogError("Error sending request to Discord API", ex);                    
+                    if (!string.IsNullOrEmpty(err)) 
+                        Logger.Log(LogType.Warning, "Discord API returned: "+ err);
                     return;
                 }
             }

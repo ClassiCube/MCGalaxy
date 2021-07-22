@@ -45,8 +45,19 @@ namespace MCGalaxy.Network {
             }
         }
         
-        /// <summary> Disposes the WebResponse in the given exception 
-        /// (if there is one) to avoid resource leakage </summary>
+        /// <summary> Attempts to read the WebResponse in the given exception into a string </summary>
+        /// <remarks> Returns null if the exception did not contain a readable WebResponse </remarks>
+        public static string GetErrorResponse(Exception ex) {
+            try {
+                WebException webEx = ex as WebException;
+                if (webEx != null && webEx.Response != null)
+                    return GetResponseText(webEx.Response);
+            } catch {  }
+            return null;
+        }
+        
+        /// <summary> Disposes the WebResponse in the given exception to avoid resource leakage </summary>
+        /// <remarks> Does nothing if there is no WebResponse </remarks>
         public static void DisposeErrorResponse(Exception ex) {
             try {
                 WebException webEx = ex as WebException;
