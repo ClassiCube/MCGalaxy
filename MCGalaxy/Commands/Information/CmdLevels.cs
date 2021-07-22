@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Info {
             // Files list is not guaranteed to be in alphabetical order
             Array.Sort(files);
             
-            p.Message("Levels (&c[no] &Sif not visitable): ");
+            p.Message("Levels (&c[no] &Sif not visitable):");
             MultiPageOutput.Output(p, files, (file) => FormatMap(p, file),
                                    "Levels", "levels", message, false);
         }

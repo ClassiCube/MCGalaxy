@@ -32,12 +32,15 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (IsListCommand(message)) {
-                p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
+            string[] args = message.SplitSpaces(3);
+            if (IsListCommand(args[0])) {
+                string modifier = args.Length > 1 ? args[1] : "";
+                
+                p.Message("Loaded plugins:");
+                MultiPageOutput.Output(p, Plugin.all, pl => pl.name,
+                                      "Plugins", "plugins", modifier, false);
                 return;
             }
-            
-            string[] args = message.SplitSpaces(3);
             if (args.Length == 1) { Help(p); return; }
             
             string cmd = args[0], name = args[1];
