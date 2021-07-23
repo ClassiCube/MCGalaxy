@@ -47,6 +47,9 @@ namespace MCGalaxy.Modules.Relay.Discord {
         [ConfigEnum("presence-activity", null, PresenceActivity.Playing, typeof(PresenceActivity))]
         public PresenceActivity Activity = PresenceActivity.Playing;
         
+        [ConfigInt("embed-color", null, 9758051)]
+        public int EmbedColor = 9758051;
+        
         const string file = "properties/discordbot.properties";
         static ConfigElement[] cfg;
         

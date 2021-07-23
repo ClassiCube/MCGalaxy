@@ -78,6 +78,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
     public class ChannelSendEmbed : ChannelSendMessage {
         public string Title;
         public Dictionary<string, string> Fields = new Dictionary<string, string>();
+        public int Color;
         
         public ChannelSendEmbed(string channelID) : base(channelID, null) { }
         
@@ -102,7 +103,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             obj["embed"] = new JsonObject()
             {
                 { "title", Title },
-                { "color", 9758051 },
+                { "color", Color },
                 { "fields", GetFields() }
             };
             return obj;
