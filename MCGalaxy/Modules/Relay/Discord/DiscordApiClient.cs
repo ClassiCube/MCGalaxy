@@ -30,6 +30,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
     public abstract class DiscordApiMessage {
         /// <summary> The path/route that will handle this message </summary>
         public string Path;
+        /// <summary> The HTTP method of the path/route (e.g. "POST") </summary>
+        public string Method = "POST";
         
         /// <summary> Converts this message into its JSON representation </summary>
         public abstract JsonObject ToJson();
@@ -143,7 +145,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             for (int retry = 0; retry < 10; retry++) {
                 try {
                     HttpWebRequest req = HttpUtil.CreateRequest(host + msg.Path);
-                    req.Method         = "POST";
+                    req.Method         = msg.Method;
                     req.ContentType    = "application/json";
                     req.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
                     
@@ -160,7 +162,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     
                     Logger.LogError("Error sending request to Discord API", ex);                    
                     if (!string.IsNullOrEmpty(err)) 
-                        Logger.Log(LogType.Warning, "Discord API returned: "+ err);
+                        Logger.Log(LogType.Warning, "Discord API returned: " + err);
                     return;
                 }
             }

@@ -281,14 +281,18 @@ namespace MCGalaxy.Modules.Relay.Discord {
             return message;
         }
         
-        readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
-        readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
-        protected override string PrepareMessage(string message) {
-            // don't let user use bold/italic etc markdown
+        static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
+        static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
+        static string StripMarkdown(string message) {
+             // don't let user use bold/italic etc markdown
             for (int i = 0; i < markdown_special.Length; i++) {
                 message = message.Replace(markdown_special[i], markdown_escaped[i]);
             }
-            
+             return message;
+        }
+        
+        protected override string PrepareMessage(string message) {
+            message = StripMarkdown(message);
             // allow uses to do things like replacing '+' with ':green_square:'
             for (int i = 0; i < filter_triggers.Count; i++) {
                 message = message.Replace(filter_triggers[i], filter_replacements[i]);
@@ -301,11 +305,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
         protected override bool CheckController(string userID, ref string error) { return true; }
         
         protected override string UnescapeFull(Player p) {
-            return "**" + base.UnescapeFull(p) + "**";
+            return "**" + StripMarkdown(base.UnescapeFull(p)) + "**";
         }
         
         protected override string UnescapeNick(Player p) {
-            return "**" + base.UnescapeNick(p) + "**";
+            return "**" + StripMarkdown(base.UnescapeNick(p)) + "**";
         }
         
         
