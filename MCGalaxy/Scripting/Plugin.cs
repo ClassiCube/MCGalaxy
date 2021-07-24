@@ -22,21 +22,11 @@ using MCGalaxy.Modules.Relay.Discord;
 using MCGalaxy.Modules.Relay.IRC;
 using MCGalaxy.Scripting;
 
-namespace MCGalaxy {
-
-    /// <summary> Importance of a plugin event handler (See IPluginEvent). </summary>
-    /// <remarks> Higher priority handlers are called before lower priority handlers. </remarks>
-    public enum Priority : byte {
-        Low = 0,
-        Normal = 1,
-        High = 2,
-        Critical = 3,
-        System_Level = 4
-    }
-  
+namespace MCGalaxy 
+{
     /// <summary> This class provides for more advanced modification to MCGalaxy </summary>
-    public abstract class Plugin {
-
+    public abstract class Plugin 
+    {
         /// <summary> Hooks into events and initalises states/resources etc </summary>
         /// <param name="auto"> True if plugin is being automatically loaded (e.g. on server startup), false if manually. </param>
         public abstract void Load(bool auto);

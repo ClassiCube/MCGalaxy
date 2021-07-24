@@ -18,11 +18,28 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Events {
+// kept in this namespace for backwards compatbility
+namespace MCGalaxy 
+{
+    /// <summary> Importance of an event handler (See IEvent). </summary>
+    /// <remarks> Higher priority handlers are called before lower priority handlers. </remarks>
+    public enum Priority : byte 
+    {
+        Low = 0,
+        Normal = 1,
+        High = 2,
+        Critical = 3,
+        System_Level = 4
+    }
+}
+
+namespace MCGalaxy.Events 
+{
     /// <summary> Represents an abstract event. </summary>
     /// <remarks> *** You MUST use a DIFFERENT delegate type for each subclass *** <br/><br/>
     /// This is because the static event lists are unique to each new generic type instantiation, not each new subclass. </remarks>
-    public class IEvent<IMethod> {
+    public class IEvent<IMethod> 
+    {
         protected internal static VolatileArray<IEvent<IMethod>> handlers = new VolatileArray<IEvent<IMethod>>();
         protected internal IMethod method;
         protected Priority priority;

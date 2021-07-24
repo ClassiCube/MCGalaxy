@@ -23,15 +23,48 @@ using System.Text;
 using System.Threading;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
+using MCGalaxy.Events;
 using MCGalaxy.Events.ServerEvents;
 
-namespace MCGalaxy.Modules.Relay {
-    
+namespace MCGalaxy.Modules.Relay 
+{
     public class RelayUser { public string ID, Nick; }
+
+    public delegate void OnDirectMessage(RelayBot bot, string channel, RelayUser user, string message, ref bool cancel);
+    /// <summary> Called when a user sends a message directly to the relay bot </summary>
+    public sealed class OnDirectMessageEvent : IEvent<OnDirectMessage> 
+    {
+        public static void Call(RelayBot bot, string channel, RelayUser user, string message, ref bool cancel) {
+            IEvent<OnDirectMessage>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try {
+                    items[i].method(bot, channel, user, message, ref cancel);
+                } catch (Exception ex) {
+                    LogHandlerException(ex, items[i]);
+                }
+            }
+        }
+    }
+    
+    public delegate void OnChannelMessage(RelayBot bot, string channel, RelayUser user, string message, ref bool cancel);
+    /// <summary> Called when a user sends a message to the given channel </summary>
+    public sealed class OnChannelMessageEvent : IEvent<OnChannelMessage> 
+    { 
+        public static void Call(RelayBot bot, string channel, RelayUser user, string message, ref bool cancel) {
+            IEvent<OnChannelMessage>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) {
+                try {
+                    items[i].method(bot, channel, user, message, ref cancel);
+                } catch (Exception ex) {
+                    LogHandlerException(ex, items[i]);
+                }
+            }
+        }
+    }
     
     /// <summary> Manages a connection to an external communication service </summary>
-    public abstract class RelayBot {
-        
+    public abstract class RelayBot 
+    {
         /// <summary> List of commands that cannot be used by relay bot controllers. </summary>
         public List<string> BannedCommands;
         
@@ -318,8 +351,13 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Handles a direct message written by the given user </summary>
         protected void HandleDirectMessage(RelayUser user, string channel, string message) {
             if (IgnoredUsers.CaselessContains(user.ID)) return;
+            message = ParseMessage(message).TrimEnd();
+            if (message.Length == 0) return;
             
-            message        = ParseMessage(message);
+            bool cancel = false;
+            OnDirectMessageEvent.Call(this, channel, user, message, ref cancel);
+            if (cancel) return;
+            
             string[] parts = message.SplitSpaces(2);
             string cmdName = parts[0].ToLower();
             string cmdArgs = parts.Length > 1 ? parts[1] : "";
@@ -339,10 +377,12 @@ namespace MCGalaxy.Modules.Relay {
         /// <summary> Handles a message written by the given user on the given channel </summary>
         protected void HandleChannelMessage(RelayUser user, string channel, string message) {
             if (IgnoredUsers.CaselessContains(user.ID)) return;
-            
-            message = ParseMessage(message);
-            message = message.TrimEnd();
+            message = ParseMessage(message).TrimEnd();
             if (message.Length == 0) return;
+            
+            bool cancel = false;
+            OnChannelMessageEvent.Call(this, channel, user, message, ref cancel);
+            if (cancel) return;
             
             string[] parts = message.SplitSpaces(3);
             string rawCmd  = parts[0].ToLower();
