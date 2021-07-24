@@ -199,10 +199,5 @@ namespace MCGalaxy.Modules.Relay.Discord {
             SleepForRetryPeriod(res);
             return true;
         }
-        
-        
-        public void SendMessageAsync(string channelID, string message) {
-            SendAsync(new ChannelSendMessage(channelID, message));
-        }
     }
 }

@@ -265,9 +265,14 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         
+        /// <summary> Asynchronously sends a message to the discord API </summary>
+        public void Send(DiscordApiMessage msg) {
+            // can be null in gap between initial connection and ready event received
+            if (api != null) api.SendAsync(msg);
+        }
+        
         protected override void DoSendMessage(string channel, string message) {
-            if (api == null) return;
-            api.SendMessageAsync(channel, message);
+            Send(new ChannelSendMessage(channel, message));
         }
         
         protected override string ConvertMessage(string message) {
@@ -335,7 +340,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     ConvertMessage(FormatPlayers(p, e))
                 );
             }
-            api.SendAsync(embed);
+            Send(embed);
         }
     }
 }
