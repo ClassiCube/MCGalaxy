@@ -136,9 +136,12 @@ namespace MCGalaxy.Modules.Relay
         
         
         /// <summary> Attempts to connect to the external communication service </summary>
-        /// <remarks> Does nothing if disabled, already connected, or the server is shutting down </remarks>
-        public void Connect() {
-            if (!Enabled || Connected || Server.shuttingDown) return;
+        /// <returns> null if connecting succeeded, otherwise the reason why connecting failed </returns>
+        /// <remarks> e.g. is not enabled, is already connected, server shutting down </remarks>
+        public string Connect() {
+            if (!Enabled)  return "is not enabled";
+            if (Connected) return "is already connected";
+            if (Server.shuttingDown) return "cannot connect as server shutting down";
             canReconnect = true;
             retries      = 0;
             
@@ -148,7 +151,9 @@ namespace MCGalaxy.Modules.Relay
             } catch (Exception e) {
                 Logger.Log(LogType.RelayActivity, "Failed to connect to {0}!", RelayName);
                 Logger.LogError(e);
+                return "failed to connect - " + e.Message;
             }
+            return null;
         }
         
         /// <summary> Forcefully disconnects from the external communication service </summary>

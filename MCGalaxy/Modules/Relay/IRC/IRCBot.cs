@@ -21,12 +21,13 @@ using System.Text.RegularExpressions;
 using MCGalaxy.Modules.Relay;
 using Sharkbite.Irc;
 
-namespace MCGalaxy.Modules.Relay.IRC {
-    
+namespace MCGalaxy.Modules.Relay.IRC 
+{
     public enum IRCControllerVerify { None, HalfOp, OpChannel };
     
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
-    public sealed class IRCBot : RelayBot {
+    public sealed class IRCBot : RelayBot 
+    {
         internal Connection connection;
         string nick;
         IRCNickList nicks;

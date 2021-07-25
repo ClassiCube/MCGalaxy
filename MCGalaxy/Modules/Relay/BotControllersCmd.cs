@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
  
-namespace MCGalaxy.Modules.Relay {
-    public abstract class BotControllersCmd : Command2 {
+namespace MCGalaxy.Modules.Relay 
+{
+    public abstract class BotControllersCmd : Command2 
+    {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         protected abstract RelayBot Bot { get; }

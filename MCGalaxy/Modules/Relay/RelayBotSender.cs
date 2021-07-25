@@ -19,10 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Modules.Relay {
-    
+namespace MCGalaxy.Modules.Relay 
+{ 
     /// <summary> Asynchronously sends data to an external communication service </summary>
-    public abstract class RelayBotSender<T> {
+    public abstract class RelayBotSender<T> 
+    {
         AutoResetEvent handle = new AutoResetEvent(false);
         volatile bool terminating;
         
