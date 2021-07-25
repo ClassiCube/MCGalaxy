@@ -21,12 +21,15 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Relay.Discord 
 {    
+    public sealed class DiscordSession { public string ID, LastSeq; }
+    
     /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
     /// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
@@ -35,6 +38,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
         public bool CanReconnect = true;
+        public DiscordSession Session;
         
         /// <summary> Whether presence support is enabled </summary>
         public bool Presence = true;
@@ -54,7 +58,6 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
-        string lastSequence, sessionID;
         TcpClient client;
         SslStream stream;
         
@@ -141,8 +144,15 @@ namespace MCGalaxy.Modules.Relay.Discord
             } else if (opcode == OPCODE_HELLO) {
                 HandleHello(obj);
             } else if (opcode == OPCODE_INVALID_SESSION) {
-                // session no longer valid for whatever reason
-                sessionID = null;
+                // See notes at https://discord.com/developers/docs/topics/gateway#resuming
+                //  (note that in this implementation, if resume fails, the bot just
+                //   gives up altogether instead of trying to resume again later)
+                Session.ID      = null;
+                Session.LastSeq = null;
+                
+                Logger.Log(LogType.Warning, "Discord relay: Resuming failed, trying again in 5 seconds");
+                Thread.Sleep(5 * 1000);
+                Identify();
             }
         }
         
@@ -161,7 +171,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             // update last sequence number
             object sequence;
             if (obj.TryGetValue("s", out sequence)) 
-                lastSequence = (string)sequence;
+                Session.LastSeq = (string)sequence;
             
             string eventName = (string)obj["t"];
             JsonObject data;
@@ -182,7 +192,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         void HandleReady(JsonObject data) {
             object session;
             if (data.TryGetValue("session_id", out session)) 
-                sessionID = (string)session;
+                Session.ID = (string)session;
         }
         
         
@@ -208,8 +218,8 @@ namespace MCGalaxy.Modules.Relay.Discord
             JsonObject obj = new JsonObject();
             obj["op"] = OPCODE_HEARTBEAT;
             
-            if (lastSequence != null) {
-                obj["d"] = int.Parse(lastSequence);
+            if (Session.LastSeq != null) {
+                obj["d"] = int.Parse(Session.LastSeq);
             } else {
                 obj["d"] = null;
             }
@@ -220,13 +230,25 @@ namespace MCGalaxy.Modules.Relay.Discord
         const int INTENT_DIRECT_MESSAGES = 1 << 12;
         
         public void Identify() {
-        	JsonObject data = MakeIdentify();
-            SendMessage(OPCODE_IDENTIFY, data);
+            if (Session.ID != null && Session.LastSeq != null) {
+                SendMessage(OPCODE_RESUME,   MakeResume());
+            } else {
+                SendMessage(OPCODE_IDENTIFY, MakeIdentify());
+            }
         }
         
         public void UpdateStatus() {
             JsonObject data = MakePresence();
             SendMessage(OPCODE_STATUS_UPDATE, data);
+        }
+        
+        JsonObject MakeResume() {
+            return new JsonObject()
+            {
+                { "token",      Token },
+                { "session_id", Session.ID },
+                { "seq",        int.Parse(Session.LastSeq) }
+            };
         }
         
         JsonObject MakeIdentify() {
@@ -237,32 +259,30 @@ namespace MCGalaxy.Modules.Relay.Discord
                 { "$device",  Server.SoftwareName }
             };
             
-            JsonObject data = new JsonObject()
+            return new JsonObject()
             {
                 { "token",      Token },
                 { "intents",    INTENT_GUILD_MESSAGES | INTENT_DIRECT_MESSAGES },
                 { "properties", props },
                 { "presence",   MakePresence() }
             };
-            return data;
         }
         
         JsonObject MakePresence() {
             if (!Presence) return null;
-        	
+            
             JsonObject activity = new JsonObject()
             {
                 { "name", GetStatus() },
                 { "type", (int)Activity }
             };
-            JsonObject obj = new JsonObject()
+            return new JsonObject()
             {
                 { "since",      null },
                 { "activities", new JsonArray() { activity } },
                 { "status",     Status.ToString() },
                 { "afk",        false }
             };
-            return obj;
         }
     }
 }

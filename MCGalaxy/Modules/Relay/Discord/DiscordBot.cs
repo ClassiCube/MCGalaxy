@@ -32,6 +32,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     {
         DiscordApiClient api;
         DiscordWebsocket socket;
+        DiscordSession session;
         string botUserID;
         
         Dictionary<string, bool> isDMChannel = new Dictionary<string, bool>();
@@ -55,7 +56,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         protected override void DoConnect() {
-            socket = new DiscordWebsocket(); 
+            socket = new DiscordWebsocket();
+            socket.Session   = session;
             socket.Token     = Config.BotToken;
             socket.Presence  = Config.PresenceEnabled;
             socket.Status    = Config.Status;
@@ -243,7 +245,9 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         
         protected override void OnStart() {
-            base.OnStart();          
+            session = new DiscordSession();
+            base.OnStart();
+            
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);
