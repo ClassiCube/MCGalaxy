@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
+using MCGalaxy.Modules.Moderation.Notes;
 using MCGalaxy.Modules.Relay.Discord;
 using MCGalaxy.Modules.Relay.IRC;
 using MCGalaxy.Scripting;

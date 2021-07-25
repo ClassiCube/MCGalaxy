@@ -25,13 +25,13 @@ using MCGalaxy.Config;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Modules.Relay.Discord {
-    
+namespace MCGalaxy.Modules.Relay.Discord 
+{    
     /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
     /// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
-    public sealed class DiscordWebsocket : ClientWebSocket {
-        
+    public sealed class DiscordWebsocket : ClientWebSocket 
+    {       
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
         public bool CanReconnect = true;
@@ -154,7 +154,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
             
             heartbeat = Server.Background.QueueRepeat(SendHeartbeat, null, 
                                           TimeSpan.FromMilliseconds(msInterval));
-            SendIdentify();
+            Identify();
         }
         
         void HandleDispatch(JsonObject obj) {
@@ -219,7 +219,17 @@ namespace MCGalaxy.Modules.Relay.Discord {
         const int INTENT_GUILD_MESSAGES  = 1 << 9;
         const int INTENT_DIRECT_MESSAGES = 1 << 12;
         
-        public void SendIdentify() {
+        public void Identify() {
+        	JsonObject data = MakeIdentify();
+            SendMessage(OPCODE_IDENTIFY, data);
+        }
+        
+        public void UpdateStatus() {
+            JsonObject data = MakePresence();
+            SendMessage(OPCODE_STATUS_UPDATE, data);
+        }
+        
+        JsonObject MakeIdentify() {
             JsonObject props = new JsonObject()
             {
                 { "$os",      "linux" },
@@ -234,12 +244,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
                 { "properties", props },
                 { "presence",   MakePresence() }
             };
-            SendMessage(OPCODE_IDENTIFY, data);
-        }
-        
-        public void SendUpdateStatus() {
-            JsonObject data = MakePresence();
-            SendMessage(OPCODE_STATUS_UPDATE, data);
+            return data;
         }
         
         JsonObject MakePresence() {

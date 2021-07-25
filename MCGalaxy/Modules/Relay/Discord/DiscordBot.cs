@@ -26,9 +26,10 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Modules.Relay.Discord {
-
-    public sealed class DiscordBot : RelayBot {
+namespace MCGalaxy.Modules.Relay.Discord 
+{
+    public sealed class DiscordBot : RelayBot 
+    {
         DiscordApiClient api;
         DiscordWebsocket socket;
         string botUserID;
@@ -232,7 +233,7 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         void UpdateDiscordStatus() {
-            try { socket.SendUpdateStatus(); } catch { }
+            try { socket.UpdateStatus(); } catch { }
         }
         
         
@@ -284,11 +285,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
         static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
         static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
         static string StripMarkdown(string message) {
-             // don't let user use bold/italic etc markdown
+            // don't let user use bold/italic etc markdown
             for (int i = 0; i < markdown_special.Length; i++) {
                 message = message.Replace(markdown_special[i], markdown_escaped[i]);
             }
-             return message;
+            return message;
         }
         
         protected override string PrepareMessage(string message) {
@@ -332,10 +333,11 @@ namespace MCGalaxy.Modules.Relay.Discord {
             ChannelSendEmbed embed = new ChannelSendEmbed(p.ChannelID);
             int total;
             List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
-            embed.Color = Config.EmbedColor;
             
+            embed.Color = Config.EmbedColor;            
             embed.Title = string.Format("{0} player{1} currently online",
                                         total, total.Plural());
+            
             foreach (OnlineListEntry e in entries) {
                 if (e.players.Count == 0) continue;
                 

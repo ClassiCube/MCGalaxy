@@ -17,9 +17,12 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands;
 
-namespace MCGalaxy.Commands.Moderation {
-    public class CmdNotes : Command2 {
+namespace MCGalaxy.Modules.Moderation.Notes 
+{
+    public class CmdNotes : Command2 
+    {
         public override string name { get { return "Notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
@@ -76,7 +79,8 @@ namespace MCGalaxy.Commands.Moderation {
         }
     }
     
-    public sealed class CmdMyNotes : CmdNotes {
+    public sealed class CmdMyNotes : CmdNotes 
+    {
         public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool SuperUseable { get { return false; } }

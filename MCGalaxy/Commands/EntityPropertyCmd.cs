@@ -79,7 +79,5 @@ namespace MCGalaxy.Commands {
         protected virtual void SetBotData(Player p, PlayerBot bot,    string args) { }      
         protected virtual void SetOnlineData(Player p, Player who,    string args) { }       
         protected virtual void SetPlayerData(Player p, string target, string args) { }
-        
-        
     }
 }
