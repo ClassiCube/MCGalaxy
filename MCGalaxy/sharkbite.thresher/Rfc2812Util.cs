@@ -69,12 +69,11 @@ namespace Sharkbite.Irc
 			}
 		}
 		/// <summary>
-		/// Break up an IRC user string into its component
-		/// parts. 
+		/// Break up an IRC user string into its component parts. 
 		/// </summary>
 		/// <param name="fullUserName">The user in nick!user@host form</param>
 		/// <returns>A string array with the first item being nick, then user, and then host.</returns>
-		public static string[] ParseUserInfoLine( string fullUserName ) 
+		static string[] ParseUserInfoLine( string fullUserName ) 
 		{
 			if( fullUserName == null || fullUserName.Trim().Length == 0 ) 
 			{

@@ -224,6 +224,11 @@ namespace MCGalaxy.Modules.Relay.Discord
             
             // remove variant selector character used with some emotes
             sb.Replace("\uFE0F", "");
+            
+            // unescape escaped bold/italic markdown characters
+            for (int i = 0; i < markdown_escaped.Length; i++) {
+                sb = sb.Replace(markdown_escaped[i], markdown_special[i]);
+            }
             return sb.ToString();
         }
         
