@@ -238,8 +238,8 @@ namespace MCGalaxy {
                 foreach (INetSocket p in pending) { p.Send(kick, SendFlags.None); }
             } catch (Exception ex) { Logger.LogError(ex); }
 
-            Plugin.UnloadAll();
             OnShuttingDownEvent.Call(restarting, msg);
+            Plugin.UnloadAll();
 
             try {
                 string autoload = null;
