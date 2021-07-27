@@ -65,7 +65,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.frozen = true;
             LogAction(e, who, "&bfrozen");
-
+            who.Message("You have been frozen for the following reason: {0}", e.Reason);
             Server.frozen.Update(e.Target, FormatModTaskData(e));
             ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
@@ -86,7 +86,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.muted = true;
             LogAction(e, who, "&8muted");
-            
+            who.Message("You have been muted for the following reason: {0}", e.Reason);
             Server.muted.Update(e.Target, FormatModTaskData(e));
             ModerationTasks.MuteCalcNextRun();
             Server.muted.Save();
@@ -106,7 +106,7 @@ namespace MCGalaxy.Core {
         static void DoBan(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
             LogAction(e, who, "&8banned");
-            
+            who.Message("You have been banned for the following reason: {0}", e.Reason);
             if (e.Duration.Ticks != 0) {
                 string banner = e.Actor.truename;
                 DateTime end = DateTime.UtcNow.Add(e.Duration);
@@ -162,6 +162,7 @@ namespace MCGalaxy.Core {
         static void DoBanIP(ModAction e) {
             LogIPAction(e, "&8IP banned");
             Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.Actor.name);
+            who.Message("You have been IP-banned for the following reason: {0}", e.Reason);
             Server.bannedIP.Add(e.Target);
             Server.bannedIP.Save();
         }
@@ -178,6 +179,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) {
                 LogAction(e, who, "&ewarned");
+                who.Message("You have been warned for the following reason: {0}", e.Reason);
                 if (who.warn == 0) {
                     who.Message("Do it again twice and you will get kicked!");
                 } else if (who.warn == 1) {
