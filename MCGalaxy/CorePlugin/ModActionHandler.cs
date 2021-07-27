@@ -162,7 +162,6 @@ namespace MCGalaxy.Core {
         static void DoBanIP(ModAction e) {
             LogIPAction(e, "&8IP banned");
             Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.Actor.name);
-            who.Message("You have been IP-banned for the following reason: {0}", e.Reason);
             Server.bannedIP.Add(e.Target);
             Server.bannedIP.Save();
         }
