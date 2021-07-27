@@ -55,12 +55,12 @@ namespace MCGalaxy.Commands.World {
         }
         
         static void JoinMuseum(Player p, string name, string mapName, string path) {
-            Level lvl = IMapImporter.Formats[0].Read(path, name, false);
+            Level lvl   = IMapImporter.GetFor(path).Read(path, name, false);
             lvl.MapName = mapName;
+            
             SetLevelProps(lvl);
             Level.LoadMetadata(lvl);
-            
-            if (!PlayerActions.ChangeMap(p, lvl)) return;
+            PlayerActions.ChangeMap(p, lvl);
         }
         
         static void SetLevelProps(Level lvl) {

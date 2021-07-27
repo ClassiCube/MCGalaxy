@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Levels.IO {
-    
+namespace MCGalaxy.Levels.IO 
+{    
     /// <summary> Reads/Loads block data (and potentially metadata) encoded in a particular format. </summary>
-    public abstract class IMapImporter {
-        
+    public abstract class IMapImporter 
+    {
         public abstract string Extension { get; }
         public abstract string Description { get; }
         
@@ -69,11 +69,20 @@ namespace MCGalaxy.Levels.IO {
                 offset += read; count -= read;
             }
         }
+         
+        public static IMapImporter GetFor(string path) {
+            string ext = Path.GetExtension(path);
+            
+            foreach (IMapImporter imp in Formats) {
+                if (imp.Extension.CaselessEq(ext)) return imp;
+            }
+            return Formats[0];
+        }
     }
 
     /// <summary> Writes/Saves block data (and potentially metadata) encoded in a particular format. </summary>
-    public abstract class IMapExporter {
-
+    public abstract class IMapExporter 
+    {
         public abstract string Extension { get; }
         
         public void Write(string path, Level lvl) {
