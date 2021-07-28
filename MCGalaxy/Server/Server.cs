@@ -95,7 +95,7 @@ namespace MCGalaxy {
             MoveSqliteDll();
             MoveOutdatedFiles();
 
-            GenerateSalt();
+            salt = GenerateSalt();
             LoadAllSettings();
             InitDatabase();
             Economy.LoadDatabase();
@@ -368,7 +368,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Generates a random salt that is used for calculating mppasses. </summary>
-        public static void GenerateSalt() {
+        public static string GenerateSalt() {
             RandomNumberGenerator rng = RandomNumberGenerator.Create();
             char[] str = new char[32];
             byte[] one = new byte[1];
@@ -379,7 +379,7 @@ namespace MCGalaxy {
                 
                 str[i] = (char)one[0]; i++;
             }
-            salt = new string(str);
+            return new string(str);
         }
         
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();

@@ -17,18 +17,16 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
-using System.Threading;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Network {
-
-    /// <summary> Sends a heartbeat (optionally repeatedly every certain interval) to a web server. </summary>
-    public abstract class Heartbeat {
-
+namespace MCGalaxy.Network 
+{
+    /// <summary> Repeatedly sends a heartbeat every certain interval to a web server. </summary>
+    public abstract class Heartbeat 
+    {
         /// <summary> The max number of retries attempted for a heartbeat. </summary>
         public const int MAX_RETRIES = 3;
         
@@ -38,9 +36,6 @@ namespace MCGalaxy.Network {
         
         /// <summary> Gets the URL the heartbeat is sent to. </summary>
         public abstract string URL { get; }
-        
-        /// <summary> Gets whether this heartbeat periodically repeats beats. </summary>
-        public virtual bool Persistent { get { return true; } }
         
         /// <summary> Initialises data for this heartbeat. </summary>
         public abstract void Init();
@@ -69,9 +64,7 @@ namespace MCGalaxy.Network {
         
         static SchedulerTask heartbeatTask;
         static void OnBeat(SchedulerTask task) {
-            foreach (Heartbeat beat in Heartbeats) {
-                if (beat.Persistent) Pump(beat);
-            }
+            foreach (Heartbeat beat in Heartbeats) { Pump(beat); }
         }
         
 
