@@ -65,7 +65,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.frozen = true;
             LogAction(e, who, "&bfrozen");
-            who.Message("You have been frozen for the following reason: {0}", e.Reason);
+            if (who != null) who.Message("You have been frozen for the following reason: {0}", e.Reason);
             Server.frozen.Update(e.Target, FormatModTaskData(e));
             ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
@@ -86,7 +86,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.muted = true;
             LogAction(e, who, "&8muted");
-            who.Message("You have been muted for the following reason: {0}", e.Reason);
+            if (who != null) who.Message("You have been muted for the following reason: {0}", e.Reason);
             Server.muted.Update(e.Target, FormatModTaskData(e));
             ModerationTasks.MuteCalcNextRun();
             Server.muted.Save();
@@ -106,7 +106,7 @@ namespace MCGalaxy.Core {
         static void DoBan(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
             LogAction(e, who, "&8banned");
-            who.Message("You have been banned for the following reason: {0}", e.Reason);
+            if (who != null) who.Message("You have been banned for the following reason: {0}", e.Reason);
             if (e.Duration.Ticks != 0) {
                 string banner = e.Actor.truename;
                 DateTime end = DateTime.UtcNow.Add(e.Duration);
