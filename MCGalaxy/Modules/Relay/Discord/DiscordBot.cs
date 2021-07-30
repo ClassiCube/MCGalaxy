@@ -65,6 +65,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             socket.GetStatus = GetStatusMessage;
             
             socket.OnReady         = HandleReadyEvent;
+            socket.OnResumed       = HandleResumedEvent;
             socket.OnMessageCreate = HandleMessageEvent;
             socket.OnChannelCreate = HandleChannelEvent;
             socket.Connect();
@@ -168,7 +169,10 @@ namespace MCGalaxy.Modules.Relay.Discord
         void HandleReadyEvent(JsonObject data) {
             JsonObject user = (JsonObject)data["user"];
             botUserID       = (string)user["id"];
-            
+            HandleResumedEvent(data);
+        }
+        
+        void HandleResumedEvent(JsonObject data) {
             // May not be null when reconnecting
             if (api == null) {
                 api = new DiscordApiClient();
