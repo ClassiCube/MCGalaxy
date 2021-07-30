@@ -91,7 +91,20 @@ namespace MCGalaxy {
         
         public static void Log(LogType type, string message) {
             lock (logLock) {
-                if (LogHandler != null) LogHandler(type, message);
+                try {
+                    if (LogHandler != null) LogHandler(type, message);
+                } catch (Exception ex) {
+                    // a LogHandler threw an exception, try to log that error
+                    LogLoggerError(ex);
+                }
+            }
+        }
+        
+        static void LogLoggerError(Exception ex) {
+            try {
+                LogHandler(LogType.Error, FormatException(ex));
+            } catch {
+                // give up if the problematic LogHandler still throws an error
             }
         }
         

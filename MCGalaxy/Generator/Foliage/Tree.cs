@@ -22,7 +22,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Generator.Foliage {
 
-    public delegate void TreeOutput(ushort x, ushort y, ushort z, byte block);
+    public delegate void TreeOutput(ushort x, ushort y, ushort z, BlockID block);
     
     public delegate Tree TreeConstructor();
     

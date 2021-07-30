@@ -77,7 +77,7 @@ namespace MCGalaxy {
                 
                 // TODO: select color from database?
                 string color = who != null ? who.color : Group.GroupIn(target).Color;
-                PlayerOperations.MessageAction(p, target, who, "λACTOR &Schanged λTARGET nick to " + color + nick);
+                MessageAction(p, target, who, "λACTOR &Schanged λTARGET nick to " + color + nick);
             }
             
             if (who != null) who.DisplayName = nick;

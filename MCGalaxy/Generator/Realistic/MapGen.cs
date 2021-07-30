@@ -141,7 +141,7 @@ namespace MCGalaxy.Generator.Realistic {
                                 tree.Generate(x, (ushort)(y + 1), z, (xT, yT, zT, bT) =>
                                             {
                                                 if (Lvl.IsAirAt(xT, yT, zT))
-                                                    Lvl.SetTile(xT, yT, zT, bT);
+                                                    Lvl.SetTile(xT, yT, zT, (byte)bT);
                                             });
                             }
                         }
