@@ -57,11 +57,11 @@ namespace MCGalaxy.DB {
         
         public static void MiscLine(Player p, string name, int deaths, int money) {
             if (Economy.Enabled) {
-                p.Message("  &a{0} &cdeaths&S, &a{2} &S{3}, {1} &Sawards",
-                               deaths, PlayerAwards.AwardAmount(name), money, Server.Config.Currency);
+                p.Message("  &a{0} &cdeaths&S, &a{2} &S{3}, &f{1} &Sawards",
+                               deaths, PlayerAwards.Summarise(name), money, Server.Config.Currency);
             } else {
-                p.Message("  &a{0} &cdeaths&S, {1} &Sawards",
-                               deaths, PlayerAwards.AwardAmount(name));
+                p.Message("  &a{0} &cdeaths&S, &f{1} &Sawards",
+                               deaths, PlayerAwards.Summarise(name));
             }
         }
         

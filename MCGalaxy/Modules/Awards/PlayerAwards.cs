@@ -26,11 +26,11 @@ namespace MCGalaxy.Modules.Awards
     {  
         struct PlayerAward { public string Player; public List<string> Awards; }
 
-        /// <summary> List of all players who have awards. </summary>
+        /// <summary> List of all players who have awards </summary>
         static List<PlayerAward> Awards = new List<PlayerAward>();
         
         
-        /// <summary> Adds the given award to the given player's list of awards. </summary>
+        /// <summary> Adds the given award to the given player's list of awards </summary>
         public static bool Give(string player, string award) {
             List<string> awards = Get(player);
             if (awards == null) {
@@ -44,19 +44,10 @@ namespace MCGalaxy.Modules.Awards
             return true;
         }
         
-        /// <summary> Removes the given award from the given player's list of awards. </summary>
+        /// <summary> Removes the given award from the given player's list of awards </summary>
         public static bool Take(string player, string award) {
             List<string> awards = Get(player);
             return awards != null && awards.CaselessRemove(award);
-        }
-        
-        public static string AwardAmount(string playerName) {
-            int total = AwardsList.Awards.Count;
-            List<string> awards = GetCurrentAwards(playerName);
-            if (awards == null || total == 0) return "&f0/" + total + " (0%)";
-            
-            double percentHas = Math.Round(((double)awards.Count / total) * 100, 2);
-            return "&f" + awards.Count + "/" + total + " (" + percentHas + "%)";
         }
         
         public static List<string> Get(string player) {
@@ -66,15 +57,21 @@ namespace MCGalaxy.Modules.Awards
             return null;
         }
         
-        public static List<string> GetCurrentAwards(string player) {
+        
+        /// <summary> Returns a summarised form of the player's awards </summary>
+        /// <returns> [number of awards player has] / [number of awards] (% of total) </returns>
+        public static string Summarise(string player) {
+            int total = AwardsList.Awards.Count;
             List<string> awards = Get(player);
-            if (awards == null) return null;
+            if (awards == null || total == 0) return "0/" + total + " (0%)";
             
-            // Some awards may have been deleted
+            // Some awards the player has may have been deleted
             for (int i = awards.Count - 1; i >= 0; i--) {
                 if (!AwardsList.Exists(awards[i])) awards.RemoveAt(i);
             }
-            return awards;
+            
+            double percentHas = Math.Round(((double)awards.Count / total) * 100, 2);
+            return awards.Count + "/" + total + " (" + percentHas + "%)";
         }
 
         
@@ -84,7 +81,7 @@ namespace MCGalaxy.Modules.Awards
                 using (StreamWriter w = new StreamWriter("text/playerAwards.txt"))
             {
                 foreach (PlayerAward a in Awards)
-                    w.WriteLine(a.Player.ToLower() + " : " + a.Awards.Join(","));
+                    w.WriteLine(a.Player + " : " + a.Awards.Join(","));
             }
         }
         
@@ -96,7 +93,7 @@ namespace MCGalaxy.Modules.Awards
         static void ProcessLine(string key, string value) {
             if (value.Length == 0) return;
             PlayerAward a;
-            a.Player = key.ToLower();
+            a.Player = key;
             a.Awards = new List<string>();
             
             if (value.IndexOf(',') != -1) {

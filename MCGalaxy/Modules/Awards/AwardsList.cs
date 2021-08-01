@@ -63,11 +63,7 @@ namespace MCGalaxy.Modules.Awards
             lock (saveLock)
                 using (StreamWriter w = new StreamWriter("text/awardsList.txt"))
             {
-                w.WriteLine("# This is a full list of awards. The server will load these and they can be awarded as you please");
-                w.WriteLine("# Format is:");
-                w.WriteLine("# AwardName : Description of award goes after the colon");
-                w.WriteLine();
-                
+                WriteHeader(w);
                 foreach (Award a in Awards) {
                     w.WriteLine(a.Name + " : " + a.Description);
                 }
@@ -77,10 +73,7 @@ namespace MCGalaxy.Modules.Awards
         public static void Load() {
             if (!File.Exists("text/awardsList.txt")) {
                 using (StreamWriter w = new StreamWriter("text/awardsList.txt")) {
-                    w.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
-                    w.WriteLine("#Format is:");
-                    w.WriteLine("# AwardName : Description of award goes after the colon");
-                    w.WriteLine();
+                    WriteHeader(w);
                     w.WriteLine("Gotta start somewhere : Built your first house");
                     w.WriteLine("Climbing the ladder : Earned a rank advancement");
                     w.WriteLine("Do you live here? : Joined the server a huge bunch of times");
@@ -94,6 +87,13 @@ namespace MCGalaxy.Modules.Awards
         static void ProcessLine(string key, string value) {
             if (value.Length == 0) return;
             Add(key, value);
+        }
+        
+        static void WriteHeader(StreamWriter w) {
+            w.WriteLine("#This is a full list of awards. The server will load these and they can be awarded as you please");
+            w.WriteLine("#Format is:");
+            w.WriteLine("# AwardName : Description of award goes after the colon");
+            w.WriteLine();
         }
     }
 }

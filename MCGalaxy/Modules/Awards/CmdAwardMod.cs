@@ -27,8 +27,8 @@ namespace MCGalaxy.Modules.Awards
         static char[] awardArgs = new char[] { ':' };
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0 || message.IndexOf(' ') == -1) { Help(p); return; }
             string[] args = message.SplitSpaces(2);
+            if (args.Length < 2) { Help(p); return; }
 
             if (IsCreateCommand(args[0])) {
                 args = args[1].Split(awardArgs, 2);
