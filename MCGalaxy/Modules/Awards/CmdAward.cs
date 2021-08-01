@@ -17,8 +17,10 @@
 */
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdAward : Command2 {      
+namespace MCGalaxy.Modules.Awards
+{
+    public sealed class CmdAward : Command2 
+    {
         public override string name { get { return "Award"; } }
         public override string type { get { return CommandTypes.Economy; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

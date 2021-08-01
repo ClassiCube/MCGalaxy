@@ -32,6 +32,7 @@ using MCGalaxy.Network;
 using MCGalaxy.Scripting;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
+using MCGalaxy.Modules.Awards;
 
 namespace MCGalaxy {
     public sealed partial class Server {

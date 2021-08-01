@@ -202,9 +202,6 @@
     <Compile Include="Commands\CPE\CmdSkin.cs" />
     <Compile Include="Commands\CPE\CmdTexture.cs" />
     <Compile Include="Commands\CPE\CustomBlockCommand.cs" />
-    <Compile Include="Commands\Economy\CmdAward.cs" />
-    <Compile Include="Commands\Economy\CmdAwardMod.cs" />
-    <Compile Include="Commands\Economy\CmdAwards.cs" />
     <Compile Include="Commands\Economy\CmdBuy.cs" />
     <Compile Include="Commands\Economy\CmdEconomy.cs" />
     <Compile Include="Commands\Economy\CmdGive.cs" />
@@ -457,7 +454,6 @@
     <Compile Include="Drawing\Transform\RotateTransform.cs" />
     <Compile Include="Drawing\Transform\SimpleTransforms.cs" />
     <Compile Include="Drawing\Transform\Transform.cs" />
-    <Compile Include="Economy\Awards.cs" />
     <Compile Include="Economy\Economy.DB.cs" />
     <Compile Include="Economy\OtherItems.cs" />
     <Compile Include="Economy\ZombieItems.cs" />
@@ -584,6 +580,10 @@
     <Compile Include="Blocks\Physics\TntPhysics.cs" />
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Levels\Zone.cs" />
+    <Compile Include="Modules\Awards\Awards.cs" />
+    <Compile Include="Modules\Awards\CmdAward.cs" />
+    <Compile Include="Modules\Awards\CmdAwardMod.cs" />
+    <Compile Include="Modules\Awards\CmdAwards.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
@@ -731,6 +731,7 @@
     <Folder Include="Generator\LibNoise" />
     <Folder Include="Generator\Classic" />
     <Folder Include="Generator\Realistic" />
+    <Folder Include="Modules\Awards" />
     <Folder Include="Modules\Moderation" />
     <Folder Include="Modules\Moderation\Notes" />
     <Folder Include="Modules\Relay\Discord" />

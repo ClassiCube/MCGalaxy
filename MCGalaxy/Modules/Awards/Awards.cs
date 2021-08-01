@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Eco {
-    
+namespace MCGalaxy.Modules.Awards
+{
     /// <summary> Manages the awards the server has, and which players have which awards. </summary>
-    public static class Awards {
-        
+    public static class Awards 
+    {  
         public struct PlayerAward { public string Name; public List<string> Awards; }
         
         public class Award { public string Name, Description; }

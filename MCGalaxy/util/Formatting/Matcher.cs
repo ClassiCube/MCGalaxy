@@ -22,6 +22,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using MCGalaxy.Eco;
+using MCGalaxy.Modules.Awards;
 
 namespace MCGalaxy {
     
