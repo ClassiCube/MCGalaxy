@@ -183,7 +183,8 @@ namespace MCGalaxy {
             CommandPerms.Load();
             Command.InitAll();
             Block.SetBlocks();
-            Awards.Load();
+            AwardsList.Load();
+            PlayerAwards.Load();
             Economy.Load();
             WarpList.Global.Filename = "extra/warps.save";
             WarpList.Global.Load();

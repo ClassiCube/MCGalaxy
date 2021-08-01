@@ -580,10 +580,11 @@
     <Compile Include="Blocks\Physics\TntPhysics.cs" />
     <Compile Include="Blocks\Physics\ZombiePhysics.cs" />
     <Compile Include="Levels\Zone.cs" />
-    <Compile Include="Modules\Awards\Awards.cs" />
+    <Compile Include="Modules\Awards\PlayerAwards.cs" />
     <Compile Include="Modules\Awards\CmdAward.cs" />
     <Compile Include="Modules\Awards\CmdAwardMod.cs" />
     <Compile Include="Modules\Awards\CmdAwards.cs" />
+    <Compile Include="Modules\Awards\AwardsList.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />

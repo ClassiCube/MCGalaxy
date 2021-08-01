@@ -42,18 +42,18 @@ namespace MCGalaxy.Modules.Awards
 
             string displayName = p.FormatNick(plName);
             if (!take) {
-                if (Awards.GiveAward(plName, award)) {
+                if (PlayerAwards.Give(plName, award)) {
                     Chat.MessageGlobal("{0} &Swas awarded: &b{1}", displayName, award);
-                    Awards.SavePlayers();
+                    PlayerAwards.Save();
                 } else if (plName.CaselessEq(p.name)) {
                     p.Message("You already have that award.");
                 } else {
                     p.Message("{0} &Salready has that award.", displayName);
                 }
             } else {
-                if (Awards.TakeAward(plName, award)) {
+                if (PlayerAwards.Take(plName, award)) {
                     Chat.MessageGlobal("{0} &Shad their &b{1} &Saward removed", displayName, award);
-                    Awards.SavePlayers();
+                    PlayerAwards.Save();
                 } else if (plName.CaselessEq(p.name)) {
                     p.Message("You did not have that award to begin with.");
                 } else {

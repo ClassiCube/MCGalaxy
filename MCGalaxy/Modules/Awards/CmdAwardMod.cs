@@ -37,18 +37,18 @@ namespace MCGalaxy.Modules.Awards
                     Help(p); return;
                 }
 
-                if (!Awards.Add(args[0], args[1])) {
+                if (!AwardsList.Add(args[0], args[1])) {
                     p.Message("This award already exists."); return;
                 } else {
                     Chat.MessageGlobal("Award added: &6{0} : {1}", args[0], args[1]);
-                    Awards.SaveAwards();
+                    AwardsList.Save();
                 }
             } else if (IsDeleteCommand(args[0])) {
-                if (!Awards.Remove(args[1])) {
+                if (!AwardsList.Remove(args[1])) {
                     p.Message("This award does not exist."); return;
                 } else {
                     Chat.MessageGlobal("Award removed: &6{0}", args[1]);
-                    Awards.SaveAwards();
+                    AwardsList.Save();
                 }
             } else {
                 Help(p);

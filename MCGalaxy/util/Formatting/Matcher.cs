@@ -33,8 +33,8 @@ namespace MCGalaxy {
         /// <summary> Finds partial matches of 'name' against the list of all awards. </summary>
         public static string FindAwards(Player p, string name) {
             int matches;
-            Awards.Award award = Find(p, name, out matches, Awards.AwardsList,
-                                      null, a => a.Name, "awards");
+            Award award = Find(p, name, out matches, AwardsList.Awards,
+                               null, a => a.Name, "awards");
             return award == null ? null : award.Name;
         }
         

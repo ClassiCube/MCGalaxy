@@ -38,10 +38,10 @@ namespace MCGalaxy.Modules.Awards
                 if (name == null) return;
             }
 
-            List<Awards.Award> awards = Awards.AwardsList;
+            List<Award> awards = AwardsList.Awards;
             if (awards.Count == 0) { p.Message("This server has no awards yet."); return; }
             
-            List<string> playerAwards = Awards.GetPlayerAwards(name);
+            List<string> playerAwards = PlayerAwards.Get(name);
             StringFormatter<Awards.Award> formatter = (award) => FormatPlayerAward(award, playerAwards);
             
             string cmd = name.Length == 0 ? "awards" : "awards " + name;
