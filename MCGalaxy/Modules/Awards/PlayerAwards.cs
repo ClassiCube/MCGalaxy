@@ -66,12 +66,13 @@ namespace MCGalaxy.Modules.Awards
             if (awards == null || total == 0) return "0/" + total + " (0%)";
             
             // Some awards the player has may have been deleted
-            for (int i = awards.Count - 1; i >= 0; i--) {
-                if (!AwardsList.Exists(awards[i])) awards.RemoveAt(i);
+            int count = 0;
+            for (int i = 0; i < awards.Count; i++) {
+                if (AwardsList.Exists(awards[i])) count++;
             }
             
-            double percentHas = Math.Round(((double)awards.Count / total) * 100, 2);
-            return awards.Count + "/" + total + " (" + percentHas + "%)";
+            double percentHas = Math.Round(((double)count / total) * 100, 2);
+            return count + "/" + total + " (" + percentHas + "%)";
         }
 
         

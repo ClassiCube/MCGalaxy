@@ -24,7 +24,7 @@ namespace MCGalaxy.Modules.Awards
     public class Award { public string Name, Description; }
 	
     /// <summary> Manages the awards the server has </summary>
-    public static class AwardsList 
+    public static class AwardsList
     {  
         /// <summary> List of currently defined awards </summary>
         public static List<Award> Awards = new List<Award>();
@@ -34,8 +34,8 @@ namespace MCGalaxy.Modules.Awards
             if (Exists(name)) return false;
 
             Award award = new Award();
-            award.Name  = name.Trim();
-            award.Description = desc.Trim();
+            award.Name  = name;
+            award.Description = desc;
             Awards.Add(award);
             return true;
         }
@@ -84,9 +84,9 @@ namespace MCGalaxy.Modules.Awards
             PropertiesFile.Read("text/awardsList.txt", ProcessLine, ':');
         }
         
-        static void ProcessLine(string key, string value) {
-            if (value.Length == 0) return;
-            Add(key, value);
+        static void ProcessLine(string award, string desc) {
+            if (desc.Length == 0) return;
+            Add(award, desc);
         }
         
         static void WriteHeader(StreamWriter w) {

@@ -36,11 +36,14 @@ namespace MCGalaxy.Modules.Awards
                     p.Message("&WUse a : to separate the award name from its description."); 
                     Help(p); return;
                 }
+                
+                string award = args[0].Trim();
+                string desc  = args[1].Trim();
 
-                if (!AwardsList.Add(args[0], args[1])) {
+                if (!AwardsList.Add(award, desc)) {
                     p.Message("This award already exists."); return;
                 } else {
-                    Chat.MessageGlobal("Award added: &6{0} : {1}", args[0], args[1]);
+                    Chat.MessageGlobal("Award added: &6{0} : {1}", award, desc);
                     AwardsList.Save();
                 }
             } else if (IsDeleteCommand(args[0])) {
