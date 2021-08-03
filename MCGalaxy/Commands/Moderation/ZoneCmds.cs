@@ -21,6 +21,7 @@ using MCGalaxy.Commands.CPE;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
+using MCGalaxy.Blocks.Extended;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Moderation {
@@ -134,6 +135,15 @@ namespace MCGalaxy.Commands.Moderation {
             } else if (opt.CaselessEq("motd")) {
                 zone.Config.MOTD = value;
                 OnChangedZone(zone);
+            } else if (opt.CaselessEq("text")) {
+                if (value == "null") {
+                    zone.Config.Text = "";
+                } else {
+                    bool allCmds = HasExtraPerm(p, "MB", p.Rank, 1);
+                    if (!MessageBlock.Validate(p, value, allCmds)) return;
+                    zone.Config.Text = value;
+                    OnChangedZone(zone);
+                }
             } else if (CmdEnvironment.Handle(p, p.level, opt, value, zone.Config, "zone " + zone.ColoredName)) {
                 OnChangedZone(zone);
             } else {
@@ -170,6 +180,9 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("&HSets the color of the box shown around the zone");
                 p.Message("&T/Zone set [name] motd [value]");
                 p.Message("&HSets the MOTD applied when in the zone. See &T/Help map motd");
+                p.Message("&T/Zone set [name] text [text]");
+                p.Message("&HSets the text shown when a player enters the zone.");
+                p.Message("&HSee &T/Help mb. &HUse \"null\" to remove the text");
                 p.Message("&T/Zone set [name] [env property] [value]");
                 p.Message("&HSets an env setting applied when in the zone. See &T/Help env");
             } else {
