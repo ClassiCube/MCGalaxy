@@ -104,7 +104,7 @@ namespace MCGalaxy.Blocks {
 
         /// <summary> Gets the default step sound of a block. </summary>
         public static SoundType StepSound(BlockID b) {
-            if (b == Block.Glass) return SoundType.Stone;
+            if (b == Block.Glass) return SoundType.Glass;
             if (b == Block.Rope) return SoundType.Cloth;
             if (Draw(b) == DrawType.Sprite) return SoundType.None;
             
