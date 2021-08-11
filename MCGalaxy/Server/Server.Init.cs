@@ -134,7 +134,7 @@ namespace MCGalaxy {
             Critical.QueueRepeat(ServerTasks.TickPlayers, null,
                                  TimeSpan.FromMilliseconds(20));
 
-            Logger.Log(LogType.SystemActivity, "Finished setting up server, finding classicube.net url..");
+            Logger.Log(LogType.SystemActivity, "Finished setting up server");
             SetupFinished = true;
         }
     }
