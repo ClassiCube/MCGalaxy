@@ -53,22 +53,6 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        static string[] GetReportedUsers() {
-            string[] users = Directory.GetFiles("extra/reported", "*.txt");
-            for (int i = 0; i < users.Length; i++) {
-                users[i] = Path.GetFileNameWithoutExtension(users[i]);
-            }
-            return users;
-        }
-        
-        static void DeleteReport(string user) {
-            if (File.Exists("extra/reportedbackups/" + user + ".txt")) {
-                File.Delete("extra/reportedbackups/" + user + ".txt");
-            }            
-            File.Move("extra/reported/" + user + ".txt", 
-                      "extra/reportedbackups/" + user + ".txt");
-        }
-        
         void HandleList(Player p, string[] args, CommandData data) {
             if (!CheckExtraPerm(p, data, 1)) return;
             string[] users = GetReportedUsers();
@@ -79,10 +63,10 @@ namespace MCGalaxy.Commands.Moderation {
                 MultiPageOutput.Output(p, users, pl => p.FormatNick(pl),
                                        "Review list", "players", modifier, false);
                 
-                p.Message("Use &T/Report check [Player] &Sto view report details.");
-                p.Message("Use &T/Report delete [Player] &Sto delete a report");
+                p.Message("Use &T/Report check [player] &Sto view report details.");
+                p.Message("Use &T/Report delete [player] &Sto delete a report");
             } else {
-                p.Message("No reports were found.");
+                p.Message("No players have been reported currently.");
             }
         }
         
@@ -91,11 +75,13 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p, data, 1)) return;
+            
             string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
+            string nick = p.FormatNick(target);
             
-            if (!File.Exists("extra/reported/" + target + ".txt")) {
-                p.Message("The player you specified has not been reported."); return;
+            if (!HasReports(target)) {
+                p.Message("{0} &Shas not been reported.", nick); return;
             }
             
             string[] reports = File.ReadAllLines("extra/reported/" + target + ".txt");
@@ -107,17 +93,18 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("You need to provide a player's name."); return;
             }
             if (!CheckExtraPerm(p, data, 1)) return;
+            
             string target = PlayerDB.MatchNames(p, args[1]);
             if (target == null) return;
+            string nick = p.FormatNick(target);
             
-            if (!File.Exists("extra/reported/" + target + ".txt")) {
-                p.Message("The player you specified has not been reported."); return;
+            if (!HasReports(target)) {
+                p.Message("{0} &Shas not been reported.", nick); return;
             }
             if (!Directory.Exists("extra/reportedbackups"))
                 Directory.CreateDirectory("extra/reportedbackups");
             
             DeleteReport(target);
-            string nick = p.FormatNick(target);
             p.Message("Reports on {0} &Swere deleted.", nick);
             Chat.MessageFromOps(p, "λNICK &Sdeleted reports on " + nick);
             Logger.Log(LogType.UserActivity, "Reports on {1} were deleted by {0}", p.name, target);
@@ -140,32 +127,57 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length != 2) {
                 p.Message("You need to provide a reason for the report."); return;
             }
+            
             string target = PlayerDB.MatchNames(p, args[0]);
             if (target == null) return;
+            string nick = p.FormatNick(target);
 
             List<string> reports = new List<string>();
-            if (File.Exists("extra/reported/" + target + ".txt")) {
-                reports = Utils.ReadAllLinesList("extra/reported/" + target + ".txt");
+            if (HasReports(target)) {
+                reports = Utils.ReadAllLinesList(ReportPath(target));
             }
-            
             ItemPerms checkPerms = CommandExtraPerms.Find(name, 1);
+            
             if (reports.Count >= 5) {
                 p.Message("{0} &Walready has 5 reports! Please wait until an {1} &Whas reviewed these reports first!",
-                          p.FormatNick(target), checkPerms.Describe());
+                          nick, CommandExtraPerms.Find(name, 1).Describe());
                 return;
             }
             
-            string reason = args[1];
-            reason = ModActionCmd.ExpandReason(p, reason);
+            string reason = ModActionCmd.ExpandReason(p, args[1]);
             if (reason == null) return;
             
             reports.Add(reason + " - Reported by " + p.name + " at " + DateTime.Now);
-            File.WriteAllLines("extra/reported/" + target + ".txt", reports.ToArray());
+            File.WriteAllLines(ReportPath(target), reports.ToArray());
             p.Message("&aReport sent! It should be viewed when a {0} &ais online", 
-                           checkPerms.Describe());
+                      checkPerms.Describe());
             
-            string opsMsg = "λNICK &Smade a report, view it with &T/Report check " + target;
+            string opsMsg = "λNICK &Sreported " + nick + "&S. Reason: " + reason;
             Chat.MessageFrom(ChatScope.Perms, p, opsMsg, checkPerms, null, true);
+            string allMsg = "Use &T/Report check " + target + " &Sto see all of their reports";
+            Chat.MessageFrom(ChatScope.Perms, p, allMsg, checkPerms, null, true);
+        }
+        
+        
+        static bool HasReports(string user) {
+            return File.Exists(ReportPath(user));
+        }
+        static string ReportPath(string user) {
+            return "extra/reported/" + user + ".txt";
+        }
+                
+        static string[] GetReportedUsers() {
+            string[] users = Directory.GetFiles("extra/reported", "*.txt");
+            for (int i = 0; i < users.Length; i++) {
+                users[i] = Path.GetFileNameWithoutExtension(users[i]);
+            }
+            return users;
+        }
+        
+        static void DeleteReport(string user) {
+            string backup = "extra/reportedbackups/" + user + ".txt";
+            AtomicIO.TryDelete(backup);           
+            File.Move(ReportPath(user), backup);
         }
         
         public override void Help(Player p) {
