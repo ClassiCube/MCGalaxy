@@ -35,12 +35,11 @@ namespace MCGalaxy {
             if (!Server.Config.VerifyNames) return true;
             string calculated = Server.CalcMppass(p.truename);
             
-            if (!mppass.CaselessEq(calculated)) {
-                if (!IPUtil.IsPrivate(p.IP)) return false;
-            } else {
+            if (mppass.CaselessEq(calculated)) {
                 p.verifiedName = true;
+                return true;
             }
-            return true;
+            return IPUtil.IsPrivate(p.IP);
         }
         
         /// <summary> Informs the given player that they must first

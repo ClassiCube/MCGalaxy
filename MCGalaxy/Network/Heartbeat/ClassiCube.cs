@@ -115,22 +115,23 @@ namespace MCGalaxy.Network {
         
         static string GetError(string json) {
             JsonReader reader = new JsonReader(json);
-            string error = null;
+            // silly design, but form of json is:
+            // {
+            //   "errors": [ ["Error 1"], ["Error 2"] ],
+            //   "response": "",
+            //   "status": "fail"
+            // }
+            JsonObject obj = reader.Parse() as JsonObject;
+            if (obj == null || !obj.ContainsKey("errors")) return null;
             
-            // silly design, but form of json is: "errors": [ ["Error1"], ["Error2"] ]
-            reader.OnMember = (obj, key, value) => {
-                if (key != "errors") return;                
-                JsonArray errors = value as JsonArray;
-                if (errors == null) return;
-                
-                foreach (object raw in errors) {
-                    JsonArray err = raw as JsonArray;
-                    if (err != null && err.Count > 0) error = (string)err[0];
-                }                
-            };
-            
-            reader.Parse();
-            return error;
+            JsonArray errors = obj["errors"] as JsonArray;
+            if (errors == null) return null;
+
+            foreach (object raw in errors) {
+                JsonArray err = raw as JsonArray;
+                if (err != null && err.Count > 0) return (string)err[0];
+            }
+            return null;
         }
     }
 }

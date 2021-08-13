@@ -38,6 +38,12 @@ namespace MCGalaxy.Commands.Building {
             string opt = message.ToLower();
             BlockDefinition[] defs = p.level.CustomBlockDefs;
             
+            // /Mirror used to be part of spin
+            if (opt.CaselessStarts("mirror")) {
+                p.Message("&T/Spin {0} &Sis deprecated. Use &T/Mirror &Sinstead", opt);
+                return;
+            }
+            
             string[] args = opt.SplitSpaces();
             char axis = 'Y';
             int angle = 90;
