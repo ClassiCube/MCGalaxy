@@ -224,6 +224,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         
+        static bool IsEscaped(char c) {
+            // To match Discord: \a --> \a, \* --> *
+            return (c >  ' ' && c <= '/') || (c >= ':' && c <= '@') 
+                || (c >= '[' && c <= '`') || (c >= '{' && c <= '~');
+        }        
         protected override string ParseMessage(string input) {
             StringBuilder sb = new StringBuilder(input);
             SimplifyCharacters(sb);
@@ -231,9 +236,10 @@ namespace MCGalaxy.Modules.Relay.Discord
             // remove variant selector character used with some emotes
             sb.Replace("\uFE0F", "");
             
-            // unescape escaped bold/italic markdown characters
-            for (int i = 0; i < markdown_escaped.Length; i++) {
-                sb = sb.Replace(markdown_escaped[i], markdown_special[i]);
+            // unescape \ escaped characters
+            for (int i = sb.Length - 1; i >= 0; i--) {
+                if (sb[i] != '\\') continue;
+                if (IsEscaped(sb[i + 1])) sb.Remove(i, 1);
             }
             return sb.ToString();
         }

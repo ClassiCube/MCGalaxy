@@ -13,11 +13,8 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using System.Net;
-using System.Net.Security;
 using System.Net.Sockets;
-using System.Security.Authentication;
 
 namespace MCGalaxy.Network {
     /// <summary> Utility methods related to IP addresses </summary>
@@ -57,6 +54,7 @@ namespace MCGalaxy.Network {
             return false;
         }
         
+        /// <summary> Returns whether the given IP is an IPv4 mapped IPv6 address </summary>
         public static bool IsIPv4Mapped(IPAddress ip) {
             if (ip.AddressFamily != AddressFamily.InterNetworkV6) return false;
             byte[] addr = ip.GetAddressBytes();
@@ -69,6 +67,7 @@ namespace MCGalaxy.Network {
             return addr[10] == 0xFF && addr[11] == 0xFF;
         }
         
+        /// <summary> Converts an IPv4 mapped IPv6 address into an IPv4 address </summary>
         public static IPAddress MapToIPV4(IPAddress ip) {
             byte[] addr = ip.GetAddressBytes();
             
