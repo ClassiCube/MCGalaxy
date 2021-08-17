@@ -55,6 +55,7 @@ namespace MCGalaxy.Modules.Security
             
             DateTime now = DateTime.UtcNow;
             string ipStr = ip.ToString();
+            int failed   = 0;
             
             lock (ipsLock) {
                 IPThrottleEntry entry;
@@ -71,11 +72,17 @@ namespace MCGalaxy.Modules.Security
                     return;
                 }
                 
-                // If still connecting despite getting kick message 10 times, 
-                //  treat this as an automated DOS attempt by a bot
                 entry.FailedLogins++;
-                if (entry.FailedLogins > 10) cancel = true;
+                failed = entry.FailedLogins;
             }
+            
+            // If still connecting despite getting kick message 15 times, 
+            //  treat this as an automated DOS attempt by a bot
+            if (failed > 15) cancel = true;
+            
+            // Log message so host is aware the server is being attacked
+            if ((failed % 1000) != 0) return;
+            Logger.Log(LogType.SystemActivity, "Blocked {0} from connecting ({1} blocked attempts)", ipStr, failed);
         }
         
         void HandleConnecting(Player p, string mppass) {
@@ -87,10 +94,9 @@ namespace MCGalaxy.Modules.Security
             lock (ipsLock) {
                 IPThrottleEntry entry;
                 if (!ips.TryGetValue(p.ip, out entry)) return;
-                
                 blockedUntil = entry.BlockedUntil;
-                if (blockedUntil < now) return;
             }
+            if (blockedUntil < now) return;
             
             // do this outside lock since we want to minimise time spent locked
             TimeSpan delta = blockedUntil - now;
