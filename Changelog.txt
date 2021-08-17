@@ -1,3 +1,32 @@
+v 1.9.3.4
+Added: Allow custom Discord .who embed color
+Added: Events for messages received from a relay bot
+Fixed: /infoswapping two players of same rank causing destination player to lose their rank
+Fixed: On some versions of WINE, if you close the server while players are still connected, you get EADDRINUSE for next few minutes if you try to start server again
+Fixed: Settings GUI icon showing default form icon on mono/wine
+Fixed: mkbundle wrapped CLI always crashing at startup
+Fixed: If you buy a login/logout/title etc while muted, you are still charged even though the message does not change
+Fixed: VecF32.Normalise on a zero vector turning into NaN (Thanks Venk)
+Fixed: Some characters in nicks not being properly escaped for Discord
+Fixed: Escaped characters from Discord like \* still appearing escaped in-game
+Fixed: Workaround custom Loggers rarely throwing exceptions in their LogHandler
+Fixed: Being able to add award with same name twice
+Fixed: Can't do /reload [level] when can't do /reload
+Fixed: Custom defined default glass not having correct break sound
+Improved: Log error details if fail to download required file
+Improved: Support compiling multiple files into one DLL
+Improved: Generate .pdb so errors have stacktraces when thrown from commands/plugins
+Improved: Now you can remove login/logout message while muted
+Improved: Split up /spin into /spin and /mirror
+Improved: Actually log Discord error response text
+Improved: Make /plugins output paginated
+Improved: Show messages if relay bot connect fails asides from just not being enabled
+Improved: Support resuming Discord relay bot session (should fix rarely losing 1-2 seconds of discord -> ingame chat)
+Improved: Simplified /reload all [level] to just /reload [level]
+Improved: /report message to also show reason to online ops
+Improved: Don't log so much when connection is being spammed
+Improved: Tidy up /awards output
+
 v 1.9.3.3
 Added: Allow overriding default authentication mechanisms
 Fixed: /ccols edit not working with non-ascii colour codes
