@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Net;
 using System.Net.Sockets;
+using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Network {
     
@@ -109,10 +110,16 @@ namespace MCGalaxy.Network {
             
             try {
                 Socket raw = listen.socket.EndAccept(result);
-                s = new TcpSocket(raw);
+                s = new TcpSocket(raw);    
+                bool cancel = false;
                 
-                Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
-                s.Init();                
+                OnConnectionReceivedEvent.Call(s, ref cancel);
+                if (cancel) {
+                    s.Close();
+                } else {
+                    Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
+                    s.Init();
+                }
             } catch (Exception ex) {
                 if (!(ex is SocketException)) Logger.LogError(ex);
                 if (s != null) s.Close();

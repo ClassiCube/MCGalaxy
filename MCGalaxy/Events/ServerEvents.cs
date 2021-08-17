@@ -49,9 +49,23 @@ namespace MCGalaxy.Events.ServerEvents {
     /// <summary> Called when the server configuration has been updated. </summary>
     public sealed class OnConfigUpdatedEvent : IEvent<OnConfigUpdated> {
         
-    	public static void Call() {
+        public static void Call() {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl());
+        }
+    }
+    
+    public delegate void OnConnectionReceived(TcpSocket s, ref bool cancel);
+    /// <summary> Called when a new connection has been received. </summary>
+    public sealed class OnConnectionReceivedEvent : IEvent<OnConnectionReceived> {
+        
+        public static void Call(TcpSocket s, ref bool cancel) {
+            IEvent<OnConnectionReceived>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(s, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
     
