@@ -17,8 +17,11 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
@@ -36,32 +39,56 @@ namespace MCGalaxy.Modules.Security
         
         public override void Load(bool startup) {
             OnPlayerStartConnectingEvent.Register(HandleConnecting, Priority.System_Level);
+            OnConnectionReceivedEvent.Register(HandleConnectionReceived, Priority.System_Level);
             clearTask = Server.Background.QueueRepeat(CleanupTask, null, TimeSpan.FromMinutes(10));
         }
         
         public override void Unload(bool shutdown) {
             OnPlayerStartConnectingEvent.Unregister(HandleConnecting);
+            OnConnectionReceivedEvent.Unregister(HandleConnectionReceived);
             Server.Background.Cancel(clearTask);
         }
         
-        void HandleConnecting(Player p, string mppass) {
-            if (!Server.Config.IPSpamCheck || IPUtil.IsLocal(p.IP)) return;
-            DateTime blockedUntil, now = DateTime.UtcNow;
+        void HandleConnectionReceived(Socket s, ref bool cancel) {
+            IPAddress ip = SocketUtil.GetIP(s);
+            if (!Server.Config.IPSpamCheck || IPUtil.IsLocal(ip)) return;
+            
+            DateTime now = DateTime.UtcNow;
+            string ipStr = ip.ToString();
             
             lock (ipsLock) {
                 IPThrottleEntry entry;
-                if (!ips.TryGetValue(p.ip, out entry)) {
+                if (!ips.TryGetValue(ipStr, out entry)) {
                     entry = new IPThrottleEntry();
-                    ips[p.ip] = entry;
+                    ips[ipStr] = entry;
                 }
-                blockedUntil = entry.BlockedUntil;
                 
-                if (blockedUntil < now) {
+                if (entry.BlockedUntil < now) {
                     if (!entry.AddSpamEntry(Server.Config.IPSpamCount, Server.Config.IPSpamInterval)) {
                         entry.BlockedUntil = now.Add(Server.Config.IPSpamBlockTime);
                     }
-                	return;
+                    return;
                 }
+                
+                // If still connecting despite getting kick message 10 times, 
+                //  treat this as an automated DOS attempt by a bot
+                entry.FailedLogins++;
+                if (entry.FailedLogins > 10) cancel = true;
+            }
+        }
+        
+        void HandleConnecting(Player p, string mppass) {
+            if (!Server.Config.IPSpamCheck) return;
+            DateTime now = DateTime.UtcNow;
+            DateTime blockedUntil;
+            
+            // Most of work is done on initial connection
+            lock (ipsLock) {
+                IPThrottleEntry entry;
+                if (!ips.TryGetValue(p.ip, out entry)) return;
+                
+                blockedUntil = entry.BlockedUntil;
+                if (blockedUntil < now) return;
             }
             
             // do this outside lock since we want to minimise time spent locked
@@ -70,8 +97,10 @@ namespace MCGalaxy.Modules.Security
             p.cancelconnecting = true;
         }
         
+        
         class IPThrottleEntry : List<DateTime> {
             public DateTime BlockedUntil;
+            public int FailedLogins;
         }
         
         void CleanupTask(SchedulerTask task) {
