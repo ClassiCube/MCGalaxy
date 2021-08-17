@@ -260,7 +260,10 @@ namespace MCGalaxy.Network {
         public override void Close() {
             Disconnected = true;
             pending.Remove(this);
-            SocketUtil.ForceClose(socket);
+            
+            // swallow errors as connection is being closed anyways
+            try { socket.Shutdown(SocketShutdown.Both); } catch { }
+            try { socket.Close(); } catch { }
             
             lock (sendLock) { sendQueue.Clear(); }
             try { recvArgs.Dispose(); } catch { }

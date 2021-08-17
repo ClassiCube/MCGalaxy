@@ -67,12 +67,6 @@ namespace MCGalaxy.Network
     /// <summary> Utility methods related to sockets </summary>
     public static class SocketUtil 
     { 
-        /// <summary> Forcesfully closes the given socket, swallowing any errors </summary>
-        public static void ForceClose(Socket s) {
-            try { s.Shutdown(SocketShutdown.Both); } catch { }
-            try { s.Close(); } catch { }
-        }
-
         /// <summary> Retrieves the remote IP address associated with the given socket </summary>
         public static IPAddress GetIP(Socket s) {
             return ((IPEndPoint)s.RemoteEndPoint).Address;

@@ -114,7 +114,8 @@ namespace MCGalaxy.Network {
                 
                 OnConnectionReceivedEvent.Call(raw, ref cancel);
                 if (cancel) {
-                    SocketUtil.ForceClose(raw);
+                    // intentionally non-clean connection close
+                    try { raw.Close(); } catch { }
                 } else {
                     s = new TcpSocket(raw);
                     Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
