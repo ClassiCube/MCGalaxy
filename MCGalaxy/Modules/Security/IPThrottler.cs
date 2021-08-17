@@ -51,7 +51,7 @@ namespace MCGalaxy.Modules.Security
         
         void HandleConnectionReceived(Socket s, ref bool cancel) {
             IPAddress ip = SocketUtil.GetIP(s);
-            if (!Server.Config.IPSpamCheck || IPUtil.IsLocal(ip)) return;
+            if (!Server.Config.IPSpamCheck || IPAddress.IsLoopback(ip)) return;
             
             DateTime now = DateTime.UtcNow;
             string ipStr = ip.ToString();
@@ -63,6 +63,7 @@ namespace MCGalaxy.Modules.Security
                     ips[ipStr] = entry;
                 }
                 
+                // Check if that IP is repeatedly trying to connect
                 if (entry.BlockedUntil < now) {
                     if (!entry.AddSpamEntry(Server.Config.IPSpamCount, Server.Config.IPSpamInterval)) {
                         entry.BlockedUntil = now.Add(Server.Config.IPSpamBlockTime);

@@ -39,21 +39,6 @@ namespace MCGalaxy.Network
             // TODO: Are there more IPv6 address ranges than just this?
             return ip.IsIPv6LinkLocal;
         }
-
-        /// <summary> Returns whether the given IP is a loopback address
-        /// or an address mapped to this computer's host </summary>
-        public static bool IsLocal(IPAddress ip) {
-            try {
-                if (IPAddress.IsLoopback(ip)) return true;
-                
-                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-                foreach (IPAddress localIP in localIPs) {
-                    if (ip.Equals(localIP)) return true;
-                }
-            }
-            catch { }
-            return false;
-        }
         
         /// <summary> Returns whether the given IP is an IPv4 mapped IPv6 address </summary>
         public static bool IsIPv4Mapped(IPAddress ip) {
