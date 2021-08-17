@@ -21,6 +21,7 @@ using MCGalaxy.Core;
 using MCGalaxy.Modules.Moderation.Notes;
 using MCGalaxy.Modules.Relay.Discord;
 using MCGalaxy.Modules.Relay.IRC;
+using MCGalaxy.Modules.Security;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy 
@@ -109,6 +110,7 @@ namespace MCGalaxy
             LoadCorePlugin(new NotesPlugin());
             LoadCorePlugin(new DiscordPlugin());
             LoadCorePlugin(new IRCPlugin());
+            LoadCorePlugin(new IPThrottler());
             IScripting.AutoloadPlugins();
         }
         

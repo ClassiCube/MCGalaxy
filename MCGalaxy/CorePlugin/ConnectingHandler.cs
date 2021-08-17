@@ -20,9 +20,9 @@ namespace MCGalaxy.Core {
     internal static class ConnectingHandler {
         
         internal static void HandleConnecting(Player p, string mppass) {
+            if (p.cancelconnecting) return;
             bool success = HandleConnectingCore(p, mppass);
-            if (success) return;
-            p.cancelconnecting = true;
+            if (!success) p.cancelconnecting = true;
         }
         
         static bool HandleConnectingCore(Player p, string mppass) {
@@ -36,8 +36,6 @@ namespace MCGalaxy.Core {
             if (!Authenticator.Current.VerifyLogin(p, mppass)) {
                 p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
             }
-            
-            if (!IPThrottler.CheckIP(p)) return false;
             if (!CheckTempban(p)) return false;
 
             if (Server.Config.WhitelistedOnly && !Server.whiteList.Contains(p.name)) {

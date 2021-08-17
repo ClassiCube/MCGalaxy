@@ -143,8 +143,8 @@ namespace MCGalaxy.Network {
         }
         
         public override IPAddress IP {
-            get { return ((IPEndPoint)socket.RemoteEndPoint).Address; }
-        }        
+            get { return SocketUtil.GetIP(socket); }
+        }
         public override bool LowLatency { set { socket.NoDelay = value; } }
         
         
@@ -260,10 +260,7 @@ namespace MCGalaxy.Network {
         public override void Close() {
             Disconnected = true;
             pending.Remove(this);
-            
-            // Try to close the socket. Sometimes socket is already closed, so just hide this.
-            try { socket.Shutdown(SocketShutdown.Both); } catch { }
-            try { socket.Close(); } catch { }
+            SocketUtil.ForceClose(socket);
             
             lock (sendLock) { sendQueue.Clear(); }
             try { recvArgs.Dispose(); } catch { }

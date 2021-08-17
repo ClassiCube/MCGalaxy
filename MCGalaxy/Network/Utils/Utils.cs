@@ -16,10 +16,11 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace MCGalaxy.Network {
+namespace MCGalaxy.Network 
+{
     /// <summary> Utility methods related to IP addresses </summary>
-    public static class IPUtil {
-        
+    public static class IPUtil 
+    {
         /// <summary> Returns whether the given IP is a loopback or a LAN address </summary>
         public static bool IsPrivate(IPAddress ip) {
             if (IPAddress.IsLoopback(ip)) return true;
@@ -75,6 +76,21 @@ namespace MCGalaxy.Network {
             byte[] ipv4 = new byte[4];
             Buffer.BlockCopy(addr, 12, ipv4, 0, 4);
             return new IPAddress(ipv4);
+        }
+    }
+    
+    /// <summary> Utility methods related to sockets </summary>
+    public static class SocketUtil 
+    { 
+        /// <summary> Forcesfully closes the given socket, swallowing any errors </summary>
+        public static void ForceClose(Socket s) {
+            try { s.Shutdown(SocketShutdown.Both); } catch { }
+            try { s.Close(); } catch { }
+        }
+
+        /// <summary> Retrieves the remote IP address associated with the given socket </summary>
+        public static IPAddress GetIP(Socket s) {
+            return ((IPEndPoint)s.RemoteEndPoint).Address;
         }
     }
 }

@@ -381,7 +381,6 @@
     <Compile Include="CorePlugin\CorePlugin.cs" />
     <Compile Include="CorePlugin\ConnectHandler.cs" />
     <Compile Include="CorePlugin\EcoHandlers.cs" />
-    <Compile Include="CorePlugin\IPThrottler.cs" />
     <Compile Include="CorePlugin\MiscHandlers.cs" />
     <Compile Include="CorePlugin\ModActionHandler.cs" />
     <Compile Include="Database\Backends\SQLite.cs" />
@@ -597,6 +596,7 @@
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
     <Compile Include="Modules\Relay\RelayBotSender.cs" />
+    <Compile Include="Modules\Security\IPThrottler.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
@@ -607,7 +607,7 @@
     <Compile Include="Network\Sockets.cs" />
     <Compile Include="Network\Utils\BufferedBlockSender.cs" />
     <Compile Include="Network\Utils\HttpUtil.cs" />
-    <Compile Include="Network\Utils\IPUtil.cs" />
+    <Compile Include="Network\Utils\Utils.cs" />
     <Compile Include="Network\Utils\LevelChunkStream.cs" />
     <Compile Include="Network\Utils\NetUtils.cs" />
     <Compile Include="Network\Utils\PingList.cs" />
@@ -735,6 +735,7 @@
     <Folder Include="Modules\Awards" />
     <Folder Include="Modules\Moderation" />
     <Folder Include="Modules\Moderation\Notes" />
+    <Folder Include="Modules\Security" />
     <Folder Include="Modules\Relay\Discord" />
     <Folder Include="Modules\Relay" />
     <Folder Include="Network\Heartbeat" />

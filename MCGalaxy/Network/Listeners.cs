@@ -109,14 +109,14 @@ namespace MCGalaxy.Network {
             TcpSocket s = null;
             
             try {
-                Socket raw = listen.socket.EndAccept(result);
-                s = new TcpSocket(raw);    
+                Socket raw = listen.socket.EndAccept(result);  
                 bool cancel = false;
                 
-                OnConnectionReceivedEvent.Call(s, ref cancel);
+                OnConnectionReceivedEvent.Call(raw, ref cancel);
                 if (cancel) {
-                    s.Close();
+                    SocketUtil.ForceClose(raw);
                 } else {
+                    s = new TcpSocket(raw);
                     Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
                     s.Init();
                 }

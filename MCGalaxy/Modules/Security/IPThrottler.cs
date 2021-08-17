@@ -14,21 +14,38 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
- */
+*/
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Events;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Core {
-
-    internal static class IPThrottler {
+namespace MCGalaxy.Modules.Security
+{
+    public sealed class IPThrottler : Plugin 
+    {
+        public override string creator { get { return Server.SoftwareName + " team"; } }
+        public override string MCGalaxy_Version { get { return Server.Version; } }
+        public override string name { get { return "IPThrottler"; } }
         
-        static readonly Dictionary<string, IPThrottleEntry> ips = new Dictionary<string, IPThrottleEntry>();
-        static readonly object ipsLock = new object();
+        SchedulerTask clearTask;        
+        readonly Dictionary<string, IPThrottleEntry> ips = new Dictionary<string, IPThrottleEntry>();
+        readonly object ipsLock = new object();
         
-        internal static bool CheckIP(Player p) {
-            if (!Server.Config.IPSpamCheck || IPUtil.IsLocal(p.IP)) return true;
+        public override void Load(bool startup) {
+            OnPlayerStartConnectingEvent.Register(HandleConnecting, Priority.System_Level);
+            clearTask = Server.Background.QueueRepeat(CleanupTask, null, TimeSpan.FromMinutes(10));
+        }
+        
+        public override void Unload(bool shutdown) {
+            OnPlayerStartConnectingEvent.Unregister(HandleConnecting);
+            Server.Background.Cancel(clearTask);
+        }
+        
+        void HandleConnecting(Player p, string mppass) {
+            if (!Server.Config.IPSpamCheck || IPUtil.IsLocal(p.IP)) return;
             DateTime blockedUntil, now = DateTime.UtcNow;
             
             lock (ipsLock) {
@@ -43,21 +60,21 @@ namespace MCGalaxy.Core {
                     if (!entry.AddSpamEntry(Server.Config.IPSpamCount, Server.Config.IPSpamInterval)) {
                         entry.BlockedUntil = now.Add(Server.Config.IPSpamBlockTime);
                     }
-                    return true;
+                	return;
                 }
             }
             
             // do this outside lock since we want to minimise time spent locked
             TimeSpan delta = blockedUntil - now;
             p.Leave("Too many connections too quickly! Wait " + delta.Shorten(true) + " before joining");            
-            return false;
+            p.cancelconnecting = true;
         }
         
         class IPThrottleEntry : List<DateTime> {
             public DateTime BlockedUntil;
         }
         
-        internal static void CleanupTask(SchedulerTask task) {
+        void CleanupTask(SchedulerTask task) {
             lock (ipsLock) {
                 if (!Server.Config.IPSpamCheck) { ips.Clear(); return; }
                 

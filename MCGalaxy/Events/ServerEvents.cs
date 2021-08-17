@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Events.ServerEvents {
@@ -55,11 +56,11 @@ namespace MCGalaxy.Events.ServerEvents {
         }
     }
     
-    public delegate void OnConnectionReceived(TcpSocket s, ref bool cancel);
+    public delegate void OnConnectionReceived(Socket s, ref bool cancel);
     /// <summary> Called when a new connection has been received. </summary>
     public sealed class OnConnectionReceivedEvent : IEvent<OnConnectionReceived> {
         
-        public static void Call(TcpSocket s, ref bool cancel) {
+        public static void Call(Socket s, ref bool cancel) {
             IEvent<OnConnectionReceived>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
