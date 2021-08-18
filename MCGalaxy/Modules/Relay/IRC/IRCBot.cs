@@ -46,8 +46,22 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
         
         
+        static char[] newline = { '\n' };
         protected override void DoSendMessage(string channel, string message) {
-            if (ready) connection.SendMessage(channel, message);
+            if (!ready) return;
+            
+            // IRC messages can't have \r or \n in them
+            //  https://stackoverflow.com/questions/13898584/insert-line-breaks-into-an-irc-message
+            if (message.IndexOf('\n') == -1) {
+                connection.SendMessage(channel, message);
+                return;
+            }
+            
+            string[] parts = message.Split(newline, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string part in parts) 
+            {
+                connection.SendMessage(channel, part.Replace("\r", ""));
+            }
         }
         
         public void Raw(string message) {
