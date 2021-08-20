@@ -37,25 +37,38 @@ namespace MCGalaxy.Commands.World {
                     PlayerActions.ChangeMap(p, Server.mainLevel);
                 }
             } else {
+                string[] args = message.SplitSpaces();
+                string levelName = args[0];
+                bool unloadOldMain;
+                if (args.Length == 1)
+                    unloadOldMain = false;
+                else if (args.Length == 2 && args[1] == "unload")
+                    unloadOldMain = true;
+                else
+                    return;
+
                 if (!CheckExtraPerm(p, data, 1)) return;
-                if (!Formatter.ValidMapName(p, message)) return;
+                if (!Formatter.ValidMapName(p, levelName)) return;
                 if (!LevelInfo.Check(p, data.Rank, Server.mainLevel, "set main to another map")) return;
-                
-                string map = Matcher.FindMaps(p, message);
+
+                string map = Matcher.FindMaps(p, levelName);
                 if (map == null) return;
                 if (!LevelInfo.Check(p, data.Rank, map, "set main to this map")) return;
-                
-                Server.SetMainLevel(map);
+
+                Server.SetMainLevel(map, unloadOldMain);
                 SrvProperties.Save();
                 p.Message("Set main level to {0}", Server.mainLevel.ColoredName);
             }
         }
         
-        public override void Help(Player p) {
+        public override void Help(Player p)
+        {
             p.Message("&T/Main");
             p.Message("&HSends you to the main level.");
             p.Message("&T/Main [level]");
-            p.Message("&HSets the main level to that level.");
+            p.Message("&HSets the main level to that level. The old main level can be unloaded by using /unload [level] or using:");
+            p.Message("&T/Main [level] unload");
+            p.Message("&HSets the main level to that level and unloads the current main level.")
         }
     }
 }
