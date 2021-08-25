@@ -170,6 +170,9 @@ namespace MCGalaxy.Generator {
             int width = lvl.Width, length = lvl.Length;
             byte[] blocks = lvl.blocks;
             
+            // space theme uses maxY = 2, but map might only be 1 block high
+            maxY = Math.Min(maxY, lvl.MaxY);
+            
             for (int y = minY; y <= maxY; y++)
                 for (int z = minZ; z <= maxZ; z++)
                     for (int x = minX; x <= maxX; x++)

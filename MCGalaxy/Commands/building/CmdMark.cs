@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Building {
                     p.Message("Cannot mark, no selection in progress.");
                 } else {                    
                     Level lvl = p.level;
-                    DoMark(p, lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
+                    DoMark(p, lvl.MaxX, lvl.MaxY, lvl.MaxZ);
                 }
                 return;
             }
