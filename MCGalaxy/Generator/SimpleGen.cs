@@ -55,6 +55,15 @@ namespace MCGalaxy.Generator {
             return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.ocean);
         }
         
+        static bool GenDesert(Player p, Level lvl, string seed) {
+            lvl.Config.HorizonBlock = Block.Sand;
+            lvl.Config.CloudColor   = "#FFEE88";
+            lvl.Config.SkyColor     = "#FFEE88";
+            lvl.Config.FogColor     = "#FFEE88";
+            
+            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.desert);
+        }
+        
         unsafe static bool GenFlat(Player p, Level lvl, string seed) {
             int grassHeight = lvl.Height / 2, v;
             if (int.TryParse(seed, out v) && v >= 0 && v < lvl.Height) grassHeight = v;
@@ -68,16 +77,13 @@ namespace MCGalaxy.Generator {
             }
             return true;
         }
+        
 
         static bool GenEmpty(Player p, Level lvl, string seed) {
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
             Cuboid(lvl, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
             lvl.Config.EdgeLevel = 1;
             return true;
-        }
-        
-        static bool GenDesert(Player p, Level lvl, string seed) {
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.desert);
         }
         
         static bool GenPixel(Player p, Level lvl, string seed) {
@@ -110,6 +116,11 @@ namespace MCGalaxy.Generator {
             Cuboid(lvl, 0, 0, 0,    maxX, 0, maxZ, () => Block.Bedrock);
             Cuboid(lvl, 0, 1, 0,    maxX, 1, maxZ,    nextBlock);
             Cuboid(lvl, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
+            
+            lvl.Config.EdgeLevel    = 1;
+            lvl.Config.HorizonBlock = Block.Obsidian;
+            lvl.Config.SkyColor     = "#000000";
+            lvl.Config.FogColor     = "#000000";
             return true;
         }
         
@@ -155,6 +166,11 @@ namespace MCGalaxy.Generator {
                 }
                 index++;
             }
+            
+            lvl.Config.CloudColor   = "#000000";
+            lvl.Config.SkyColor     = "#FFCC00";
+            lvl.Config.FogColor     = "FF6600";
+            lvl.Config.HorizonBlock = Block.Lava;
             return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.hell);
         }
         
