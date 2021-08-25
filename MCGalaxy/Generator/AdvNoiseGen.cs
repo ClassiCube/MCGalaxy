@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using LibNoise;
 
-namespace MCGalaxy.Generator {
-    public static class AdvNoiseGen {
+namespace MCGalaxy.Generator 
+{
+    public static class AdvNoiseGen 
+    {
         const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         
         public static void RegisterGenerators() {

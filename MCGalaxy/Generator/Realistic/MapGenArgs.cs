@@ -17,10 +17,12 @@
  */
 using System;
 
-namespace MCGalaxy.Generator.Realistic {
+namespace MCGalaxy.Generator.Realistic 
+{
     public delegate ushort CalcLiquidLevel(ushort lvlHeight);
     
-    public sealed class RealisticMapGenArgs {
+    public sealed class RealisticMapGenArgs 
+    {
         public float RangeLow = 0.2f;
         public float RangeHigh = 0.8f;
         public bool SimpleColumns = false, IslandColumns = false;

@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Generator.Realistic;
 
-namespace MCGalaxy.Generator {
-    public static class SimpleGen {
+namespace MCGalaxy.Generator 
+{
+    public static class SimpleGen 
+    {
         delegate byte NextBlock();
         const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         
@@ -170,7 +172,7 @@ namespace MCGalaxy.Generator {
             lvl.Config.CloudColor   = "#000000";
             lvl.Config.SkyColor     = "#FFCC00";
             lvl.Config.FogColor     = "FF6600";
-            lvl.Config.HorizonBlock = Block.Lava;
+            lvl.Config.HorizonBlock = Block.StillLava;
             return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.hell);
         }
         

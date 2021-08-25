@@ -1,11 +1,11 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt //Copyright (c) 2011-2013 Jon Baker, Glenn Marien and Lao Tszy <Jonty800@gmail.com> //Copyright (c) <2012-2014> <LeChosenOne, DingusBungus> | ProCraft Copyright 2014-2016 Joseph Beauvais <123DMWM@gmail.com>
 using System;
 
-namespace MCGalaxy.Generator.fCraft {
-
+namespace MCGalaxy.Generator.fCraft 
+{
     /// <summary> Interpolation mode for perlin noise. </summary>
-    public enum NoiseInterpolationMode {
-        
+    public enum NoiseInterpolationMode 
+    {        
         /// <summary> Cosine interpolation (fast). </summary>
         Cosine,
 
@@ -15,7 +15,8 @@ namespace MCGalaxy.Generator.fCraft {
 
 
     /// <summary> Class for generating and filtering 2D and 3D noise, extensively used by MapGenerator and Cloudy brush. </summary>
-    public sealed class Noise {
+    public sealed class Noise 
+    {
         public readonly int Seed;
         public readonly NoiseInterpolationMode InterpolationMode;
 

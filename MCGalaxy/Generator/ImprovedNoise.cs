@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy.Generator {
-    
+namespace MCGalaxy.Generator 
+{    
     /// <summary> Implements improved perlin noise as described in http://mrl.nyu.edu/~perlin/noise/ </summary>
-    public sealed class ImprovedNoise {
-        
+    public sealed class ImprovedNoise 
+    {    
         public float Frequency = 1;
         public float Amplitude = 1;
         public float Lacunarity = 2;

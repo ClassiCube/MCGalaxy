@@ -67,22 +67,22 @@ namespace MCGalaxy {
         [ConfigBoolInt("ExpFog", "Env")]
         public int ExpFog = -1;
         
-        /// <summary> Color of the clouds (Hex RGB color). Set to -1 to use client defaults. </summary>
+        /// <summary> Color of the clouds (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("CloudColor", "Env", "", true)]
         public string CloudColor = "";
-        /// <summary> Color of the fog (Hex RGB color). Set to -1 to use client defaults. </summary>
+        /// <summary> Color of the fog (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("FogColor", "Env", "", true)]
         public string FogColor = "";
-        /// <summary> Color of the sky (Hex RGB color). Set to -1 to use client defaults. </summary>
+        /// <summary> Color of the sky (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("SkyColor", "Env", "", true)]
         public string SkyColor = "";
-        /// <summary> Color of the blocks in shadows (Hex RGB color). Set to -1 to use client defaults. </summary>
+        /// <summary> Color of the blocks in shadows (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("ShadowColor", "Env", "", true)]
         public string ShadowColor = "";
-        /// <summary> Color of the blocks in the light (Hex RGB color). Set to -1 to use client defaults. </summary>
+        /// <summary> Color of the blocks in the light (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("LightColor", "Env", "", true)]
         public string LightColor = "";
-        /// <summary> Color of the skybox (Hex RGB color). Set to -1 to use client defaults. </summary>
+        /// <summary> Color of the skybox (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("SkyboxColor", "Env", "", true)]
         public string SkyboxColor = "";
         
@@ -139,6 +139,7 @@ namespace MCGalaxy {
             return -1;
         }
         
+        /// <summary> Calculates the default value for the given env property </summary>
         public int DefaultEnvProp(EnvProp i, int height) {
             if (i == EnvProp.SidesBlock)     return Block.Bedrock;
             if (i == EnvProp.EdgeBlock)      return Block.Water;

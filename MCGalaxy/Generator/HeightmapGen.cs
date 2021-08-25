@@ -23,9 +23,10 @@ using System.Net;
 using MCGalaxy.Network;
 using MCGalaxy.Drawing;
 
-namespace MCGalaxy.Generator {
-    public static class HeightmapGen {
-        
+namespace MCGalaxy.Generator 
+{
+    public static class HeightmapGen 
+    {       
         static void OnDecodeError(Player p, Bitmap bmp) {
             if (bmp != null) bmp.Dispose();
             // TODO failed to decode the image. make sure you are using the URL of the image directly, not just the webpage it is hosted on              
