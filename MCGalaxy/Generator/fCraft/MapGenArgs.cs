@@ -118,6 +118,30 @@ namespace MCGalaxy.Generator.fCraft
                     break;
             }
         }
+        
+        public void ApplyEnv( EnvConfig env ) {
+            switch( Biome ) {
+                case MapGenBiome.Arctic:
+                    env.CloudColor   = "#8E8E8E";
+                    env.SkyColor     = "#8E8E8E";
+                    env.FogColor     = "#AFAFAF";
+                    break;
+                    
+                case MapGenBiome.Desert:
+                    env.CloudColor   = "#FFEE88";
+                    env.SkyColor     = "#FFEE88";
+                    env.FogColor     = "#FFEE88";
+                    env.HorizonBlock = Block.Sand;
+                    break;
+                    
+                case MapGenBiome.Hell:
+                    env.CloudColor   = "#000000";
+                    env.SkyColor     = "#FFCC00";
+                    env.FogColor     = "#FF6600";
+                    env.HorizonBlock = Block.StillLava;
+                    break;
+            }
+        }
 
 
         public static fCraftMapGenArgs MakeTemplate( MapGenTheme template ) {

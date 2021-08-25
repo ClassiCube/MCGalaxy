@@ -439,6 +439,7 @@ namespace MCGalaxy.Generator.fCraft {
             args.WaterLevel = (lvl.Height - 1) / 2;
 
             new fCraftMapGen(args).Generate(lvl);
+            args.ApplyEnv(lvl.Config);
             return true;
         }
     }
