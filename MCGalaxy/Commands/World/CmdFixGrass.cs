@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
                 Help(p); return;
             }
 
-            p.Message("Place or break two blocks to determine corners edges.");
+            p.Message("Place or break two blocks to determine the bounds within which grass/dirt is fixed");
             p.MakeSelection(2, "Selecting corners for &SFixGrass", op, DoFixGrass);
         }
         
@@ -59,11 +59,10 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Help(Player p) {
-            p.Message("&T/FixGrass [mode] &H- Fixes grass based on mode");
-            p.Message("&H[mode] is \"\": Any grass with something on top is made into dirt, dirt with nothing on top is made grass");
-            p.Message("&H[mode] is \"light\": Only dirt/grass in sunlight becomes grass");
-            p.Message("&H[mode] is \"grass\": Only turns grass to dirt when under stuff");
-            p.Message("&H[mode] is \"dirt\": Only turns dirt with nothing on top to grass");
+            p.Message("&T/FixGrass &H- Turns grass with something on top to dirt, and turns dirt with nothing on top to grass");
+            p.Message("&T/FixGrass light &H- Only dirt/grass in sunlight becomes grass");
+            p.Message("&T/FixGrass grass &H- Turns grass with something on top to dirt");
+            p.Message("&T/FixGrass dirt &H- Turns dirt with nothing on top to grass");
         }
     }
 }

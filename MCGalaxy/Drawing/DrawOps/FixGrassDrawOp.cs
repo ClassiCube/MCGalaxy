@@ -46,14 +46,18 @@ namespace MCGalaxy.Drawing.Ops
         
         void Fix(DrawOpOutput output, bool fixGrass, bool fixDirt) {
             Level lvl = Level;
-            int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            int maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
+            int index, width = lvl.Width, length = lvl.Length;
             BlockID above, block;
             
-            for (ushort y = 0; y < lvl.Height; y++)
-                for (ushort z = 0; z < lvl.Length; z++)
-                    for (ushort x = 0; x < lvl.Width; x++)
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
+            	index = x + width * (z + y * length);
                 block = lvl.FastGetBlock(index);
+                
                 if (fixGrass && lvl.Props[block].GrassBlock != Block.Invalid) {
                     above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
                     BlockID grass = lvl.Props[block].GrassBlock;
@@ -71,13 +75,16 @@ namespace MCGalaxy.Drawing.Ops
         
         void FixLight(DrawOpOutput output) {
             Level lvl = Level;
-            int index = 0, oneY = lvl.Width * lvl.Length;
+            int oneY = lvl.Width * lvl.Length;
+            int index, width = lvl.Width, length = lvl.Length;
             BlockID above, block;
             
-            for (ushort y = 0; y < lvl.Height - 1; y++)
-                for (ushort z = 0; z < lvl.Length; z++)
-                    for (ushort x = 0; x < lvl.Width; x++)
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
+            	index = x + width * (z + y * length);
                 block = lvl.FastGetBlock(index);
                 bool inShadow = false;
                 
