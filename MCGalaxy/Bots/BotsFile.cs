@@ -116,7 +116,6 @@ namespace MCGalaxy.Bots {
     public sealed class BotProperties {
         [ConfigString] public string DisplayName;
         [ConfigString] public string Name;
-        [ConfigString] public string Level;
         [ConfigString] public string Skin;
         [ConfigString] public string Model;
         [ConfigString] public string Color;
@@ -145,7 +144,7 @@ namespace MCGalaxy.Bots {
         
         public void FromBot(PlayerBot bot) {
             Owner = bot.Owner;
-            Name = bot.name; Level = bot.level.name;
+            Name = bot.name;
             Skin = bot.SkinName; AI = bot.AIName;
             Model = bot.Model; Color = bot.color;
             Kill = bot.kill; Hunt = bot.hunt;

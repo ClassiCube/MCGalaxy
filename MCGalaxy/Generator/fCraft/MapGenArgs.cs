@@ -140,6 +140,7 @@ namespace MCGalaxy.Generator.fCraft
                     env.FogColor     = "#FF6600";
                     env.HorizonBlock = Block.StillLava;
                     break;
+                    // TODO swamp env
             }
         }
 
