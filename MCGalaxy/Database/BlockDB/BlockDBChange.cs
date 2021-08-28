@@ -75,6 +75,7 @@ namespace MCGalaxy.DB {
             if ((flags & BlockDBFlags.UndoOther) != 0) return " (UndoneOther)";
             if ((flags & BlockDBFlags.UndoSelf) != 0)  return " (UndoneSelf)";
             if ((flags & BlockDBFlags.RedoSelf) != 0)  return " (RedoneSelf)";
+            if ((flags & BlockDBFlags.FixGrass) != 0)  return " (FixGrass)";
             return "";
         }
     }

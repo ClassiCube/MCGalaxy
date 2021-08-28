@@ -16,6 +16,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
@@ -29,95 +31,31 @@ namespace MCGalaxy.Commands.World {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            int totalFixed = 0;
-            Level lvl = p.level;
-            if (!LevelInfo.Check(p, data.Rank, lvl, "use &T/fixgrass &Son this level")) return;
+            FixGrassDrawOp op = new FixGrassDrawOp();
             
             if (message.Length == 0) {
-                Fix(p, lvl, ref totalFixed, true, true);
+                op.FixDirt   = true;
+                op.FixGrass  = true;
             } else if (message.CaselessEq("light")) {
-                FixLight(p, lvl, ref totalFixed);
+                op.LightMode = true;
             } else if (message.CaselessEq("grass")) {
-                Fix(p, lvl, ref totalFixed, true, false);
+                op.FixGrass  = true;
             } else if (message.CaselessEq("dirt")) {
-                Fix(p, lvl, ref totalFixed, false, true);
+                op.FixDirt   = true;
             } else {
                 Help(p); return;
             }
-            
-            p.Message("Fixed " + totalFixed + " blocks.");
-        }        
-        
-        static void Fix(Player p, Level lvl, ref int totalFixed, bool fixGrass, bool fixDirt) {
-            int index = 0, maxY = lvl.Height - 1, oneY = lvl.Width * lvl.Length;
-            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-            BlockID above, block;
-            
-            for (ushort y = 0; y < lvl.Height; y++)
-                for (ushort z = 0; z < lvl.Length; z++)
-                    for (ushort x = 0; x < lvl.Width; x++)
-            {
-                block = lvl.FastGetBlock(index);
-                if (fixGrass && lvl.Props[block].GrassBlock != Block.Invalid) {
-                    above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
-                    BlockID grass = lvl.Props[block].GrassBlock;
-                    
-                    if (lvl.LightPasses(above) && p.level.TryChangeBlock(p, x, y, z, grass) == ChangeResult.Modified) {
-                        buffer.Add(index, grass);
-                        totalFixed++;
-                    }
-                } else if (fixDirt && lvl.Props[block].DirtBlock != Block.Invalid) {
-                    above = y == maxY ? Block.Air : lvl.FastGetBlock(index + oneY);
-                    BlockID dirt = lvl.Props[block].DirtBlock;
-                    
-                    if (!lvl.LightPasses(above) && p.level.TryChangeBlock(p, x, y, z, dirt) == ChangeResult.Modified) {
-                        buffer.Add(index, dirt);
-                        totalFixed++;
-                    }
-                }
-                index++;
-            }
-            buffer.Flush();
+
+            p.Message("Place or break two blocks to determine corners edges.");
+            p.MakeSelection(2, "Selecting corners for &SFixGrass", op, DoFixGrass);
         }
         
-        static void FixLight(Player p, Level lvl, ref int totalFixed) {
-            int index = 0, oneY = lvl.Width * lvl.Length;
-            BufferedBlockSender buffer = new BufferedBlockSender(lvl);
-            BlockID above, block;
+        bool DoFixGrass(Player p, Vec3S32[] marks, object state, BlockID block) {
+            FixGrassDrawOp op = (FixGrassDrawOp)state;
+            op.AlwaysUsable = true;
             
-            for (ushort y = 0; y < lvl.Height - 1; y++)
-                for (ushort z = 0; z < lvl.Length; z++)
-                    for (ushort x = 0; x < lvl.Width; x++)
-            {
-                block = lvl.FastGetBlock(index);
-                bool inShadow = false;
-                
-                if (lvl.Props[block].GrassBlock != Block.Invalid) {
-                    for (int i = 1; i < (lvl.Height - y); i++) {
-                        above = lvl.FastGetBlock(index + oneY * i);
-                        if (!lvl.LightPasses(above)) { inShadow = true; break; }
-                    }
-                    
-                    BlockID grass = lvl.Props[block].GrassBlock;
-                    if (!inShadow && p.level.TryChangeBlock(p, x, y, z, grass) == ChangeResult.Modified) {
-                        buffer.Add(lvl.PosToInt(x, y, z), grass);
-                        totalFixed++;
-                    }
-                } else if (lvl.Props[block].DirtBlock != Block.Invalid) {
-                    for (int i = 1; i < (lvl.Height - y); i++) {
-                        above = lvl.FastGetBlock(index + oneY * i);
-                        if (!lvl.LightPasses(above)) { inShadow = true; break; }
-                    }
-                    
-                    BlockID dirt = lvl.Props[block].DirtBlock;
-                    if (inShadow && p.level.TryChangeBlock(p, x, y, z, dirt) == ChangeResult.Modified) {
-                        buffer.Add(lvl.PosToInt(x, y, z), dirt);
-                        totalFixed++;
-                    }
-                }
-                index++;
-            }
-            buffer.Flush();
+            DrawOpPerformer.Do(op, null, p, marks, false);
+            return false;
         }
 
         public override void Help(Player p) {

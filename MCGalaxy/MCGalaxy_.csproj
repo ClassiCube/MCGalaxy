@@ -426,6 +426,7 @@
     <Compile Include="Drawing\DrawOps\DrawOpPerformer.cs" />
     <Compile Include="Drawing\DrawOps\DrawOp.cs" />
     <Compile Include="Drawing\DrawOps\FillDrawOp.cs" />
+    <Compile Include="Drawing\DrawOps\FixGrassDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\HighlightDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\LineDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\MazeDrawOp.cs" />
