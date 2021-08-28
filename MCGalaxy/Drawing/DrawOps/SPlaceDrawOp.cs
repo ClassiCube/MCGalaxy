@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops { 
-    public class SPlaceDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class SPlaceDrawOp : DrawOp 
+    {
         public override string Name { get { return "SPlace"; } }
         public int Distance, Interval;
         

@@ -20,8 +20,10 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {    
-    public class PasteDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class PasteDrawOp : DrawOp 
+    {
         public override string Name { get { return "Paste"; } }        
         public CopyState CopyState;
         

@@ -17,11 +17,12 @@
  */
 using System;
 using MCGalaxy.Commands;
-using MCGalaxy.Commands.Building;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    public sealed class SolidBrushFactory : BrushFactory {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class SolidBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Normal"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -49,7 +50,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class CheckeredBrushFactory : BrushFactory {
+    public sealed class CheckeredBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Checkered"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -86,7 +88,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class PasteBrushFactory : BrushFactory {
+    public sealed class PasteBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Paste"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -122,7 +125,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class StripedBrushFactory : BrushFactory {
+    public sealed class StripedBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Striped"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -152,7 +156,8 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     
-    public sealed class RainbowBrushFactory : BrushFactory {
+    public sealed class RainbowBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Rainbow"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -169,7 +174,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class BWRainbowBrushFactory : BrushFactory {
+    public sealed class BWRainbowBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "BWRainbow"; } }
         public override string[] Help { get { return HelpString; } }
         

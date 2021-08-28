@@ -17,17 +17,15 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
-using MCGalaxy.Undo;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-
-    public class UndoSelfDrawOp : UndoDrawOp {
-        
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class UndoSelfDrawOp : UndoDrawOp 
+    {       
         public UndoSelfDrawOp() {
             Flags = BlockDBFlags.UndoSelf;
         }
@@ -35,7 +33,8 @@ namespace MCGalaxy.Drawing.Ops {
         public override string Name { get { return "UndoSelf"; } }
     }
     
-    public class UndoDrawOp : DrawOp {
+    public class UndoDrawOp : DrawOp 
+    {
         public override string Name { get { return "Undo"; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>

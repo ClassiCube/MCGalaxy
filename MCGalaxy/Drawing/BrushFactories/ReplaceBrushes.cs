@@ -17,11 +17,12 @@
  */
 using System;
 using MCGalaxy.Commands;
-using MCGalaxy.Commands.Building;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {  
-    public sealed class ReplaceBrushFactory : BrushFactory {       
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class ReplaceBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Replace"; } }       
         public override string[] Help { get { return HelpString; } }
         
@@ -75,7 +76,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class ReplaceNotBrushFactory : BrushFactory {    
+    public sealed class ReplaceNotBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "ReplaceNot"; } }        
         public override string[] Help { get { return HelpString; } }
         

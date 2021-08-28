@@ -30,8 +30,10 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Generator.Foliage;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {
-    public class TreeDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class TreeDrawOp : DrawOp 
+    {
         public override string Name { get { return "Tree"; } }
         
         public Random random = new Random();

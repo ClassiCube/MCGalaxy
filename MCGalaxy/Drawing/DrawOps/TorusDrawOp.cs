@@ -16,12 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {
-    public class TorusDrawOp : DrawOp {      
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class TorusDrawOp : DrawOp 
+    {
         public override string Name { get { return "Torus"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

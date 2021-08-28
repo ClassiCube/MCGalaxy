@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    public abstract class Brush {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public abstract class Brush 
+    {
         public abstract string Name { get; }
         public virtual void Configure(DrawOp op, Player p) { }
         

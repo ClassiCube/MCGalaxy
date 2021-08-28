@@ -19,9 +19,10 @@ using System;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    
-    public sealed class RandomBrush : Brush {
+namespace MCGalaxy.Drawing.Brushes 
+{   
+    public sealed class RandomBrush : Brush 
+    {
         readonly BlockID[] blocks;
         readonly int seed;
         

@@ -21,10 +21,10 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy.Drawing {
-
-    public sealed class CopyState {
-        
+namespace MCGalaxy.Drawing 
+{
+    public sealed class CopyState 
+    {  
         byte[] blocks;
         byte[][] extBlocks;
         public int X, Y, Z;

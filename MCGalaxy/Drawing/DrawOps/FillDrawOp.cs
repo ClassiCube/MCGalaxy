@@ -20,14 +20,14 @@ using System.Collections.Generic;
 using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
-using MCGalaxy.Util;
 using MCGalaxy.Maths;
+using MCGalaxy.Util;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class FillDrawOp : DrawOp {
-        
+namespace MCGalaxy.Drawing.Ops
+{
+    public class FillDrawOp : DrawOp 
+    {      
         public List<int> Positions;
         
         public FillDrawOp() {

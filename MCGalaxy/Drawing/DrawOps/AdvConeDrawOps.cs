@@ -25,8 +25,10 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-    public class AdvConeDrawOp : AdvDrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class AdvConeDrawOp : AdvDrawOp 
+    {
         public override string Name { get { return "Adv Cone"; } }
         public AdvConeDrawOp(bool invert = false) { Invert = invert; }
         
@@ -59,7 +61,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvHollowConeDrawOp : AdvDrawOp {
+    public class AdvHollowConeDrawOp : AdvDrawOp 
+    {
         public override string Name { get { return "Adv Hollow Cone"; } }
         public AdvHollowConeDrawOp(bool invert = false) { Invert = invert; }
         
@@ -99,7 +102,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvVolcanoDrawOp : AdvDrawOp {
+    public class AdvVolcanoDrawOp : AdvDrawOp 
+    {
         public override string Name { get { return "Adv Volcano"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

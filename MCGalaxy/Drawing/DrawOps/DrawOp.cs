@@ -16,27 +16,27 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    
-    public struct DrawOpBlock {
+namespace MCGalaxy 
+{
+    public struct DrawOpBlock 
+    {
         public ushort X, Y, Z;
         public BlockID Block;
     }
 }
 
-namespace MCGalaxy.Drawing.Ops {
-    
+namespace MCGalaxy.Drawing.Ops 
+{    
     /// <summary> Performs on action on a block output from a draw operation. </summary>
     public delegate void DrawOpOutput(DrawOpBlock block);
     
-    public abstract partial class DrawOp {
-        
+    public abstract class DrawOp 
+    {        
         //public long TotalAffected; // blocks affected by the draw operation
         public long TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         

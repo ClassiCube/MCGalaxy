@@ -17,12 +17,12 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.Commands;
-using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    public abstract class BrushFactory {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public abstract class BrushFactory 
+    {
         public abstract string Name { get; }
         public abstract string[] Help { get; }
         
@@ -49,7 +49,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public struct BrushArgs {
+    public struct BrushArgs 
+    {
         /// <summary> Player that is providing arguments. </summary>
         public Player Player;
         

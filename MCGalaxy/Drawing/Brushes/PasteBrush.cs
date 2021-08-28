@@ -20,8 +20,10 @@ using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    public sealed class SimplePasteBrush : Brush {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class SimplePasteBrush : Brush 
+    {
         readonly CopyState state;
         
         public SimplePasteBrush(CopyState state) { this.state = state; }
@@ -47,7 +49,8 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
 	// TODO merge with SimplePasteBrush
-    public sealed class PasteBrush : Brush {
+    public sealed class PasteBrush : Brush 
+    {
         readonly CopyState state;
         public BlockID[] Include;
         
@@ -78,7 +81,8 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     
-    public sealed class PasteNotBrush : Brush {
+    public sealed class PasteNotBrush : Brush 
+    {
         readonly CopyState state;
         public BlockID[] Exclude;
         

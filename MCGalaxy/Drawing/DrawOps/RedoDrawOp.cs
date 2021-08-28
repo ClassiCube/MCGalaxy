@@ -18,13 +18,13 @@
 using System;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
-using MCGalaxy.Undo;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class RedoSelfDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class RedoSelfDrawOp : DrawOp 
+    {
         public override string Name { get { return "RedoSelf"; } }
         
         /// <summary> Point in time that the /undo should go backwards up to. </summary>

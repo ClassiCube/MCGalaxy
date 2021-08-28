@@ -16,14 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-
-    public class HollowDrawOp : CuboidDrawOp {      
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class HollowDrawOp : CuboidDrawOp 
+    {
         public override string Name { get { return "Hollow"; } }
         public BlockID Skip;
         
@@ -63,7 +63,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class OutlineDrawOp : CuboidDrawOp {        
+    public class OutlineDrawOp : CuboidDrawOp 
+    {
         public override string Name { get { return "Outline"; } }
         public BlockID Target;
         public bool Above = true, Layer = true, Below = true;
@@ -88,8 +89,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class RainbowDrawOp : CuboidDrawOp {
-        
+    public class RainbowDrawOp : CuboidDrawOp 
+    {       
         public bool AllowAir;
         public override string Name { get { return "Rainbow"; } }
         

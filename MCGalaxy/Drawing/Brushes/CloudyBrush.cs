@@ -16,15 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    
-    public sealed class CloudyBrush : Brush {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class CloudyBrush : Brush 
+    {
         readonly BlockID[] blocks;
         readonly int[] counts;
         readonly float[] thresholds;

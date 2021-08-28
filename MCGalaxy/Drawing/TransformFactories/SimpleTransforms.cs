@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
 
-namespace MCGalaxy.Drawing.Transforms {
-    public sealed class NoTransformFactory : TransformFactory {
+namespace MCGalaxy.Drawing.Transforms 
+{
+    public sealed class NoTransformFactory : TransformFactory 
+    {
         public override string Name { get { return "None"; } }
         public override string[] Help { get { return HelpString; } }
         
@@ -34,7 +36,8 @@ namespace MCGalaxy.Drawing.Transforms {
         }
     }
     
-    public sealed class ScaleTransformFactory : TransformFactory {
+    public sealed class ScaleTransformFactory : TransformFactory 
+    {
         public override string Name { get { return "Scale"; } }
         public override string[] Help { get { return HelpString; } }
         

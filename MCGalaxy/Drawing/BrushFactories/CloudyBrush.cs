@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Commands;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    public sealed class CloudyBrushFactory : BrushFactory {       
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class CloudyBrushFactory : BrushFactory 
+    {
         public override string Name { get { return "Cloudy"; } }        
         public override string[] Help { get { return HelpString; } }
         
@@ -81,7 +83,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public struct NoiseArgs {
+    public struct NoiseArgs 
+    {
         public int Octaves, Seed;
         public float Frequency, Amplitude, Persistence, Lacunarity;
     }

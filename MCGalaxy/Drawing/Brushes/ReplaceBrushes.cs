@@ -16,14 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using MCGalaxy.Commands.Building;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {    
-    public sealed class ReplaceBrush : Brush {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class ReplaceBrush : Brush 
+    {
         readonly BlockID[] include;
         readonly BlockID target;
         
@@ -48,7 +48,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public sealed class ReplaceNotBrush : Brush {
+    public sealed class ReplaceNotBrush : Brush 
+    {
         readonly BlockID[] exclude;
         readonly BlockID target;
         

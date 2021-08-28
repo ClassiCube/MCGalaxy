@@ -19,10 +19,10 @@ using System;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {
-    
-    public sealed class RainbowBrush : CheckeredPaletteBrush {
-
+namespace MCGalaxy.Drawing.Brushes 
+{ 
+    public sealed class RainbowBrush : CheckeredPaletteBrush 
+    {
         public override string Name { get { return "Rainbow"; } }
         public RainbowBrush() : base(blocks) {}
         
@@ -34,8 +34,8 @@ namespace MCGalaxy.Drawing.Brushes {
             Block.Pink };
     }
     
-    public sealed class BWRainbowBrush : CheckeredPaletteBrush {
-        
+    public sealed class BWRainbowBrush : CheckeredPaletteBrush 
+    {        
         public override string Name { get { return "BWRainbow"; } }
         public BWRainbowBrush() : base(blocks) {}
         
@@ -45,7 +45,8 @@ namespace MCGalaxy.Drawing.Brushes {
             Block.Gray,  Block.White };
     }
     
-    internal sealed class RandomRainbowBrush : Brush {
+    internal sealed class RandomRainbowBrush : Brush 
+    {
         readonly Random rnd;
         
         public override string Name { get { return "RandomRainbow"; } }

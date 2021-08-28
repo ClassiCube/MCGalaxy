@@ -19,11 +19,11 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
-using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-
-    public class RestoreSelectionDrawOp : DrawOp {        
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class RestoreSelectionDrawOp : DrawOp 
+    {
         public override string Name { get { return "RestoreSelection"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

@@ -24,8 +24,10 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {
-    public class AdvPyramidDrawOp : AdvDrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class AdvPyramidDrawOp : AdvDrawOp 
+    {
         public override string Name { get { return "Adv Pyramid"; } }
         public AdvPyramidDrawOp(bool invert = false) { Invert = invert; }
         
@@ -57,7 +59,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class AdvHollowPyramidDrawOp : AdvDrawOp {
+    public class AdvHollowPyramidDrawOp : AdvDrawOp 
+    {
         public override string Name { get { return "Adv Hollow Pyramid"; } }
         public AdvHollowPyramidDrawOp(bool invert = false) { Invert = invert; }
         

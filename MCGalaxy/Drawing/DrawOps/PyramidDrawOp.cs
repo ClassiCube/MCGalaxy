@@ -16,13 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {
-
-    public abstract class PyramidDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public abstract class PyramidDrawOp : DrawOp 
+    {
         protected DrawOp baseOp;
         protected int yDir;
         
@@ -62,22 +62,22 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class PyramidSolidDrawOp : PyramidDrawOp {
-
+    public class PyramidSolidDrawOp : PyramidDrawOp 
+    {
         public PyramidSolidDrawOp() : base(new CuboidDrawOp(), 1) { }
         
         public override string Name { get { return "Pyramid solid"; } }
     }
     
-    public class PyramidHollowDrawOp : PyramidDrawOp {      
-
+    public class PyramidHollowDrawOp : PyramidDrawOp 
+    {
         public PyramidHollowDrawOp() : base(new CuboidWallsDrawOp(), 1) { }
         
         public override string Name { get { return "Pyramid hollow"; } }
     }
     
-    public class PyramidReverseDrawOp : PyramidDrawOp {
-
+    public class PyramidReverseDrawOp : PyramidDrawOp 
+    {
         DrawOp wallOp;
         Brush airBrush;
         public PyramidReverseDrawOp() : base(new CuboidDrawOp(), -1) {

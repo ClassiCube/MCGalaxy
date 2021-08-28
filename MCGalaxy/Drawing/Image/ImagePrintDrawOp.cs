@@ -16,16 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
-using Draw = System.Drawing;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
+using Draw = System.Drawing;
 
-namespace MCGalaxy.Drawing.Ops {
-
-    public class ImagePrintDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class ImagePrintDrawOp : DrawOp 
+    {
         public override string Name { get { return "ImagePrint"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

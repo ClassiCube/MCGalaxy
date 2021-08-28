@@ -51,7 +51,7 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Renames the given map and associated metadata. Does not unload. </summary>
+        /// <summary> Renames the given level and its associated metadata. Does not unload. </summary>
         /// <remarks> Backups are NOT renamed. </remarks>
         public static bool Rename(Player p, string src, string dst) {
             if (LevelInfo.MapExists(dst)) { 
@@ -142,7 +142,7 @@ namespace MCGalaxy {
         }*/
         
         
-        /// <summary> Deletes a map and associated metadata. </summary>
+        /// <summary> Deletes a level and its associated metadata. </summary>
         public static bool Delete(Player p, string map) {
             Level lvl = LevelInfo.FindExact(map);
             if (lvl == Server.mainLevel) {
@@ -214,7 +214,7 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Copies a map and related metadata. </summary>
+        /// <summary> Copies a level and its related metadata. </summary>
         /// <remarks> Backups and BlockDB are NOT copied. </remarks>
         public static bool Copy(Player p, string src, string dst) {
             if (LevelInfo.MapExists(dst)) { 
@@ -247,6 +247,9 @@ namespace MCGalaxy {
         }
 
         
+        /// <summary> Reloads the given level for all players in that level </summary>
+        /// <param name="src"> The player that triggered the reload </param>
+        /// <param name="announce"> Whether to show a message in chat </param>
         public static void ReloadAll(Level lvl, Player src, bool announce) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {

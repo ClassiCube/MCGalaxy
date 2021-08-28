@@ -16,17 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
-using System.IO;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
-using MCGalaxy.Undo;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class HighlightDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{    
+    public class HighlightDrawOp : DrawOp 
+    {
         public override string Name { get { return "Highlight"; } }
         
         // Some servers like to set custom default highlight blocks due to using custom blocks

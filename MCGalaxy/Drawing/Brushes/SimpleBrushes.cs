@@ -16,12 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Commands.Building;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Brushes {    
-    public sealed class SolidBrush : Brush {
+namespace MCGalaxy.Drawing.Brushes 
+{
+    public sealed class SolidBrush : Brush 
+    {
         readonly BlockID block;
         
         public SolidBrush(BlockID block) {
@@ -34,7 +35,8 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     // CheckeredPaletteBrush of { b1, b1, b2, b2 }
-    public sealed class StripedBrush : Brush {
+    public sealed class StripedBrush : Brush 
+    {
         readonly BlockID b1, b2;
         
         public StripedBrush(BlockID block1, BlockID block2) {
@@ -49,7 +51,8 @@ namespace MCGalaxy.Drawing.Brushes {
     }
     
     // CheckeredPaletteBrush of { b1, b2 }
-    public sealed class CheckeredBrush : Brush {
+    public sealed class CheckeredBrush : Brush 
+    {
         readonly BlockID b1, b2;
         
         public CheckeredBrush(BlockID block1, BlockID block2) {
@@ -63,7 +66,8 @@ namespace MCGalaxy.Drawing.Brushes {
         }
     }
     
-    public class CheckeredPaletteBrush : Brush {
+    public class CheckeredPaletteBrush : Brush 
+    {
         readonly BlockID[] blocks;
         
         public CheckeredPaletteBrush(BlockID[] blocks) { this.blocks = blocks; }

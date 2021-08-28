@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops { 
-    public class LineDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class LineDrawOp : DrawOp 
+    {
         public override string Name { get { return "Line"; } }
         public bool WallsMode;
         public int MaxLength = int.MaxValue;

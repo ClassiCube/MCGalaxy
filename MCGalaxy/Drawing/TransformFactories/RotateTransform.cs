@@ -19,9 +19,10 @@ using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Commands.Building;
 
-namespace MCGalaxy.Drawing.Transforms {
-    
-    public sealed class RotateTransformFactory : TransformFactory {
+namespace MCGalaxy.Drawing.Transforms 
+{
+    public sealed class RotateTransformFactory : TransformFactory 
+    {
         public override string Name { get { return "Rotate"; } }
         public override string[] Help { get { return HelpString; } }
         

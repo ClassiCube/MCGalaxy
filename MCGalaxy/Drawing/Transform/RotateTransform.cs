@@ -20,10 +20,10 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Transforms {
-    
-    public sealed class RotateTransform : Transform {
-        
+namespace MCGalaxy.Drawing.Transforms 
+{
+    public sealed class RotateTransform : Transform 
+    {        
         public override string Name { get { return "Rotate"; } }
         public bool CentreOrigin;
         double cosX, cosY, cosZ, sinX, sinY, sinZ;

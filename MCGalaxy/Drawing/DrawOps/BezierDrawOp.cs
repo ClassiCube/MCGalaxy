@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {
-    public class BezierDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class BezierDrawOp : DrawOp 
+    {
         public override string Name { get { return "Bezier"; } }
         public bool WallsMode;
         public int MaxLength = int.MaxValue;

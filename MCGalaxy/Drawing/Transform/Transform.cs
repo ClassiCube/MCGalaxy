@@ -20,8 +20,10 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Transforms {
-    public abstract class Transform {
+namespace MCGalaxy.Drawing.Transforms 
+{
+    public abstract class Transform 
+    {
         public abstract string Name { get; }
         public virtual void Configure(DrawOp op, Player p) { }
         

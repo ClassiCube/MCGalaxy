@@ -16,16 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-    
-    public class ReplaceDrawOp : DrawOp {
-        
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class ReplaceDrawOp : DrawOp 
+    {       
         public BlockID Include;
         
         public ReplaceDrawOp(BlockID include) {
@@ -52,8 +51,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class ReplaceNotDrawOp : DrawOp {
-        
+    public class ReplaceNotDrawOp : DrawOp 
+    {       
         public BlockID Exclude;
         
         public ReplaceNotDrawOp(BlockID exclude) {

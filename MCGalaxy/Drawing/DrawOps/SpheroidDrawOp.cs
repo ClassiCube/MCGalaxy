@@ -16,12 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Ops {
-    public class EllipsoidDrawOp : DrawOp {        
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class EllipsoidDrawOp : DrawOp 
+    {
         public override string Name { get { return "Ellipsoid"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -47,8 +48,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class EllipsoidHollowDrawOp : DrawOp {
-        
+    public class EllipsoidHollowDrawOp : DrawOp 
+    {       
         public override string Name { get { return "Ellipsoid Hollow"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -80,7 +81,8 @@ namespace MCGalaxy.Drawing.Ops {
         }
     }
     
-    public class CylinderDrawOp : DrawOp {       
+    public class CylinderDrawOp : DrawOp 
+    {
         public override string Name { get { return "Cylinder"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

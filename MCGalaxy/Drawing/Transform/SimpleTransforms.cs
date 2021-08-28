@@ -16,14 +16,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Drawing.Transforms {
-    public sealed class NoTransform : Transform {
-        
+namespace MCGalaxy.Drawing.Transforms 
+{
+    public sealed class NoTransform : Transform 
+    {
         public override string Name { get { return "None"; } }
         public static NoTransform Instance = new NoTransform();
         
@@ -32,8 +32,8 @@ namespace MCGalaxy.Drawing.Transforms {
         }
     }
     
-    public sealed class ScaleTransform : Transform {
-        
+    public sealed class ScaleTransform : Transform 
+    {   
         public override string Name { get { return "Scale"; } }
         public bool CentreOrigin;
         public int XMul, XDiv, YMul, YDiv, ZMul, ZDiv;

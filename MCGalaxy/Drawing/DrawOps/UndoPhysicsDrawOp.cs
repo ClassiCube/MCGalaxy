@@ -21,9 +21,10 @@ using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Drawing.Ops {
-
-    public class UndoPhysicsDrawOp : DrawOp {
+namespace MCGalaxy.Drawing.Ops 
+{
+    public class UndoPhysicsDrawOp : DrawOp 
+    {
         public override string Name { get { return "UndoPhysics"; } }        
         internal DateTime Start;
 
