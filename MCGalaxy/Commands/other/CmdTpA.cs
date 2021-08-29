@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Misc {
                 Thread.Sleep(1000);
             }
 
-            sender.SendPos(Entities.SelfID, p.Pos, p.Rot);
+            sender.SetPosAsync(p.Pos, p.Rot);
         }
         
         void DoDeny(Player p) {

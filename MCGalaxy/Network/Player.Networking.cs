@@ -299,17 +299,18 @@ namespace MCGalaxy {
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
-        public void SendPos(byte id, ushort x, ushort y, ushort z, byte rotx, byte roty) {
-            SendPos(id, new Position(x, y, z), new Orientation(rotx, roty));
-        }
-        
-        /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
         public void SendPos(byte id, Position pos, Orientation rot) {
             if (id == Entities.SelfID) {
                 Pos = pos; SetYawPitch(rot.RotY, rot.HeadX);
                 pos.Y -= 22;  // NOTE: Fix for standard clients
             }           
             Send(Packet.Teleport(id, pos, rot, hasExtPositions));
+        }
+        
+        /// <summary> Sends a packet indicating an absolute position + orientation change for this player. </summary>
+        public void SetPosAsync(Position pos, Orientation rot) {
+            pos.Y -= 22; // NOTE: Fix for standard clients
+            Send(Packet.Teleport(Entities.SelfID, pos, rot, hasExtPositions));
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {

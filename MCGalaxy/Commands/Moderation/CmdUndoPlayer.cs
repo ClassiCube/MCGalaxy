@@ -90,7 +90,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
 
             string namesStr = names.Join(name => p.FormatNick(name));
-            if (op.found) {
+            if (op.found) { // TODO bug assumes no other queued drawops
                 Chat.MessageGlobal("Undid {1}&S's changes for the past &b{0}", delta.Shorten(true), namesStr);
                 Logger.Log(LogType.UserActivity, "Actions of {0} for the past {1} were undone.", names.Join(), delta.Shorten(true));
             } else {

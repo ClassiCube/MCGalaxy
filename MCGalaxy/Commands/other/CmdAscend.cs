@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Misc {
             } else {
                 p.Message("Teleported you up.");
                 Position pos = Position.FromFeet(p.Pos.X, freeY * 32, p.Pos.Z);
-                p.SendPos(Entities.SelfID, pos, p.Rot);
+                p.SetPosAsync(pos, p.Rot);
             }
         }
         

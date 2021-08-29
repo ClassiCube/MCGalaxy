@@ -45,7 +45,7 @@ namespace MCGalaxy.Drawing.Ops
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-                BlockID block = Level.GetBlock(x, y, z);
+                BlockID block = Level.GetBlock(x, y, z); // TODO fastGetblock?
                 if (block == Include) output(Place(x, y, z, brush));
             }
         }

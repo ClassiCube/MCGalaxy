@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Misc {
                 foreach (Player target in players) {
                     if (target.level == p.level && target != p && data.Rank > target.Rank) {
                         target.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                        target.SendPos(Entities.SelfID, p.Pos, p.Rot);
+                        target.SetPosAsync(p.Pos, p.Rot);
                         target.Message("You were summoned by {0}&S.", target.FormatNick(p));
                     }
                 }
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Misc {
             if (p.level != target.level) return; // in case they were unable to move to this level
             
             target.AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-            target.SendPos(Entities.SelfID, p.Pos, p.Rot);
+            target.SetPosAsync(p.Pos, p.Rot);
             target.Message("You were summoned by {0}&S.", target.FormatNick(p));
         }
         

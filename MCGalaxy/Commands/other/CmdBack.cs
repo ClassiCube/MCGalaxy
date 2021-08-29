@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Misc {
             
             if (!p.level.name.CaselessEq(p.PreTeleportMap))
                 PlayerActions.ChangeMap(p, p.PreTeleportMap);
-            p.SendPos(Entities.SelfID, p.PreTeleportPos, p.PreTeleportRot);
+            p.SetPosAsync(p.PreTeleportPos, p.PreTeleportRot);
         }
         
         public override void Help(Player p) {
