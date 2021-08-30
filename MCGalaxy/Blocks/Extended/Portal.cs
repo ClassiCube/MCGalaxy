@@ -50,7 +50,7 @@ namespace MCGalaxy.Blocks.Extended {
             }
 
             Position pos = Position.FromFeetBlockCoords(exit.X, exit.Y, exit.Z);
-            p.SendPos(Entities.SelfID, pos, rot);
+            p.SendPosition(pos, rot);
             return true;
         }
         

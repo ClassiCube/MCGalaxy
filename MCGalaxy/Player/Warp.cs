@@ -73,7 +73,7 @@ namespace MCGalaxy {
             }
             
             if (p.level.name.CaselessEq(warp.Level)) {
-                p.SendPos(Entities.SelfID, warp.Pos, new Orientation(warp.Yaw, warp.Pitch));
+                p.SendPosition(warp.Pos, new Orientation(warp.Yaw, warp.Pitch));
                 p.Message("Sent you to waypoint/warp");
             } else {
                 p.Message("Unable to send you to the warp as the map it is on is not loaded.");

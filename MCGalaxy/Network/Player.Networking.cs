@@ -308,7 +308,7 @@ namespace MCGalaxy {
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for this player. </summary>
-        public void SetPosAsync(Position pos, Orientation rot) {
+        public void SendPosition(Position pos, Orientation rot) {
             pos.Y -= 22; // NOTE: Fix for standard clients
             Send(Packet.Teleport(Entities.SelfID, pos, rot, hasExtPositions));
         }

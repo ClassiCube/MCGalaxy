@@ -60,7 +60,7 @@ namespace MCGalaxy.Tasks {
                     return;
                 }
                 
-                p.SetPosAsync(who.Pos, who.Rot);
+                p.SendPosition(who.Pos, who.Rot);
             } else if (p.possess.Length > 0) {
                 Player who = PlayerInfo.FindExact(p.possess);
                 if (who == null || who.level != p.level)
