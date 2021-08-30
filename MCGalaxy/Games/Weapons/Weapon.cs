@@ -154,7 +154,7 @@ namespace MCGalaxy.Games {
             if (i >= 0 && i < visible.Count) {
                 Vec3U16 coords = visible[i];
                 Position pos   = new Position(coords.X * 32, coords.Y * 32 + 32, coords.Z * 32);
-                p.SendPos(Entities.SelfID, pos, p.Rot);
+                p.SendPosition(pos, p.Rot);
             }
         }
     }

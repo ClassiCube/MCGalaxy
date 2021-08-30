@@ -54,7 +54,7 @@ namespace MCGalaxy.Games {
             if (!speeding || log.AddSpamEntry(5, interval)) return false;
             
             Warn("speedhack");
-            p.SendPos(Entities.SelfID, p.Pos, p.Rot);
+            p.SendPosition(p.Pos, p.Rot);
             return true;
         }
     }

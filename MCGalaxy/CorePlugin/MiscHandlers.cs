@@ -36,7 +36,7 @@ namespace MCGalaxy.Core {
             bool movedZ = Math.Abs(next.Z - p.Pos.Z) > 4;  // moved more than 0.125 blocks horizontally
             p.SetYawPitch(yaw, pitch);
             
-            if (movedX || movedY || movedZ) { p.SendPos(Entities.SelfID, p.Pos, p.Rot); }
+            if (movedX || movedY || movedZ) { p.SendPosition(p.Pos, p.Rot); }
             p.cancelmove = true;
         }
         
