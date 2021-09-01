@@ -237,9 +237,14 @@ namespace MCGalaxy.Modules.Relay.Discord
             sb.Replace("\uFE0F", "");
             
             // unescape \ escaped characters
-            for (int i = sb.Length - 1; i >= 0; i--) {
+            //  -1 in case message ends with a \
+            int length = sb.Length - 1;
+            for (int i = 0; i < length; i++) 
+            {
                 if (sb[i] != '\\') continue;
-                if (IsEscaped(sb[i + 1])) sb.Remove(i, 1);
+                if (!IsEscaped(sb[i + 1])) continue;
+                
+                sb.Remove(i, 1); length--;
             }
             return sb.ToString();
         }
