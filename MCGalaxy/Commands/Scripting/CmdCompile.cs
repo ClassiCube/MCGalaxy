@@ -31,22 +31,18 @@ namespace MCGalaxy.Commands.Scripting {
             string[] args = message.SplitSpaces();
             if (!Formatter.CheckFilenameOnly(p, args[0])) return;
 
-            string language  = args.Length > 1 ? args[1] : "";
-            ICompiler engine = ICompiler.Lookup(language, p);
-            if (engine == null) return;
+            string language    = args.Length > 1 ? args[1] : "";
+            ICompiler compiler = ICompiler.Lookup(language, p);
+            if (compiler == null) return;
  
             // either "source" or "source1,source2,source3"
             string[] paths = args[0].SplitComma();
             string dstPath = IScripting.CommandPath(paths[0]);
             
             for (int i = 0; i < paths.Length; i++) {
-                string srcPath = engine.CommandPath(paths[i]);
-                if (File.Exists(srcPath)) { paths[i] = srcPath; continue; }
-                
-                p.Message("File &9{0} &Snot found.", srcPath);
-                return;
+                 paths[i] = compiler.CommandPath(paths[i]);
             }
-            engine.TryCompile(p, "Command", paths, dstPath);
+            compiler.Compile(p, "Command", paths, dstPath);
         }
 
         public override void Help(Player p) {

@@ -247,16 +247,29 @@ namespace MCGalaxy.Scripting {
         protected abstract CompilerResults DoCompile(string[] srcPaths, string dstPath);
         
         
-        public bool TryCompile(Player p, string type, string[] srcs, string dst) {
+        /// <summary> Attempts to compile the given source code files into a .dll </summary>
+        /// <param name="p"> Player to send messages to </param>
+        /// <param name="type"> Type of files being compiled (e.g. Plugin, Command) </param>
+        /// <param name="srcs"> Path of the source code files </param>
+        /// <param name="dst"> Path to the destination .dll </param>
+        /// <returns> The compiled assembly, or null if compilation failed </returns>
+        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
+        public Assembly Compile(Player p, string type, string[] srcs, string dst) {
+            foreach (string path in srcs) {
+                if (File.Exists(path)) continue;
+                
+                p.Message("File &9{0} &Snot found.", path);
+                return null;
+            }
+            
             CompilerResults results = Compile(srcs, dst);
             if (!results.Errors.HasErrors) {
                 p.Message("{0} compiled successfully.", type);
-                return true;
+                return results.CompiledAssembly;
             }
             
             SummariseErrors(results, p);
-            p.Message("&WCompilation error. See " + ErrorPath + " for more information.");
-            return false;
+            return null;
         }
         
         /// <summary> Messages a summary of warnings and errors to the given player. </summary>
@@ -270,8 +283,10 @@ namespace MCGalaxy.Scripting {
                 if (logged >= maxLog) break;
             }
             
-            if (results.Errors.Count <= maxLog) return;
-            p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
+            if (results.Errors.Count > maxLog) {
+                p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
+            }
+            p.Message("&WCompilation error. See " + ErrorPath + " for more information.");
         }
     }
     

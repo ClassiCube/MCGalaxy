@@ -112,13 +112,11 @@ namespace MCGalaxy.Gui.Popups {
                 return null;
             }
             
-            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
-            CompilerResults result = compiler.Compile(path, null);
-            if (!result.Errors.HasErrors) return result.CompiledAssembly;
+            ConsoleHelpPlayer p = new ConsoleHelpPlayer();
+            Assembly result     = compiler.Compile(p, "Command", new[] { path }, null);
+            if (result != null) return result;
             
-            ICompiler.SummariseErrors(result, p);
-            string body = "\r\n\r\n" + Colors.StripUsed(p.Messages);
-            Popup.Error("Compilation error. See logs/errors/compiler.log for more details." + body);
+            Popup.Error(Colors.StripUsed(p.Messages));
             return null;
         }
         
