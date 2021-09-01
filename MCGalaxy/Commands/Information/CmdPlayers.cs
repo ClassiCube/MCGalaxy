@@ -70,9 +70,9 @@ namespace MCGalaxy.Commands.Info {
             foreach (Player pl in e.players) {
                 Append(p, data, pl, e.group);
             }
-            
-            // remove , from end
-            data.Remove(data.Length - 1, 1);
+
+            // remove , from end, keeping in mind that length could be 0 if showWhenEmpty
+            if (data.Length > 0) { data.Remove(data.Length - 1, 1); }
             p.Message(":{0}:{1}", e.group.GetFormattedName(), data);
         }
         
