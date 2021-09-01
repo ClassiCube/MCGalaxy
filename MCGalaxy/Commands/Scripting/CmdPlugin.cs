@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (args.Length == 1) { Help(p); return; }
             
             string cmd = args[0], name = args[1];
-            if (!Formatter.ValidName(p, name, "plugin")) return;
+            if (!Formatter.CheckFilenameOnly(p, name)) return;
             string language = args.Length > 2 ? args[2] : "";
             
             if (cmd.CaselessEq("load")) {
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Scripting {
             
             // either "source" or "source1,source2,source3"
             string[] paths = name.SplitComma();
-            string dstPath = IScripting.PluginPath(name);
+            string dstPath = IScripting.PluginPath(paths[0]);
             
             for (int i = 0; i < paths.Length; i++) {
                 string srcPath = engine.PluginPath(paths[i]);

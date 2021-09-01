@@ -76,10 +76,17 @@ namespace MCGalaxy {
             p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;
         }
-		
+        
         public static bool ValidMapName(Player p, string name) {
             if (LevelInfo.ValidName(name)) return true;
             p.Message("\"{0}\" is not a valid level name.", name);
+            return false;
+        }
+        
+        static char[] separators = { '/', '\\', ':' };
+        public static bool CheckFilenameOnly(Player p, string name) {
+            if (name.IndexOfAny(separators) == -1) return true;
+            p.Message("\"{0}\" includes a directory separator (/, \\ or :), which is not allowed", name);
             return false;
         }
     }

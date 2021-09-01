@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string cmdName, CommandData data) {
-            if (!Formatter.ValidName(p, cmdName, "command")) return;
+            if (!Formatter.CheckFilenameOnly(p, cmdName)) return;            
             if (Command.Find(cmdName) != null) {
                 p.Message("That command is already loaded!"); return;
             }
