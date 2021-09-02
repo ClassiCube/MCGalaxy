@@ -250,7 +250,7 @@ namespace MCGalaxy.Scripting
             foreach (CompilerError err in results.Errors) 
             {
                 string type = err.IsWarning ? "Warning" : "Error";
-                sb.AppendLine(type + " on line " + err.Line + ":");
+                sb.AppendLine(DescribeError(err, srcPaths, "") + ":");
                 
                 if (err.Line > 0) sb.AppendLine(sources.Get(err.FileName, err.Line - 1));
                 if (err.Column > 0) sb.Append(' ', err.Column - 1);
@@ -301,12 +301,8 @@ namespace MCGalaxy.Scripting
             int logged = 0;
             foreach (CompilerError err in results.Errors) 
             {
-                string type = err.IsWarning ? "Warning" : "Error";
-                string file = Path.GetFileName(err.FileName);
-                // Include filename if compiling multiple source code files
-                p.Message("&W{0} #{1} on line {2}{4} - {3}", type, err.ErrorNumber, err.Line, err.ErrorText,
-                          srcs.Length > 1 ? " in " + file : "");
-                
+            	p.Message("&W{1} - {0}", err.ErrorText,
+            	          DescribeError(err, srcs, " #" + err.ErrorNumber));
                 logged++;
                 if (logged >= maxLog) break;
             }
@@ -315,6 +311,15 @@ namespace MCGalaxy.Scripting
                 p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
             }
             p.Message("&WCompilation error. See " + ErrorPath + " for more information.");
+        }
+        
+        static string DescribeError(CompilerError err, string[] srcs, string text) {
+            string type = err.IsWarning ? "Warning" : "Error";
+            string file = Path.GetFileName(err.FileName);
+            
+            // Include filename if compiling multiple source code files
+            return string.Format("{0}{1} on line {2}{3}", type, text, err.Line,
+                                 srcs.Length > 1 ? " in " + file : "");
         }
     }
     
