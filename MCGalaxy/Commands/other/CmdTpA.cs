@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Misc {
                 p.Message("Player \"{0}\" is in a museum.", p.FormatNick(target)); return;
             }
             if (target.Loading) {
-            	p.Message("Waiting for {0} &Sto spawn...", p.FormatNick(target));
+                p.Message("Waiting for {0} &Sto spawn...", p.FormatNick(target));
                 target.BlockUntilLoad(10);
             }
             

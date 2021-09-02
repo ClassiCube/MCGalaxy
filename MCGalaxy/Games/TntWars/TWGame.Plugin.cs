@@ -102,13 +102,13 @@ namespace MCGalaxy.Games {
                 tabGroup = "&7Spectators";
             }
         }
-		
+        
         void HandleSettingColor(Player p, ref string color) {
             if (p.level != Map) return;
             TWTeam team = TeamOf(p);
             if (team != null) color = team.Color;
         }
-		
+        
         void HandleSentMap(Player p, Level prevLevel, Level level) {
             if (level != Map) return;
             MessageMapInfo(p);

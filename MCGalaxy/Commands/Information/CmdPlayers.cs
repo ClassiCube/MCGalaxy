@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Info {
             
             if (rank == null || rank.players.Count == 0) {
                 p.Message("There are no {0} &Sonline.", 
-            	          rank.group.GetFormattedName());
+                          rank.group.GetFormattedName());
             } else {
                 Output(rank, p, false);
             }

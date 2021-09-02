@@ -56,10 +56,10 @@ namespace MCGalaxy.Games {
             int count = Database.CountRows("CTF", "WHERE Name=@0", p.name);
             if (count == 0) {
                 Database.AddRow("CTF", "Points, Captures, tags, Name",
-            	                data.Points, data.Captures, data.Tags, p.name);
+                                data.Points, data.Captures, data.Tags, p.name);
             } else {
                 Database.UpdateRows("CTF", "Points=@0, Captures=@1, tags=@2", "WHERE Name=@3",
-            	                    data.Points, data.Captures, data.Tags, p.name);
+                                    data.Points, data.Captures, data.Tags, p.name);
             }
         }
     }

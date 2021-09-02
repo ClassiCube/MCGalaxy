@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.Scripting {
             }
             
             try {
-            	string source = engine.GenExampleCommand(args[0]);
-            	File.WriteAllText(path, source);
+                string source = engine.GenExampleCommand(args[0]);
+                File.WriteAllText(path, source);
             } catch (Exception ex) {
                 Logger.LogError("Error saving new command to " + path, ex);
                 p.Message("An error occurred creating the command.");

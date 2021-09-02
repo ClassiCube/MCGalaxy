@@ -64,8 +64,8 @@ namespace MCGalaxy.Eco {
             if (ZSGame.Instance.Picker.QueuedMap != null) {
                 p.Message("Someone else has already queued a level."); return;
             }
-        	
-        	if (args.Length == 0) { OnStoreCommand(p); return; }
+            
+            if (args.Length == 0) { OnStoreCommand(p); return; }
             if (!CheckPrice(p)) return;
             
             if (!ZSGame.Instance.SetQueuedLevel(p, args)) return;

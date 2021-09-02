@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.Chatting {
                 
                 if (!who.hasTwoWayPing) {
                     p.Message("{0} client does not support measuring ping", 
-                	          p == who ? "Your" : p.FormatNick(who) + "&S's");
+                              p == who ? "Your" : p.FormatNick(who) + "&S's");
                 } else if (who.Ping.Measures() == 0) {
                     p.Message("No ping measurements yet. Try again in a bit.");
                 } else {

@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Chatting {
                 }
                 
                 if (p.Ignores.Names.CaselessRemove(target.name)) {
-                	p.Message("&aNo longer ignoring {0}", p.FormatNick(target));
+                    p.Message("&aNo longer ignoring {0}", p.FormatNick(target));
                 } else {
                     p.Ignores.Names.Add(target.name);
                     p.Message("&cNow ignoring {0}", p.FormatNick(target));

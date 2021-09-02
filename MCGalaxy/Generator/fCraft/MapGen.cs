@@ -417,7 +417,7 @@ namespace MCGalaxy.Generator.fCraft {
                 //  with 'MapGenTheme.Count' theme instead of the expected theme
                 // Using a local variable copy fixes this
                 MapGenTheme theme_ = theme;
-            	
+                
                 MapGen.Register(theme_.ToString(), GenType.fCraft,
                                 (p, lvl, seed) => Gen(p, lvl, seed, theme_), desc);
             }

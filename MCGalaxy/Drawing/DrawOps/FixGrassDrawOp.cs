@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Ops
 {
     public sealed class FixGrassDrawOp : CuboidDrawOp 
     {       
-    	public bool LightMode;
+        public bool LightMode;
         public bool FixGrass, FixDirt;
         
         public FixGrassDrawOp() {
@@ -38,7 +38,7 @@ namespace MCGalaxy.Drawing.Ops
             if (LightMode) {
                 FixLight(output);
             } else {
-            	Fix(output, FixGrass, FixDirt);
+                Fix(output, FixGrass, FixDirt);
             }
             
             Player.Message("Fixed " + TotalModified + " blocks.");
@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing.Ops
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-            	index = x + width * (z + y * length);
+                index = x + width * (z + y * length);
                 block = lvl.FastGetBlock(index);
                 
                 if (fixGrass && lvl.Props[block].GrassBlock != Block.Invalid) {
@@ -84,7 +84,7 @@ namespace MCGalaxy.Drawing.Ops
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
-            	index = x + width * (z + y * length);
+                index = x + width * (z + y * length);
                 block = lvl.FastGetBlock(index);
                 bool inShadow = false;
                 

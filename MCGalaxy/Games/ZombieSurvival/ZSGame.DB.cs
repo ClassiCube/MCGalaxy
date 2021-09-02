@@ -125,12 +125,12 @@ namespace MCGalaxy.Games {
             int count = Database.CountRows("ZombieStats", "WHERE Name=@0", p.name);
             if (count == 0) {
                 Database.AddRow("ZombieStats", "TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name",
-            	                data.TotalRoundsSurvived, data.MaxRoundsSurvived,
-            	                data.TotalInfected,       data.MaxInfected, p.name);
+                                data.TotalRoundsSurvived, data.MaxRoundsSurvived,
+                                data.TotalInfected,       data.MaxInfected, p.name);
             } else {
                 Database.UpdateRows("ZombieStats", "TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3",
-            	                    "WHERE Name=@4", data.TotalRoundsSurvived, data.MaxRoundsSurvived,
-            	                                     data.TotalInfected,       data.MaxInfected, p.name);
+                                    "WHERE Name=@4", data.TotalRoundsSurvived, data.MaxRoundsSurvived,
+                                                     data.TotalInfected,       data.MaxInfected, p.name);
             }
         }
     }

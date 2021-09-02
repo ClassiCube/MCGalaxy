@@ -61,7 +61,7 @@ namespace MCGalaxy {
             LoadPlayerLists();
             ModerationTasks.QueueTasks();
         }
-		
+        
         internal static void LoadPlayerLists() {
             agreed = PlayerList.Load("ranks/agreed.txt");
             invalidIds = PlayerList.Load("extra/invalidids.txt");
@@ -84,7 +84,7 @@ namespace MCGalaxy {
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans  = PlayerExtList.Load(Paths.TempBansFile);
             whiteList = PlayerList.Load("ranks/whitelist.txt");
-	    }
+        }
         
         static void LoadAutoloadMaps(SchedulerTask task) {
             AutoloadMaps = PlayerExtList.Load("text/autoload.txt", '=');

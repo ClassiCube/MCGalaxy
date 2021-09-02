@@ -153,7 +153,7 @@ namespace MCGalaxy.Blocks.Extended {
         /// <summary> Deletes the given message block from the given map. </summary>
         public static void Delete(string map, ushort x, ushort y, ushort z) {
             Database.DeleteRows("Messages" + map,
-        	                    "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+                                "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
         }
         
         /// <summary> Creates or updates the given message block in the given map. </summary>
@@ -170,7 +170,7 @@ namespace MCGalaxy.Blocks.Extended {
                 Database.AddRow("Messages" + map, "X, Y, Z, Message", x, y, z, contents);
             } else {
                 Database.UpdateRows("Messages" + map, "Message=@3",
-            	                    "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, contents);
+                                    "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, contents);
             }
             
             Level lvl = LevelInfo.FindExact(map);

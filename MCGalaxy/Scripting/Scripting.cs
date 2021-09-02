@@ -90,7 +90,7 @@ namespace MCGalaxy.Scripting {
                     Logger.Log(LogType.Warning, error);
                 } else {
                     Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from Cmd{1}.dll", 
-                	           cmds.Join(c => "/" + c.name), cmdName);
+                               cmds.Join(c => "/" + c.name), cmdName);
                 }
             }
         }
@@ -110,14 +110,14 @@ namespace MCGalaxy.Scripting {
                         error = "/" + cmd.name + " is already loaded";
                         return null;
                     }
-                	
+                    
                     Command.Register(cmd);
                 }
                 return commands;
             } catch (Exception ex) {
                 error = DescribeLoadError(path, ex);
+                return null;
             }
-            return null;
         }
         
         static string DescribeLoadError(string path, Exception ex) {

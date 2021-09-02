@@ -55,7 +55,7 @@ namespace MCGalaxy.Drawing.Transforms
         static bool ParseAngle(Player p, string input, ref float angle) {
             if (!CommandParser.GetReal(p, input, "Angle", ref angle, -360, 360)) {
                 p.MessageLines(HelpString); return false;
-        	}
+            }
             return true;
         }
     }

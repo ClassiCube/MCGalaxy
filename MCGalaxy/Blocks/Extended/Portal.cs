@@ -129,14 +129,14 @@ namespace MCGalaxy.Blocks.Extended {
         /// <remarks> Returns null if the given portal does not actually exist. </remarks>
         public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
             object raw = Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", null, ReadExit,
-        	                               "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                                           "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
             return (PortalExit)raw;
         }
         
         /// <summary> Deletes the given portal from the given map. </summary>
         public static void Delete(string map, ushort x, ushort y, ushort z) {
             Database.DeleteRows("Portals" + map,
-        	                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                                "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
         }
         
         /// <summary> Creates or updates the given portal in the given map. </summary>
@@ -148,11 +148,11 @@ namespace MCGalaxy.Blocks.Extended {
             
             if (count == 0) {
                 Database.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
-            	                x, y, z, exitX, exitY, exitZ, exitMap);
+                                x, y, z, exitX, exitY, exitZ, exitMap);
             } else {
                 Database.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
-            	                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z,
-            	                    exitX, exitY, exitZ, exitMap);
+                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z,
+                                    exitX, exitY, exitZ, exitMap);
             }
             
             Level lvl = LevelInfo.FindExact(map);

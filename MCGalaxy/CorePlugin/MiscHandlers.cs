@@ -63,9 +63,9 @@ namespace MCGalaxy.Core {
                 p.Message("BlockDB is disabled here, &Wyou will not be able to /undo or /redo");
             }
         }
-		
-		internal static void HandleChangedZone(Player p) {
-			if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
+        
+        internal static void HandleChangedZone(Player p) {
+            if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
             p.SendCurrentEnv();
             
             if (p.isFlying && !Hacks.CanUseFly(p)) {

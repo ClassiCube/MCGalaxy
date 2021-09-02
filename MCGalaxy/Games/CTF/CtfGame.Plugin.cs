@@ -138,7 +138,7 @@ namespace MCGalaxy.Games {
             MessageMapInfo(p);
             if (TeamOf(p) == null) AutoAssignTeam(p);
         }
-		
+        
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
         }

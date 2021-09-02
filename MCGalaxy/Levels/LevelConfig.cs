@@ -23,8 +23,8 @@ using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
-	public abstract class EnvConfig {
-		// Environment settings
+    public abstract class EnvConfig {
+        // Environment settings
         const int envRange = 0xFFFFFF;
         [ConfigInt("Weather", "Env", 0, -1, 2)]
         public int Weather = -1;
@@ -152,9 +152,9 @@ namespace MCGalaxy {
             if (i == EnvProp.SidesOffset)    return -2;
             return 0;
         }
-	}
-	
-	public abstract class AreaConfig : EnvConfig {
+    }
+    
+    public abstract class AreaConfig : EnvConfig {
         [ConfigString("MOTD", "General", "ignore", true)]
         public string MOTD = "ignore";
 

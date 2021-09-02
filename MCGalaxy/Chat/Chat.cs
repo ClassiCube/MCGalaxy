@@ -218,7 +218,7 @@ namespace MCGalaxy {
         static string UnescapeMessage(Player pl, Player src, string msg) {
             string nick = pl.FormatNick(src);
             msg = msg.Replace("λNICK", nick);
-        	
+            
             if (pl.Ignores.Titles) {
                 return msg.Replace("λFULL", src.GroupPrefix + nick);
             } else if (pl.Ignores.Nicks) {

@@ -210,7 +210,7 @@ namespace MCGalaxy {
         
         void GetPlayerStats() {
             object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
-			                               "WHERE Name=@0", name);
+                                           "WHERE Name=@0", name);
             if (raw == null) {
                 PlayerData.Create(this);
                 Chat.MessageFrom(this, "λNICK &Shas connected for the first time!");
