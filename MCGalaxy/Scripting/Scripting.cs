@@ -83,33 +83,39 @@ namespace MCGalaxy.Scripting {
             {
                 if (cmdName.IsCommentLine()) continue;
                 string path  = CommandPath(cmdName);
-                string error = LoadCommands(path);
+                string error;
+                List<Command> cmds = LoadCommands(path, out error);
                 
                 if (error != null) { 
                     Logger.Log(LogType.Warning, error);
                 } else {
-                    Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
+                    Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from Cmd{1}.dll", 
+                	           cmds.Join(c => "/" + c.name), cmdName);
                 }
             }
         }
         
         /// <summary> Loads and registers all the commands from the given .dll path </summary>
         /// <returns> If an error occurred, a string describing the error </returns>
-        public static string LoadCommands(string path) {
+        public static List<Command> LoadCommands(string path, out string error) {
+            error = null;
             try {
                 Assembly lib = LoadAssembly(path);
                 List<Command> commands = LoadTypes<Command>(lib);
-                if (commands.Count == 0) return "&WNo commands in " + path;
+                if (commands.Count == 0) error = "&WNo commands in " + path;
                 
                 foreach (Command cmd in commands) 
                 {
-                    if (Command.Find(cmd.name) != null)
-                        return "/" + cmd.name + " is already loaded";
-                    
+                    if (Command.Find(cmd.name) != null) {
+                        error = "/" + cmd.name + " is already loaded";
+                        return null;
+                    }
+                	
                     Command.Register(cmd);
                 }
+                return commands;
             } catch (Exception ex) {
-                return DescribeLoadError(path, ex);
+                error = DescribeLoadError(path, ex);
             }
             return null;
         }
