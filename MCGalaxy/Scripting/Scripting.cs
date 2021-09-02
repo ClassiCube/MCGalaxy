@@ -24,11 +24,11 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace MCGalaxy.Scripting {
-    
+namespace MCGalaxy.Scripting 
+{    
     /// <summary> Utility methods for loading assemblies, commands, and plugins </summary>
-    public static class IScripting {
-        
+    public static class IScripting 
+    {     
         public const string AutoloadFile = "text/cmdautoload.txt";
         public const string DllDir = "extra/commands/dll/";
         
@@ -42,7 +42,8 @@ namespace MCGalaxy.Scripting {
         public static List<T> LoadTypes<T>(Assembly lib) {
             List<T> instances = new List<T>();
             
-            foreach (Type t in lib.GetTypes()) {
+            foreach (Type t in lib.GetTypes()) 
+            {
                 if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(T))) continue;
                 object instance = Activator.CreateInstance(t);
                 
@@ -164,8 +165,8 @@ namespace MCGalaxy.Scripting {
     }
     
     /// <summary> Compiles source code files for a particular programming language into a .dll </summary>
-    public abstract class ICompiler {
-        
+    public abstract class ICompiler 
+    {   
         public const string SourceDir = "extra/commands/source/";
         public const string ErrorPath = "logs/errors/compiler.log";
         
@@ -246,7 +247,8 @@ namespace MCGalaxy.Scripting {
             sb.AppendLine("############################################################");
             sb.AppendLine();
             
-            foreach (CompilerError err in results.Errors) {
+            foreach (CompilerError err in results.Errors) 
+            {
                 string type = err.IsWarning ? "Warning" : "Error";
                 sb.AppendLine(type + " on line " + err.Line + ":");
                 
@@ -277,7 +279,8 @@ namespace MCGalaxy.Scripting {
         /// <returns> The compiled assembly, or null if compilation failed </returns>
         /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
         public Assembly Compile(Player p, string type, string[] srcs, string dst) {
-            foreach (string path in srcs) {
+            foreach (string path in srcs) 
+            {
                 if (File.Exists(path)) continue;
                 
                 p.Message("File &9{0} &Snot found.", path);
@@ -290,16 +293,19 @@ namespace MCGalaxy.Scripting {
                 return results.CompiledAssembly;
             }
             
-            SummariseErrors(results, p);
+            SummariseErrors(results, srcs, p);
             return null;
         }
         
-        /// <summary> Messages a summary of warnings and errors to the given player. </summary>
-        public static void SummariseErrors(CompilerResults results, Player p) {
+        static void SummariseErrors(CompilerResults results, string[] srcs, Player p) {
             int logged = 0;
-            foreach (CompilerError err in results.Errors) {
+            foreach (CompilerError err in results.Errors) 
+            {
                 string type = err.IsWarning ? "Warning" : "Error";
-                p.Message("&W{0} #{1} on line {2} - {3}", type, err.ErrorNumber, err.Line, err.ErrorText);
+                string file = Path.GetFileName(err.FileName);
+                // Include filename if compiling multiple source code files
+                p.Message("&W{0} #{1} on line {2}{4} - {3}", type, err.ErrorNumber, err.Line, err.ErrorText,
+                          srcs.Length > 1 ? " in " + file : "");
                 
                 logged++;
                 if (logged >= maxLog) break;
@@ -313,7 +319,8 @@ namespace MCGalaxy.Scripting {
     }
     
     /// <summary> Compiles source code files from a particular language into a .dll file, using a CodeDomProvider for the compiler. </summary>
-    public abstract class ICodeDomCompiler : ICompiler {
+    public abstract class ICodeDomCompiler : ICompiler 
+    {
         readonly object compilerLock = new object();
         CodeDomProvider compiler;
         
@@ -365,7 +372,8 @@ namespace MCGalaxy.Scripting {
             if (dstPath != null) args.OutputAssembly   = dstPath;
             if (dstPath == null) args.GenerateInMemory = true;
             
-            for (int i = 0; i < srcPaths.Length; i++) {
+            for (int i = 0; i < srcPaths.Length; i++) 
+            {
                 // CodeDomProvider doesn't work properly with relative paths
                 string path = Path.GetFullPath(srcPaths[i]);
                 
