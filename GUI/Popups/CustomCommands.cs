@@ -122,10 +122,6 @@ namespace MCGalaxy.Gui.Popups {
         
         void LoadCommands(Assembly assembly) {
             List<Command> commands = IScripting.LoadTypes<Command>(assembly);
-            if (commands == null) {
-                Popup.Error("Error compiling files. Check logs for more details"); return;
-            }
-            
             for (int i = 0; i < commands.Count; i++) {
                 Command cmd = commands[i];
 

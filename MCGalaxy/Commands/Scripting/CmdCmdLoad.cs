@@ -26,18 +26,11 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string cmdName, CommandData data) {
-            if (!Formatter.CheckFilenameOnly(p, cmdName)) return;            
-            if (Command.Find(cmdName) != null) {
-                p.Message("That command is already loaded!"); return;
-            }
-            
-            string path = IScripting.CommandPath(cmdName);
-            if (!File.Exists(path)) {
-                p.Message("File &9{0} &Snot found.", path); return;
-            }
-            
+            if (!Formatter.CheckFilenameOnly(p, cmdName)) return;
+            string path  = IScripting.CommandPath(cmdName);
             string error = IScripting.LoadCommands(path);
-            if (error != null) { p.Message("&W" + error); return; }
+            
+            if (error != null) { p.Message(error); return; }
             p.Message("Command was successfully loaded.");
         }
 

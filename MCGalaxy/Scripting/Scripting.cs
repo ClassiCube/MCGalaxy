@@ -79,38 +79,54 @@ namespace MCGalaxy.Scripting {
             if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }
             string[] list = File.ReadAllLines(AutoloadFile);
             
-            foreach (string cmdName in list) {
+            foreach (string cmdName in list) 
+            {
                 if (cmdName.IsCommentLine()) continue;
                 string path  = CommandPath(cmdName);
                 string error = LoadCommands(path);
                 
-                if (error != null) { Logger.Log(LogType.Warning, error); continue; }
-                Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
+                if (error != null) { 
+                    Logger.Log(LogType.Warning, error);
+                } else {
+                    Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded Cmd{0}.dll", cmdName);
+                }
             }
         }
         
-        /// <summary> Loads and registers all the commands from the given .dll path. </summary>
+        /// <summary> Loads and registers all the commands from the given .dll path </summary>
+        /// <returns> If an error occurred, a string describing the error </returns>
         public static string LoadCommands(string path) {
             try {
                 Assembly lib = LoadAssembly(path);
                 List<Command> commands = LoadTypes<Command>(lib);
+                if (commands.Count == 0) return "&WNo commands in " + path;
                 
-                if (commands.Count == 0) return "No commands in dll file";
-                foreach (Command cmd in commands) { Command.Register(cmd); }
-            } catch (Exception ex) {
-                Logger.LogError("Error loading commands from " + path, ex);
-                
-                string file = Path.GetFileName(path);
-                if (ex is FileNotFoundException) {
-                    return file + " does not exist in the DLL folder, or is missing a dependency. Details in the error log.";
-                } else if (ex is BadImageFormatException) {
-                    return file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
-                } else if (ex is FileLoadException) {
-                    return file + " or one of its dependencies could not be loaded. Details in the error log.";
+                foreach (Command cmd in commands) 
+                {
+                    if (Command.Find(cmd.name) != null)
+                        return "/" + cmd.name + " is already loaded";
+                    
+                    Command.Register(cmd);
                 }
-                return "An unknown error occured. Details in the error log.";
+            } catch (Exception ex) {
+                return DescribeLoadError(path, ex);
             }
             return null;
+        }
+        
+        static string DescribeLoadError(string path, Exception ex) {
+            if (ex is FileNotFoundException)
+                return "File &9" + path + " &Snot found.";
+            
+            Logger.LogError("Error loading commands from " + path, ex);
+            string file = Path.GetFileName(path);
+            
+            if (ex is BadImageFormatException) {
+                return "&W" + file + " is not a valid assembly, or has an invalid dependency. Details in the error log.";
+            } else if (ex is FileLoadException) {
+                return "&W" + file + " or one of its dependencies could not be loaded. Details in the error log.";
+            }
+            return "&WAn unknown error occured. Details in the error log.";
         }
         
         
