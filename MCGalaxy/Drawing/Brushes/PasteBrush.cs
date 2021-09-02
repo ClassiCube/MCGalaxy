@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Brushes
         }
     }
     
-	// TODO merge with SimplePasteBrush
+    // TODO merge with SimplePasteBrush
     public sealed class PasteBrush : Brush 
     {
         readonly CopyState state;

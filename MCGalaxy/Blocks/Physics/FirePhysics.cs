@@ -82,7 +82,7 @@ namespace MCGalaxy.Blocks.Physics {
                     ExpandDiagonal(lvl, x, y, z, -1, yy, +1);
                     ExpandDiagonal(lvl, x, y, z, +1, yy, +1);
                 }
-            	
+                
                 if (C.Data.Data < 4) {
                     C.Data.Data++;
                     return;

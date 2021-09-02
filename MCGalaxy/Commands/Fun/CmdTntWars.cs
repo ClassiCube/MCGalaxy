@@ -210,7 +210,7 @@ namespace MCGalaxy.Commands.Fun {
                 if (args.Length > 4 && args[4].CaselessEq("all")) {
                     zones.Clear();
                     p.Message("Deleted all {0} zones", type);
-            	} else {
+                } else {
                     p.Message("Place a block to delete a {0} zone", type);
                     p.MakeSelection(1, zones, DeleteZoneCallback);
                 }

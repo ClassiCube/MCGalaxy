@@ -88,7 +88,7 @@ namespace MCGalaxy.Network
                     string response = HttpUtil.GetResponseText(res);
                     beat.OnResponse(response);
                     return;
-            	} catch (Exception ex) {
+                } catch (Exception ex) {
                     HttpUtil.DisposeErrorResponse(ex);
                     lastEx = ex;
                     continue;

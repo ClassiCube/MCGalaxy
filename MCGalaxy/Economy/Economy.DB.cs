@@ -74,8 +74,8 @@ namespace MCGalaxy.Eco {
         
         public static void UpdateStats(EcoStats stats) {
             Database.AddOrReplaceRow("Economy", "player, money, total, purchase, payment, salary, fine",
-			                         stats.Player, 0, stats.TotalSpent, stats.Purchase,
-			                         stats.Payment, stats.Salary, stats.Fine);
+                                     stats.Player, 0, stats.TotalSpent, stats.Purchase,
+                                     stats.Payment, stats.Salary, stats.Fine);
         }
         
         static EcoStats ParseStats(IDataRecord record) {

@@ -57,7 +57,7 @@ namespace MCGalaxy.Events.LevelEvents {
     public delegate void OnLevelUnload(Level lvl, ref bool cancel);
     public sealed class OnLevelUnloadEvent : IEvent<OnLevelUnload> {
         
-    	public static void Call(Level lvl, ref bool cancel) {
+        public static void Call(Level lvl, ref bool cancel) {
             IEvent<OnLevelUnload>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
                 try { items[i].method(lvl, ref cancel); } 

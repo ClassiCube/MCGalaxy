@@ -170,7 +170,7 @@ namespace MCGalaxy.Games {
         }
                 
         protected override bool OnHitBlock(MissileData args, Vec3U16 pos, BlockID block) {
-        	if (p.level.physics >= 3) p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
+            if (p.level.physics >= 3) p.level.MakeExplosion(pos.X, pos.Y, pos.Z, 1);
             return true;
         }
     }

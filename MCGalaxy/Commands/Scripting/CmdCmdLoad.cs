@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System.IO;
+using System.Collections.Generic;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Commands.Scripting {
@@ -26,12 +27,17 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string cmdName, CommandData data) {
+            if (cmdName.Length == 0) { Help(p); return; }
             if (!Formatter.CheckFilenameOnly(p, cmdName)) return;
-            string path  = IScripting.CommandPath(cmdName);
-            string error = IScripting.LoadCommands(path);
+            string path = IScripting.CommandPath(cmdName);
+            string error;
+            List<Command> cmds = IScripting.LoadCommands(path, out error);
             
-            if (error != null) { p.Message(error); return; }
-            p.Message("Command was successfully loaded.");
+            if (error != null) { 
+                p.Message(error);
+            } else {
+                p.Message("Successfully loaded {0}", cmds.Join(c => "/" + c.name));
+            }
         }
 
         public override void Help(Player p) {

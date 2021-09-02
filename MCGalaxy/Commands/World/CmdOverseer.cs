@@ -114,10 +114,10 @@ namespace MCGalaxy.Commands.World {
             int realms = p.group.OverseerMaps;
             
             for (int i = 1; realms > 0; i++) {
-            	string map = GetLevelName(p, i);
-            	if (!LevelInfo.MapExists(map)) return map;
-            	
-            	if (LevelInfo.IsRealmOwner(p.name, map)) realms--;
+                string map = GetLevelName(p, i);
+                if (!LevelInfo.MapExists(map)) return map;
+                
+                if (LevelInfo.IsRealmOwner(p.name, map)) realms--;
             }
             p.Message("You have reached the limit for your overseer maps."); return null;
         }

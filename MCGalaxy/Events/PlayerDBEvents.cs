@@ -23,7 +23,7 @@ namespace MCGalaxy.Events.PlayerDBEvents {
     /// <summary> Called whenever the server saves player's stats to the database. </summary>
     public sealed class OnInfoSaveEvent : IEvent<OnInfoSave> {
         
-    	public static void Call(Player p, ref bool cancel) {
+        public static void Call(Player p, ref bool cancel) {
             IEvent<OnInfoSave>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++) {
                 try { items[i].method(p, ref cancel); } 

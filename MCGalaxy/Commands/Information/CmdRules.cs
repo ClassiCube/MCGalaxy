@@ -49,8 +49,8 @@ namespace MCGalaxy.Commands.Info {
             target.MessageLines(rules);
             
             if (target != null && p != target) {
-            	p.Message("Sent the rules to {0}&S.", p.FormatNick(target));
-            	target.Message("{0} &Ssent you the rules.", target.FormatNick(p));
+                p.Message("Sent the rules to {0}&S.", p.FormatNick(target));
+                target.Message("{0} &Ssent you the rules.", target.FormatNick(p));
             }
         }
         

@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.CPE {
             // Work on current level by default
             if (cfg == null) {
                 if (p.IsSuper) { p.Message("&WWhen using &T/Env &Wfrom {0}, only &T/Env Global &Wis supported", p.SuperName); return; }
-            	
+                
                 lvl = p.level; cfg = lvl.Config;
                 area = lvl.ColoredName;
                 if (!LevelInfo.Check(p, data.Rank, lvl, "set env settings of this level")) return;

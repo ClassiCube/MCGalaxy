@@ -19,7 +19,7 @@ using System;
 
 namespace MCGalaxy {
     
-	/// <summary> Provides a centralised list of files and paths used. </summary>
+    /// <summary> Provides a centralised list of files and paths used. </summary>
     public static class Paths {
         
         public const string CustomColorsFile = "text/customcolors.txt";

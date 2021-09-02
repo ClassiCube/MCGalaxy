@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting {
             message = parts[1];
             
             if (message.Length >= 256 && Database.Backend.EnforcesTextLength) {
-            	message = message.Substring(0, 255);
+                message = message.Substring(0, 255);
                 p.Message("&WMessage was too long. It has been trimmed to:");
                 p.Message(message);
             }

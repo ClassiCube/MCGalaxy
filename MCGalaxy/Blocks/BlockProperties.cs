@@ -95,7 +95,7 @@ namespace MCGalaxy.Blocks {
             lock (list) {
                 if (!Directory.Exists("blockprops")) {
                     Directory.CreateDirectory("blockprops");
-        	    }
+                }
                 SaveCore(group, list, scope);
             }
         }

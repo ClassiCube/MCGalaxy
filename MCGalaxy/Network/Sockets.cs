@@ -182,7 +182,7 @@ namespace MCGalaxy.Network {
 
             // TODO: Low priority sending support
             try {
-            	if ((flags & SendFlags.Synchronous) != 0) {
+                if ((flags & SendFlags.Synchronous) != 0) {
                     socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
                     return;
                 }

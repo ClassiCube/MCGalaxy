@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.World {
             BlockProps[] scope = GetScope(p, data, args[0]);
             if (scope == null) return;           
             if (IsListCommand(args[1]) && (args.Length == 2 || IsListModifier(args[2]))) {
-            	ListProps(p, scope, args); return;
+                ListProps(p, scope, args); return;
             }
             
             BlockID block = GetBlock(p, scope, args[1]);
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.World {
         }
         
         static BlockID GetBlock(Player p, BlockProps[] scope, string str) {
-        	Player pScope = scope == Block.Props ? Player.Console : p;
+            Player pScope = scope == Block.Props ? Player.Console : p;
             BlockID block = Block.Parse(pScope, str);
             
             if (block == Block.Invalid) {
@@ -137,12 +137,12 @@ namespace MCGalaxy.Commands.World {
         }
         
         void CopyProps(Player p, BlockProps[] scope, BlockID block, string[] args) {
-        	if (args.Length < 4) { Help(p); return; }
-        	BlockID dst = GetBlock(p, scope, args[3]);
-        	if (dst == Block.Invalid) return;
-        	
-        	scope[dst] = scope[block];
-        	scope[dst].ChangedScope |= BlockProps.ScopeId(scope);
+            if (args.Length < 4) { Help(p); return; }
+            BlockID dst = GetBlock(p, scope, args[3]);
+            if (dst == Block.Invalid) return;
+            
+            scope[dst] = scope[block];
+            scope[dst].ChangedScope |= BlockProps.ScopeId(scope);
             
             p.Message("Copied properties of {0} to {1}",
                       BlockProps.ScopedName(scope, p, block),
@@ -168,7 +168,7 @@ namespace MCGalaxy.Commands.World {
             BlockProps.ApplyChanges(scope, p.level, block, true);
         }
         
-        public override void Help(Player p) {                	
+        public override void Help(Player p) {
             p.Message("&T/BlockProps global/level list");
             p.Message("&HLists blocks which have non-default properties");
             p.Message("&T/BlockProps global/level [id/name] copy [new id]");

@@ -22,7 +22,7 @@ using System.IO;
 namespace MCGalaxy.Modules.Awards
 {
     public class Award { public string Name, Description; }
-	
+    
     /// <summary> Manages the awards the server has </summary>
     public static class AwardsList
     {  

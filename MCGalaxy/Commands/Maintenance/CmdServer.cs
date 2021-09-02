@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands.Maintenance {
             if (!CheckPerms(p)) {
                 p.Message("Only Console or the Server Owner can update the server."); return;
             }
-        	Updater.PerformUpdate();
+            Updater.PerformUpdate();
         }
         
         void DoImport(Player p, string[] args) {

@@ -130,7 +130,7 @@ namespace MCGalaxy.Generator
                 CheckMapAxis(p, args[i    ], "Width",  ref x) &&
                 CheckMapAxis(p, args[i + 1], "Height", ref y) &&
                 CheckMapAxis(p, args[i + 2], "Length", ref z) &&
-            	(!checkVolume || CheckMapVolume(p, x, y, z));
+                (!checkVolume || CheckMapVolume(p, x, y, z));
         }
         
         static bool CheckMapAxis(Player p, string input, string type, ref ushort len) {

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
                 }
                 return;
             }
-        	
+            
             
             Vec3S32 P = p.Pos.BlockCoords;
             P.Y = (p.Pos.Y - 32) / 32;

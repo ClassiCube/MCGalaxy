@@ -45,7 +45,7 @@ namespace MCGalaxy.Games {
         }
         
         void HandleSaveStats(Player p, ref bool cancel) { SaveStats(p); }
-		
+        
         protected virtual void HandleSendingHeartbeat(Heartbeat service, ref string name) {
             if (Map == null || !GetConfig().MapInHeartbeat) return;
             name += " (map: " + Map.MapName + ")";

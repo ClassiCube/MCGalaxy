@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("&WThe physics on {0} &Ware not sufficient for exploding!", lvl.ColoredName); 
                 return false;
             }
-        	
+            
             pos = lvl.ClampPos(pos);
             ushort x = (ushort)pos.X, y = (ushort)pos.Y, z = (ushort)pos.Z;    
             BlockID old = lvl.GetBlock(x, y, z);
