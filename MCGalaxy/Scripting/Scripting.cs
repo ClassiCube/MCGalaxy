@@ -321,6 +321,7 @@ namespace MCGalaxy.Scripting
         static string DescribeError(CompilerError err, string[] srcs, string text) {
             string type = err.IsWarning ? "Warning" : "Error";
             string file = Path.GetFileName(err.FileName);
+            // TODO line 0 shouldn't appear
             
             // Include filename if compiling multiple source code files
             return string.Format("{0}{1} on line {2}{3}", type, text, err.Line,

@@ -101,6 +101,10 @@ namespace MCGalaxy.Modules.Relay
         /// <summary> List of users allowed to run in-game commands from the external communication service </summary>
         public PlayerList Controllers;
         
+        /// <summary> The ID of the user associated with this relay bot </summary>
+        /// <remarks> Do not cache this ID as it can change </remarks>
+        public abstract string UserID { get; }
+        
         
         /// <summary> Sends a message to all channels setup for general public chat </summary>
         public void SendPublicMessage(string message) {

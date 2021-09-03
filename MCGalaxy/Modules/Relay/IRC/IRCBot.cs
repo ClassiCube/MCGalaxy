@@ -28,13 +28,14 @@ namespace MCGalaxy.Modules.Relay.IRC
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
     public sealed class IRCBot : RelayBot 
     {
-        internal Connection connection;
+        internal Connection conn;
         string nick;
         IRCNickList nicks;
         bool ready;
         
         public override string RelayName { get { return "IRC"; } }
-        public override bool Enabled { get { return Server.Config.UseIRC; } }
+        public override bool Enabled  { get { return Server.Config.UseIRC; } }
+        public override string UserID { get { return conn == null ? null : conn.Nick; } }
         
         public override void LoadControllers() {
             Controllers = PlayerList.Load("ranks/IRC_Controllers.txt");
@@ -53,25 +54,25 @@ namespace MCGalaxy.Modules.Relay.IRC
             // IRC messages can't have \r or \n in them
             //  https://stackoverflow.com/questions/13898584/insert-line-breaks-into-an-irc-message
             if (message.IndexOf('\n') == -1) {
-                connection.SendMessage(channel, message);
+                conn.SendMessage(channel, message);
                 return;
             }
             
             string[] parts = message.Split(newline, StringSplitOptions.RemoveEmptyEntries);
             foreach (string part in parts) 
             {
-                connection.SendMessage(channel, part.Replace("\r", ""));
+                conn.SendMessage(channel, part.Replace("\r", ""));
             }
         }
         
         public void Raw(string message) {
             if (!Enabled || !Connected) return;
-            connection.SendRaw(message);
+            conn.SendRaw(message);
         }
 
         void Join(string channel) {
             if (String.IsNullOrEmpty(channel)) return;
-            connection.SendJoin(channel);
+            conn.SendJoin(channel);
         }
         
         
@@ -81,29 +82,29 @@ namespace MCGalaxy.Modules.Relay.IRC
             ready = false;
             nick  = Server.Config.IRCNick.Replace(" ", "");
             
-            if (connection == null) connection = new Connection(new UTF8Encoding(false));
-            connection.Hostname = Server.Config.IRCServer;
-            connection.Port     = Server.Config.IRCPort;
-            connection.UseSSL   = Server.Config.IRCSSL;
+            if (conn == null) conn = new Connection(new UTF8Encoding(false));
+            conn.Hostname = Server.Config.IRCServer;
+            conn.Port     = Server.Config.IRCPort;
+            conn.UseSSL   = Server.Config.IRCSSL;
             
-            connection.Nick     = nick;
-            connection.UserName = nick;
-            connection.RealName = Server.SoftwareNameVersioned;
+            conn.Nick     = nick;
+            conn.UserName = nick;
+            conn.RealName = Server.SoftwareNameVersioned;
             HookIRCEvents();
             
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
-            connection.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
-            connection.Connect();
+            conn.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
+            conn.Connect();
         }
         
         protected override void DoReadLoop() {
-            connection.ReceiveIRCMessages();
+            conn.ReceiveIRCMessages();
         }
         
         protected override void DoDisconnect(string reason) {
             nicks.Clear();
             try {
-                connection.Disconnect(reason);
+                conn.Disconnect(reason);
             } catch {
                 // no point logging disconnect failures
             }
@@ -197,38 +198,38 @@ namespace MCGalaxy.Modules.Relay.IRC
 
         void HookIRCEvents() {
             // Regster events for incoming
-            connection.Listener.OnNick += OnNick;
-            connection.Listener.OnRegistered += OnRegistered;
-            connection.Listener.OnAction += OnAction;
-            connection.Listener.OnPublic += OnPublic;
-            connection.Listener.OnPrivate += OnPrivate;
-            connection.Listener.OnError += OnError;
-            connection.Listener.OnQuit += OnQuit;
-            connection.Listener.OnJoin += OnJoin;
-            connection.Listener.OnPart += OnPart;
-            connection.Listener.OnChannelModeChange += OnChannelModeChange;
-            connection.Listener.OnNames += OnNames;
-            connection.Listener.OnKick += OnKick;
-            connection.Listener.OnKill += OnKill;
-            connection.Listener.OnPrivateNotice += OnPrivateNotice;
+            conn.Listener.OnNick += OnNick;
+            conn.Listener.OnRegistered += OnRegistered;
+            conn.Listener.OnAction += OnAction;
+            conn.Listener.OnPublic += OnPublic;
+            conn.Listener.OnPrivate += OnPrivate;
+            conn.Listener.OnError += OnError;
+            conn.Listener.OnQuit += OnQuit;
+            conn.Listener.OnJoin += OnJoin;
+            conn.Listener.OnPart += OnPart;
+            conn.Listener.OnChannelModeChange += OnChannelModeChange;
+            conn.Listener.OnNames += OnNames;
+            conn.Listener.OnKick += OnKick;
+            conn.Listener.OnKill += OnKill;
+            conn.Listener.OnPrivateNotice += OnPrivateNotice;
         }
 
         void UnhookIRCEvents() {
             // Regster events for incoming
-            connection.Listener.OnNick -= OnNick;
-            connection.Listener.OnRegistered -= OnRegistered;
-            connection.Listener.OnAction -= OnAction;
-            connection.Listener.OnPublic -= OnPublic;
-            connection.Listener.OnPrivate -= OnPrivate;
-            connection.Listener.OnError -= OnError;
-            connection.Listener.OnQuit -= OnQuit;
-            connection.Listener.OnJoin -= OnJoin;
-            connection.Listener.OnPart -= OnPart;
-            connection.Listener.OnChannelModeChange -= OnChannelModeChange;
-            connection.Listener.OnNames -= OnNames;
-            connection.Listener.OnKick -= OnKick;
-            connection.Listener.OnKill -= OnKill;
-            connection.Listener.OnPrivateNotice -= OnPrivateNotice;
+            conn.Listener.OnNick -= OnNick;
+            conn.Listener.OnRegistered -= OnRegistered;
+            conn.Listener.OnAction -= OnAction;
+            conn.Listener.OnPublic -= OnPublic;
+            conn.Listener.OnPrivate -= OnPrivate;
+            conn.Listener.OnError -= OnError;
+            conn.Listener.OnQuit -= OnQuit;
+            conn.Listener.OnJoin -= OnJoin;
+            conn.Listener.OnPart -= OnPart;
+            conn.Listener.OnChannelModeChange -= OnChannelModeChange;
+            conn.Listener.OnNames -= OnNames;
+            conn.Listener.OnKick -= OnKick;
+            conn.Listener.OnKill -= OnKill;
+            conn.Listener.OnPrivateNotice -= OnPrivateNotice;
         }
 
         
@@ -237,7 +238,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
         
         void OnJoin(UserInfo user, string channel) {
-            connection.SendNames(channel);
+            conn.SendNames(channel);
             AnnounceJoinLeave(user.Nick, "joined", channel);
         }
         
@@ -255,7 +256,7 @@ namespace MCGalaxy.Modules.Relay.IRC
 
         void OnQuit(UserInfo user, string reason) {
             // Old bot was disconnected, try to reclaim it
-            if (user.Nick == nick) connection.SendNick(nick);
+            if (user.Nick == nick) conn.SendNick(nick);
             nicks.OnLeft(user);
             
             if (user.Nick == nick) return;
@@ -305,7 +306,7 @@ namespace MCGalaxy.Modules.Relay.IRC
             
             if (Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0) {
                 Logger.Log(LogType.RelayActivity, "Identifying with " + nickServ);
-                connection.SendMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
+                conn.SendMessage(nickServ, "IDENTIFY " + Server.Config.IRCPassword);
             }
         }
 
@@ -323,7 +324,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
         
         void OnChannelModeChange(UserInfo who, string channel) {
-            connection.SendNames(channel);
+            conn.SendNames(channel);
         }
         
         void OnKick(UserInfo user, string channel, string kickee, string reason) {
