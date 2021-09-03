@@ -97,7 +97,8 @@ namespace MCGalaxy.Scripting
         }
         
         /// <summary> Loads and registers all the commands from the given .dll path </summary>
-        /// <returns> If an error occurred, a string describing the error </returns>
+        /// <param name="error"> If an error occurs, set to a string describing the error </param>
+        /// <returns> The list of commands loaded </returns>
         public static List<Command> LoadCommands(string path, out string error) {
             error = null;
             try {
@@ -215,11 +216,15 @@ namespace MCGalaxy.Scripting
             return string.Format(source, args);
         }
         
+        /// <summary> Generates source code for an example command, 
+        /// preformatted with the given command name </summary>
         public string GenExampleCommand(string cmdName) {
             cmdName = cmdName.ToLower().Capitalize();
             return FormatSource(CommandSkeleton, cmdName);
         }
         
+        /// <summary> Generates source code for an example plugin, 
+        /// preformatted with the given name and creator </summary>
         public string GenExamplePlugin(string plugin, string creator) {
             return FormatSource(PluginSkeleton, plugin, creator, Server.Version);
         }
@@ -333,9 +338,9 @@ namespace MCGalaxy.Scripting
         protected abstract CodeDomProvider CreateProvider();
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
-        /// <summary> Returns the prefix for an assembly reference line </summary>
-        /// <example> For C# this prefix is "//reference "" </example>
-        protected virtual string ReferenceLine { get { return "//reference "; } }
+        /// <summary> Returns the starting characters for a comment </summary>
+        /// <example> For C# this is "//" </example>
+        protected virtual string CommentPrefix { get { return "//"; } }
         
         // Lazy init compiler when it's actually needed
         void InitCompiler() {
@@ -354,7 +359,7 @@ namespace MCGalaxy.Scripting
         void AddReferences(string path, CompilerParameters args) {
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
             using (StreamReader r = new StreamReader(path)) {               
-                string refPrefix = ReferenceLine;
+                string refPrefix = CommentPrefix + "reference ";
                 string line;
                 
                 while ((line = r.ReadLine()) != null) {
@@ -393,7 +398,8 @@ namespace MCGalaxy.Scripting
         }
     }
     
-    class SourceMap {
+    class SourceMap 
+    {
         readonly string[] files;
         readonly List<string>[] sources;
         
