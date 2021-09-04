@@ -146,7 +146,7 @@ namespace MCGalaxy.Commands.Bots{
         }
         
         static string ListInstructions() {
-            return BotInstruction.Instructions.Join(ins => ins.Name);
+            return BotInstruction.Instructions.Join(ins => ins.Key);
         }
     }
 }

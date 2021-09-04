@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
+namespace MCGalaxy.Bots 
+{    
     /// <summary> Represents an action that a bot will perform </summary>
-    public abstract class BotInstruction {
-        
+    public abstract class BotInstruction 
+    {        
         /// <summary> Gets the identifying name for this instruction. </summary>
         public string Name;
         
@@ -44,18 +44,25 @@ namespace MCGalaxy.Bots {
         public abstract string[] Help { get; }
         
         /// <summary> All instructions that bots can execute. </summary>
-        public static List<BotInstruction> Instructions = new List<BotInstruction>() {
-            new NodInstruction(), new SpinInstruction(), 
-            new HuntInstruction(), new KillInstruction(), new StareInstruction(),
-            new TeleportInstruction(), new WalkInstruction(), new JumpInstruction(), new SpeedInstruction(),            
-            new RemoveInstruction(), new ResetInstruction(), new LinkScriptInstruction(), new WaitInstruction(),
+        public static Dictionary<string, Func<BotInstruction>> Instructions = new Dictionary<string, Func<BotInstruction>>() {
+            { "Nod", () => new NodInstruction() }, { "Spin", () => new SpinInstruction() },
+            // hunting related instructions
+            { "Hunt",  () => new HuntInstruction()  }, { "Kill", () => new KillInstruction() }, 
+            { "Stare", () => new StareInstruction() },
+            // movement related instructions
+            { "Teleport", () => new TeleportInstruction() }, { "Walk",  () => new WalkInstruction() },
+            { "Jump",     () => new JumpInstruction()     }, { "Speed", () => new SpeedInstruction() },
+            // other instructions
+            { "Remove",     () => new RemoveInstruction() },     { "Reset", () => new ResetInstruction() }, 
+            { "LinkScript", () => new LinkScriptInstruction() }, { "Wait", () => new WaitInstruction() },
         };
         
         /// <summary> Creates the instruction which has the given identifying name. </summary>
         /// <remarks> Returns null if there is no instruction with the given name </remarks>
         public static BotInstruction Create(string name) {
-            foreach (BotInstruction ins in Instructions) {
-                if (ins.Name.CaselessEq(name)) return ins;
+            foreach (var kvp in Instructions) 
+            {
+                if (kvp.Key.CaselessEq(name)) return kvp.Value();
             }
             return null;
         }
