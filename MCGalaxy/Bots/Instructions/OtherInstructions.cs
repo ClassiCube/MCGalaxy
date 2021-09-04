@@ -18,13 +18,14 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
-    /// <summary> Causes the bot to reset to the and execute first instruction. </summary>
-    public sealed class ResetInstruction : BotInstruction {
+namespace MCGalaxy.Bots 
+{  
+    /// <summary> Causes the bot to reset to the and execute first instruction </summary>
+    public sealed class ResetInstruction : BotInstruction 
+    {
         public ResetInstruction() { Name = "reset"; }
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
+        public override bool Execute(PlayerBot bot) {
             bot.cur = 0; return false;
         }
         
@@ -35,11 +36,12 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to be removed from the world. </summary>
-    public sealed class RemoveInstruction : BotInstruction {
+    /// <summary> Causes the bot to be removed from the world </summary>
+    public sealed class RemoveInstruction : BotInstruction 
+    {
         public RemoveInstruction() { Name = "remove"; }
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
+        public override bool Execute(PlayerBot bot) {
             PlayerBot.Remove(bot); return true;
         }
         
@@ -50,23 +52,22 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to switch to a different AI. </summary>
-    public sealed class LinkScriptInstruction : BotInstruction {
+    /// <summary> Causes the bot to switch to a different AI </summary>
+    public sealed class LinkScriptInstruction : BotInstruction 
+    {
         public LinkScriptInstruction() { Name = "linkscript"; }
+        public string AI;
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            string ai = (string)data.Metadata;
-            if (File.Exists("bots/" + ai)) {
-                ScriptFile.Parse(Player.Console, bot, ai);
+        public override bool Execute(PlayerBot bot) {
+            if (File.Exists("bots/" + AI)) {
+                ScriptFile.Parse(Player.Console, bot, AI);
                 return true;
             }
             bot.NextInstruction(); return true;
         }
         
-        public override InstructionData Parse(string[] args) {
-            InstructionData data = default(InstructionData);
-            data.Metadata = args[1];
-            return data;
+        public override void Parse(string[] args) {
+            AI = args[1];
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
@@ -86,12 +87,14 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
-    public sealed class WaitInstruction : BotInstruction {
+    public sealed class WaitInstruction : BotInstruction 
+    {
         public WaitInstruction() { Name = "wait"; }
+        public short Interval = 10;
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
+        public override bool Execute(PlayerBot bot) {
             if (bot.countdown == 0) {
-                bot.countdown = (short)data.Metadata;
+                bot.countdown = Interval;
                 return true;
             }
             
@@ -100,10 +103,8 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        public override InstructionData Parse(string[] args) {
-            InstructionData data = default(InstructionData);
-            data.Metadata = short.Parse(args[1]);
-            return data;
+        public override void Parse(string[] args) {
+            Interval = short.Parse(args[1]);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {

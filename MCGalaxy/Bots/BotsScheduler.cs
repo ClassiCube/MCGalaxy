@@ -44,38 +44,30 @@ namespace MCGalaxy {
             }
         }
 
+        static BotInstruction killInstruction = new KillInstruction();
+        static BotInstruction huntInstruction = new HuntInstruction();
         static void BotTick(PlayerBot bot) {
             if (bot.kill) {
-                InstructionData data = default(InstructionData);
                 // The kill instruction should not interfere with the bot AI
                 int actualCur = bot.cur;
-                BotInstruction.Find("kill").Execute(bot, data);
+                killInstruction.Execute(bot);
                 bot.cur = actualCur;
             }
             bot.movement = false;
 
             if (bot.Instructions.Count == 0) {
-                if (bot.hunt) {
-                    InstructionData data = default(InstructionData);
-                    BotInstruction.Find("hunt").Execute(bot, data);
-                }
+                if (bot.hunt) huntInstruction.Execute(bot);
             } else {
-                bool doNextInstruction = !DoInstruction(bot);
+                bool doNextInstruction = !bot.Instructions[bot.cur].Execute(bot);
                 if (bot.cur == bot.Instructions.Count) bot.cur = 0;
                 
                 if (doNextInstruction) {
-                    DoInstruction(bot);
+                    bot.Instructions[bot.cur].Execute(bot);
                     if (bot.cur == bot.Instructions.Count) bot.cur = 0;
                 }
             }
             
             if (bot.curJump > 0) DoJump(bot);
-        }
-        
-        static bool DoInstruction(PlayerBot bot) {
-            BotInstruction ins = BotInstruction.Find(bot.Instructions[bot.cur].Name);
-            if (ins == null) return false;
-            return ins.Execute(bot, bot.Instructions[bot.cur]);
         }
         
         static void DoJump(PlayerBot bot) {            

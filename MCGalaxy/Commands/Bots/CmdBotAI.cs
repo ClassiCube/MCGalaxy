@@ -132,19 +132,21 @@ namespace MCGalaxy.Commands.Bots{
             p.Message("&T/BotAI list &H- lists all current AIs");
             p.Message("&T/BotAI add [name] [instruction] <args>");
             
-            p.Message("&HInstructions: &S{0}",
-                      BotInstruction.Instructions.Join(ins => ins.Name));
+            p.Message("&HInstructions: &S{0}", ListInstructions());
             p.Message("&HTo see detailed help, type &T/Help BotAI [instruction]");
         }
         
         public override void Help(Player p, string message) {
-            BotInstruction ins = BotInstruction.Find(message);
+            BotInstruction ins = BotInstruction.Create(message);
             if (ins == null) {
-                p.Message("&HInstructions: &S{0}, reverse",
-                               BotInstruction.Instructions.Join(ins2 => ins2.Name));
+                p.Message("&HInstructions: &S{0}, reverse", ListInstructions());
             } else {
                 p.MessageLines(ins.Help);
             }
+        }
+        
+        static string ListInstructions() {
+            return BotInstruction.Instructions.Join(ins => ins.Name);
         }
     }
 }

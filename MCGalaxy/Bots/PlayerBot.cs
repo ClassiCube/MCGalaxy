@@ -41,7 +41,7 @@ namespace MCGalaxy {
         public int cur = 0;
         public int countdown = 0;
         public bool nodUp = false;
-        public List<InstructionData> Instructions = new List<InstructionData>();
+        public List<BotInstruction> Instructions = new List<BotInstruction>();
         
         public Position TargetPos;
         public bool movement = false;

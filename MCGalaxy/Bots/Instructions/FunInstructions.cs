@@ -18,34 +18,29 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
-    /// <summary> Causes the bot to nod spin around for a certain interval. </summary>
-    public class SpinInstruction : BotInstruction {
+namespace MCGalaxy.Bots 
+{
+    /// <summary> Causes the bot to nod spin around for a certain interval </summary>
+    public class SpinInstruction : BotInstruction 
+    {
         public SpinInstruction() { Name = "spin"; }
+        public short Interval, Speed;
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            Metadata meta = (Metadata)data.Metadata;
-            if (bot.countdown == 0) { bot.countdown = meta.Seconds; return true; }
+        public override bool Execute(PlayerBot bot) {
+            if (bot.countdown == 0) { bot.countdown = Interval; return true; }
             bot.countdown--;
 
             Orientation rot = bot.Rot;
-            rot.RotY += (byte)meta.Speed;
+            rot.RotY += (byte)Speed;
             bot.Rot = rot;
 
             if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;
         }
         
-        protected class Metadata { public short Seconds, Speed; }
-        
-        public override InstructionData Parse(string[] args) {
-            InstructionData data = default(InstructionData);
-            Metadata meta = new Metadata();
-            meta.Seconds  = short.Parse(args[1]);
-            meta.Speed    = short.Parse(args[2]);
-            data.Metadata = meta;
-            return data;
+        public override void Parse(string[] args) {
+            Interval  = short.Parse(args[1]);
+            Speed     = short.Parse(args[2]);
         }
         
        public override void Output(Player p, string[] args, TextWriter w) {
@@ -63,16 +58,16 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to nod down up and down for a certain interval. </summary>
-    public sealed class NodInstruction : SpinInstruction {
+    /// <summary> Causes the bot to nod down up and down for a certain interval </summary>
+    public sealed class NodInstruction : SpinInstruction
+    {
         public NodInstruction() { Name = "nod"; }
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            Metadata meta = (Metadata)data.Metadata;
-            if (bot.countdown == 0) { bot.countdown = meta.Seconds; return true; }
+        public override bool Execute(PlayerBot bot) {
+            if (bot.countdown == 0) { bot.countdown = Interval; return true; }
             bot.countdown--;
 
-            byte speed = (byte)meta.Speed;
+            byte speed = (byte)Speed;
             Orientation rot = bot.Rot;
             if (bot.nodUp) {
                 if (rot.HeadX > 32 && rot.HeadX < 128) {

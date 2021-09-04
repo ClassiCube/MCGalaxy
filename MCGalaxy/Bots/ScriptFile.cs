@@ -42,12 +42,11 @@ namespace MCGalaxy.Bots {
                 string[] args = line.SplitSpaces();
 
                 try {
-                    BotInstruction ins = BotInstruction.Find(args[0]);
+                    BotInstruction ins = BotInstruction.Create(args[0]);
                     if (ins == null) continue;
                     
-                    InstructionData data = ins.Parse(args);
-                    data.Name = args[0];
-                    bot.Instructions.Add(data);
+                    ins.Parse(args);
+                    bot.Instructions.Add(ins);
                 } catch {
                     p.Message("AI file corrupt."); return false;
                 }
@@ -60,7 +59,7 @@ namespace MCGalaxy.Bots {
                 if (cmd.Length == 0)      cmd = "walk";
                 if (cmd.CaselessEq("tp")) cmd = "teleport";
 
-                BotInstruction ins = BotInstruction.Find(cmd);
+                BotInstruction ins = BotInstruction.Create(cmd);
                 if (ins == null) {
                     p.Message("Could not find instruction \"" + cmd + "\""); return null;
                 }

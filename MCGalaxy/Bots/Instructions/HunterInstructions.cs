@@ -19,16 +19,16 @@ using System;
 using System.IO;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Bots {
-    
-    /// <summary> Causes the bot to move towards the closest player, within a defined search radius. </summary>
-    public sealed class HuntInstruction : BotInstruction {
+namespace MCGalaxy.Bots 
+{
+    /// <summary> Causes the bot to move towards the closest player, within a defined search radius </summary>
+    public sealed class HuntInstruction : BotInstruction 
+    {
         public HuntInstruction() { Name = "hunt"; }
+        public int SearchRadius = 75;
         
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            int search = 75;
-            if (data.Metadata != null) search = (ushort)data.Metadata;
-            Player closest = ClosestPlayer(bot, search);
+        public override bool Execute(PlayerBot bot) {
+            Player closest = ClosestPlayer(bot, SearchRadius);
             
             if (closest == null) { bot.NextInstruction(); return false; }
             bool overlapsPlayer = MoveTowards(bot, closest);
@@ -76,11 +76,8 @@ namespace MCGalaxy.Bots {
             return dx <= 8 && dy <= 16 && dz <= 8;
         }
         
-        public override InstructionData Parse(string[] args) {
-            InstructionData data = default(InstructionData);
-            if (args.Length > 1)
-                data.Metadata = ushort.Parse(args[1]);
-            return data;
+        public override void Parse(string[] args) {
+            if (args.Length > 1) SearchRadius = ushort.Parse(args[1]);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
@@ -99,11 +96,12 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to kill nearby players. </summary>
-    public sealed class KillInstruction : BotInstruction {
+    /// <summary> Causes the bot to kill nearby players </summary>
+    public sealed class KillInstruction : BotInstruction 
+    {
         public KillInstruction() { Name = "kill"; }
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
+        public override bool Execute(PlayerBot bot) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != bot.level || p.invincible) continue;
@@ -130,22 +128,18 @@ namespace MCGalaxy.Bots {
     
     public sealed class StareInstruction : BotInstruction {
         public StareInstruction() { Name = "stare"; }
+        public int SearchRadius = 20000;
         
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            int search = 20000;
-            if (data.Metadata != null) search = (ushort)data.Metadata;
-            Player closest = HuntInstruction.ClosestPlayer(bot, search);
+        public override bool Execute(PlayerBot bot) {
+            Player closest = HuntInstruction.ClosestPlayer(bot, SearchRadius);
             
             if (closest == null) return true;
             FaceTowards(bot, closest);
             return true;
         }
         
-        public override InstructionData Parse(string[] args) {
-            InstructionData data = default(InstructionData);
-            if (args.Length > 1)
-                data.Metadata = ushort.Parse(args[1]);
-            return data;
+        public override void Parse(string[] args) {
+            if (args.Length > 1) SearchRadius = ushort.Parse(args[1]);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {

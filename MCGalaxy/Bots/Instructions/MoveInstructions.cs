@@ -18,41 +18,33 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
-    /// <summary> Causes the bot to instantly teleport to a position. </summary>
-    public class TeleportInstruction : BotInstruction {
+namespace MCGalaxy.Bots 
+{   
+    /// <summary> Causes the bot to instantly teleport to a position </summary>
+    public class TeleportInstruction : BotInstruction 
+    {
         public TeleportInstruction() { Name = "teleport"; }
+        public Position Target;
+        public byte Yaw, Pitch;
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            Coords coords = (Coords)data.Metadata;
-            bot.Pos = new Position(coords.X, coords.Y, coords.Z);
-            bot.SetYawPitch(coords.RotX, coords.RotY);
+        public override bool Execute(PlayerBot bot) {
+            bot.Pos = Target;
+            bot.SetYawPitch(Yaw, Pitch);
             
             bot.NextInstruction();
             return true;
         }
         
-        public override InstructionData Parse(string[] args) {
-            Coords coords;
-            coords.X = int.Parse(args[1]);
-            coords.Y = int.Parse(args[2]);
-            coords.Z = int.Parse(args[3]);
-            coords.RotX = byte.Parse(args[4]);
-            coords.RotY = byte.Parse(args[5]);
-            
-            InstructionData data = default(InstructionData);
-            data.Metadata = coords;
-            return data;
+        public override void Parse(string[] args) {
+            Target.X = int.Parse(args[1]);
+            Target.Y = int.Parse(args[2]);
+            Target.Z = int.Parse(args[3]);
+            Yaw      = byte.Parse(args[4]);
+            Pitch    = byte.Parse(args[5]);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
             w.WriteLine(Name + " " + p.Pos.X + " " + p.Pos.Y + " " + p.Pos.Z + " " + p.Rot.RotY + " " + p.Rot.HeadX);
-        }
-        
-        protected struct Coords {
-            public int X, Y, Z;
-            public byte RotX, RotY;
         }
         
         public override string[] Help { get { return help; } }
@@ -64,16 +56,16 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to gradually move to to a position. </summary>
-    public sealed class WalkInstruction : TeleportInstruction {
+    public sealed class WalkInstruction : TeleportInstruction 
+    {
         public WalkInstruction() { Name = "walk"; }
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            Coords target = (Coords)data.Metadata;
-            bot.TargetPos = new Position(target.X, target.Y, target.Z);
-            bot.movement = true;
+        public override bool Execute(PlayerBot bot) {
+            bot.TargetPos = Target;
+            bot.movement  = true;
 
             if (bot.Pos.BlockX == bot.TargetPos.BlockX && bot.Pos.BlockZ == bot.TargetPos.BlockZ) {
-                bot.SetYawPitch(target.RotX, target.RotY);
+                bot.SetYawPitch(Yaw, Pitch);
                 bot.movement = false;
                 bot.NextInstruction(); return false;
             }
@@ -89,11 +81,12 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to begin jumping. </summary>
-    public sealed class JumpInstruction : BotInstruction {
+    /// <summary> Causes the bot to begin jumping </summary>
+    public sealed class JumpInstruction : BotInstruction 
+    {
         public JumpInstruction() { Name = "jump"; }
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
+        public override bool Execute(PlayerBot bot) {
             if (bot.curJump <= 0) bot.curJump = 1;
             bot.NextInstruction(); return false;
         }
@@ -107,20 +100,20 @@ namespace MCGalaxy.Bots {
         };
     }
     
-    /// <summary> Causes the bot to change how fast it moves. </summary>
-    public sealed class SpeedInstruction : BotInstruction {
+    /// <summary> Causes the bot to change how fast it moves </summary>
+    public sealed class SpeedInstruction : BotInstruction 
+    {
         public SpeedInstruction() { Name = "speed"; }
+        public short Speed = 100;
 
-        public override bool Execute(PlayerBot bot, InstructionData data) {
-            bot.movementSpeed = (int)Math.Round(3m * (short)data.Metadata / 100m);
+        public override bool Execute(PlayerBot bot) {
+            bot.movementSpeed = (int)Math.Round(3m * Speed / 100m);
             if (bot.movementSpeed == 0) bot.movementSpeed = 1;
             bot.NextInstruction(); return false;
         }
         
-        public override InstructionData Parse(string[] args) {
-            InstructionData data = default(InstructionData);
-            data.Metadata = short.Parse(args[1]);
-            return data;
+        public override void Parse(string[] args) {
+            Speed = short.Parse(args[1]);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {

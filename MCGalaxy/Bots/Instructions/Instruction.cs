@@ -30,12 +30,10 @@ namespace MCGalaxy.Bots {
         /// <summary> Performs a tick for this instruction. </summary>
         /// <returns> false if the bot should proceed to execute the 
         /// next instruction in the same tick. </returns>
-        public abstract bool Execute(PlayerBot bot, InstructionData data);
+        public abstract bool Execute(PlayerBot bot);
         
         /// <summary> Parses the given arguments which contains the data for this instruction. </summary>
-        public virtual InstructionData Parse(string[] args) {
-            return default(InstructionData);
-        }
+        public virtual void Parse(string[] args) { }
         
         /// <summary> Writes the data for this instruction to the given AI file. </summary>
         public virtual void Output(Player p, string[] args, TextWriter w) {
@@ -53,17 +51,13 @@ namespace MCGalaxy.Bots {
             new RemoveInstruction(), new ResetInstruction(), new LinkScriptInstruction(), new WaitInstruction(),
         };
         
-        /// <summary> Finds the instruction which has the given identifying name. </summary>
-        public static BotInstruction Find(string name) {
+        /// <summary> Creates the instruction which has the given identifying name. </summary>
+        /// <remarks> Returns null if there is no instruction with the given name </remarks>
+        public static BotInstruction Create(string name) {
             foreach (BotInstruction ins in Instructions) {
                 if (ins.Name.CaselessEq(name)) return ins;
             }
             return null;
         }
-    }
-    
-    public struct InstructionData { 
-        public string Name;
-        public object Metadata;
     }
 }
