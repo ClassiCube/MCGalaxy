@@ -39,14 +39,14 @@ namespace MCGalaxy.Bots {
 
             foreach (string line in instructions) {
                 if (line.IsCommentLine()) continue;
-                string[] args = line.SplitSpaces(2);
+                string[] bits = line.SplitSpaces(2);
 
                 try {
-                    BotInstruction ins = BotInstruction.Create(args[0]);
+                    BotInstruction ins = BotInstruction.Create(bits[0]);
                     if (ins == null) continue;
                     
-                    string value = args.Length > 1 ? args[1] : "";
-                    ins.Deserialise(value);
+                    string args = bits.Length > 1 ? bits[1] : "";
+                    ins.Deserialise(args);
                     bot.Instructions.Add(ins);
                 } catch {
                     p.Message("AI file corrupt."); return false;

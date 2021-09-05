@@ -36,10 +36,10 @@ namespace MCGalaxy.Bots
         public abstract string Serialise();
         
         /// <summary> Deserialises the arguments for this instruction from the given string </summary>
-        public virtual void Deserialise(string value) { }
+        public virtual void Deserialise(string args) { }
         
         /// <summary> Parses arguments given by the player to instruction arguments </summary>
-        public virtual bool Parse(Player p, string value) { return true; }
+        public virtual bool Parse(Player p, string args) { return true; }
         
         /// <summary> Returns the help for this instruction. n</summary>
         public abstract string[] Help { get; }

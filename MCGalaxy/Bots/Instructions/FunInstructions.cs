@@ -42,26 +42,27 @@ namespace MCGalaxy.Bots
         public override string Serialise() { return "spin " + SerialiseArgs(); }
         protected string SerialiseArgs()   { return Interval + " " + Speed; }
         
-        public override void Deserialise(string value) {
-            string[] args = value.SplitSpaces();
-            Interval = int.Parse(args[0]);
-            Speed    = int.Parse(args[1]);
+        public override void Deserialise(string args) {
+            string[] bits = args.SplitSpaces();
+            Interval = int.Parse(bits[0]);
+            Speed    = int.Parse(bits[1]);
         }
         
-        public override bool Parse(Player p, string value) {
-            string[] args = value.SplitSpaces(2);
+        public override bool Parse(Player p, string args) {
+            string[] bits = args.SplitSpaces(2);
             
-            if (value.Length > 0) {
-                if (!CommandParser.GetInt(p, args[0], "Interval", ref Interval)) return false; 
+            if (args.Length > 0) {
+                if (!CommandParser.GetInt(p, bits[0], "Interval", ref Interval)) return false; 
             }
-            if (args.Length  > 1) {
-                if (!CommandParser.GetInt(p, args[1], "Speed", ref Speed)) return false;
+            if (bits.Length  > 1) {
+                if (!CommandParser.GetInt(p, bits[1], "Speed", ref Speed)) return false;
             }
             return true;
         }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { "&T/BotAI add [name] spin <interval> <speed>",
+        static string[] help = new string[] { 
+            "&T/BotAI add [name] spin <interval> <speed>",
             "&HCauses the bot to spin around for a period of time.",
             "&H  <interval> is in tenths of a second, so an interval of 20 means " +
             "spin for two seconds. (defaults to 1 second)",
@@ -103,7 +104,8 @@ namespace MCGalaxy.Bots
         public override string Serialise() { return "nod " + SerialiseArgs(); }
         
         public override string[] Help { get { return help; } }
-        static string[] help = new string[] { "&T/BotAI add [name] nod <interval> <speed>",
+        static string[] help = new string[] { 
+            "&T/BotAI add [name] nod <interval> <speed>",
             "&HCauses the bot to nod up and down for a period of time.",
             "&H  <interval> is in tenths of a second, so an interval of 20 means " +
             "nod for two seconds. (defaults to 1 second)",

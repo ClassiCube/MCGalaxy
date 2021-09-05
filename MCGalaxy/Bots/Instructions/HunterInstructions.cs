@@ -78,15 +78,15 @@ namespace MCGalaxy.Bots
         
         public override string Serialise() { return "hunt " + SearchRadius; }
         
-        public override void Deserialise(string value) {
-            if (value.Length == 0) return;
-            SearchRadius = int.Parse(value);
+        public override void Deserialise(string args) {
+            if (args.Length == 0) return;
+            SearchRadius = int.Parse(args);
         }
         
-        public override bool Parse(Player p, string value) {
-        	if (value.Length == 0) return true;
+        public override bool Parse(Player p, string args) {
+        	if (args.Length == 0) return true;
         	
-        	return CommandParser.GetInt(p, value, "Search radius", ref SearchRadius);
+        	return CommandParser.GetInt(p, args, "Search radius", ref SearchRadius);
         }
         
         public override string[] Help { get { return help; } }
@@ -156,15 +156,15 @@ namespace MCGalaxy.Bots
         
         public override string Serialise() { return "stare " + SearchRadius; }
         
-        public override void Deserialise(string value) {
-            if (value.Length == 0) return;
-            SearchRadius = int.Parse(value);
+        public override void Deserialise(string args) {
+            if (args.Length == 0) return;
+            SearchRadius = int.Parse(args);
         }
            
-        public override bool Parse(Player p, string value) {
-        	if (value.Length == 0) return true;
+        public override bool Parse(Player p, string args) {
+        	if (args.Length == 0) return true;
         	
-        	return CommandParser.GetInt(p, value, "Search radius", ref SearchRadius);
+        	return CommandParser.GetInt(p, args, "Search radius", ref SearchRadius);
         }
         
         public override string[] Help { get { return help; } }

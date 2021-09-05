@@ -41,16 +41,16 @@ namespace MCGalaxy.Bots
             return Target.X + " " + Target.Y + " " + Target.Z + " " + Yaw + " " + Pitch;
         }
         
-        public override void Deserialise(string value) {
-            string[] args = value.SplitSpaces();
-            Target.X = int.Parse(args[0]);
-            Target.Y = int.Parse(args[1]);
-            Target.Z = int.Parse(args[2]);
-            Yaw      = byte.Parse(args[3]);
-            Pitch    = byte.Parse(args[4]);
+        public override void Deserialise(string args) {
+            string[] bits = args.SplitSpaces();
+            Target.X = int.Parse(bits[0]);
+            Target.Y = int.Parse(bits[1]);
+            Target.Z = int.Parse(bits[2]);
+            Yaw      = byte.Parse(bits[3]);
+            Pitch    = byte.Parse(bits[4]);
         }
         
-        public override bool Parse(Player p, string value) {
+        public override bool Parse(Player p, string args) {
             Target = p.Pos;
             Yaw    = p.Rot.RotY;
             Pitch  = p.Rot.HeadX;
@@ -130,14 +130,14 @@ namespace MCGalaxy.Bots
         
         public override string Serialise() { return "speed " + Speed; }
         
-        public override void Deserialise(string value) {
-            Speed = int.Parse(value);
+        public override void Deserialise(string args) {
+            Speed = int.Parse(args);
         }
 
-        public override bool Parse(Player p, string value) {
-        	if (value.Length == 0) return true;
+        public override bool Parse(Player p, string args) {
+        	if (args.Length == 0) return true;
         	
-        	return CommandParser.GetInt(p, value, "Speed", ref Speed);
+        	return CommandParser.GetInt(p, args, "Speed", ref Speed);
         }
         
         public override string[] Help { get { return help; } }

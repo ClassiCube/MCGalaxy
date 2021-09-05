@@ -71,17 +71,17 @@ namespace MCGalaxy.Bots
         
         public override string Serialise() { return "linkscript " + AI;  }
         
-        public override void Deserialise(string value) {
-            AI = value;
+        public override void Deserialise(string args) {
+            AI = args;
         }
         
-        public override bool Parse(Player p, string value) {
-            if (value.Length == 0) {
+        public override bool Parse(Player p, string args) {
+            if (args.Length == 0) {
                 p.Message("LinkScript requires a script name as a parameter");
                 return false;
             }
             
-            AI = value;
+            AI = args;
             return true;
         }
         
@@ -111,14 +111,14 @@ namespace MCGalaxy.Bots
         
         public override string Serialise() { return "wait " + Interval; }
         
-        public override void Deserialise(string value) {
-            Interval = int.Parse(value);
+        public override void Deserialise(string args) {
+            Interval = int.Parse(args);
         }
         
-        public override bool Parse(Player p, string value) {
-            if (value.Length == 0) return true;
+        public override bool Parse(Player p, string args) {
+            if (args.Length == 0) return true;
             
-            return CommandParser.GetInt(p, value, "Interval", ref Interval);
+            return CommandParser.GetInt(p, args, "Interval", ref Interval);
         }
         
         public override string[] Help { get { return help; } }
