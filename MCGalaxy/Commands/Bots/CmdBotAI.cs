@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Bots{
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            string[] args = message.SplitSpaces();
+            string[] args = message.SplitSpaces(4);
             string cmd = args[0];
             if (IsListCommand(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
@@ -101,8 +101,9 @@ namespace MCGalaxy.Commands.Bots{
                 }
             }
 
-            string action = args.Length > 2 ? args[2] : "";
-            ScriptFile.Append(p, ai, action, args);
+            string cmd = args.Length > 2 ? args[2] : "";
+            string val = args.Length > 3 ? args[3] : "";
+            ScriptFile.Append(p, ai, cmd, val);
         }
         
         void HandleList(Player p, string modifier) {

@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Bots 
 {  
@@ -74,13 +75,14 @@ namespace MCGalaxy.Bots
             AI = value;
         }
         
-        public override void Output(Player p, string[] args, TextWriter w) {
-            string script = args.Length > 3 ? args[3] : "";
-            if (script.Length == 0) {
+        public override bool Parse(Player p, string value) {
+            if (value.Length == 0) {
                 p.Message("LinkScript requires a script name as a parameter");
-            } else {
-                AI = script;
+                return false;
             }
+            
+            AI = value;
+            return true;
         }
         
         public override string[] Help { get { return help; } }
@@ -93,7 +95,7 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
     public sealed class WaitInstruction : BotInstruction 
     {
-        public short Interval = 10;
+        public int Interval = 10;
 
         public override bool Execute(PlayerBot bot) {
             if (bot.countdown == 0) {
@@ -110,12 +112,13 @@ namespace MCGalaxy.Bots
         public override string Serialise() { return "wait " + Interval; }
         
         public override void Deserialise(string value) {
-            Interval = short.Parse(value);
+            Interval = int.Parse(value);
         }
         
-        public override void Output(Player p, string[] args, TextWriter w) {
-            string time = args.Length > 3 ? args[3] : "10";
-            Interval = short.Parse(time);
+        public override bool Parse(Player p, string value) {
+            if (value.Length == 0) return true;
+            
+            return CommandParser.GetInt(p, value, "Interval", ref Interval);
         }
         
         public override string[] Help { get { return help; } }

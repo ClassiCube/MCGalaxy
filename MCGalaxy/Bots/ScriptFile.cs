@@ -55,7 +55,7 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        public static void Append(Player p, string ai, string cmd, string[] args) {
+        public static void Append(Player p, string ai, string cmd, string args) {
             if (cmd.Length == 0)      cmd = "walk";
             if (cmd.CaselessEq("tp")) cmd = "teleport";
 
@@ -69,14 +69,10 @@ namespace MCGalaxy.Bots {
                 killPerms.MessageCannotUse(p);
                 return;
             }
+            if (!ins.Parse(p, args)) return;
                 
             using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                try {
-                    ins.Output(p, args, w);
-                } catch {
-                    p.Message("Invalid arguments given for instruction " + ins.Name);
-                    return;
-                }
+                w.WriteLine(ins.Serialise());
             }
             p.Message("Appended " + cmd + " instruction to bot AI &b" + ai);
         }

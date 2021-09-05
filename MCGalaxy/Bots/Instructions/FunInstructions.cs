@@ -16,15 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Bots 
 {
     /// <summary> Causes the bot to nod spin around for a certain interval </summary>
     public class SpinInstruction : BotInstruction 
     {
-        public short Interval = 10;
-        public short Speed    = 2;
+        public int Interval = 10;
+        public int Speed    = 2;
 
         public override bool Execute(PlayerBot bot) {
             if (bot.countdown == 0) { bot.countdown = Interval; return true; }
@@ -44,16 +44,20 @@ namespace MCGalaxy.Bots
         
         public override void Deserialise(string value) {
             string[] args = value.SplitSpaces();
-            Interval = short.Parse(args[0]);
-            Speed    = short.Parse(args[1]);
+            Interval = int.Parse(args[0]);
+            Speed    = int.Parse(args[1]);
         }
         
-       public override void Output(Player p, string[] args, TextWriter w) {
-            string time  = args.Length > 3 ? args[3] : "10";
-            string speed = args.Length > 4 ? args[4] : "2";
+        public override bool Parse(Player p, string value) {
+            string[] args = value.SplitSpaces(2);
             
-            Interval = short.Parse(time);
-            Speed    = short.Parse(speed);
+            if (value.Length > 0) {
+                if (!CommandParser.GetInt(p, args[0], "Interval", ref Interval)) return false; 
+            }
+            if (args.Length  > 1) {
+                if (!CommandParser.GetInt(p, args[1], "Speed", ref Speed)) return false;
+            }
+            return true;
         }
         
         public override string[] Help { get { return help; } }

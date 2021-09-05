@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Bots 
 {   
@@ -50,10 +50,11 @@ namespace MCGalaxy.Bots
             Pitch    = byte.Parse(args[4]);
         }
         
-        public override void Output(Player p, string[] args, TextWriter w) {
+        public override bool Parse(Player p, string value) {
             Target = p.Pos;
             Yaw    = p.Rot.RotY;
             Pitch  = p.Rot.HeadX;
+            return true;
         }
         
         public override string[] Help { get { return help; } }
@@ -118,7 +119,7 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to change how fast it moves </summary>
     public sealed class SpeedInstruction : BotInstruction 
     {
-        public short Speed = 100;
+        public int Speed = 100;
 
         public override bool Execute(PlayerBot bot) {
             bot.movementSpeed = (int)Math.Round(3m * Speed / 100m);
@@ -130,12 +131,13 @@ namespace MCGalaxy.Bots
         public override string Serialise() { return "speed " + Speed; }
         
         public override void Deserialise(string value) {
-            Speed = short.Parse(value);
+            Speed = int.Parse(value);
         }
-        
-        public override void Output(Player p, string[] args, TextWriter w) {
-            string time = args.Length > 3 ? args[3] : "10";
-            Speed = short.Parse(time);
+
+        public override bool Parse(Player p, string value) {
+        	if (value.Length == 0) return true;
+        	
+        	return CommandParser.GetInt(p, value, "Speed", ref Speed);
         }
         
         public override string[] Help { get { return help; } }

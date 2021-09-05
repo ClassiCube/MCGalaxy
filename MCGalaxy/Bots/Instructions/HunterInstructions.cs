@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
+using MCGalaxy.Commands;
 using MCGalaxy.Maths;
 
 namespace MCGalaxy.Bots 
@@ -80,13 +80,13 @@ namespace MCGalaxy.Bots
         
         public override void Deserialise(string value) {
             if (value.Length == 0) return;
-            SearchRadius = ushort.Parse(value);
+            SearchRadius = int.Parse(value);
         }
         
-        public override void Output(Player p, string[] args, TextWriter w) {
-            if (args.Length > 3) {
-                SearchRadius = ushort.Parse(args[3]);
-            }
+        public override bool Parse(Player p, string value) {
+        	if (value.Length == 0) return true;
+        	
+        	return CommandParser.GetInt(p, value, "Search radius", ref SearchRadius);
         }
         
         public override string[] Help { get { return help; } }
@@ -158,13 +158,13 @@ namespace MCGalaxy.Bots
         
         public override void Deserialise(string value) {
             if (value.Length == 0) return;
-            SearchRadius = ushort.Parse(value);
+            SearchRadius = int.Parse(value);
         }
-        
-        public override void Output(Player p, string[] args, TextWriter w) {
-            if (args.Length > 3) {
-                SearchRadius = ushort.Parse(args[3]);
-            }
+           
+        public override bool Parse(Player p, string value) {
+        	if (value.Length == 0) return true;
+        	
+        	return CommandParser.GetInt(p, value, "Search radius", ref SearchRadius);
         }
         
         public override string[] Help { get { return help; } }

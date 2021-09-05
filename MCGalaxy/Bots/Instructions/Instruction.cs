@@ -38,10 +38,8 @@ namespace MCGalaxy.Bots
         /// <summary> Deserialises the arguments for this instruction from the given string </summary>
         public virtual void Deserialise(string value) { }
         
-        /// <summary> Writes the data for this instruction to the given AI file. </summary>
-        public virtual void Output(Player p, string[] args, TextWriter w) {
-            w.WriteLine(Name);
-        }
+        /// <summary> Parses arguments given by the player to instruction arguments </summary>
+        public virtual bool Parse(Player p, string value) { return true; }
         
         /// <summary> Returns the help for this instruction. n</summary>
         public abstract string[] Help { get; }
