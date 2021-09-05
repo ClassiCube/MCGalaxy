@@ -76,8 +76,9 @@ namespace MCGalaxy.Bots
             return dx <= 8 && dy <= 16 && dz <= 8;
         }
         
-        public override void Parse(string[] args) {
-            if (args.Length > 1) SearchRadius = ushort.Parse(args[1]);
+        public override void Deserialise(string value) {
+            if (value.Length == 0) return;
+            SearchRadius = ushort.Parse(value);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
@@ -138,8 +139,9 @@ namespace MCGalaxy.Bots
             return true;
         }
         
-        public override void Parse(string[] args) {
-            if (args.Length > 1) SearchRadius = ushort.Parse(args[1]);
+        public override void Deserialise(string value) {
+            if (value.Length == 0) return;
+            SearchRadius = ushort.Parse(value);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {

@@ -32,8 +32,8 @@ namespace MCGalaxy.Bots
         /// next instruction in the same tick. </returns>
         public abstract bool Execute(PlayerBot bot);
         
-        /// <summary> Parses the given arguments which contains the data for this instruction. </summary>
-        public virtual void Parse(string[] args) { }
+        /// <summary> Deserialises the arguments for this instruction from the given string </summary>
+        public virtual void Deserialise(string value) { }
         
         /// <summary> Writes the data for this instruction to the given AI file. </summary>
         public virtual void Output(Player p, string[] args, TextWriter w) {
@@ -45,16 +45,16 @@ namespace MCGalaxy.Bots
         
         /// <summary> All instructions that bots can execute. </summary>
         public static Dictionary<string, Func<BotInstruction>> Instructions = new Dictionary<string, Func<BotInstruction>>() {
-            { "Nod", () => new NodInstruction() }, { "Spin", () => new SpinInstruction() },
+            { "nod", () => new NodInstruction() }, { "spin", () => new SpinInstruction() },
             // hunting related instructions
-            { "Hunt",  () => new HuntInstruction()  }, { "Kill", () => new KillInstruction() }, 
-            { "Stare", () => new StareInstruction() },
+            { "hunt",  () => new HuntInstruction()  }, { "kill", () => new KillInstruction() }, 
+            { "stare", () => new StareInstruction() },
             // movement related instructions
-            { "Teleport", () => new TeleportInstruction() }, { "Walk",  () => new WalkInstruction() },
-            { "Jump",     () => new JumpInstruction()     }, { "Speed", () => new SpeedInstruction() },
+            { "teleport", () => new TeleportInstruction() }, { "walk",  () => new WalkInstruction() },
+            { "jump",     () => new JumpInstruction()     }, { "speed", () => new SpeedInstruction() },
             // other instructions
-            { "Remove",     () => new RemoveInstruction() },     { "Reset", () => new ResetInstruction() }, 
-            { "LinkScript", () => new LinkScriptInstruction() }, { "Wait", () => new WaitInstruction() },
+            { "remove",     () => new RemoveInstruction() },     { "reset", () => new ResetInstruction() }, 
+            { "linkscript", () => new LinkScriptInstruction() }, { "wait", () => new WaitInstruction() },
         };
         
         /// <summary> Creates the instruction which has the given identifying name. </summary>

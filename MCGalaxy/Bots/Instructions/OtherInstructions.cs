@@ -66,8 +66,8 @@ namespace MCGalaxy.Bots
             bot.NextInstruction(); return true;
         }
         
-        public override void Parse(string[] args) {
-            AI = args[1];
+        public override void Deserialise(string value) {
+            AI = value;
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
@@ -103,8 +103,8 @@ namespace MCGalaxy.Bots
             return true;
         }
         
-        public override void Parse(string[] args) {
-            Interval = short.Parse(args[1]);
+        public override void Deserialise(string value) {
+            Interval = short.Parse(value);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {

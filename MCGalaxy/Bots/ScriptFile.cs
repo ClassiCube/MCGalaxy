@@ -39,13 +39,14 @@ namespace MCGalaxy.Bots {
 
             foreach (string line in instructions) {
                 if (line.IsCommentLine()) continue;
-                string[] args = line.SplitSpaces();
+                string[] args = line.SplitSpaces(2);
 
                 try {
                     BotInstruction ins = BotInstruction.Create(args[0]);
                     if (ins == null) continue;
                     
-                    ins.Parse(args);
+                    string value = args.Length > 1 ? args[1] : "";
+                    ins.Deserialise(value);
                     bot.Instructions.Add(ins);
                 } catch {
                     p.Message("AI file corrupt."); return false;
@@ -54,30 +55,30 @@ namespace MCGalaxy.Bots {
             return true;
         }
         
-        public static string Append(Player p, string ai, string cmd, string[] args) {
-            using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
-                if (cmd.Length == 0)      cmd = "walk";
-                if (cmd.CaselessEq("tp")) cmd = "teleport";
+        public static void Append(Player p, string ai, string cmd, string[] args) {
+            if (cmd.Length == 0)      cmd = "walk";
+            if (cmd.CaselessEq("tp")) cmd = "teleport";
 
-                BotInstruction ins = BotInstruction.Create(cmd);
-                if (ins == null) {
-                    p.Message("Could not find instruction \"" + cmd + "\""); return null;
-                }
+            BotInstruction ins = BotInstruction.Create(cmd);
+            if (ins == null) {
+                p.Message("Could not find instruction \"" + cmd + "\""); return;
+            }
+            
+            CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);
+            if ((ins is KillInstruction) && !killPerms.UsableBy(p.Rank)) {
+                killPerms.MessageCannotUse(p);
+                return;
+            }
                 
-                CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);
-                if (ins.Name.CaselessEq("kill") && !killPerms.UsableBy(p.Rank)) {
-                    killPerms.MessageCannotUse(p); 
-                    return null;
-                }
-                
+            using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
                 try {
                     ins.Output(p, args, w);
                 } catch {
                     p.Message("Invalid arguments given for instruction " + ins.Name);
-                    return null;
+                    return;
                 }
-                return ins.Name;
             }
+            p.Message("Appended " + cmd + " instruction to bot AI &b" + ai);
         }
     }
 }

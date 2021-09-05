@@ -38,9 +38,10 @@ namespace MCGalaxy.Bots
             return true;
         }
         
-        public override void Parse(string[] args) {
-            Interval  = short.Parse(args[1]);
-            Speed     = short.Parse(args[2]);
+        public override void Deserialise(string value) {
+            string[] args = value.SplitSpaces();
+            Interval = short.Parse(args[0]);
+            Speed    = short.Parse(args[1]);
         }
         
        public override void Output(Player p, string[] args, TextWriter w) {

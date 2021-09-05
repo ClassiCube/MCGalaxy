@@ -35,12 +35,13 @@ namespace MCGalaxy.Bots
             return true;
         }
         
-        public override void Parse(string[] args) {
-            Target.X = int.Parse(args[1]);
-            Target.Y = int.Parse(args[2]);
-            Target.Z = int.Parse(args[3]);
-            Yaw      = byte.Parse(args[4]);
-            Pitch    = byte.Parse(args[5]);
+        public override void Deserialise(string value) {
+            string[] args = value.SplitSpaces();
+            Target.X = int.Parse(args[0]);
+            Target.Y = int.Parse(args[1]);
+            Target.Z = int.Parse(args[2]);
+            Yaw      = byte.Parse(args[3]);
+            Pitch    = byte.Parse(args[4]);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
@@ -112,8 +113,8 @@ namespace MCGalaxy.Bots
             bot.NextInstruction(); return false;
         }
         
-        public override void Parse(string[] args) {
-            Speed = short.Parse(args[1]);
+        public override void Deserialise(string value) {
+        	Speed = short.Parse(value);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {

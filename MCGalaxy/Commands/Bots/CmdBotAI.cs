@@ -102,10 +102,7 @@ namespace MCGalaxy.Commands.Bots{
             }
 
             string action = args.Length > 2 ? args[2] : "";
-            string instruction = ScriptFile.Append(p, ai, action, args);
-            if (instruction != null) {
-                p.Message("Appended " + instruction + " instruction to bot AI &b" + ai);
-            }
+            ScriptFile.Append(p, ai, action, args);
         }
         
         void HandleList(Player p, string modifier) {
