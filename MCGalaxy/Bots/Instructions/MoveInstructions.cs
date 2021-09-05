@@ -35,6 +35,12 @@ namespace MCGalaxy.Bots
             return true;
         }
         
+        
+        public override string Serialise() { return "teleport " + SerialiseArgs(); }
+        protected string SerialiseArgs() {
+            return Target.X + " " + Target.Y + " " + Target.Z + " " + Yaw + " " + Pitch;
+        }
+        
         public override void Deserialise(string value) {
             string[] args = value.SplitSpaces();
             Target.X = int.Parse(args[0]);
@@ -45,7 +51,9 @@ namespace MCGalaxy.Bots
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
-            w.WriteLine(Name + " " + p.Pos.X + " " + p.Pos.Y + " " + p.Pos.Z + " " + p.Rot.RotY + " " + p.Rot.HeadX);
+            Target = p.Pos;
+            Yaw    = p.Rot.RotY;
+            Pitch  = p.Rot.HeadX;
         }
         
         public override string[] Help { get { return help; } }
@@ -74,6 +82,9 @@ namespace MCGalaxy.Bots
             bot.AdvanceRotation(); return true;
         }
         
+        
+        public override string Serialise() { return "walk " + SerialiseArgs(); }
+        
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
             "&T/BotAI add [name] walk",
@@ -92,6 +103,9 @@ namespace MCGalaxy.Bots
             bot.NextInstruction(); return false;
         }
         
+        
+        public override string Serialise() { return "jump"; }
+        
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
             "&T/BotAI add [name] jump",
@@ -104,7 +118,6 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to change how fast it moves </summary>
     public sealed class SpeedInstruction : BotInstruction 
     {
-        public SpeedInstruction() { Name = "speed"; }
         public short Speed = 100;
 
         public override bool Execute(PlayerBot bot) {
@@ -113,13 +126,16 @@ namespace MCGalaxy.Bots
             bot.NextInstruction(); return false;
         }
         
+        
+        public override string Serialise() { return "speed " + Speed; }
+        
         public override void Deserialise(string value) {
-        	Speed = short.Parse(value);
+            Speed = short.Parse(value);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
             string time = args.Length > 3 ? args[3] : "10";
-            w.WriteLine(Name + " " + short.Parse(time));
+            Speed = short.Parse(time);
         }
         
         public override string[] Help { get { return help; } }

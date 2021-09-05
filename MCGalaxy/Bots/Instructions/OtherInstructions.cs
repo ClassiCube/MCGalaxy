@@ -23,11 +23,12 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to reset to the and execute first instruction </summary>
     public sealed class ResetInstruction : BotInstruction 
     {
-        public ResetInstruction() { Name = "reset"; }
-
         public override bool Execute(PlayerBot bot) {
             bot.cur = 0; return false;
         }
+        
+        
+        public override string Serialise() { return "reset"; }
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] { 
@@ -39,11 +40,12 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to be removed from the world </summary>
     public sealed class RemoveInstruction : BotInstruction 
     {
-        public RemoveInstruction() { Name = "remove"; }
-
         public override bool Execute(PlayerBot bot) {
             PlayerBot.Remove(bot); return true;
         }
+        
+        
+        public override string Serialise() { return "remove"; }
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] { 
@@ -55,7 +57,6 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to switch to a different AI </summary>
     public sealed class LinkScriptInstruction : BotInstruction 
     {
-        public LinkScriptInstruction() { Name = "linkscript"; }
         public string AI;
 
         public override bool Execute(PlayerBot bot) {
@@ -66,6 +67,9 @@ namespace MCGalaxy.Bots
             bot.NextInstruction(); return true;
         }
         
+        
+        public override string Serialise() { return "linkscript " + AI;  }
+        
         public override void Deserialise(string value) {
             AI = value;
         }
@@ -75,7 +79,7 @@ namespace MCGalaxy.Bots
             if (script.Length == 0) {
                 p.Message("LinkScript requires a script name as a parameter");
             } else {
-                w.WriteLine(Name + " " + script);
+                AI = script;
             }
         }
         
@@ -89,7 +93,6 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
     public sealed class WaitInstruction : BotInstruction 
     {
-        public WaitInstruction() { Name = "wait"; }
         public short Interval = 10;
 
         public override bool Execute(PlayerBot bot) {
@@ -103,13 +106,16 @@ namespace MCGalaxy.Bots
             return true;
         }
         
+        
+        public override string Serialise() { return "wait " + Interval; }
+        
         public override void Deserialise(string value) {
             Interval = short.Parse(value);
         }
         
         public override void Output(Player p, string[] args, TextWriter w) {
             string time = args.Length > 3 ? args[3] : "10";
-            w.WriteLine(Name + " " + short.Parse(time));
+            Interval = short.Parse(time);
         }
         
         public override string[] Help { get { return help; } }

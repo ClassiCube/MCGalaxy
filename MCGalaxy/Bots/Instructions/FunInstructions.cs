@@ -23,8 +23,8 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to nod spin around for a certain interval </summary>
     public class SpinInstruction : BotInstruction 
     {
-        public SpinInstruction() { Name = "spin"; }
-        public short Interval, Speed;
+        public short Interval = 10;
+        public short Speed    = 2;
 
         public override bool Execute(PlayerBot bot) {
             if (bot.countdown == 0) { bot.countdown = Interval; return true; }
@@ -38,6 +38,10 @@ namespace MCGalaxy.Bots
             return true;
         }
         
+                
+        public override string Serialise() { return "spin " + SerialiseArgs(); }
+        protected string SerialiseArgs()   { return Interval + " " + Speed; }
+        
         public override void Deserialise(string value) {
             string[] args = value.SplitSpaces();
             Interval = short.Parse(args[0]);
@@ -47,7 +51,9 @@ namespace MCGalaxy.Bots
        public override void Output(Player p, string[] args, TextWriter w) {
             string time  = args.Length > 3 ? args[3] : "10";
             string speed = args.Length > 4 ? args[4] : "2";
-            w.WriteLine(Name + " " + short.Parse(time) + " " + short.Parse(speed));
+            
+            Interval = short.Parse(time);
+            Speed    = short.Parse(speed);
         }
         
         public override string[] Help { get { return help; } }
@@ -62,8 +68,6 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to nod down up and down for a certain interval </summary>
     public sealed class NodInstruction : SpinInstruction
     {
-        public NodInstruction() { Name = "nod"; }
-
         public override bool Execute(PlayerBot bot) {
             if (bot.countdown == 0) { bot.countdown = Interval; return true; }
             bot.countdown--;
@@ -90,6 +94,9 @@ namespace MCGalaxy.Bots
             if (bot.countdown == 0) { bot.NextInstruction(); return false; }
             return true;
         }
+        
+        
+        public override string Serialise() { return "nod " + SerialiseArgs(); }
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] { "&T/BotAI add [name] nod <interval> <speed>",

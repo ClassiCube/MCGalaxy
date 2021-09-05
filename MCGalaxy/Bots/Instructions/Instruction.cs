@@ -32,6 +32,9 @@ namespace MCGalaxy.Bots
         /// next instruction in the same tick. </returns>
         public abstract bool Execute(PlayerBot bot);
         
+        /// <summary> Serialises this instruction into a string </summary>
+        public abstract string Serialise();
+        
         /// <summary> Deserialises the arguments for this instruction from the given string </summary>
         public virtual void Deserialise(string value) { }
         

@@ -24,7 +24,6 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to move towards the closest player, within a defined search radius </summary>
     public sealed class HuntInstruction : BotInstruction 
     {
-        public HuntInstruction() { Name = "hunt"; }
         public int SearchRadius = 75;
         
         public override bool Execute(PlayerBot bot) {
@@ -76,6 +75,9 @@ namespace MCGalaxy.Bots
             return dx <= 8 && dy <= 16 && dz <= 8;
         }
         
+        
+        public override string Serialise() { return "hunt " + SearchRadius; }
+        
         public override void Deserialise(string value) {
             if (value.Length == 0) return;
             SearchRadius = ushort.Parse(value);
@@ -83,9 +85,7 @@ namespace MCGalaxy.Bots
         
         public override void Output(Player p, string[] args, TextWriter w) {
             if (args.Length > 3) {
-                w.WriteLine(Name + " " + ushort.Parse(args[3]));
-            } else {
-                w.WriteLine(Name);
+                SearchRadius = ushort.Parse(args[3]);
             }
         }
         
@@ -100,8 +100,6 @@ namespace MCGalaxy.Bots
     /// <summary> Causes the bot to kill nearby players </summary>
     public sealed class KillInstruction : BotInstruction 
     {
-        public KillInstruction() { Name = "kill"; }
-
         public override bool Execute(PlayerBot bot) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
@@ -120,6 +118,9 @@ namespace MCGalaxy.Bots
             bot.NextInstruction(); return true;
         }
         
+        
+        public override string Serialise() { return "kill"; }
+        
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
             "&T/BotAI add [name] kill",
@@ -127,8 +128,8 @@ namespace MCGalaxy.Bots
         };
     }
     
-    public sealed class StareInstruction : BotInstruction {
-        public StareInstruction() { Name = "stare"; }
+    public sealed class StareInstruction : BotInstruction 
+    {
         public int SearchRadius = 20000;
         
         public override bool Execute(PlayerBot bot) {
@@ -137,19 +138,6 @@ namespace MCGalaxy.Bots
             if (closest == null) return true;
             FaceTowards(bot, closest);
             return true;
-        }
-        
-        public override void Deserialise(string value) {
-            if (value.Length == 0) return;
-            SearchRadius = ushort.Parse(value);
-        }
-        
-        public override void Output(Player p, string[] args, TextWriter w) {
-            if (args.Length > 3) {
-                w.WriteLine(Name + " " + ushort.Parse(args[3]));
-            } else {
-                w.WriteLine(Name);
-            }
         }
         
         static void FaceTowards(PlayerBot bot, Player p) {
@@ -163,6 +151,20 @@ namespace MCGalaxy.Bots
             Orientation rot = bot.Rot;
             DirUtils.GetYawPitch(dir, out rot.RotY, out rot.HeadX);
             bot.Rot = rot;
+        }
+        
+        
+        public override string Serialise() { return "stare " + SearchRadius; }
+        
+        public override void Deserialise(string value) {
+            if (value.Length == 0) return;
+            SearchRadius = ushort.Parse(value);
+        }
+        
+        public override void Output(Player p, string[] args, TextWriter w) {
+            if (args.Length > 3) {
+                SearchRadius = ushort.Parse(args[3]);
+            }
         }
         
         public override string[] Help { get { return help; } }
