@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Bots {
             if (target == null) return;
             
             int x = target.Pos.X, y = target.Pos.Y - Entities.CharacterHeight, z = target.Pos.Z;
-            p.Message("{0} &Sis on {1}", p.FormatNick(target.DisplayName), target.level.ColoredName);
+            p.Message("Position of bot {0}:", p.FormatNick(target.DisplayName);
             p.Message("   X: &b{0:F5} &SY: &b{1:F5} &SZ: &b{2:F5}",
                            x / 32.0, y / 32.0, z / 32.0);
             
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Bots {
 
         public override void Help(Player p) {
             p.Message("&T/BotWhere [name]");
-            p.Message("&HDisplays level, position, and orientation of that bot.");
+            p.Message("&HDisplays position, and orientation of that bot.");
         }
     }
 }
