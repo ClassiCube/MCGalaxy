@@ -41,6 +41,7 @@ namespace MCGalaxy.Modules.Relay.Discord
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
+        public override string UserID    { get { return botUserID; } }
         public DiscordConfig Config;
         
         TextFile replacementsFile = new TextFile("text/discord/replacements.txt",

@@ -70,3 +70,9 @@ Compiling
 Copyright/License
 -----------------
 See LICENSE for MCGalaxy license, and license.txt for code used from other software.
+
+Docker support
+-----------------
+Some **unofficial** dockerfiles for running MCGalaxy in Docker:
+* [using Mono](https://github.com/UnknownShadow200/MCGalaxy/pull/577/files)
+* [using .NET core](https://github.com/UnknownShadow200/MCGalaxy/pull/629/files)

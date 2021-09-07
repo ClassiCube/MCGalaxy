@@ -23,11 +23,13 @@ using System;
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 #endif
 
-namespace MCGalaxy.Scripting {
-    public sealed class CSCompiler : ICodeDomCompiler {        
+namespace MCGalaxy.Scripting 
+{
+    public sealed class CSCompiler : ICodeDomCompiler 
+    {
         public override string FileExtension { get { return ".cs"; } }
         public override string ShortName     { get { return "CS"; } }  
-        public override string FullName  { get { return "CSharp"; } }        
+        public override string FullName      { get { return "CSharp"; } }        
 
         protected override CodeDomProvider CreateProvider() {
 #if NETSTANDARD
@@ -45,7 +47,7 @@ namespace MCGalaxy.Scripting {
             get {
                 return @"//\tAuto-generated command skeleton class.
 //\tUse this as a basis for custom MCGalaxy commands.
-//\tFile and class should be named a specific way. For example, /update is named 'CmdUpdate.cs' for the file, and 'CmdUpdate' for the class.
+//\tNaming should be kept consistent. (e.g. /update command should have a class name of 'CmdUpdate' and a filename of 'CmdUpdate.cs')
 // As a note, MCGalaxy is designed for .NET 4.0
 
 // To reference other assemblies, put a ""//reference [assembly filename]"" at the top of the file
@@ -126,10 +128,11 @@ namespace MCGalaxy
         }
     }
     
-    public sealed class VBCompiler : ICodeDomCompiler {
+    public sealed class VBCompiler : ICodeDomCompiler 
+    {
         public override string FileExtension { get { return ".vb"; } }
         public override string ShortName     { get { return "VB"; } }
-        public override string FullName  { get { return "Visual Basic"; } }
+        public override string FullName      { get { return "Visual Basic"; } }
         
         protected override CodeDomProvider CreateProvider() {
 #if NETSTANDARD
@@ -140,17 +143,17 @@ namespace MCGalaxy
         }
         
         protected override void PrepareArgs(CompilerParameters args) { }
-        protected override string ReferenceLine { get { return "'reference "; } }
+        protected override string CommentPrefix { get { return "'"; } }
         
         public override string CommandSkeleton {
             get {
                 return @"'\tAuto-generated command skeleton class.
 '\tUse this as a basis for custom MCGalaxy commands.
-'\tFile and class should be named a specific way. For example, /update is named 'CmdUpdate.vb' for the file, and 'CmdUpdate' for the class.
+'\tNaming should be kept consistent. (e.g. /update command should have a class name of 'CmdUpdate' and a filename of 'CmdUpdate.vb')
 ' As a note, MCGalaxy is designed for .NET 4.0.
 
-' To reference other assemblies, put a ""//reference [assembly filename]"" at the top of the file
-'   e.g. to reference the System.Data assembly, put ""//reference System.Data.dll""
+' To reference other assemblies, put a ""'reference [assembly filename]"" at the top of the file
+'   e.g. to reference the System.Data assembly, put ""'reference System.Data.dll""
 
 ' Add any other Imports statements you need after this
 Imports System
