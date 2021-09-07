@@ -22,6 +22,7 @@ namespace MCGalaxy.Commands.Bots {
     public sealed class CmdBotWhere : Command2 {
         public override string name { get { return "BotWhere"; } }
         public override string type { get { return CommandTypes.Information; } }
+        public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) return;
