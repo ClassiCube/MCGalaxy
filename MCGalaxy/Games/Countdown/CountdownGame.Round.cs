@@ -63,6 +63,7 @@ namespace MCGalaxy.Games {
         }
         
         void BeginRound() {
+            if (SpeedType == null || SpeedType == "" || Interval == 0) Interval = 650; SpeedType = "normal";
             string modeSuffix = FreezeMode ? " in freeze mode" : "";
             Map.Message("Starting " + SpeedType + " speed Countdown" + modeSuffix);
             
