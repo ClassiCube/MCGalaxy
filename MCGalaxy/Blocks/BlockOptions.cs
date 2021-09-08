@@ -164,7 +164,7 @@ namespace MCGalaxy.Blocks {
                 p.Message("{1} for {0} removed.", name, type);
             } else {
                 BlockID other;
-                if (!CommandParser.GetBlock(p, msg, out other)) return;
+                if (!CommandParser.GetBlockIfAllowed(p, msg, "use", out other)) return;
                 if (other == block) { p.Message("ID of {0} must be different.", type); return; }
                 
                 target = other;
