@@ -50,8 +50,7 @@ namespace MCGalaxy.Commands.Building {
             }
             
             BlockID block;
-            if (!CommandParser.GetBlock(p, message, out block)) return;
-            if (!CommandParser.IsBlockAllowed(p, "place", block)) return;
+            if (!CommandParser.GetBlockIfAllowed(p, message, "place", out block)) return;
             
             if (p.ModeBlock == block) {
                 p.Message("&b{0} &Smode: &cOFF", Block.GetName(p, p.ModeBlock));

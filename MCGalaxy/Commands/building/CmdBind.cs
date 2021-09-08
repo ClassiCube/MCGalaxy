@@ -45,8 +45,7 @@ namespace MCGalaxy.Commands.Building {
 
             if (args.Length == 2) {
                 BlockID dst;
-                if (!CommandParser.GetBlock(p, args[1], out dst)) return;
-                if (!CommandParser.IsBlockAllowed(p, "bind a block to", dst)) return;
+                if (!CommandParser.GetBlockIfAllowed(p, args[1], "bind a block to", out dst)) return;
                 
                 p.BlockBindings[src] = dst;
                 p.Message("{0} bound to {1}", Block.GetName(p, src), Block.GetName(p, dst));

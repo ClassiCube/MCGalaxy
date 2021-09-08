@@ -27,8 +27,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length < 2) { Help(p); return; }
             
             BlockID block;
-            if (!CommandParser.GetBlock(p, args[0], out block)) return;
-            if (!CommandParser.IsBlockAllowed(p, "change permissions of", block)) return;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], "change permissions of", out block)) return;
 
             BlockPerms perms = BlockPerms.Find(block);
             SetPerms(p, args, data, perms, "block");
