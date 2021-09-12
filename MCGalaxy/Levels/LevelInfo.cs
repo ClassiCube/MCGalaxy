@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.SQL;
 
@@ -104,8 +105,33 @@ namespace MCGalaxy {
             }
             return latest;
         }
-               
         
+        public static void OutputBackups(Player p, string map) {
+            map = map.ToLower();
+            string backupPath = BackupBasePath(map);
+            if (!Directory.Exists(backupPath)) {
+                p.Message(map + " has no backups yet."); return;
+            }
+
+            string[] dirs = Directory.GetDirectories(backupPath);
+            p.Message(map + " has &b" + dirs.Length + " &Sbackups.");
+            int count = 0;
+            StringBuilder custom = new StringBuilder();
+
+            foreach (string path in dirs) {
+                string name = BackupNameFrom(path);
+                int num;
+                if (int.TryParse(name, out num)) continue;
+
+                count++;
+                custom.Append(", " + name);
+            }
+
+            if (count == 0) return;
+            p.Message("&b" + count + " &Sof these are custom-named restores:");
+            p.Message(custom.ToString(2, custom.Length - 2));
+        }
+
         /// <summary> Relative path of a level's property file </summary>
         public static string PropsPath(string name) {
             return "levels/level properties/" + name + ".properties";

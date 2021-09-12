@@ -29,8 +29,16 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
-        
-        public string name, MapName;
+
+        /// <summary>
+        /// The name of the map file, sans extension.
+        /// </summary>
+        public string MapName;
+        /// <summary>
+        /// Same as MapName, unless <cref>IsMuseum</cref>, then it will be prefixed and suffixed to denote museum.
+        /// </summary>
+        public string name;
+
         public string Color { get { return Config.Color; } }
         public string ColoredName { get { return Config.Color + name; } }
         public LevelConfig Config = new LevelConfig();

@@ -17,7 +17,6 @@
  */
 using System;
 using System.IO;
-using System.Text;
 
 namespace MCGalaxy.Commands.World {
     public sealed class CmdRestore : Command2 {        
@@ -28,7 +27,7 @@ namespace MCGalaxy.Commands.World {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { OutputBackups(p); return; }
+            if (message.Length == 0) { LevelInfo.OutputBackups(p, p.level.MapName); return; }
             
             Level lvl;
             string[] args = message.SplitSpaces();
@@ -67,31 +66,6 @@ namespace MCGalaxy.Commands.World {
                 Logger.Log(LogType.Warning, "Restore nulled");
                 File.Copy(LevelInfo.MapPath(lvl.name) + ".backup", LevelInfo.MapPath(lvl.name), true);
             }
-        }
-        
-        static void OutputBackups(Player p) {
-            string backupPath = LevelInfo.BackupBasePath(p.level.name);
-            if (!Directory.Exists(backupPath)) {
-                p.Message(p.level.ColoredName + " &Shas no backups yet."); return;
-            }
-            
-            string[] dirs = Directory.GetDirectories(backupPath);
-            p.Message(p.level.ColoredName + " &Shas &b" + dirs.Length + " &Sbackups.");
-            int count = 0;
-            StringBuilder custom = new StringBuilder();
-            
-            foreach (string path in dirs) {
-                string name = LevelInfo.BackupNameFrom(path);
-                int num;
-                if (int.TryParse(name, out num)) continue;
-                
-                count++;
-                custom.Append(", " + name);
-            }
-
-            if (count == 0) return;
-            p.Message("&b" + count + " &Sof these are custom-named restores:");
-            p.Message(custom.ToString(2, custom.Length - 2));
         }
 
         public override void Help(Player p) {

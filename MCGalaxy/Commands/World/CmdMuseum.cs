@@ -26,21 +26,55 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool SuperUseable { get { return false; } }
 
+        const string currentFlag = "*current";
+        const string latestFlag = "*latest";
+        
         public override void Use(Player p, string message, CommandData data) {
-            string[] args = message.SplitSpaces();
-            string path = args.Length == 1 ? LevelInfo.MapPath(args[0]) : LevelInfo.BackupFilePath(args[0], args[1]);
-            if (!File.Exists(path)) {
-                p.Message("Level or backup could not be found."); return;
-            }
-            
-            string name = null;
-            if (args.Length == 1) {
-                name = "&cMuseum &S(" + args[0] + ")";
+            if (message.Length == 0) { LevelInfo.OutputBackups(p, p.level.MapName); return; }
+
+            string[] args = message.ToLower().SplitSpaces();
+            string mapArg = args.Length > 1 ? args[0] : p.level.MapName;
+            string backupArg = args.Length > 1 ? args[1] : args[0];
+
+            string path;
+            if (backupArg == currentFlag) {
+                path = LevelInfo.MapPath(mapArg);
+                if (!LevelInfo.MapExists(mapArg)) {
+                    if (Directory.Exists(LevelInfo.BackupBasePath(mapArg))) {
+                        p.Message("&WLevel \"{0}\" does not currently exist, &Showever:", mapArg);
+                        LevelInfo.OutputBackups(p, mapArg);
+                    } else {
+                        p.Message("&WLevel \"{0}\" does not exist and no backups could be found.", mapArg);
+                    }
+                    return;
+                }
             } else {
-                name = "&cMuseum &S(" + args[0] + " " + args[1] + ")";
+                if (!Directory.Exists(LevelInfo.BackupBasePath(mapArg))) {
+                    p.Message("Level \"{0}\" has no backups.", mapArg); return;
+                }
+                if (backupArg == latestFlag) {
+                    int latest = LevelInfo.LatestBackup(mapArg);
+                    if (latest == 0) {
+                        p.Message("&WLevel \"{0}\" does not have any numbered backups, " +
+                            "so the latest backup could not be determined.", mapArg);
+                        return;
+                    }
+                    backupArg = latest.ToString();
+                }
+                path = LevelInfo.BackupFilePath(mapArg, backupArg);
+            }
+            if (!File.Exists(path)) {
+                p.Message("Backup \"{0}\" for {1} could not be found.", backupArg, mapArg); return;
+            }
+
+            string formattedMuseumName;
+            if (backupArg == currentFlag) {
+                formattedMuseumName = "&cMuseum &S(" + mapArg + ")";
+            } else {
+                formattedMuseumName = "&cMuseum &S(" + mapArg + " " + backupArg + ")";
             }
             
-            if (p.level.name.CaselessEq(name)) {
+            if (p.level.name.CaselessEq(formattedMuseumName)) {
                 p.Message("You are already in this museum."); return;
             }
             if (Interlocked.CompareExchange(ref p.LoadingMuseum, 1, 0) == 1) {
@@ -48,14 +82,14 @@ namespace MCGalaxy.Commands.World {
             }
             
             try {
-                JoinMuseum(p, name, args[0].ToLower(), path);
+                JoinMuseum(p, formattedMuseumName, mapArg, path);
             } finally {
                 Interlocked.Exchange(ref p.LoadingMuseum, 0);
             }
         }
         
-        static void JoinMuseum(Player p, string name, string mapName, string path) {
-            Level lvl   = IMapImporter.GetFor(path).Read(path, name, false);
+        static void JoinMuseum(Player p, string formattedMuseumName, string mapName, string path) {
+            Level lvl   = IMapImporter.GetFor(path).Read(path, formattedMuseumName, false);
             lvl.MapName = mapName;
             
             SetLevelProps(lvl);
@@ -71,8 +105,13 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("&T/Museum [level] [backup]");
-            p.Message("&HTeleports you to a backup of the given level.");
+            p.Message("&T/Museum <level> [backup]");
+            p.Message("&HVisits the [backup] of <level>");
+            p.Message("&T/Museum <level> *latest");
+            p.Message("&HVisits the latest backup of <level>");
+            p.Message("&T/Museum <level> *current");
+            p.Message("&HVisits <level> as it is currently stored on disk.");
+            p.Message("&HIf <level> is not given, the current level is used.");
         }
     }
 }
