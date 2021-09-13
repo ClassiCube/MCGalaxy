@@ -25,9 +25,10 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-
-    public sealed class CountdownConfig : RoundsGameConfig {
+namespace MCGalaxy.Games 
+{
+    public sealed class CountdownConfig : RoundsGameConfig 
+    {
         public override bool AllowAutoload { get { return true; } }
         protected override string GameName { get { return "Countdown"; } }
         protected override string PropsPath { get { return "properties/countdown.properties"; } }
@@ -38,7 +39,8 @@ namespace MCGalaxy.Games {
         }
     }
     
-    public sealed partial class CountdownGame : RoundsGame {
+    public sealed partial class CountdownGame : RoundsGame 
+    {
         public VolatileArray<Player> Players = new VolatileArray<Player>();
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
         
@@ -131,10 +133,19 @@ namespace MCGalaxy.Games {
         protected override string FormatStatus2(Player p) {
             return RoundInProgress ? Remaining.Count + " players left" : "";
         }
-                
-        struct SquarePos {
-            public ushort X, Z;
-            public SquarePos(int x, int z) { X = (ushort)x; Z = (ushort)z; }
+        
+        public bool SetSpeed(string speed) {
+            switch (speed) {
+                case "slow":     Interval = 800; break;
+                case "normal":   Interval = 650; break;
+                case "fast":     Interval = 500; break;
+                case "extreme":  Interval = 300; break;
+                case "ultimate": Interval = 150; break;
+                default: return false;
+            }
+            
+            SpeedType = speed;
+            return true;
         }
     }
 }

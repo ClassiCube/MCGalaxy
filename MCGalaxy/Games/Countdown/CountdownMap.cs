@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy.Games {
-    
-    /// <summary> Generates a map for countdown. </summary>
-    public static class CountdownMapGen {
-        
+namespace MCGalaxy.Games 
+{   
+    /// <summary> Generates a map for countdown </summary>
+    public static class CountdownMapGen 
+    {     
         public static Level Generate(int width, int height, int length) {
             Level lvl = new Level("countdown", (ushort)width, (ushort)height, (ushort)length);
             MakeBoundaries(lvl);

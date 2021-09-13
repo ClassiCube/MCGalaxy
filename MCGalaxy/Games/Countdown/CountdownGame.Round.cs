@@ -25,9 +25,16 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    
-    public sealed partial class CountdownGame : RoundsGame {
+namespace MCGalaxy.Games 
+{   
+    public sealed partial class CountdownGame : RoundsGame 
+    {          
+        struct SquarePos 
+        {
+            public ushort X, Z;
+            public SquarePos(int x, int z) { X = (ushort)x; Z = (ushort)z; }
+        }
+        
         List<SquarePos> squaresLeft = new List<SquarePos>();
         BufferedBlockSender bulk = new BufferedBlockSender();
         
@@ -63,10 +70,7 @@ namespace MCGalaxy.Games {
         }
         
         void BeginRound() {
-            if (SpeedType == null || SpeedType == "" || Interval == 0) {
-                Interval = 650; 
-                SpeedType = "normal";
-            }
+            if (Interval == 0) SetSpeed("normal");
             string modeSuffix = FreezeMode ? " in freeze mode" : "";
             Map.Message("Starting " + SpeedType + " speed Countdown" + modeSuffix);
             

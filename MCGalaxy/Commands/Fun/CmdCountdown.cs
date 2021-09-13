@@ -75,20 +75,12 @@ namespace MCGalaxy.Commands.Fun {
             string speed = args.Length > 1 ? args[1] : "";
             string  mode = args.Length > 2 ? args[2] : "";
             
-            switch (speed) {
-                case "slow":     game.Interval = 800; break;
-                case "normal":   game.Interval = 650; break;
-                case "fast":     game.Interval = 500; break;
-                case "extreme":  game.Interval = 300; break;
-                case "ultimate": game.Interval = 150; break;
-                
-                default:
-                    p.Message("No speed specified, playing at 'normal' speed.");
-                    game.Interval = 650; speed = "normal"; break;
+            if (!game.SetSpeed(speed)) {
+                p.Message("No speed specified, playing at 'normal' speed.");
+                game.SetSpeed("normal");
             }
             
             game.FreezeMode = mode == "freeze" || mode == "frozen";
-            game.SpeedType = speed;
             game.Start(p, "countdown", int.MaxValue);
         }       
         

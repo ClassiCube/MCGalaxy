@@ -19,10 +19,10 @@ using System;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 
-namespace MCGalaxy.Games {
-    
-    public sealed partial class CountdownGame : RoundsGame {
-        
+namespace MCGalaxy.Games 
+{    
+    public sealed partial class CountdownGame : RoundsGame 
+    {       
          protected override void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
