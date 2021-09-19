@@ -309,8 +309,13 @@ namespace MCGalaxy {
             }
         }
         
+        static bool checkedOnMono, runningOnMono;
         public static bool RunningOnMono() {
-            return Type.GetType("Mono.Runtime") != null;
+            if (!checkedOnMono) {
+                runningOnMono = Type.GetType("Mono.Runtime") != null;
+                checkedOnMono = true;
+            }
+            return runningOnMono;
         }
 
         public static void UpdateUrl(string url) {

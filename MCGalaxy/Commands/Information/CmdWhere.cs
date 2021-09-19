@@ -25,8 +25,7 @@ namespace MCGalaxy.Commands.Info {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) message = p.name;
-            int matches;
-            Player target = PlayerInfo.FindMatches(p, message, out matches);
+            Player target = PlayerInfo.FindMatches(p, message);
             if (target == null) return;
             
             if (IGame.GameOn(target.level) != null && !(p.IsSuper || p.Game.Referee)) {

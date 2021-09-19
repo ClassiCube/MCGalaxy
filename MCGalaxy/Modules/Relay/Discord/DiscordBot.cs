@@ -359,7 +359,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             int total;
             List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
             
-            embed.Color = Config.EmbedColor;            
+            embed.Color = Config.EmbedColor;
             embed.Title = string.Format("{0} player{1} currently online",
                                         total, total.Plural());
             

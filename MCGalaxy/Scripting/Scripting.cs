@@ -56,10 +56,16 @@ namespace MCGalaxy.Scripting
             return instances;
         }
         
-        static byte[] GetDebugPDB(string path) {
-            path = Path.ChangeExtension(path, ".pdb");
-            if (!File.Exists(path)) return null;
+        static byte[] GetDebugData(string path) {
+            if (Server.RunningOnMono()) {
+                // Cmdtest.dll -> Cmdtest.dll.mdb
+                path += ".mdb";
+            } else {
+                // Cmdtest.dll -> Cmdtest.pdb
+                path = Path.ChangeExtension(path, ".pdb");
+            }
             
+            if (!File.Exists(path)) return null;
             try {
                 return File.ReadAllBytes(path);
             } catch (Exception ex) {
@@ -71,7 +77,7 @@ namespace MCGalaxy.Scripting
         /// <summary> Loads the given assembly from disc (and associated .pdb debug data) </summary>
         public static Assembly LoadAssembly(string path) {
             byte[] data  = File.ReadAllBytes(path);
-            byte[] debug = GetDebugPDB(path);
+            byte[] debug = GetDebugData(path);
             return Assembly.Load(data, debug);
         }
         
@@ -306,8 +312,8 @@ namespace MCGalaxy.Scripting
             int logged = 0;
             foreach (CompilerError err in results.Errors) 
             {
-            	p.Message("&W{1} - {0}", err.ErrorText,
-            	          DescribeError(err, srcs, " #" + err.ErrorNumber));
+                p.Message("&W{1} - {0}", err.ErrorText,
+                          DescribeError(err, srcs, " #" + err.ErrorNumber));
                 logged++;
                 if (logged >= maxLog) break;
             }
