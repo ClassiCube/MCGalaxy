@@ -309,7 +309,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
         static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
-        static string StripMarkdown(string message) {
+        static string EscapeMarkdown(string message) {
             // don't let user use bold/italic etc markdown
             for (int i = 0; i < markdown_special.Length; i++) {
                 message = message.Replace(markdown_special[i], markdown_escaped[i]);
@@ -318,7 +318,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         protected override string PrepareMessage(string message) {
-            message = StripMarkdown(message);
+            message = EscapeMarkdown(message);
             // allow uses to do things like replacing '+' with ':green_square:'
             for (int i = 0; i < filter_triggers.Count; i++) {
                 message = message.Replace(filter_triggers[i], filter_replacements[i]);
@@ -331,11 +331,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         protected override bool CheckController(string userID, ref string error) { return true; }
         
         protected override string UnescapeFull(Player p) {
-            return "**" + StripMarkdown(base.UnescapeFull(p)) + "**";
+            return "**" + EscapeMarkdown(base.UnescapeFull(p)) + "**";
         }
         
         protected override string UnescapeNick(Player p) {
-            return "**" + StripMarkdown(base.UnescapeNick(p)) + "**";
+            return "**" + EscapeMarkdown(base.UnescapeNick(p)) + "**";
         }
         
         
@@ -346,8 +346,10 @@ namespace MCGalaxy.Modules.Relay.Discord
 
         static string FormatNick(Player p, Player pl) {
             string flags  = OnlineListEntry.GetFlags(pl);
-            string format = flags.Length > 0 ? "**{0}**_{2}_ (`{1}`)" : "**{0}** (`{1}`)";            
-            return string.Format(format, p.FormatNick(pl), pl.level.name, flags);
+            string format = flags.Length > 0 ? "**{0}**_{2}_ (`{1}`)" : "**{0}** (`{1}`)";
+            
+            return string.Format(format, 
+                                 EscapeMarkdown(p.FormatNick(pl)), EscapeMarkdown(pl.level.name), flags);
         }
         
         static string FormatPlayers(Player p, OnlineListEntry e) {
