@@ -133,7 +133,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             ChatTokens.LoadTokens(lines, (phrase, replacement) => 
                                   {
                                       filter_triggers.Add(phrase);
-                                      filter_replacements.Add(replacement);
+                                      filter_replacements.Add(MarkdownToSpecial(replacement));
                                   });
         }
         
@@ -304,6 +304,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         protected override string ConvertMessage(string message) {
             message = base.ConvertMessage(message);
             message = Colors.StripUsed(message);
+            message = EscapeMarkdown(message);
+            message = SpecialToMarkdown(message);
             return message;
         }
         
@@ -318,7 +320,6 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         protected override string PrepareMessage(string message) {
-            message = EscapeMarkdown(message);
             // allow uses to do things like replacing '+' with ':green_square:'
             for (int i = 0; i < filter_triggers.Count; i++) {
                 message = message.Replace(filter_triggers[i], filter_replacements[i]);
@@ -331,25 +332,28 @@ namespace MCGalaxy.Modules.Relay.Discord
         protected override bool CheckController(string userID, ref string error) { return true; }
         
         protected override string UnescapeFull(Player p) {
-            return "**" + EscapeMarkdown(base.UnescapeFull(p)) + "**";
-        }
-        
+            return BOLD + base.UnescapeFull(p) + BOLD;
+        }        
         protected override string UnescapeNick(Player p) {
-            return "**" + EscapeMarkdown(base.UnescapeNick(p)) + "**";
+            return BOLD + base.UnescapeNick(p) + BOLD;
         }
         
         
         static string FormatRank(OnlineListEntry e) {
-            return string.Format("__{0}__ (`{1}`)",
+            return string.Format(UNDERLINE + "{0}" + UNDERLINE + " (" + CODE + "{1}" + CODE + ")",
                                  e.group.GetFormattedName(), e.players.Count);
         }
 
         static string FormatNick(Player p, Player pl) {
             string flags  = OnlineListEntry.GetFlags(pl);
-            string format = flags.Length > 0 ? "**{0}**_{2}_ (`{1}`)" : "**{0}** (`{1}`)";
+            string format;
             
-            return string.Format(format, 
-                                 EscapeMarkdown(p.FormatNick(pl)), EscapeMarkdown(pl.level.name), flags);
+            if (flags.Length > 0) {
+                format = BOLD + "{0}" + BOLD + ITALIC + "{2}" + ITALIC + " (" + CODE + "{1}" + CODE + ")";
+            } else {
+                format = BOLD + "{0}" + BOLD                           + " (" + CODE + "{1}" + CODE + ")";
+            }
+            return string.Format(format, p.FormatNick(pl), pl.level.name, flags);
         }
         
         static string FormatPlayers(Player p, OnlineListEntry e) {
@@ -374,6 +378,38 @@ namespace MCGalaxy.Modules.Relay.Discord
                 );
             }
             Send(embed);
+        }
+        
+        
+        const char UNDERSCORE = '\uEDC1'; // _    
+        const char TILDE      = '\uEDC2'; // ~
+        const char STAR       = '\uEDC3'; // *
+        const char GRAVE      = '\uEDC4'; // `
+        const char BAR        = '\uEDC5'; // |
+        
+        public const string UNDERLINE     = "\uEDC1\uEDC1"; // __
+        public const string BOLD          = "\uEDC3\uEDC3"; // **
+        public const string ITALIC        = "\uEDC1"; // _
+        public const string CODE          = "\uEDC4"; // `
+        public const string SPOILER       = "\uEDC5\uEDC5"; // ||
+        public const string STRIKETHROUGH = "\uEDC2\uEDC2"; // ~~
+        
+        static string MarkdownToSpecial(string input) {
+            return input
+                .Replace('_', UNDERSCORE)
+                .Replace('~', TILDE)
+                .Replace('*', STAR)
+                .Replace('`', GRAVE)
+                .Replace('|', BAR);
+        }
+        
+        static string SpecialToMarkdown(string input) {
+            return input
+                .Replace(UNDERSCORE, '_')
+                .Replace(TILDE,      '~')
+                .Replace(STAR,       '*')
+                .Replace(GRAVE,      '`')
+                .Replace(BAR,        '|');
         }
     }
 }
