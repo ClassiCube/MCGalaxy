@@ -45,6 +45,7 @@ namespace MCGalaxy.Commands.Bots {
             
             if (!Formatter.ValidName(p, args[1], "bot")) return;
             if (!LevelInfo.Check(p, data.Rank, p.level, "modify bots in this level")) return;
+            if (!p.level.Config.AllowBots) { p.Message("Bots have been disabled in this level."); return; }
             
             string bot = args[1], value = args.Length > 2 ? args[2] : null;
             if (args[0].CaselessEq("add")) {
