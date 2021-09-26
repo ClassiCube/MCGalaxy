@@ -24,10 +24,11 @@ using System.Threading;
 using MCGalaxy.Config;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Modules.Relay.Discord {
-    
+namespace MCGalaxy.Modules.Relay.Discord
+{
     /// <summary> Represents an abstract Discord API message </summary>
-    public abstract class DiscordApiMessage {
+    public abstract class DiscordApiMessage
+    {
         /// <summary> The path/route that will handle this message </summary>
         public string Path;
         /// <summary> The HTTP method of the path/route (e.g. "POST") </summary>
@@ -41,7 +42,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
     }
     
     /// <summary> Message for sending text to a channel </summary>
-    public class ChannelSendMessage : DiscordApiMessage {
+    public class ChannelSendMessage : DiscordApiMessage
+    {
         StringBuilder content;
         
         public ChannelSendMessage(string channelID, string message) {
@@ -77,17 +79,20 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
     }
     
-    public class ChannelSendEmbed : ChannelSendMessage {
+    public class ChannelSendEmbed : DiscordApiMessage
+    {
         public string Title;
         public Dictionary<string, string> Fields = new Dictionary<string, string>();
         public int Color;
         
-        public ChannelSendEmbed(string channelID) : base(channelID, null) { }
+        public ChannelSendEmbed(string channelID) {
+            Path = "/channels/" + channelID + "/messages";
+        }
         
         JsonArray GetFields() {
             JsonArray arr = new JsonArray();
-            foreach (var raw in Fields) {
-                
+            foreach (var raw in Fields) 
+            { 
                 JsonObject field = new JsonObject()
                 {
                     { "name",   raw.Key  },
@@ -99,25 +104,31 @@ namespace MCGalaxy.Modules.Relay.Discord {
         }
         
         public override JsonObject ToJson() {
-            JsonObject obj = base.ToJson();
-            obj.Remove("content");
-            
-            obj["embed"] = new JsonObject()
+            JsonObject obj = new JsonObject()
             {
-                { "title", Title },
-                { "color", Color },
-                { "fields", GetFields() }
+                { "embed", new JsonObject()
+                    {
+                        { "title", Title },
+                        { "color", Color },
+                        { "fields", GetFields() }
+                    }
+                },
+            	// no pinging anything
+                { "allowed_mentions", new JsonObject()
+                    {
+                        { "parse", new JsonArray() }
+                    }
+                }
             };
             return obj;
         }
-        
-        public override bool CombineWith(DiscordApiMessage prior) { return false; }
     }
     
     /// <summary> Implements a basic web client for sending messages to the Discord API </summary>
     /// <remarks> https://discord.com/developers/docs/reference </remarks>
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
-    public sealed class DiscordApiClient : RelayBotSender<DiscordApiMessage> {
+    public sealed class DiscordApiClient : RelayBotSender<DiscordApiMessage>
+    {
         public string Token;
         const string host = "https://discord.com/api/v8";
         
@@ -160,8 +171,8 @@ namespace MCGalaxy.Modules.Relay.Discord {
                     HttpUtil.DisposeErrorResponse(ex);
                     if (Handle429(ex)) continue;
                     
-                    Logger.LogError("Error sending request to Discord API", ex);                    
-                    if (!string.IsNullOrEmpty(err)) 
+                    Logger.LogError("Error sending request to Discord API", ex);
+                    if (!string.IsNullOrEmpty(err))
                         Logger.Log(LogType.Warning, "Discord API returned: " + err);
                     return;
                 }

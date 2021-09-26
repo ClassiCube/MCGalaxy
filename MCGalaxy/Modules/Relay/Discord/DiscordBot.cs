@@ -381,7 +381,9 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         
-        const char UNDERSCORE = '\uEDC1'; // _    
+        // these characters are chosen specifically to lie within the unspecified unicode range
+        //  https://en.wikipedia.org/wiki/Private_Use_Areas
+        const char UNDERSCORE = '\uEDC1'; // _
         const char TILDE      = '\uEDC2'; // ~
         const char STAR       = '\uEDC3'; // *
         const char GRAVE      = '\uEDC4'; // `

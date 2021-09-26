@@ -172,6 +172,7 @@ namespace MCGalaxy.Modules.Relay
             try { worker.Join(); } catch { }
         }
         
+        /// <summary> Disconnects from the external communication service and then connects again </summary>
         public void Reset() {
             Disconnect(RelayName + " Bot resetting...");
             Connect();
@@ -228,6 +229,7 @@ namespace MCGalaxy.Modules.Relay
             worker = null;
         }
         
+        /// <summary> Starts the read loop in a background thread </summary>
         void RunAsync() {
             worker      = new Thread(IOThread);
             worker.Name = RelayName + "_RelayBot";
@@ -248,6 +250,7 @@ namespace MCGalaxy.Modules.Relay
             UpdateConfig();
             LoadControllers();
         }
+        
         protected abstract void UpdateConfig();
         
         protected void LoadBannedCommands() {

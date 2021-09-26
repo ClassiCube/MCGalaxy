@@ -148,9 +148,9 @@ namespace MCGalaxy.Modules.Relay.IRC
             SimplifyCharacters(sb);
             
             // remove misc formatting chars
-            sb.Replace("\x02", ""); // bold
-            sb.Replace("\x1D", ""); // italic
-            sb.Replace("\x1F", ""); // underline
+            sb.Replace(BOLD,      "");
+            sb.Replace(ITALIC,    "");
+            sb.Replace(UNDERLINE, "");
             
             sb.Replace("\x03", "&f"); // color reset
             sb.Replace("\x0f", "&f"); // reset
@@ -338,6 +338,11 @@ namespace MCGalaxy.Modules.Relay.IRC
         void OnKill(UserInfo user, string nick, string reason) {
             nicks.OnLeft(user);
         }
+        
+        
+        public const string BOLD      = "\x02";
+        public const string ITALIC    = "\x1D";
+        public const string UNDERLINE = "\x1F";
     }
 }
 
