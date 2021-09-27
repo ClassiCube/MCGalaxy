@@ -191,7 +191,7 @@ namespace MCGalaxy {
         public byte GetFallback(BlockID b) {
             BlockDefinition def = CustomBlockDefs[b];
             if (def != null) return def.FallBack;
-            return b < Block.CpeCount ? (byte)b : Block.Air;
+            return b < Block.CPE_COUNT ? (byte)b : Block.Air;
         }
         
         internal bool BuildIn(BlockID block) {

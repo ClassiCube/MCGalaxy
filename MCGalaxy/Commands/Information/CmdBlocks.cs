@@ -84,7 +84,7 @@ namespace MCGalaxy.Commands.Info {
             }
             
             string msg = "";
-            for (BlockID b = Block.CpeCount; b < Block.Count; b++) {
+            for (BlockID b = Block.CPE_COUNT; b < Block.Count; b++) {
                 if (Block.Convert(b) != block) continue;
                 msg += FormatBlockName(p, b) + ", ";
             }

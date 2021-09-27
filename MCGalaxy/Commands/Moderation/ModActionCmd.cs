@@ -88,8 +88,10 @@ namespace MCGalaxy.Commands.Moderation {
             who.SetPrefix();
             
             Entities.DespawnEntities(who, false);
-            who.Send(Packet.UserType(who.UserType()));
-            
+            // this packet doesn't exist before protocol version 7
+            if (who.version >= Server.VERSION_0030)
+                who.Send(Packet.UserType(who.UserType()));
+          
             who.SendCurrentBlockPermissions();
             Entities.SpawnEntities(who, false);
             CheckBlockBindings(who);

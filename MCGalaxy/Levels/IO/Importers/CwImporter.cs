@@ -71,7 +71,7 @@ namespace MCGalaxy.Levels.IO {
             byte[] hi = root["BlockArray2"].ByteArrayValue;
             
             for (int i = 0; i < lo.Length; i++) {
-                if (hi[i] == 0 && lo[i] <= Block.CpeMaxBlock) continue;
+                if (hi[i] == 0 && lo[i] <= Block.CPE_MAX_BLOCK) continue;
                 ushort x, y, z;
                 
                 lvl.IntToPos(i, out x, out y, out z);

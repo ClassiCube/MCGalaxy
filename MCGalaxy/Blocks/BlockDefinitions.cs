@@ -123,7 +123,7 @@ namespace MCGalaxy {
                     }
                     
                     // In case user manually edited fallback in the json file
-                    def.FallBack = Math.Min(def.FallBack, Block.CpeMaxBlock);
+                    def.FallBack = Math.Min(def.FallBack, Block.CPE_MAX_BLOCK);
                 }
             } catch (Exception ex) {
                 Logger.LogError("Error Loading block defs from " + path, ex);
@@ -295,7 +295,7 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) {
                 BlockDefinition def = defs[i];
                 int raw = def != null ? def.RawID : i;
-                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CpeCount)) continue;
+                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CPE_COUNT)) continue;
                 
                 if (def != null && def.InventoryOrder >= 0) continue;
                 if (order_to_blocks[raw] == -1) {
@@ -308,7 +308,7 @@ namespace MCGalaxy {
             for (int i = defs.Length - 1; i >= 0; i--) {
                 BlockDefinition def = defs[i];
                 int raw = def != null ? def.RawID : i;
-                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CpeCount)) continue;
+                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CPE_COUNT)) continue;
                 
                 if (block_to_orders[raw] != -1) continue;
                 for (int slot = count - 1; slot >= 1; slot--) {
@@ -325,7 +325,7 @@ namespace MCGalaxy {
                 if (order == -1) order = 0;
                 
                 BlockDefinition def = defs[Block.FromRaw((BlockID)raw)];
-                if (def == null && raw >= Block.CpeCount) continue;
+                if (def == null && raw >= Block.CPE_COUNT) continue;
                 // Special case, don't want 255 getting hidden by default
                 if (raw == 255 && def.InventoryOrder == -1) continue;
                 
@@ -351,7 +351,7 @@ namespace MCGalaxy {
                 
                 // If custom block is replacing core block, need to always reload for fallback
                 // But if level doesn't use custom blocks, don't need to reload for the player
-                if (block >= Block.CpeCount && !pl.level.MightHaveCustomBlocks()) continue;
+                if (block >= Block.CPE_COUNT && !pl.level.MightHaveCustomBlocks()) continue;
                 PlayerActions.ReloadMap(pl);
             }
         }

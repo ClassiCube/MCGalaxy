@@ -17,12 +17,18 @@
 */
 using System;
 
-namespace MCGalaxy {
-    public static partial class Block {
-        public const byte OriginalMaxBlock = Obsidian;
-        public const byte OriginalCount = OriginalMaxBlock + 1;
-        public const byte CpeMaxBlock = StoneBrick;
-        public const byte CpeCount = CpeMaxBlock + 1;
+namespace MCGalaxy 
+{
+    public static partial class Block 
+    {
+        /// <summary> Highest block ID supported in Classic </summary>
+        public const byte CLASSIC_MAX_BLOCK = Obsidian;
+        /// <summary> Total number of blocks in Classic </summary>
+        public const byte CLASSIC_COUNT     = CLASSIC_MAX_BLOCK + 1;
+        /// <summary> Highest block ID supported in Classic + CPE custom blocks </summary>
+        public const byte CPE_MAX_BLOCK     = StoneBrick;
+        /// <summary> Total number of blocks in Classic + CPE CustomBlocks </summary>
+        public const byte CPE_COUNT         = CPE_MAX_BLOCK + 1;
         public const int Count = 256;
 
         // 10 bit block ids are broken down into: 2 bits of class/type, 8 bits value

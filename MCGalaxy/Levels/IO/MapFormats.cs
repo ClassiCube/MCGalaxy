@@ -52,7 +52,7 @@ namespace MCGalaxy.Levels.IO
             byte[] blocks = lvl.blocks; // local var to avoid JIT bounds check
             for (int i = 0; i < blocks.Length; i++) {
                 byte raw = blocks[i];
-                if (raw <= Block.CpeMaxBlock) continue;
+                if (raw <= Block.CPE_MAX_BLOCK) continue;
                 
                 blocks[i] = Block.custom_block;
                 lvl.IntToPos(i, out x, out y, out z);

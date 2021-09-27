@@ -329,23 +329,26 @@ namespace MCGalaxy {
         }
         
         
+        /// <summary> Converts the given block ID into a raw block ID that can be sent to this player </summary>
         public BlockID ConvertBlock(BlockID block) {
             BlockID raw;
             if (block >= Block.Extended) {
                 raw = Block.ToRaw(block);
             } else {
                 raw = Block.Convert(block);
-                if (raw >= Block.CpeCount) raw = Block.Orange;
+                // show invalid physics blocks as Orange
+                if (raw >= Block.CPE_COUNT) raw = Block.Orange;
             }
             if (raw > MaxRawBlock) raw = level.GetFallback(block);
             
-            // Custom block replaced a core block
-            if (!hasBlockDefs && raw < Block.CpeCount) {
+            // Check if a custom block replaced a core block
+            //  If so, assume fallback is the better block to display
+            if (!hasBlockDefs && raw < Block.CPE_COUNT) {
                 BlockDefinition def = level.CustomBlockDefs[raw];
                 if (def != null) raw = def.FallBack;
             }
             
-            if (!hasCustomBlocks) raw = Block.ConvertCPE((BlockRaw)raw);
+            if (!hasCustomBlocks) raw = fallback[(BlockRaw)raw];
             return raw;
         }
     }

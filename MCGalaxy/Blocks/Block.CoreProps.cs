@@ -179,7 +179,7 @@ const string default_names =
                 string name = start == end ? "unknown" : default_names.Substring(start, end - start);
                 start = end + 1;
                 
-                if (b > 0 && b < Block.CpeCount) {
+                if (b > 0 && b < Block.CPE_COUNT) {
                     BlockDefinition def = BlockDefinition.GlobalDefs[b];
                     if (def != null) name = def.Name;
                 }

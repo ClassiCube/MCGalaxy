@@ -53,7 +53,7 @@ namespace MCGalaxy {
             BlockID block;
             // raw ID is treated specially, before names
             if (BlockID.TryParse(input, out block)) {
-                if (block < Block.CpeCount || (block <= Block.MaxRaw && defs[FromRaw(block)] != null)) {
+                if (block < Block.CPE_COUNT || (block <= Block.MaxRaw && defs[FromRaw(block)] != null)) {
                     return FromRaw(block);
                 }
             }
@@ -73,6 +73,26 @@ namespace MCGalaxy {
                 if (def.Name.Replace(" ", "").CaselessEq(msg)) return def.GetBlock();
             }
             return Block.Invalid;
+        }
+        
+        
+        /// <summary> Converts a block &lt; CPE_COUNT into a suitable block for given protocol </summary>
+        internal static byte ConvertClassic(byte block, byte version) {
+            block = ConvertCPE(block);
+            if (version >= Server.VERSION_0030) return block;
+            
+            // protocol version 6 only supports up to gold block
+            switch (block) {
+                case Iron:  return Gold;
+                case DoubleSlab: return Gray;
+                case Slab:  return Gray;
+                case Brick: return Red;
+                case TNT:   return Red;
+                case Bookshelf:  return Wood;
+                case MossyRocks: return Cobblestone;
+                case Obsidian:   return Cobblestone;
+            }
+            return block;
         }
         
         public static byte ConvertCPE(byte block) {

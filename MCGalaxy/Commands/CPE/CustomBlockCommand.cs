@@ -127,7 +127,7 @@ namespace MCGalaxy.Commands.CPE {
 
         static bool DoCopy(Player p, Level lvl, bool global, string cmd, bool keepOrder, 
                            BlockDefinition srcDef, BlockID src, BlockID dst) {
-            if (srcDef == null && src < Block.CpeCount) {
+            if (srcDef == null && src < Block.CPE_COUNT) {
                 srcDef = DefaultSet.MakeCustomBlock(src);
             }
             if (srcDef == null) { MessageNoBlock(p, src, global, cmd); return false; }
@@ -407,7 +407,7 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
             BlockDefinition def = defs[block], globalDef = BlockDefinition.GlobalDefs[block];
             
-            if (def == null && block < Block.CpeCount) {
+            if (def == null && block < Block.CPE_COUNT) {
                 def = DefaultSet.MakeCustomBlock(block);
                 UpdateBlock(p, lvl, def, global);
             }
@@ -615,13 +615,13 @@ namespace MCGalaxy.Commands.CPE {
             // Start from opposite ends to avoid overlap
             if (global) {
                 BlockDefinition[] defs = BlockDefinition.GlobalDefs;
-                for (BlockID b = Block.CpeCount; b <= Block.MaxRaw; b++) {
+                for (BlockID b = Block.CPE_COUNT; b <= Block.MaxRaw; b++) {
                     BlockID block = Block.FromRaw(b);
                     if (defs[block] == null) return block;
                 }
             } else {
                 BlockDefinition[] defs = lvl.CustomBlockDefs;
-                for (BlockID b = Block.MaxRaw; b >= Block.CpeCount; b--) {
+                for (BlockID b = Block.MaxRaw; b >= Block.CPE_COUNT; b--) {
                     BlockID block = Block.FromRaw(b);
                     if (defs[block] == null) return block;
                 }

@@ -35,9 +35,8 @@ namespace MCGalaxy
             if (loggedIn) return;
             version = buffer[offset + 1];
             
-            if (version < Server.VERSION_PRECLASSIC || version > Server.VERSION_CLASSIC) {
-                Leave(null, "Wrong version!", true); 
-                return; 
+            if (version < Server.VERSION_0023 || version > Server.VERSION_0030) {
+                Leave(null, "Unsupported protocol version", true); return; 
             }
             
             name = NetUtils.ReadString(buffer, offset + 2);
@@ -48,10 +47,14 @@ namespace MCGalaxy
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return; }
             
-            hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
-            level = Server.mainLevel;
+            hasCpe  = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
+            level   = Server.mainLevel;
             Loading = true;
             if (Socket.Disconnected) return;
+            
+            for (byte b = 0; b < Block.CPE_COUNT; b++) {
+                fallback[b] = Block.ConvertClassic(b, version);
+            }
             
             if (hasCpe) { SendCpeExtensions(); } 
             else { CompleteLoginProcess(); }

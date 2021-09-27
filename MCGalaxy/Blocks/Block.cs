@@ -187,11 +187,11 @@ namespace MCGalaxy {
         }
         
         public static BlockID FromRaw(BlockID raw) {
-            return raw < CpeCount ? raw : (BlockID)(raw + Block.Extended);
+            return raw < CPE_COUNT ? raw : (BlockID)(raw + Block.Extended);
         }
         
         public static BlockID ToRaw(BlockID raw) {
-            return raw < CpeCount ? raw : (BlockID)(raw - Block.Extended);
+            return raw < CPE_COUNT ? raw : (BlockID)(raw - Block.Extended);
         }
         
         public static BlockID FromRaw(byte raw, bool extended) {
@@ -205,7 +205,7 @@ namespace MCGalaxy {
         }
         
         public static bool IsPhysicsType(BlockID block) {
-            return block >= Block.CpeCount && block < Block.Extended;
+            return block >= Block.CPE_COUNT && block < Block.Extended;
         }
         
         public static bool VisuallyEquals(BlockID a, BlockID b) {
