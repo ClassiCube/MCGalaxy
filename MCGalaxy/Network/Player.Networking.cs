@@ -39,7 +39,7 @@ namespace MCGalaxy
                     // Partial packet received
                     if (packetLen == 0) break;
                     
-                    // Invalid opcode received
+                    // Client was forced disconnected
                     if (packetLen == -1) return bufferLen;
                     
                     // Packet processed, onto next
@@ -50,23 +50,10 @@ namespace MCGalaxy
             }
             return read;
         }
-        
-        /*
-                case Opcode.Handshake:      return 1 + 1 + 64 + 64 + 1;
-                case Opcode.SetBlockClient: return 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
-                case Opcode.EntityTeleport: return 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
-                case Opcode.Message:        return 1 + 1 + 64;
-                case Opcode.CpeExtInfo:     return 1 + 64 + 2;
-                case Opcode.CpeExtEntry:    return 1 + 64 + 4;
-                case Opcode.CpeCustomBlockSupportLevel: return 1 + 1;
-                case Opcode.CpePlayerClick: return 1 + 1 + 1 + 2 + 2 + 1 + 2 + 2 + 2 + 1;
-                case Opcode.Ping:           return 1;
-                case Opcode.CpeTwoWayPing:  return 1 + 1 + 2;
-        */
-        
+
         int HandlePacket(byte[] buffer, int offset, int left) {
             switch (buffer[offset]) {
-                case Opcode.Ping: return 1;
+                case Opcode.Ping:           return 1;
                 case Opcode.Handshake:      return HandleLogin(buffer, offset, left);
                 case Opcode.SetBlockClient: return HandleBlockchange(buffer, offset, left);
                 case Opcode.EntityTeleport: return HandleMovement(buffer, offset, left);
@@ -99,19 +86,54 @@ namespace MCGalaxy
         #else
         BlockID ReadBlock(byte[] buffer, int offset) { return Block.FromRaw(buffer[offset]); }
         #endif
+                
+        int HandleBlockchange(byte[] buffer, int offset, int left) {
+            int size = 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
+            if (left < size) return 0;
+            if (!loggedIn)   return size;
+            
+            ProcessBlockchange(buffer, offset);
+            return size;
+        }
         
-        void HandleExtInfo(byte[] buffer, int offset, int left) {
+        int HandleMovement(byte[] buffer, int offset, int left) {
+            int size = 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
+            if (left < size) return 0;
+            if (!loggedIn)   return size;
+            
+            ProcessMovement(buffer, offset);
+            return size;
+        }
+        
+        int HandleChat(byte[] buffer, int offset, int left) {
+            const int size = 1 + 1 + 64;
+            if (left < size) return 0;
+            if (!loggedIn)   return size;
+            
+            ProcessChat(buffer, offset);
+            return size;
+        }
+        
+        int HandleExtInfo(byte[] buffer, int offset, int left) {
+            const int size = 1 + 64 + 2;
+            if (left < size) return 0;
+            
             appName = NetUtils.ReadString(buffer, offset + 1);
             extensionCount = buffer[offset + 66];
             CheckReadAllExtensions(); // in case client supports 0 CPE packets
+            return size;
         }
 
-        void HandleExtEntry(byte[] buffer, int offset, int left) {
+        int HandleExtEntry(byte[] buffer, int offset, int left) {
+            const int size = 1 + 64 + 4;
+            if (left < size) return 0;
+            
             string extName = NetUtils.ReadString(buffer, offset + 1);
             int extVersion = NetUtils.ReadI32(buffer, offset + 65);
             AddExtension(extName, extVersion);
             extensionCount--;
             CheckReadAllExtensions();
+            return size;
         }
 
         void CheckReadAllExtensions() {
@@ -346,7 +368,7 @@ namespace MCGalaxy
         }
         
         void UpdateFallbackTable() {
-        	for (byte b = 0; b < Block.CPE_COUNT; b++)
+            for (byte b = 0; b < Block.CPE_COUNT; b++)
             {
                 fallback[b] = Block.ConvertLimited(b, this);
             }

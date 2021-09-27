@@ -30,13 +30,14 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable 
     { 
-        void HandleLogin(byte[] buffer, int offset, int left) {
+        int HandleLogin(byte[] buffer, int offset, int left) {
+    	    const int size = 1 + 1 + 64 + 64 + 1;
             LastAction = DateTime.UtcNow;
-            if (loggedIn) return;
+            if (loggedIn) return size;
             version = buffer[offset + 1];
             
             if (version < Server.VERSION_0023 || version > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return; 
+                Leave(null, "Unsupported protocol version", true); return size; 
             }
             
             name = NetUtils.ReadString(buffer, offset + 2);
@@ -45,16 +46,17 @@ namespace MCGalaxy
             
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
-            if (cancelconnecting) { cancelconnecting = false; return; }
+            if (cancelconnecting) { cancelconnecting = false; return size; }
             
             hasCpe  = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
             level   = Server.mainLevel;
             Loading = true;
-            if (Socket.Disconnected) return;
+            if (Socket.Disconnected) return size;
             
             UpdateFallbackTable();
             if (hasCpe) { SendCpeExtensions(); } 
             else { CompleteLoginProcess(); }
+            return size;
         }
         
         void SendCpeExtensions() {
