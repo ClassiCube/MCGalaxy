@@ -26,14 +26,19 @@ using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 
-namespace MCGalaxy {
-    public partial class Player : IDisposable {
-        
+namespace MCGalaxy 
+{
+    public partial class Player : IDisposable 
+    { 
         void HandleLogin(byte[] buffer, int offset) {
             LastAction = DateTime.UtcNow;
             if (loggedIn) return;
-            byte version = buffer[offset + 1];
-            if (version != Server.version) { Leave(null, "Wrong version!", true); return; }
+            version = buffer[offset + 1];
+            
+            if (version < Server.VERSION_PRECLASSIC || version > Server.VERSION_CLASSIC) {
+                Leave(null, "Wrong version!", true); 
+                return; 
+            }
             
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;

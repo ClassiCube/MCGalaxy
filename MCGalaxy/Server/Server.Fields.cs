@@ -83,7 +83,9 @@ namespace MCGalaxy {
         public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
         public static Server s = new Server();
 
-        public const byte version = 7;
+        public const byte VERSION_PRECLASSIC = 6;
+        public const byte VERSION_CLASSIC    = 7;
+        
         public static string salt = "";
         public static bool chatmod, flipHead;
         public static bool shuttingDown;

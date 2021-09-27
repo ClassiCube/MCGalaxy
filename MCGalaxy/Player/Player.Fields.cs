@@ -223,6 +223,7 @@ namespace MCGalaxy {
         public bool loggedIn;
         public bool verifiedName;
         bool gotSQLData;
+        internal byte version; // protocol version
         
         
         public bool cancelcommand, cancelchat, cancelmove;

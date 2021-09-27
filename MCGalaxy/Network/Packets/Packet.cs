@@ -20,17 +20,18 @@ using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Network {
-
+namespace MCGalaxy.Network 
+{
     /// <summary> Constructors for all classic and CPE packets. </summary>
-    public static class Packet {
-        
+    public static class Packet 
+    {
+
         #region Classic
         
         public static byte[] Motd(Player p, string motd) {
             byte[] buffer = new byte[131];
             buffer[0] = Opcode.Handshake;
-            buffer[1] = Server.version;
+            buffer[1] = p.version;
             
             if (motd.Length > NetUtils.StringSize) {
                 NetUtils.Write(motd, buffer, 2, p.hasCP437);
