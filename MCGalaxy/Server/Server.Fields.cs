@@ -86,7 +86,7 @@ namespace MCGalaxy {
         public const byte VERSION_0016 = 3; // preclassic 0.0.16
         public const byte VERSION_0017 = 4; // preclassic 0.0.17 / 0.0.18
         public const byte VERSION_0019 = 5; // preclassic 0.0.19
-        public const byte VERSION_0023 = 6; // preclassic 0.0.23a
+        public const byte VERSION_0020 = 6; // preclassic 0.0.20 / 0.0.21 / 0.0.23
         public const byte VERSION_0030 = 7; // classic
         
         public static string salt = "";

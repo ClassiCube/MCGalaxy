@@ -29,7 +29,7 @@ namespace MCGalaxy.Network
         #region Classic
         
         public static byte[] Motd(Player p, string motd) {
-            bool type     = p.version >= Server.VERSION_0023;
+            bool type     = p.version >= Server.VERSION_0020;
             byte[] buffer = new byte[130 + (type ? 1 : 0)];
             buffer[0] = Opcode.Handshake;
             buffer[1] = p.version;

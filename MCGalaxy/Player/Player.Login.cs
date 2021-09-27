@@ -40,12 +40,12 @@ namespace MCGalaxy
             
             LastAction = DateTime.UtcNow;
             version    = buffer[offset + 1];
-            if (version < Server.VERSION_0016 || version > Server.VERSION_0030) {
+            if (version > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version", true); return -1; 
             }
             
             // check size now that know whether usertype field is included or not
-            int size = version >= Server.VERSION_0023 ? new_size : old_size;
+            int size = version >= Server.VERSION_0020 ? new_size : old_size;
             if (left < size) return 0;
             if (loggedIn)    return size;
             
