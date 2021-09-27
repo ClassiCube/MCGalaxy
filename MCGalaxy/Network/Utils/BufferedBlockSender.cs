@@ -19,12 +19,13 @@ using System;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy.Network {
+namespace MCGalaxy.Network 
+{
     /// <summary> Helper class for efficiently sending many block changes. </summary>
     /// <remarks> Sends block changes as either a single CPE BulkBlockUpdate packet,
     /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </remarks>
-    public sealed class BufferedBlockSender {
-        
+    public sealed class BufferedBlockSender 
+    {  
         int[] indices = new int[256];
         BlockID[] blocks = new BlockID[256];
         int count = 0;
@@ -32,19 +33,19 @@ namespace MCGalaxy.Network {
         public Player player;
         public BufferedBlockSender() { }
         
-        /// <summary> Constructs a bulk sender that will send block changes to all players on that level. </summary>
+        /// <summary> Constructs a bulk sender that will send block changes to all players on that level </summary>
         public BufferedBlockSender(Level level) {
             this.level = level;
         }
         
-        /// <summary> Constructs a bulk sender that will only send block changes to that player. </summary>
+        /// <summary> Constructs a bulk sender that will only send block changes to that player </summary>
         public BufferedBlockSender(Player player) {
             this.player = player;
             this.level  = player.level;
         }
         
-        /// <summary> Adds a block change to list of buffered changes. </summary>
-        /// <remarks> When buffer limit is reached, calls Flush(), resetting buffered list. </remarks>
+        /// <summary> Adds a block change to list of buffered changes </summary>
+        /// <remarks> This method automatically calls Flush() when buffer limit is reached </remarks>
         public void Add(int index, BlockID block) {
             indices[count] = index;
             if (Block.IsPhysicsType(block)) {
@@ -57,7 +58,7 @@ namespace MCGalaxy.Network {
             if (count == 256) Flush();
         }
         
-        /// <summary> Sends buffered block changes to target player(s). </summary>
+        /// <summary> Sends buffered block changes to target player(s) </summary>
         public void Flush() {
             if (count == 0) return;
             
@@ -67,27 +68,29 @@ namespace MCGalaxy.Network {
         }
         
         void SendLevel() {
-            byte[] bulk = null, normal = null, noBlockDefs = null, classic = null, ext = null, extBulk = null;
+            byte[] bulk = null, normal = null, classic = null, ext = null, extBulk = null;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (p.level != level) continue;
+                
                 byte[] packet = MakePacket(p, ref bulk, ref normal,
-                                           ref noBlockDefs, ref classic, ref ext, ref extBulk);
+                                           ref classic, ref ext, ref extBulk);
                 p.Socket.Send(packet, SendFlags.LowPriority);
             }
         }
         
         void SendPlayer() {
-            byte[] bulk = null, normal = null, noBlockDefs = null, classic = null, ext = null, extBulk = null;
+            byte[] bulk = null, normal = null,classic = null, ext = null, extBulk = null;
             byte[] packet = MakePacket(player, ref bulk, ref normal,
-                                       ref noBlockDefs, ref classic, ref ext, ref extBulk);
+                                       ref classic, ref ext, ref extBulk);
             player.Socket.Send(packet, SendFlags.LowPriority);
         }
         
         #region Packet construction
         
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
-                          ref byte[] noBlockDefs, ref byte[] classic, ref byte[] ext, ref byte[] extBulk) {
+                          ref byte[] classic, ref byte[] ext, ref byte[] extBulk) {
             #if TEN_BIT_BLOCKS
             if (p.hasExtBlocks) {
                 if (p.hasBulkBlockUpdate && count >= 150) {
@@ -125,13 +128,15 @@ namespace MCGalaxy.Network {
             data[0] = Opcode.CpeBulkBlockUpdate;
             data[1] = (byte)(count - 1);
             
-            for (int i = 0, j = 2; i < count; i++) {
+            for (int i = 0, j = 2; i < count; i++) 
+            {
                 int index = indices[i];
                 data[j++] = (byte)(index >> 24); data[j++] = (byte)(index >> 16);
                 data[j++] = (byte)(index >> 8);  data[j++] = (byte)index;
             }
             
-            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) {
+            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) 
+            {
                 data[j++] = (BlockRaw)blocks[i];
             }
             
@@ -148,7 +153,8 @@ namespace MCGalaxy.Network {
         
         byte[] MakeExt() {
             byte[] data = new byte[count * 9];
-            for (int i = 0, j = 0; i < count; i++) {
+            for (int i = 0, j = 0; i < count; i++) 
+            {
                 int index = indices[i];
                 int x = (index % level.Width);
                 int y = (index / level.Width) / level.Length;
@@ -171,12 +177,14 @@ namespace MCGalaxy.Network {
             byte[] data = new byte[2 + 256 * 5];
             data[0] = Opcode.CpeBulkBlockUpdate;
             data[1] = (byte)(count - 1);
-            for (int i = 0, j = 2; i < count; i++) {
+            for (int i = 0, j = 2; i < count; i++) 
+            {
                 int index = indices[i];
                 data[j++] = (byte)(index >> 24); data[j++] = (byte)(index >> 16);
                 data[j++] = (byte)(index >> 8);  data[j++] = (byte)index;
             }
-            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) {
+            for (int i = 0, j = 2 + 256 * sizeof(int); i < count; i++) 
+            {
                 #if TEN_BIT_BLOCKS
                 BlockID block = blocks[i];
                 data[j++] = block <= 511 ? (BlockRaw)block : level.GetFallback(block);
@@ -189,7 +197,8 @@ namespace MCGalaxy.Network {
         
         byte[] MakeNormal() {
             byte[] data = new byte[count * 8];
-            for (int i = 0, j = 0; i < count; i++) {
+            for (int i = 0, j = 0; i < count; i++) 
+            {
                 int index = indices[i];
                 int x = (index % level.Width);
                 int y = (index / level.Width) / level.Length;
@@ -211,7 +220,8 @@ namespace MCGalaxy.Network {
         
         byte[] MakeLimited(byte[] fallback) {
             byte[] data = new byte[count * 8];
-            for (int i = 0, j = 0; i < count; i++) {
+            for (int i = 0, j = 0; i < count; i++) 
+            {
                 int index = indices[i];
                 int x = (index % level.Width);
                 int y = (index / level.Width) / level.Length;

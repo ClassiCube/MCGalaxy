@@ -47,27 +47,24 @@ namespace MCGalaxy.DB {
         }
 
         public static void SetNick(string name, string nick) {
+            EnsureDirectoriesExist();
             using (StreamWriter sw = new StreamWriter("players/" + name + "DB.txt", false))
                 sw.WriteLine("Nick = " + nick);
         }
         
         
         public static string GetLoginMessage(Player p) {
-            if (!Directory.Exists("text/login"))
-                Directory.CreateDirectory("text/login");
-            
             string path = LoginPath(p.name);
             if (File.Exists(path)) return File.ReadAllText(path);
-            // Unix is case sensitive (older files used correct casing of name)
+            
+            // Filesystem is case sensitive (older files used correct casing of name)
             path = "text/login/" + p.name + ".txt";
             return File.Exists(path) ? File.ReadAllText(path) : "connected";
         }
 
         public static string GetLogoutMessage(Player p) {
             if (p.name == null) return "disconnected";
-            if (!Directory.Exists("text/logout"))
-                Directory.CreateDirectory("text/logout");
-            
+
             string path = LogoutPath(p.name);
             if (File.Exists(path)) return File.ReadAllText(path);
             
@@ -76,6 +73,7 @@ namespace MCGalaxy.DB {
         }
         
         static void SetMessage(string path, string msg) {
+            EnsureDirectoriesExist();
             if (msg.Length > 0) {
                 File.WriteAllText(path, msg);
             } else if (File.Exists(path)) {
@@ -164,6 +162,16 @@ namespace MCGalaxy.DB {
             Database.ReadRows("Players", columns, arg, callback,
                               "WHERE Name LIKE @0 ESCAPE '#' LIMIT 101" + suffix,
                               "%" + name.Replace("_", "#_") + "%");
+        }
+        
+        
+        public static void EnsureDirectoriesExist() {
+            if (!Directory.Exists("text/login"))
+                Directory.CreateDirectory("text/login");
+            if (!Directory.Exists("text/logout"))
+            	Directory.CreateDirectory("text/logout");
+            if (!Directory.Exists("players"))
+                Directory.CreateDirectory("players");
         }
     }
 }

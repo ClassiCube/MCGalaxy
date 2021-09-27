@@ -24,6 +24,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using MCGalaxy.Commands;
+using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
 using MCGalaxy.Events.ServerEvents;
@@ -141,6 +142,7 @@ namespace MCGalaxy {
             EnsureDirectoryExists("ranks");
             RankInfo.EnsureExists();
             Ban.EnsureExists();
+            PlayerDB.EnsureDirectoriesExist();
 
             EnsureDirectoryExists("extra");
             EnsureDirectoryExists(Paths.WaypointsDir);

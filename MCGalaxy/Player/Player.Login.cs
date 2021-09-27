@@ -62,7 +62,8 @@ namespace MCGalaxy
             // fix for classicube java client, doesn't reply if only send EnvMapAppearance with version 2
             Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));
             
-            foreach (CpeExtension ext in Extensions) {
+            foreach (CpeExtension ext in Extensions) 
+            {
                 Send(Packet.ExtEntry(ext.Name, ext.ServerVersion));
             }
         }
@@ -105,8 +106,6 @@ namespace MCGalaxy
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
             
-            if (!Directory.Exists("players"))
-                Directory.CreateDirectory("players");
             PlayerDB.LoadNick(this);
             Game.Team = Team.TeamIn(this);
             SetPrefix();
