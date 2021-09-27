@@ -30,7 +30,7 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable 
     { 
-        void HandleLogin(byte[] buffer, int offset) {
+        void HandleLogin(byte[] buffer, int offset, int left) {
             LastAction = DateTime.UtcNow;
             if (loggedIn) return;
             version = buffer[offset + 1];

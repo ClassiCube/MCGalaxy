@@ -186,7 +186,7 @@ namespace MCGalaxy {
             return result;
         }
 
-        void HandleBlockchange(byte[] buffer, int offset) {
+        void HandleBlockchange(byte[] buffer, int offset, int left) {
             try {
                 if (!loggedIn || spamChecker.CheckBlockSpam()) return;
                 ushort x = NetUtils.ReadU16(buffer, offset + 1);
@@ -229,7 +229,7 @@ namespace MCGalaxy {
             }
         }
         
-        void HandleMovement(byte[] buffer, int offset) {
+        void HandleMovement(byte[] buffer, int offset, int left) {
             if (!loggedIn) return;
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             if (Supports(CpeExt.HeldBlock)) {
@@ -288,7 +288,7 @@ namespace MCGalaxy {
             if (zone != null) OnChangedZoneEvent.Call(this);
         }        
         
-        void HandlePlayerClicked(byte[] buffer, int offset) {
+        void HandlePlayerClicked(byte[] buffer, int offset, int left) {
             MouseButton Button = (MouseButton)buffer[offset + 1];
             MouseAction Action = (MouseAction)buffer[offset + 2];
             ushort yaw = NetUtils.ReadU16(buffer, offset + 3);
@@ -303,7 +303,7 @@ namespace MCGalaxy {
             OnPlayerClickEvent.Call(this, Button, Action, yaw, pitch, entityID, x, y, z, face);
         }
         
-        void HandleTwoWayPing(byte[] buffer, int offset) {
+        void HandleTwoWayPing(byte[] buffer, int offset, int left) {
             bool serverToClient = buffer[offset + 1] != 0;
             ushort data = NetUtils.ReadU16(buffer, offset + 2);
             
@@ -430,7 +430,7 @@ namespace MCGalaxy {
             return true;
         }
 
-        void HandleChat(byte[] buffer, int offset) {
+        void HandleChat(byte[] buffer, int offset, int left) {
             if (!loggedIn) return;
             byte continued = buffer[offset + 1];
             string text = NetUtils.ReadString(buffer, offset + 2);
