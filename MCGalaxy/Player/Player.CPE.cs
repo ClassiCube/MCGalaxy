@@ -74,6 +74,8 @@ namespace MCGalaxy {
             if (ext.Name == CpeExt.CustomBlocks) {
                 if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
                 hasCustomBlocks = true;
+                
+                UpdateFallbackTable();
                 if (MaxRawBlock < Block.CPE_MAX_BLOCK) MaxRawBlock = Block.CPE_MAX_BLOCK;
             } else if (ext.Name == CpeExt.ChangeModel) {
                 hasChangeModel = true;

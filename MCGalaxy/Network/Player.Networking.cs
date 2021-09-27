@@ -23,10 +23,11 @@ using MCGalaxy.Network;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy {
-    public partial class Player : IDisposable, INetProtocol {
-
-        public bool hasCpe, finishedCpeLogin = false;
+namespace MCGalaxy 
+{
+    public partial class Player : IDisposable, INetProtocol 
+    {
+        public bool hasCpe, finishedCpeLogin;
         public string appName;
         int extensionCount;
         
@@ -350,6 +351,13 @@ namespace MCGalaxy {
             
             if (!hasCustomBlocks) raw = fallback[(BlockRaw)raw];
             return raw;
+        }
+        
+        void UpdateFallbackTable() {
+        	for (byte b = 0; b < Block.CPE_COUNT; b++)
+            {
+                fallback[b] = Block.ConvertLimited(b, this);
+            }
         }
     }
 }

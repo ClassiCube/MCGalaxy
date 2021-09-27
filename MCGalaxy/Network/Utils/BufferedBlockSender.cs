@@ -67,27 +67,27 @@ namespace MCGalaxy.Network {
         }
         
         void SendLevel() {
-            byte[] bulk = null, normal = null, noBlockDefs = null, original = null, ext = null, extBulk = null;
+            byte[] bulk = null, normal = null, noBlockDefs = null, classic = null, ext = null, extBulk = null;
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level != level) continue;
                 byte[] packet = MakePacket(p, ref bulk, ref normal,
-                                           ref noBlockDefs, ref original, ref ext, ref extBulk);
+                                           ref noBlockDefs, ref classic, ref ext, ref extBulk);
                 p.Socket.Send(packet, SendFlags.LowPriority);
             }
         }
         
         void SendPlayer() {
-            byte[] bulk = null, normal = null, noBlockDefs = null, original = null, ext = null, extBulk = null;
+            byte[] bulk = null, normal = null, noBlockDefs = null, classic = null, ext = null, extBulk = null;
             byte[] packet = MakePacket(player, ref bulk, ref normal,
-                                       ref noBlockDefs, ref original, ref ext, ref extBulk);
+                                       ref noBlockDefs, ref classic, ref ext, ref extBulk);
             player.Socket.Send(packet, SendFlags.LowPriority);
         }
         
         #region Packet construction
         
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
-                          ref byte[] noBlockDefs, ref byte[] original, ref byte[] ext, ref byte[] extBulk) {
+                          ref byte[] noBlockDefs, ref byte[] classic, ref byte[] ext, ref byte[] extBulk) {
             #if TEN_BIT_BLOCKS
             if (p.hasExtBlocks) {
                 if (p.hasBulkBlockUpdate && count >= 150) {
@@ -101,18 +101,21 @@ namespace MCGalaxy.Network {
             #endif
             
             // Different clients support varying types of blocks
-            if (p.hasBulkBlockUpdate && p.hasCustomBlocks && p.hasBlockDefs && count >= 160) {
+            if (p.hasBulkBlockUpdate && p.hasBlockDefs && count >= 160) {
                 if (bulk == null) bulk = MakeBulk();
                 return bulk;
-            } else if (p.hasCustomBlocks && p.hasBlockDefs) {
+            } else if (p.hasBlockDefs) {
+                // supports all 255 blocks (classicube enhanced client)
                 if (normal == null) normal = MakeNormal();
                 return normal;
-            } else if (p.hasCustomBlocks) {
-                if (noBlockDefs == null) noBlockDefs = MakeNoBlockDefs();
-                return noBlockDefs;
+            } else if (!p.hasCustomBlocks && p.version == Server.VERSION_0030) {
+                // support original 45 blocks (classic client)
+                if (classic == null) classic = MakeLimited(p.fallback);
+                return classic;
             } else {
-                if (original == null) original = MakeOriginalOnly();
-                return original;
+                // other support combination (CPE only, preclassic, etc)
+                //  don't bother trying to optimise for this case
+                return MakeLimited(p.fallback);
             }
         }
 
@@ -206,7 +209,7 @@ namespace MCGalaxy.Network {
             return data;
         }
         
-        byte[] MakeNoBlockDefs() {
+        byte[] MakeLimited(byte[] fallback) {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) {
                 int index = indices[i];
@@ -218,24 +221,7 @@ namespace MCGalaxy.Network {
                 data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
                 data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
                 data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = level.GetFallback(blocks[i]);
-            }
-            return data;
-        }
-        
-        byte[] MakeOriginalOnly() {
-            byte[] data = new byte[count * 8];
-            for (int i = 0, j = 0; i < count; i++) {
-                int index = indices[i];
-                int x = (index % level.Width);
-                int y = (index / level.Width) / level.Length;
-                int z = (index / level.Width) % level.Length;
-                
-                data[j++] = Opcode.SetBlock;
-                data[j++] = (byte)(x >> 8); data[j++] = (byte)x;
-                data[j++] = (byte)(y >> 8); data[j++] = (byte)y;
-                data[j++] = (byte)(z >> 8); data[j++] = (byte)z;
-                data[j++] = Block.ConvertCPE(level.GetFallback(blocks[i]));
+                data[j++] = fallback[level.GetFallback(blocks[i])];
             }
             return data;
         }

@@ -76,10 +76,29 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Converts a block &lt; CPE_COUNT into a suitable block for given protocol </summary>
-        internal static byte ConvertClassic(byte block, byte version) {
-            block = ConvertCPE(block);
-            if (version >= Server.VERSION_0030) return block;
+        /// <summary> Converts a block &lt; CPE_COUNT into a suitable block for client </summary>
+        internal static byte ConvertLimited(byte block, Player p) {
+        	if (p.hasCustomBlocks) return block;
+        	
+            switch (block) {
+                case CobblestoneSlab: block = Slab; break;
+                case Rope:        block = Mushroom; break;
+                case Sandstone:   block = Sand; break;
+                case Snow:        block = Air; break;
+                case Fire:        block = Lava; break;
+                case LightPink:   block = Pink; break;
+                case ForestGreen: block = Green; break;
+                case Brown:       block = Dirt; break;
+                case DeepBlue:    block = Blue; break;
+                case Turquoise:   block = Cyan; break;
+                case Ice:         block = Glass; break;
+                case CeramicTile: block = Iron; break;
+                case MagmaBlock:  block = Obsidian; break;
+                case Pillar:      block = White; break;
+                case Crate:       block = Wood; break;
+                case StoneBrick:  block = Stone; break;
+            }
+            if (p.version >= Server.VERSION_0030) return block;
             
             // protocol version 6 only supports up to gold block
             switch (block) {
@@ -93,28 +112,6 @@ namespace MCGalaxy {
                 case Obsidian:   return Cobblestone;
             }
             return block;
-        }
-        
-        public static byte ConvertCPE(byte block) {
-            switch (block) {
-                case CobblestoneSlab: return Slab;
-                case Rope: return Mushroom;
-                case Sandstone: return Sand;
-                case Snow: return Air;
-                case Fire: return Lava;
-                case LightPink: return Pink;
-                case ForestGreen: return Green;
-                case Brown: return Dirt;
-                case DeepBlue: return Blue;
-                case Turquoise: return Cyan;
-                case Ice: return Glass;
-                case CeramicTile: return Iron;
-                case MagmaBlock: return Obsidian;
-                case Pillar: return White;
-                case Crate: return Wood;
-                case StoneBrick: return Stone;
-                default: return block;
-            }
         }
         
         public static BlockID Convert(BlockID block) {

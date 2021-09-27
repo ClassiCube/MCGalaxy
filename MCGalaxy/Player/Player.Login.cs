@@ -52,10 +52,7 @@ namespace MCGalaxy
             Loading = true;
             if (Socket.Disconnected) return;
             
-            for (byte b = 0; b < Block.CPE_COUNT; b++) {
-                fallback[b] = Block.ConvertClassic(b, version);
-            }
-            
+            UpdateFallbackTable();
             if (hasCpe) { SendCpeExtensions(); } 
             else { CompleteLoginProcess(); }
         }

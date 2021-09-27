@@ -225,7 +225,7 @@ namespace MCGalaxy {
         bool gotSQLData;
         
         internal byte version; // protocol version
-        byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
+        internal byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
         
         
         public bool cancelcommand, cancelchat, cancelmove;
