@@ -31,14 +31,23 @@ namespace MCGalaxy
     public partial class Player : IDisposable 
     { 
         int HandleLogin(byte[] buffer, int offset, int left) {
-    	    const int size = 1 + 1 + 64 + 64 + 1;
-            LastAction = DateTime.UtcNow;
-            if (loggedIn) return size;
-            version = buffer[offset + 1];
+            // protocol versions < 6 didn't have the usertype field,
+            //  hence this two-packet-size-handling monstrosity
+            const int old_size = 1 + 1 + 64 + 64;
+            const int new_size = 1 + 1 + 64 + 64 + 1;
+            // the packet must be at least old_size long
+            if (left < old_size) return 0;  
             
-            if (version < Server.VERSION_0023 || version > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return size; 
+            LastAction = DateTime.UtcNow;
+            version    = buffer[offset + 1];
+            if (version < Server.VERSION_0016 || version > Server.VERSION_0030) {
+                Leave(null, "Unsupported protocol version", true); return -1; 
             }
+            
+            // check size now that know whether usertype field is included or not
+            int size = version >= Server.VERSION_0023 ? new_size : old_size;
+            if (left < size) return 0;
+            if (loggedIn)    return size;
             
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;

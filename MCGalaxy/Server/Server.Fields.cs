@@ -83,6 +83,9 @@ namespace MCGalaxy {
         public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
         public static Server s = new Server();
 
+        public const byte VERSION_0016 = 3; // preclassic 0.0.16
+        public const byte VERSION_0017 = 4; // preclassic 0.0.17 / 0.0.18
+        public const byte VERSION_0019 = 5; // preclassic 0.0.19
         public const byte VERSION_0023 = 6; // preclassic 0.0.23a
         public const byte VERSION_0030 = 7; // classic
         
