@@ -393,9 +393,9 @@ namespace MCGalaxy {
         static object md5Lock = new object();
         
         /// <summary> Calculates mppass (verification token) for the given username. </summary>
-        public static string CalcMppass(string salt, string name) {
+        public static string CalcMppass(string name, string salt) {
             byte[] hash = null;
-            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(name + salt));
+            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
             return BitConverter.ToString(hash).Replace("-", "");
         }
     }
