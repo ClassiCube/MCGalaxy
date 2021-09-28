@@ -86,7 +86,6 @@ namespace MCGalaxy {
         public const byte VERSION_0023 = 6; // preclassic 0.0.23a
         public const byte VERSION_0030 = 7; // classic
         
-        public static string salt = "";
         public static bool chatmod, flipHead;
         public static bool shuttingDown;
     }

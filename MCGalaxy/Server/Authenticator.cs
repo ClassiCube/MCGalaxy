@@ -33,11 +33,15 @@ namespace MCGalaxy {
         /// <summary> Checks if the given player is allowed to login with the given mppass </summary>
         public virtual bool VerifyLogin(Player p, string mppass) {
             if (!Server.Config.VerifyNames) return true;
-            string calculated = Server.CalcMppass(p.truename);
             
-            if (mppass.CaselessEq(calculated)) {
-                p.verifiedName = true;
-                return true;
+            foreach (Heartbeat hb in Heartbeat.Heartbeats)
+            {
+                string calculated = Server.CalcMppass(p.truename, hb.Salt);
+                
+                if (mppass.CaselessEq(calculated)) {
+                    p.verifiedName = true;
+                    return true;
+                }
             }
             return IPUtil.IsPrivate(p.IP);
         }

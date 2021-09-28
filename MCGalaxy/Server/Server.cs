@@ -97,7 +97,6 @@ namespace MCGalaxy {
             MoveSqliteDll();
             MoveOutdatedFiles();
 
-            salt = GenerateSalt();
             LoadAllSettings();
             InitDatabase();
             Economy.LoadDatabase();
@@ -394,9 +393,9 @@ namespace MCGalaxy {
         static object md5Lock = new object();
         
         /// <summary> Calculates mppass (verification token) for the given username. </summary>
-        public static string CalcMppass(string name) {
+        public static string CalcMppass(string salt, string name) {
             byte[] hash = null;
-            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
+            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(name + salt));
             return BitConverter.ToString(hash).Replace("-", "");
         }
     }

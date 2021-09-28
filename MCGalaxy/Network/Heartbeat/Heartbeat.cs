@@ -37,6 +37,9 @@ namespace MCGalaxy.Network
         /// <summary> Gets the URL the heartbeat is sent to. </summary>
         public abstract string URL { get; }
         
+        /// <summary> Salt used for verifying player names </summary>
+        public string Salt = "";
+        
         /// <summary> Initialises data for this heartbeat. </summary>
         public abstract void Init();
         
@@ -54,6 +57,7 @@ namespace MCGalaxy.Network
         public static void InitHeartbeats() {
             foreach (Heartbeat beat in Heartbeats) {
                 beat.Init();
+                beat.Salt = Server.GenerateSalt();
                 Pump(beat);
             }
             
