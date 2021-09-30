@@ -112,9 +112,9 @@ namespace MCGalaxy.Gui.Popups {
                 return null;
             }
             
-            ConsoleHelpPlayer p = new ConsoleHelpPlayer();
-            Assembly result     = compiler.Compile(p, "Command", new[] { path }, null);
-            if (result != null) return result;
+            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
+            CompilerResults result = compiler.Compile(p, "Command", new[] { path }, null);
+            if (result != null) return result.CompiledAssembly;
             
             Popup.Error(Colors.StripUsed(p.Messages));
             return null;

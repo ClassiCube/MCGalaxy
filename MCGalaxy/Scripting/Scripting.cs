@@ -287,9 +287,9 @@ namespace MCGalaxy.Scripting
         /// <param name="type"> Type of files being compiled (e.g. Plugin, Command) </param>
         /// <param name="srcs"> Path of the source code files </param>
         /// <param name="dst"> Path to the destination .dll </param>
-        /// <returns> The compiled assembly, or null if compilation failed </returns>
+        /// <returns> The compiler results, or null if compilation failed </returns>
         /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
-        public Assembly Compile(Player p, string type, string[] srcs, string dst) {
+        public CompilerResults Compile(Player p, string type, string[] srcs, string dst) {
             foreach (string path in srcs) 
             {
                 if (File.Exists(path)) continue;
@@ -301,7 +301,7 @@ namespace MCGalaxy.Scripting
             CompilerResults results = Compile(srcs, dst);
             if (!results.Errors.HasErrors) {
                 p.Message("{0} compiled successfully.", type);
-                return results.CompiledAssembly;
+                return results;
             }
             
             SummariseErrors(results, srcs, p);
