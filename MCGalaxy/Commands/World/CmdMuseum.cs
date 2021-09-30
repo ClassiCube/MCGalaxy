@@ -94,11 +94,11 @@ namespace MCGalaxy.Commands.World {
             
             SetLevelProps(lvl);
             Level.LoadMetadata(lvl);
+            lvl.Config.Physics = 0;
             PlayerActions.ChangeMap(p, lvl);
         }
         
         static void SetLevelProps(Level lvl) {
-            lvl.SetPhysics(0);
             lvl.backedup = true;
             lvl.BuildAccess.Min = LevelPermission.Nobody;
             lvl.IsMuseum = true;

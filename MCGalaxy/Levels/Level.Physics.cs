@@ -34,6 +34,8 @@ namespace MCGalaxy {
         readonly object checkLock = new object();
         
         public void SetPhysics(int level) {
+            if (IsMuseum) return;
+        	
             if (physics == 0 && level != 0 && blocks != null) {
                 for (int i = 0; i < blocks.Length; i++)
                     // Optimization hack, since no blocks under 183 ever need a restart
