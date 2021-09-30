@@ -45,7 +45,6 @@ namespace MCGalaxy.Commands.Bots {
             
             if (!Formatter.ValidName(p, args[1], "bot")) return;
             if (!LevelInfo.Check(p, data.Rank, p.level, "modify bots in this level")) return;
-            if (!p.level.Config.AllowBots) { p.Message("Bots have been disabled in this level."); return; }
             
             string bot = args[1], value = args.Length > 2 ? args[2] : null;
             if (args[0].CaselessEq("add")) {
@@ -66,6 +65,7 @@ namespace MCGalaxy.Commands.Bots {
         }
         
         void AddBot(Player p, string botName) {
+            if (!p.level.Config.AllowBots) { p.Message("Bots have been disabled in this level."); return; }
             botName = botName.Replace(' ', '_');
             PlayerBot bot = new PlayerBot(botName, p.level);
             bot.Owner = p.name;
