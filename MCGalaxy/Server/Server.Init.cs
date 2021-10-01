@@ -108,8 +108,14 @@ namespace MCGalaxy {
         }
         
         static void InitHeartbeat(SchedulerTask task) {
-            try {
-                Heartbeat.InitHeartbeats();
+            try
+            {
+                heartbeatService = new HeartbeatService();
+                foreach (string heartbeatUrl in Config.HeartbeatURLs)
+                {
+                    heartbeatService.RegisterHeartbeat(new ClassiCubeBeat(heartbeatUrl));
+                }
+                heartbeatService.StartBeating();
             } catch (Exception ex) {
                 Logger.LogError("Error initialising heartbeat", ex);
             }

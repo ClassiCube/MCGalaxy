@@ -81,7 +81,20 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigStringListAttribute : ConfigAttribute {
+    public sealed class ConfigStringListAttribute : ConfigAttribute
+    {
+        private readonly bool allowEmpty;
+        private readonly string allowedChars;
+        private readonly string[] defValue;
+
+        public ConfigStringListAttribute(string name, string section, string[] def, bool empty, string allowed)
+            : base(name, section) { defValue = def; allowEmpty = empty; allowedChars = allowed; }
+
+        public ConfigStringListAttribute(string name, string section, string[] def, bool empty)
+            : base(name, section) { defValue = def; allowEmpty = empty; }
+        
+        public ConfigStringListAttribute(string name, string section, string[] def) 
+            : base(name, section) { defValue = def; }
         
         public ConfigStringListAttribute(string name, string section) 
             : base(name, section) { }
@@ -92,7 +105,26 @@ namespace MCGalaxy.Config {
         
         public override string Serialise(object value) {
             List<string> elements = (List<string>)value;
-            return elements.Join(",");
+            List<string> sanitizedElements = new List<string>();
+            
+            foreach (string url in elements)
+            {
+                bool reject = false;
+                
+                foreach (char c in url) {
+                    if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue;                
+                    if (allowedChars.IndexOf(c) >= 0) continue;
+                    reject = true;
+                }
+                
+                if (!reject)
+                    sanitizedElements.Add(url);
+            }
+
+            if (sanitizedElements.Count < 1 && !allowEmpty)
+                sanitizedElements = new List<string>(defValue);
+            
+            return sanitizedElements.Join(",");
         }
     }
 }

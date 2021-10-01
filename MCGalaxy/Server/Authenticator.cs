@@ -34,7 +34,7 @@ namespace MCGalaxy {
         public virtual bool VerifyLogin(Player p, string mppass) {
             if (!Server.Config.VerifyNames) return true;
             
-            foreach (Heartbeat hb in Heartbeat.Heartbeats)
+            foreach (Heartbeat hb in Server.heartbeatService.ReadHeartbeats())
             {
                 string calculated = Server.CalcMppass(p.truename, hb.Salt);
                 

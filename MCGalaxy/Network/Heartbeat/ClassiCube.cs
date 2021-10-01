@@ -28,8 +28,9 @@ namespace MCGalaxy.Network {
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
     public sealed class ClassiCubeBeat : Heartbeat {
         string proxyUrl;
-        public override string URL { get { return Server.Config.HeartbeatURL; } }
         public string ServerHash;
+        
+        public ClassiCubeBeat(string URL) : base(URL) { }
         
         public override void Init() {
             string hostUrl = "";
@@ -117,7 +118,7 @@ namespace MCGalaxy.Network {
             return response.Substring(response.LastIndexOf('/') + 1);
         }
         
-        static string GetError(string json) {
+        string GetError(string json) {
             JsonReader reader = new JsonReader(json);
             // silly design, but form of json is:
             // {

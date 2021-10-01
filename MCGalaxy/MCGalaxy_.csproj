@@ -601,6 +601,7 @@
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
+    <Compile Include="Network\Heartbeat\HeartbeatService.cs" />
     <Compile Include="Modules\Relay\IRC\IRCBot.cs" />
     <Compile Include="Network\Listeners.cs" />
     <Compile Include="Network\Packets\Opcode.cs" />
