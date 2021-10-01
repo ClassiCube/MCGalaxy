@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public sealed class CpeExtension {
+namespace MCGalaxy 
+{
+    public sealed class CpeExtension 
+    {
         public string Name;
         public byte ClientVersion, ServerVersion = 1;
         
@@ -30,7 +32,11 @@ namespace MCGalaxy {
         }
     }
     
-    public partial class Player {
+    public partial class Player 
+    {
+        public bool hasCpe, finishedCpeLogin;
+        public string appName;
+        int extensionCount;
         
         public CpeExtension[] Extensions = new CpeExtension[] {
             new CpeExtension(CpeExt.ClickDistance),    new CpeExtension(CpeExt.CustomBlocks),
@@ -66,6 +72,44 @@ namespace MCGalaxy {
         public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks, hasEmoteFix,
         hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate, hasExtTexs;
 
+        /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
+        public bool Supports(string extName, int version = 1) {
+            if (!hasCpe) return false;
+            CpeExtension ext = FindExtension(extName);
+            return ext != null && ext.ClientVersion == version;
+        }
+        
+        public string GetTextureUrl() {
+            string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
+            if (url.Length == 0) {
+                url = Server.Config.DefaultTexture.Length == 0 ? Server.Config.DefaultTerrain : Server.Config.DefaultTexture;
+            }
+            return url;
+        }
+        
+        
+        int HandleExtInfo(byte[] buffer, int offset, int left) {
+            const int size = 1 + 64 + 2;
+            if (left < size) return 0;
+            
+            appName        = NetUtils.ReadString(buffer, offset + 1);
+            extensionCount = buffer[offset + 66];
+            CheckReadAllExtensions(); // in case client supports 0 CPE packets
+            return size;
+        }
+
+        int HandleExtEntry(byte[] buffer, int offset, int left) {
+            const int size = 1 + 64 + 4;
+            if (left < size) return 0;
+            
+            string extName = NetUtils.ReadString(buffer, offset + 1);
+            int extVersion = NetUtils.ReadI32(buffer,    offset + 65);
+            AddExtension(extName, extVersion);
+            extensionCount--;
+            CheckReadAllExtensions();
+            return size;
+        }
+        
         void AddExtension(string extName, int version) {
             CpeExtension ext = FindExtension(extName.Trim());
             if (ext == null) return;
@@ -110,12 +154,14 @@ namespace MCGalaxy {
             }
             #endif
         }
-
-        public bool Supports(string extName, int version = 1) {
-            if (!hasCpe) return false;
-            CpeExtension ext = FindExtension(extName);
-            return ext != null && ext.ClientVersion == version;
+        
+        void CheckReadAllExtensions() {
+            if (extensionCount <= 0 && !finishedCpeLogin) {
+                CompleteLoginProcess();
+                finishedCpeLogin = true;
+            }
         }
+        
         
         string lastUrl = "";
         public void SendCurrentTextures() {
@@ -145,14 +191,6 @@ namespace MCGalaxy {
                 url = level.Config.Terrain.Length == 0 ? Server.Config.DefaultTerrain : level.Config.Terrain;
                 Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
             }
-        }
-        
-        public string GetTextureUrl() {
-            string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
-            if (url.Length == 0) {
-                url = Server.Config.DefaultTexture.Length == 0 ? Server.Config.DefaultTerrain : Server.Config.DefaultTexture;
-            }
-            return url;
         }
 
         public void SendEnvColor(byte type, string hex) {

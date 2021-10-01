@@ -27,10 +27,6 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable, INetProtocol 
     {
-        public bool hasCpe, finishedCpeLogin;
-        public string appName;
-        int extensionCount;
-        
         int INetProtocol.ProcessReceived(byte[] buffer, int bufferLen) {
             int read = 0;
             try {
@@ -113,36 +109,7 @@ namespace MCGalaxy
             ProcessChat(buffer, offset);
             return size;
         }
-        
-        int HandleExtInfo(byte[] buffer, int offset, int left) {
-            const int size = 1 + 64 + 2;
-            if (left < size) return 0;
-            
-            appName = NetUtils.ReadString(buffer, offset + 1);
-            extensionCount = buffer[offset + 66];
-            CheckReadAllExtensions(); // in case client supports 0 CPE packets
-            return size;
-        }
 
-        int HandleExtEntry(byte[] buffer, int offset, int left) {
-            const int size = 1 + 64 + 4;
-            if (left < size) return 0;
-            
-            string extName = NetUtils.ReadString(buffer, offset + 1);
-            int extVersion = NetUtils.ReadI32(buffer, offset + 65);
-            AddExtension(extName, extVersion);
-            extensionCount--;
-            CheckReadAllExtensions();
-            return size;
-        }
-
-        void CheckReadAllExtensions() {
-            if (extensionCount <= 0 && !finishedCpeLogin) {
-                CompleteLoginProcess();
-                finishedCpeLogin = true;
-            }
-        }
-        
         
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
         public void Send(byte[] buffer, bool sync) {
