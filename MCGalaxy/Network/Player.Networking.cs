@@ -27,68 +27,43 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable, INetProtocol 
     {
-        public bool hasCpe, finishedCpeLogin;
-        public string appName;
-        int extensionCount;
-        
         int INetProtocol.ProcessReceived(byte[] buffer, int bufferLen) {
-            int processedLen = 0;
+            int read = 0;
             try {
-                while (processedLen < bufferLen) {
-                    int packetLen = PacketSize(buffer[processedLen]);
+                while (read < bufferLen) {
+                    int packetLen = HandlePacket(buffer, read, bufferLen - read);
+                    // Partial packet received
+                    if (packetLen == 0) break;
+                    
+                    // Client was forced disconnected
                     if (packetLen == -1) return bufferLen;
                     
-                    // Partial packet data received
-                    if (processedLen + packetLen > bufferLen) return processedLen;
-                    HandlePacket(buffer, processedLen);
-                    processedLen += packetLen;
+                    // Packet processed, onto next
+                    read += packetLen;
                 }
             } catch (Exception ex) {
                 Logger.LogError(ex);
             }
-            return processedLen;
+            return read;
         }
-        
-        int PacketSize(byte opcode) {
-            switch (opcode) {
-                case Opcode.Handshake:      return 1 + 1 + 64 + 64 + 1;
-                case Opcode.SetBlockClient: return 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
-                case Opcode.EntityTeleport: return 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
-                case Opcode.Message:        return 1 + 1 + 64;
-                case Opcode.CpeExtInfo:     return 1 + 64 + 2;
-                case Opcode.CpeExtEntry:    return 1 + 64 + 4;
-                case Opcode.CpeCustomBlockSupportLevel: return 1 + 1;
-                case Opcode.CpePlayerClick: return 1 + 1 + 1 + 2 + 2 + 1 + 2 + 2 + 2 + 1;
-                case Opcode.Ping:           return 1;
-                case Opcode.CpeTwoWayPing:  return 1 + 1 + 2;
 
-                default:
-                    Leave("Unhandled opcode \"" + opcode + "\"!", true);
-                    return -1;
-            }
-        }
-        
-        void HandlePacket(byte[] buffer, int offset) {
+        int HandlePacket(byte[] buffer, int offset, int left) {
             switch (buffer[offset]) {
-                case Opcode.Ping: break;
-                case Opcode.Handshake:
-                    HandleLogin(buffer, offset); break;
-                case Opcode.SetBlockClient:
-                    HandleBlockchange(buffer, offset); break;
-                case Opcode.EntityTeleport:
-                    HandleMovement(buffer, offset); break;
-                case Opcode.Message:
-                    HandleChat(buffer, offset); break;
-                case Opcode.CpeExtInfo:
-                    HandleExtInfo(buffer, offset); break;
-                case Opcode.CpeExtEntry:
-                    HandleExtEntry(buffer, offset); break;
+                case Opcode.Ping:           return 1;
+                case Opcode.Handshake:      return HandleLogin(buffer, offset, left);
+                case Opcode.SetBlockClient: return HandleBlockchange(buffer, offset, left);
+                case Opcode.EntityTeleport: return HandleMovement(buffer, offset, left);
+                case Opcode.Message:        return HandleChat(buffer, offset, left);
+                case Opcode.CpeExtInfo:     return HandleExtInfo(buffer, offset, left);
+                case Opcode.CpeExtEntry:    return HandleExtEntry(buffer, offset, left);
+                case Opcode.CpePlayerClick: return HandlePlayerClicked(buffer, offset, left);
+                case Opcode.CpeTwoWayPing:  return HandleTwoWayPing(buffer, offset, left);   
+                
                 case Opcode.CpeCustomBlockSupportLevel:
-                    break; // only ever one level
-                case Opcode.CpePlayerClick:
-                    HandlePlayerClicked(buffer, offset); break;
-                case Opcode.CpeTwoWayPing:
-                    HandleTwoWayPing(buffer, offset); break;
+                    return left < 2 ? 0 : 2; // only ever one level anyways
+                default:
+                    Leave("Unhandled opcode \"" + buffer[offset] + "\"!", true);
+                    return -1;
             }
         }
         
@@ -107,28 +82,34 @@ namespace MCGalaxy
         #else
         BlockID ReadBlock(byte[] buffer, int offset) { return Block.FromRaw(buffer[offset]); }
         #endif
-        
-        void HandleExtInfo(byte[] buffer, int offset) {
-            appName = NetUtils.ReadString(buffer, offset + 1);
-            extensionCount = buffer[offset + 66];
-            CheckReadAllExtensions(); // in case client supports 0 CPE packets
-        }
-
-        void HandleExtEntry(byte[] buffer, int offset) {
-            string extName = NetUtils.ReadString(buffer, offset + 1);
-            int extVersion = NetUtils.ReadI32(buffer, offset + 65);
-            AddExtension(extName, extVersion);
-            extensionCount--;
-            CheckReadAllExtensions();
-        }
-
-        void CheckReadAllExtensions() {
-            if (extensionCount <= 0 && !finishedCpeLogin) {
-                CompleteLoginProcess();
-                finishedCpeLogin = true;
-            }
+                
+        int HandleBlockchange(byte[] buffer, int offset, int left) {
+            int size = 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
+            if (left < size) return 0;
+            if (!loggedIn)   return size;
+            
+            ProcessBlockchange(buffer, offset);
+            return size;
         }
         
+        int HandleMovement(byte[] buffer, int offset, int left) {
+            int size = 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
+            if (left < size) return 0;
+            if (!loggedIn)   return size;
+            
+            ProcessMovement(buffer, offset);
+            return size;
+        }
+        
+        int HandleChat(byte[] buffer, int offset, int left) {
+            const int size = 1 + 1 + 64;
+            if (left < size) return 0;
+            if (!loggedIn)   return size;
+            
+            ProcessChat(buffer, offset);
+            return size;
+        }
+
         
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
         public void Send(byte[] buffer, bool sync) {
@@ -354,7 +335,7 @@ namespace MCGalaxy
         }
         
         void UpdateFallbackTable() {
-        	for (byte b = 0; b < Block.CPE_COUNT; b++)
+            for (byte b = 0; b < Block.CPE_COUNT; b++)
             {
                 fallback[b] = Block.ConvertLimited(b, this);
             }

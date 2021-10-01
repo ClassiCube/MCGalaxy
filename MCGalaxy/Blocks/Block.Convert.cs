@@ -80,6 +80,7 @@ namespace MCGalaxy {
         internal static byte ConvertLimited(byte block, Player p) {
         	if (p.hasCustomBlocks) return block;
         	
+            // protocol version 7 only supports up to Obsidian block
             switch (block) {
                 case CobblestoneSlab: block = Slab; break;
                 case Rope:        block = Mushroom; break;
@@ -100,17 +101,31 @@ namespace MCGalaxy {
             }
             if (p.version >= Server.VERSION_0030) return block;
             
-            // protocol version 6 only supports up to gold block
+            // protocol version 6 only supports up to Gold block
             switch (block) {
-                case Iron:  return Gold;
-                case DoubleSlab: return Gray;
-                case Slab:  return Gray;
-                case Brick: return Red;
-                case TNT:   return Red;
-                case Bookshelf:  return Wood;
-                case MossyRocks: return Cobblestone;
-                case Obsidian:   return Cobblestone;
+                case Iron:       block = Gold; break;
+                case DoubleSlab: block = Gray; break;
+                case Slab:       block = Gray; break;
+                case Brick:      block = Red; break;
+                case TNT:        block = Red; break;
+                case Bookshelf:  block = Wood; break;
+                case MossyRocks: block = Cobblestone; break;
+                case Obsidian:   block = Cobblestone; break;
             }
+            if (p.version >= Server.VERSION_0020) return block;
+            
+            // protocol version 5 only supports up to Glass block
+            if (block == Block.Gold)      block = Block.Sponge;
+            if (block >= Block.Dandelion) block = Block.Sapling;
+            if (block >= Block.Red)       block = Block.Sand;
+            if (p.version >= Server.VERSION_0019) return block;
+            
+            // protocol version 4 only supports up to Leaves block
+            if (block == Block.Glass) block  = Block.Leaves;
+            if (block == Block.Sponge) block = Block.GoldOre;
+            
+            // protocol version 3 seems to have same support
+            // TODO what even changed between 3 and 4?
             return block;
         }
         

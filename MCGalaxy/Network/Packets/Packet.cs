@@ -29,7 +29,8 @@ namespace MCGalaxy.Network
         #region Classic
         
         public static byte[] Motd(Player p, string motd) {
-            byte[] buffer = new byte[131];
+            bool type     = p.version >= Server.VERSION_0020;
+            byte[] buffer = new byte[130 + (type ? 1 : 0)];
             buffer[0] = Opcode.Handshake;
             buffer[1] = p.version;
             
@@ -41,7 +42,7 @@ namespace MCGalaxy.Network
                 NetUtils.Write(motd, buffer, 66, p.hasCP437);
             }
 
-            buffer[130] = p.UserType();
+            if (type) buffer[130] = p.UserType();
             return buffer;
         }
         

@@ -30,14 +30,24 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable 
     { 
-        void HandleLogin(byte[] buffer, int offset) {
-            LastAction = DateTime.UtcNow;
-            if (loggedIn) return;
-            version = buffer[offset + 1];
+        int HandleLogin(byte[] buffer, int offset, int left) {
+            // protocol versions < 6 didn't have the usertype field,
+            //  hence this two-packet-size-handling monstrosity
+            const int old_size = 1 + 1 + 64 + 64;
+            const int new_size = 1 + 1 + 64 + 64 + 1;
+            // the packet must be at least old_size long
+            if (left < old_size) return 0;  
             
-            if (version < Server.VERSION_0023 || version > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return; 
+            LastAction = DateTime.UtcNow;
+            version    = buffer[offset + 1];
+            if (version > Server.VERSION_0030) {
+                Leave(null, "Unsupported protocol version", true); return -1; 
             }
+            
+            // check size now that know whether usertype field is included or not
+            int size = version >= Server.VERSION_0020 ? new_size : old_size;
+            if (left < size) return 0;
+            if (loggedIn)    return size;
             
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;
@@ -45,16 +55,17 @@ namespace MCGalaxy
             
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
-            if (cancelconnecting) { cancelconnecting = false; return; }
+            if (cancelconnecting) { cancelconnecting = false; return size; }
             
             hasCpe  = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
             level   = Server.mainLevel;
             Loading = true;
-            if (Socket.Disconnected) return;
+            if (Socket.Disconnected) return size;
             
             UpdateFallbackTable();
             if (hasCpe) { SendCpeExtensions(); } 
             else { CompleteLoginProcess(); }
+            return size;
         }
         
         void SendCpeExtensions() {

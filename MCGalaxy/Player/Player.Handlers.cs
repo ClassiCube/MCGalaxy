@@ -29,8 +29,10 @@ using MCGalaxy.SQL;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public partial class Player : IDisposable {
+namespace MCGalaxy 
+{
+    public partial class Player : IDisposable 
+    {
         const string mustAgreeMsg = "You must read /rules then agree to them with /agree!";
         
         readonly object blockchangeLock = new object();
@@ -186,9 +188,9 @@ namespace MCGalaxy {
             return result;
         }
 
-        void HandleBlockchange(byte[] buffer, int offset) {
+        void ProcessBlockchange(byte[] buffer, int offset) {
             try {
-                if (!loggedIn || spamChecker.CheckBlockSpam()) return;
+                if (spamChecker.CheckBlockSpam()) return;
                 ushort x = NetUtils.ReadU16(buffer, offset + 1);
                 ushort y = NetUtils.ReadU16(buffer, offset + 3);
                 ushort z = NetUtils.ReadU16(buffer, offset + 5);
@@ -229,8 +231,7 @@ namespace MCGalaxy {
             }
         }
         
-        void HandleMovement(byte[] buffer, int offset) {
-            if (!loggedIn) return;
+        void ProcessMovement(byte[] buffer, int offset) {
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             if (Supports(CpeExt.HeldBlock)) {
                 ClientHeldBlock = ReadBlock(buffer, offset + 1);
@@ -288,7 +289,10 @@ namespace MCGalaxy {
             if (zone != null) OnChangedZoneEvent.Call(this);
         }        
         
-        void HandlePlayerClicked(byte[] buffer, int offset) {
+        int HandlePlayerClicked(byte[] buffer, int offset, int left) {
+            const int size = 1 + 1 + 1 + 2 + 2 + 1 + 2 + 2 + 2 + 1;
+            if (left < size) return 0;
+            
             MouseButton Button = (MouseButton)buffer[offset + 1];
             MouseAction Action = (MouseAction)buffer[offset + 2];
             ushort yaw = NetUtils.ReadU16(buffer, offset + 3);
@@ -301,9 +305,13 @@ namespace MCGalaxy {
             TargetBlockFace face = (TargetBlockFace)buffer[offset + 14];
             if (face > TargetBlockFace.None) face = TargetBlockFace.None;
             OnPlayerClickEvent.Call(this, Button, Action, yaw, pitch, entityID, x, y, z, face);
+            return size;
         }
         
-        void HandleTwoWayPing(byte[] buffer, int offset) {
+        int HandleTwoWayPing(byte[] buffer, int offset, int left) {
+            const int size = 1 + 1 + 2;
+            if (left < size) return 0;
+            
             bool serverToClient = buffer[offset + 1] != 0;
             ushort data = NetUtils.ReadU16(buffer, offset + 2);
             
@@ -314,6 +322,7 @@ namespace MCGalaxy {
                 // Server -> client ping, set time received for reply.
                 Ping.Update(data);
             }
+            return size;
         }
         
         int CurrentEnvProp(EnvProp i, Zone zone) {
@@ -429,9 +438,8 @@ namespace MCGalaxy {
             lastDeath = DateTime.UtcNow;
             return true;
         }
-
-        void HandleChat(byte[] buffer, int offset) {
-            if (!loggedIn) return;
+        
+        void ProcessChat(byte[] buffer, int offset) {
             byte continued = buffer[offset + 1];
             string text = NetUtils.ReadString(buffer, offset + 2);
             LastAction = DateTime.UtcNow;
