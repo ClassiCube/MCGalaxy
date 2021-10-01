@@ -29,6 +29,7 @@ namespace MCGalaxy.Network {
     public sealed class ClassiCubeBeat : Heartbeat {
         string proxyUrl;
         public override string URL { get { return Server.Config.HeartbeatURL; } }
+        public string ServerHash;
         
         public override void Init() {
             string hostUrl = "";
@@ -88,21 +89,17 @@ namespace MCGalaxy.Network {
         
         public override void OnResponse(string response) {
             if (String.IsNullOrEmpty(response)) return;
-            
-            // in form of http://www.classicube.net/server/play/<hash>/
-            if (response.EndsWith("/"))
-                response = response.Substring(0, response.Length - 1);
-            string hash = response.Substring(response.LastIndexOf('/') + 1);
+            string hash = ExtractHash(response);
 
             // only need to do this when contents have changed
-            if (hash == Server.Hash) return;
-            Server.Hash = hash;
+            if (hash == ServerHash) return;
+            ServerHash = hash;
             Server.URL = response;
             
             if (!response.Contains("\"errors\":")) {
                 Server.UpdateUrl(Server.URL);
                 File.WriteAllText("text/externalurl.txt", Server.URL);
-                Logger.Log(LogType.SystemActivity, "ClassiCube URL found: " + Server.URL);
+                Logger.Log(LogType.SystemActivity, "Server URL found: " + Server.URL);
             } else {
                 string error = GetError(response);
                 if (error == null) error = "Error while finding URL. Is the port open?";
@@ -111,6 +108,13 @@ namespace MCGalaxy.Network {
                 Server.UpdateUrl(Server.URL);
                 Logger.Log(LogType.Warning, response);
             }
+        }
+        
+        static string ExtractHash(string response) {
+            // in form of http://www.classicube.net/server/play/<hash>/
+            if (response.EndsWith("/"))
+                response = response.Substring(0, response.Length - 1);
+            return response.Substring(response.LastIndexOf('/') + 1);
         }
         
         static string GetError(string json) {

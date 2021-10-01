@@ -49,8 +49,8 @@ namespace MCGalaxy {
             set { fullName = value; }
         }
 
-        // URL hash for connecting to the server
-        public static string Hash = String.Empty, URL = String.Empty;
+        // URL for connecting to the server
+        public static string URL = String.Empty;
         public static INetListen Listener;
 
         //Other
