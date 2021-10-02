@@ -179,6 +179,7 @@ namespace MCGalaxy {
             ImagePalette.Load();
             
             SrvProperties.Load();
+            Heartbeat.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();
             Command.InitAll();

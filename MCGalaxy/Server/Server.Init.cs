@@ -108,11 +108,7 @@ namespace MCGalaxy {
         }
         
         static void InitHeartbeat(SchedulerTask task) {
-            try {
-                Heartbeat.InitHeartbeats();
-            } catch (Exception ex) {
-                Logger.LogError("Error initialising heartbeat", ex);
-            }
+            Heartbeat.Start();
         }
         
         static void InitTimers(SchedulerTask task) {

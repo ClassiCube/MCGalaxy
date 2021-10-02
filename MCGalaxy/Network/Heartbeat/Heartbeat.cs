@@ -27,14 +27,14 @@ namespace MCGalaxy.Network
     /// <summary> Repeatedly sends a heartbeat request every certain interval to a web server. </summary>
     public abstract class Heartbeat 
     {
-        /// <summary> The max number of retries attempted for a requests. </summary>
+        /// <summary> The max number of retries attempted for a request </summary>
         public const int MAX_RETRIES = 3;
         
-        /// <summary> List of all heartbeats to pump. </summary>
+        /// <summary> List of all heartbeats to pump </summary>
         public static List<Heartbeat> Heartbeats = new List<Heartbeat>();
         
         
-        /// <summary> The URL the heartbeat is sent to </summary
+        /// <summary> The URL this heartbeat is sent to </summary
         public string URL;
         /// <summary> Salt used for verifying player names </summary>
         public string Salt = "";        
@@ -84,19 +84,25 @@ namespace MCGalaxy.Network
         public static void Register(Heartbeat beat) {
             beat.Init();
             beat.Salt = Server.GenerateSalt();
-            beat.Pump();
             Heartbeats.Add(beat);
         }
         
-        /// <summary> Initialises all heartbeats </summary>
-        public static void InitHeartbeats() {
-            UpdateHeartbeats();
+        /// <summary> Starts pumping heartbeats </summary>
+        public static void Start() {
+            OnBeat(null); // immedately call so URL is shown as soon as possible in console
             Server.Background.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
         }
         
-        static void UpdateHeartbeats() {
-            string[] urls = Server.Config.HeartbeatURL.SplitComma();
-            foreach (string url in urls)
+        static string lastUrls;
+        /// <summary> Reloads list of heartbeats from Server.Config </summary>
+        public static void ReloadDefault() {
+            string urls = Server.Config.HeartbeatURL;
+            // don't reload heartbeats unless absolutely have to
+            if (urls == lastUrls) return;
+            lastUrls    = urls;
+            
+            Heartbeats.Clear(); // TODO only reload default heartbeats
+            foreach (string url in urls.SplitComma())
             {
                 Heartbeat beat = new ClassiCubeBeat() { URL = url };
                 Register(beat);

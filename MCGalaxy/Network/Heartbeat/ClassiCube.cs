@@ -23,10 +23,11 @@ using System.Net.Sockets;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
 
-namespace MCGalaxy.Network {
-    
+namespace MCGalaxy.Network 
+{
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
-    public sealed class ClassiCubeBeat : Heartbeat {
+    public sealed class ClassiCubeBeat : Heartbeat 
+    {
         string proxyUrl;
         public string ServerHash;
         
