@@ -210,17 +210,19 @@ namespace MCGalaxy
         }
         
         bool SendRawMapCore(Level prev, Level level) {
-            if (level.blocks == null) return false;
             bool success = true;
-            useCheckpointSpawn = false;
-            lastCheckpointIndex = -1;
-            
-            AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-            ZoneIn = null;
-            SendMapMotd();
-            AllowBuild = level.BuildAccess.CheckAllowed(this);
-            
             try {
+                if (level.blocks == null)
+                    throw new InvalidOperationException("Tried to join unloaded level");
+                
+                useCheckpointSpawn  = false;
+                lastCheckpointIndex = -1;
+
+                AFKCooldown = DateTime.UtcNow.AddSeconds(2);
+                ZoneIn = null;
+                SendMapMotd();
+                AllowBuild = level.BuildAccess.CheckAllowed(this);
+            
                 int volume = level.blocks.Length;
                 if (Supports(CpeExt.FastMap)) {
                     Send(Packet.LevelInitaliseExt(volume));
