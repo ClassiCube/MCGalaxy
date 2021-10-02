@@ -31,26 +31,22 @@ namespace MCGalaxy.Network
         public const int MAX_RETRIES = 3;
         
         /// <summary> List of all heartbeats to pump. </summary>
-        public static List<Heartbeat> Heartbeats = new List<Heartbeat>() { new ClassiCubeBeat() };
+        public static List<Heartbeat> Heartbeats = new List<Heartbeat>();
         
         
-        /// <summary> Gets the URL the heartbeat is sent to </summary
-        public abstract string URL { get; }
-        
+        /// <summary> The URL the heartbeat is sent to </summary
+        public string URL;
         /// <summary> Salt used for verifying player names </summary>
-        public string Salt = "";
-        
+        public string Salt = "";        
         /// <summary> Initialises data for this heartbeat </summary>
         protected abstract void Init();
         
         /// <summary> Gets the data to be sent for the next heartbeat </summary>
         protected abstract string GetHeartbeatData();
-        
         /// <summary> Called when a heartbeat is about to be sent to the web server </summary>
         protected abstract void OnRequest(HttpWebRequest request);
-        
         /// <summary> Called when a response is received from the web server </summary>
-        protected abstract void OnResponse(string response);
+        protected abstract void OnResponse(WebResponse response);
         
 
         /// <summary> Pumps this heartbeat </summary>
@@ -70,9 +66,7 @@ namespace MCGalaxy.Network
                     OnRequest(req);
                     HttpUtil.SetRequestData(req, data);
                     WebResponse res = req.GetResponse();
-                    
-                    string response = HttpUtil.GetResponseText(res);
-                    OnResponse(response);
+                    OnResponse(res);
                     return;
                 } catch (Exception ex) {
                     HttpUtil.DisposeErrorResponse(ex);
@@ -86,20 +80,29 @@ namespace MCGalaxy.Network
         }
         
         
-        /// <summary> Initialises all heartbeats </summary>
-        public static void InitHeartbeats() {
-            foreach (Heartbeat beat in Heartbeats) {
-                beat.Init();
-                beat.Salt = Server.GenerateSalt();
-                beat.Pump();
-            }
-            
-            if (heartbeatTask != null) return;
-            heartbeatTask = Server.Background.QueueRepeat(OnBeat, null, 
-                                                          TimeSpan.FromSeconds(30));
+        /// <summary> Adds the given heartbeat to the list of automatically pumped heartbeats </summary>
+        public static void Register(Heartbeat beat) {
+            beat.Init();
+            beat.Salt = Server.GenerateSalt();
+            beat.Pump();
+            Heartbeats.Add(beat);
         }
         
-        static SchedulerTask heartbeatTask;
+        /// <summary> Initialises all heartbeats </summary>
+        public static void InitHeartbeats() {
+            UpdateHeartbeats();
+            Server.Background.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
+        }
+        
+        static void UpdateHeartbeats() {
+            string[] urls = Server.Config.HeartbeatURL.SplitComma();
+            foreach (string url in urls)
+            {
+                Heartbeat beat = new ClassiCubeBeat() { URL = url };
+                Register(beat);
+            }
+        }
+        
         static void OnBeat(SchedulerTask task) {
             foreach (Heartbeat beat in Heartbeats) { beat.Pump(); }
         }

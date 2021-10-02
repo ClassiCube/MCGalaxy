@@ -28,7 +28,6 @@ namespace MCGalaxy.Network {
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
     public sealed class ClassiCubeBeat : Heartbeat {
         string proxyUrl;
-        public override string URL { get { return Server.Config.HeartbeatURL; } }
         public string ServerHash;
         
         protected override void Init() {
@@ -87,26 +86,27 @@ namespace MCGalaxy.Network {
             request.Proxy = new WebProxy(proxyUrl);
         }
         
-        protected override void OnResponse(string response) {
-            if (String.IsNullOrEmpty(response)) return;
-            string hash = ExtractHash(response);
+        protected override void OnResponse(WebResponse response) {
+            string text = HttpUtil.GetResponseText(response);
+            if (String.IsNullOrEmpty(text)) return;
+            string hash = ExtractHash(text);
 
             // only need to do this when contents have changed
             if (hash == ServerHash) return;
             ServerHash = hash;
-            Server.URL = response;
+            Server.URL = text;
             
-            if (!response.Contains("\"errors\":")) {
+            if (!text.Contains("\"errors\":")) {
                 Server.UpdateUrl(Server.URL);
                 File.WriteAllText("text/externalurl.txt", Server.URL);
                 Logger.Log(LogType.SystemActivity, "Server URL found: " + Server.URL);
             } else {
-                string error = GetError(response);
+                string error = GetError(text);
                 if (error == null) error = "Error while finding URL. Is the port open?";
                 
                 Server.URL = error;
                 Server.UpdateUrl(Server.URL);
-                Logger.Log(LogType.Warning, response);
+                Logger.Log(LogType.Warning, text);
             }
         }
         

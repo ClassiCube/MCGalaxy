@@ -61,7 +61,7 @@ namespace MCGalaxy {
         public string SslCertPath = "";
         [ConfigString("ssl-certificate-password", "Other", "", true)]
         public string SslCertPass = "";
-        [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.")]
+        [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.,")]
         public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";
         
         [ConfigBool("core-secret-commands", "Other", true)]
