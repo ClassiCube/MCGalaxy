@@ -31,7 +31,7 @@ namespace MCGalaxy.Network {
         public override string URL { get { return Server.Config.HeartbeatURL; } }
         public string ServerHash;
         
-        public override void Init() {
+        protected override void Init() {
             string hostUrl = "";
             try {
                 hostUrl = new Uri(URL).Host;
@@ -50,22 +50,22 @@ namespace MCGalaxy.Network {
         // classicube.net only supports ipv4 servers, so we need to make
         // sure we are using its ipv4 address when POSTing heartbeats
         void EnsureIPv4Url(IPAddress[] addresses) {
-            bool useIPv6 = false;
+            bool hasIPv6 = false;
             IPAddress firstIPv4 = null;
             
             foreach (IPAddress ip in addresses) {
                 AddressFamily family = ip.AddressFamily;
                 if (family == AddressFamily.InterNetworkV6)
-                    useIPv6 = true;
+                    hasIPv6 = true;
                 if (family == AddressFamily.InterNetwork && firstIPv4 == null)
                     firstIPv4 = ip;
             }
             
-            if (!useIPv6 || firstIPv4 == null) return;
+            if (!hasIPv6 || firstIPv4 == null) return;
             proxyUrl = "http://"  + firstIPv4 + ":80";
         }
 
-        public override string GetHeartbeatData()  {
+        protected override string GetHeartbeatData()  {
             string name = Server.Config.Name;
             OnSendingHeartbeatEvent.Call(this, ref name);
             name = Colors.StripUsed(name);
@@ -82,12 +82,12 @@ namespace MCGalaxy.Network {
                 "&web="      + Server.Config.WebClient;
         }
         
-        public override void OnRequest(HttpWebRequest request) {
+        protected override void OnRequest(HttpWebRequest request) {
             if (proxyUrl == null) return;
             request.Proxy = new WebProxy(proxyUrl);
         }
         
-        public override void OnResponse(string response) {
+        protected override void OnResponse(string response) {
             if (String.IsNullOrEmpty(response)) return;
             string hash = ExtractHash(response);
 
