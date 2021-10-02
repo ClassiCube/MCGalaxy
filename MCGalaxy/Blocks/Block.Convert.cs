@@ -99,7 +99,7 @@ namespace MCGalaxy {
                 case Crate:       block = Wood; break;
                 case StoneBrick:  block = Stone; break;
             }
-            if (p.version >= Server.VERSION_0030) return block;
+            if (p.ProtocolVersion >= Server.VERSION_0030) return block;
             
             // protocol version 6 only supports up to Gold block
             switch (block) {
@@ -112,13 +112,13 @@ namespace MCGalaxy {
                 case MossyRocks: block = Cobblestone; break;
                 case Obsidian:   block = Cobblestone; break;
             }
-            if (p.version >= Server.VERSION_0020) return block;
+            if (p.ProtocolVersion >= Server.VERSION_0020) return block;
             
             // protocol version 5 only supports up to Glass block
             if (block == Block.Gold)      block = Block.Sponge;
             if (block >= Block.Dandelion) block = Block.Sapling;
             if (block >= Block.Red)       block = Block.Sand;
-            if (p.version >= Server.VERSION_0019) return block;
+            if (p.ProtocolVersion >= Server.VERSION_0019) return block;
             
             // protocol version 4 only supports up to Leaves block
             if (block == Block.Glass) block  = Block.Leaves;

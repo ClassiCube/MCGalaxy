@@ -224,7 +224,7 @@ namespace MCGalaxy {
         public bool verifiedName;
         bool gotSQLData;
         
-        internal byte version; // protocol version
+        public byte ProtocolVersion;
         internal byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
         
         

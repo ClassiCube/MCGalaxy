@@ -38,14 +38,14 @@ namespace MCGalaxy
             // the packet must be at least old_size long
             if (left < old_size) return 0;  
             
-            LastAction = DateTime.UtcNow;
-            version    = buffer[offset + 1];
-            if (version > Server.VERSION_0030) {
+            LastAction      = DateTime.UtcNow;
+            ProtocolVersion = buffer[offset + 1];
+            if (ProtocolVersion > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version", true); return -1; 
             }
             
             // check size now that know whether usertype field is included or not
-            int size = version >= Server.VERSION_0020 ? new_size : old_size;
+            int size = ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
             if (left < size) return 0;
             if (loggedIn)    return size;
             

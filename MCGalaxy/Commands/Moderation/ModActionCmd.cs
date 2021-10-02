@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             Entities.DespawnEntities(who, false);
             // this packet doesn't exist before protocol version 7
-            if (who.version >= Server.VERSION_0030)
+            if (who.ProtocolVersion >= Server.VERSION_0030)
                 who.Send(Packet.UserType(who.UserType()));
           
             who.SendCurrentBlockPermissions();

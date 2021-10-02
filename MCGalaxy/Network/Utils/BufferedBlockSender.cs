@@ -111,7 +111,7 @@ namespace MCGalaxy.Network
                 // supports all 255 blocks (classicube enhanced client)
                 if (normal == null) normal = MakeNormal();
                 return normal;
-            } else if (!p.hasCustomBlocks && p.version == Server.VERSION_0030) {
+            } else if (!p.hasCustomBlocks && p.ProtocolVersion == Server.VERSION_0030) {
                 // support original 45 blocks (classic client)
                 if (classic == null) classic = MakeLimited(p.fallback);
                 return classic;
