@@ -1,3 +1,28 @@
+v 1.9.3.5
+Added: Support for all multiplayer versions of Classic (i.e. classic pre 0.30)
+Improved: Can now send heartbeat to multiple addresses
+Improved: /FixGrass is now a drawop (logs to BlockDB, can specify area bounds, etc)
+Improved: /CmdLoad and autoload now log the actual names of loaded commands
+Improved: If error(s) occur compiling commands/plugins with multiple source code files, error logs also include filename
+Improved: Some map themes now have custom default environment settings
+Improved: Rework /museum arguments to make more sense (Thanks Goodly)
+Fixed: Spring/yoyo effect when teleporting via portals/warps (players appear to warp to new position, then previous, then new again)
+Fixed: Markdown escaping issues with Discord relay bot
+Fixed: Getting stuck on map loading screen if you tried to join a level that had been unloaded
+Fixed: Physics should never be enabled in museums
+Fixed: Restrict /blockprops to not allow setting blocks that you are not allowed to use
+Fixed: Generating space themed map one block high throwing IndexOutOfRangeException
+Fixed: Never showing line numbers on mono for commands/plugins with .mdb files
+Fixed: messages with \n in them only showing first line on IRC
+Fixed: /me from discord/console erroring
+Fixed: Do not set auto unload to true on old main when switching mains (Thanks Goodly)
+Fixed: Countdown doesn't work properly when started by autostart on server startup (Thanks forkiesassds)
+Fixed: /plugin compile not accepting multiple soure code filenames
+Fixed: When compiling plugins, output .dll filename was all source code filenames combined instead of just first 
+Fixed: Very rare case where a in-game message just after a .who would not appear in Discord
+Fixed: /Players erroring if "Show empty ranks in /players" is true and there are no players online with a given rank (Thanks Goodly)
+Removed: Drop extra/bots.json auto upgrading support (obsolete 4 years)
+
 v 1.9.3.4
 Added: Allow custom Discord .who embed color
 Added: Events for messages received from a relay bot
