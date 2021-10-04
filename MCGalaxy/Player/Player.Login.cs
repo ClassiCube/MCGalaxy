@@ -52,18 +52,25 @@ namespace MCGalaxy
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;
             if (Server.Config.ClassicubeAccountPlus) name += "+";
-            
+
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return size; }
             
-            hasCpe  = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
+            // usertype field has different meanings depending on protocol version
+            //  Version 7 - 0x42 for CPE supporting client, should be 0 otherwise
+            //  Version 6 - should be 0
+            //  Version 5 - field does not exist
+            if (ProtocolVersion >= Server.VERSION_0030) {
+                hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
+            }
+            
             level   = Server.mainLevel;
             Loading = true;
             if (Socket.Disconnected) return size;
             
             UpdateFallbackTable();
-            if (hasCpe) { SendCpeExtensions(); } 
+            if (hasCpe) { SendCpeExtensions(); }
             else { CompleteLoginProcess(); }
             return size;
         }
