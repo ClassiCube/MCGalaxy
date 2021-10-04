@@ -353,7 +353,11 @@ namespace MCGalaxy.Modules.Relay.Discord
             } else {
                 format = BOLD + "{0}" + BOLD                           + " (" + CODE + "{1}" + CODE + ")";
             }
-            return string.Format(format, p.FormatNick(pl), pl.level.name, flags);
+            return string.Format(format, p.FormatNick(pl), 
+                                 // level name must not have _ escaped as the level name is in a code block -
+                                 //  otherwise the escaped "\_" actually shows as "\_" instead of "_" 
+                                 pl.level.name.Replace('_', UNDERSCORE),
+                                 flags);
         }
         
         static string FormatPlayers(Player p, OnlineListEntry e) {
