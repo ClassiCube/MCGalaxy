@@ -76,7 +76,8 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Converts a block &lt; CPE_COUNT into a suitable block for client </summary>
+        /// <summary> Converts a block &lt; CPE_COUNT into a suitable
+        /// block supported by the given player's client </summary>
         internal static byte ConvertLimited(byte block, Player p) {
         	if (p.hasCustomBlocks) return block;
         	
@@ -121,7 +122,7 @@ namespace MCGalaxy {
             if (p.ProtocolVersion >= Server.VERSION_0019) return block;
             
             // protocol version 4 only supports up to Leaves block
-            if (block == Block.Glass) block  = Block.Leaves;
+            if (block == Block.Glass)  block = Block.Leaves;
             if (block == Block.Sponge) block = Block.GoldOre;
             
             // protocol version 3 seems to have same support

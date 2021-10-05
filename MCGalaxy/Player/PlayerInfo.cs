@@ -19,9 +19,10 @@ using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
-    public static class PlayerInfo {
-        
+namespace MCGalaxy 
+{
+    public static class PlayerInfo 
+    {
         /// <summary> Array of all currently online players. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
         public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
@@ -167,9 +168,26 @@ namespace MCGalaxy {
             }
             return entry;
         }
+        
+        
+        /// <summary> Returns an appropriate name for the given player's client </summary>
+        /// <remarks> Determines name based on appname or protocol supported </remarks>
+        public static string ClientName(Player p) {
+            if (!string.IsNullOrEmpty(p.appName)) return p.appName;
+            byte version = p.ProtocolVersion;
+                  
+            if (version == Server.VERSION_0016) return "Classic 0.0.16";
+            if (version == Server.VERSION_0017) return "Classic 0.0.17-0.0.18";
+            if (version == Server.VERSION_0019) return "Classic 0.0.19";
+            if (version == Server.VERSION_0020) return "Classic 0.0.20-0.0.23";
+            
+            // Could be Classic, Classicube in Classic Mode, Charged Miners, who knows
+            return "(unknown)";
+        }
     }
     
-    public class OnlineListEntry { 
+    public class OnlineListEntry 
+    {
         public Group group; public List<Player> players;
         
         public static string GetFlags(Player p) {

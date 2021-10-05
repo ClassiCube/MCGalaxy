@@ -40,8 +40,6 @@ namespace MCGalaxy.Drawing.Ops
         //public long TotalAffected; // blocks affected by the draw operation
         public long TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
-        protected internal int method;
-        
         /// <summary> Minimum coordinates of the bounds of this drawing command. </summary>
         public Vec3S32 Min;
         
