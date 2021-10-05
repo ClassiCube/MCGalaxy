@@ -18,9 +18,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Config {
-    
-    public sealed class ConfigColorAttribute : ConfigAttribute {
+namespace MCGalaxy.Config 
+{    
+    public sealed class ConfigColorAttribute : ConfigAttribute 
+    {
         string defCol;
         
         public ConfigColorAttribute(string name, string section, string def)
@@ -41,7 +42,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigStringAttribute : ConfigAttribute {
+    public sealed class ConfigStringAttribute : ConfigAttribute 
+    {
         bool allowEmpty;
         string defValue, allowedChars;
  
@@ -74,15 +76,16 @@ namespace MCGalaxy.Config {
                 if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue;                
                 if (allowedChars.IndexOf(c) >= 0) continue;
                 
-                Logger.Log(LogType.Warning, "Config key \"{0}\" contains non-allowed characters, using default of {1}", Name, defValue);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" contains non-allowed character \"{2}\", using default of {1}", 
+                           Name, defValue, c);
                 return defValue;
             }
             return value;
         }
     }
     
-    public sealed class ConfigStringListAttribute : ConfigAttribute {
-        
+    public sealed class ConfigStringListAttribute : ConfigAttribute 
+    {        
         public ConfigStringListAttribute(string name, string section) 
             : base(name, section) { }
         
