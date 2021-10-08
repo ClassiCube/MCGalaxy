@@ -53,6 +53,8 @@ namespace MCGalaxy {
         public bool ClickToMark = true;
 
         public string name;
+        public string AppendToStart;
+        public string AppendToEnd;
         public string DisplayName;
         public int warn = 0;
         public byte id;

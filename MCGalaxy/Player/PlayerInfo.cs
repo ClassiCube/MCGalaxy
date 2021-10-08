@@ -96,7 +96,7 @@ namespace MCGalaxy
         /// <returns> Player instance if an exact match is found, null if not. </returns>
         public static Player FindExact(string name) {
             Player[] players = PlayerInfo.Online.Items;
-            name = name.RemoveLastPlus();
+            name = name;
             
             foreach (Player p in players) {
                 if (p.truename.CaselessEq(name)) return p;

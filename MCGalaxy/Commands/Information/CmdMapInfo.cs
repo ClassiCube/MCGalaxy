@@ -125,15 +125,16 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static string DefaultRealmOwner(string map) {
-            bool plus = Server.Config.ClassicubeAccountPlus;
+            //TODO: make it automatically find the heartbeat that uses + at the end
+            //bool plus = Server.Config.ClassicubeAccountPlus;
             // Early out when accounts have + and map doesn't.
-            if (plus && map.IndexOf('+') == -1) return null;
+            //if (plus && map.IndexOf('+') == -1) return null;
             
             string name = null, origMap = map;
             while (map.Length > 0 && Char.IsNumber(map[map.Length - 1])) {
                 // If the server does not have account with +, we have to account for the
                 // that say Player123's second level is Player1232, and the realm owner is Player123
-                name = plus ? null : PlayerDB.FindName(map);
+                name = /*plus ? null :*/ PlayerDB.FindName(map);
                 if (name != null) break;
                 map = map.Substring(0, map.Length - 1);
             }

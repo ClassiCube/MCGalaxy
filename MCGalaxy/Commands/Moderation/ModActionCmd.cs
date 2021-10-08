@@ -154,7 +154,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (confirmed != null) reason = confirmed;
             
             if (match != null) {
-                if (match.RemoveLastPlus().CaselessEq(name.RemoveLastPlus())) return match;
+                if (match.CaselessEq(name)) return match;
                 // Not an exact match, may be wanting to ban a non-existent account
                 p.Message("1 player matches \"{0}\": {1}", name, match);
             }
@@ -200,7 +200,7 @@ namespace MCGalaxy.Commands.Moderation {
             name = null;
             
             if (IPAddress.TryParse(message, out ip) && ValidIP(message)) {
-                string account = Server.Config.ClassicubeAccountPlus ? message + "+" : message;
+                string account = message;
                 if (PlayerDB.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.

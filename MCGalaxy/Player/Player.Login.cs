@@ -48,13 +48,15 @@ namespace MCGalaxy
             int size = ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
             if (left < size) return 0;
             if (loggedIn)    return size;
-            
+
+            //duplicate code to prevent stuff from breaking down
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;
-            if (Server.Config.ClassicubeAccountPlus) name += "+";
-
+            
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
+            name = AppendToStart + NetUtils.ReadString(buffer, offset + 2) + AppendToEnd;
+            SkinName = name; DisplayName = name; truename = name;
             if (cancelconnecting) { cancelconnecting = false; return size; }
             
             // usertype field has different meanings depending on protocol version

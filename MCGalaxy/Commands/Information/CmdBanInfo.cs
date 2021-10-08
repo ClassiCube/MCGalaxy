@@ -88,7 +88,6 @@ namespace MCGalaxy.Commands.Info {
         
         static string GetName(Player p, string user) {
             // ban/unban uses truename
-            if (Server.Config.ClassicubeAccountPlus && !user.EndsWith("+")) user += "+";
             return p.FormatNick(user);
         }
         

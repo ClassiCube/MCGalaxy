@@ -39,6 +39,8 @@ namespace MCGalaxy {
                 string calculated = Server.CalcMppass(p.truename, hb.Salt);
                 
                 if (mppass.CaselessEq(calculated)) {
+                    p.AppendToStart = hb.AppendToStart;
+                    p.AppendToEnd = hb.AppendToEnd;
                     p.verifiedName = true;
                     return true;
                 }
@@ -175,7 +177,7 @@ namespace MCGalaxy {
         
         static string NewHashPath(string name) {
             // don't want '+' at end of names
-            return PASS_FOLDER + name.RemoveLastPlus().ToLower() + ".pwd";
+            return PASS_FOLDER + name.ToLower() + ".pwd";
         }
         
         static string FindOldHashPath(string name) {

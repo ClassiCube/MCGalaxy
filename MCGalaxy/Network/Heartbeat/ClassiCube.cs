@@ -70,16 +70,15 @@ namespace MCGalaxy.Network
             OnSendingHeartbeatEvent.Call(this, ref name);
             name = Colors.StripUsed(name);
             
-            return
-                "&port="     + Server.Config.Port +
-                "&max="      + Server.Config.MaxPlayers +
-                "&name="     + Uri.EscapeDataString(name) +
-                "&public="   + Server.Config.Public +
-                "&version=7" +
-                "&salt="     + Salt +
-                "&users="    + PlayerInfo.NonHiddenUniqueIPCount() +
-                "&software=" + Uri.EscapeDataString(Server.SoftwareNameVersioned) +
-                "&web="      + Server.Config.WebClient;
+            return Arguments
+                .Replace("%port", Server.Config.Port.ToString())
+                .Replace("%max", Server.Config.MaxPlayers.ToString())
+                .Replace("%name", Uri.EscapeDataString(name))
+                .Replace("%public", Server.Config.Public.ToString())
+                .Replace("%salt", Salt)
+                .Replace("%players", PlayerInfo.NonHiddenUniqueIPCount().ToString())
+                .Replace("%software", Uri.EscapeDataString(Server.SoftwareNameVersioned))
+                .Replace("%websupport", Server.Config.WebClient.ToString());
         }
         
         protected override void OnRequest(HttpWebRequest request) {
