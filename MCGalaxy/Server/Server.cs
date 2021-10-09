@@ -399,5 +399,10 @@ namespace MCGalaxy {
             lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
             return BitConverter.ToString(hash).Replace("-", "");
         }
+        
+        public static string FormatName(string name) {
+            // TODO: if (account_plus) { remove_last_plus() } else { nothing }
+            return name.RemoveLastPlus();
+        }
     }
 }

@@ -40,10 +40,11 @@ namespace MCGalaxy.DB {
         };
         
         public static void CoreLine(Player p, PlayerData data) {
-            Group group = Group.GroupIn(data.Name);
-            string color = data.Color.Length == 0 ? group.Color : data.Color;
+            Group group   = Group.GroupIn(data.Name);
+            string color  = data.Color.Length == 0 ? group.Color : data.Color;
             string prefix = data.Title.Length == 0 ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
-            string fullName = prefix + color + data.Name.RemoveLastPlus();
+            
+            string fullName = prefix + color + Server.FormatName(data.Name);
             OnlineStat.CommonCoreLine(p, fullName, data.Name, group, data.Messages);
         }
         
