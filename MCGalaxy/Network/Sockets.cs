@@ -23,16 +23,18 @@ using System.Net.Security;
 using System.Threading;
 using System.Security.Cryptography.X509Certificates;
 
-namespace MCGalaxy.Network {
-    
-    public enum SendFlags {
+namespace MCGalaxy.Network 
+{    
+    public enum SendFlags 
+    {
         None        = 0x00,
         Synchronous = 0x01,
         LowPriority = 0x02,
     }
     
     /// <summary> Abstracts sending to/receiving from a network socket. </summary>
-    public abstract class INetSocket {
+    public abstract class INetSocket 
+    {
         protected INetProtocol protocol;        
         /// <summary> Whether the socket has been closed/disconnected. </summary>
         public bool Disconnected;

@@ -71,7 +71,7 @@ namespace MCGalaxy {
             
             if (nick.Length == 0) {
                 PlayerOperations.MessageAction(p, target, who, "λACTOR &Sremoved λTARGET nick");
-                nick = target;
+                nick = Server.FormatName(target);
             } else {
                 if (!p.CheckCanSpeak("change nicks")) return false;
                 

@@ -39,6 +39,7 @@ namespace MCGalaxy {
         internal string currentTpa = "";
 
         public string truename;
+        /// <summary> The underlying socket for sending/receiving raw data </summary>
         public INetSocket Socket;
         public PingList Ping = new PingList();
         public BlockID MaxRawBlock = Block.CLASSIC_MAX_BLOCK;
@@ -90,6 +91,7 @@ namespace MCGalaxy {
         public string GroupPrefix { get { return group.Prefix.Length == 0 ? "" : "&f" + group.Prefix; } }
 
         public bool deleteMode;
+        /// <summary> Whether automatic blockspam detection should be skipped for this player </summary>
         public bool ignoreGrief;
         public bool parseEmotes = Server.Config.ParseEmotes;
         public bool opchat;
@@ -109,7 +111,7 @@ namespace MCGalaxy {
         //Using for anything else can cause unintended effects!
         public bool possessed;
         
-        /// <summary> Whether the player has permission to build in the current level. </summary>
+        /// <summary> Whether this player has permission to build in the current level. </summary>
         public bool AllowBuild = true;
 
         public int money;
@@ -189,7 +191,7 @@ namespace MCGalaxy {
         public DateTime lastDeath = DateTime.UtcNow;
 
         public BlockID ModeBlock = Block.Invalid;
-        /// <summary> The block ID the client specifies it is currently holding in hand. </summary>
+        /// <summary> The block ID this player's client specifies it is currently holding in hand. </summary>
         /// <remarks> This ignores /bind and /mode. GetHeldBlock() is usually preferred. </remarks>
         public BlockID ClientHeldBlock = Block.Stone;
         public BlockID[] BlockBindings = new BlockID[Block.ExtendedCount];        
@@ -221,7 +223,7 @@ namespace MCGalaxy {
         public DateTime LastPatrol;
         public LevelPermission Rank { get { return group.Permission; } }
 
-        /// <summary> Whether player has completed login process and been sent initial map. </summary>
+        /// <summary> Whether player has completed login process and has been sent initial map. </summary>
         public bool loggedIn;
         public bool verifiedName;
         bool gotSQLData;

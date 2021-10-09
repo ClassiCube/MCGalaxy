@@ -58,8 +58,7 @@ namespace MCGalaxy.Network
         protected abstract void OnResponse(WebResponse response);
         
 
-        /// <summary> Pumps this heartbeat </summary>
-        /// <remarks> i.e. Sends a heartbeat and then reads the response </remarks>
+        /// <summary> Sends a heartbeat to the web server and then reads the response </summary>
         public void Pump() 
         {
             byte[] data = Encoding.ASCII.GetBytes(GetHeartbeatData());
