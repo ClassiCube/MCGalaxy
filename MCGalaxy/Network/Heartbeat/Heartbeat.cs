@@ -37,7 +37,7 @@ namespace MCGalaxy.Network
         public static List<Heartbeat> Heartbeats = new List<Heartbeat>();
         
         
-        /// <summary> The URL this heartbeat is sent to </summary
+        /// <summary> The URL this heartbeat is sent to </summary>
         public string URL;
         /// <summary> The arguments used for the heartbeat. </summary>
         public string Arguments;
