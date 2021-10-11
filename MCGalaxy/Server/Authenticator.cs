@@ -176,7 +176,6 @@ namespace MCGalaxy {
 
         
         static string NewHashPath(string name) {
-            // don't want '+' at end of names
             return PASS_FOLDER + name.ToLower() + ".pwd";
         }
         
