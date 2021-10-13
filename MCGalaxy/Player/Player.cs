@@ -383,7 +383,7 @@ namespace MCGalaxy {
             // TODO: select color from database?
             if (target != null && CanSee(target)) return FormatNick(target);
             
-            return Group.GroupIn(name).Color + Server.FormatName(name);
+            return Group.GroupIn(name).Color + Server.ToRawUsername(name);
         }
 
         /// <summary> Formats a player's name for displaying in chat. </summary>        
