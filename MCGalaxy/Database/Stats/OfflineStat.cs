@@ -43,7 +43,7 @@ namespace MCGalaxy.DB {
             Group group   = Group.GroupIn(data.Name);
             string color  = data.Color.Length == 0 ? group.Color : data.Color;
             string prefix = data.Title.Length == 0 ? "" : color + "[" + data.TitleColor + data.Title + color + "] ";
-            string fullName = prefix + color + Server.FormatName(data.Name);
+            string fullName = prefix + color + Server.ToRawUsername(data.Name);
             OnlineStat.CommonCoreLine(p, fullName, data.Name, group, data.Messages);
         }
         

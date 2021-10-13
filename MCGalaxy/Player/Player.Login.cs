@@ -79,7 +79,7 @@ namespace MCGalaxy
         
         void SendCpeExtensions() {
             Send(Packet.ExtInfo((byte)(Extensions.Length + 1)));
-            // fix for classicube java client, doesn't reply if only send EnvMapAppearance with version 2
+            // fix for old classicube java client, doesn't reply if only send EnvMapAppearance with version 2
             Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));
             
             foreach (CpeExtension ext in Extensions) 

@@ -57,7 +57,7 @@ namespace MCGalaxy {
         public string AppendToStart;
         public string AppendToEnd;
         public string DisplayName;
-        public int warn = 0;
+        public int warn;
         public byte id;
         public IPAddress IP;
         public string ip;
@@ -138,6 +138,7 @@ namespace MCGalaxy {
 
         public bool joker;
         public bool Unverified, verifiedPass;
+        /// <summary> Whether this player can speak even while chat moderation is on </summary>
         public bool voice;
         
         public CommandData DefaultCmdData {

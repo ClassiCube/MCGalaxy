@@ -400,7 +400,9 @@ namespace MCGalaxy {
             return BitConverter.ToString(hash).Replace("-", "");
         }
         
-        public static string FormatName(string name) {
+        /// <summary> Converts a formatted username into its original username </summary>
+        /// <remarks> If ClassiCubeAccountPlus option is set, removes trailing + </remarks>
+        public static string ToRawUsername(string name) {
             // TODO: if (account_plus) { remove_last_plus() } else { nothing }
             return name.RemoveLastPlus();
         }
