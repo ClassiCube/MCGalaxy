@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info {
             
             foreach (Player pl in online) {
                 if (!p.CanSee(pl, data.Rank)) continue;
-                string appName = PlayerInfo.ClientName(p);
+                string appName = PlayerInfo.ClientName(pl);
                     
                List<Player> usingClient;
                if (!clients.TryGetValue(appName, out usingClient)) {
