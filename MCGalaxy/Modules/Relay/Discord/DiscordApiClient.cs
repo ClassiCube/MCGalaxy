@@ -171,7 +171,8 @@ namespace MCGalaxy.Modules.Relay.Discord
                     HttpUtil.DisposeErrorResponse(ex);
                     if (Handle429(ex)) continue;
                     
-                    Logger.LogError("Error sending request to Discord API", ex);
+                    string target = "(" + msg.Method + " " + msg.Path + ")";
+                    Logger.LogError("Error sending request to Discord API " + target, ex);
                     if (!string.IsNullOrEmpty(err))
                         Logger.Log(LogType.Warning, "Discord API returned: " + err);
                     return;

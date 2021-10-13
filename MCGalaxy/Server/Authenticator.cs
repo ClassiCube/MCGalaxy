@@ -21,11 +21,12 @@ using System.Security.Cryptography;
 using System.Text;
 using MCGalaxy.Network;
 
-namespace MCGalaxy {
+namespace MCGalaxy 
+{
     /// <summary> Authenticates the mppass provided at login 
     /// and optionally requires additional verification </summary>
-    public abstract class Authenticator {
-        
+    public abstract class Authenticator 
+    {        
         /// <summary> The currently/actively used authenticator </summary>
         public static Authenticator Current = new DefaultAuthenticator();
         
@@ -78,7 +79,8 @@ namespace MCGalaxy {
         public abstract bool VerifyPassword(string name, string password);
     }
     
-    public sealed class DefaultAuthenticator : Authenticator {
+    public sealed class DefaultAuthenticator : Authenticator 
+    {
         const string PASS_FOLDER = "extra/passwords/";
         
         public override bool HasPassword(string name) { return FindHashPath(name) != null; }
