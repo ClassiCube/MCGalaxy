@@ -31,7 +31,7 @@ namespace MCGalaxy {
             return new string(a);
         }
         
-        /// <summary> Removes an ending + from an account name. </summary>
+        /// <summary> Removes an ending + from a username. </summary>
         public static string RemoveLastPlus(this string str) {
             if (String.IsNullOrEmpty(str)) return str;
             

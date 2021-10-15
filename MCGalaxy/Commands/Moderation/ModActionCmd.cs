@@ -154,8 +154,11 @@ namespace MCGalaxy.Commands.Moderation {
             if (confirmed != null) reason = confirmed;
             
             if (match != null) {
-                if (match.RemoveLastPlus().CaselessEq(name.RemoveLastPlus())) return match;
-                // Not an exact match, may be wanting to ban a non-existent account
+                // Does matching name exactly equal name given by user?
+                if (Server.ToRawUsername(match).CaselessEq(Server.ToRawUsername(name)))
+                    return match;
+                    
+                // Not an exact match, user might have made a mistake
                 p.Message("1 player matches \"{0}\": {1}", name, match);
             }
 

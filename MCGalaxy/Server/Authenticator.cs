@@ -176,8 +176,10 @@ namespace MCGalaxy
 
         
         static string NewHashPath(string name) {
-            // don't want '+' at end of names
-            return PASS_FOLDER + name.RemoveLastPlus().ToLower() + ".pwd";
+            // unfortunately necessary for backwards compatibility
+            name = Server.ToRawUsername(name);
+            
+            return PASS_FOLDER + name.ToLower() + ".pwd";
         }
         
         static string FindOldHashPath(string name) {

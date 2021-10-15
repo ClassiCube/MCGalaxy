@@ -38,6 +38,8 @@ namespace MCGalaxy {
         internal string senderName = "";
         internal string currentTpa = "";
 
+        /// <summary> Account name of the user </summary>
+        /// <remarks> Use 'truename' for displaying/logging, use 'name' for storing data </remarks>
         public string truename;
         /// <summary> The underlying socket for sending/receiving raw data </summary>
         public INetSocket Socket;
@@ -53,6 +55,8 @@ namespace MCGalaxy {
         public string afkMessage;
         public bool ClickToMark = true;
 
+        /// <summary> Account name of the user, plus a trailing '+' if ClassiCubeAccountPlus is enabled </summary>
+        /// <remarks> Use 'truename' for displaying/logging, use 'name' for storing data </remarks>
         public string name;
         public string DisplayName;
         public int warn;
