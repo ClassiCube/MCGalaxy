@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.Info {
             
             string realmOwner = cfg.RealmOwner;
             if (String.IsNullOrEmpty(cfg.RealmOwner)) {
-                realmOwner = DefaultRealmOwner(data.MapName);
+                realmOwner = LevelInfo.DefaultRealmOwner(data.MapName);
             }
             if (String.IsNullOrEmpty(realmOwner)) return;
             
@@ -122,25 +122,6 @@ namespace MCGalaxy.Commands.Info {
                            cfg.RoundsPlayed, winChance);
             p.Message("This map has &a{0} likes &Sand &c{1} dislikes",
                            cfg.Likes, cfg.Dislikes);
-        }
-        
-        static string DefaultRealmOwner(string map) {
-            bool plus = Server.Config.ClassicubeAccountPlus;
-            // Early out when accounts have + and map doesn't.
-            if (plus && map.IndexOf('+') == -1) return null;
-            
-            string name = null, origMap = map;
-            while (map.Length > 0 && Char.IsNumber(map[map.Length - 1])) {
-                // If the server does not have account with +, we have to account for the
-                // that say Player123's second level is Player1232, and the realm owner is Player123
-                name = plus ? null : PlayerDB.FindName(map);
-                if (name != null) break;
-                map = map.Substring(0, map.Length - 1);
-            }
-            
-            if (name == null) name = PlayerDB.FindName(map);
-            if (name != null && !LevelInfo.IsRealmOwner(name, origMap)) return null;
-            return name;
         }
         
         void ShowEnv(Player p, MapInfo data, LevelConfig cfg) {

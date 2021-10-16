@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MCGalaxy.DB;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.SQL;
 
@@ -184,6 +185,7 @@ namespace MCGalaxy {
             return true;
         }
         
+        
         public static bool IsRealmOwner(string name, string map) {
             LevelConfig cfg = GetConfig(map); 
             return IsRealmOwner(map, cfg, name);
@@ -205,6 +207,22 @@ namespace MCGalaxy {
             // For backwards compatibility, treat name+XYZ map names as belonging to name+
             // If no + though, don't use because otherwise people can register accounts and claim maps
             return Server.Config.ClassicubeAccountPlus && map.CaselessStarts(name);
+        }
+        
+        internal static string DefaultRealmOwner(string map) {
+            bool plus = Server.Config.ClassicubeAccountPlus;
+            // Early out when either
+            //  1) accounts aren't using +
+            //  2) map name doesn't include +
+            if (!plus || map.IndexOf('+') == -1) return null;
+            
+            // Convert username+23 to username+
+            while (map.Length > 0 && Char.IsNumber(map[map.Length - 1])) {
+                map = map.Substring(0, map.Length - 1);
+            }
+            
+            // Match the backwards compatibilty case of IsRealmOwner
+            return PlayerDB.FindName(map);
         }
     }
 }
