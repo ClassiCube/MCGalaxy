@@ -73,8 +73,8 @@ namespace MCGalaxy {
         
         [ConfigInt("position-interval", "Other", 100, 20, 2000)]
         public int PositionUpdateInterval = 100;
-        [ConfigBool("classicube-account-plus", "Server", true)]
-        public bool ClassicubeAccountPlus = true;
+        [ConfigBool("classicube-account-plus", "Server", false)]
+        public bool ClassicubeAccountPlus = false;
         [ConfigBool("agree-to-rules-on-entry", "Other", false)]
         public bool AgreeToRulesOnEntry = false;
         [ConfigBool("admins-join-silent", "Other", false)]

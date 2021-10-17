@@ -403,8 +403,9 @@ namespace MCGalaxy {
         /// <summary> Converts a formatted username into its original username </summary>
         /// <remarks> If ClassiCubeAccountPlus option is set, removes trailing + </remarks>
         public static string ToRawUsername(string name) {
-            // TODO: if (account_plus) { remove_last_plus() } else { nothing }
-            return name.RemoveLastPlus();
+            if (Config.ClassicubeAccountPlus)
+                return name.RemoveLastPlus();
+            return name;
         }
     }
 }
