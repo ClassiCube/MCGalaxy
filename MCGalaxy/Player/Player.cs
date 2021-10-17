@@ -238,9 +238,6 @@ namespace MCGalaxy {
         public void Leave(string msg, bool sync = false) {
             LeaveServer(msg, msg, false, sync);
         }
-        
-        [Obsolete("Use Leave() or Kick() instead", true)]
-        public void leftGame(string discMsg = "") { Kick(discMsg); }
 
         bool leftServer = false;
         void LeaveServer(string chatMsg, string discMsg, bool isKick, bool sync = false) {
@@ -262,12 +259,8 @@ namespace MCGalaxy {
                     PlayerInfo.Online.Remove(this);
                     return;
                 }
-                // FlyBuffer.Clear();
-                LastAction = DateTime.UtcNow;
-                IsAfk = false;
-                isFlying = false;
-                if (weapon != null) weapon.Disable();
-                
+
+                if (weapon != null) weapon.Disable();                
                 if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
                 discMsg = Colors.Escape(discMsg);
                 
