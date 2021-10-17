@@ -22,10 +22,10 @@ using MCGalaxy.Commands;
 using MCGalaxy.Maths;
 using MCGalaxy.Scripting;
 
-namespace MCGalaxy {
-    
-    public abstract partial class Command {
-        
+namespace MCGalaxy 
+{
+    public abstract partial class Command 
+    {
         public abstract string name { get; }
         public virtual string shortcut { get { return ""; } }
         public abstract string type { get; }
@@ -134,18 +134,21 @@ namespace MCGalaxy {
         }
     }
     
-    public enum CommandContext : byte {
+    public enum CommandContext : byte 
+    {
         Normal, Static, SendCmd, Purchase, MessageBlock
     }
     
-    public struct CommandData {
+    public struct CommandData 
+    {
         public LevelPermission Rank;
         public CommandContext Context;
         public Vec3S32 MBCoords;
     }
     
     // Clunky design, but needed to stay backwards compatible with custom commands
-    public abstract class Command2 : Command {
+    public abstract class Command2 : Command 
+    {
         public override void Use(Player p, string message) {
             if (p == null) p = Player.Console;
             Use(p, message, p.DefaultCmdData);
@@ -153,15 +156,9 @@ namespace MCGalaxy {
     }
     
     // Kept around for backwards compatibility
-    public sealed class CommandList {
-        [Obsolete("Use Command.Register() instead", true)]
-        public void Add(Command cmd) { Command.Register(cmd); }
-        [Obsolete("Use Command.Unregister() instead", true)]
-        public bool Remove(Command cmd) { return Command.Unregister(cmd); }
-        
+    public sealed class CommandList 
+    {
         [Obsolete("Use Command.Find() instead", true)]
-        public Command FindByName(string name) { return Command.Find(name); }
-        [Obsolete("Use Command.Find() instead")]
         public Command Find(string name) {
             foreach (Command cmd in Command.allCmds) {
                 if (cmd.name.CaselessEq(name) || cmd.shortcut.CaselessEq(name)) return cmd;
@@ -171,13 +168,16 @@ namespace MCGalaxy {
     }
     
     [Flags]
-    public enum CommandEnable {
+    public enum CommandEnable 
+    {
         Always = 0, Economy = 1, Zombie = 2, Lava = 4,
     }
 }
 
-namespace MCGalaxy.Commands {
-    public struct CommandPerm {
+namespace MCGalaxy.Commands 
+{
+    public struct CommandPerm 
+    {
         public LevelPermission Perm;
         public string Description;
         
@@ -186,7 +186,8 @@ namespace MCGalaxy.Commands {
         }
     }
     
-    public struct CommandAlias {
+    public struct CommandAlias 
+    {
         public string Trigger, Format;
         
         public CommandAlias(string cmd, string format = null) {
