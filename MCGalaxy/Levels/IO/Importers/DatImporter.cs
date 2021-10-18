@@ -70,18 +70,11 @@ namespace MCGalaxy.Levels.IO
         }
         
         
-        #region V1 parser
         static Level ReadFormat1(Level lvl, DatReader r) {
             string name = r.ReadUtf8();
             string auth = r.ReadUtf8();
-            
-            // TODO what even are these 8 bytes
-            r.ReadInt64();
-            /*lvl.spawnx = (ushort)(r.ReadUInt16() >> 5);
-            lvl.spawnz = (ushort)(r.ReadUInt16() >> 5);
-            lvl.spawny = (ushort)(r.ReadUInt16() >> 5);
-            lvl.rotx   = r.ReadUInt8();
-            lvl.roty   = r.ReadUInt8();*/
+            r.ReadInt64(); // created timestamp (currentTimeMillis)
+            // no spawn in 0.13, you always spawn in a random place
             
             lvl.Width  = r.ReadUInt16();
             lvl.Length = r.ReadUInt16();
@@ -89,10 +82,8 @@ namespace MCGalaxy.Levels.IO
             lvl.blocks = r.ReadBytes(lvl.Width * lvl.Height * lvl.Length);
             return lvl;
         }
-        #endregion
+
         
-        
-        #region V2 parser
         static Level ReadFormat2(Level lvl, DatReader r) {
             if (r.ReadUInt16() != 0xACED) throw new InvalidDataException("Invalid stream magic");
             if (r.ReadUInt16() != 0x0005) throw new InvalidDataException("Invalid stream version");
@@ -327,6 +318,5 @@ namespace MCGalaxy.Levels.IO
                 ReadContent(r, typeCode);
             }
         }
-        #endregion
     }
 }
