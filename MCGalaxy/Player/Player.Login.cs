@@ -40,9 +40,6 @@ namespace MCGalaxy
             
             LastAction      = DateTime.UtcNow;
             ProtocolVersion = buffer[offset + 1];
-            if (ProtocolVersion > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return -1; 
-            }
             
             // check size now that know whether usertype field is included or not
             int size = ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
@@ -51,8 +48,18 @@ namespace MCGalaxy
             
             name = NetUtils.ReadString(buffer, offset + 2);
             SkinName = name; DisplayName = name; truename = name;
+            
+            if (ProtocolVersion > Server.VERSION_0030) {
+                Leave(null, "Unsupported protocol version", true); return -1; 
+            }
+            if (name.Length > 16) {
+                Leave(null, "Usernames must be 16 characters or less", true); return -1;
+            }
+            if (!Player.ValidName(name)) {
+                Leave(null, "Invalid player name", true); return -1;
+            }
+            
             if (Server.Config.ClassicubeAccountPlus) name += "+";
-
             string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return size; }

@@ -71,8 +71,8 @@ namespace MCGalaxy.Levels.IO
         
         
         static Level ReadFormat1(Level lvl, DatReader r) {
-            string name = r.ReadUtf8();
-            string auth = r.ReadUtf8();
+            r.ReadUtf8();  // level name
+            r.ReadUtf8();  // level author
             r.ReadInt64(); // created timestamp (currentTimeMillis)
             // no spawn in 0.13, you always spawn in a random place
             

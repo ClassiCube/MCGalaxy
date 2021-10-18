@@ -26,13 +26,6 @@ namespace MCGalaxy.Core {
         }
         
         static bool HandleConnectingCore(Player p, string mppass) {
-            if (p.truename.Length > 16) {
-                p.Leave(null, "Usernames must be 16 characters or less", true); return false;
-            }
-            if (!Player.ValidName(p.truename)) {
-                p.Leave(null, "Invalid player name", true); return false;
-            }
-            
             if (!Authenticator.Current.VerifyLogin(p, mppass)) {
                 p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
             }

@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands.World {
                     Server.DoGC();
                 }
             } catch (Exception ex) {
-                Logger.LogError("Error importing map", ex);
+                Logger.LogError("Error importing map " + map, ex);
                 p.Message("&WImporting map {0} failed. See error logs.", map);
                 return;
             }
