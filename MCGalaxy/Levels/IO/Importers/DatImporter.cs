@@ -23,8 +23,10 @@ using System.Net;
 using System.Text;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Levels.IO {
-    sealed class DatReader {
+namespace MCGalaxy.Levels.IO 
+{
+    sealed class DatReader 
+    {
         public BinaryReader src;
         public List<object> handles = new List<object>();
         public byte[] ReadBytes(int count) { return src.ReadBytes(count); }
@@ -37,12 +39,67 @@ namespace MCGalaxy.Levels.IO {
         public string ReadUtf8() { return Encoding.UTF8.GetString(src.ReadBytes(ReadUInt16())); }
     }
     
-    public sealed class DatImporter : IMapImporter {
+    public sealed class DatImporter : IMapImporter 
+    {
         public override string Extension { get { return ".dat"; } }
         public override string Description { get { return "Minecraft Classic map"; } }
 
         public override Vec3U16 ReadDimensions(Stream src) {
             throw new NotSupportedException();
+        }
+        
+        public override Level Read(Stream src, string name, bool metadata) {
+            using (GZipStream s = new GZipStream(src, CompressionMode.Decompress)) {
+                Level lvl   = new Level(name, 0, 0, 0);
+                DatReader r = new DatReader();
+                r.src = new BinaryReader(s);
+                
+                int signature = r.ReadInt32();
+                if (signature != 0x271BB788) 
+                    throw new InvalidDataException("Invalid .dat map signature");
+                
+                switch (r.ReadUInt8())
+                {
+                    // Format version 1 - classic 0.13
+                    case 0x01: return ReadFormat1(lvl, r);
+                    // Format version 2 - classic 0.15 to 0.30
+                    case 0x02: return ReadFormat2(lvl, r);
+                }
+                throw new InvalidDataException("Invalid .dat map version");
+            }
+        }
+        
+        
+        #region V1 parser
+        static Level ReadFormat1(Level lvl, DatReader r) {
+            string name = r.ReadUtf8();
+            string auth = r.ReadUtf8();
+            
+            // TODO what even are these 8 bytes
+            r.ReadInt64();
+            /*lvl.spawnx = (ushort)(r.ReadUInt16() >> 5);
+            lvl.spawnz = (ushort)(r.ReadUInt16() >> 5);
+            lvl.spawny = (ushort)(r.ReadUInt16() >> 5);
+            lvl.rotx   = r.ReadUInt8();
+            lvl.roty   = r.ReadUInt8();*/
+            
+            lvl.Width  = r.ReadUInt16();
+            lvl.Length = r.ReadUInt16();
+            lvl.Height = r.ReadUInt16();            
+            lvl.blocks = r.ReadBytes(lvl.Width * lvl.Height * lvl.Length);
+            return lvl;
+        }
+        #endregion
+        
+        
+        #region V2 parser
+        static Level ReadFormat2(Level lvl, DatReader r) {
+            if (r.ReadUInt16() != 0xACED) throw new InvalidDataException("Invalid stream magic");
+            if (r.ReadUInt16() != 0x0005) throw new InvalidDataException("Invalid stream version");
+            
+            JObject obj = (JObject)ReadObject(r);
+            ParseRootObject(lvl, obj);
+            return lvl;
         }
         
         const byte TC_NULL = 0x70;
@@ -99,31 +156,6 @@ namespace MCGalaxy.Levels.IO {
                 if (f.Name == "xSpawn") lvl.spawnx = U16(value);
                 if (f.Name == "ySpawn") lvl.spawny = U16(value);
                 if (f.Name == "zSpawn") lvl.spawnz = U16(value);
-            }
-        }
-        
-        public override Level Read(Stream src, string name, bool metadata) {
-            using (GZipStream s = new GZipStream(src, CompressionMode.Decompress)) {
-                Level lvl   = new Level(name, 0, 0, 0);
-                DatReader r = new DatReader();
-                r.src = new BinaryReader(s);
-                
-                int sig = r.ReadInt32();
-                if (sig != 0x271BB788) {
-                    throw new InvalidDataException("Invalid .dat map signature");
-                }
-                
-                byte ver = r.ReadUInt8();
-                if (ver != 0x02) {
-                    throw new InvalidDataException("Invalid .dat map version");
-                }
-                
-                if (r.ReadUInt16() != 0xACED) throw new InvalidDataException("Invalid stream magic");
-                if (r.ReadUInt16() != 0x0005) throw new InvalidDataException("Invalid stream version");
-                
-                JObject obj = (JObject)ReadObject(r);
-                ParseRootObject(lvl, obj);
-                return lvl;
             }
         }
         
@@ -295,5 +327,6 @@ namespace MCGalaxy.Levels.IO {
                 ReadContent(r, typeCode);
             }
         }
+        #endregion
     }
 }
