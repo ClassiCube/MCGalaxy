@@ -108,8 +108,14 @@ namespace MCGalaxy.Levels.IO {
                 DatReader r = new DatReader();
                 r.src = new BinaryReader(s);
                 
-                if (r.ReadInt32() != 0x271BB788 || r.ReadUInt8() != 0x02) {
-                    throw new InvalidDataException("Unexpected constant in .dat file");
+                int sig = r.ReadInt32();
+                if (sig != 0x271BB788) {
+                    throw new InvalidDataException("Invalid .dat map signature");
+                }
+                
+                byte ver = r.ReadUInt8();
+                if (ver != 0x02) {
+                    throw new InvalidDataException("Invalid .dat map version");
                 }
                 
                 if (r.ReadUInt16() != 0xACED) throw new InvalidDataException("Invalid stream magic");
