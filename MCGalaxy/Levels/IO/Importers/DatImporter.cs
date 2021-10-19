@@ -55,6 +55,13 @@ namespace MCGalaxy.Levels.IO
                 r.src = new BinaryReader(s);
                 
                 int signature = r.ReadInt32();
+                // Format version 0 - preclassic to classic 0.12
+                //  (technically this format doesn't have a signature, 
+                //   but 99% of such maps will start with these 4 bytes)
+                if (signature == 0x01010101)
+                    return ReadFormat0(lvl, s);
+                
+                // All valid .dat maps must start with these 4 bytes
                 if (signature != 0x271BB788) 
                     throw new InvalidDataException("Invalid .dat map signature");
                 
@@ -70,6 +77,23 @@ namespace MCGalaxy.Levels.IO
         }
         
         
+        // Map 'format' is just the 256x64x256 blocks of the level
+        const int PC_WIDTH = 256, PC_HEIGHT = 64, PC_LENGTH = 256;
+        static Level ReadFormat0(Level lvl, Stream s) {
+            lvl.Width  = PC_WIDTH;
+            lvl.Height = PC_HEIGHT;
+            lvl.Length = PC_LENGTH;
+            
+            // First 4 bytes were already read earlier as signature
+            byte[] blocks = new byte[PC_WIDTH * PC_HEIGHT * PC_LENGTH];
+            blocks[0] = 1; blocks[1] = 1; blocks[2] = 1; blocks[3] = 1;
+            s.Read(blocks, 4, blocks.Length - 4);
+            
+            lvl.blocks = blocks;
+            return lvl;
+        }
+        
+        
         static Level ReadFormat1(Level lvl, DatReader r) {
             r.ReadUtf8();  // level name
             r.ReadUtf8();  // level author
@@ -79,11 +103,16 @@ namespace MCGalaxy.Levels.IO
             lvl.Width  = r.ReadUInt16();
             lvl.Length = r.ReadUInt16();
             lvl.Height = r.ReadUInt16();            
-            lvl.blocks = r.ReadBytes(lvl.Width * lvl.Height * lvl.Length);
+            lvl.blocks = r.ReadBytes(lvl.Width * lvl.Height * lvl.Length); // TODO readfully
             return lvl;
         }
 
         
+        // Really annoying map format to parse, because it's just a Java serialised object
+        //  http://www.javaworld.com/article/2072752/the-java-serialization-algorithm-revealed.html
+        //  https://docs.oracle.com/javase/7/docs/platform/serialization/spec/protocol.html
+        // Good reference tool for comparison
+        //  https://github.com/NickstaDB/SerializationDumper
         static Level ReadFormat2(Level lvl, DatReader r) {
             if (r.ReadUInt16() != 0xACED) throw new InvalidDataException("Invalid stream magic");
             if (r.ReadUInt16() != 0x0005) throw new InvalidDataException("Invalid stream version");
