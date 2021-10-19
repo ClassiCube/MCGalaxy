@@ -80,9 +80,9 @@ namespace MCGalaxy.Levels.IO
         // Map 'format' is just the 256x64x256 blocks of the level
         const int PC_WIDTH = 256, PC_HEIGHT = 64, PC_LENGTH = 256;
         static Level ReadFormat0(Level lvl, Stream s) {
-            lvl.Width  = PC_WIDTH;  lvl.spawnx = PC_WIDTH  / 2;
-            lvl.Height = PC_HEIGHT; lvl.spawny = PC_HEIGHT;
-            lvl.Length = PC_LENGTH; lvl.spawnz = PC_LENGTH / 2;
+            lvl.Width  = PC_WIDTH;
+            lvl.Height = PC_HEIGHT;
+            lvl.Length = PC_LENGTH;
             
             // First 4 bytes were already read earlier as signature
             byte[] blocks = new byte[PC_WIDTH * PC_HEIGHT * PC_LENGTH];
@@ -90,8 +90,8 @@ namespace MCGalaxy.Levels.IO
             s.Read(blocks, 4, blocks.Length - 4);
             lvl.blocks = blocks;
             
+            SetupClassic013(lvl);
             // Similiar env to how it appears in preclassic client
-            ApplyClassic013Env(lvl);
             lvl.Config.EdgeBlock    = Block.Air;
             lvl.Config.HorizonBlock = Block.Air;
             return lvl;
@@ -103,17 +103,24 @@ namespace MCGalaxy.Levels.IO
             r.ReadUtf8();  // level author
             r.ReadInt64(); // created timestamp (currentTimeMillis)
             // no spawn in 0.13, you always spawn in a random place
+            // TODO just set to mid of map
             
             lvl.Width  = r.ReadUInt16();
             lvl.Length = r.ReadUInt16();
             lvl.Height = r.ReadUInt16();            
             lvl.blocks = r.ReadBytes(lvl.Width * lvl.Height * lvl.Length); // TODO readfully
-            ApplyClassic013Env(lvl);
+            SetupClassic013(lvl);
             return lvl;
         }
         
-        static void ApplyClassic013Env(Level lvl) {
-            // Similiar env to how it appears in classic 0.13 client
+        static void SetupClassic013(Level lvl) {
+            // You always spawn in a random place in 0.13,
+            //  so just use middle of map for spawn instead
+            lvl.spawnx = (ushort)(lvl.Width  / 2);
+            lvl.spawny = lvl.Height;
+            lvl.spawnz = (ushort)(lvl.Length / 2);
+            
+            // Similiar env to how it appears in 0.13 client
             lvl.Config.CloudsHeight = -30000;
             lvl.Config.SkyColor     = "#7FCCFF";
             lvl.Config.FogColor     = "#7FCCFF";

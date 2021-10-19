@@ -31,7 +31,7 @@ namespace MCGalaxy {
     public sealed partial class Level : IDisposable {
         
         readonly object updateLock = new object();
-        readonly object checkLock = new object();
+        readonly object checkLock  = new object();
         
         public void SetPhysics(int level) {
             if (IsMuseum) return;

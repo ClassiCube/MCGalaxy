@@ -199,14 +199,6 @@ namespace MCGalaxy {
         [ConfigString("TexturePack", "Env", "", true)]
         public string TexturePack = "";
         
-        public byte jailrotx, jailroty;
-        [ConfigInt("JailX", "Jail", 0, 0, 65535)]
-        public int JailX;
-        [ConfigInt("JailY", "Jail", 0, 0, 65535)]
-        public int JailY;
-        [ConfigInt("JailZ", "Jail", 0, 0, 65535)]
-        public int JailZ;
-        
         // Permission settings
         [ConfigString("RealmOwner", "Permissions", "", true)]
         public string RealmOwner = "";

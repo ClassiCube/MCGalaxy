@@ -304,12 +304,6 @@ namespace MCGalaxy {
         }
         
         public static void LoadMetadata(Level lvl) {
-            lvl.Config.JailX = (ushort)(lvl.spawnx * 32);
-            lvl.Config.JailY = (ushort)(lvl.spawny * 32);
-            lvl.Config.JailZ = (ushort)(lvl.spawnz * 32);
-            lvl.Config.jailrotx = lvl.rotx;
-            lvl.Config.jailroty = lvl.roty;
-            
             try {
                 string propsPath = LevelInfo.PropsPath(lvl.MapName);
                 if (lvl.Config.Load(propsPath)) {
