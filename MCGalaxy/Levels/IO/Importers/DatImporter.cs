@@ -80,16 +80,20 @@ namespace MCGalaxy.Levels.IO
         // Map 'format' is just the 256x64x256 blocks of the level
         const int PC_WIDTH = 256, PC_HEIGHT = 64, PC_LENGTH = 256;
         static Level ReadFormat0(Level lvl, Stream s) {
-            lvl.Width  = PC_WIDTH;
-            lvl.Height = PC_HEIGHT;
-            lvl.Length = PC_LENGTH;
+            lvl.Width  = PC_WIDTH;  lvl.spawnx = PC_WIDTH  / 2;
+            lvl.Height = PC_HEIGHT; lvl.spawny = PC_HEIGHT;
+            lvl.Length = PC_LENGTH; lvl.spawnz = PC_LENGTH / 2;
             
             // First 4 bytes were already read earlier as signature
             byte[] blocks = new byte[PC_WIDTH * PC_HEIGHT * PC_LENGTH];
             blocks[0] = 1; blocks[1] = 1; blocks[2] = 1; blocks[3] = 1;
             s.Read(blocks, 4, blocks.Length - 4);
-            
             lvl.blocks = blocks;
+            
+            // Similiar env to how it appears in preclassic client
+            ApplyClassic013Env(lvl);
+            lvl.Config.EdgeBlock    = Block.Air;
+            lvl.Config.HorizonBlock = Block.Air;
             return lvl;
         }
         
@@ -104,7 +108,15 @@ namespace MCGalaxy.Levels.IO
             lvl.Length = r.ReadUInt16();
             lvl.Height = r.ReadUInt16();            
             lvl.blocks = r.ReadBytes(lvl.Width * lvl.Height * lvl.Length); // TODO readfully
+            ApplyClassic013Env(lvl);
             return lvl;
+        }
+        
+        static void ApplyClassic013Env(Level lvl) {
+            // Similiar env to how it appears in classic 0.13 client
+            lvl.Config.CloudsHeight = -30000;
+            lvl.Config.SkyColor     = "#7FCCFF";
+            lvl.Config.FogColor     = "#7FCCFF";
         }
 
         
