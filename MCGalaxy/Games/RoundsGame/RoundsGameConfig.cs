@@ -70,7 +70,11 @@ namespace MCGalaxy.Games {
         ConfigElement[] cfg;
         public virtual void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(GetType());
-            ConfigElement.SerialiseSimple(cfg, PropsPath, this);
+            
+            using (StreamWriter w = new StreamWriter(PropsPath)) {
+                w.WriteLine("#" + GameName + " configuration");
+                ConfigElement.SerialiseElements(cfg, w, this);
+            }
         }
         
         public virtual void Load() {

@@ -102,8 +102,6 @@ namespace MCGalaxy.Levels.IO
             r.ReadUtf8();  // level name
             r.ReadUtf8();  // level author
             r.ReadInt64(); // created timestamp (currentTimeMillis)
-            // no spawn in 0.13, you always spawn in a random place
-            // TODO just set to mid of map
             
             lvl.Width  = r.ReadUInt16();
             lvl.Length = r.ReadUInt16();
