@@ -21,9 +21,10 @@ using System.IO;
 using System.Reflection;
 using MCGalaxy.Config;
 
-namespace MCGalaxy {
-    
-    public struct ConfigElement {
+namespace MCGalaxy 
+{    
+    public struct ConfigElement 
+    {
         public ConfigAttribute Attrib;
         public FieldInfo Field;
         
@@ -38,7 +39,8 @@ namespace MCGalaxy {
             List<ConfigElement> elems = new List<ConfigElement>();
             FieldInfo[] fields = type.GetFields(flags);
             
-            for (int i = 0; i < fields.Length; i++) {
+            for (int i = 0; i < fields.Length; i++) 
+            {
                 FieldInfo field = fields[i];
                 Attribute[] attributes = Attribute.GetCustomAttributes(field, typeof(ConfigAttribute));
                 if (attributes.Length == 0) continue;
@@ -58,7 +60,8 @@ namespace MCGalaxy {
         }
         
         public static void Parse(ConfigElement[] elems, object instance, string k, string v) {
-            foreach (ConfigElement elem in elems) {
+            foreach (ConfigElement elem in elems) 
+            {
                 if (!elem.Attrib.Name.CaselessEq(k)) continue;
                 
                 elem.Field.SetValue(instance, elem.Attrib.Parse(v)); return;
@@ -68,7 +71,8 @@ namespace MCGalaxy {
         public static void Serialise(ConfigElement[] elements, StreamWriter dst, object instance) {
             Dictionary<string, List<ConfigElement>> sections = new Dictionary<string, List<ConfigElement>>();
             
-            foreach (ConfigElement elem in elements) {
+            foreach (ConfigElement elem in elements) 
+            {
                 List<ConfigElement> members;
                 if (!sections.TryGetValue(elem.Attrib.Section, out members)) {
                     members = new List<ConfigElement>();
@@ -78,9 +82,11 @@ namespace MCGalaxy {
             }
             
             // group output by sections
-            foreach (var kvp in sections) {
+            foreach (var kvp in sections) 
+            {
                 dst.WriteLine("# " + kvp.Key + " settings");
-                foreach (ConfigElement elem in kvp.Value) {
+                foreach (ConfigElement elem in kvp.Value) 
+                {
                     dst.WriteLine(elem.Format(instance));
                 }
                 dst.WriteLine();
@@ -90,9 +96,14 @@ namespace MCGalaxy {
         public static void SerialiseSimple(ConfigElement[] elements, string path, object instance) {
             using (StreamWriter w = new StreamWriter(path)) {
                 w.WriteLine("#Settings file");
-                foreach (ConfigElement elem in elements) {
-                    w.WriteLine(elem.Format(instance));
-                }
+                SerialiseElements(elements, w, instance);
+            }
+        }
+        
+        public static void SerialiseElements(ConfigElement[] elements, TextWriter w, object instance) {
+            foreach (ConfigElement elem in elements) 
+            {
+                w.WriteLine(elem.Format(instance));
             }
         }
     }

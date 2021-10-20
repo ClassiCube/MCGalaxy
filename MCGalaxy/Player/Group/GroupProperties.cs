@@ -109,9 +109,7 @@ namespace MCGalaxy {
                 
                 foreach (Group group in givenList) {
                     w.WriteLine("RankName = " + group.Name);
-                    foreach (ConfigElement elem in cfg) {
-                        w.WriteLine(elem.Format(group));
-                    }
+                    ConfigElement.SerialiseElements(cfg, w, group);
                     w.WriteLine();
                 }
             }
