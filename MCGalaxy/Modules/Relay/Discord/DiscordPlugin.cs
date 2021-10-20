@@ -51,20 +51,26 @@ namespace MCGalaxy.Modules.Relay.Discord
         [ConfigInt("embed-color", null, 9758051)]
         public int EmbedColor = 9758051;
         
-        const string file = "properties/discordbot.properties";
+        const string PROPS_PATH = "properties/discordbot.properties";
         static ConfigElement[] cfg;
         
         public void Load() {
             // create default config file
-            if (!File.Exists(file)) Save();
+            if (!File.Exists(PROPS_PATH)) Save();
 
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.ParseFile(cfg, file, this);
+            ConfigElement.ParseFile(cfg, PROPS_PATH, this);
         }
         
         public void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
-            ConfigElement.SerialiseSimple(cfg, file, this);
+            
+            using (StreamWriter w = new StreamWriter(PROPS_PATH)) {
+            	w.WriteLine("# Discord relay bot configuration file");
+            	w.WriteLine("# See " + Updater.SourceURL + "/wiki/Discord-relay-bot/");
+            	w.WriteLine();
+            	ConfigElement.SerialiseElements(cfg, w, this);
+            }
         }
     }
     
