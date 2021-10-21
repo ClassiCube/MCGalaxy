@@ -46,15 +46,17 @@ namespace MCGalaxy.Commands.Building {
             
             if (opt == "save") {
                 if (parts.Length != 2) { Help(p); return; }
-                if (!Formatter.ValidName(p, parts[1], "saved copy")) return;
+                if (!Formatter.CheckFilenameOnly(p, parts[1])) return;
+                
                 SaveCopy(p, parts[1]);
             } else if (opt == "load") {
                 if (parts.Length != 2) { Help(p); return; }
-                if (!Formatter.ValidName(p, parts[1], "saved copy")) return;
+                if (!Formatter.CheckFilenameOnly(p, parts[1])) return;
+                
                 LoadCopy(p, parts[1]);
             } else if (IsDeleteCommand(opt)) {
                 if (parts.Length != 2) { Help(p); return; }
-                if (!Formatter.ValidName(p, parts[1], "saved copy")) return;
+                if (!Formatter.CheckFilenameOnly(p, parts[1])) return;
                 
                 string path = FindCopy(p.name, parts[1]);
                 if (path == null) { p.Message("No such copy exists."); return; }

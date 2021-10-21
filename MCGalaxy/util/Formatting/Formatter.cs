@@ -21,9 +21,10 @@ using System.Text;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 
-namespace MCGalaxy {
-    public static class Formatter {
-        
+namespace MCGalaxy 
+{
+    public static class Formatter 
+    { 
         public static void PrintCommandInfo(Player p, Command cmd) {
             ItemPerms perms = CommandPerms.Find(cmd.name) ?? new ItemPerms(cmd.defaultRank);
             p.Message("Usable by: " + perms.Describe());
@@ -34,7 +35,8 @@ namespace MCGalaxy {
             if (extraPerms.Count == 0) return;
             
             p.Message("&TExtra permissions:");
-            foreach (CommandExtraPerms extra in extraPerms) {
+            foreach (CommandExtraPerms extra in extraPerms) 
+            {
                 p.Message("{0}) {1} {2}", extra.Num, extra.Describe(), extra.Desc);
             }
         }
@@ -52,7 +54,8 @@ namespace MCGalaxy {
         }
         
         static void FindAliases(List<Alias> aliases, Command cmd, StringBuilder dst) {
-            foreach (Alias a in aliases) {
+            foreach (Alias a in aliases) 
+            {
                 if (!a.Target.CaselessEq(cmd.name)) continue;
                 
                 dst.Append('/').Append(a.Trigger);
@@ -84,9 +87,15 @@ namespace MCGalaxy {
         }
         
         static char[] separators = { '/', '\\', ':' };
+        /// <summary> Checks that the input is a valid filename (non-empty and no directory separator) </summary>
+        /// <remarks> If the input is invalid, messages the player the reason why </remarks>
         public static bool CheckFilenameOnly(Player p, string name) {
+            if (string.IsNullOrEmpty(name)) {
+                p.Message("&WFilename cannot be empty"); return false;
+            }
+            
             if (name.IndexOfAny(separators) == -1) return true;
-            p.Message("\"{0}\" includes a directory separator (/, \\ or :), which is not allowed", name);
+            p.Message("&W\"{0}\" includes a directory separator (/, : or \\), which is not allowed", name);
             return false;
         }
     }
