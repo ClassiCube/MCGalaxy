@@ -52,10 +52,10 @@ namespace MCGalaxy
             if (ProtocolVersion > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version", true); return -1; 
             }
-            if (name.Length > 16) {
-                Leave(null, "Usernames must be 16 characters or less", true); return -1;
+            if (name.Length < 1 || name.Length > 16) {
+                Leave(null, "Usernames must be between 1 and 16 characters", true); return -1;
             }
-            if (!Player.ValidName(name)) {
+            if (!name.ContainsAllIn(USERNAME_ALPHABET)) {
                 Leave(null, "Invalid player name", true); return -1;
             }
             

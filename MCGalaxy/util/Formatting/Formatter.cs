@@ -75,7 +75,9 @@ namespace MCGalaxy
         }
         
         public static bool ValidName(Player p, string name, string type) {
-            if (Player.ValidName(name)) return true;
+            const string alphabet = Player.USERNAME_ALPHABET + "+"; // compatibility with ClassiCubeAccountPlus
+            if (name.Length > 0 && name.ContainsAllIn(alphabet)) return true;
+            
             p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;
         }
@@ -89,7 +91,7 @@ namespace MCGalaxy
         static char[] separators = { '/', '\\', ':' };
         /// <summary> Checks that the input is a valid filename (non-empty and no directory separator) </summary>
         /// <remarks> If the input is invalid, messages the player the reason why </remarks>
-        public static bool CheckFilenameOnly(Player p, string name) {
+        public static bool ValidFilename(Player p, string name) {
             if (string.IsNullOrEmpty(name)) {
                 p.Message("&WFilename cannot be empty"); return false;
             }

@@ -325,15 +325,7 @@ namespace MCGalaxy {
         
         [Obsolete("Use PlayerInfo.Online.Items")]
         public static List<Player> players;
-
-        public static bool ValidName(string name) {
-            if (name.Length == 0) return false;
-            const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._+";
-            foreach (char c in name) {
-                if (valid.IndexOf(c) == -1) return false;
-            }
-            return true;
-        }
+        public const string USERNAME_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._";
         
         internal byte UserType() { return group.Blocks[Block.Bedrock] ? (byte)100 : (byte)0; }
 

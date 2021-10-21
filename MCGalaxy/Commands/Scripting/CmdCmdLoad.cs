@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Scripting {
         
         public override void Use(Player p, string cmdName, CommandData data) {
             if (cmdName.Length == 0) { Help(p); return; }
-            if (!Formatter.CheckFilenameOnly(p, cmdName)) return;
+            if (!Formatter.ValidFilename(p, cmdName)) return;
             string path = IScripting.CommandPath(cmdName);
             string error;
             List<Command> cmds = IScripting.LoadCommands(path, out error);

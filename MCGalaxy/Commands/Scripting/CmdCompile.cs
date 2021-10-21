@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
-            if (!Formatter.CheckFilenameOnly(p, args[0])) return;
+            if (!Formatter.ValidFilename(p, args[0])) return;
 
             string language    = args.Length > 1 ? args[1] : "";
             ICompiler compiler = ICompiler.Lookup(language, p);

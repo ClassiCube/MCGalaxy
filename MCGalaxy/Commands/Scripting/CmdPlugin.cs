@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (args.Length == 1) { Help(p); return; }
             
             string cmd = args[0], name = args[1];
-            if (!Formatter.CheckFilenameOnly(p, name)) return;
+            if (!Formatter.ValidFilename(p, name)) return;
             string language = args.Length > 2 ? args[2] : "";
             
             if (cmd.CaselessEq("load")) {

@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy {
-
+namespace MCGalaxy 
+{
     /// <summary> Extension methods relating to strings. </summary>
-    public static class StringExts {
-
+    public static class StringExts 
+    {
         /// <summary> Sets the first character of the input string to uppercase. </summary>
         public static string Capitalize(this string str) {
             if (String.IsNullOrEmpty(str)) return str;
@@ -42,6 +42,15 @@ namespace MCGalaxy {
         /// <summary> Returns whether line is empty or starts with a #. </summary>
         public static bool IsCommentLine(this string line) {
             return line.Length == 0 || line[0] == '#';
+        }
+        
+        /// <summary> Returns whether all characters in the given string are also in the given alphabet </summary>
+        public static bool ContainsAllIn(this string str, string alphabet) {
+            foreach (char c in str) 
+            {
+                if (alphabet.IndexOf(c) == -1) return false;
+            }
+            return true;
         }
         
         

@@ -46,17 +46,17 @@ namespace MCGalaxy.Commands.Building {
             
             if (opt == "save") {
                 if (parts.Length != 2) { Help(p); return; }
-                if (!Formatter.CheckFilenameOnly(p, parts[1])) return;
+                if (!Formatter.ValidFilename(p, parts[1])) return;
                 
                 SaveCopy(p, parts[1]);
             } else if (opt == "load") {
                 if (parts.Length != 2) { Help(p); return; }
-                if (!Formatter.CheckFilenameOnly(p, parts[1])) return;
+                if (!Formatter.ValidFilename(p, parts[1])) return;
                 
                 LoadCopy(p, parts[1]);
             } else if (IsDeleteCommand(opt)) {
                 if (parts.Length != 2) { Help(p); return; }
-                if (!Formatter.CheckFilenameOnly(p, parts[1])) return;
+                if (!Formatter.ValidFilename(p, parts[1])) return;
                 
                 string path = FindCopy(p.name, parts[1]);
                 if (path == null) { p.Message("No such copy exists."); return; }
@@ -196,7 +196,6 @@ namespace MCGalaxy.Commands.Building {
         void LoadCopy(Player p, string file) {
             string path = FindCopy(p.name, file);
             if (path == null) { p.Message("No such copy exists"); return; }
-            file = Path.GetFileNameWithoutExtension(path);
             
             using (FileStream fs = File.OpenRead(path))
                 using (GZipStream gs = new GZipStream(fs, CompressionMode.Decompress))
@@ -214,8 +213,8 @@ namespace MCGalaxy.Commands.Building {
             p.Message("Loaded copy from " + file);
         }
         
-        static string FindCopy(string name, string file) {
-            string path = "extra/savecopy/" + name + "/" + file;
+        static string FindCopy(string player, string file) {
+            string path = "extra/savecopy/" + player + "/" + file;
             bool existsNew = File.Exists(path + ".cpb");
             bool existsOld = File.Exists(path + ".cpy");
             
