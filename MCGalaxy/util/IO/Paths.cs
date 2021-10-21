@@ -43,7 +43,8 @@ namespace MCGalaxy {
         public const string CmdExtraPermsFile = "properties/ExtraCommandPermissions.properties";
         public const string EconomyPropsFile = "properties/economy.properties";
         public const string ServerPropsFile = "properties/server.properties";
-        public const string RankPropsFile = "properties/ranks.properties";        
+        public const string RankPropsFile = "properties/ranks.properties";
+        public const string AuthServicesFile = "properties/authservices.properties";
         
         public const string ImportsDir = "extra/import/";
         public const string WaypointsDir = "extra/Waypoints/";
