@@ -30,9 +30,12 @@ namespace MCGalaxy.Network
     {
         string proxyUrl;
         public string ServerHash;
+        bool checkedAddr;
         
-        protected override void Init() {
+        void CheckAddress() {
             string hostUrl = "";
+            checkedAddr    = true;
+            
             try {
                 hostUrl = new Uri(URL).Host;
                 IPAddress[] addresses = Dns.GetHostAddresses(hostUrl);
@@ -83,6 +86,8 @@ namespace MCGalaxy.Network
         }
         
         protected override void OnRequest(HttpWebRequest request) {
+            if (!checkedAddr) CheckAddress();
+            
             if (proxyUrl == null) return;
             request.Proxy = new WebProxy(proxyUrl);
         }
