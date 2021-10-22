@@ -79,7 +79,6 @@ namespace MCGalaxy.Commands.World {
                 return false;
             }
             
-            if (!Formatter.ValidName(p, name, "player")) return false;
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return false;
             

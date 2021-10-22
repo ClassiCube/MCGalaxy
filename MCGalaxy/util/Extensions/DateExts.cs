@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
-
+namespace MCGalaxy 
+{
     /// <summary> Extension methods relating to dates. </summary>
-    public static class DateExts {
-        
+    public static class DateExts 
+    {        
         public static TimeSpan ParseOldDBTimeSpent(this string value) {
             string[] parts = value.SplitSpaces();
             return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
@@ -37,12 +37,15 @@ namespace MCGalaxy {
             return DateTime.Parse(value);
         }
         
+        /// <summary> Origin point in time for Unix time (Midnight January 1, 1970) </summary>
         public static DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         
         public static DateTime FromUnixTime(this long offset) {
             return UnixEpoch.AddTicks(offset * TimeSpan.TicksPerSecond);
         }
         
+        /// <summary> Converts the given DateTime instance to Unix time </summary>
+        /// <remarks> Unix time is the number of seconds since Midnight January 1, 1970 </remarks>
         public static long ToUnixTime(this DateTime time) {
             return (long)(time.ToUniversalTime() - UnixEpoch).TotalSeconds;
         }

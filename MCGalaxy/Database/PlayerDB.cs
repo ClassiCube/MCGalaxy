@@ -90,6 +90,7 @@ namespace MCGalaxy.DB {
         }
         
         
+        /// <summary> Returns the fields of the row whose Name field caselessly equals the given name </summary>
         public static PlayerData FindData(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
             object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
@@ -97,11 +98,13 @@ namespace MCGalaxy.DB {
             return (PlayerData)raw;
         }
 
+        /// <summary> Returns the Name field of the row whose Name field caselessly equals the given name </summary>
         public static string FindName(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
             return Database.ReadString("Players", "Name", "WHERE Name=@0" + suffix, name);
         }
         
+        /// <summary> Returns the IP field of the row whose Name field caselessly equals the given name </summary>
         public static string FindIP(string name) {
             string suffix = Database.Backend.CaselessWhereSuffix;
             return Database.ReadString("Players", "IP", "WHERE Name=@0" + suffix, name);

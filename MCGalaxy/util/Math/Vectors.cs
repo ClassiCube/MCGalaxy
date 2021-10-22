@@ -17,8 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy.Maths { 
-    public struct Vec3U16 : IEquatable<Vec3U16> {
+namespace MCGalaxy.Maths 
+{
+    /// <summary> 3 component vector (unsigned 16 bit integer) </summary>
+    public struct Vec3U16 : IEquatable<Vec3U16> 
+    {
         public ushort X, Y, Z;
         public static Vec3U16 Zero = new Vec3U16(0);
         public static Vec3U16 MinVal = new Vec3U16(ushort.MinValue);
@@ -68,7 +71,9 @@ namespace MCGalaxy.Maths {
         public override string ToString() { return X + ", " + Y + ", " + Z; }
     }
     
-    public struct Vec3S32 : IEquatable<Vec3S32> {
+    /// <summary> 3 component vector (signed 32 bit integer) </summary>
+    public struct Vec3S32 : IEquatable<Vec3S32> 
+    {
         public int X, Y, Z;
         public static Vec3S32 Zero = new Vec3S32(0);
         
@@ -163,7 +168,9 @@ namespace MCGalaxy.Maths {
         }
     }
     
-    public struct Vec3F32 : IEquatable<Vec3F32> {
+    /// <summary> 3 component vector (32 bit floating point) </summary>
+    public struct Vec3F32 : IEquatable<Vec3F32> 
+    {
         public float X, Y, Z;
         
         public Vec3F32(float x, float y, float z) {

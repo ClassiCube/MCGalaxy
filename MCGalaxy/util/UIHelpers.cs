@@ -19,9 +19,11 @@ using System;
 using System.Threading;
 using MCGalaxy;
 
-namespace MCGalaxy.UI {
-    public static class UIHelpers {
-        
+namespace MCGalaxy.UI 
+{
+    /// <summary> Common functionality for a CLI or GUI server console </summary>
+    public static class UIHelpers 
+    {        
         static string lastCMD = "";
         public static void HandleChat(string text) {
             if (text != null) text = text.Trim();
