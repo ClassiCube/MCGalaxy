@@ -40,6 +40,7 @@ namespace MCGalaxy {
         
         public const string BlockPermsFile = "properties/block.properties";
         public const string CmdPermsFile = "properties/command.properties";
+        public const string CPEFile = "properties/cpe.properties";
         public const string CmdExtraPermsFile = "properties/ExtraCommandPermissions.properties";
         public const string EconomyPropsFile = "properties/economy.properties";
         public const string ServerPropsFile = "properties/server.properties";

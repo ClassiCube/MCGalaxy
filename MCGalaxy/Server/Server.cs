@@ -183,6 +183,7 @@ namespace MCGalaxy {
             Group.LoadAll();
             CommandPerms.Load();
             Command.InitAll();
+            CPEConfig.Load();
             Block.SetBlocks();
             AwardsList.Load();
             PlayerAwards.Load();
