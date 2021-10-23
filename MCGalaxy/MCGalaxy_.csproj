@@ -637,7 +637,8 @@
     <Compile Include="Games\CTF\CtfGame.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Levels\Level.cs" />
-    <Compile Include="Server\Authenticator.cs" />
+    <Compile Include="Server\Authentication\Authenticator.cs" />
+    <Compile Include="Server\Authentication\AuthService.cs" />
     <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
@@ -746,6 +747,7 @@
     <Folder Include="Entity" />
     <Folder Include="Modules" />
     <Folder Include="Server\Maintenance" />
+    <Folder Include="Server\Authentication" />
     <Folder Include="util\Formatting" />
     <Folder Include="util\Threading" />
   </ItemGroup>
