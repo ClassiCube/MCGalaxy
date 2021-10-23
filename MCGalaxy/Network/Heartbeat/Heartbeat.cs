@@ -89,22 +89,6 @@ namespace MCGalaxy.Network
             Server.Background.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
         }
         
-        static string lastUrls;
-        /// <summary> Reloads list of heartbeats from Server.Config </summary>
-        public static void ReloadDefault() {
-            string urls = Server.Config.HeartbeatURL;
-            // don't reload heartbeats unless absolutely have to
-            if (urls == lastUrls) return;
-            lastUrls    = urls;
-            
-            Heartbeats.Clear(); // TODO only reload default heartbeats
-            foreach (string url in urls.SplitComma())
-            {
-                Heartbeat beat = new ClassiCubeBeat() { URL = url };
-                Register(beat);
-            }
-        }
-        
         static void OnBeat(SchedulerTask task) {
             foreach (Heartbeat beat in Heartbeats) { beat.Pump(); }
         }

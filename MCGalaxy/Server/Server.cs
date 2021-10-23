@@ -23,6 +23,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
+using MCGalaxy.Authentication;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
@@ -179,7 +180,7 @@ namespace MCGalaxy {
             ImagePalette.Load();
             
             SrvProperties.Load();
-            Heartbeat.ReloadDefault();
+            AuthService.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();
             Command.InitAll();

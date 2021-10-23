@@ -21,10 +21,10 @@ using System.Security.Cryptography;
 using System.Text;
 using MCGalaxy.Network;
 
-namespace MCGalaxy 
+namespace MCGalaxy.Authentication
 {
-    /// <summary> Authenticates the mppass provided at login 
-    /// and optionally requires additional verification </summary>
+    /// <summary> Authenticates a player using the mppass provided at login,
+    /// and optionally manages additional verification for certain users </summary>
     public abstract class Authenticator 
     {        
         /// <summary> The currently/actively used authenticator </summary>
@@ -35,14 +35,9 @@ namespace MCGalaxy
         public virtual bool VerifyLogin(Player p, string mppass) {
             if (!Server.Config.VerifyNames) return true;
             
-            foreach (Heartbeat hb in Heartbeat.Heartbeats)
+            foreach (AuthService auth in AuthService.Services)
             {
-                string calculated = Server.CalcMppass(p.truename, hb.Salt);
-                
-                if (mppass.CaselessEq(calculated)) {
-                    p.verifiedName = true;
-                    return true;
-                }
+                if (auth.Authenticate(p, mppass)) return true;
             }
             return IPUtil.IsPrivate(p.IP);
         }
@@ -79,6 +74,7 @@ namespace MCGalaxy
         public abstract bool VerifyPassword(string name, string password);
     }
     
+    /// <summary> Authenticator that loads/stores passwords in /extra/passwords folder </summary>
     public sealed class DefaultAuthenticator : Authenticator 
     {
         const string PASS_FOLDER = "extra/passwords/";

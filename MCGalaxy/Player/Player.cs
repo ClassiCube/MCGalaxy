@@ -18,6 +18,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using MCGalaxy.Authentication;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Events.EconomyEvents;
