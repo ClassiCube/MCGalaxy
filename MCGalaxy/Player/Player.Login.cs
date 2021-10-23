@@ -77,12 +77,13 @@ namespace MCGalaxy
             if (Socket.Disconnected) return size;
             
             UpdateFallbackTable();
-            if (hasCpe) { SendCpeExtensions(); }
+            if (hasCpe) { SendCpeExtensions(this); }
             else { CompleteLoginProcess(); }
             return size;
         }
         
-        void SendCpeExtensions() {
+        void SendCpeExtensions(Player p) {
+            CPEConfig.Load(p);
             Send(Packet.ExtInfo((byte)(Extensions.Length + 1)));
             // fix for old classicube java client, doesn't reply if only send EnvMapAppearance with version 2
             Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));

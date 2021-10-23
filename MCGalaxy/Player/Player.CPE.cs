@@ -41,7 +41,7 @@ namespace MCGalaxy
         public string appName;
         int extensionCount;
         
-        public static CpeExtension[] Extensions = new CpeExtension[] 
+        public CpeExtension[] Extensions = new CpeExtension[] 
         {
             new CpeExtension(CpeExt.ClickDistance, true),    new CpeExtension(CpeExt.CustomBlocks, true),
             new CpeExtension(CpeExt.HeldBlock, true),        new CpeExtension(CpeExt.TextHotkey, true),
@@ -69,7 +69,6 @@ namespace MCGalaxy
         {
             foreach (CpeExtension ext in Extensions) 
             {
-                Logger.Log(LogType.Debug, ext.Name + " " + ext.Enabled);
                 if (ext.Name.CaselessEq(extName)) if (ext.Enabled) return ext;
             }
 
@@ -345,38 +344,40 @@ namespace MCGalaxy
     
     public sealed class CPEConfig 
     {
-        public static void Load() {
+        public static void Load(Player p) {
             if (!File.Exists(Paths.CPEFile)) {
-                SaveConfig();
+                SaveConfig(new Player(""));
             }
-            LoadConfig();
+            LoadConfig(p);
+        }
+        static void LoadConfig(Player p) {
+
+            PropertiesFile.Read(Paths.CPEFile, ref p, ParseProperty, '=', true);
         }
 
-        static void LoadConfig() {
-            CpeExtension cur = null;
-            PropertiesFile.Read(Paths.CPEFile, ref cur, ParseProperty, '=', true);
-        }
-
-        static void ParseProperty(string key, string value, ref CpeExtension cur) {
+        static void ParseProperty(string key, string value, ref Player p) 
+        {
             int i = 0;
-            foreach (CpeExtension c in Player.Extensions) 
+            foreach (CpeExtension c in p.Extensions) 
             {
-                if (key.CaselessEq(c.Name)) {
-                    Player.Extensions[i] = new CpeExtension(c.Name, bool.Parse(value));
+                if (key.CaselessEq(c.Name)) 
+                {
+                    p.Extensions[i] = new CpeExtension(c.Name, bool.Parse(value));
                 }
                 i++;
             }
         }
 
-        static void SaveConfig() {
-            using (StreamWriter w = new StreamWriter(Paths.CPEFile)) {
-                Logger.Log(LogType.Debug, "test");
+        static void SaveConfig(Player p) 
+        {
+            using (StreamWriter w = new StreamWriter(Paths.CPEFile)) 
+            {
                 w.WriteLine("# CPE configuration");
                 w.WriteLine("#   Here you can configure settings for CPE (Classic Protocol Extension).");
                 w.WriteLine("#   You shouldn't touch any settings here unless you know what you are doing.");
                 w.WriteLine();
                 
-                foreach (CpeExtension c in Player.Extensions) 
+                foreach (CpeExtension c in p.Extensions) 
                 {
                     w.WriteLine(c.Name + " = " + c.Enabled);
                 }
