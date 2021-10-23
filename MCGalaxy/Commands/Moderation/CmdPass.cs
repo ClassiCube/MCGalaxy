@@ -18,6 +18,7 @@
  
  */
 using System;
+using MCGalaxy.Authentication;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdPass : Command2 {
