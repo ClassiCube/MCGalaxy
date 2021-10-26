@@ -41,7 +41,8 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("Select two corners for restore.");
                 p.MakeSelection(2, "Selecting region for &SRestore", path, DoRestore);
             } else {
-                p.Message("Backup " + message + " does not exist.");
+                p.Message("Backup {0} does not exist.", message);
+                LevelInfo.OutputBackups(p, p.level.name);
             }
         }
         

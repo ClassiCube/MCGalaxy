@@ -28,7 +28,8 @@ using BlockRaw = System.Byte;
 namespace MCGalaxy {
 
     /// <summary> Result of attempting to change a block to another. </summary>
-    public enum ChangeResult {
+    public enum ChangeResult 
+    {
         /// <summary> Block change was not performed </summary>
         Unchanged,
         /// <summary> Old block was same as new block visually. (e.g. white to door_white) </summary>
@@ -37,13 +38,13 @@ namespace MCGalaxy {
         Modified
     }
     
-    public sealed partial class Level : IDisposable {
-        
+    public sealed partial class Level : IDisposable 
+    {        
         public byte[] blocks;
         public byte[][] CustomBlocks;
         public int ChunksX, ChunksY, ChunksZ;
         
-        /// <summary> Relatively quick guess at whether this level might use custom blocks. </summary>
+        /// <summary> Makes a quick guess at whether this level might use custom blocks. </summary>
         public bool MightHaveCustomBlocks() {
             byte[][] customBlocks = CustomBlocks;
             if (customBlocks == null) return false;
@@ -52,6 +53,39 @@ namespace MCGalaxy {
                 if (customBlocks[i] != null) return true;
             }
             return false;
+        }
+        
+        /// <summary> Converts the given coordinates to a position index </summary>
+        /// <remarks> Returns -1 if coordinates outside this level's boundaries are given </remarks>
+        public int PosToInt(ushort x, ushort y, ushort z) {
+            if (x >= Width || y >= Height || z >= Length) return -1;
+            return x + Width * (z + y * Length);
+        }
+
+        /// <summary> Converts the given position index to coordinates </summary>
+        /// <remarks> Undefined coordinates if given position index is invalid </remarks>
+        public void IntToPos(int pos, out ushort x, out ushort y, out ushort z) {
+            y = (ushort)(pos / Width / Length);
+            pos -= y * Width * Length;
+            z = (ushort)(pos / Width);
+            pos -= z * Width;
+            x = (ushort)pos;
+        }
+
+        /// <summary> Offsets the given position index by the given relative coordinates </summary>
+        /// <example> index = lvl.IntOffset(index, 0, -1, 0); </example>
+        public int IntOffset(int pos, int x, int y, int z)  {
+            return pos + x + z * Width + y * Width * Length;
+        }
+        
+        /// <summary> Returns whether the given coordinates lie within this level's boundaries </summary>
+        public bool IsValidPos(Vec3U16 pos) {
+            return pos.X < Width && pos.Y < Height && pos.Z < Length;
+        }
+        
+        /// <summary> Returns whether the given coordinates lie within this level's boundaries </summary>
+        public bool IsValidPos(int x, int y, int z) {
+            return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
         }
         
         
@@ -187,13 +221,7 @@ namespace MCGalaxy {
             }
         }
         
-        
-        public byte GetFallback(BlockID b) {
-            BlockDefinition def = CustomBlockDefs[b];
-            if (def != null) return def.FallBack;
-            return b < Block.CPE_COUNT ? (byte)b : Block.Air;
-        }
-        
+  
         internal bool BuildIn(BlockID block) {
             if (block == Block.Op_Water || block == Block.Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
             block = Block.Convert(block);
@@ -412,40 +440,6 @@ namespace MCGalaxy {
                 return false;
             }
         }
-
-        public int PosToInt(ushort x, ushort y, ushort z) {
-            //if (x < 0 || x >= Width || y < 0 || y >= Height || z < 0 || z >= Length)
-            //    return -1;
-            if (x >= Width || y >= Height || z >= Length) return -1;
-            return x + Width * (z + y * Length);
-        }
-
-        public void IntToPos(int pos, out ushort x, out ushort y, out ushort z) {
-            y = (ushort)(pos / Width / Length);
-            pos -= y * Width * Length;
-            z = (ushort)(pos / Width);
-            pos -= z * Width;
-            x = (ushort)pos;
-        }
-
-        public int IntOffset(int pos, int x, int y, int z)  {
-            return pos + x + z * Width + y * Width * Length;
-        }
-        
-        public bool IsValidPos(Vec3U16 pos) {
-            return pos.X < Width && pos.Y < Height && pos.Z < Length;
-        }
-        
-        public bool IsValidPos(int x, int y, int z) {
-            return x >= 0 && y >= 0 && z >= 0 && x < Width && y < Height && z < Length;
-        }
-        
-        public Vec3S32 ClampPos(Vec3S32 P) {
-            P.X = Math.Max(0, Math.Min(P.X, Width  - 1));
-            P.Y = Math.Max(0, Math.Min(P.Y, Height - 1));
-            P.Z = Math.Max(0, Math.Min(P.Z, Length - 1));
-            return P;
-        }
         
         public void UpdateBlock(Player p, ushort x, ushort y, ushort z, BlockID block,
                                 ushort flags = BlockDBFlags.ManualPlace, bool buffered = false) {
@@ -464,6 +458,14 @@ namespace MCGalaxy {
             } else {
                 BroadcastChange(x, y, z, block);
             }
+        }
+        
+        
+        public Vec3S32 ClampPos(Vec3S32 P) {
+            P.X = Math.Max(0, Math.Min(P.X, Width  - 1));
+            P.Y = Math.Max(0, Math.Min(P.Y, Height - 1));
+            P.Z = Math.Max(0, Math.Min(P.Z, Length - 1));
+            return P;
         }
         
         public BlockDefinition GetBlockDef(BlockID block) {
@@ -488,6 +490,12 @@ namespace MCGalaxy {
             BlockDefinition def = GetBlockDef(block);
             if (def != null) return !def.BlocksLight || def.BlockDraw == DrawType.TransparentThick || def.MinZ > 0;
             return Block.LightPass(block);
+        }
+        
+        public byte GetFallback(BlockID b) {
+            BlockDefinition def = CustomBlockDefs[b];
+            if (def != null) return def.FallBack;
+            return b < Block.CPE_COUNT ? (byte)b : Block.Air;
         }
     }
 }
