@@ -19,11 +19,15 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands.World;
 
-namespace MCGalaxy.Games {
-
-    public abstract class IGame {
+namespace MCGalaxy.Games 
+{
+    public abstract class IGame 
+    {
+        /// <summary> The level this game is currently running on </summary>
         public Level Map;
+        /// <summary> Whether this game is currently running/active </summary>
         public bool Running;
+        /// <summary> Full name of this game (e.g. Zombie Survival) </summary>
         public abstract string GameName { get; }
         
         public static VolatileArray<IGame> RunningGames = new VolatileArray<IGame>(false);
@@ -37,23 +41,21 @@ namespace MCGalaxy.Games {
             return null;
         }
 
+        /// <summary> Whether this game intercepts the given chat message </summary>
+        /// <example> RoundsGame uses this when voting for next level at end of rounds </example>
         public virtual bool HandlesChatMessage(Player p, string message) { return false; }
         public virtual void PlayerJoinedGame(Player p) { }
         public virtual void PlayerLeftGame(Player p) { }
         
+        /// <summary> Adjusts the given player's prefix that appears in all chat messages </summary>
+        /// <example> Zombie Survival uses this to show winstreaks </example>
         public virtual void AdjustPrefix(Player p, ref string prefix) { }
+        /// <summary> Immediately force stops/ends this game </summary>
         public abstract void End();
         public abstract void EndRound();
         
-        
-        /// <summary> Resets all CPE status messages to blank. </summary>
-        protected void ResetStatus(Player p) {
-            p.SendCpeMessage(CpeMessageType.Status1, "");
-            p.SendCpeMessage(CpeMessageType.Status2, "");
-            p.SendCpeMessage(CpeMessageType.Status3, "");
-        }
-        
-        /// <summary> Sends a message of the given type to all players on the level this game is running on. </summary>
+
+        /// <summary> Sends a message of the given type to all players in the level this game is currently running on </summary>
         public void MessageMap(CpeMessageType type, string message) {
             if (!Running) return;
             Player[] online = PlayerInfo.Online.Items;
@@ -64,14 +66,14 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected virtual string FormatStatus1(Player p) { return ""; }
-        protected virtual string FormatStatus2(Player p) { return ""; }
-        protected virtual string FormatStatus3(Player p) { return ""; }
-        
+        /// <summary> Sends CPE Status1 messages to all players in this game's current level </summary>
         public void UpdateAllStatus1() { UpdateAllStatus(CpeMessageType.Status1); }
+        /// <summary> Sends CPE Status2 messages to all players in this game's current level </summary>
         public void UpdateAllStatus2() { UpdateAllStatus(CpeMessageType.Status2); }
+        /// <summary> Sends CPE Status3 messages to all players in this game's current level </summary>
         public void UpdateAllStatus3() { UpdateAllStatus(CpeMessageType.Status3); }
         
+        /// <summary> Sends CPE Status1, Status2, and Status3 messages to all players in this game's current level </summary>
         public void UpdateAllStatus() {
             UpdateAllStatus1();
             UpdateAllStatus2();
@@ -89,16 +91,31 @@ namespace MCGalaxy.Games {
             }
         }
         
+        
+        protected virtual string FormatStatus1(Player p) { return ""; }
+        protected virtual string FormatStatus2(Player p) { return ""; }
+        protected virtual string FormatStatus3(Player p) { return ""; }
+        
+        /// <summary> Sends a CPE Status1 message (using FormatStatus1) to the given player </summary>
         protected void UpdateStatus1(Player p) {
             p.SendCpeMessage(CpeMessageType.Status1, FormatStatus1(p));
         }
         
+        /// <summary> Sends a CPE Status2 message (using FormatStatus2) to the given player </summary>
         protected void UpdateStatus2(Player p) {
             p.SendCpeMessage(CpeMessageType.Status2, FormatStatus2(p));
         }
         
+        /// <summary> Sends a CPE Status3 message (using FormatStatus3) to the given player </summary>
         protected void UpdateStatus3(Player p) {
             p.SendCpeMessage(CpeMessageType.Status3, FormatStatus3(p));
+        }
+        
+        /// <summary> Resets all CPE Status messages to blank for the given player </summary>
+        protected void ResetStatus(Player p) {
+            p.SendCpeMessage(CpeMessageType.Status1, "");
+            p.SendCpeMessage(CpeMessageType.Status2, "");
+            p.SendCpeMessage(CpeMessageType.Status3, "");
         }
         
         
