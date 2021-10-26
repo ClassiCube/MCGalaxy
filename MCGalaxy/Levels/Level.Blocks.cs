@@ -342,8 +342,8 @@ namespace MCGalaxy {
                 errorLocation = "Adding physics";
                 if (physics > 0 && ActivatesPhysics(block)) AddCheck(PosToInt(x, y, z));
 
-                Changed  = true;
-                backedup = false;
+                Changed            = true;
+                ChangedSinceBackup = true;
                 
                 return Block.VisuallyEquals(old, block) ? ChangeResult.VisuallySame : ChangeResult.Modified;
             } catch (Exception e) {

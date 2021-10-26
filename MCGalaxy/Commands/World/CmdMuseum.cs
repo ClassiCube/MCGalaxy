@@ -90,8 +90,7 @@ namespace MCGalaxy.Commands.World {
         
         static void JoinMuseum(Player p, string formattedMuseumName, string mapName, string path) {
             Level lvl    = IMapImporter.GetFor(path).Read(path, formattedMuseumName, false);
-            lvl.MapName  = mapName;            
-            lvl.backedup = true;            
+            lvl.MapName  = mapName;
             lvl.IsMuseum = true;
             
             Level.LoadMetadata(lvl);

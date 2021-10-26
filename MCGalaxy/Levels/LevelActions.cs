@@ -417,7 +417,7 @@ namespace MCGalaxy {
                 lvl.SaveChanges = false;
             }
             
-            res.backedup = true;
+            res.ChangedSinceBackup = false;
             Level.LoadMetadata(res);
             BotsFile.Load(res);
             

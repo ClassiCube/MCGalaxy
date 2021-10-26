@@ -253,7 +253,7 @@ namespace MCGalaxy {
         /// <param name="backup"> Specific name of the backup, or "" to automatically pick a name. </param>
         /// <returns> The name of the backup, or null if no backup was saved. </returns>
         public string Backup(bool force = false, string backup = "") {
-            if (!backedup || force) {
+            if (ChangedSinceBackup || force) {
                 string backupPath = LevelInfo.BackupBasePath(name);
                 if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);
                 int next = LevelInfo.LatestBackup(name) + 1;
@@ -283,7 +283,6 @@ namespace MCGalaxy {
             
             try {
                 Level lvl = IMapImporter.GetFor(path).Read(path, name, true);
-                lvl.backedup = true;
                 LoadMetadata(lvl);
                 BotsFile.Load(lvl);
 

@@ -173,7 +173,7 @@ namespace MCGalaxy.Modules.Relay.Discord
                     // 429 errors simply require retrying after sleeping for a bit
                     if (Handle429(ex)) continue;
                     
-                    // If unable to reach Discord, don't spam error logs
+                    // If unable to reach Discord at all, don't spam error logs
                     if (ex.Status == WebExceptionStatus.NameResolutionFailure) {
                         Logger.Log(LogType.Warning, "Error sending request to Discord API - " + ex.Message);
                         return;

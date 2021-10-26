@@ -61,6 +61,7 @@ namespace MCGalaxy {
         internal AABB[] blockAABBs = new AABB[Block.ExtendedCount];
         
         public ushort Width, Height, Length;
+        /// <summary> Whether this level should be treated as a readonly museum </summary>
         public bool IsMuseum;
 
         public int ReloadThreshold {
@@ -77,6 +78,7 @@ namespace MCGalaxy {
         public bool Changed;
          /// <summary> Whether block changes made on this level should be saved to the BlockDB and .lvl files. </summary>
         public bool SaveChanges = true;
+        public bool ChangedSinceBackup;
         
         /// <summary> Whether players on this level sees server-wide chat. </summary>
         public bool SeesServerWideChat { get { return Config.ServerWideChat && Server.Config.ServerWideChat; } }
@@ -87,7 +89,6 @@ namespace MCGalaxy {
 
         public List<UndoPos> UndoBuffer = new List<UndoPos>();
         public VolatileArray<Zone> Zones = new VolatileArray<Zone>();
-        public bool backedup;
         public BlockDB BlockDB;
         public LevelAccessController VisitAccess, BuildAccess;
         
