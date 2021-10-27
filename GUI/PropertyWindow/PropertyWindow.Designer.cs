@@ -2323,7 +2323,7 @@ namespace MCGalaxy.Gui
             this.bak_lblLocation.Name = "bak_lblLocation";
             this.bak_lblLocation.Size = new System.Drawing.Size(44, 13);
             this.bak_lblLocation.TabIndex = 3;
-            this.bak_lblLocation.Text = "Backup:";
+            this.bak_lblLocation.Text = "Location:";
             // 
             // bak_txtLocation
             // 

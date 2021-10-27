@@ -27,24 +27,27 @@ using BlockRaw = System.Byte;
 
 namespace MCGalaxy {
 
-    /// <summary> Result of attempting to change a block to another. </summary>
+    /// <summary> Result of attempting to change a block to another </summary>
     public enum ChangeResult 
     {
         /// <summary> Block change was not performed </summary>
         Unchanged,
-        /// <summary> Old block was same as new block visually. (e.g. white to door_white) </summary>
+        /// <summary> Old block was same as new block visually (e.g. white to door_white) </summary>
         VisuallySame,
-        /// <summary> Old block was different to new block visually. </summary>
+        /// <summary> Old block was different to new block visually </summary>
         Modified
     }
     
     public sealed partial class Level : IDisposable 
     {        
         public byte[] blocks;
+        /// <summary> Lazily allocated 16x16x16 chunks that store extended tile IDs </summary>
+        /// <remarks> Access should be done through GetBlock or GetExtTile </remarks>
         public byte[][] CustomBlocks;
+        /// <summary> Number of 16x16x16 chunks that this level consists of </summary>
         public int ChunksX, ChunksY, ChunksZ;
         
-        /// <summary> Makes a quick guess at whether this level might use custom blocks. </summary>
+        /// <summary> Makes a quick guess at whether this level might use custom blocks </summary>
         public bool MightHaveCustomBlocks() {
             byte[][] customBlocks = CustomBlocks;
             if (customBlocks == null) return false;
@@ -89,8 +92,8 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Undefined behaviour if coordinates are invalid. </returns>
+        /// <summary> Gets the block at the given coordinates </summary>
+        /// <returns> Undefined behaviour if coordinates are invalid </returns>
         public BlockID FastGetBlock(int index) {
             byte raw = blocks[index];
             #if TEN_BIT_BLOCKS
@@ -101,8 +104,8 @@ namespace MCGalaxy {
             #endif
         }
         
-        /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Undefined behaviour if coordinates are invalid. </returns>
+        /// <summary> Gets the block at the given coordinates </summary>
+        /// <returns> Undefined behaviour if coordinates are invalid </returns>
         public BlockID FastGetBlock(ushort x, ushort y, ushort z) {
             byte raw = blocks[x + Width * (z + y * Length)];
             #if TEN_BIT_BLOCKS
@@ -113,8 +116,8 @@ namespace MCGalaxy {
             #endif
         }
         
-        /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Block.Invalid if coordinates outside level. </returns>
+        /// <summary> Gets the block at the given coordinates </summary>
+        /// <returns> Block.Invalid if coordinates outside level </returns>
         public BlockID GetBlock(ushort x, ushort y, ushort z) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return Block.Invalid;
             byte raw = blocks[x + Width * (z + y * Length)];
@@ -127,8 +130,8 @@ namespace MCGalaxy {
             #endif
         }
         
-        /// <summary> Gets the block at the given coordinates. </summary>
-        /// <returns> Block.Invalid if coordinates outside level. </returns>
+        /// <summary> Gets the block at the given coordinates </summary>
+        /// <returns> Block.Invalid if coordinates outside level </returns>
         public BlockID GetBlock(ushort x, ushort y, ushort z, out int index) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return Block.Invalid; }
             index = x + Width * (z + y * Length);
@@ -142,19 +145,21 @@ namespace MCGalaxy {
             #endif
         }
         
-        /// <summary> Gets whether the block at the given coordinates is air. </summary>
+        /// <summary> Gets whether the block at the given coordinates is air </summary>
         public bool IsAirAt(ushort x, ushort y, ushort z) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) return false;
             return blocks[x + Width * (z + y * Length)] == Block.Air;
         }
         
-        /// <summary> Gets whether the block at the given coordinates is air. </summary>
+        /// <summary> Gets whether the block at the given coordinates is air </summary>
         public bool IsAirAt(ushort x, ushort y, ushort z, out int index) {
             if (x >= Width || y >= Height || z >= Length || blocks == null) { index = -1; return false; }
             index = x + Width * (z + y * Length);
             return blocks[index] == Block.Air;
         }
         
+        /// <summary> Gets the extended tile at the given position index </summary>
+        /// <remarks> GetBlock / FastGetBlock is preferred over calling this method </remarks>
         public byte GetExtTile(int index) {
             ushort x, y, z;
             IntToPos(index, out x, out y, out z);
@@ -164,6 +169,9 @@ namespace MCGalaxy {
             return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
+        /// <summary> Gets the extended tile at the given coordinates </summary>
+        /// <remarks> GetBlock / FastGetBlock is preferred over calling this method </remarks>
+        /// <returns> Undefined behaviour if coordinates are invalid. </returns>
         public byte FastGetExtTile(ushort x, ushort y, ushort z) {
             int cx = x >> 4, cy = y >> 4, cz = z >> 4;
             byte[] chunk = CustomBlocks[(cy * ChunksZ + cz) * ChunksX + cx];
