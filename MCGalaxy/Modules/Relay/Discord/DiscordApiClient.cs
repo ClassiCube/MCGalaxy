@@ -30,8 +30,10 @@ namespace MCGalaxy.Modules.Relay.Discord
     public abstract class DiscordApiMessage
     {
         /// <summary> The path/route that will handle this message </summary>
+        /// <example> /channels/{channel id}/messages </example>
         public string Path;
-        /// <summary> The HTTP method of the path/route (e.g. "POST") </summary>
+        /// <summary> The HTTP method to handle the path/route with </summary>
+        /// <example> POST, PATCH, DELETE </example>
         public string Method = "POST";
         
         /// <summary> Converts this message into its JSON representation </summary>
@@ -44,7 +46,9 @@ namespace MCGalaxy.Modules.Relay.Discord
     /// <summary> Message for sending text to a channel </summary>
     public class ChannelSendMessage : DiscordApiMessage
     {
+        static JsonArray default_allowed = new JsonArray() { "users", "roles" };
         StringBuilder content;
+        public JsonArray Allowed;
         
         public ChannelSendMessage(string channelID, string message) {
             Path    = "/channels/" + channelID + "/messages";
@@ -55,7 +59,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             // no pinging everyone
             JsonObject allowed = new JsonObject()
             {
-                { "parse", new JsonArray() { "users", "roles" } }
+                { "parse", Allowed ?? default_allowed }
             };
             JsonObject obj = new JsonObject()
             {

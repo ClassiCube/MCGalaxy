@@ -51,6 +51,13 @@ namespace MCGalaxy.Modules.Relay.Discord
         [ConfigInt("embed-color", null, 9758051)]
         public int EmbedColor = 9758051;
         
+        [ConfigBool("can-mention-users", null, true)]
+        public bool CanMentionUsers = true;
+        [ConfigBool("can-mention-roles", null, true)]
+        public bool CanMentionRoles = true;
+        [ConfigBool("can-mention-everyone", null, false)]
+        public bool CanMentionHere;
+        
         const string PROPS_PATH = "properties/discordbot.properties";
         static ConfigElement[] cfg;
         

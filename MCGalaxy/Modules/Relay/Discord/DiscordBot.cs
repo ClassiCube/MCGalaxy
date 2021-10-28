@@ -38,6 +38,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         Dictionary<string, bool> isDMChannel = new Dictionary<string, bool>();
         List<string> filter_triggers = new List<string>();
         List<string> filter_replacements = new List<string>();
+        JsonArray allowed;
 
         public override string RelayName { get { return "Discord"; } }
         public override bool Enabled     { get { return Config.Enabled; } }
@@ -120,7 +121,17 @@ namespace MCGalaxy.Modules.Relay.Discord
             Channels     = Config.Channels.SplitComma();
             OpChannels   = Config.OpChannels.SplitComma();
             IgnoredUsers = Config.IgnoredUsers.SplitComma();
+            
+            UpdateAllowed();
             LoadBannedCommands();
+        }
+        
+        void UpdateAllowed() {
+            JsonArray mentions = new JsonArray();
+            if (Config.CanMentionUsers) mentions.Add("users");
+            if (Config.CanMentionRoles) mentions.Add("roles");
+            if (Config.CanMentionHere)  mentions.Add("everyone");
+            allowed = mentions;
         }
         
         void LoadReplacements() {
@@ -298,7 +309,9 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         protected override void DoSendMessage(string channel, string message) {
-            Send(new ChannelSendMessage(channel, message));
+            ChannelSendMessage msg = new ChannelSendMessage(channel, message);
+            msg.Allowed = allowed;
+            Send(msg);
         }
         
         protected override string ConvertMessage(string message) {
@@ -313,7 +326,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
         static string EscapeMarkdown(string message) {
             // don't let user use bold/italic etc markdown
-            for (int i = 0; i < markdown_special.Length; i++) {
+            for (int i = 0; i < markdown_special.Length; i++) 
+            {
                 message = message.Replace(markdown_special[i], markdown_escaped[i]);
             }
             return message;
@@ -321,7 +335,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         protected override string PrepareMessage(string message) {
             // allow uses to do things like replacing '+' with ':green_square:'
-            for (int i = 0; i < filter_triggers.Count; i++) {
+            for (int i = 0; i < filter_triggers.Count; i++) 
+            {
                 message = message.Replace(filter_triggers[i], filter_replacements[i]);
             }
             return message;
@@ -373,7 +388,8 @@ namespace MCGalaxy.Modules.Relay.Discord
             embed.Title = string.Format("{0} player{1} currently online",
                                         total, total.Plural());
             
-            foreach (OnlineListEntry e in entries) {
+            foreach (OnlineListEntry e in entries) 
+            {
                 if (e.players.Count == 0) continue;
                 
                 embed.Fields.Add(
