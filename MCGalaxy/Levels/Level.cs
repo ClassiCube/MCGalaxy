@@ -32,8 +32,10 @@ using MCGalaxy.Util;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy {
-    public enum LevelPermission {
+namespace MCGalaxy 
+{
+    public enum LevelPermission
+    {
         Banned = -20, Guest = 0, Builder = 30,
         AdvBuilder = 50, Operator = 80,
         Admin = 100, Nobody = 120, Null = 150
@@ -41,8 +43,8 @@ namespace MCGalaxy {
     
     public enum BuildType { Normal, ModifyOnly, NoModify };
 
-    public sealed partial class Level : IDisposable {
-        
+    public sealed partial class Level : IDisposable 
+    {        
         public Level(string name, ushort width, ushort height, ushort length) {
             Init(name, width, height, length);
         }
@@ -51,8 +53,9 @@ namespace MCGalaxy {
             this.blocks = blocks;
             Init(name, width, height, length);
         }
-        
-        void Init(string name, ushort width, ushort height, ushort length) {
+    	internal Level() { }
+    	
+        internal void Init(string name, ushort width, ushort height, ushort length) {
             if (width  < 1) width  = 1;
             if (height < 1) height = 1;
             if (length < 1) length = 1;
@@ -75,7 +78,7 @@ namespace MCGalaxy {
             ChunksX = Utils.CeilDiv16(width);
             ChunksY = Utils.CeilDiv16(height);
             ChunksZ = Utils.CeilDiv16(length);
-            CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
+            if (CustomBlocks == null) CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
 
             spawnx = (ushort)(width / 2);
             spawny = (ushort)(height * 0.75f);

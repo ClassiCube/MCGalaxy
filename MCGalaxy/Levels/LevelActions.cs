@@ -367,8 +367,9 @@ namespace MCGalaxy {
             return lvl;
         }
         
+        
         public static Level LoadMuseum(Player p, string name, string mapName, string path) {
-            Level lvl    = IMapImporter.Read(path, name, false);
+            Level lvl    = GetMuseum(name, path);
             lvl.MapName  = mapName;
             lvl.IsMuseum = true;
             
@@ -376,6 +377,29 @@ namespace MCGalaxy {
             lvl.BuildAccess.Min = LevelPermission.Nobody;
             lvl.Config.Physics = 0;
             return lvl;
+        }
+        
+        static Level GetMuseum(string name, string path) {
+            Player[] players = PlayerInfo.Online.Items;            
+            // Since museums are essentially readonly anyways, try to reuse
+            //  blocks/CustomBlocks from existing museum to reduce memory usage
+            foreach (Player pl in players)
+            {
+                Level lvl = pl.level;
+                if (!lvl.IsMuseum || lvl.name != name) continue;
+                
+                Level clone        = new Level();
+                clone.blocks       = lvl.blocks;
+                clone.CustomBlocks = lvl.CustomBlocks;
+                
+                // Just in case museum was unloaded a split second before
+                if (clone.blocks == null || clone.CustomBlocks == null) break;
+                
+                clone.Init(name, lvl.Width, lvl.Height, lvl.Length);
+                return clone;
+            }
+            
+            return IMapImporter.Read(path, name, false);
         }
         
         

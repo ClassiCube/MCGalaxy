@@ -123,8 +123,7 @@ namespace MCGalaxy.Commands.World {
             p.Message("&HImports every map in /extra/import/ folder");
             p.Message("&T/Import [url/filename]");
             p.Message("&HImports a map from a webpage or the /extra/import/ folder");
-            p.Message("&HSee &T/Help Import formats &Hfor supported formats");
-            
+            p.Message("&HSee &T/Help Import formats &Hfor supported formats"); 
         }
         
         public override void Help(Player p, string message) {
