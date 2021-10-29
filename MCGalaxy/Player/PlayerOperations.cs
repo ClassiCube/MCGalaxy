@@ -70,7 +70,7 @@ namespace MCGalaxy {
             Player who = PlayerInfo.FindExact(target);
             
             if (nick.Length == 0) {
-                PlayerOperations.MessageAction(p, target, who, "λACTOR &Sremoved λTARGET nick");
+                MessageAction(p, target, who, "λACTOR &Sremoved λTARGET nick");
                 nick = Server.ToRawUsername(target);
             } else {
                 if (!p.CheckCanSpeak("change nicks")) return false;

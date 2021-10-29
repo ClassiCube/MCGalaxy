@@ -174,18 +174,30 @@ namespace MCGalaxy.Modules.Relay.Discord
                 } catch (WebException ex) {
                     string err = HttpUtil.GetErrorResponse(ex);
                     HttpUtil.DisposeErrorResponse(ex);
-                    // 429 errors simply require retrying after sleeping for a bit
-                    if (Handle429(ex)) continue;
+                    HttpStatusCode status = GetStatus(ex);
                     
-                    // If unable to reach Discord at all, don't spam error logs
+                    // 429 errors simply require retrying after sleeping for a bit
+                    if (status == (HttpStatusCode)429) {
+                        SleepForRetryPeriod(ex.Response);
+                        continue;
+                    }
+                    
+                    // 500 errors might be temporary outage, so still retry a few times
+                    if (status >= (HttpStatusCode)500 && status <= (HttpStatusCode)504) {
+                        Logger.Log(LogType.Warning, "Error sending request to Discord API - " + ex.Message);
+                    	LogResponse(err);
+                    	if (retry >= 2) return;
+                    	continue;
+                    }
+                    
+                    // If unable to reach Discord at all, immediately give up
                     if (ex.Status == WebExceptionStatus.NameResolutionFailure) {
                         Logger.Log(LogType.Warning, "Error sending request to Discord API - " + ex.Message);
                         return;
                     }
                     
                     LogError(ex, msg);
-                    if (!string.IsNullOrEmpty(err))
-                        Logger.Log(LogType.Warning, "Discord API returned: " + err);
+                    LogResponse(err);
                     return;
                 } catch (Exception ex) {
                     LogError(ex, msg);
@@ -201,6 +213,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         static void LogError(Exception ex, DiscordApiMessage msg) {
             string target = "(" + msg.Method + " " + msg.Path + ")";
             Logger.LogError("Error sending request to Discord API " + target, ex);
+        }
+        
+        static void LogResponse(string err) {
+            if (string.IsNullOrEmpty(err)) return;
+            Logger.Log(LogType.Warning, "Discord API returned: " + err);
         }
         
         
@@ -222,14 +239,9 @@ namespace MCGalaxy.Modules.Relay.Discord
             Thread.Sleep(TimeSpan.FromSeconds(delay + 0.5f));
         }
         
-        static bool Handle429(WebException ex) {
-            if (ex.Response == null) return false;
-            
-            HttpWebResponse res = (HttpWebResponse)ex.Response;
-            if (res.StatusCode != (HttpStatusCode)429) return false;
-
-            SleepForRetryPeriod(res);
-            return true;
+        static HttpStatusCode GetStatus(WebException ex) {
+            if (ex.Response == null) return 0;            
+            return ((HttpWebResponse)ex.Response).StatusCode;
         }
     }
 }

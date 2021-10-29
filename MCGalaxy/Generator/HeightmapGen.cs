@@ -91,6 +91,7 @@ namespace MCGalaxy.Generator
                             layer = Block.Stone; top = Block.Stone;
                         }
                         
+                        // remap from 0..255 to 0..lvl.Height
                         height = height * lvl.Height / 255;
                         for (int y = 0; y < height - 1; y++)
                             lvl.blocks[index + oneY * y] = layer;
