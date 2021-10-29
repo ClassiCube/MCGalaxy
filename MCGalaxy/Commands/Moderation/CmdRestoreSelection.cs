@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
             if (!Formatter.ValidMapName(p, message)) return;
             
-            string path = message;//LevelInfo.BackupFilePath(p.level.name, message);
+            string path = LevelInfo.BackupFilePath(p.level.name, message);
             if (File.Exists(path)) {
                 p.Message("Select two corners for restore.");
                 p.MakeSelection(2, "Selecting region for &SRestore", path, DoRestore);
