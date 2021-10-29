@@ -33,13 +33,13 @@ namespace MCGalaxy.Commands.World {
             }
             
             if (message.CaselessEq("all")) {
-                string[] maps = Directory.GetFiles(Paths.ImportsDir);
-                foreach (string map in maps) { ImportFile(p, map); }
+                string[] paths = Directory.GetFiles(Paths.ImportsDir);
+                ImportFiles(p, paths);
             } else if (message.IndexOf('/') >= 0) {
                 ImportWeb(p, message);
             } else {
                 if (!Formatter.ValidMapName(p, message)) return;
-                ImportFile(p, message);
+                ImportName(p, message);
             }
         }
         
@@ -53,23 +53,24 @@ namespace MCGalaxy.Commands.World {
             string map  = Path.GetFileNameWithoutExtension(path);
             if (!Formatter.ValidMapName(p, map)) return;
             
-            foreach (IMapImporter imp in IMapImporter.Formats) {
-                if (!path.CaselessEnds(imp.Extension)) continue;
-                
-                using (Stream src = new MemoryStream(data)) {
-                    Import(p, imp, src, map); return;
-                }
+            using (Stream src = new MemoryStream(data))
+                ImportFrom(p, src, path);
+        }
+        
+        static void ImportFiles(Player p, string[] paths) {
+            foreach (string path in paths)
+            {
+                using (Stream src = File.OpenRead(path))
+                    ImportFrom(p, src, path);
             }
-            
-            string formats = IMapImporter.Formats.Join(imp => imp.Extension);
-            p.Message("&WOnly {0} formats are supported.", formats);
         }
 
-        static void ImportFile(Player p, string map) {
+        static void ImportName(Player p, string map) {
             map = Path.GetFileNameWithoutExtension(map);
             string path = Paths.ImportsDir + map;
             
-            foreach (IMapImporter imp in IMapImporter.Formats) {
+            foreach (IMapImporter imp in IMapImporter.Formats)
+            {
                 path = Path.ChangeExtension(path, imp.Extension);
                 if (!File.Exists(path)) continue;
                 
@@ -78,14 +79,26 @@ namespace MCGalaxy.Commands.World {
                 }
             }
             
-            string formats = IMapImporter.Formats.Join(imp => imp.Extension);
+            string formats = IMapImporter.Formats.Join(x => x.Extension);
             p.Message("&WNo {0} file with that name was found in /extra/import folder.", formats);
+        }
+        
+        
+        static void ImportFrom(Player p, Stream src, string path) {
+            IMapImporter imp = IMapImporter.GetFor(path);
+            if (imp == null) {
+                string formats = IMapImporter.Formats.Join(x => x.Extension);
+                p.Message("&WCannot import {0} as only {1} formats are supported.", path, formats);
+                return;
+            }
+            
+            string map = Path.GetFileNameWithoutExtension(path);
+            Import(p, imp, src, map);
         }
         
         static void Import(Player p, IMapImporter importer, Stream src, string map) {
             if (LevelInfo.MapExists(map)) {
-                p.Message("&WMap {0} already exists. Rename the file to something else before importing",
-                          Path.GetFileNameWithoutExtension(map));
+                p.Message("&WMap {0} already exists. Rename the file to something else before importing", map);
                 return;
             }
             

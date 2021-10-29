@@ -73,11 +73,9 @@ namespace MCGalaxy.Levels.IO
         /// <remarks> Determines importer suitability by comparing file extensions </remarks>
         /// <remarks> A suitable IMapImporter, or null if no suitable importer is found </remarks>
         public static IMapImporter GetFor(string path) {
-            string ext = Path.GetExtension(path);
-            
             foreach (IMapImporter imp in Formats) 
             {
-                if (imp.Extension.CaselessEq(ext)) return imp;
+                if (path.CaselessEnds(imp.Extension)) return imp;
             }
             return null;
         }
