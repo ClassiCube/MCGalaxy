@@ -182,18 +182,25 @@ namespace MCGalaxy.Modules.Relay.Discord
                         continue;
                     }
                     
-                    // 500 errors might be temporary outage, so still retry a few times
+                    // 500 errors might be temporary Discord outage, so still retry a few times
                     if (status >= (HttpStatusCode)500 && status <= (HttpStatusCode)504) {
-                        Logger.Log(LogType.Warning, "Error sending request to Discord API - " + ex.Message);
-                    	LogResponse(err);
-                    	if (retry >= 2) return;
-                    	continue;
+                        LogWarning(ex);
+                        LogResponse(err);
+                        if (retry >= 2) return;
+                        continue;
                     }
                     
                     // If unable to reach Discord at all, immediately give up
                     if (ex.Status == WebExceptionStatus.NameResolutionFailure) {
-                        Logger.Log(LogType.Warning, "Error sending request to Discord API - " + ex.Message);
+                        LogWarning(ex);
                         return;
+                    }
+                    
+                    // May be caused by connection dropout/reset, so still retry a few times
+                    if (ex.InnerException is IOException) {
+                        LogWarning(ex);
+                        if (retry >= 2) return;
+                        continue;
                     }
                     
                     LogError(ex, msg);
@@ -210,9 +217,19 @@ namespace MCGalaxy.Modules.Relay.Discord
             if (remaining == "1") SleepForRetryPeriod(res);
         }
         
+        
+        static HttpStatusCode GetStatus(WebException ex) {
+            if (ex.Response == null) return 0;            
+            return ((HttpWebResponse)ex.Response).StatusCode;
+        }
+        
         static void LogError(Exception ex, DiscordApiMessage msg) {
             string target = "(" + msg.Method + " " + msg.Path + ")";
             Logger.LogError("Error sending request to Discord API " + target, ex);
+        }
+        
+        static void LogWarning(Exception ex) {
+            Logger.Log(LogType.Warning, "Error sending request to Discord API - " + ex.Message);
         }
         
         static void LogResponse(string err) {
@@ -237,11 +254,6 @@ namespace MCGalaxy.Modules.Relay.Discord
 
             Logger.Log(LogType.SystemActivity, "Discord bot ratelimited! Trying again in {0} seconds..", delay);
             Thread.Sleep(TimeSpan.FromSeconds(delay + 0.5f));
-        }
-        
-        static HttpStatusCode GetStatus(WebException ex) {
-            if (ex.Response == null) return 0;            
-            return ((HttpWebResponse)ex.Response).StatusCode;
         }
     }
 }
