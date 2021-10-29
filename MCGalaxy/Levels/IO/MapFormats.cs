@@ -28,11 +28,6 @@ namespace MCGalaxy.Levels.IO
         public abstract string Extension { get; }
         public abstract string Description { get; }
         
-        public Level Read(string path, string name, bool metadata) {
-            using (FileStream fs = File.OpenRead(path))
-                return Read(fs, name, metadata);
-        }
-        
         public abstract Level Read(Stream src, string name, bool metadata);
 
         public Vec3U16 ReadDimensions(string path) {
@@ -41,11 +36,6 @@ namespace MCGalaxy.Levels.IO
         }
         
         public abstract Vec3U16 ReadDimensions(Stream src);
-        
-        public static List<IMapImporter> Formats = new List<IMapImporter>() {
-            new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), 
-            new DatImporter(), new McLevelImporter(),
-        };
         
         protected static void ConvertCustom(Level lvl) {
             ushort x, y, z;
@@ -60,6 +50,8 @@ namespace MCGalaxy.Levels.IO
             }
         }
         
+        /// <summary> Reads the given number of bytes from the given stream </summary>
+        /// <remarks> Throws EndOfStreamException if unable to read sufficient bytes </remarks>
         protected static void ReadFully(Stream s, byte[] data, int count) {
             int offset = 0;
             while (count > 0) {
@@ -70,13 +62,32 @@ namespace MCGalaxy.Levels.IO
             }
         }
          
+        
+        /// <summary> List of all level format importers </summary>
+        public static List<IMapImporter> Formats = new List<IMapImporter>() {
+            new LvlImporter(), new CwImporter(), new FcmImporter(), new McfImporter(), 
+            new DatImporter(), new McLevelImporter(),
+        };
+        
+        /// <summary> Returns an IMapImporter capable of decoding the given level file </summary>
+        /// <remarks> Determines importer suitability by comparing file extensions </remarks>
+        /// <remarks> A suitable IMapImporter, or null if no suitable importer is found </remarks>
         public static IMapImporter GetFor(string path) {
             string ext = Path.GetExtension(path);
             
-            foreach (IMapImporter imp in Formats) {
+            foreach (IMapImporter imp in Formats) 
+            {
                 if (imp.Extension.CaselessEq(ext)) return imp;
             }
-            return Formats[0];
+            return null;
+        }
+        
+        /// <summary> Decodes the given level file into a Level instance </summary>
+        public static Level Read(string path, string name, bool metadata) {
+            IMapImporter imp = GetFor(path) ?? Formats[0];
+            
+            using (FileStream fs = File.OpenRead(path))
+                return imp.Read(fs, name, metadata);
         }
     }
 

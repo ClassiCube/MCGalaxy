@@ -282,7 +282,7 @@ namespace MCGalaxy {
             }
             
             try {
-                Level lvl = IMapImporter.GetFor(path).Read(path, name, true);
+                Level lvl = IMapImporter.Read(path, name, true);
                 LoadMetadata(lvl);
                 BotsFile.Load(lvl);
 

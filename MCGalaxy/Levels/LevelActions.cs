@@ -368,7 +368,7 @@ namespace MCGalaxy {
         }
         
         public static Level LoadMuseum(Player p, string name, string mapName, string path) {
-            Level lvl    = IMapImporter.GetFor(path).Read(path, name, false);
+            Level lvl    = IMapImporter.Read(path, name, false);
             lvl.MapName  = mapName;
             lvl.IsMuseum = true;
             

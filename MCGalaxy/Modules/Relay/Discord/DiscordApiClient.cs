@@ -56,7 +56,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         public override JsonObject ToJson() {
-            // no pinging everyone
+            // only allow pinging certain groups
             JsonObject allowed = new JsonObject()
             {
                 { "parse", Allowed ?? default_allowed }
