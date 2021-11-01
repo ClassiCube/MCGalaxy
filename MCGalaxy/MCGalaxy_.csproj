@@ -599,6 +599,7 @@
     <Compile Include="Modules\Relay\RelayBotSender.cs" />
     <Compile Include="Modules\Security\IPThrottler.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
+    <Compile Include="Network\CPESupport.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
     <Compile Include="Modules\Relay\IRC\IRCBot.cs" />
