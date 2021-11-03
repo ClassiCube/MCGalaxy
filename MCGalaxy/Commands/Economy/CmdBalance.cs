@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Eco {
         public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "player name")) return;
             if (message.Length == 0) message = p.name;
-            if (!Formatter.ValidName(p, message, "player")) return;
+            if (!Formatter.ValidPlayerName(p, message)) return;
             
             int matches = 1;
             Player who  = PlayerInfo.FindMatches(p, message, out matches);

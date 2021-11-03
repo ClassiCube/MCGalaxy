@@ -148,7 +148,7 @@ namespace MCGalaxy.Commands.Moderation {
         /// and requires a confirmation message for non-existent players. </summary>
         internal static string FindName(Player p, string action, string cmd,
                                         string cmdSuffix, string name, ref string reason) {
-            if (!Formatter.ValidName(p, name, "player")) return null;
+            if (!Formatter.ValidPlayerName(p, name)) return null;
             string match = MatchName(p, ref name);
             string confirmed = IsConfirmed(reason);
             if (confirmed != null) reason = confirmed;

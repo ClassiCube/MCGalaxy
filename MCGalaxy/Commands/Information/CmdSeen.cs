@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Info {
                 if (p.IsSuper) { SuperRequiresArgs(p, "player name"); return; }
                 message = p.name;
             }
-            if (!Formatter.ValidName(p, message, "player")) return;
+            if (!Formatter.ValidPlayerName(p, message)) return;
 
             int matches;
             Player pl = PlayerInfo.FindMatches(p, message, out matches);

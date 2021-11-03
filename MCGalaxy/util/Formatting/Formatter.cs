@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MCGalaxy.Authentication;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 
@@ -73,11 +74,25 @@ namespace MCGalaxy
         public static void MessageNeedMinPerm(Player p, string action, LevelPermission perm) {
             p.Message("Only {0}&S{1}", Group.GetColoredName(perm), action);
         }
+    	
         
         public static bool ValidName(Player p, string name, string type) {
             const string alphabet = Player.USERNAME_ALPHABET + "+"; // compatibility with ClassiCubeAccountPlus
-            if (name.Length > 0 && name.ContainsAllIn(alphabet)) return true;
+            return IsValidName(p, name, type, alphabet);
+        }
+        
+        public static bool ValidPlayerName(Player p, string name) {
+            string alphabet = Player.USERNAME_ALPHABET + "+"; // compatibility with ClassiCubeAccountPlus
             
+            foreach (AuthService service in AuthService.Services)
+            {
+                alphabet += service.Config.NameSuffix;
+            }
+            return IsValidName(p, name, "player", alphabet);
+        }
+    	
+    	static bool IsValidName(Player p, string name, string type, string alphabet) {
+            if (name.Length > 0 && name.ContainsAllIn(alphabet)) return true;
             p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;
         }

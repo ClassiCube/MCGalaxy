@@ -46,7 +46,7 @@ namespace MCGalaxy.Gui {
         void tsPlayer_Voice_Click(object sender, EventArgs e) {   PlayerCmd("Voice"); }
         void tsPlayer_Whois_Click(object sender, EventArgs e) {   PlayerCmd("WhoIs"); }       
         void tsPlayer_Ban_Click(object sender, EventArgs e) {     PlayerCmd("Ban"); }
-        void tsPlayer_Kick_Click(object sender, EventArgs e) {    PlayerCmd("Kick", "", " You have been kicked by the console."); }
+        void tsPlayer_Kick_Click(object sender, EventArgs e) {    PlayerCmd("Kick"); }
         void tsPlayer_Promote_Click(object sender, EventArgs e) { PlayerCmd("SetRank", "+up ", ""); }
         void tsPlayer_Demote_Click(object sender, EventArgs e) {  PlayerCmd("SetRank", "-down ", ""); }
 
@@ -80,7 +80,7 @@ namespace MCGalaxy.Gui {
         void tsMap_Physics5_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 5"); }
         void tsMap_Save_Click(object sender, EventArgs e) {     LevelCmd("Save"); }
         void tsMap_Unload_Click(object sender, EventArgs e) {   LevelCmd("Unload"); }
-        void tsMap_Reload_Click(object sender, EventArgs e) {   LevelCmd("Reload", "", ""); }
+        void tsMap_Reload_Click(object sender, EventArgs e) {   LevelCmd("Reload"); }
         
         
         

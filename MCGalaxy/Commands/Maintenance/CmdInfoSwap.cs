@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Maintenance {
         }
         
         static string GetName(Player p, string name) {
-            if (!Formatter.ValidName(p, name, "player")) return null;
+            if (!Formatter.ValidPlayerName(p, name)) return null;
             if (PlayerInfo.FindExact(name) != null) {
                 p.Message("\"{0}\" must be offline to use &T/InfoSwap", name); return null;
             }

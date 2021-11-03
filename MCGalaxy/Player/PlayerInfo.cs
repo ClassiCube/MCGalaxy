@@ -71,7 +71,7 @@ namespace MCGalaxy
         /// <returns> A Player instance if exactly one match was found </returns>
         public static Player FindMatches(Player pl, string name, out int matches, bool _useless = false) {
             matches = 0;
-            if (!Formatter.ValidName(pl, name, "player")) return null;
+            if (!Formatter.ValidPlayerName(pl, name)) return null;
             
             // Try to exactly match name first (because names have + at end)
             Player exact = FindExact(name);
@@ -82,7 +82,7 @@ namespace MCGalaxy
         }
         
         public static string FindMatchesPreferOnline(Player p, string name) {
-            if (!Formatter.ValidName(p, name, "player")) return null;
+            if (!Formatter.ValidPlayerName(p, name)) return null;
             int matches;
             Player target = FindMatches(p, name, out matches);
             
