@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p) {
-            p.Message("&T/Reload &H- Reloads the map you are in, just for you.");
-            p.Message("&T/Reload all &H- Reloads for all players in map you are in.");
+            p.Message("&T/Reload &H- Reloads the level you are in, just for you");
+            p.Message("&T/Reload all &H- Reloads for all players in level you are in");
             p.Message("&T/Reload [level] &H- Reloads for all players in [level]");
         }
     }

@@ -80,7 +80,7 @@ namespace MCGalaxy.Gui {
         void tsMap_Physics5_Click(object sender, EventArgs e) { LevelCmd("Physics", "", " 5"); }
         void tsMap_Save_Click(object sender, EventArgs e) {     LevelCmd("Save"); }
         void tsMap_Unload_Click(object sender, EventArgs e) {   LevelCmd("Unload"); }
-        void tsMap_Reload_Click(object sender, EventArgs e) {   LevelCmd("Reload", "all ", ""); }
+        void tsMap_Reload_Click(object sender, EventArgs e) {   LevelCmd("Reload", "", ""); }
         
         
         
