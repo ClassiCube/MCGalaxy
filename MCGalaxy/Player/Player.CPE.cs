@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
@@ -26,32 +27,11 @@ namespace MCGalaxy
         public bool hasCpe, finishedCpeLogin;
         public string appName;
         int extensionCount;
-        
-        public CpeExtension[] Extensions = new CpeExtension[] {
-            new CpeExtension(CpeExt.ClickDistance),    new CpeExtension(CpeExt.CustomBlocks),
-            new CpeExtension(CpeExt.HeldBlock),        new CpeExtension(CpeExt.TextHotkey),
-            new CpeExtension(CpeExt.ExtPlayerList, 2), new CpeExtension(CpeExt.EnvColors),
-            new CpeExtension(CpeExt.SelectionCuboid),  new CpeExtension(CpeExt.BlockPermissions),
-            new CpeExtension(CpeExt.ChangeModel),      new CpeExtension(CpeExt.EnvMapAppearance, 2),
-            new CpeExtension(CpeExt.EnvWeatherType),   new CpeExtension(CpeExt.HackControl),
-            new CpeExtension(CpeExt.EmoteFix),         new CpeExtension(CpeExt.MessageTypes),
-            new CpeExtension(CpeExt.LongerMessages),   new CpeExtension(CpeExt.FullCP437),
-            new CpeExtension(CpeExt.BlockDefinitions), new CpeExtension(CpeExt.BlockDefinitionsExt, 2),
-            new CpeExtension(CpeExt.TextColors),       new CpeExtension(CpeExt.BulkBlockUpdate),
-            new CpeExtension(CpeExt.EnvMapAspect),     new CpeExtension(CpeExt.PlayerClick),
-            new CpeExtension(CpeExt.EntityProperty),   new CpeExtension(CpeExt.ExtEntityPositions),
-            new CpeExtension(CpeExt.TwoWayPing),       new CpeExtension(CpeExt.InventoryOrder),
-            new CpeExtension(CpeExt.InstantMOTD),      new CpeExtension(CpeExt.FastMap),
-            new CpeExtension(CpeExt.ExtTextures),      new CpeExtension(CpeExt.SetHotbar),
-            new CpeExtension(CpeExt.SetSpawnpoint),    new CpeExtension(CpeExt.VelocityControl),
-            new CpeExtension(CpeExt.CustomParticles),  new CpeExtension(CpeExt.CustomModels, 2),
-            #if TEN_BIT_BLOCKS
-            new CpeExtension(CpeExt.ExtBlocks),
-            #endif
-        };
+        CpeExtension[] extensions = CpeExtension.Empty;
         
         CpeExtension FindExtension(string extName) {
-            foreach (CpeExtension ext in Extensions) {
+            foreach (CpeExtension ext in extensions) 
+            {
                 if (ext.Name.CaselessEq(extName)) return ext;
             }
             return null;

@@ -16,10 +16,35 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Network;
 
 namespace MCGalaxy 
 {
+    public enum CpeMessageType : byte 
+    {
+        Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
+        BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
+        Announcement = 100, BigAnnouncement = 101, SmallAnnouncement = 102 
+    }
+    
+    public enum EnvProp : byte 
+    {
+        SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
+        CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
+        WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
+        SidesOffset = 9, SkyboxHorSpeed = 10, SkyboxVerSpeed = 11,
+        
+        Max,
+        Weather = 255, // this is internal, not an official env prop
+    }
+    
+    public enum EntityProp : byte 
+    {
+        RotX = 0, RotY = 1, RotZ = 2, ScaleX = 3, ScaleY = 4, ScaleZ = 5,
+    }
+    
+    
     public sealed class CpeExtension 
     {
         public string Name;
@@ -28,6 +53,46 @@ namespace MCGalaxy
         public CpeExtension(string name) { Name = name; }
         public CpeExtension(string name, byte version) {
             Name = name; ServerVersion = version;
+        }
+        
+        
+        /// <summary> Array of all supported CPE extensions </summary>
+        public static CpeExtension[] All = new CpeExtension[] {
+            new CpeExtension(CpeExt.ClickDistance),    new CpeExtension(CpeExt.CustomBlocks),
+            new CpeExtension(CpeExt.HeldBlock),        new CpeExtension(CpeExt.TextHotkey),
+            new CpeExtension(CpeExt.ExtPlayerList, 2), new CpeExtension(CpeExt.EnvColors),
+            new CpeExtension(CpeExt.SelectionCuboid),  new CpeExtension(CpeExt.BlockPermissions),
+            new CpeExtension(CpeExt.ChangeModel),      new CpeExtension(CpeExt.EnvMapAppearance, 2),
+            new CpeExtension(CpeExt.EnvWeatherType),   new CpeExtension(CpeExt.HackControl),
+            new CpeExtension(CpeExt.EmoteFix),         new CpeExtension(CpeExt.MessageTypes),
+            new CpeExtension(CpeExt.LongerMessages),   new CpeExtension(CpeExt.FullCP437),
+            new CpeExtension(CpeExt.BlockDefinitions), new CpeExtension(CpeExt.BlockDefinitionsExt, 2),
+            new CpeExtension(CpeExt.TextColors),       new CpeExtension(CpeExt.BulkBlockUpdate),
+            new CpeExtension(CpeExt.EnvMapAspect),     new CpeExtension(CpeExt.PlayerClick),
+            new CpeExtension(CpeExt.EntityProperty),   new CpeExtension(CpeExt.ExtEntityPositions),
+            new CpeExtension(CpeExt.TwoWayPing),       new CpeExtension(CpeExt.InventoryOrder),
+            new CpeExtension(CpeExt.InstantMOTD),      new CpeExtension(CpeExt.FastMap),
+            new CpeExtension(CpeExt.ExtTextures),      new CpeExtension(CpeExt.SetHotbar),
+            new CpeExtension(CpeExt.SetSpawnpoint),    new CpeExtension(CpeExt.VelocityControl),
+            new CpeExtension(CpeExt.CustomParticles),  new CpeExtension(CpeExt.CustomModels, 2),
+            #if TEN_BIT_BLOCKS
+            new CpeExtension(CpeExt.ExtBlocks),
+            #endif
+        };
+        internal static CpeExtension[] Empty = new CpeExtension[0];
+        
+        /// <summary> Retrieves a list of all supported and enabled CPE extensions </summary>
+        public static CpeExtension[] GetAllEnabled() {
+            if (!Server.Config.EnableCPE) return Empty;
+            CpeExtension[] all  = All;
+            CpeExtension[] exts = new CpeExtension[all.Length];
+            
+            for (int i = 0; i < exts.Length; i++)
+            {
+                CpeExtension e = all[i];
+                exts[i] = new CpeExtension(e.Name, e.ServerVersion);
+            }
+            return exts;
         }
     }
     
@@ -68,28 +133,5 @@ namespace MCGalaxy
         public const string VelocityControl = "VelocityControl";
         public const string CustomParticles = "CustomParticles";
         public const string CustomModels = "CustomModels";
-    }
-    
-    public enum CpeMessageType : byte 
-    {
-        Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
-        BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
-        Announcement = 100, BigAnnouncement = 101, SmallAnnouncement = 102 
-    }
-    
-    public enum EnvProp : byte 
-    {
-        SidesBlock = 0, EdgeBlock = 1, EdgeLevel = 2,
-        CloudsLevel = 3, MaxFog = 4, CloudsSpeed = 5,
-        WeatherSpeed = 6, WeatherFade = 7, ExpFog = 8,
-        SidesOffset = 9, SkyboxHorSpeed = 10, SkyboxVerSpeed = 11,
-        
-        Max,
-        Weather = 255, // this is internal, not an official env prop
-    }
-    
-    public enum EntityProp : byte 
-    {
-        RotX = 0, RotY = 1, RotZ = 2, ScaleX = 3, ScaleY = 4, ScaleZ = 5,
     }
 }
