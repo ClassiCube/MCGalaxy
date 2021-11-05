@@ -27,10 +27,10 @@ namespace MCGalaxy
         public bool hasCpe, finishedCpeLogin;
         public string appName;
         int extensionCount;
-        CpeExtension[] extensions = CpeExtension.Empty;
+        CpeExt[] extensions = CpeExtension.Empty;
         
-        CpeExtension FindExtension(string extName) {
-            foreach (CpeExtension ext in extensions) 
+        CpeExt FindExtension(string extName) {
+            foreach (CpeExt ext in extensions) 
             {
                 if (ext.Name.CaselessEq(extName)) return ext;
             }
@@ -44,7 +44,7 @@ namespace MCGalaxy
         /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
         public bool Supports(string extName, int version = 1) {
             if (!hasCpe) return false;
-            CpeExtension ext = FindExtension(extName);
+            CpeExt ext = FindExtension(extName);
             return ext != null && ext.ClientVersion == version;
         }
         
@@ -80,7 +80,7 @@ namespace MCGalaxy
         }
         
         void AddExtension(string extName, int version) {
-            CpeExtension ext = FindExtension(extName.Trim());
+            CpeExt ext = FindExtension(extName.Trim());
             if (ext == null) return;
             ext.ClientVersion = (byte)version;
             

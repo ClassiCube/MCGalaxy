@@ -45,59 +45,12 @@ namespace MCGalaxy
     }
     
     
-    public sealed class CpeExtension 
+    public class CpeExt 
     {
-        public string Name;
-        public byte ClientVersion, ServerVersion = 1;
-        
-        public CpeExtension(string name) { Name = name; }
-        public CpeExtension(string name, byte version) {
-            Name = name; ServerVersion = version;
-        }
-        
-        
-        /// <summary> Array of all supported CPE extensions </summary>
-        public static CpeExtension[] All = new CpeExtension[] {
-            new CpeExtension(CpeExt.ClickDistance),    new CpeExtension(CpeExt.CustomBlocks),
-            new CpeExtension(CpeExt.HeldBlock),        new CpeExtension(CpeExt.TextHotkey),
-            new CpeExtension(CpeExt.ExtPlayerList, 2), new CpeExtension(CpeExt.EnvColors),
-            new CpeExtension(CpeExt.SelectionCuboid),  new CpeExtension(CpeExt.BlockPermissions),
-            new CpeExtension(CpeExt.ChangeModel),      new CpeExtension(CpeExt.EnvMapAppearance, 2),
-            new CpeExtension(CpeExt.EnvWeatherType),   new CpeExtension(CpeExt.HackControl),
-            new CpeExtension(CpeExt.EmoteFix),         new CpeExtension(CpeExt.MessageTypes),
-            new CpeExtension(CpeExt.LongerMessages),   new CpeExtension(CpeExt.FullCP437),
-            new CpeExtension(CpeExt.BlockDefinitions), new CpeExtension(CpeExt.BlockDefinitionsExt, 2),
-            new CpeExtension(CpeExt.TextColors),       new CpeExtension(CpeExt.BulkBlockUpdate),
-            new CpeExtension(CpeExt.EnvMapAspect),     new CpeExtension(CpeExt.PlayerClick),
-            new CpeExtension(CpeExt.EntityProperty),   new CpeExtension(CpeExt.ExtEntityPositions),
-            new CpeExtension(CpeExt.TwoWayPing),       new CpeExtension(CpeExt.InventoryOrder),
-            new CpeExtension(CpeExt.InstantMOTD),      new CpeExtension(CpeExt.FastMap),
-            new CpeExtension(CpeExt.ExtTextures),      new CpeExtension(CpeExt.SetHotbar),
-            new CpeExtension(CpeExt.SetSpawnpoint),    new CpeExtension(CpeExt.VelocityControl),
-            new CpeExtension(CpeExt.CustomParticles),  new CpeExtension(CpeExt.CustomModels, 2),
-            #if TEN_BIT_BLOCKS
-            new CpeExtension(CpeExt.ExtBlocks),
-            #endif
-        };
-        internal static CpeExtension[] Empty = new CpeExtension[0];
-        
-        /// <summary> Retrieves a list of all supported and enabled CPE extensions </summary>
-        public static CpeExtension[] GetAllEnabled() {
-            if (!Server.Config.EnableCPE) return Empty;
-            CpeExtension[] all  = All;
-            CpeExtension[] exts = new CpeExtension[all.Length];
-            
-            for (int i = 0; i < exts.Length; i++)
-            {
-                CpeExtension e = all[i];
-                exts[i] = new CpeExtension(e.Name, e.ServerVersion);
-            }
-            return exts;
-        }
-    }
-    
-    public static class CpeExt 
-    {
+    	public string Name;
+    	public byte ServerVersion;
+    	public byte ClientVersion;
+    	
         public const string ClickDistance = "ClickDistance";
         public const string CustomBlocks = "CustomBlocks";
         public const string HeldBlock = "HeldBlock";
@@ -133,5 +86,75 @@ namespace MCGalaxy
         public const string VelocityControl = "VelocityControl";
         public const string CustomParticles = "CustomParticles";
         public const string CustomModels = "CustomModels";
+    }
+    
+    public sealed class CpeExtension 
+    {
+        public string Name;
+        public byte Version = 1;
+        public string Desc;
+        public bool Enabled;
+        
+        public CpeExtension(string name) { Name = name; }
+        public CpeExtension(string name, byte version) {
+            Name = name; Version = version;
+        }
+        
+        
+        /// <summary> Array of all supported CPE extensions </summary>
+        public static CpeExtension[] All = new CpeExtension[] {
+            new CpeExtension(CpeExt.ClickDistance),    
+            new CpeExtension(CpeExt.CustomBlocks),
+            new CpeExtension(CpeExt.HeldBlock),        
+            new CpeExtension(CpeExt.TextHotkey),
+            new CpeExtension(CpeExt.ExtPlayerList, 2), 
+            new CpeExtension(CpeExt.EnvColors),
+            new CpeExtension(CpeExt.SelectionCuboid),  
+            new CpeExtension(CpeExt.BlockPermissions),
+            new CpeExtension(CpeExt.ChangeModel),      
+            new CpeExtension(CpeExt.EnvMapAppearance, 2),
+            new CpeExtension(CpeExt.EnvWeatherType),   
+            new CpeExtension(CpeExt.HackControl),
+            new CpeExtension(CpeExt.EmoteFix),         
+            new CpeExtension(CpeExt.MessageTypes),
+            new CpeExtension(CpeExt.LongerMessages),   
+            new CpeExtension(CpeExt.FullCP437),
+            new CpeExtension(CpeExt.BlockDefinitions), 
+            new CpeExtension(CpeExt.BlockDefinitionsExt, 2),
+            new CpeExtension(CpeExt.TextColors),       
+            new CpeExtension(CpeExt.BulkBlockUpdate),
+            new CpeExtension(CpeExt.EnvMapAspect),     
+            new CpeExtension(CpeExt.PlayerClick),
+            new CpeExtension(CpeExt.EntityProperty),   
+            new CpeExtension(CpeExt.ExtEntityPositions),
+            new CpeExtension(CpeExt.TwoWayPing),       
+            new CpeExtension(CpeExt.InventoryOrder),
+            new CpeExtension(CpeExt.InstantMOTD),      
+            new CpeExtension(CpeExt.FastMap),
+            new CpeExtension(CpeExt.ExtTextures),      
+            new CpeExtension(CpeExt.SetHotbar),
+            new CpeExtension(CpeExt.SetSpawnpoint),    
+            new CpeExtension(CpeExt.VelocityControl),
+            new CpeExtension(CpeExt.CustomParticles),  
+            new CpeExtension(CpeExt.CustomModels, 2),
+            #if TEN_BIT_BLOCKS
+            new CpeExtension(CpeExt.ExtBlocks),
+            #endif
+        };
+        internal static CpeExt[] Empty = new CpeExt[0];
+        
+        /// <summary> Retrieves a list of all supported and enabled CPE extensions </summary>
+        public static CpeExt[] GetAllEnabled() {
+            if (!Server.Config.EnableCPE) return Empty;
+            CpeExtension[] all = All;
+            CpeExt[] exts = new CpeExt[all.Length];
+            
+            for (int i = 0; i < exts.Length; i++)
+            {
+                CpeExtension e = all[i];
+                exts[i] = new CpeExt() { Name = e.Name, ServerVersion = e.Version };
+            }
+            return exts;
+        }
     }
 }
