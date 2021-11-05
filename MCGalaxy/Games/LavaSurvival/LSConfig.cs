@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Maths;
 
@@ -24,10 +26,61 @@ namespace MCGalaxy.Games {
     public sealed class LSConfig : RoundsGameConfig {
         [ConfigInt("lives", null, 3, 0)]
         public int MaxLives = 3;
-        
+        [ConfigInt("max-award", null, 25, 0)]
+        public int MaxAward = 25;
+        [ConfigInt("award-reducer", null, 5, 0)]
+        public int AwardReducer = 2;
+
+        static ConfigElement[] cfg;
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }
         protected override string PropsPath { get { return "properties/lavasurvival.properties"; } }
+
+        public override void Save()
+        {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSConfig));
+
+            using (StreamWriter w = new StreamWriter(PropsPath))
+            {
+                w.WriteLine("#" + GameName + " configuration");
+                ConfigElement.SerialiseElements(cfg, w, this);
+            }
+        }
+
+        public override void Load()
+        {
+            if (!File.Exists(PropsPath))
+            {
+                // Enter the default configuration
+                string configuration  = string.Format(
+                              $"# Lava Survival\n" +
+                              $"lives = {MaxLives}\n" +
+                              $"max-award = {MaxAward}\n" +
+                              $"award-reducer = {AwardReducer}\n\n" +
+                              $"# General\n" +
+                              "set-main-level = false\n" +
+                              "map-in-heartbeat = false\n" +
+                              "maps = bouda_metro,cube,desert_well,island,lava_geyser,passage,pluto,volcano"
+                              );
+
+                File.WriteAllText(PropsPath, configuration);
+            }
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(ZSConfig));
+            PropertiesFile.Read(PropsPath, ProcessConfigLine);
+        }
+
+        void ProcessConfigLine(string key, string value)
+        {
+            // backwards compatibility
+            if (key.CaselessEq("maps"))
+            {
+                Maps = new List<string>(value.SplitComma());
+            }
+            else
+            {
+                ConfigElement.Parse(cfg, this, key, value);
+            }
+        }
     }
     
     public sealed class LSMapConfig : RoundsGameMapConfig {

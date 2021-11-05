@@ -20,12 +20,24 @@ using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.LevelEvents;
 using BlockID = System.UInt16;
+using MCGalaxy.Events.EntityEvents;
 
 namespace MCGalaxy.Games {
     public sealed partial class LSGame : RoundsGame {
 
+        void HandleCanSeeEntity(Player p, ref bool canSee, Entity other)
+        {
+            Player target = other as Player;
+            if (!canSee || p.Game.Referee || target == null) return;
+
+            LSData data = LSData.TryGet(target);
+            if (data == null || target.level != Map) return;
+            canSee = !(target.Game.Referee);
+        }
+
         protected override void HookEventHandlers() {
-            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
+            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
+            OnGettingCanSeeEntityEvent.Register(HandleCanSeeEntity, Priority.High);
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             
@@ -36,7 +48,8 @@ namespace MCGalaxy.Games {
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
-            
+            OnGettingCanSeeEntityEvent.Unregister(HandleCanSeeEntity);
+
             base.UnhookEventHandlers();
         }
         
@@ -45,7 +58,18 @@ namespace MCGalaxy.Games {
             
             if (Map != level) return;            
             MessageMapInfo(p);
-            if (RoundInProgress) OutputStatus(p);
+            if (LSGame.Instance.floodInProgress)
+            {
+                Spectator.Add(p);
+                Chat.MessageChat(ChatScope.Global, p, $"%S[%cLS%S]: {p.ColoredName}%S joined as a %bspectator%S.", null, null, false);
+                p.Message("You've joined in the middle of a round and have been put in spectator mode.");
+                OutputStatus(p);
+            }
+            else
+            {
+                Alive.Add(p);
+                Chat.MessageChat(ChatScope.Global, p, $"%S[%cLS%S]: {p.ColoredName}%S has joined the %chell fire%S!", null, null, false);
+            }
         }
 
         void HandlePlayerConnect(Player p) {

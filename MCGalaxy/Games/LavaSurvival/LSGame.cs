@@ -23,14 +23,23 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Games {
     internal sealed class LSData {
         public int TimesDied;
+        public int Award;
+        public const string lsExtrasKey = "MCG_LS_DATA";
+
+        internal static LSData TryGet(Player p)
+        {
+            object data; p.Extras.TryGet(lsExtrasKey, out data); return (LSData)data;
+        }
     }
     
     public sealed partial class LSGame : RoundsGame {
         LSMapConfig cfg = new LSMapConfig();
+        public VolatileArray<Player> Spectator = new VolatileArray<Player>();
+        public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public static LSConfig Config = new LSConfig();
         public override string GameName { get { return "Lava survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
-        
+
         bool flooded, fastMode, killerMode, destroyMode, waterMode, layerMode;
         BlockID floodBlock;
         int curLayer, roundTotalSecs, floodDelaySecs, layerIntervalSecs;
@@ -75,7 +84,7 @@ namespace MCGalaxy.Games {
             
             if (RoundInProgress) Map.SetPhysics(destroyMode ? 2 : 1);
         }
-                
+
         protected override List<Player> GetPlayers() {
             return Map.getPlayers();
         }

@@ -22,6 +22,36 @@ using System.Threading;
 namespace MCGalaxy.Games {
     public sealed partial class LSGame : RoundsGame {
 
+        public bool floodInProgress;
+
+        public void AwardWinners()
+        {
+            List<Player> winners = Alive.list;
+            List<Player> onlineUsers = PlayerInfo.Online.list;
+            List<Player> announceWinners = new List<Player>();
+
+            // Calculate the awards and distribute
+            foreach(Player winner in winners)
+            {
+                // Only award the users that are still online
+                if (onlineUsers.Contains(winner))
+                {
+                    // Calculate the award based on times died.
+                    int awardAmount = LSGame.Config.MaxAward / (LSGame.Config.AwardReducer * winner.TimesDied);
+                    winner.SetMoney(winner.money + awardAmount);
+                    winner.Message($"%SCongratulations on surviving! You've been awarded %a{awardAmount} {Server.Config.Currency}%S.");
+                    announceWinners.Add(winner);
+                }
+            }
+
+            string winnerString = string.Format(winners.ToArray().ToString());
+
+            Chat.MessageChat(ChatScope.Global, Player.Console, "%a-------------------------------", null, null, false);
+            Chat.MessageChat(ChatScope.Global, Player.Console, "%a--  This round's survivors:  --", null, null, false);
+            Chat.MessageChat(ChatScope.Global, Player.Console, winnerString, null, null, false);
+            Chat.MessageChat(ChatScope.Global, Player.Console, "%a-------------------------------", null, null, false);
+        }
+
         protected override void DoRound() {
             if (!Running) return;
 
@@ -35,7 +65,7 @@ namespace MCGalaxy.Games {
             
             while (RoundInProgress && secs < roundTotalSecs) {
                 if (!Running) return;
-                if ((secs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
+                if ((secs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage(DateTime.UtcNow)); }
                 
                 if (secs >= floodDelaySecs) {
                     if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
@@ -46,6 +76,7 @@ namespace MCGalaxy.Games {
                         Map.Message("&4Look out, here comes the flood!");
                         Logger.Log(LogType.GameActivity, "[Lava Survival] Starting map flood.");
                         Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
+                        floodInProgress = true;
                     }
                     
                     layerSecs++;
@@ -58,21 +89,47 @@ namespace MCGalaxy.Games {
 
         public override void EndRound() {
             if (!RoundInProgress) return;
+
             RoundInProgress = false;
             flooded = false;
+            floodInProgress = false;
             
             Map.SetPhysics(5);
             Map.Message("The round has ended!");
+            ResetPlayers();
         }
 
-        internal string FloodTimeLeftMessage() {
-            TimeSpan left = RoundStart.Add(cfg.FloodTime) - DateTime.UtcNow;
-            return "&3" + left.Shorten(true) + " &Suntil the flood.";
+        internal string FloodTimeLeftMessage(DateTime now) {
+            TimeSpan left = RoundStart.Add(cfg.FloodTime) - now;
+            string time = left.Shorten(true);
+            if (time.Contains("-"))
+                time = "0";
+            return "&3" + time + " &Suntil the flood.";
         }
         
-        internal string RoundTimeLeftMessage() {
-            TimeSpan left = RoundStart.Add(cfg.RoundTime) - DateTime.UtcNow;
-            return "&3" + left.Shorten(true) + " &Suntil the round ends.";
+        internal string RoundTimeLeftMessage(DateTime now) {
+            TimeSpan left = RoundStart.Add(cfg.RoundTime) - now;
+            string time = left.Shorten(true);
+            if (time.Contains("-"))
+                time = "0";
+            return "&3" + time + " &Suntil the round ends.";
+        }
+
+        /// <summary>
+        /// MakeSpectator function
+        /// Description: Helper function that handles putting a player into spectator mode.
+        /// </summary>
+        /// <param name="spectator"></param>
+        public void MakeSpectator(Player spectator)
+        {
+            // We don't want to do anything with the prior referees (staff members)
+            if (!spectator.Game.Referee)
+            {
+                Command.Find("xhide").Use(null, spectator.name);
+                spectator.hidden = true;
+                spectator.Game.Referee = true;
+                Spectator.Add(spectator);
+            }
         }
 
         public override void OutputStatus(Player p) {
@@ -91,8 +148,35 @@ namespace MCGalaxy.Games {
             if (killerMode) p.Message("The " + block + " will &ckill you &Sthis round!");
             if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!");
             
-            if (!flooded) p.Message(FloodTimeLeftMessage());
-            p.Message(RoundTimeLeftMessage());
+            if (!flooded) p.Message(FloodTimeLeftMessage(DateTime.UtcNow));
+            p.Message(RoundTimeLeftMessage(DateTime.UtcNow));
+        }
+
+        /// <summary>
+        /// ResetPlayers function
+        /// Description: Loops through all dead players / spectators and resets their
+        /// status to Alive for the next round of Lava Survival.
+        /// </summary>
+        public void ResetPlayers()
+        {
+            // Grab an isolated version of this list to reset all users.
+            List<Player> spectators = Spectator.list;
+            List<Player> onlineUsers = PlayerInfo.Online.list;
+            Alive.Clear();
+
+            // Clear out the spectators
+            foreach(Player spectator in spectators)
+            {
+                // Drop the player completely if they're no longer online
+                if (onlineUsers.Contains(spectator))
+                {
+                    spectator.Game.Referee = false;
+                    Alive.Add(spectator);
+                    spectator.hidden = false;
+                    Command.Find("xhide").Use(null, spectator.name);
+                }
+                Spectator.Remove(spectator);
+            }
         }
 
         protected override bool SetMap(string map) {
@@ -106,8 +190,10 @@ namespace MCGalaxy.Games {
             Get(p).TimesDied++;
             if (!IsPlayerDead(p)) return;
             
-            Chat.MessageFromLevel(p, "λNICK &4ran out of lives, and is out of the round!");
-            p.Message("&4You can still watch, but you cannot build.");
+            Chat.MessageFromLevel(p, "λNICK &cran out of lives, and is out of the round!");
+            p.Message("&cYou can still watch, but you cannot build.");
+            Alive.Remove(p);
+            MakeSpectator(p);
         }
     }
 }
