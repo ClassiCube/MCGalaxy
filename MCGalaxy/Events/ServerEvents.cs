@@ -113,7 +113,7 @@ namespace MCGalaxy.Events.ServerEvents {
     }
 
     public delegate void OnPluginMessageReceived(Player p, byte channel, byte[] data);
-    /// <summary> Called when a player sends a PluginMessage CPE packet. </summary>
+    /// <summary> Called when a player sends a PluginMessage CPE packet to the server. </summary>
     public sealed class OnPluginMessageReceivedEvent : IEvent<OnPluginMessageReceived> {
         
         public static void Call(Player p, byte channel, byte[] data) {
