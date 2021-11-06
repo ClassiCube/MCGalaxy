@@ -195,6 +195,7 @@ namespace MCGalaxy {
             Team.LoadList();
             ChatTokens.LoadCustom();
             SrvProperties.FixupOldPerms();
+            CpeExtension.LoadDisabledList();
             
             TextFile announcementsFile = TextFile.Files["Announcements"];
             announcementsFile.EnsureExists();

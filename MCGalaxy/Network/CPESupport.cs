@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MCGalaxy.Network;
 
 namespace MCGalaxy 
@@ -93,14 +94,14 @@ namespace MCGalaxy
     
     public sealed class CpeExtension 
     {
-    	/// <summary> Name of the CPE extension (e.g. ExtPlayerList) </summary>
+        /// <summary> Name of the CPE extension (e.g. ExtPlayerList) </summary>
         public string Name;
         /// <summary> Short description of this CPE extension </summary>
         public string Desc;
         /// <summary> Highest version of this CPE extension supported by the server </summary>
         public byte Version;
         /// <summary> Whether this CPE extension is currently enabled by the server </summary>
-        public bool Enabled;
+        public bool Enabled = true;
         
         public CpeExtension(string name, string desc) {
             Name = name; Desc = desc; Version = 1;
@@ -156,14 +157,60 @@ namespace MCGalaxy
         public static CpeExt[] GetAllEnabled() {
             if (!Server.Config.EnableCPE) return Empty;
             CpeExtension[] all = All;
-            CpeExt[] exts = new CpeExt[all.Length];
+            List<CpeExt> exts  = new List<CpeExt>(all.Length);
             
-            for (int i = 0; i < exts.Length; i++)
+            for (int i = 0; i < all.Length; i++)
             {
                 CpeExtension e = all[i];
-                exts[i] = new CpeExt() { Name = e.Name, ServerVersion = e.Version };
+                if (!e.Enabled) continue;
+                
+                exts.Add(new CpeExt() { Name = e.Name, ServerVersion = e.Version });
             }
-            return exts;
+            return exts.ToArray();
+        }
+        
+        
+        static int supportedCount;
+        public static void LoadDisabledList() {
+            supportedCount = 0;
+
+            foreach (CpeExtension e in All) { e.Enabled = true; }
+            PropertiesFile.Read(Paths.CPEDisabledFile, ParseLine, '=');
+            
+            // file is out of sync with actual list
+            if (supportedCount == All.Length) return;
+            try {
+                SaveDisabledList();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving CPE disabled list", ex);
+            }
+        }
+
+        static void ParseLine(string name, string value) {
+            foreach (CpeExtension c in All) 
+            {
+                if (!name.CaselessEq(c.Name)) continue;
+                
+                c.Enabled = bool.Parse(value);
+                supportedCount++;
+                return;
+            }
+        }
+
+        static void SaveDisabledList() {
+            using (StreamWriter w = new StreamWriter(Paths.CPEDisabledFile)) {
+                w.WriteLine("# CPE configuration");
+                w.WriteLine("#   This file allows disabling non-classic (CPE) extensions ");
+                w.WriteLine("#   To disable an extension, just change '= True' to '= False'");
+                w.WriteLine("#   You do not normally need to edit this file - all non-classic functionality can be simply disabled by setting 'enable-cpe' in server.properties to 'False'");
+                w.WriteLine();
+
+                foreach (CpeExtension c in All) 
+                {
+                    w.WriteLine("#  " + c.Desc);
+                    w.WriteLine(c.Name + " = " + c.Enabled);
+                }
+            }
         }
     }
 }
