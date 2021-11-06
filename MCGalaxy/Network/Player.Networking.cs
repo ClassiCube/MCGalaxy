@@ -49,15 +49,16 @@ namespace MCGalaxy
 
         int HandlePacket(byte[] buffer, int offset, int left) {
             switch (buffer[offset]) {
-                case Opcode.Ping:           return 1;
-                case Opcode.Handshake:      return HandleLogin(buffer, offset, left);
-                case Opcode.SetBlockClient: return HandleBlockchange(buffer, offset, left);
-                case Opcode.EntityTeleport: return HandleMovement(buffer, offset, left);
-                case Opcode.Message:        return HandleChat(buffer, offset, left);
-                case Opcode.CpeExtInfo:     return HandleExtInfo(buffer, offset, left);
-                case Opcode.CpeExtEntry:    return HandleExtEntry(buffer, offset, left);
-                case Opcode.CpePlayerClick: return HandlePlayerClicked(buffer, offset, left);
-                case Opcode.CpeTwoWayPing:  return HandleTwoWayPing(buffer, offset, left);   
+                case Opcode.Ping:              return 1;
+                case Opcode.Handshake:         return HandleLogin(buffer, offset, left);
+                case Opcode.SetBlockClient:    return HandleBlockchange(buffer, offset, left);
+                case Opcode.EntityTeleport:    return HandleMovement(buffer, offset, left);
+                case Opcode.Message:           return HandleChat(buffer, offset, left);
+                case Opcode.CpeExtInfo:        return HandleExtInfo(buffer, offset, left);
+                case Opcode.CpeExtEntry:       return HandleExtEntry(buffer, offset, left);
+                case Opcode.CpePlayerClick:    return HandlePlayerClicked(buffer, offset, left);
+                case Opcode.CpeTwoWayPing:     return HandleTwoWayPing(buffer, offset, left);   
+                case Opcode.CpePluginMessage:  return HandlePluginMessage(buffer, offset, left);   
                 
                 case Opcode.CpeCustomBlockSupportLevel:
                     return left < 2 ? 0 : 2; // only ever one level anyways

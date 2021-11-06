@@ -325,6 +325,18 @@ namespace MCGalaxy
             }
             return size;
         }
+
+        int HandlePluginMessage(byte[] buffer, int offset, int left) {
+            const int size = 1 + 1 + 64;
+            if (left < size) return 0;
+
+            byte channel = buffer[offset + 1];
+            byte[] data = new byte[64];
+            Array.Copy(buffer, offset + 2, data, 0, 64);
+            OnPlayerPluginMessageEvent.Call(this, channel, data);
+
+            return size;
+        }
         
         int CurrentEnvProp(EnvProp i, Zone zone) {
             int value   = Server.Config.GetEnvProp(i);

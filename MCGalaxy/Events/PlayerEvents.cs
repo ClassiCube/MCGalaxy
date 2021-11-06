@@ -316,5 +316,15 @@ namespace MCGalaxy.Events.PlayerEvents {
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
-    }    
+    }
+
+    public delegate void OnPlayerPluginMessage(Player p, byte channel, byte[] data);
+    /// <summary> Called when a player sends a PluginMessage CPE packet. </summary>
+    public sealed class OnPlayerPluginMessageEvent : IEvent<OnPlayerPluginMessage> {
+        
+        public static void Call(Player p, byte channel, byte[] data) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(p, channel, data));
+        }
+    }
 }
