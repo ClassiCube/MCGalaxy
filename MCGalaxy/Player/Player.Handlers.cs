@@ -327,12 +327,12 @@ namespace MCGalaxy
         }
 
         int HandlePluginMessage(byte[] buffer, int offset, int left) {
-            const int size = 1 + 1 + 64;
+            const int size = 1 + 1 + Packet.PluginMessageDataLength;
             if (left < size) return 0;
 
             byte channel = buffer[offset + 1];
-            byte[] data = new byte[64];
-            Array.Copy(buffer, offset + 2, data, 0, 64);
+            byte[] data = new byte[Packet.PluginMessageDataLength];
+            Array.Copy(buffer, offset + 2, data, 0, Packet.PluginMessageDataLength);
             OnPlayerPluginMessageEvent.Call(this, channel, data);
 
             return size;
