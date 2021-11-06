@@ -125,10 +125,11 @@ namespace MCGalaxy.Games {
             // We don't want to do anything with the prior referees (staff members)
             if (!spectator.Game.Referee)
             {
-                Command.Find("xhide").Use(null, spectator.name);
                 spectator.hidden = true;
-                spectator.Game.Referee = true;
+                spectator.invincible = true;
+                spectator.Game.Referee = true;   
                 Spectator.Add(spectator);
+                Entities.GlobalDespawn(spectator, false);  
             }
         }
 
@@ -170,13 +171,21 @@ namespace MCGalaxy.Games {
                 // Drop the player completely if they're no longer online
                 if (onlineUsers.Contains(spectator))
                 {
-                    spectator.Game.Referee = false;
-                    Alive.Add(spectator);
-                    spectator.hidden = false;
-                    Command.Find("xhide").Use(null, spectator.name);
+                    try
+                    {
+                        spectator.Game.Referee = false;
+                        spectator.hidden = false;
+                        spectator.invincible = false;
+                        Alive.Add(spectator);
+                        Entities.GlobalSpawn(spectator, false);
+                    }
+                    catch(NullReferenceException nre)
+                    {
+                        Logger.LogError("NRE in ResetPlayers, refencing spectator failed.", nre);
+                    }
                 }
-                Spectator.Remove(spectator);
             }
+            Spectator.Clear();
         }
 
         protected override bool SetMap(string map) {

@@ -61,9 +61,10 @@ namespace MCGalaxy.Games {
             if (LSGame.Instance.floodInProgress)
             {
                 Spectator.Add(p);
+                OutputStatus(p);
+                MakeSpectator(p);
                 Chat.MessageChat(ChatScope.Global, p, $"%S[%cLS%S]: {p.ColoredName}%S joined as a %bspectator%S.", null, null, false);
                 p.Message("You've joined in the middle of a round and have been put in spectator mode.");
-                OutputStatus(p);
             }
             else
             {

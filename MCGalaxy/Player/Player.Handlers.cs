@@ -68,7 +68,8 @@ namespace MCGalaxy
                 RevertBlock(x, y, z); return;
             }
 
-            if ( LSGame.Instance.Running && LSGame.Instance.Map == level && LSGame.Instance.IsPlayerDead(this) ) {
+            if ( LSGame.Instance.Running && LSGame.Instance.Map == level && (LSGame.Instance.IsPlayerDead(this) 
+                || LSGame.Instance.IsPlayerSpectator(this))) {
                 Message("You are out of the round, and cannot build.");
                 RevertBlock(x, y, z); return;
             }

@@ -101,6 +101,12 @@ namespace MCGalaxy.Games {
         public bool IsPlayerDead(Player p) {
             return Config.MaxLives > 0 && Get(p).TimesDied >= Config.MaxLives;
         }
+
+        public bool IsPlayerSpectator(Player p) {
+            if (Spectator.Contains(p))
+                return true;
+            return false;
+        }
         
         void ResetPlayerDeaths() {
             Player[] players = PlayerInfo.Online.Items;
