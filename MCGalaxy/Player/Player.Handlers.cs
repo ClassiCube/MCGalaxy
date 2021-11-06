@@ -23,6 +23,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.Commands.Chatting;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
@@ -333,7 +334,7 @@ namespace MCGalaxy
             byte channel = buffer[offset + 1];
             byte[] data = new byte[Packet.PluginMessageDataLength];
             Array.Copy(buffer, offset + 2, data, 0, Packet.PluginMessageDataLength);
-            OnPlayerPluginMessageEvent.Call(this, channel, data);
+            OnPluginMessageReceivedEvent.Call(this, channel, data);
 
             return size;
         }
