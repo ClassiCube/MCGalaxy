@@ -90,6 +90,7 @@ namespace MCGalaxy
         public const string VelocityControl = "VelocityControl";
         public const string CustomParticles = "CustomParticles";
         public const string CustomModels = "CustomModels";
+        public const string PluginMessages = "PluginMessages";
     }
     
     public sealed class CpeExtension 
@@ -147,6 +148,7 @@ namespace MCGalaxy
             new CpeExtension(CpeExt.VelocityControl,     "Allows adjusting velocity of players"),
             new CpeExtension(CpeExt.CustomParticles,     "Allows defining and spawning custom particles"),
             new CpeExtension(CpeExt.CustomModels,        "Allows defining custom models for entities", 2),
+            new CpeExtension(CpeExt.PluginMessages,      "Allows sending and receiving plugin messages from clients"),
             #if TEN_BIT_BLOCKS
             new CpeExtension(CpeExt.ExtBlocks,           "Allows using block IDs over 255 in block definitions"),
             #endif

@@ -23,6 +23,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.Commands.Chatting;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
@@ -323,6 +324,18 @@ namespace MCGalaxy
                 // Server -> client ping, set time received for reply.
                 Ping.Update(data);
             }
+            return size;
+        }
+
+        int HandlePluginMessage(byte[] buffer, int offset, int left) {
+            const int size = 1 + 1 + Packet.PluginMessageDataLength;
+            if (left < size) return 0;
+
+            byte channel = buffer[offset + 1];
+            byte[] data = new byte[Packet.PluginMessageDataLength];
+            Array.Copy(buffer, offset + 2, data, 0, Packet.PluginMessageDataLength);
+            OnPluginMessageReceivedEvent.Call(this, channel, data);
+
             return size;
         }
         

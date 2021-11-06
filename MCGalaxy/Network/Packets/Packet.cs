@@ -638,6 +638,17 @@ namespace MCGalaxy.Network
             return buffer;
         }
 
+        public const int PluginMessageDataLength = 64;
+        public static byte[] PluginMessage(byte channel, byte[] data) {
+            byte[] buffer = new byte[66];
+            int i = 0;
+            buffer[i++] = Opcode.CpePluginMessage;
+            buffer[i++] = channel;
+            Array.Copy(data, 0, buffer, i, PluginMessageDataLength);
+            
+            return buffer;
+        }
+
         #endregion
         
         

@@ -316,5 +316,5 @@ namespace MCGalaxy.Events.PlayerEvents {
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
-    }    
+    }
 }
