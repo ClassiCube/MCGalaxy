@@ -281,50 +281,7 @@ namespace MCGalaxy.Scripting
         /// <summary> Compiles the given source code. </summary>
         protected abstract CompilerResults DoCompile(string[] srcPaths, string dstPath);
         
-        
-        /// <summary> Attempts to compile the given source code files into a .dll </summary>
-        /// <param name="p"> Player to send messages to </param>
-        /// <param name="type"> Type of files being compiled (e.g. Plugin, Command) </param>
-        /// <param name="srcs"> Path of the source code files </param>
-        /// <param name="dst"> Path to the destination .dll </param>
-        /// <returns> The compiler results, or null if compilation failed </returns>
-        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
-        public CompilerResults Compile(Player p, string type, string[] srcs, string dst) {
-            foreach (string path in srcs) 
-            {
-                if (File.Exists(path)) continue;
-                
-                p.Message("File &9{0} &Snot found.", path);
-                return null;
-            }
-            
-            CompilerResults results = Compile(srcs, dst);
-            if (!results.Errors.HasErrors) {
-                p.Message("{0} compiled successfully.", type);
-                return results;
-            }
-            
-            SummariseErrors(results, srcs, p);
-            return null;
-        }
-        
-        static void SummariseErrors(CompilerResults results, string[] srcs, Player p) {
-            int logged = 0;
-            foreach (CompilerError err in results.Errors) 
-            {
-                p.Message("&W{1} - {0}", err.ErrorText,
-                          DescribeError(err, srcs, " #" + err.ErrorNumber));
-                logged++;
-                if (logged >= maxLog) break;
-            }
-            
-            if (results.Errors.Count > maxLog) {
-                p.Message(" &W.. and {0} more", results.Errors.Count - maxLog);
-            }
-            p.Message("&WCompilation error. See " + ErrorPath + " for more information.");
-        }
-        
-        static string DescribeError(CompilerError err, string[] srcs, string text) {
+        public static string DescribeError(CompilerError err, string[] srcs, string text) {
             string type = err.IsWarning ? "Warning" : "Error";
             string file = Path.GetFileName(err.FileName);
             // TODO line 0 shouldn't appear

@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Scripting {
             for (int i = 0; i < paths.Length; i++) {
                  paths[i] = compiler.CommandPath(paths[i]);
             }
-            compiler.Compile(p, "Command", paths, dstPath);
+            ScriptingOperations.Compile(p, compiler, "Command", paths, dstPath);
         }
 
         public override void Help(Player p) {

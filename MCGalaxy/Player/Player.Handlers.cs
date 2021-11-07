@@ -488,6 +488,12 @@ namespace MCGalaxy
             Chat.MessageChat(this, "λFULL: &f" + text, null, true);
         }
         
+        void LimitPartialMessage() {
+            if (partialMessage.Length < 1024 * 64) return;
+            partialMessage = "";
+            Message("&WPartial message cleared due to exceeding 1024 lines");
+        }
+        
         bool FilterChat(ref string text, byte continued) {
             // Handle /womid [version] which informs the server of the WoM client version
             if (text.StartsWith("/womid")) {
@@ -498,6 +504,7 @@ namespace MCGalaxy
             if (Supports(CpeExt.LongerMessages) && continued != 0) {
                 partialMessage += text;
                 if (text.Length < NetUtils.StringSize) partialMessage += " ";
+                LimitPartialMessage();
                 return true;
             }
 
@@ -509,10 +516,12 @@ namespace MCGalaxy
             if (IsPartialSpaced(text)) {
                 partialMessage += text.Substring(0, text.Length - 2) + " ";
                 Message("&3Partial message: &f" + partialMessage);
+                LimitPartialMessage();
                 return true;
             } else if (IsPartialJoined(text)) {
                 partialMessage += text.Substring(0, text.Length - 2);
                 Message("&3Partial message: &f" + partialMessage);
+                LimitPartialMessage();
                 return true;
             } else if (partialMessage.Length > 0) {
                 text = partialMessage + text;

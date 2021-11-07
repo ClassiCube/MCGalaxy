@@ -71,7 +71,7 @@ namespace MCGalaxy.Commands.Scripting {
             for (int i = 0; i < paths.Length; i++) {
                  paths[i] = compiler.PluginPath(paths[i]);
             }
-            compiler.Compile(p, "Plugin", paths, dstPath);
+            ScriptingOperations.Compile(p, compiler, "Plugin", paths, dstPath);
         }
         
         static void LoadPlugin(Player p, string name) {
