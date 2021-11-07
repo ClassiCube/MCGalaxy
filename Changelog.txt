@@ -1,3 +1,24 @@
+v 1.9.3.6
+Added: preclassic and classic 0.13 dat importing support
+Added: Allow disabling CPE extensions
+Improved: Disable ClassiCubeAccountPlus by default
+Improved: Museum now uses significantly less memory where multiple players go to same museum
+Improved: Allow disabling Discord user mentions from in-game chat
+Improved: Allow configuring authentication services
+Improved: Retry sending Discord messages for transient Discord errors
+Improved: Do not log transient Discord errors to error logs
+Improved: Change /restore to also list backups when invalid backup number is given
+Improved: Change /clients to show classic < 0.30 versions
+Improved: Allow /copy save to use any filename
+Improved: Better error message when importing non .dat file as a .dat
+Improved: /import shows better error messages when unsupported file 
+Improved: 'config contains non-allowed character' message to also include the non-allowed characters
+Fixed: Discord relay bot .who showing level names with _ in them as '\_' instead of expected '_'
+Fixed: Museum not restricting perbuild to nobody
+Fixed: /place still being usable on museums
+Fixed: 'Reload level' in GUI context menu not working
+Fixed: '/import all' rarely not importing the right file
+
 v 1.9.3.5
 Added: Support for all multiplayer versions of Classic (i.e. classic pre 0.30)
 Improved: Can now send heartbeat to multiple addresses
