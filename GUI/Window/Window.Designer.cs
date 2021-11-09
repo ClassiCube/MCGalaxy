@@ -831,6 +831,7 @@ namespace MCGalaxy.Gui
             // map_pgProps
             // 
             this.map_pgProps.Location = new System.Drawing.Point(7, 20);
+            this.map_pgProps.ForeColor = System.Drawing.Color.Red;
             this.map_pgProps.Name = "map_pgProps";
             this.map_pgProps.Size = new System.Drawing.Size(330, 323);
             this.map_pgProps.TabIndex = 0;
@@ -849,6 +850,7 @@ namespace MCGalaxy.Gui
             // map_lbLoaded
             // 
             this.map_lbLoaded.BackColor = System.Drawing.SystemColors.Window;
+            this.map_lbLoaded.ForeColor = System.Drawing.SystemColors.WindowText;
             this.map_lbLoaded.FormattingEnabled = true;
             this.map_lbLoaded.Location = new System.Drawing.Point(5, 15);
             this.map_lbLoaded.MultiColumn = true;
@@ -881,6 +883,7 @@ namespace MCGalaxy.Gui
             // map_lbUnloaded
             // 
             this.map_lbUnloaded.BackColor = System.Drawing.SystemColors.Window;
+            this.map_lbUnloaded.ForeColor = System.Drawing.SystemColors.WindowText;
             this.map_lbUnloaded.FormattingEnabled = true;
             this.map_lbUnloaded.Location = new System.Drawing.Point(5, 15);
             this.map_lbUnloaded.MultiColumn = true;
@@ -1278,6 +1281,7 @@ namespace MCGalaxy.Gui
             // pl_listBox
             // 
             this.pl_listBox.BackColor = System.Drawing.SystemColors.Window;
+            this.pl_listBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.pl_listBox.FormattingEnabled = true;
             this.pl_listBox.Location = new System.Drawing.Point(8, 27);
             this.pl_listBox.Name = "pl_listBox";

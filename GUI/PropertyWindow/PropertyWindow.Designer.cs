@@ -1857,6 +1857,7 @@ namespace MCGalaxy.Gui
             // blk_list
             // 
             this.blk_list.BackColor = System.Drawing.SystemColors.Window;
+            this.blk_list.ForeColor = System.Drawing.SystemColors.WindowText;
             this.blk_list.FormattingEnabled = true;
             this.blk_list.Location = new System.Drawing.Point(6, 6);
             this.blk_list.Name = "blk_list";
@@ -2095,6 +2096,7 @@ namespace MCGalaxy.Gui
             // rank_list
             // 
             this.rank_list.BackColor = System.Drawing.SystemColors.Window;
+            this.rank_list.ForeColor = System.Drawing.SystemColors.WindowText;
             this.rank_list.FormattingEnabled = true;
             this.rank_list.Location = new System.Drawing.Point(6, 6);
             this.rank_list.Name = "rank_list";
@@ -3722,6 +3724,7 @@ namespace MCGalaxy.Gui
             // ls_lstNotUsed
             // 
             this.ls_lstNotUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.ls_lstNotUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ls_lstNotUsed.FormattingEnabled = true;
             this.ls_lstNotUsed.Location = new System.Drawing.Point(6, 219);
             this.ls_lstNotUsed.Name = "ls_lstNotUsed";
@@ -3731,6 +3734,7 @@ namespace MCGalaxy.Gui
             // ls_lstUsed
             // 
             this.ls_lstUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.ls_lstUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ls_lstUsed.FormattingEnabled = true;
             this.ls_lstUsed.Location = new System.Drawing.Point(6, 33);
             this.ls_lstUsed.Name = "ls_lstUsed";
@@ -4222,6 +4226,7 @@ namespace MCGalaxy.Gui
             // zs_lstNotUsed
             // 
             this.zs_lstNotUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_lstNotUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.zs_lstNotUsed.FormattingEnabled = true;
             this.zs_lstNotUsed.Location = new System.Drawing.Point(6, 219);
             this.zs_lstNotUsed.Name = "zs_lstNotUsed";
@@ -4231,6 +4236,7 @@ namespace MCGalaxy.Gui
             // zs_lstUsed
             // 
             this.zs_lstUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.zs_lstUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.zs_lstUsed.FormattingEnabled = true;
             this.zs_lstUsed.Location = new System.Drawing.Point(6, 33);
             this.zs_lstUsed.Name = "zs_lstUsed";
@@ -4403,6 +4409,7 @@ namespace MCGalaxy.Gui
             // ctf_lstNotUsed
             // 
             this.ctf_lstNotUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.ctf_lstNotUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ctf_lstNotUsed.FormattingEnabled = true;
             this.ctf_lstNotUsed.Location = new System.Drawing.Point(6, 219);
             this.ctf_lstNotUsed.Name = "ctf_lstNotUsed";
@@ -4412,6 +4419,7 @@ namespace MCGalaxy.Gui
             // ctf_lstUsed
             // 
             this.ctf_lstUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.ctf_lstUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ctf_lstUsed.FormattingEnabled = true;
             this.ctf_lstUsed.Location = new System.Drawing.Point(6, 33);
             this.ctf_lstUsed.Name = "ctf_lstUsed";
@@ -4834,6 +4842,7 @@ namespace MCGalaxy.Gui
             // tw_lstNotUsed
             // 
             this.tw_lstNotUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.tw_lstNotUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.tw_lstNotUsed.FormattingEnabled = true;
             this.tw_lstNotUsed.Location = new System.Drawing.Point(6, 219);
             this.tw_lstNotUsed.Name = "tw_lstNotUsed";
@@ -4843,6 +4852,7 @@ namespace MCGalaxy.Gui
             // tw_lstUsed
             // 
             this.tw_lstUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.tw_lstUsed.ForeColor = System.Drawing.SystemColors.WindowText;
             this.tw_lstUsed.FormattingEnabled = true;
             this.tw_lstUsed.Location = new System.Drawing.Point(6, 33);
             this.tw_lstUsed.Name = "tw_lstUsed";
@@ -5159,6 +5169,7 @@ namespace MCGalaxy.Gui
             // cmd_list
             // 
             this.cmd_list.BackColor = System.Drawing.SystemColors.Window;
+            this.cmd_list.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cmd_list.FormattingEnabled = true;
             this.cmd_list.Location = new System.Drawing.Point(6, 6);
             this.cmd_list.Name = "cmd_list";

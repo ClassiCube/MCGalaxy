@@ -46,6 +46,7 @@
         	// lstCommands
         	// 
         	this.lstCommands.BackColor = System.Drawing.SystemColors.Window;
+        	this.lstCommands.ForeColor = System.Drawing.SystemColors.WindowText;
         	this.lstCommands.FormattingEnabled = true;
         	this.lstCommands.Location = new System.Drawing.Point(12, 127);
         	this.lstCommands.MultiColumn = true;
