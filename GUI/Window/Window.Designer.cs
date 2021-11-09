@@ -498,6 +498,7 @@ namespace MCGalaxy.Gui
             // logs_dateGeneral
             // 
             this.logs_dateGeneral.Location = new System.Drawing.Point(87, 4);
+            this.logs_dateGeneral.CalendarForeColor = System.Drawing.SystemColors.WindowText;
             this.logs_dateGeneral.Name = "logs_dateGeneral";
             this.logs_dateGeneral.Size = new System.Drawing.Size(200, 21);
             this.logs_dateGeneral.TabIndex = 5;
@@ -831,7 +832,6 @@ namespace MCGalaxy.Gui
             // map_pgProps
             // 
             this.map_pgProps.Location = new System.Drawing.Point(7, 20);
-            this.map_pgProps.ForeColor = System.Drawing.Color.Red;
             this.map_pgProps.Name = "map_pgProps";
             this.map_pgProps.Size = new System.Drawing.Size(330, 323);
             this.map_pgProps.TabIndex = 0;
