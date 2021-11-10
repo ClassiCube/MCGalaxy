@@ -134,7 +134,7 @@ namespace MCGalaxy.Gui {
         }
 
         void dis_lnkHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Program.OpenBrowser(Updater.SourceURL + "/wiki/Discord-relay-bot/");
+            GuiUtils.OpenBrowser(Updater.SourceURL + "/wiki/Discord-relay-bot/");
         }
     }
 }

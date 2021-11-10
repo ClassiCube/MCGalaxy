@@ -138,7 +138,7 @@ namespace MCGalaxy.Gui {
         
         void main_TxtUrl_DoubleClick(object sender, EventArgs e) {
             if (!Main_IsUsingUrl()) return;
-            Program.OpenBrowser(main_txtUrl.Text);
+            GuiUtils.OpenBrowser(main_txtUrl.Text);
         }
         
         void main_BtnSaveAll_Click(object sender, EventArgs e) {

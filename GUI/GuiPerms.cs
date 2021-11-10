@@ -19,9 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace MCGalaxy.Gui {
-    internal static class GuiPerms {
-        
+namespace MCGalaxy.Gui 
+{
+    internal static class GuiPerms 
+    {
         internal static string[] RankNames;
         internal static LevelPermission[] RankPerms;
         

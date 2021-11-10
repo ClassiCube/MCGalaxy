@@ -56,6 +56,7 @@
     <Compile Include="Controls\HackyPropertyGrid.cs" />
     <Compile Include="Controls\TimespanUpDown.cs" />
     <Compile Include="GuiPerms.cs" />
+    <Compile Include="GuiUtils.cs" />
     <Compile Include="Popups\ColorSelector.cs" />
     <Compile Include="Popups\ColorSelector.Designer.cs">
       <DependentUpon>ColorSelector.cs</DependentUpon>

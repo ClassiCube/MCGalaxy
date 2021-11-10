@@ -129,7 +129,7 @@ namespace MCGalaxy.Gui.Components {
 
         void HandleLinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e) {
             if (!Popup.OKCancel("Never open links from people that you don't trust!", "Warning!!")) return;
-            Program.OpenBrowser(e.LinkText);
+            GuiUtils.OpenBrowser(e.LinkText);
         }
 
         /// <summary> Scrolls to the end of the log </summary>

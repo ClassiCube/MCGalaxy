@@ -40,7 +40,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Program.OpenBrowser("https://www.canyouseeme.org/");
+            GuiUtils.OpenBrowser("https://www.canyouseeme.org/");
         }
 
         void PortChecker_FormClosing(object sender, FormClosingEventArgs e) {
@@ -48,7 +48,7 @@ namespace MCGalaxy.Gui.Popups {
         }
 
         void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Program.OpenBrowser("https://portforward.com");
+            GuiUtils.OpenBrowser("https://portforward.com");
         }
 
         void btnForward_Click(object sender, EventArgs e) {

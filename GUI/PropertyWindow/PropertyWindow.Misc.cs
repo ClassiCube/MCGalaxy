@@ -100,7 +100,7 @@ namespace MCGalaxy.Gui {
         }
 
         void sql_linkDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Program.OpenBrowser("https://dev.mysql.com/downloads/");
+            GuiUtils.OpenBrowser("https://dev.mysql.com/downloads/");
         }
 
         void sql_chkUseSQL_CheckedChanged(object sender, EventArgs e) {

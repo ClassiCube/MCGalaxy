@@ -22,9 +22,10 @@ using System.Xml;
 using MCGalaxy.Network;
 //This upnp class comes from http://www.codeproject.com/Articles/27992/NAT-Traversal-with-UPnP-in-C, Modified for use with MCForge
 
-namespace MCGalaxy {
-    public static class UPnP {
-
+namespace MCGalaxy 
+{
+    public static class UPnP 
+    {
         public static TimeSpan Timeout = TimeSpan.FromSeconds(3);
         
         const string req = 

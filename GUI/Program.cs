@@ -16,40 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace MCGalaxy.Gui {
-    
-    public static class Popup {
-        public static void Message(string message, string title = "") {
-            MessageBox.Show(message, title);
-        }
-        
-        public static void Error(string message) {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        
-        public static void Warning(string message) {
-            MessageBox.Show(message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-        
-        public static bool OKCancel(string message, string title) {
-            return MessageBox.Show(message, title, MessageBoxButtons.OKCancel,
-                                  MessageBoxIcon.Warning) == DialogResult.OK;
-        }
-        
-        public static bool YesNo(string message, string title) {
-            return MessageBox.Show(message, title, MessageBoxButtons.YesNo, 
-                                   MessageBoxIcon.Question) == DialogResult.Yes;
-        }
-    }
-    
-    public static class Program {
-        
+namespace MCGalaxy.Gui 
+{
+    public static class Program 
+    {   
         [STAThread]
         public static void Main(string[] args) {
             Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -95,15 +70,6 @@ namespace MCGalaxy.Gui {
 
         static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
             LogAndRestart(e.Exception);
-        }
-        
-        public static void OpenBrowser(string url) {
-            try { 
-                Process.Start(url);
-            } catch (Exception ex) {
-                Logger.LogError("Opening url in browser", ex);
-                Popup.Error("Failed to open " + url);
-            }
         }
     }
 }

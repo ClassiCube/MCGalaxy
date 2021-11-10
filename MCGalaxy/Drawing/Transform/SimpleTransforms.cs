@@ -43,9 +43,9 @@ namespace MCGalaxy.Drawing.Transforms
         
         public void CheckScales() {
             // Need to reverse direction for negative scales
-            signX = Math.Sign(XMul / XDiv);
-            signY = Math.Sign(YMul / YDiv);
-            signZ = Math.Sign(ZMul / ZDiv);
+            signX = Math.Sign(XMul * XDiv); // using * instead of /,
+            signY = Math.Sign(YMul * YDiv); //  as otherwise scales < 1
+            signZ = Math.Sign(ZMul * ZDiv); //  don't work (e.g. 1/2)
             
             XMul = Math.Abs(XMul); XDiv = Math.Abs(XDiv);
             YMul = Math.Abs(YMul); YDiv = Math.Abs(YDiv);
