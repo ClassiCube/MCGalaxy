@@ -96,7 +96,9 @@ namespace MCGalaxy.Gui.Popups
         	this.Controls.Add(this.txtEdit);
         	this.Controls.Add(this.cmbList);
         	this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+        	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        	this.MaximizeBox = false;
+        	this.MinimizeBox = false;
         	this.Name = "EditText";
         	this.ShowIcon = false;
         	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

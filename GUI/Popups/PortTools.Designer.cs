@@ -120,7 +120,9 @@ namespace MCGalaxy.Gui.Popups {
             this.Controls.Add(this.gbUpnp);
             this.Controls.Add(this.linkManually);
             this.Controls.Add(this.linkHelpForward);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+        	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        	this.MaximizeBox = false;
+        	this.MinimizeBox = false;
             this.Name = "PortTools";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Port forward tools";
