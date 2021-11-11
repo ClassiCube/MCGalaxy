@@ -23,8 +23,10 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using MCGalaxy.Core;
 
-namespace MCGalaxy.Gui.Popups {
-    public partial class PortTools : Form {
+namespace MCGalaxy.Gui.Popups 
+{
+    public partial class PortTools : Form 
+    {
 
         readonly BackgroundWorker worker;
         int port;
@@ -38,6 +40,10 @@ namespace MCGalaxy.Gui.Popups {
             this.port = port;
             btnForward.Text = "Forward " + port;
         }
+        
+        void PortTools_Load(object sender, EventArgs e) {
+            GuiUtils.SetIcon(this);
+		}
 
         void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             GuiUtils.OpenBrowser("https://www.canyouseeme.org/");

@@ -121,6 +121,7 @@ namespace MCGalaxy.Gui.Popups {
             this.Controls.Add(this.linkManually);
             this.Controls.Add(this.linkHelpForward);
         	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Load += new System.EventHandler(this.PortTools_Load);
         	this.MaximizeBox = false;
         	this.MinimizeBox = false;
             this.Name = "PortTools";

@@ -102,6 +102,7 @@ Trying to mix two versions is unsupported - you may experience issues";
             try {
                 ComponentResourceManager resources = new ComponentResourceManager(typeof(Window));
                 Icon = (Icon)(resources.GetObject("$this.Icon"));
+                GuiUtils.WinIcon = Icon;
             } catch { }
         }
         
@@ -320,9 +321,7 @@ Trying to mix two versions is unsupported - you may experience issues";
 
         void btnProperties_Click(object sender, EventArgs e) {
             if (!hasPropsForm) {
-                propsForm = new PropertyWindow();
-                // just doing 'propForms.Icon = Icon;' doesn't show on Mono
-                try { propsForm._icon = Icon; } catch { }
+                propsForm    = new PropertyWindow();
                 hasPropsForm = true; 
             }
             

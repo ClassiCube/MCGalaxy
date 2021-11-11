@@ -125,7 +125,7 @@ namespace MCGalaxy.Gui {
         
         void cmd_btnCustom_Click(object sender, EventArgs e) {
             using (CustomCommands form = new CustomCommands()) {
-                form.ShowDialog();
+        		form.ShowDialog();
             }
         }
         

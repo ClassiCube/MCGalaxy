@@ -17,6 +17,7 @@
  */
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace MCGalaxy.Gui 
@@ -49,6 +50,13 @@ namespace MCGalaxy.Gui
     
     public static class GuiUtils 
     {   
+    	/// <summary> MCGalaxy window icon (shared) </summary>
+    	public static Icon WinIcon;
+    	
+    	public static void SetIcon(Form form) {
+    	    try { form.Icon = WinIcon; } catch { }
+    	}
+    	
         /// <summary> Opens the given url in the system's default web browser </summary>
         /// <remarks> Catches and logs any unhandled errors </remarks>
         public static void OpenBrowser(string url) {

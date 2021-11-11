@@ -3,8 +3,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MCGalaxy.Gui.Popups {
-    internal sealed partial class TokenSelector : Form {
+namespace MCGalaxy.Gui.Popups 
+{
+    internal sealed partial class TokenSelector : Form 
+    {
         public string Token;
 
         public TokenSelector(string title) {
@@ -22,6 +24,10 @@ namespace MCGalaxy.Gui.Popups {
             UpdateBaseLayout();
             ResumeLayout(false);
         }
+        
+        void TokenSelector_Load(object sender, EventArgs e) {
+            GuiUtils.SetIcon(this);
+		}
         
         
         const int btnWidth = 110, btnHeight = 40, btnsPerCol = 9;

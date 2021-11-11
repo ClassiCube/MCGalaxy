@@ -32,6 +32,10 @@ namespace MCGalaxy.Gui.Popups {
                 if (!Command.IsCore(cmd)) lstCommands.Items.Add(cmd.name);
             }
         }
+		
+        void CustomCommands_Load(object sender, EventArgs e) {
+            GuiUtils.SetIcon(this);
+		}
         
         void CreateCommand(ICompiler engine) {
             string cmdName = txtCmdName.Text.Trim();

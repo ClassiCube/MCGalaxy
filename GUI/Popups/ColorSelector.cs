@@ -4,8 +4,10 @@ using System.Drawing;
 using System;
 using MCGalaxy;
 
-namespace MCGalaxy.Gui.Popups {
-    internal sealed partial class ColorSelector : Form {
+namespace MCGalaxy.Gui.Popups 
+{
+    internal sealed partial class ColorSelector : Form 
+    {
         public char ColorCode;
 
         internal static Color LookupColor(char colCode, out Color textCol) {
@@ -45,6 +47,10 @@ namespace MCGalaxy.Gui.Popups {
             UpdateBaseLayout();
             ResumeLayout(false);
         }
+        
+        void ColorSelector_Load(object sender, EventArgs e) {
+            GuiUtils.SetIcon(this);
+		}
         
         
         const int btnWidth = 130, btnHeight = 40, btnsPerCol = 8;

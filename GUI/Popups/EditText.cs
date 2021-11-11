@@ -20,8 +20,10 @@ using System.IO;
 using System.Windows.Forms;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Gui.Popups {
-    public partial class EditText : Form {
+namespace MCGalaxy.Gui.Popups 
+{
+    public partial class EditText : Form 
+    {
         TextFile curFile;
         
         public EditText() {
@@ -31,6 +33,10 @@ namespace MCGalaxy.Gui.Popups {
             }
             cmbList.Text = "Select file..";
         }
+        
+        void EditText_Load(object sender, EventArgs e) {
+            GuiUtils.SetIcon(this);
+		}
         
         void cmbList_SelectedIndexChanged(object sender, EventArgs e) {
             if (cmbList.SelectedIndex == -1) return;

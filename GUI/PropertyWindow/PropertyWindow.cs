@@ -20,10 +20,11 @@ using MCGalaxy.Eco;
 using MCGalaxy.Events.GameEvents;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Gui {
-    public partial class PropertyWindow : Form {
+namespace MCGalaxy.Gui 
+{
+    public partial class PropertyWindow : Form 
+    {
         ZombieProperties zsSettings = new ZombieProperties();
-        internal Icon _icon;
         
         public PropertyWindow() {
             InitializeComponent();
@@ -35,7 +36,8 @@ namespace MCGalaxy.Gui {
 
         void PropertyWindow_Load(object sender, EventArgs e) {
             // try to use same icon as main window
-            try { Icon = _icon; } catch { }
+            // must be done in OnLoad, otherwise icon doesn't show on Mono
+            GuiUtils.SetIcon(this);
             
             OnMapsChangedEvent.Register(HandleMapsChanged, Priority.Low);
             OnStateChangedEvent.Register(HandleStateChanged, Priority.Low);
