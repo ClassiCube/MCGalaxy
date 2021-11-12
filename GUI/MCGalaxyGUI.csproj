@@ -81,6 +81,10 @@
     <Compile Include="Popups\TokenSelector.Designer.cs">
       <DependentUpon>TokenSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Popups\UpdateAvailable.cs" />
+    <Compile Include="Popups\UpdateAvailable.Designer.cs">
+      <DependentUpon>UpdateAvailable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="PropertyWindow\GamesHelper.cs" />
     <Compile Include="PropertyWindow\ItemPermsHelper.cs" />

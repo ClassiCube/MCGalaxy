@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Generator;
+using MCGalaxy.Gui.Popups;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Gui {
@@ -130,7 +131,7 @@ Trying to mix two versions is unsupported - you may experience issues";
         
         void InitServer() {
             Logger.LogHandler += LogMessage;
-            Updater.NewerVersionDetected += LogNewerVersionDetected;
+            Updater.NewerVersionDetected += OnNewerVersionDetected;
 
             Server.OnURLChange += UpdateUrl;
             Server.OnSettingsUpdate += SettingsUpdate;
@@ -200,25 +201,24 @@ Trying to mix two versions is unsupported - you may experience issues";
         }
         
 
-        static volatile bool msgOpen = false;
-        static void LogNewerVersionDetected(object sender, EventArgs e) {
-            if (msgOpen) return;
-            // don't want message box blocking background scheduler thread
-            RunAsync(ShowUpdateMessageBox);
+        void OnNewerVersionDetected(object sender, EventArgs e) {
+            RunOnUI_Async(ShowUpdateMessageBox);
+        }
+        
+        void ShowUpdateMessageBox() {
+            if (UpdateAvailable.Active) return;
+            UpdateAvailable form = new UpdateAvailable();
+            
+            // https://stackoverflow.com/questions/8566582/how-to-centerparent-a-non-modal-form
+            form.Location = new Point(Location.X + (Width  - form.Width ) / 2,
+                                     Location.Y  + (Height - form.Height) / 2);
+            form.Show(this);
         }
         
         static void RunAsync(ThreadStart func) {
             Thread thread = new Thread(func);
             thread.Name = "MsgBox";
             thread.Start();
-        }
-        
-        static void ShowUpdateMessageBox() {
-            msgOpen = true;
-            if (Popup.YesNo("New version found. Would you like to update?", "Update?")) {
-                Updater.PerformUpdate();
-            }
-            msgOpen = false;
         }
         
         void InitServerTask(SchedulerTask task) {
