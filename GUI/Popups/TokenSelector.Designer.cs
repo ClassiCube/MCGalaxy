@@ -30,10 +30,10 @@
             this.ClientSize = new System.Drawing.Size(200, 200);
             this.Controls.Add(this.btnCancel);
             this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Load += new System.EventHandler(this.TokenSelector_Load);
-        	this.MaximizeBox = false;
-        	this.MinimizeBox = false;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "TokenSelector";
             this.ShowIcon = false;

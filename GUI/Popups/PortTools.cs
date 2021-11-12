@@ -43,7 +43,7 @@ namespace MCGalaxy.Gui.Popups
         
         void PortTools_Load(object sender, EventArgs e) {
             GuiUtils.SetIcon(this);
-		}
+        }
 
         void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             GuiUtils.OpenBrowser("https://www.canyouseeme.org/");

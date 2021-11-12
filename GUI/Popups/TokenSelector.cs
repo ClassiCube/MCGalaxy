@@ -27,7 +27,7 @@ namespace MCGalaxy.Gui.Popups
         
         void TokenSelector_Load(object sender, EventArgs e) {
             GuiUtils.SetIcon(this);
-		}
+        }
         
         
         const int btnWidth = 110, btnHeight = 40, btnsPerCol = 9;

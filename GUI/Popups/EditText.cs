@@ -36,7 +36,7 @@ namespace MCGalaxy.Gui.Popups
         
         void EditText_Load(object sender, EventArgs e) {
             GuiUtils.SetIcon(this);
-		}
+        }
         
         void cmbList_SelectedIndexChanged(object sender, EventArgs e) {
             if (cmbList.SelectedIndex == -1) return;

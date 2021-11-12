@@ -70,7 +70,6 @@
         	// 
         	// btnCreateCS
         	// 
-        	this.btnCreateCS.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.btnCreateCS.Location = new System.Drawing.Point(11, 48);
         	this.btnCreateCS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
         	this.btnCreateCS.Name = "btnCreateCS";
@@ -82,7 +81,6 @@
         	// 
         	// btnCreateVB
         	// 
-        	this.btnCreateVB.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.btnCreateVB.Location = new System.Drawing.Point(96, 48);
         	this.btnCreateVB.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
         	this.btnCreateVB.Name = "btnCreateVB";
@@ -95,17 +93,15 @@
         	// txtCmdName
         	// 
         	this.txtCmdName.BackColor = System.Drawing.SystemColors.Window;
-        	this.txtCmdName.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.txtCmdName.Location = new System.Drawing.Point(93, 20);
+        	this.txtCmdName.Location = new System.Drawing.Point(100, 20);
         	this.txtCmdName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
         	this.txtCmdName.Name = "txtCmdName";
-        	this.txtCmdName.Size = new System.Drawing.Size(355, 18);
+        	this.txtCmdName.Size = new System.Drawing.Size(348, 18);
         	this.txtCmdName.TabIndex = 27;
         	// 
         	// lblTxtName
         	// 
         	this.lblTxtName.AutoSize = true;
-        	this.lblTxtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.lblTxtName.Location = new System.Drawing.Point(11, 23);
         	this.lblTxtName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
         	this.lblTxtName.Name = "lblTxtName";
@@ -115,7 +111,6 @@
         	// 
         	// btnLoad
         	// 
-        	this.btnLoad.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.btnLoad.Location = new System.Drawing.Point(13, 267);
         	this.btnLoad.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
         	this.btnLoad.Name = "btnLoad";
@@ -128,7 +123,6 @@
         	// btnUnload
         	// 
         	this.btnUnload.Enabled = false;
-        	this.btnUnload.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.btnUnload.Location = new System.Drawing.Point(391, 267);
         	this.btnUnload.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
         	this.btnUnload.Name = "btnUnload";
@@ -150,10 +144,10 @@
         	this.Controls.Add(this.btnUnload);
         	this.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Load += new System.EventHandler(this.CustomCommands_Load);
+        	this.Load += new System.EventHandler(this.CustomCommands_Load);
         	this.MaximizeBox = false;
         	this.MinimizeBox = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+        	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         	this.Name = "CustomCommands";
         	this.Text = "Custom commands";
         	this.grpCreate.ResumeLayout(false);

@@ -50,7 +50,7 @@ namespace MCGalaxy.Gui.Popups
         
         void ColorSelector_Load(object sender, EventArgs e) {
             GuiUtils.SetIcon(this);
-		}
+        }
         
         
         const int btnWidth = 130, btnHeight = 40, btnsPerCol = 8;
