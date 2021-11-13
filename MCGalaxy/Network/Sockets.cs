@@ -402,7 +402,7 @@ namespace MCGalaxy.Network
             public override void Write(byte[] buffer, int offset, int count) {
                 byte[] data = new byte[count];
                 Buffer.BlockCopy(buffer, offset, data, 0, count);
-                s.raw.Send(data, false);
+                s.raw.Send(data, SendFlags.None);
             }
         }
     }
