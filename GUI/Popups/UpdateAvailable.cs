@@ -27,8 +27,8 @@ namespace MCGalaxy.Gui.Popups
         
         public UpdateAvailable() {
             Active = true;
-            Text   = "Update " + Server.SoftwareName + "?";
             InitializeComponent();
+            Text   = "Update " + Server.SoftwareName + "?";
         }
         
         protected override void OnPaint(PaintEventArgs e) {
