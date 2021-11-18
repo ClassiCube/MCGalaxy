@@ -354,7 +354,6 @@ namespace MCGalaxy.Network
         void IOThread() {
             try {
                 X509Certificate cert = new X509Certificate(Server.Config.SslCertPath);
-                // Logger.Log(LogType.UserActivity, "dbg cert {0}", cert);
                 ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
                 ssl.AuthenticateAsServer(cert, clientCertificateRequired: false, (System.Security.Authentication.SslProtocols)3072, checkCertificateRevocation: true);
                 // Display the properties and settings for the authenticated stream.
