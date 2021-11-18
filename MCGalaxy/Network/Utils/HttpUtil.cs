@@ -89,14 +89,14 @@ namespace MCGalaxy.Network {
         }
         
         
-        // these do not exist in .NET 4.0 and cause a compilation failure
-        const SslProtocols tls_11 = (SslProtocols)768;
-        const SslProtocols tls_12 = (SslProtocols)3072;
+        // TLS 1.1/1.2 do not exist in .NET 4.0 and cause a compilation failure
+        public const SslProtocols TLS_11  = (SslProtocols)768;
+        public const SslProtocols TLS_12  = (SslProtocols)3072;
+        public const SslProtocols TLS_ALL = SslProtocols.Tls | TLS_11 | TLS_12;
         
         public static SslStream WrapSSLStream(Stream source, string host) {
             SslStream wrapped  = new SslStream(source);
-            SslProtocols flags = SslProtocols.Tls | tls_11 | tls_12;
-            wrapped.AuthenticateAsClient(host, null, flags, false);
+            wrapped.AuthenticateAsClient(host, null, TLS_ALL, false);
             return wrapped;
         }
         
