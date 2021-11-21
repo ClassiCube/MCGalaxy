@@ -85,7 +85,7 @@ namespace MCGalaxy.DB {
             if (col.Length == 0) col = p.group.Color;
             p.SetColor(col);
             
-            p.TotalModified = TotalModified;
+            p.SetBaseTotalModified(TotalModified);
             p.TotalDrawn = TotalDrawn;
             p.TotalPlaced = TotalPlaced;
             p.TotalDeleted = TotalDeleted;

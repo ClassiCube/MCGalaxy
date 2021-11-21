@@ -136,6 +136,7 @@ namespace MCGalaxy.DB {
         
         public static void EntityLine(Player p, Player who) {
             bool hasSkin = !who.SkinName.CaselessEq(who.truename);
+            // TODO remove hardcoding
             bool hasModel = !(who.Model.CaselessEq("humanoid") || who.Model.CaselessEq("human"));
             
             if (hasSkin && hasModel) {

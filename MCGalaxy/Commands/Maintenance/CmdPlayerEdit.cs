@@ -91,7 +91,7 @@ namespace MCGalaxy.Commands.Maintenance {
                 MessageDataChanged(p, args[0], args[1], args[2]);
             }  else if (opt == "modified") {
                 SetInteger(p, args, PlayerData.ColumnBlocks, int.MaxValue, who,
-                           v => who.TotalModified = v, type_lo);
+            	           v => who.SetBaseTotalModified(v), type_lo);
             } else if (opt == "drawn") {
                 SetInteger(p, args, PlayerData.ColumnDrawn, int.MaxValue, who,
                            v => who.TotalDrawn = v, type_lo);

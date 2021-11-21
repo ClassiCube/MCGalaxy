@@ -411,7 +411,14 @@ namespace MCGalaxy {
         
         public void CheckForMessageSpam() {
             if (spamChecker != null) spamChecker.CheckChatSpam();
-        }        
+        }
+
+        internal void SetBaseTotalModified(long modified) {
+            long adjust    = modified - TotalModified;
+            TotalModified  = modified;
+            // adjustment so that SessionModified is unaffected
+            startModified += adjust;
+        }
         
         string selTitle;
         readonly object selLock = new object();

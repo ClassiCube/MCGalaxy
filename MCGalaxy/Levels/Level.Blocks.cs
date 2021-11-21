@@ -325,9 +325,7 @@ namespace MCGalaxy {
                     OtherPhysics.DoSpongeRemoved(this, PosToInt(x, y, z), true);
                 }
 
-                p.SessionModified++;
-                p.TotalModified++;
-                
+                p.TotalModified++;                
                 if (drawn) p.TotalDrawn++;
                 else if (block == Block.Air) p.TotalDeleted++;
                 else p.TotalPlaced++;

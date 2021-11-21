@@ -118,9 +118,11 @@ namespace MCGalaxy {
 
         public int money;
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
-        public int SessionModified;
         public int TimesVisited, TimesBeenKicked, TimesDied;
         public int TotalMessagesSent;
+        
+        long startModified;
+        public long SessionModified { get { return TotalModified - startModified; } }
         
         DateTime startTime;
         public TimeSpan TotalTime {
