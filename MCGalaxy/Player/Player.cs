@@ -261,7 +261,7 @@ namespace MCGalaxy {
                     return;
                 }
 
-                if (weapon != null) weapon.Disable();                
+                if (weapon != null) weapon.Disable();
                 if (chatMsg != null) chatMsg = Colors.Escape(chatMsg);
                 discMsg = Colors.Escape(discMsg);
                 
@@ -416,7 +416,7 @@ namespace MCGalaxy {
         internal void SetBaseTotalModified(long modified) {
             long adjust    = modified - TotalModified;
             TotalModified  = modified;
-            // adjustment so that SessionModified is unaffected
+            // adjust so that SessionModified is unaffected
             startModified += adjust;
         }
         

@@ -401,7 +401,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         
-        // these characters are chosen specifically to lie within the unspecified unicode range
+        // these characters are chosen specifically to lie within the unspecified unicode range,
+        //  as those characters are "application defined" (EDCX = Escaped Discord Character #X)
         //  https://en.wikipedia.org/wiki/Private_Use_Areas
         const char UNDERSCORE = '\uEDC1'; // _
         const char TILDE      = '\uEDC2'; // ~

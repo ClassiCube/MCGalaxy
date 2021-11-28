@@ -196,27 +196,14 @@ namespace MCGalaxy.Levels.IO
             }
         }
         
-        static object ReadContent(DatReader r, byte typeCode) {
-            if (typeCode == TC_BLOCKDATA) {
-                return r.ReadBytes(r.ReadUInt8());
-            } else if (typeCode == TC_BLOCKDATALONG) {
-                return r.ReadBytes(r.ReadInt32());
-            } else {
-                return ReadObject(r, typeCode);
-            }
-        }
-        
         static object ReadObject(DatReader r) { return ReadObject(r, r.ReadUInt8()); }
         static object ReadObject(DatReader r, byte typeCode) {
             switch (typeCode) {
                 case TC_STRING:    return NewString(r);
-                case TC_RESET: r.handles.Clear(); return null;
                 case TC_NULL:      return null;
                 case TC_REFERENCE: return PrevObject(r);
-                case TC_CLASS:     return NewClass(r);
                 case TC_OBJECT:    return NewObject(r);
                 case TC_ARRAY:     return NewArray(r);
-                case TC_CLASSDESC: return NewClassDesc(r);
             }
             throw new InvalidDataException("Invalid typecode: " + typeCode);
         }
@@ -231,12 +218,6 @@ namespace MCGalaxy.Levels.IO
             int handle = r.ReadInt32() - baseWireHandle;
             if (handle >= 0 && handle < r.handles.Count) return r.handles[handle];
             throw new InvalidDataException("Invalid stream handle: " + handle);
-        }
-        
-        static JClassDesc NewClass(DatReader r) {
-            JClassDesc classDesc = ClassDesc(r);
-            r.handles.Add(classDesc);
-            return classDesc;
         }
         
         static JObject NewObject(DatReader r) {
@@ -360,8 +341,13 @@ namespace MCGalaxy.Levels.IO
         
         static void SkipAnnotation(DatReader r) {
             byte typeCode;
-            while ((typeCode = r.ReadUInt8()) != TC_ENDBLOCKDATA) {
-                ReadContent(r, typeCode);
+            while ((typeCode = r.ReadUInt8()) != TC_ENDBLOCKDATA) 
+            {
+                if (typeCode == TC_BLOCKDATA) {
+                    r.ReadBytes(r.ReadUInt8());
+                } else {
+                    ReadObject(r, typeCode);
+                }
             }
         }
     }
