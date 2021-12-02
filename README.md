@@ -76,3 +76,8 @@ Docker support
 Some **unofficial** dockerfiles for running MCGalaxy in Docker:
 * [using Mono](https://github.com/UnknownShadow200/MCGalaxy/pull/577/files)
 * [using .NET core](https://github.com/UnknownShadow200/MCGalaxy/pull/629/files)
+
+Documentation
+-----------------
+* [General documentation](https://github.com/UnknownShadow200/MCGalaxy/wiki)
+* [API documentation](https://github.com/ClassiCube/MCGalaxy-API-Documentation)
