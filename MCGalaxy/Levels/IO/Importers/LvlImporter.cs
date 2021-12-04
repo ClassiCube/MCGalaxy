@@ -21,41 +21,42 @@ using System.IO.Compression;
 using System.Text;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Levels.IO {
-
+namespace MCGalaxy.Levels.IO 
+{
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-    public unsafe sealed class LvlImporter : IMapImporter {
-
+    public unsafe sealed class LvlImporter : IMapImporter 
+    {
         public override string Extension { get { return ".lvl"; } }
         public override string Description { get { return "MCDzienny/MCForge/MCGalaxy map"; } }
+        const int HEADER_SIZE = 18;
         
         public override Vec3U16 ReadDimensions(Stream src) {
             using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {
-                byte[] header = new byte[16];
-                int offset = 0;
-                return ReadHeader(gs, header, out offset);
+                byte[] header = new byte[HEADER_SIZE];
+                return ReadHeader(gs, header);
             }
         }
         
         public override Level Read(Stream src, string name, bool metadata) {
             using (Stream gs = new GZipStream(src, CompressionMode.Decompress, true)) {
-                byte[] header = new byte[16];
-                int offset = 0;
-                Vec3U16 dims = ReadHeader(gs, header, out offset);
+                byte[] header = new byte[HEADER_SIZE];
+                Vec3U16 dims  = ReadHeader(gs, header);
 
-                Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
-                lvl.spawnx = BitConverter.ToUInt16(header, offset + 4);
-                lvl.spawnz = BitConverter.ToUInt16(header, offset + 6);
-                lvl.spawny = BitConverter.ToUInt16(header, offset + 8);
-                lvl.rotx = header[offset + 10];
-                lvl.roty = header[offset + 11];
+                Level lvl  = new Level(name, dims.X, dims.Y, dims.Z);
+                lvl.spawnx = BitConverter.ToUInt16(header,  8);
+                lvl.spawnz = BitConverter.ToUInt16(header, 10);
+                lvl.spawny = BitConverter.ToUInt16(header, 12);
+                lvl.rotx   = header[14];
+                lvl.roty   = header[15];
+                // pervisit/perbuild permission bytes ignored
                 
                 ReadFully(gs, lvl.blocks, lvl.blocks.Length);
                 ReadCustomBlocksSection(lvl, gs);
                 if (!metadata) return lvl;
                 
-                for (;;) {
+                for (;;) 
+                {
                     int section = gs.ReadByte();
                     if (section == 0xFC) { // 'ph'ysics 'c'hecks
                         ReadPhysicsSection(lvl, gs); continue;
@@ -68,22 +69,16 @@ namespace MCGalaxy.Levels.IO {
             }
         }
         
-        static Vec3U16 ReadHeader(Stream gs, byte[] header, out int offset) {
-            ReadFully(gs, header, 2);
-            Vec3U16 dims = default(Vec3U16);
-            dims.X = BitConverter.ToUInt16(header, 0);
-
-            if (dims.X == 1874) { // version field, width is next ushort
-                ReadFully(gs, header, 16);
-                dims.X = BitConverter.ToUInt16(header, 0);
-                offset = 2;
-            } else {
-                ReadFully(gs, header, 12);
-                offset = 0;
-            }
+        static Vec3U16 ReadHeader(Stream gs, byte[] header) {
+            ReadFully(gs, header, HEADER_SIZE);
+            int signature = BitConverter.ToUInt16(header, 0);
+            if (signature != 1874)
+                throw new InvalidDataException("Invalid .lvl map signature");
             
-            dims.Z = BitConverter.ToUInt16(header, offset);
-            dims.Y = BitConverter.ToUInt16(header, offset + 2);
+            Vec3U16 dims;
+            dims.X = BitConverter.ToUInt16(header, 2);
+            dims.Z = BitConverter.ToUInt16(header, 4);
+            dims.Y = BitConverter.ToUInt16(header, 6);
             return dims;
         }
         
@@ -106,6 +101,7 @@ namespace MCGalaxy.Levels.IO {
                 index++;
             }
         }
+        
         
         static void ReadPhysicsSection(Level lvl, Stream gs) {
             byte[] buffer = new byte[sizeof(int)];

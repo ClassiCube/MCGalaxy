@@ -26,13 +26,14 @@ namespace MCGalaxy.Levels.IO {
 
     //WARNING! DO NOT CHANGE THE WAY THE LEVEL IS SAVED/LOADED!
     //You MUST make it able to save and load as a new version other wise you will make old levels incompatible!
-    public unsafe sealed class LvlExporter : IMapExporter {
-
+    public unsafe sealed class LvlExporter : IMapExporter 
+    {
         public override string Extension { get { return ".lvl"; } }
         
         const int bufferSize = 64 * 1024;
         public override void Write(Stream dst, Level lvl) {
-            using (Stream gs = new GZipStream(dst, CompressionMode.Compress)) {
+            using (Stream gs = new GZipStream(dst, CompressionMode.Compress)) 
+            {
                 // We need to copy blocks to a temp byte array due to the multithreaded nature of the server
                 // Otherwise, some blocks can change between writing data and calculating its crc32, which
                 // then causes the level to fail to load next time do to the crc32 not matching the data.
