@@ -22,9 +22,11 @@ using MCGalaxy.UI;
 namespace MCGalaxy.Gui {
     public partial class Window : Form {
         PlayerProperties playerProps;
+        
+        void NoPlayerSelected() { Popup.Warning("No player selected"); }
 
         void pl_BtnUndo_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
+            if (curPlayer == null) { NoPlayerSelected(); return; }
             string time = pl_txtUndo.Text.Trim();
             if (time.Length == 0) { Players_AppendStatus("Amount of time to undo required"); return; }
 
@@ -33,7 +35,7 @@ namespace MCGalaxy.Gui {
         }
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
+            if (curPlayer == null) { NoPlayerSelected(); return; }
             string text = pl_txtMessage.Text.Trim();
             if (text.Length == 0) { Players_AppendStatus("No message to send"); return; }
             
@@ -43,7 +45,7 @@ namespace MCGalaxy.Gui {
         }
 
         void pl_BtnSendCommand_Click(object sender, EventArgs e) {
-            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
+            if (curPlayer == null) { NoPlayerSelected(); return; }
             string text = pl_txtImpersonate.Text.Trim();
             if (text.Length == 0) { Players_AppendStatus("No command to execute"); return; }
             
@@ -73,7 +75,7 @@ namespace MCGalaxy.Gui {
         void pl_BtnRules_Click(object sender, EventArgs e) { DoCmd("Rules", "Sent rules to @p"); }
         
         void DoCmd(string cmdName, string action) {
-            if (curPlayer == null) { Players_AppendStatus("No player selected"); return; }
+            if (curPlayer == null) { NoPlayerSelected(); return; }
             UIHelpers.HandleCommand(cmdName + " " + curPlayer.name);
             
             Players_AppendStatus(action.Replace("@p", curPlayer.truename));

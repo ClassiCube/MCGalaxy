@@ -101,7 +101,7 @@ namespace MCGalaxy.Gui {
         
         void map_BtnLoad_Click(object sender, EventArgs e) {
             object selected = map_lbUnloaded.SelectedItem;
-            if (selected == null) { Popup.Warning("No map file selected."); return; }
+            if (selected == null) { Popup.Warning("No unloaded level selected."); return; }
 
             UIHelpers.HandleCommand("Load " + selected.ToString());
         }
