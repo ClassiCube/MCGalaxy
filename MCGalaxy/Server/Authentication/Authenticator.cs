@@ -30,7 +30,7 @@ namespace MCGalaxy.Authentication
         /// <summary> The currently/actively used authenticator </summary>
         public static Authenticator Current = new DefaultAuthenticator();
 
-        private microsoftAuthenticator = new MicrosoftAuthenticator();
+        private MicrosoftAuthenticator microsoftAuthenticator = new MicrosoftAuthenticator();
         
         /// <summary> Checks if the given player is allowed to login with the given mppass </summary>
         public virtual bool VerifyLogin(Player p, string mppass) {
