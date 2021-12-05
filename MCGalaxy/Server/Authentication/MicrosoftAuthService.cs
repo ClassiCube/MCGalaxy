@@ -9,15 +9,8 @@ namespace MCGalaxy.Authentication
     {
         public override bool Authenticate(Player p, string mppass) {
             String serverId = Server.Config.ListenIP + ":" + Server.Config.Port;
-            MessageDigest md = null;
-            try {
-                md = MessageDigest.getInstance("SHA-1");
-            }
-            catch(NoSuchAlgorithmException e) {
-                Logger.LogError(e)
-                return false;
-            }
-            serverId = new String(md.digest(String.getBytes(serverId)));
+            var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(serverId));
+            serverId = string.Concat(hash.Select(b => b.ToString("x2")));
 
             if (!hasJoined(p.truename, serverId)) return false;
 
