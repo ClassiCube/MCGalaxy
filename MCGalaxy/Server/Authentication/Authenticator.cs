@@ -82,7 +82,7 @@ namespace MCGalaxy.Authentication
     }
     
     /// <summary> Authenticator that loads/stores passwords in /extra/passwords folder </summary>
-    public sealed class DefaultAuthenticator : Authenticator 
+    public class DefaultAuthenticator : Authenticator 
     {
         const string PASS_FOLDER = "extra/passwords/";
         
