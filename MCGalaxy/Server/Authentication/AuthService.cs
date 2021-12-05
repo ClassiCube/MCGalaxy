@@ -38,8 +38,8 @@ namespace MCGalaxy.Authentication
         public AuthServiceConfig Config;
         
         public virtual bool Authenticate(Player p, string mppass) {
-            string calculated = Server.CalcMppass(p.truename, Beat.Salt);
-            if (!mppass.CaselessEq(calculated)) return false;
+            bool valid = Authenticator.Current.VerifyLogin(p, mppass, this);
+            if (!valid) return false;
             AuthServiceConfig cfg = Config;
             
             p.verifiedName = true;

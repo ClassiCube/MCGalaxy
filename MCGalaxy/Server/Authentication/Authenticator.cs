@@ -42,6 +42,13 @@ namespace MCGalaxy.Authentication
             return IPUtil.IsPrivate(p.IP);
         }
         
+        /// <summary> Checks if the given player is allowed to login with the 
+        /// given mppass to the given authentication service </summary>
+        public virtual bool VerifyLogin(Player p, string mppass, AuthService service) {
+            string calculated = Server.CalcMppass(p.truename, service.Beat.Salt);
+            return mppass.CaselessEq(calculated);
+        }
+        
         /// <summary> Informs the given player that they must first
         /// verify before they can perform the given action </summary>
         public virtual void RequiresVerification(Player p, string action) {
