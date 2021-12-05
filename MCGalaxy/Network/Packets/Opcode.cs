@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy.Network {
-
+namespace MCGalaxy.Network 
+{
     /// <summary> List of packet opcode bytes. (Packet identifiers) </summary>
-    public static class Opcode {
-        
+    public static class Opcode 
+    {
         public const byte Handshake = 0;
         public const byte Ping = 1;
         public const byte LevelInitialise = 2;

@@ -31,22 +31,28 @@ namespace MCGalaxy
     public partial class Player : IDisposable 
     { 
         int HandleLogin(byte[] buffer, int offset, int left) {
-            // protocol versions < 6 didn't have the usertype field,
-            //  hence this two-packet-size-handling monstrosity
-            const int old_size = 1 + 1 + 64 + 64;
-            const int new_size = 1 + 1 + 64 + 64 + 1;
-            // the packet must be at least old_size long
-            if (left < old_size) return 0;  
+            // this packet is a mess to handle since its size depends on protocol 
+            //   BYTE version  (since 0.0.16)
+            //   STR  username (always)
+            //   STR  mppass   (since 0.0.16)
+            //   BYTE extra    (since 0.0.20)
+            // packet always has at least username field
+            if (left < 1 + 64) return 0;  
             
             LastAction      = DateTime.UtcNow;
             ProtocolVersion = buffer[offset + 1];
             
-            // check size now that know whether usertype field is included or not
-            int size = ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
+            // 0.0.15 protocol doesn't have a ProtocolVersion field, so fake it
+            if (ProtocolVersion >= 'A' && ProtocolVersion <= 'z') 
+                ProtocolVersion = Server.VERSION_0015;
+            
+            // get actual packet size now that protocol version is known
+            int size = Packet.MotdSize(ProtocolVersion);
             if (left < size) return 0;
             if (loggedIn)    return size;
             
-            name = NetUtils.ReadString(buffer, offset + 2);
+            int nameStart = ProtocolVersion == Server.VERSION_0015 ? 1 : 2;
+            name = NetUtils.ReadString(buffer, offset + nameStart);
             SkinName = name; DisplayName = name; truename = name;
             
             if (ProtocolVersion > Server.VERSION_0030) {
