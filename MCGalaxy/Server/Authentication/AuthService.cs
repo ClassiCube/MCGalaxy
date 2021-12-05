@@ -86,6 +86,8 @@ namespace MCGalaxy.Authentication
                 Services.Add(auth);
                 Heartbeat.Register(beat);
             }
+
+            Services.Add(new MicrosoftAuthService());
         }
         
         
