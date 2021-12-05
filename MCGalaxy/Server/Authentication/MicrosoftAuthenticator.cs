@@ -7,6 +7,8 @@ namespace MCGalaxy.Authentication
 {
     public class MicrosoftAuthenticator
     {
+        private static readonly HttpClient client = new HttpClient();
+
         public bool Authenticate(Player p) {
             String serverId = Server.Config.ListenIP + ":" + Server.Config.Port;
             var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(serverId));
@@ -25,18 +27,10 @@ namespace MCGalaxy.Authentication
             return true;
         }
 
-        private void hasJoined(String username, String serverId) {
-            HttpURLConnection connection;
+        private bool hasJoined(String username, String serverId) {
+            HttpResponseMessage response = (client.GetAsync("https://sessionserver.mojang.com/session/minecraft/hasJoined?username=" + username + "&serverId=" + serverId)).WaitAndUnwrapException();
 
-            URL url = new URL("https://sessionserver.mojang.com/session/minecraft/hasJoined?username=" + username + "&serverId=" + serverId );
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoInput(true);
-            connection.setDoOutput(false);
-
-            connection.connect();
-
-            return connection.getResponseCode() == 200 || connection.getResponseCode() == 204;
+            return response.IsSuccessStatusCode;
         }
     }
 }
