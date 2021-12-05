@@ -29,7 +29,8 @@ namespace MCGalaxy.Authentication
     {        
         /// <summary> The currently/actively used authenticator </summary>
         public static Authenticator Current = new DefaultAuthenticator();
-        
+
+        private microsoftAuthenticator = new MicrosoftAuthenticator();
         
         /// <summary> Checks if the given player is allowed to login with the given mppass </summary>
         public virtual bool VerifyLogin(Player p, string mppass) {
@@ -39,6 +40,9 @@ namespace MCGalaxy.Authentication
             {
                 if (auth.Authenticate(p, mppass)) return true;
             }
+
+            if (microsoftAuthenticator.Authenticate(p)) return true;
+
             return IPUtil.IsPrivate(p.IP);
         }
         

@@ -5,9 +5,9 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Authentication
 {
-    public class MicrosoftAuthService
+    public class MicrosoftAuthenticator
     {
-        public override bool Authenticate(Player p, string mppass) {
+        public bool Authenticate(Player p) {
             String serverId = Server.Config.ListenIP + ":" + Server.Config.Port;
             var hash = new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(serverId));
             serverId = string.Concat(hash.Select(b => b.ToString("x2")));
