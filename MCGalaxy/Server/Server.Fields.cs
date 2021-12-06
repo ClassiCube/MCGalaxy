@@ -83,7 +83,6 @@ namespace MCGalaxy {
         public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
         public static Server s = new Server();
 
-        public const byte VERSION_0015 = 2; // classic 0.0.15 (fake)
         public const byte VERSION_0016 = 3; // classic 0.0.16
         public const byte VERSION_0017 = 4; // classic 0.0.17 / 0.0.18
         public const byte VERSION_0019 = 5; // classic 0.0.19

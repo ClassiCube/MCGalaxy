@@ -28,25 +28,11 @@ namespace MCGalaxy.Network
 
         #region Classic
         
-        internal static int MotdSize(byte version) {
-            if (version >= Server.VERSION_0020)
-                return 1 + 1 + 64 + 64 + 1;
-            if (version != Server.VERSION_0015)
-                return 1 + 1 + 64 + 64;
-            // 0.0.15 only has name field
-            return 1 + 64;
-        }
-        
         public static byte[] Motd(Player p, string motd) {
-            byte[] buffer = new byte[MotdSize(p.ProtocolVersion)];
+            bool type     = p.ProtocolVersion >= Server.VERSION_0020;
+            byte[] buffer = new byte[130 + (type ? 1 : 0)];
             buffer[0] = Opcode.Handshake;
             buffer[1] = p.ProtocolVersion;
-            
-            // 0.0.15 only has name field
-            if (p.ProtocolVersion == Server.VERSION_0015) {
-                NetUtils.Write(Server.Config.Name, buffer, 1, p.hasCP437);
-                return buffer;
-            }
             
             if (motd.Length > NetUtils.StringSize) {
                 NetUtils.Write(motd, buffer, 2, p.hasCP437);
@@ -56,8 +42,7 @@ namespace MCGalaxy.Network
                 NetUtils.Write(motd, buffer, 66, p.hasCP437);
             }
 
-            if (p.ProtocolVersion >= Server.VERSION_0020) 
-                buffer[130] = p.UserType();
+            if (type) buffer[130] = p.UserType();
             return buffer;
         }
         
