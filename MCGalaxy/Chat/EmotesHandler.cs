@@ -28,7 +28,7 @@ namespace MCGalaxy {
             { "updown", '↕' }, { "^v", '↕' },
             { "!!", '‼' },
             { "p", '¶' }, { "para", '¶' }, { "pilcrow", '¶' }, { "paragraph", '¶' },
-            { "s", '§' }, { "sect", '§' }, { "section", '§' },
+            { "sect", '§' }, { "section", '§' },
             { "-", '▬' }, { "_", '▬' }, { "bar", '▬' }, { "half", '▬' },
             { "updown2", '↨' }, { "^v_", '↨' },
             { "^", '↑' }, { "uparrow", '↑' },
