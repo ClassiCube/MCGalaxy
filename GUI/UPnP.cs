@@ -44,13 +44,14 @@ namespace MCGalaxy
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
             
-            byte[] data = Encoding.ASCII.GetBytes(req);
+            byte[] data   = Encoding.ASCII.GetBytes(req);
             IPEndPoint ep = new IPEndPoint(IPAddress.Broadcast, 1900);
             byte[] buffer = new byte[0x1000];
 
-            DateTime start = DateTime.UtcNow;
+            DateTime start   = DateTime.UtcNow;
             s.ReceiveTimeout = 3000;
-            visitedLocations.Clear();
+            visitedLocations.Clear();           
+            Logger.Log(LogType.BackgroundActivity, "Searching for UPnP devices..");
             
             try {
                 do {
@@ -69,6 +70,8 @@ namespace MCGalaxy
                             
                             if (!visitedLocations.Contains(location)) {
                                 visitedLocations.Add(location);
+                                Logger.Log(LogType.BackgroundActivity, "UPnP device found: " + location);
+                                
                                 _serviceUrl = GetServiceUrl(location);
                                 if (!String.IsNullOrEmpty(_serviceUrl)) return true;
                             }
@@ -76,7 +79,8 @@ namespace MCGalaxy
                     } while (length > 0);
                 } while (start.Subtract(DateTime.UtcNow) < Timeout);
                 return false;
-            } catch {
+            } catch (Exception ex) {
+                Logger.LogError("Error discovering UPnP devices", ex);
                 return false;
             }
         }
@@ -112,9 +116,7 @@ namespace MCGalaxy
         
 
         static string GetServiceUrl(string location) {
-#if !DEBUG
             try {
-#endif
                 XmlDocument doc = new XmlDocument();
                 WebRequest request = WebRequest.CreateDefault(new Uri(location));
                 doc.Load(request.GetResponse().GetResponseStream());
@@ -133,12 +135,12 @@ namespace MCGalaxy
                 // Try again with version 2
                 node = doc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:WANIPConnection:2\"]/tns:controlURL/text()", nsMgr);
                 if (node != null) return CombineUrls(location, node.Value);
-                
-                return null;
-#if !DEBUG
-            } catch { return null; }
-#endif
-        }        
+
+            } catch (Exception ex) {
+                Logger.LogError("Error getting UPnP device service URL", ex);
+            }
+            return null;
+        }
 
         static string CombineUrls(string location, string p) {
             int n = location.IndexOf("://");
@@ -148,7 +150,8 @@ namespace MCGalaxy
         
         static string GetLocalIP() {
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());        
-            foreach (IPAddress ip in host.AddressList) {
+            foreach (IPAddress ip in host.AddressList) 
+            {
                 if (ip.AddressFamily == AddressFamily.InterNetwork) {
                     return ip.ToString();
                 }
