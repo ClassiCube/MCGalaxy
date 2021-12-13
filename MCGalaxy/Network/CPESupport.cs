@@ -24,8 +24,8 @@ namespace MCGalaxy
 {
     public enum CpeMessageType : byte 
     {
-        Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3,
-        BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13,
+        Normal = 0, Status1 = 1, Status2 = 2, Status3 = 3, Status4 = 4,  Status5 = 5, Status6 = 6,
+        BottomRight1 = 11, BottomRight2 = 12, BottomRight3 = 13, BottomRight4 = 14, BottomRight5 = 15, BottomRight6 = 16,
         Announcement = 100, BigAnnouncement = 101, SmallAnnouncement = 102 
     }
     
