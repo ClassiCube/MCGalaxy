@@ -68,12 +68,9 @@ namespace MCGalaxy.Gui.Popups
         }
 
         void mWorkerForwarder_DoWork(object sender, DoWorkEventArgs e) {
-            int tries = 0;
             bool adding = (bool)e.Argument;
             
-            retry:
             try {
-                tries++;
                 if (!UPnP.Discover()) {
                     e.Result = 0;
                 } else if (adding) {                   
@@ -83,8 +80,8 @@ namespace MCGalaxy.Gui.Popups
                     UPnP.DeleteForwardingRule(port, ProtocolType.Tcp);
                     e.Result = 3;
                 }
-            } catch {
-                if (tries < 2) goto retry;
+            } catch (Exception ex) {
+                Logger.LogError("Unexpected UPnP error", ex);
                 e.Result = 2;
             }
         }
@@ -104,18 +101,18 @@ namespace MCGalaxy.Gui.Popups
                     lblResult.ForeColor = Color.Green;
                     return;
                 case 2:
-                    lblResult.Text = "Something weird just happened, try again.";
-                    lblResult.ForeColor = Color.Black;
+                    lblResult.Text = "Unexpected error, see Error Logs";
+                    lblResult.ForeColor = Color.Red;
                     return;
                 case 3:
-                    lblResult.Text = "Deleted port forward rule.";
+                    lblResult.Text = "Deleted port forward rule";
                     lblResult.ForeColor = Color.Green;
                     return;
             }
         }
         
         void SetUPnPEnabled(bool enabled) {
-            btnDelete.Enabled = enabled;
+            btnDelete.Enabled  = enabled;
             btnForward.Enabled = enabled;        
         }
     }

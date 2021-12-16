@@ -21,6 +21,9 @@ using System.Threading;
 using System.Xml;
 using MCGalaxy.Network;
 //This upnp class comes from http://www.codeproject.com/Articles/27992/NAT-Traversal-with-UPnP-in-C, Modified for use with MCForge
+// Some relatively straightforward documentation on how UPnP works:
+//  http://www.upnp-hacks.org/upnp.html
+//  http://www.upnp-hacks.org/igd.html
 
 namespace MCGalaxy 
 {
@@ -48,17 +51,18 @@ namespace MCGalaxy
             IPEndPoint ep = new IPEndPoint(IPAddress.Broadcast, 1900);
             byte[] buffer = new byte[0x1000];
 
-            DateTime start   = DateTime.UtcNow;
             s.ReceiveTimeout = 3000;
             visitedLocations.Clear();           
             Logger.Log(LogType.BackgroundActivity, "Searching for UPnP devices..");
+            DateTime end  = DateTime.UtcNow.Add(Timeout);
             
             try {
-                do {
+                while (DateTime.UtcNow < end)
+                {
                     s.SendTo(data, ep);
                     s.SendTo(data, ep);
                     s.SendTo(data, ep);
-
+			    
                     int length = -1;
                     do {
                         length = s.Receive(buffer);
@@ -77,19 +81,18 @@ namespace MCGalaxy
                             }
                         }
                     } while (length > 0);
-                } while (start.Subtract(DateTime.UtcNow) < Timeout);
-                return false;
+                }
             } catch (Exception ex) {
                 Logger.LogError("Error discovering UPnP devices", ex);
-                return false;
             }
+            return false;
         }
 
         public static void ForwardPort(int port, ProtocolType protocol, string description) {
             if (String.IsNullOrEmpty(_serviceUrl) )
                 throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             
-            string xdoc = SOAPRequest(_serviceUrl, 
+            string xdoc = SOAPRequest(_serviceUrl, "AddPortMapping",
                 "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
                 "<NewRemoteHost></NewRemoteHost>" +
                 "<NewExternalPort>" + port + "</NewExternalPort>" +
@@ -99,19 +102,19 @@ namespace MCGalaxy
                 "<NewEnabled>1</NewEnabled>" +
                 "<NewPortMappingDescription>" + description + "</NewPortMappingDescription>" +
                 "<NewLeaseDuration>0</NewLeaseDuration>" +
-                "</u:AddPortMapping>", "AddPortMapping");
+                "</u:AddPortMapping>");
         }
 
         public static void DeleteForwardingRule(int port, ProtocolType protocol) {
             if (String.IsNullOrEmpty(_serviceUrl) )
                 throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             
-            string xdoc = SOAPRequest(_serviceUrl,
-            "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
-            "<NewRemoteHost></NewRemoteHost>" +
-            "<NewExternalPort>" + port + "</NewExternalPort>" +
-            "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
-            "</u:DeletePortMapping>", "DeletePortMapping");
+            string xdoc = SOAPRequest(_serviceUrl, "DeletePortMapping",
+                "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
+                "<NewRemoteHost></NewRemoteHost>" +
+                "<NewExternalPort>" + port + "</NewExternalPort>" +
+                "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
+                "</u:DeletePortMapping>");
         }
         
 
@@ -161,7 +164,7 @@ namespace MCGalaxy
 
         /// <summary> Performs a XML SOAP request </summary>
         /// <returns> XML response from the service </returns>
-        static string SOAPRequest(string url, string soap, string function) {
+        static string SOAPRequest(string url, string function, string soap) {
             string req = 
                 "<?xml version=\"1.0\"?>" +
                 "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
