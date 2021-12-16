@@ -1,3 +1,17 @@
+v 1.9.3.7
+Fixed: /scale 1/2 not working (partially)
+Fixed: Session modified overflowing after 2 billion
+Fixed: SECURE_WEBSOCKETS build not compiling
+Fixed: Icon not showing in GUI dialogs on Linux 
+Fixed: Update GUI dialog causing crash sometimes on Linux
+Fixed: GUI dialogs having poor titlebar appearance on Linux
+Fixed: Some GUI element (e.g. listbox) text being nearly invisible in dark theme on Linux
+Improved: UPnP now logs more details
+Improved: Make custom commands GUI popup font consistent with rest
+Improved: Trying to perform GUI player action when no player selected shows warning dialog now
+Removed: (s) emote shortcut (can still use (sect) and (section))
+Removed: Support for .lvl files without 2 byte signature (even MCZall/MCSharp e)
+
 v 1.9.3.6
 Added: preclassic and classic 0.13 dat importing support
 Added: Allow disabling CPE extensions
