@@ -58,18 +58,6 @@ namespace MCGalaxy.Config {
         }
     }
     
-    // Hacky workaround for old ExponentialFog attribute
-    sealed class ConfigBoolIntAttribute : ConfigIntegerAttribute {
-        public ConfigBoolIntAttribute(string name, string section)
-            : base(name, section) { }
-        
-        public override object Parse(string raw) {
-            bool value;
-            if (bool.TryParse(raw, out value)) return value ? 1 : 0;
-            return ParseInteger(raw, 0, -1, 1);
-        }
-    }
-    
     public sealed class ConfigBlockAttribute : ConfigIntegerAttribute {
         BlockID defBlock;
         public ConfigBlockAttribute() : this(null, null, Block.Air) { }

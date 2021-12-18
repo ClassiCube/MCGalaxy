@@ -144,7 +144,7 @@ namespace MCGalaxy {
             int weather;
             if (IsResetString(value)) {
                 p.Message("Reset weather for {0} &Sto 0 (Sun)", area);
-                weather = -1;
+                weather = EnvConfig.ENV_USE_DEFAULT;
             } else {
                 if (int.TryParse(value, out weather)) {
                 } else if (value.CaselessEq("sun"))  { weather = 0;
@@ -164,7 +164,7 @@ namespace MCGalaxy {
         static void SetSmoothFog(Player p, string area, EnvConfig cfg, string value) {
             if (IsResetString(value)) {
                 p.Message("Reset smooth fog for {0} &Sto &cOFF", area);
-                cfg.ExpFog = -1;
+                cfg.ExpFog = EnvConfig.ENV_USE_DEFAULT;
             } else {
                 bool enabled = false;
                 if (!CommandParser.GetBool(p, value, ref enabled)) return;
@@ -194,7 +194,7 @@ namespace MCGalaxy {
         static void SetInt(Player p, string input, string area, string type, ref int target) {
             if (IsResetString(input)) {
                 p.Message("Reset {0} for {1} &Sto normal", type, area);
-                target = -1;
+                target = EnvConfig.ENV_USE_DEFAULT;
             } else {
                 int value = 0;
                 if (!CommandParser.GetInt(p, input, type, ref value,
@@ -208,7 +208,7 @@ namespace MCGalaxy {
         static void SetFloat(Player p, string input, string area, int scale, string type, ref int target, int min, int max) {
             if (IsResetString(input)) {
                 p.Message("Reset {0} for {1} &Sto normal", type, area);
-                target = -1;
+                target = EnvConfig.ENV_USE_DEFAULT;
             } else {
                 float value = 0, minF = (float)min / scale, maxF = (float)max / scale;
                 if (!CommandParser.GetReal(p, input, type, ref value, minF, maxF)) return;

@@ -24,41 +24,81 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy 
 {
+    class ConfigEnvIntAttribute : ConfigIntegerAttribute 
+    {
+        int minValue, maxValue;
+        
+        public ConfigEnvIntAttribute(string name, int min, int max)
+            : base(name, "Env") { minValue = min; maxValue = max; }
+        
+        public override object Parse(string value) {
+            if (value == "-1.0") return -1;
+            
+            // "-1" was used in past as value for "ENV_USE_DEFAULT", so must keep
+            //  doing that for backwards compatibility
+            // (would have been better to use "" for default, but too late now)
+            int num = ParseInteger(value, -1, minValue, maxValue);
+            if (num == -1) num = EnvConfig.ENV_USE_DEFAULT;
+            return num;
+        }
+               
+        public override string Serialise(object value) {
+            int num = (int)value;
+            // -1 is already used for "use default", so use this instead
+            if (num == -1) return "-1.0";
+            
+            if (num == EnvConfig.ENV_USE_DEFAULT) num = -1;
+            return num.ToString();
+        }
+    }
+    
+    // Hacky workaround for old ExponentialFog attribute which was a bool
+    class ConfigExpFogAttribute : ConfigEnvIntAttribute 
+    {
+        public ConfigExpFogAttribute(string name) : base(name, -1, 1) { }
+        
+        public override object Parse(string raw) {
+            bool value;
+            if (bool.TryParse(raw, out value)) return value ? 1 : 0;
+            return base.Parse(raw);
+        }
+    }
+    
     public abstract class EnvConfig 
     {
-        public const int ENV_USE_DEFAULT = -1;
+        public const int ENV_USE_DEFAULT = int.MaxValue;
         const int envRange = 0xFFFFFF;
-    	
+        
         // Environment settings
-        [ConfigInt("Weather", "Env", 0, -1, 2)]
+        [ConfigEnvInt("Weather", -1, 2)]
         public int Weather      = ENV_USE_DEFAULT;
         /// <summary> Elevation of the "ocean" that surrounds maps. Default is map height / 2. </summary>
-        [ConfigInt("EdgeLevel", "Env", -1, -envRange, envRange)]
+        [ConfigEnvInt("EdgeLevel", -envRange, envRange)]
         public int EdgeLevel    = ENV_USE_DEFAULT;
         /// <summary> Offset of the "bedrock" that surrounds map sides from edge level. Default is -2. </summary>
-        [ConfigInt("SidesOffset", "Env", -2, -envRange, envRange)]
+        [ConfigEnvInt("SidesOffset", -envRange, envRange)]
         public int SidesOffset  = ENV_USE_DEFAULT;
         /// <summary> Elevation of the clouds. Default is map height + 2. </summary>
-        [ConfigInt("CloudsHeight", "Env", -1, -envRange, envRange)]
+        [ConfigEnvInt("CloudsHeight", -envRange, envRange)]
         public int CloudsHeight = ENV_USE_DEFAULT;
         
         /// <summary> Max fog distance the client can see. Default is 0, means use client-side defined max fog distance. </summary>
-        [ConfigInt("MaxFog", "Env", 0, -envRange, envRange)]
+        [ConfigEnvInt("MaxFog", -envRange, envRange)]
         public int MaxFogDistance = ENV_USE_DEFAULT;
         /// <summary> Clouds speed, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("clouds-speed", "Env", 256, -envRange, envRange)]
+        [ConfigEnvInt("clouds-speed", -envRange, envRange)]
         public int CloudsSpeed    = ENV_USE_DEFAULT;
         /// <summary> Weather speed, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("weather-speed", "Env", 256, -envRange, envRange)]
+        [ConfigEnvInt("weather-speed", -envRange, envRange)]
         public int WeatherSpeed   = ENV_USE_DEFAULT;
         /// <summary> Weather fade, in units of 256ths. Default is 256 (1 speed). </summary>
-        [ConfigInt("weather-fade", "Env", 128, -envRange, envRange)]
+        [ConfigEnvInt("weather-fade", -envRange, envRange)]
         public int WeatherFade    = ENV_USE_DEFAULT;
         /// <summary> Skybox horizontal speed, in units of 1024ths. Default is 0 (0 speed). </summary>
-        [ConfigInt("skybox-hor-speed", "Env", 0, -envRange, envRange)]
+        [ConfigEnvInt("skybox-hor-speed", -envRange, envRange)]
         public int SkyboxHorSpeed = ENV_USE_DEFAULT;
         /// <summary> Skybox vertical speed, in units of 1024ths. Default is 0 (0 speed). </summary>
-        [ConfigInt("skybox-ver-speed", "Env", 0, -envRange, envRange)]
+        [ConfigEnvInt("skybox-ver-speed", -envRange, envRange)]
         public int SkyboxVerSpeed = ENV_USE_DEFAULT;
         
         /// <summary> The block which will be displayed on the horizon. </summary>
@@ -68,7 +108,7 @@ namespace MCGalaxy
         [ConfigBlock("EdgeBlock", "Env", Block.Invalid)]
         public BlockID EdgeBlock    = Block.Invalid;
         /// <summary> Whether exponential fog mode is used client-side. </summary>
-        [ConfigBoolInt("ExpFog", "Env")]
+        [ConfigExpFog("ExpFog")]
         public int ExpFog = ENV_USE_DEFAULT;
         
         /// <summary> Color of the clouds (Hex RGB color). Set to "" to use client defaults. </summary>
