@@ -194,10 +194,10 @@ namespace MCGalaxy.Commands.Info {
             }
             
             public int Get(EnvProp i) {
-                int value   = Config.GetEnvProp(i);
-                bool block  = i == EnvProp.EdgeBlock || i == EnvProp.SidesBlock;
-                int invalid = block ? Block.Invalid : -1;
-                return value != invalid ? value : Config.DefaultEnvProp(i, Height);
+                int value    = Config.GetEnvProp(i);
+                bool block   = i == EnvProp.EdgeBlock || i == EnvProp.SidesBlock;
+                int default_ = block ? Block.Invalid : EnvConfig.ENV_USE_DEFAULT;
+                return value != default_ ? value : Config.DefaultEnvProp(i, Height);
             }
             
             public string GetSkybox(EnvProp i) {

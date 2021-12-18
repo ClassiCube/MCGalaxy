@@ -340,19 +340,19 @@ namespace MCGalaxy
         }
         
         int CurrentEnvProp(EnvProp i, Zone zone) {
-            int value   = Server.Config.GetEnvProp(i);
-            bool block  = i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock;
-            int invalid = block ? Block.Invalid : -1;
+            int value    = Server.Config.GetEnvProp(i);
+            bool block   = i == EnvProp.SidesBlock || i == EnvProp.EdgeBlock;
+            int default_ = block ? Block.Invalid : EnvConfig.ENV_USE_DEFAULT;
             
-            if (level.Config.GetEnvProp(i) != invalid) {
+            if (level.Config.GetEnvProp(i) != default_) {
                 value = level.Config.GetEnvProp(i);
             }
-            if (zone != null && zone.Config.GetEnvProp(i) != invalid) {
+            if (zone != null && zone.Config.GetEnvProp(i) != default_) {
                 value = zone.Config.GetEnvProp(i);
             }
                 
-            if (value == invalid) value = level.Config.DefaultEnvProp(i, level.Height);
-            if (block)            value = ConvertBlock((BlockID)value);
+            if (value == default_) value = level.Config.DefaultEnvProp(i, level.Height);
+            if (block)             value = ConvertBlock((BlockID)value);
             return value;
         }
         

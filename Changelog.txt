@@ -10,7 +10,7 @@ Improved: UPnP now logs more details
 Improved: Make custom commands GUI popup font consistent with rest
 Improved: Trying to perform GUI player action when no player selected shows warning dialog now
 Removed: (s) emote shortcut (can still use (sect) and (section))
-Removed: Support for .lvl files without 2 byte signature (even MCZall/MCSharp e)
+Removed: Support for .lvl files without 2 byte signature (even MCZall/MCSharp have the 2 byte signature)
 
 v 1.9.3.6
 Added: preclassic and classic 0.13 dat importing support
