@@ -101,13 +101,10 @@ namespace MCGalaxy
             
             lock (PlayerInfo.Online.locker) {
                 // Check if any players online have same name
-                Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
-                    if (pl.truename == truename) { clone = pl; break; }
-                }
-                
+                clone = FindClone(truename);
                 // Remove clone from list (hold lock for as short time as possible)
                 if (clone != null && Server.Config.VerifyNames) PlayerInfo.Online.Remove(clone);
+
                 id = NextFreeId();
                 PlayerInfo.Online.Add(this);
             }
@@ -182,6 +179,15 @@ namespace MCGalaxy
             
             PlayerActions.PostSentMap(this, null, level, false);
             Loading = false;
+        }
+
+        static Player FindClone(string name) {
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players)
+            {
+                if (pl.truename.CaselessEq(name)) return pl;
+            }
+            return null;
         }
         
         void ShowWelcome() {
