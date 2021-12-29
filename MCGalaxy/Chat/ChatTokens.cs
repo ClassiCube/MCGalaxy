@@ -95,7 +95,6 @@ namespace MCGalaxy {
             new ChatToken("$first", "Date player first logged in", TokenFirst),
             new ChatToken("$visits", "Times the player logged in", TokenVisits),
             new ChatToken("$kicked", "Times the player was kicked", TokenKicked),
-            new ChatToken("$ip", "IP of the player", TokenIP),
             new ChatToken("$model", "Model of the player", TokenModel),
             new ChatToken("$skin", "Skin of the player", TokenSkin),
             new ChatToken("$level", "Name of level/map player is on", TokenLevel),    
@@ -132,7 +131,6 @@ namespace MCGalaxy {
         static string TokenFirst(Player p)   { return p.FirstLogin.ToString(); }
         static string TokenVisits(Player p)  { return p.TimesVisited.ToString(); }
         static string TokenKicked(Player p)  { return p.TimesBeenKicked.ToString(); }
-        static string TokenIP(Player p)      { return p.ip; }
         static string TokenModel(Player p)   { return p.Model; }
         static string TokenSkin(Player p)    { return p.SkinName; }
         static string TokenLevel(Player p)   { return p.level == null ? null : p.level.name; }
