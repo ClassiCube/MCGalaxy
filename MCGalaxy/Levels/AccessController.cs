@@ -39,6 +39,16 @@ namespace MCGalaxy {
         protected abstract string MaxCmd { get; }
         
         
+        /// <summary> Replaces this instance's access permissions 
+        /// with a copy of the source's access permissions </summary>
+        public void CloneAccess(AccessController source)  {
+            Min = source.Min;
+            Max = source.Max;
+            // TODO this sould be atomic
+            Whitelisted.Clear(); Whitelisted.AddRange(source.Whitelisted);
+            Blacklisted.Clear(); Blacklisted.AddRange(source.Blacklisted);
+        }
+
         public bool CheckAllowed(Player p) {
             AccessResult access = Check(p.name, p.Rank);
             return access == AccessResult.Allowed || access == AccessResult.Whitelisted;
