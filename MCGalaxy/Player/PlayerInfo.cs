@@ -181,8 +181,8 @@ namespace MCGalaxy
             if (version == Server.VERSION_0019) return "Classic 0.0.19";
             if (version == Server.VERSION_0020) return "Classic 0.0.20-0.0.23";
             
-            // Could be Classic, Classicube in Classic Mode, Charged Miners, who knows
-            return "(unknown)";
+            // Might really be Classicube in Classic Mode, Charged Miners, etc though
+            return "Classic 0.30";
         }
     }
     
