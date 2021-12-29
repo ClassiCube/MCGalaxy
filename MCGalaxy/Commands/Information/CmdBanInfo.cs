@@ -82,13 +82,13 @@ namespace MCGalaxy.Commands.Info {
             
             TimeSpan delta = DateTime.UtcNow - time;
             p.Message("{0} {1} ago by {2}",
-                           type, delta.Shorten(), GetName(p, banner));
+                          type, delta.Shorten(), GetName(p, banner));
             p.Message("Reason: {0}", reason);
         }
         
         static string GetName(Player p, string user) {
             // ban/unban uses truename
-            if (Server.Config.ClassicubeAccountPlus && !user.EndsWith("+")) user += "+";
+            user = Server.FromRawUsername(user);
             return p.FormatNick(user);
         }
         

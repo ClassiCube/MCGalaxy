@@ -46,23 +46,27 @@ namespace MCGalaxy.Commands.Moderation {
             }
         }
         
-        static void Add(Player p, string player) {
-            if (!Server.whiteList.Add(player)) {
-                p.Message("{0} &Sis already on the whitelist!", p.FormatNick(player));
+        static void Add(Player p, string name) {
+            name = Server.FromRawUsername(name);
+           
+            if (!Server.whiteList.Add(name)) {
+                p.Message("{0} &Sis already on the whitelist!", p.FormatNick(name));
             } else {
-                Chat.MessageFromOps(p, "λNICK &Sadded &f" + player + " &Sto the whitelist.");
+                Chat.MessageFromOps(p, "λNICK &Sadded &f" + name + " &Sto the whitelist.");
                 Server.whiteList.Save();
-                Logger.Log(LogType.UserActivity, "WHITELIST: Added " + player);
+                Logger.Log(LogType.UserActivity, "WHITELIST: Added " + name);
             }
         }
         
-        static void Remove(Player p, string player) {
-            if (!Server.whiteList.Remove(player)) {
-                p.Message("{0} &Sis not on the whitelist!", p.FormatNick(player));
+        static void Remove(Player p, string name) {
+            name = Server.FromRawUsername(name);
+            
+            if (!Server.whiteList.Remove(name)) {
+                p.Message("{0} &Sis not on the whitelist!", p.FormatNick(name));
             } else {
                 Server.whiteList.Save();
-                Chat.MessageFromOps(p, "λNICK &Sremoved &f" + player + " &Sfrom the whitelist.");
-                Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + player);
+                Chat.MessageFromOps(p, "λNICK &Sremoved &f" + name + " &Sfrom the whitelist.");
+                Logger.Log(LogType.UserActivity, "WHITELIST: Removed " + name);
             }
         }
         

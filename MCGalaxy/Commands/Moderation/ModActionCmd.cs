@@ -203,7 +203,7 @@ namespace MCGalaxy.Commands.Moderation {
             name = null;
             
             if (IPAddress.TryParse(message, out ip) && ValidIP(message)) {
-                string account = Server.Config.ClassicubeAccountPlus ? message + "+" : message;
+                string account = Server.FromRawUsername(message);
                 if (PlayerDB.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.

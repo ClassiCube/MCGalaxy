@@ -409,5 +409,14 @@ namespace MCGalaxy {
                 return name.RemoveLastPlus();
             return name;
         }
+
+        /// <summary> Converts a username into its formatted username </summary>
+        /// <remarks> If ClassiCubeAccountPlus option is set, adds trailing + </remarks>
+        public static string FromRawUsername(string name) {
+            if (!Config.ClassicubeAccountPlus) return name;
+
+            if (!name.EndsWith("+")) name += "+";
+            return name;
+        }
     }
 }
