@@ -85,8 +85,12 @@ namespace MCGalaxy.SQL {
 
         static object IterateExists(IDataRecord record, object arg) { return ""; }
         public override bool TableExists(string table) {
-            return Database.Iterate("SHOW TABLES LIKE '" + table + "'",
-                                    null, IterateExists) != null;
+            // "SHOW TABLES LIKE '[table]'" SQL statement is insufficient
+            //  because "table" might include characters such as _, %, etc
+            string column = "Tables_in_" + Server.Config.MySQLDatabaseName;
+
+            return Database.Iterate("SHOW TABLES WHERE " + column + " = @0",
+                                    null, IterateExists, table) != null;
         }
         
         public override List<string> AllTables() {
