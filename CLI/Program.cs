@@ -79,6 +79,8 @@ namespace MCGalaxy.Cli {
                 Server.Start();
                 Console.Title = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
                 Console.CancelKeyPress += OnCancelKeyPress;
+
+                CheckNameVerification();
                 ConsoleLoop();
             } catch (Exception e) {
                 Logger.LogError(e);
@@ -158,6 +160,11 @@ namespace MCGalaxy.Cli {
             return " (" + raw.Substring(beg, end - beg) + ")";
         }
         
+
+        static void CheckNameVerification() {
+            if (Server.Config.VerifyNames) return;
+            Write("&eWARNING: Name verification is disabled! This means players can login as anyone, including YOU");
+        }
 
         static void LogNewerVersionDetected(object sender, EventArgs e) {
             Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
