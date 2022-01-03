@@ -1,3 +1,11 @@
+﻿v 1.9.3.8
+Fixed: Username clone detection being case sensitive
+Fixed: Database.TableExists very rarely returning false positive with MySQL (SQLite is used by default)
+Improved: Allow using -1 for /env variables
+Improved: Show "Classic 0.28-0.30" instead of "(unknown") in /clients
+Improved: /whitelist automatically adds + to end of usernames when classicube-account-plus mode is on
+Removed: $ip
+
 v 1.9.3.7
 Fixed: /scale 1/2 not working (partially)
 Fixed: Session modified overflowing after 2 billion
