@@ -211,27 +211,27 @@ namespace MCGalaxy.SQL {
         }
     }
     
-    internal static class DatabaseExts {
-        internal static string GetText(this IDataRecord record, int col) {
+    public static class DatabaseExts {
+        public static string GetText(this IDataRecord record, int col) {
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
-        
-        internal static string GetText(this IDataRecord record, string name) {
+
+        public static string GetText(this IDataRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }
-        
-        internal static int GetInt(this IDataRecord record, string name) {
+
+        public static int GetInt(this IDataRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? 0 : record.GetInt32(col);
         }
-        
-        internal static long GetLong(this IDataRecord record, string name) {
+
+        public static long GetLong(this IDataRecord record, string name) {
             int col = record.GetOrdinal(name);
             return record.IsDBNull(col) ? 0 : record.GetInt64(col);
         }
-        
-        internal static string GetStringValue(this IDataRecord record, int col) {
+
+        public static string GetStringValue(this IDataRecord record, int col) {
             if (record.IsDBNull(col)) return "";
             Type type = record.GetFieldType(col);
             
