@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("MCGalaxy")]
 [assembly: AssemblyDescription("ClassiCube Server Software")]

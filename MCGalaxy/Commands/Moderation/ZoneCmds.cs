@@ -71,7 +71,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (!LevelInfo.Check(p, data.Rank, p.level, "create zones in this level")) return;
             
             Zone z = new Zone();
-            z.Access.CloneAccess(p.level.BuildAccess);
+            // TODO readd once performance issues with massive zone build blacklists are fixed
+            //z.Access.CloneAccess(p.level.BuildAccess);
             z.Config.Name = args[offset];
             if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, data, p.level)) return;
             
