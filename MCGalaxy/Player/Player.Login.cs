@@ -30,47 +30,24 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable 
     { 
-        int HandleLogin(byte[] buffer, int offset, int left) {
-            // protocol versions < 6 didn't have the usertype field,
-            //  hence this two-packet-size-handling monstrosity
-            const int old_size = 1 + 1 + 64 + 64;
-            const int new_size = 1 + 1 + 64 + 64 + 1;
-            // the packet must be at least old_size long
-            if (left < old_size) return 0;  
-            
-            LastAction      = DateTime.UtcNow;
-            ProtocolVersion = buffer[offset + 1];
-            
-            // check size now that know whether usertype field is included or not
-            int size = ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
-            if (left < size) return 0;
-            if (loggedIn)    return size;
-            
-            name = NetUtils.ReadString(buffer, offset + 2);
-            SkinName = name; DisplayName = name; truename = name;
+        internal int ProcessLogin(string user, string mppass, int size) {
+            LastAction = DateTime.UtcNow;
+            name = user;
+            SkinName = user; DisplayName = user; truename = user;
             
             if (ProtocolVersion > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version", true); return -1; 
             }
-            if (name.Length < 1 || name.Length > 16) {
+            if (user.Length < 1 || user.Length > 16) {
                 Leave(null, "Usernames must be between 1 and 16 characters", true); return -1;
             }
-            if (!name.ContainsAllIn(USERNAME_ALPHABET)) {
+            if (!user.ContainsAllIn(USERNAME_ALPHABET)) {
                 Leave(null, "Invalid player name", true); return -1;
             }
             
             if (Server.Config.ClassicubeAccountPlus) name += "+";
-            string mppass = NetUtils.ReadString(buffer, offset + 66);
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return size; }
-            
-            // usertype field has different meanings depending on protocol version
-            //  Version 7 - 0x42 for CPE supporting client, should be 0 otherwise
-            //  Version 6 - should be 0
-            //  Version 5 - field does not exist
-            if (ProtocolVersion >= Server.VERSION_0030) {
-                hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
-            }
             
             level   = Server.mainLevel;
             Loading = true;
@@ -94,7 +71,7 @@ namespace MCGalaxy
             }
         }
         
-        void CompleteLoginProcess() {
+        internal void CompleteLoginProcess() {
             Player clone = null;
             OnPlayerFinishConnectingEvent.Call(this);
             if (cancelconnecting) { cancelconnecting = false; return; }

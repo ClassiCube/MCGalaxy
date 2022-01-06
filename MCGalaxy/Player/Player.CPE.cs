@@ -24,9 +24,8 @@ namespace MCGalaxy
 {
     public partial class Player 
     {
-        public bool hasCpe, finishedCpeLogin;
+        public bool hasCpe;
         public string appName;
-        int extensionCount;
         CpeExt[] extensions = CpeExtension.Empty;
         
         CpeExt FindExtension(string extName) {
@@ -55,31 +54,9 @@ namespace MCGalaxy
             }
             return url;
         }
-        
-        
-        int HandleExtInfo(byte[] buffer, int offset, int left) {
-            const int size = 1 + 64 + 2;
-            if (left < size) return 0;
-            
-            appName        = NetUtils.ReadString(buffer, offset + 1);
-            extensionCount = buffer[offset + 66];
-            CheckReadAllExtensions(); // in case client supports 0 CPE packets
-            return size;
-        }
 
-        int HandleExtEntry(byte[] buffer, int offset, int left) {
-            const int size = 1 + 64 + 4;
-            if (left < size) return 0;
-            
-            string extName = NetUtils.ReadString(buffer, offset + 1);
-            int extVersion = NetUtils.ReadI32(buffer,    offset + 65);
-            AddExtension(extName, extVersion);
-            extensionCount--;
-            CheckReadAllExtensions();
-            return size;
-        }
         
-        void AddExtension(string extName, int version) {
+        internal void AddExtension(string extName, int version) {
             CpeExt ext = FindExtension(extName.Trim());
             if (ext == null) return;
             ext.ClientVersion = (byte)version;
@@ -122,13 +99,6 @@ namespace MCGalaxy
                 if (MaxRawBlock < 767) MaxRawBlock = 767;
             }
             #endif
-        }
-        
-        void CheckReadAllExtensions() {
-            if (extensionCount <= 0 && !finishedCpeLogin) {
-                CompleteLoginProcess();
-                finishedCpeLogin = true;
-            }
         }
         
         

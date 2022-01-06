@@ -56,7 +56,7 @@ namespace MCGalaxy.Network
         INetProtocol IdentifyProtocol(byte opcode) {
             if (opcode == Opcode.Handshake) {
                 pending.Remove(this);
-                return new Player(this);
+                return new ClassicProtocol(this);
             } else if (opcode == 'G' && Server.Config.WebClient) {
                 pending.Remove(this);
                 return new WebSocket(this);

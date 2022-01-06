@@ -190,22 +190,12 @@ namespace MCGalaxy
             return result;
         }
 
-        void ProcessBlockchange(byte[] buffer, int offset) {
+        internal void ProcessBlockchange(ushort x, ushort y, ushort z, byte action, BlockID held) {
             try {
                 if (spamChecker.CheckBlockSpam()) return;
-                ushort x = NetUtils.ReadU16(buffer, offset + 1);
-                ushort y = NetUtils.ReadU16(buffer, offset + 3);
-                ushort z = NetUtils.ReadU16(buffer, offset + 5);
-                
-                byte action = buffer[offset + 7];
-                if (action > 1) {
-                    Leave("Unknown block action!", true); return;
-                }
-                
+
                 LastAction = DateTime.UtcNow;
                 if (IsAfk) CmdAfk.ToggleAfk(this, "");
-                
-                BlockID held    = ReadBlock(buffer, offset + 8);
                 ClientHeldBlock = held;
                 
                 if ((action == 0 || held == Block.Air) && !level.Config.Deletable) {
@@ -225,7 +215,7 @@ namespace MCGalaxy
                     }
                 }
                 HandleManualChange(x, y, z, action != 0, held, true);
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 // Don't ya just love it when the server tattles?
                 Chat.MessageOps(DisplayName + " has triggered a block change error");
                 Chat.MessageOps(e.GetType().ToString() + ": " + e.Message);
@@ -233,26 +223,11 @@ namespace MCGalaxy
             }
         }
         
-        void ProcessMovement(byte[] buffer, int offset) {
+        internal void ProcessMovement(int x, int y, int z, byte yaw, byte pitch, int held) {
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
-            if (Supports(CpeExt.HeldBlock)) {
-                ClientHeldBlock = ReadBlock(buffer, offset + 1);
-                if (hasExtBlocks) offset++; // corret offset for position later
-            }
+            // TODO move above if (trainGrab
+            if (held >= 0) ClientHeldBlock = (BlockID)held;
             
-            int x, y, z;
-            if (hasExtPositions) {
-                x = NetUtils.ReadI32(buffer, offset + 2);
-                y = NetUtils.ReadI32(buffer, offset + 6);
-                z = NetUtils.ReadI32(buffer, offset + 10);
-                offset += 6; // for yaw/pitch offset below
-            } else {
-                x = NetUtils.ReadI16(buffer, offset + 2);
-                y = NetUtils.ReadI16(buffer, offset + 4);
-                z = NetUtils.ReadI16(buffer, offset + 6);
-            }
-            
-            byte yaw = buffer[offset + 8], pitch = buffer[offset + 9];
             Position next = new Position(x, y, z);
             CheckBlocks(Pos, next);
 
@@ -289,54 +264,6 @@ namespace MCGalaxy
             
             ZoneIn = null;
             if (zone != null) OnChangedZoneEvent.Call(this);
-        }        
-        
-        int HandlePlayerClicked(byte[] buffer, int offset, int left) {
-            const int size = 1 + 1 + 1 + 2 + 2 + 1 + 2 + 2 + 2 + 1;
-            if (left < size) return 0;
-            
-            MouseButton Button = (MouseButton)buffer[offset + 1];
-            MouseAction Action = (MouseAction)buffer[offset + 2];
-            ushort yaw = NetUtils.ReadU16(buffer, offset + 3);
-            ushort pitch = NetUtils.ReadU16(buffer, offset + 5);
-            byte entityID = buffer[offset + 7];
-            ushort x = NetUtils.ReadU16(buffer, offset + 8);
-            ushort y = NetUtils.ReadU16(buffer, offset + 10);
-            ushort z = NetUtils.ReadU16(buffer, offset + 12);
-            
-            TargetBlockFace face = (TargetBlockFace)buffer[offset + 14];
-            if (face > TargetBlockFace.None) face = TargetBlockFace.None;
-            OnPlayerClickEvent.Call(this, Button, Action, yaw, pitch, entityID, x, y, z, face);
-            return size;
-        }
-        
-        int HandleTwoWayPing(byte[] buffer, int offset, int left) {
-            const int size = 1 + 1 + 2;
-            if (left < size) return 0;
-            
-            bool serverToClient = buffer[offset + 1] != 0;
-            ushort data = NetUtils.ReadU16(buffer, offset + 2);
-            
-            if (!serverToClient) {
-                // Client-> server ping, immediately send reply.
-                Send(Packet.TwoWayPing(false, data));
-            } else {
-                // Server -> client ping, set time received for reply.
-                Ping.Update(data);
-            }
-            return size;
-        }
-
-        int HandlePluginMessage(byte[] buffer, int offset, int left) {
-            const int size = 1 + 1 + Packet.PluginMessageDataLength;
-            if (left < size) return 0;
-
-            byte channel = buffer[offset + 1];
-            byte[] data = new byte[Packet.PluginMessageDataLength];
-            Array.Copy(buffer, offset + 2, data, 0, Packet.PluginMessageDataLength);
-            OnPluginMessageReceivedEvent.Call(this, channel, data);
-
-            return size;
         }
         
         int CurrentEnvProp(EnvProp i, Zone zone) {
@@ -453,9 +380,7 @@ namespace MCGalaxy
             return true;
         }
         
-        void ProcessChat(byte[] buffer, int offset) {
-            byte continued = buffer[offset + 1];
-            string text = NetUtils.ReadString(buffer, offset + 2);
+        internal void ProcessChat(string text, byte continued) {
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 
