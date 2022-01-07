@@ -30,33 +30,33 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable 
     { 
-        internal int ProcessLogin(string user, string mppass, int size) {
+        internal bool ProcessLogin(string user, string mppass) {
             LastAction = DateTime.UtcNow;
-            name = user;
-            SkinName = user; DisplayName = user; truename = user;
+            name     = user; truename    = user;
+            SkinName = user; DisplayName = user; 
             
             if (ProtocolVersion > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return -1; 
+                Leave(null, "Unsupported protocol version", true); return false; 
             }
             if (user.Length < 1 || user.Length > 16) {
-                Leave(null, "Usernames must be between 1 and 16 characters", true); return -1;
+                Leave(null, "Usernames must be between 1 and 16 characters", true); return false;
             }
             if (!user.ContainsAllIn(USERNAME_ALPHABET)) {
-                Leave(null, "Invalid player name", true); return -1;
+                Leave(null, "Invalid player name", true); return false;
             }
             
             if (Server.Config.ClassicubeAccountPlus) name += "+";
             OnPlayerStartConnectingEvent.Call(this, mppass);
-            if (cancelconnecting) { cancelconnecting = false; return size; }
+            if (cancelconnecting) { cancelconnecting = false; return true; }
             
             level   = Server.mainLevel;
             Loading = true;
-            if (Socket.Disconnected) return size;
+            if (Socket.Disconnected) return true;
             
             UpdateFallbackTable();
             if (hasCpe) { SendCpeExtensions(); }
             else { CompleteLoginProcess(); }
-            return size;
+            return true;
         }
         
         void SendCpeExtensions() {

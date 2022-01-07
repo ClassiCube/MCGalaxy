@@ -31,6 +31,8 @@ namespace MCGalaxy.Network
             p = new Player(s);
         }
 
+        public void Send(byte[] data) { socket.Send(data, SendFlags.None); }
+
         public int ProcessReceived(byte[] buffer, int bufferLen) {
             int read = 0;
             try {
@@ -116,7 +118,7 @@ namespace MCGalaxy.Network
             
             string name   = NetUtils.ReadString(buffer, offset +  2);
             string mppass = NetUtils.ReadString(buffer, offset + 66);
-            return p.ProcessLogin(name, mppass, size);
+            return p.ProcessLogin(name, mppass) ? size : -1;
         }
         
         int HandleBlockchange(byte[] buffer, int offset, int left) {
@@ -257,6 +259,11 @@ namespace MCGalaxy.Network
 
             return size;
         }
+#endregion
+
+
+#region CPE sending
+
 #endregion
     }
 }
