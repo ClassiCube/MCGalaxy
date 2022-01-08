@@ -28,7 +28,7 @@ namespace MCGalaxy.Network
 
         public ClassicProtocol(INetSocket s) {
             socket = s;
-            p = new Player(s);
+            p = new Player(s, this);
         }
 
         public void Send(byte[] data) { socket.Send(data, SendFlags.None); }
@@ -240,7 +240,7 @@ namespace MCGalaxy.Network
             
             if (!serverToClient) {
                 // Client-> server ping, immediately send reply.
-                p.Send(Packet.TwoWayPing(false, data));
+                Send(Packet.TwoWayPing(false, data));
             } else {
                 // Server -> client ping, set time received for reply.
                 p.Ping.Update(data);
@@ -262,8 +262,59 @@ namespace MCGalaxy.Network
 #endregion
 
 
-#region CPE sending
+#region CPE packet sending
+        public bool SendSetReach(float reach) {
+            if (!p.Supports(CpeExt.HeldBlock)) return false;
 
+            Send(Packet.ClickDistance((short)(reach * 32)));
+            return true;
+        }
+
+        public bool SendHoldThis(BlockID block, bool locked) {
+            if (!p.Supports(CpeExt.HeldBlock)) return false;
+
+            BlockID raw = p.ConvertBlock(block);
+            Send(Packet.HoldThis(raw, locked, p.hasExtBlocks));
+            return true;
+        }
 #endregion
+
+
+#region Higher level sending
+        public void SendPing() {
+            if (p.hasTwoWayPing) {
+                Send(Packet.TwoWayPing(true, p.Ping.NextTwoWayPingData()));
+            } else {
+                Send(Packet.Ping());
+            }
+        }
+
+        public void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            if (p.Supports(CpeExt.ExtPlayerList, 2)) {
+                Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, p.hasCP437, p.hasExtPositions));
+            } else if (p.hasExtList) {
+                Send(Packet.ExtAddEntity(id, skin, name, p.hasCP437));
+                Send(Packet.Teleport(id, pos, rot, p.hasExtPositions));
+            } else {
+                Send(Packet.AddEntity(id, name, pos, rot, p.hasCP437, p.hasExtPositions));
+            }
+        }
+#endregion
+
+
+        /// <summary> Returns an appropriate name for the associated player's client </summary>
+        /// <remarks> Determines name based on appname or protocol version supported </remarks>
+        public string ClientName() {
+            if (!string.IsNullOrEmpty(p.appName)) return p.appName;
+            byte version = p.ProtocolVersion;
+                  
+            if (version == Server.VERSION_0016) return "Classic 0.0.16";
+            if (version == Server.VERSION_0017) return "Classic 0.0.17-0.0.18";
+            if (version == Server.VERSION_0019) return "Classic 0.0.19";
+            if (version == Server.VERSION_0020) return "Classic 0.0.20-0.0.23";
+            
+            // Might really be Classicube in Classic Mode, Charged Miners, etc though
+            return "Classic 0.28-0.30";
+        }
     }
 }

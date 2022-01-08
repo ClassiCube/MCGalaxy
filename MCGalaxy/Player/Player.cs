@@ -65,8 +65,9 @@ namespace MCGalaxy {
             IsSuper   = true;
         }
 
-        internal Player(INetSocket socket) {
-            Socket = socket;
+        internal Player(INetSocket socket, ClassicProtocol session) {
+            Socket  = socket;
+            Session = session;
             SetIP(Socket.IP);
             
             spamChecker = new SpamChecker(this);

@@ -27,10 +27,7 @@ namespace MCGalaxy.Commands.CPE {
         public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
-            if (!p.Supports(CpeExt.HeldBlock)) {
-                p.Message("Your client doesn't support changing your held block."); return;
-            }            
+            if (message.Length == 0) { Help(p); return; }      
             string[] args = message.SplitSpaces(2);
             
             BlockID block;
@@ -42,9 +39,11 @@ namespace MCGalaxy.Commands.CPE {
                 p.Message("Cannot hold physics blocks"); return;
             }
             
-            BlockID raw = p.ConvertBlock(block);
-            p.Send(Packet.HoldThis(raw, locked, p.hasExtBlocks));
-            p.Message("Set your held block to {0}.", Block.GetName(p, block));
+            if (p.Session.SendHoldThis(block, locked)) {
+                p.Message("Set your held block to {0}.", Block.GetName(p, block));
+            } else {
+                p.Message("Your client doesn't support changing your held block.");
+            }
         }
         
         public override void Help(Player p) {

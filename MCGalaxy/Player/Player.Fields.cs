@@ -43,6 +43,7 @@ namespace MCGalaxy {
         public string truename;
         /// <summary> The underlying socket for sending/receiving raw data </summary>
         public INetSocket Socket;
+        public ClassicProtocol Session;
         public PingList Ping = new PingList();
         public BlockID MaxRawBlock = Block.CLASSIC_MAX_BLOCK;
         

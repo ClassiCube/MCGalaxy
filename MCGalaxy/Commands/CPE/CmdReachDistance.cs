@@ -25,10 +25,7 @@ namespace MCGalaxy.Commands.CPE {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }
 
-        public override void Use(Player p, string message, CommandData data) {          
-            if (!p.Supports(CpeExt.ClickDistance)) {
-                p.Message("Your client doesn't support changing your reach distance."); return;
-            }
+        public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 p.Message("Your reach distance is {0} blocks", p.ReachDistance); return;
             }
@@ -38,13 +35,16 @@ namespace MCGalaxy.Commands.CPE {
             
             int packedDist = (int)(dist * 32);
             if (packedDist > short.MaxValue) {
-                p.Message("\"{0}\", is too long a reach distance. Max is 1023 blocks.", message);
-            } else {
-                p.Send(Packet.ClickDistance((short)packedDist));
+                p.Message("\"{0}\", is too long a reach distance. Max is 1023 blocks.", message); return;
+            }
+
+            if (p.Session.SendSetReach(dist)) {
                 p.ReachDistance = dist;
                 p.Message("Set your reach distance to {0} blocks.", dist);
                 Server.reach.Update(p.name, packedDist.ToString());
                 Server.reach.Save();
+            } else {
+                p.Message("Your client doesn't support changing your reach distance."); return;
             }
         }
         
