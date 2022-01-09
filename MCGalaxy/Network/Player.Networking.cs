@@ -28,31 +28,16 @@ namespace MCGalaxy
     public partial class Player : IDisposable
     {
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
-        public void Send(byte[] buffer, bool sync) {
-            Socket.Send(buffer, sync ? SendFlags.Synchronous : SendFlags.None);
-        }
         
         public void MessageLines(IEnumerable<string> lines) {
             foreach (string line in lines) { Message(line); }
         }
-        
-        [Obsolete("Use p.Message(message) instead", true)]
-        public static void Message(Player p, string message) {
-            if (p == null) p = Player.Console;
-            p.Message(0, message);
-        }
-        [Obsolete("Use p.Message(message) instead", true)]
-        public static void SendMessage(Player p, string message) { Message(p, message); }
         
         public void Message(string message, object a0) { Message(string.Format(message, a0)); }  
         public void Message(string message, object a0, object a1) { Message(string.Format(message, a0, a1)); }       
         public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
         public void Message(string message, params object[] args) { Message(string.Format(message, args)); }
         
-        [Obsolete("Use Message(message) instead", true)]
-        public void SendMessage(string message) { Message(0, message); } 
-        [Obsolete("Use Message(id, message) instead", true)]
-        public void SendMessage(byte id, string message) { Message(id, message); }
         public void Message(string message) { Message(0, message); }
         
         public virtual void Message(byte type, string message) {

@@ -131,10 +131,6 @@ namespace MCGalaxy
                 Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
             }
         }
-        
-        public void SendEnvColor(byte type, string hex) {
-            Session.SendSetEnvColor(type, hex);
-        }
 
         public void SendCurrentBlockPermissions() {
             if (!Supports(CpeExt.BlockPermissions)) return;
