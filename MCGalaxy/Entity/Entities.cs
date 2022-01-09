@@ -133,8 +133,6 @@ namespace MCGalaxy {
         
         static void SpawnRaw(Player dst, byte id, Entity e, Position pos, Orientation rot,
                              string skin, string name, string model) {
-            // NOTE: Fix for standard clients
-            if (id == Entities.SelfID) pos.Y -= 22;
             name = LineWrapper.CleanupColors(name, dst);
             dst.Session.SendSpawnEntity(id, name, skin, pos, rot);
 
@@ -153,14 +151,14 @@ namespace MCGalaxy {
         public static void Despawn(Player dst, Player other) {
             OnEntityDespawnedEvent.Call(other, dst);
             byte id = other == dst ? SelfID : other.id;
-            dst.Send(Packet.RemoveEntity(id));
+            dst.Session.SendRemoveEntity(id);
 
             if (!Server.Config.TablistGlobal) TabList.Remove(dst, other);
         }
         
         public static void Despawn(Player dst, PlayerBot b) {
             OnEntityDespawnedEvent.Call(b, dst);
-            dst.Send(Packet.RemoveEntity(b.id));
+            dst.Session.SendRemoveEntity(b.id);
 
             if (Server.Config.TablistBots) TabList.Remove(dst, b);
         }

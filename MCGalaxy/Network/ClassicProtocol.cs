@@ -13,6 +13,7 @@ or implied. See the Licenses for the specific language governing
 permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using BlockID = System.UInt16;
@@ -262,6 +263,57 @@ namespace MCGalaxy.Network
 #endregion
 
 
+#region Classic packet sending
+        public void SendTeleport(byte id, Position pos, Orientation rot) {
+            // NOTE: Classic clients require offseting own entity by 22 units vertically
+            if (id == Entities.SelfID) pos.Y -= 22;
+
+            Send(Packet.Teleport(Entities.SelfID, pos, rot, p.hasExtPositions));
+        }
+
+        public void SendRemoveEntity(byte id) {
+            Send(Packet.RemoveEntity(id));
+        }
+
+        public void SendChat(byte type, string message) {
+            List<string> lines = LineWrapper.Wordwrap(message, p.hasEmoteFix);
+
+            // Need to combine chat line packets into one Send call, so that
+            // multi-line messages from multiple threads don't interleave
+            for (int i = 0; i < lines.Count;) 
+            {
+                // Send buffer max size is 4096 bytes
+                // Divide by 66 (size of chat packet) gives ~62 lines
+                int count   = Math.Min(62, lines.Count - i);
+                byte[] data = new byte[count * 66];
+                
+                for (int j = 0; j < count; i++, j++) 
+                {
+                    Packet.WriteMessage(lines[i], type, p.hasCP437, data, j * 66);
+                }
+                Send(data);
+            }
+        }
+
+        public void SendMessage(CpeMessageType type, string message) {
+            Send(Packet.Message(message, type, p.hasCP437));
+        }
+        
+        public void SendKick(string reason, bool sync) {
+            byte[] buffer = Packet.Kick(reason, p.hasCP437);
+            socket.Send(buffer, sync ? SendFlags.Synchronous : SendFlags.None);
+        }
+
+        public bool SendSetUserType(byte type) {
+            // this packet doesn't exist before protocol version 7
+            if (p.ProtocolVersion < Server.VERSION_0030) return false;
+
+            Send(Packet.UserType(type));
+            return true;
+        }
+#endregion
+
+
 #region CPE packet sending
         public bool SendSetReach(float reach) {
             if (!p.Supports(CpeExt.HeldBlock)) return false;
@@ -277,6 +329,25 @@ namespace MCGalaxy.Network
             Send(Packet.HoldThis(raw, locked, p.hasExtBlocks));
             return true;
         }
+
+        public bool SendSetEnvColor(byte type, string hex) {
+            if (!p.Supports(CpeExt.EnvColors)) return false;
+
+            ColorDesc c;
+            if (Colors.TryParseHex(hex, out c)) {
+                Send(Packet.EnvColor(type, c.R, c.G, c.B));
+            } else {
+                Send(Packet.EnvColor(type, -1, -1, -1));
+            }
+            return true;
+        }
+
+        public bool SendSetWeather(byte weather) {
+            if (!p.Supports(CpeExt.EnvWeatherType)) return false;
+
+            Send(Packet.EnvWeatherType(weather));
+            return true;
+        }
 #endregion
 
 
@@ -290,6 +361,9 @@ namespace MCGalaxy.Network
         }
 
         public void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            // NOTE: Classic clients require offseting own entity by 22 units vertically
+            if (id == Entities.SelfID) pos.Y -= 22;
+
             if (p.Supports(CpeExt.ExtPlayerList, 2)) {
                 Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, p.hasCP437, p.hasExtPositions));
             } else if (p.hasExtList) {

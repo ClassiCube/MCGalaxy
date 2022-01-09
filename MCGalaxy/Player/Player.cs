@@ -267,7 +267,7 @@ namespace MCGalaxy {
                 discMsg = Colors.Escape(discMsg);
                 
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
-                Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
+                Session.SendKick(kickPacketMsg, sync);
                 Socket.Disconnected = true;
                 ZoneIn = null;
                 if (isKick) TimesBeenKicked++;

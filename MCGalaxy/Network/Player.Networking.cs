@@ -55,22 +55,6 @@ namespace MCGalaxy
         public void SendMessage(byte id, string message) { Message(id, message); }
         public void Message(string message) { Message(0, message); }
         
-        // Need to combine chat line packets into one Send call, so that
-        // multi-line messages from multiple threads don't interleave
-        void SendLines(List<string> lines, byte type) {
-            for (int i = 0; i < lines.Count;) {
-                // Send buffer max size is 4096 bytes
-                // Divide by 66 (size of chat packet) gives ~62 lines
-                int count   = Math.Min(62, lines.Count - i);
-                byte[] data = new byte[count * 66];
-                
-                for (int j = 0; j < count; i++, j++) {
-                    Packet.WriteMessage(lines[i], type, hasCP437, data, j * 66);
-                }
-                Send(data);
-            }
-        }
-        
         public virtual void Message(byte type, string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) message = "&S" + message;
@@ -82,7 +66,7 @@ namespace MCGalaxy
             
             try {
                 message = LineWrapper.CleanupColors(message, this);
-                SendLines(LineWrapper.Wordwrap(message, hasEmoteFix), type);
+                Session.SendChat(type, message);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -96,7 +80,7 @@ namespace MCGalaxy
             
             message = Chat.Format(message, this);
             message = LineWrapper.CleanupColors(message, this);
-            Send(Packet.Message(message, type, hasCP437));
+            Session.SendMessage(type, message);
         }
 
         public void SendMapMotd() {
@@ -202,15 +186,13 @@ namespace MCGalaxy
         public void SendPos(byte id, Position pos, Orientation rot) {
             if (id == Entities.SelfID) {
                 Pos = pos; SetYawPitch(rot.RotY, rot.HeadX);
-                pos.Y -= 22;  // NOTE: Fix for standard clients
-            }           
-            Send(Packet.Teleport(id, pos, rot, hasExtPositions));
+            }
+            Session.SendTeleport(id, pos, rot);
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for this player. </summary>
         public void SendPosition(Position pos, Orientation rot) {
-            pos.Y -= 22; // NOTE: Fix for standard clients
-            Send(Packet.Teleport(Entities.SelfID, pos, rot, hasExtPositions));
+            Session.SendTeleport(Entities.SelfID, pos, rot);
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {

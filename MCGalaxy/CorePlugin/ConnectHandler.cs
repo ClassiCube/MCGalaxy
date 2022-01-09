@@ -51,10 +51,9 @@ namespace MCGalaxy.Core {
             
             short reachDist;
             if (!short.TryParse(reach, out reachDist)) return;
+
             p.ReachDistance = reachDist / 32f;
-            
-            if (p.Supports(CpeExt.ClickDistance))
-                p.Send(Packet.ClickDistance(reachDist));
+            p.Session.SendSetReach(p.ReachDistance);
         }
         
         static void LoadWaypoints(Player p) {

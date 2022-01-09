@@ -131,16 +131,11 @@ namespace MCGalaxy
                 Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
             }
         }
-
-        public void SendEnvColor(byte type, string hex) {
-            ColorDesc c;
-            if (Colors.TryParseHex(hex, out c)) {
-                Send(Packet.EnvColor(type, c.R, c.G, c.B));
-            } else {
-                Send(Packet.EnvColor(type, -1, -1, -1));
-            }
-        }
         
+        public void SendEnvColor(byte type, string hex) {
+            Session.SendSetEnvColor(type, hex);
+        }
+
         public void SendCurrentBlockPermissions() {
             if (!Supports(CpeExt.BlockPermissions)) return;
             // Write the block permissions as one bulk TCP packet

@@ -293,7 +293,7 @@ namespace MCGalaxy
                 if (zone != null && zone.Config.GetColor(i) != "") {
                     col = zone.Config.GetColor(i);
                 }
-                if (Supports(CpeExt.EnvColors)) SendEnvColor((byte)i, col);
+                Session.SendSetEnvColor((byte)i, col);
             }
             
             if (Supports(CpeExt.EnvMapAspect)) {
@@ -303,10 +303,8 @@ namespace MCGalaxy
                 }
             }
             
-            if (Supports(CpeExt.EnvWeatherType)) {
-                int weather = CurrentEnvProp(EnvProp.Weather, zone);
-                Send(Packet.EnvWeatherType((byte)weather));
-            }
+            int weather = CurrentEnvProp(EnvProp.Weather, zone);
+            Session.SendSetWeather((byte)weather);
         }
         
         void CheckBlocks(Position prev, Position next) {
