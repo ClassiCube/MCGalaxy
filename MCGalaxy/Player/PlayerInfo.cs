@@ -168,22 +168,6 @@ namespace MCGalaxy
             }
             return entry;
         }
-        
-        
-        /// <summary> Returns an appropriate name for the given player's client </summary>
-        /// <remarks> Determines name based on appname or protocol supported </remarks>
-        public static string ClientName(Player p) {
-            if (!string.IsNullOrEmpty(p.appName)) return p.appName;
-            byte version = p.ProtocolVersion;
-                  
-            if (version == Server.VERSION_0016) return "Classic 0.0.16";
-            if (version == Server.VERSION_0017) return "Classic 0.0.17-0.0.18";
-            if (version == Server.VERSION_0019) return "Classic 0.0.19";
-            if (version == Server.VERSION_0020) return "Classic 0.0.20-0.0.23";
-            
-            // Might really be Classicube in Classic Mode, Charged Miners, etc though
-            return "Classic 0.28-0.30";
-        }
     }
     
     public class OnlineListEntry 

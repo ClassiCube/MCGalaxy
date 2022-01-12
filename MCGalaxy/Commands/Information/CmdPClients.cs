@@ -30,9 +30,10 @@ namespace MCGalaxy.Commands.Info {
             Dictionary<string, List<Player>> clients = new Dictionary<string, List<Player>>();
             Player[] online = PlayerInfo.Online.Items;
             
-            foreach (Player pl in online) {
+            foreach (Player pl in online) 
+            {
                 if (!p.CanSee(pl, data.Rank)) continue;
-                string appName = PlayerInfo.ClientName(pl);
+                string appName = pl.Session.ClientName();
                     
                List<Player> usingClient;
                if (!clients.TryGetValue(appName, out usingClient)) {
@@ -43,11 +44,13 @@ namespace MCGalaxy.Commands.Info {
             }
             
             p.Message("Players using:");
-            foreach (var kvp in clients) {
+            foreach (var kvp in clients) 
+            {
                 StringBuilder builder = new StringBuilder();
                 List<Player> players  = kvp.Value;
                 
-                for (int i = 0; i < players.Count; i++) {
+                for (int i = 0; i < players.Count; i++) 
+                {
                     string nick = Colors.StripUsed(p.FormatNick(players[i]));
                     builder.Append(nick);
                     if (i < players.Count - 1) builder.Append(", ");

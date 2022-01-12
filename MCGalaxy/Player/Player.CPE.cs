@@ -24,9 +24,8 @@ namespace MCGalaxy
 {
     public partial class Player 
     {
-        public bool hasCpe, finishedCpeLogin;
+        public bool hasCpe;
         public string appName;
-        int extensionCount;
         CpeExt[] extensions = CpeExtension.Empty;
         
         CpeExt FindExtension(string extName) {
@@ -55,31 +54,9 @@ namespace MCGalaxy
             }
             return url;
         }
-        
-        
-        int HandleExtInfo(byte[] buffer, int offset, int left) {
-            const int size = 1 + 64 + 2;
-            if (left < size) return 0;
-            
-            appName        = NetUtils.ReadString(buffer, offset + 1);
-            extensionCount = buffer[offset + 66];
-            CheckReadAllExtensions(); // in case client supports 0 CPE packets
-            return size;
-        }
 
-        int HandleExtEntry(byte[] buffer, int offset, int left) {
-            const int size = 1 + 64 + 4;
-            if (left < size) return 0;
-            
-            string extName = NetUtils.ReadString(buffer, offset + 1);
-            int extVersion = NetUtils.ReadI32(buffer,    offset + 65);
-            AddExtension(extName, extVersion);
-            extensionCount--;
-            CheckReadAllExtensions();
-            return size;
-        }
         
-        void AddExtension(string extName, int version) {
+        internal void AddExtension(string extName, int version) {
             CpeExt ext = FindExtension(extName.Trim());
             if (ext == null) return;
             ext.ClientVersion = (byte)version;
@@ -124,13 +101,6 @@ namespace MCGalaxy
             #endif
         }
         
-        void CheckReadAllExtensions() {
-            if (extensionCount <= 0 && !finishedCpeLogin) {
-                CompleteLoginProcess();
-                finishedCpeLogin = true;
-            }
-        }
-        
         
         string lastUrl = "";
         public void SendCurrentTextures() {
@@ -162,15 +132,6 @@ namespace MCGalaxy
             }
         }
 
-        public void SendEnvColor(byte type, string hex) {
-            ColorDesc c;
-            if (Colors.TryParseHex(hex, out c)) {
-                Send(Packet.EnvColor(type, c.R, c.G, c.B));
-            } else {
-                Send(Packet.EnvColor(type, -1, -1, -1));
-            }
-        }
-        
         public void SendCurrentBlockPermissions() {
             if (!Supports(CpeExt.BlockPermissions)) return;
             // Write the block permissions as one bulk TCP packet

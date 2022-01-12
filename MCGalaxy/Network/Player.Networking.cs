@@ -25,136 +25,20 @@ using BlockRaw = System.Byte;
 
 namespace MCGalaxy 
 {
-    public partial class Player : IDisposable, INetProtocol 
+    public partial class Player : IDisposable
     {
-        int INetProtocol.ProcessReceived(byte[] buffer, int bufferLen) {
-            int read = 0;
-            try {
-                while (read < bufferLen) {
-                    int packetLen = HandlePacket(buffer, read, bufferLen - read);
-                    // Partial packet received
-                    if (packetLen == 0) break;
-                    
-                    // Client was forced disconnected
-                    if (packetLen == -1) return bufferLen;
-                    
-                    // Packet processed, onto next
-                    read += packetLen;
-                }
-            } catch (Exception ex) {
-                Logger.LogError(ex);
-            }
-            return read;
-        }
-
-        int HandlePacket(byte[] buffer, int offset, int left) {
-            switch (buffer[offset]) {
-                case Opcode.Ping:              return 1;
-                case Opcode.Handshake:         return HandleLogin(buffer, offset, left);
-                case Opcode.SetBlockClient:    return HandleBlockchange(buffer, offset, left);
-                case Opcode.EntityTeleport:    return HandleMovement(buffer, offset, left);
-                case Opcode.Message:           return HandleChat(buffer, offset, left);
-                case Opcode.CpeExtInfo:        return HandleExtInfo(buffer, offset, left);
-                case Opcode.CpeExtEntry:       return HandleExtEntry(buffer, offset, left);
-                case Opcode.CpePlayerClick:    return HandlePlayerClicked(buffer, offset, left);
-                case Opcode.CpeTwoWayPing:     return HandleTwoWayPing(buffer, offset, left);   
-                case Opcode.CpePluginMessage:  return HandlePluginMessage(buffer, offset, left);   
-                
-                case Opcode.CpeCustomBlockSupportLevel:
-                    return left < 2 ? 0 : 2; // only ever one level anyways
-                default:
-                    Leave("Unhandled opcode \"" + buffer[offset] + "\"!", true);
-                    return -1;
-            }
-        }
-        
-        #if TEN_BIT_BLOCKS
-        BlockID ReadBlock(byte[] buffer, int offset) {
-            BlockID block;
-            if (hasExtBlocks) {
-                block = NetUtils.ReadU16(buffer, offset);
-            } else {
-                block = buffer[offset];
-            }
-            
-            if (block > Block.MaxRaw) block = Block.MaxRaw;
-            return Block.FromRaw(block);
-        }
-        #else
-        BlockID ReadBlock(byte[] buffer, int offset) { return Block.FromRaw(buffer[offset]); }
-        #endif
-                
-        int HandleBlockchange(byte[] buffer, int offset, int left) {
-            int size = 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
-            if (left < size) return 0;
-            if (!loggedIn)   return size;
-            
-            ProcessBlockchange(buffer, offset);
-            return size;
-        }
-        
-        int HandleMovement(byte[] buffer, int offset, int left) {
-            int size = 1 + 6 + 2 + (hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
-            if (left < size) return 0;
-            if (!loggedIn)   return size;
-            
-            ProcessMovement(buffer, offset);
-            return size;
-        }
-        
-        int HandleChat(byte[] buffer, int offset, int left) {
-            const int size = 1 + 1 + 64;
-            if (left < size) return 0;
-            if (!loggedIn)   return size;
-            
-            ProcessChat(buffer, offset);
-            return size;
-        }
-
-        
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
-        public void Send(byte[] buffer, bool sync) {
-            Socket.Send(buffer, sync ? SendFlags.Synchronous : SendFlags.None);
-        }
         
         public void MessageLines(IEnumerable<string> lines) {
             foreach (string line in lines) { Message(line); }
         }
-        
-        [Obsolete("Use p.Message(message) instead", true)]
-        public static void Message(Player p, string message) {
-            if (p == null) p = Player.Console;
-            p.Message(0, message);
-        }
-        [Obsolete("Use p.Message(message) instead", true)]
-        public static void SendMessage(Player p, string message) { Message(p, message); }
         
         public void Message(string message, object a0) { Message(string.Format(message, a0)); }  
         public void Message(string message, object a0, object a1) { Message(string.Format(message, a0, a1)); }       
         public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
         public void Message(string message, params object[] args) { Message(string.Format(message, args)); }
         
-        [Obsolete("Use Message(message) instead", true)]
-        public void SendMessage(string message) { Message(0, message); } 
-        [Obsolete("Use Message(id, message) instead", true)]
-        public void SendMessage(byte id, string message) { Message(id, message); }
         public void Message(string message) { Message(0, message); }
-        
-        // Need to combine chat line packets into one Send call, so that
-        // multi-line messages from multiple threads don't interleave
-        void SendLines(List<string> lines, byte type) {
-            for (int i = 0; i < lines.Count;) {
-                // Send buffer max size is 4096 bytes
-                // Divide by 66 (size of chat packet) gives ~62 lines
-                int count   = Math.Min(62, lines.Count - i);
-                byte[] data = new byte[count * 66];
-                
-                for (int j = 0; j < count; i++, j++) {
-                    Packet.WriteMessage(lines[i], type, hasCP437, data, j * 66);
-                }
-                Send(data);
-            }
-        }
         
         public virtual void Message(byte type, string message) {
             // Message should start with server color if no initial color
@@ -167,7 +51,7 @@ namespace MCGalaxy
             
             try {
                 message = LineWrapper.CleanupColors(message, this);
-                SendLines(LineWrapper.Wordwrap(message, hasEmoteFix), type);
+                Session.SendChat(type, message);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -181,7 +65,7 @@ namespace MCGalaxy
             
             message = Chat.Format(message, this);
             message = LineWrapper.CleanupColors(message, this);
-            Send(Packet.Message(message, type, hasCP437));
+            Session.SendMessage(type, message);
         }
 
         public void SendMapMotd() {
@@ -287,15 +171,13 @@ namespace MCGalaxy
         public void SendPos(byte id, Position pos, Orientation rot) {
             if (id == Entities.SelfID) {
                 Pos = pos; SetYawPitch(rot.RotY, rot.HeadX);
-                pos.Y -= 22;  // NOTE: Fix for standard clients
-            }           
-            Send(Packet.Teleport(id, pos, rot, hasExtPositions));
+            }
+            Session.SendTeleport(id, pos, rot);
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for this player. </summary>
         public void SendPosition(Position pos, Orientation rot) {
-            pos.Y -= 22; // NOTE: Fix for standard clients
-            Send(Packet.Teleport(Entities.SelfID, pos, rot, hasExtPositions));
+            Session.SendTeleport(Entities.SelfID, pos, rot);
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {

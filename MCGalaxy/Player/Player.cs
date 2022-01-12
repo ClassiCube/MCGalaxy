@@ -65,8 +65,9 @@ namespace MCGalaxy {
             IsSuper   = true;
         }
 
-        internal Player(INetSocket socket) {
-            Socket = socket;
+        internal Player(INetSocket socket, ClassicProtocol session) {
+            Socket  = socket;
+            Session = session;
             SetIP(Socket.IP);
             
             spamChecker = new SpamChecker(this);
@@ -266,7 +267,7 @@ namespace MCGalaxy {
                 discMsg = Colors.Escape(discMsg);
                 
                 string kickPacketMsg = ChatTokens.Apply(discMsg, this);
-                Send(Packet.Kick(kickPacketMsg, hasCP437), sync);
+                Session.SendKick(kickPacketMsg, sync);
                 Socket.Disconnected = true;
                 ZoneIn = null;
                 if (isKick) TimesBeenKicked++;
