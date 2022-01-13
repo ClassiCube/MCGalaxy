@@ -174,9 +174,14 @@ namespace MCGalaxy.Network
             const int size = 1 + 1 + 64;
             if (left < size) return 0;
             if (!p.loggedIn) return size;
-            
-            byte continued = buffer[offset + 1];
-            string text    = NetUtils.ReadString(buffer, offset + 2);
+
+            // In original clasic, this field is 'player ID' and so useless
+            // With LongerMessages extension, this field has been repurposed
+            bool continued = false;
+            if (p.Supports(CpeExt.LongerMessages))
+                continued  = buffer[offset + 1] != 0;
+
+            string text = NetUtils.ReadString(buffer, offset + 2);
             p.ProcessChat(text, continued);
             return size;
         }
@@ -275,7 +280,7 @@ namespace MCGalaxy.Network
             Send(Packet.RemoveEntity(id));
         }
 
-        public void SendChat(byte type, string message) {
+        public void SendChat(string message) {
             List<string> lines = LineWrapper.Wordwrap(message, p.hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
@@ -289,7 +294,7 @@ namespace MCGalaxy.Network
                 
                 for (int j = 0; j < count; i++, j++) 
                 {
-                    Packet.WriteMessage(lines[i], type, p.hasCP437, data, j * 66);
+                    Packet.WriteMessage(lines[i], 0, p.hasCP437, data, j * 66);
                 }
                 Send(data);
             }
@@ -348,10 +353,35 @@ namespace MCGalaxy.Network
             Send(Packet.EnvWeatherType(weather));
             return true;
         }
+
+        public void SendDefineBlock(BlockDefinition def) {
+            byte[] packet;
+
+            if (p.Supports(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
+                packet = Packet.DefineBlockExt(def, true, p.hasCP437, p.hasExtBlocks, p.hasExtTexs);
+            } else if (p.Supports(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
+                packet = Packet.DefineBlockExt(def, false, p.hasCP437, p.hasExtBlocks, p.hasExtTexs);
+            } else {
+                packet = Packet.DefineBlock(def, p.hasCP437, p.hasExtBlocks, p.hasExtTexs);
+            }
+            Send(packet);
+        }
+
+        public void SendUndefineBlock(BlockDefinition def) {
+            Send(Packet.UndefineBlock(def, p.hasExtBlocks));
+        }
 #endregion
 
 
 #region Higher level sending
+        public void SendMotd(string motd) {
+            byte[] packet = Packet.Motd(p, motd);
+            Send(packet);
+            
+            if (!p.Supports(CpeExt.HackControl)) return;
+            Send(Hacks.MakeHackControl(p, motd));
+        }
+
         public void SendPing() {
             if (p.hasTwoWayPing) {
                 Send(Packet.TwoWayPing(true, p.Ping.NextTwoWayPingData()));

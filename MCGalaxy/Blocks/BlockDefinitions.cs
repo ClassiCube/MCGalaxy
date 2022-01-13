@@ -202,12 +202,13 @@ namespace MCGalaxy {
             if (!global) level.UpdateCustomBlock(block, def);
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (!global && pl.level != level) continue;
                 if (!pl.hasBlockDefs || def.RawID > pl.MaxRawBlock) continue;
                 if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
-                
-                pl.Send(def.MakeDefinePacket(pl));
+
+                pl.Session.SendDefineBlock(def);
                 pl.SendCurrentBlockPermissions();
             }
         }
@@ -222,18 +223,20 @@ namespace MCGalaxy {
             if (!global) level.UpdateCustomBlock(block, null);
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (!global && pl.level != level) continue;
                 if (!pl.hasBlockDefs || def.RawID > pl.MaxRawBlock) continue;
                 if (global && pl.level.CustomBlockDefs[block] != null) continue;
-                
-                pl.Send(Packet.UndefineBlock(def, pl.hasExtBlocks));
+
+                pl.Session.SendUndefineBlock(def);
             }
         }
         
         public static void UpdateOrder(BlockDefinition def, bool global, Level level) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (!global && pl.level != level) continue;
                 if (!pl.Supports(CpeExt.InventoryOrder) || def.RawID > pl.MaxRawBlock) continue;
                 SendLevelInventoryOrder(pl);
@@ -242,7 +245,8 @@ namespace MCGalaxy {
         
         static void UpdateGlobalCustom(BlockID block, BlockDefinition def) {
             Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level lvl in loaded) {
+            foreach (Level lvl in loaded) 
+            {
                 if (lvl.CustomBlockDefs[block] != GlobalDefs[block]) continue;
                 lvl.UpdateCustomBlock(block, def);
             }
@@ -260,10 +264,11 @@ namespace MCGalaxy {
         
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            for (int i = 0; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) 
+            {
                 BlockDefinition def = defs[i];
                 if (def == null || def.RawID > pl.MaxRawBlock) continue;
-                pl.Send(def.MakeDefinePacket(pl));
+                pl.Session.SendDefineBlock(def);
             }
         }
         
@@ -273,13 +278,15 @@ namespace MCGalaxy {
             int count = pl.MaxRawBlock + 1;
             int* order_to_blocks = stackalloc int[Block.ExtendedCount];
             int* block_to_orders = stackalloc int[Block.ExtendedCount];
-            for (int b = 0; b < Block.ExtendedCount; b++) {
+            for (int b = 0; b < Block.ExtendedCount; b++) 
+            {
                 order_to_blocks[b] = -1;
                 block_to_orders[b] = -1;
             }
             
             // Fill slots with explicit order
-            for (int i = 0; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) 
+            {
                 BlockDefinition def = defs[i];
                 if (def == null || def.RawID > pl.MaxRawBlock) continue;
                 if (def.InventoryOrder == -1) continue;
@@ -292,7 +299,8 @@ namespace MCGalaxy {
             }
             
             // Put blocks into their default slot if slot is unused
-            for (int i = 0; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) 
+            {
                 BlockDefinition def = defs[i];
                 int raw = def != null ? def.RawID : i;
                 if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CPE_COUNT)) continue;
@@ -305,7 +313,8 @@ namespace MCGalaxy {
             }
             
             // Push blocks whose slots conflict with other blocks into free slots at end
-            for (int i = defs.Length - 1; i >= 0; i--) {
+            for (int i = defs.Length - 1; i >= 0; i--) 
+            {
                 BlockDefinition def = defs[i];
                 int raw = def != null ? def.RawID : i;
                 if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CPE_COUNT)) continue;
@@ -320,7 +329,8 @@ namespace MCGalaxy {
                 }
             }
             
-            for (int raw = 0; raw < count; raw++) {
+            for (int raw = 0; raw < count; raw++) 
+            {
                 int order = block_to_orders[raw];
                 if (order == -1) order = 0;
                 
@@ -333,19 +343,10 @@ namespace MCGalaxy {
             }
         }
         
-        public byte[] MakeDefinePacket(Player pl) {
-            if (pl.Supports(CpeExt.BlockDefinitionsExt, 2) && Shape != 0) {
-                return Packet.DefineBlockExt(this, true, pl.hasCP437, pl.hasExtBlocks, pl.hasExtTexs);
-            } else if (pl.Supports(CpeExt.BlockDefinitionsExt) && Shape != 0) {
-                return Packet.DefineBlockExt(this, false, pl.hasCP437, pl.hasExtBlocks, pl.hasExtTexs);
-            } else {
-                return Packet.DefineBlock(this, pl.hasCP437, pl.hasExtBlocks, pl.hasExtTexs);
-            }
-        }
-        
         public static void UpdateFallback(bool global, BlockID block, Level level) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (!global && pl.level != level) continue;
                 if (pl.hasBlockDefs) continue;
                 

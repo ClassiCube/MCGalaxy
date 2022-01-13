@@ -94,9 +94,10 @@ namespace MCGalaxy {
         }
 
         public static void Update(ColorDesc col) {
-            List[col.Index] = col;
+            List[col.Index]  = col;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (!p.Supports(CpeExt.TextColors)) continue;
                 p.Send(Packet.SetTextColor(col));
             }

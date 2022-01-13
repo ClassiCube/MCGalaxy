@@ -377,7 +377,7 @@ namespace MCGalaxy
             return true;
         }
         
-        internal void ProcessChat(string text, byte continued) {
+        internal void ProcessChat(string text, bool continued) {
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 
@@ -416,14 +416,14 @@ namespace MCGalaxy
             Message("&WPartial message cleared due to exceeding 1024 lines");
         }
         
-        bool FilterChat(ref string text, byte continued) {
+        bool FilterChat(ref string text, bool continued) {
             // Handle /womid [version] which informs the server of the WoM client version
             if (text.StartsWith("/womid")) {
                 UsingWom = true;
                 return true;
             }
             
-            if (Supports(CpeExt.LongerMessages) && continued != 0) {
+            if (continued) {
                 partialMessage += text;
                 if (text.Length < NetUtils.StringSize) partialMessage += " ";
                 LimitPartialMessage();

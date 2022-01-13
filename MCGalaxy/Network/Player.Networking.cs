@@ -51,7 +51,7 @@ namespace MCGalaxy
             
             try {
                 message = LineWrapper.CleanupColors(message, this);
-                Session.SendChat(type, message);
+                Session.SendChat(message);
             } catch (Exception e) {
                 Logger.LogError(e);
             }
@@ -81,11 +81,7 @@ namespace MCGalaxy
                     .Replace("-speed","+speed").Replace("-respawn", "+respawn")
                     .Replace("-fly",  "+fly"  ).Replace("-thirdperson", "+thirdperson");
             }
-            byte[] packet = Packet.Motd(this, motd);
-            Send(packet);
-            
-            if (!Supports(CpeExt.HackControl)) return;
-            Send(Hacks.MakeHackControl(this, motd));
+            Session.SendMotd(motd);
         }
 
         readonly object joinLock = new object();
@@ -163,7 +159,7 @@ namespace MCGalaxy
                 if (def == BlockDefinition.GlobalDefs[i] || def == null) continue;
                 
                 if (def.RawID > MaxRawBlock) continue;
-                Send(Packet.UndefineBlock(def, hasExtBlocks));
+                Session.SendUndefineBlock(def);
             }
         }
         
