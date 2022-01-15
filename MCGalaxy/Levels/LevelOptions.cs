@@ -89,11 +89,11 @@ namespace MCGalaxy {
             lvl.Message("Map's MOTD was changed to: &b" + lvl.Config.MOTD);
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 // Some clients will freeze or crash if we send a MOTD packet, but don't follow it up by a new map.
-                // Although checking for CPE extension support is preferred, also send to whitelisted clients for maximum compatibility
-                bool motdOnly = pl.Supports(CpeExt.InstantMOTD) || (pl.appName != null && pl.appName.CaselessStarts("classicalsharp"));
-                if (motdOnly) {
+                // Hnece only send MOTD for clients supporting InstantMOTD CPE extension
+                if (pl.Supports(CpeExt.InstantMOTD)) {
                     pl.SendMapMotd();
                 } else {
                     PlayerActions.ReloadMap(pl);
