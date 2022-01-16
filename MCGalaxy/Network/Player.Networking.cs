@@ -100,44 +100,11 @@ namespace MCGalaxy
                 lastCheckpointIndex = -1;
 
                 AFKCooldown = DateTime.UtcNow.AddSeconds(2);
-                ZoneIn = null;
+                ZoneIn      = null;
+                AllowBuild  = level.BuildAccess.CheckAllowed(this);
+
                 SendMapMotd();
-                AllowBuild = level.BuildAccess.CheckAllowed(this);
-            
-                int volume = level.blocks.Length;
-                if (Supports(CpeExt.FastMap)) {
-                    Send(Packet.LevelInitaliseExt(volume));
-                } else {
-                    Send(Packet.LevelInitalise());
-                }
-                
-                if (hasBlockDefs) {
-                    if (prev != null && prev != level) {
-                        RemoveOldLevelCustomBlocks(prev);
-                    }
-                    BlockDefinition.SendLevelCustomBlocks(this);
-                    
-                    if (Supports(CpeExt.InventoryOrder)) {
-                        BlockDefinition.SendLevelInventoryOrder(this);
-                    }
-                }
-                
-                using (LevelChunkStream dst = new LevelChunkStream(this))
-                    using (Stream stream = LevelChunkStream.CompressMapHeader(this, volume, dst))
-                {
-                    if (level.MightHaveCustomBlocks()) {
-                        LevelChunkStream.CompressMap(this, stream, dst);
-                    } else {
-                        LevelChunkStream.CompressMapSimple(this, stream, dst);
-                    }
-                }
-                
-                // Force players to read the MOTD (clamped to 3 seconds at most)
-                if (level.Config.LoadDelay > 0)
-                    System.Threading.Thread.Sleep(level.Config.LoadDelay);
-                
-                byte[] buffer = Packet.LevelFinalise(level.Width, level.Height, level.Length);
-                Send(buffer);
+                Session.SendLevel(prev, level);
                 Loading = false;
                 
                 OnSentMapEvent.Call(this, prev, level);
@@ -150,17 +117,6 @@ namespace MCGalaxy
                 Server.DoGC();
             }
             return success;
-        }
-        
-        void RemoveOldLevelCustomBlocks(Level oldLevel) {
-            BlockDefinition[] defs = oldLevel.CustomBlockDefs;
-            for (int i = 0; i < defs.Length; i++) {
-                BlockDefinition def = defs[i];
-                if (def == BlockDefinition.GlobalDefs[i] || def == null) continue;
-                
-                if (def.RawID > MaxRawBlock) continue;
-                Session.SendUndefineBlock(def);
-            }
         }
         
         /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>

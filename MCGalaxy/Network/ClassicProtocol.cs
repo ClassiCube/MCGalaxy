@@ -14,6 +14,8 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using BlockID = System.UInt16;
@@ -347,6 +349,19 @@ namespace MCGalaxy.Network
             return true;
         }
 
+        public void SendChangeModel(byte id, string model) {
+            BlockID raw;
+            if (BlockID.TryParse(model, out raw) && raw > p.MaxRawBlock) {
+                BlockID block = Block.FromRaw(raw);
+                if (block >= Block.ExtendedCount) {
+                    model = "humanoid"; // invalid block ids
+                } else {
+                    model = p.ConvertBlock(block).ToString();
+                }                
+            }
+            Send(Packet.ChangeModel(id, model, p.hasCP437));
+        }
+
         public bool SendSetWeather(byte weather) {
             if (!p.Supports(CpeExt.EnvWeatherType)) return false;
 
@@ -401,6 +416,55 @@ namespace MCGalaxy.Network
                 Send(Packet.Teleport(id, pos, rot, p.hasExtPositions));
             } else {
                 Send(Packet.AddEntity(id, name, pos, rot, p.hasCP437, p.hasExtPositions));
+            }
+        }
+
+        public void SendLevel(Level prev, Level level) {
+            int volume = level.blocks.Length;
+            if (p.Supports(CpeExt.FastMap)) {
+                Send(Packet.LevelInitaliseExt(volume));
+            } else {
+                Send(Packet.LevelInitalise());
+            }
+            
+            if (p.hasBlockDefs) {
+                if (prev != null && prev != level) {
+                    RemoveOldLevelCustomBlocks(prev);
+                }
+                BlockDefinition.SendLevelCustomBlocks(p);
+                
+                if (p.Supports(CpeExt.InventoryOrder)) {
+                    BlockDefinition.SendLevelInventoryOrder(p);
+                }
+            }
+            
+            using (LevelChunkStream dst = new LevelChunkStream(p))
+                using (Stream stream = LevelChunkStream.CompressMapHeader(p, volume, dst))
+            {
+                if (level.MightHaveCustomBlocks()) {
+                    LevelChunkStream.CompressMap(p, stream, dst);
+                } else {
+                    LevelChunkStream.CompressMapSimple(p, stream, dst);
+                }
+            }
+            
+            // Force players to read the MOTD (clamped to 3 seconds at most)
+            if (level.Config.LoadDelay > 0)
+                Thread.Sleep(level.Config.LoadDelay);
+            
+            byte[] buffer = Packet.LevelFinalise(level.Width, level.Height, level.Length);
+            Send(buffer);
+        }
+
+        void RemoveOldLevelCustomBlocks(Level oldLevel) {
+            BlockDefinition[] defs = oldLevel.CustomBlockDefs;
+            for (int i = 0; i < defs.Length; i++)
+            {
+                BlockDefinition def = defs[i];
+                if (def == BlockDefinition.GlobalDefs[i] || def == null) continue;
+
+                if (def.RawID > p.MaxRawBlock) continue;
+                SendUndefineBlock(def);
             }
         }
 #endregion

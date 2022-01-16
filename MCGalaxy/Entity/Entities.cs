@@ -138,7 +138,7 @@ namespace MCGalaxy {
 
             if (dst.hasChangeModel) {
                 OnSendingModelEvent.Call(e, ref model, dst);
-                if (!model.CaselessEq("humanoid")) SendModel(dst, id, model);
+                if (!model.CaselessEq("humanoid")) dst.Session.SendChangeModel(id, model);
             }
             
             if (dst.Supports(CpeExt.EntityProperty)) {
@@ -180,7 +180,8 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = e.Level;
             
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != lvl || !pl.hasChangeModel) continue;
                 if (!pl.CanSeeEntity(e)) continue;
                 
@@ -188,7 +189,7 @@ namespace MCGalaxy {
                 string model = Chat.Format(m, pl, true, false);
                 
                 OnSendingModelEvent.Call(e, ref model, pl);
-                SendModel(pl, id, model);
+                pl.Session.SendChangeModel(id, model);
                 SendModelScales(pl, id, e);
             }
         }
@@ -209,19 +210,6 @@ namespace MCGalaxy {
             int packed = (int)(value * 1000);
             if (packed == 0) return;
             dst.Send(Packet.EntityProperty(id, axis, packed));
-        }
-        
-        static void SendModel(Player dst, byte id, string model) {
-            BlockID raw;
-            if (BlockID.TryParse(model, out raw) && raw > dst.MaxRawBlock) {
-                BlockID block = Block.FromRaw(raw);
-                if (block >= Block.ExtendedCount) {
-                    model = "humanoid"; // invalid block ids
-                } else {
-                    model = dst.ConvertBlock(block).ToString();
-                }                
-            }
-            dst.Send(Packet.ChangeModel(id, model, dst.hasCP437));
         }
 
         public static void UpdateEntityProp(Entity e, EntityProp prop, int value) {
