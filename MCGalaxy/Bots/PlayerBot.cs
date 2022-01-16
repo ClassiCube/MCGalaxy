@@ -190,7 +190,7 @@ namespace MCGalaxy {
                 PlayerBot bot = bots[i];
                 if (bot.movement) bot.PerformMovement();
                 Position pos = bot.Pos; Orientation rot = bot.Rot;
-                
+
                 Entities.GetPositionPacket(ref ptrSrc, bot.id, true, false,
                                            pos, bot.lastPos, rot, bot.lastRot);
                 Entities.GetPositionPacket(ref ptrExt, bot.id, true, true,

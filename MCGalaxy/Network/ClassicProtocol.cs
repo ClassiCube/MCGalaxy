@@ -50,6 +50,7 @@ namespace MCGalaxy.Network
 
         public abstract void SendMotd(string motd);
         public abstract void SendPing();
+        public abstract void SendBlockChange(ushort x, ushort y, ushort z, BlockID block);
         public abstract void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot);
         public abstract void SendLevel(Level prev, Level level);
 
@@ -306,11 +307,23 @@ namespace MCGalaxy.Network
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
-            Send(Packet.Teleport(Entities.SelfID, pos, rot, p.hasExtPositions));
+            Send(Packet.Teleport(id, pos, rot, p.hasExtPositions));
         }
 
         public override void SendRemoveEntity(byte id) {
             Send(Packet.RemoveEntity(id));
+        }
+
+        public override void SendBlockChange(ushort x, ushort y, ushort z, BlockID block) {
+            byte[] buffer = new byte[p.hasExtBlocks ? 9 : 8];
+            buffer[0] = Opcode.SetBlock;
+            NetUtils.WriteU16(x, buffer, 1);
+            NetUtils.WriteU16(y, buffer, 3);
+            NetUtils.WriteU16(z, buffer, 5);
+
+            BlockID raw = p.ConvertBlock(block);
+            NetUtils.WriteBlock(raw, buffer, 7, p.hasExtBlocks);
+            socket.Send(buffer, SendFlags.LowPriority);
         }
 
         public override void SendChat(string message) {

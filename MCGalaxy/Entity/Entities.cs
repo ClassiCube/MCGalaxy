@@ -281,7 +281,7 @@ namespace MCGalaxy {
             *ptr = (byte)(value >> 8); ptr++; *ptr = (byte)value; ptr++;
         }
         
-        static Position GetDelta(Position pos, Position old, bool extPositions) {
+        public static Position GetDelta(Position pos, Position old, bool extPositions) {
             Position delta = new Position(pos.X - old.X, pos.Y - old.Y, pos.Z - old.Z);
             if (extPositions) return delta;
             
@@ -323,8 +323,16 @@ namespace MCGalaxy {
                 }
             
                 rot.HeadX = pitch;
-                Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
-                                           p.tempPos, p.lastPos, rot, p.lastRot);
+
+                // TEMP HACK
+                Position delta  = GetDelta(p.tempPos, p.lastPos, p.hasExtPositions);
+                bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
+                bool oriChanged = rot.RotY != p.lastRot.RotY || rot.HeadX != p.lastRot.HeadX;
+                if (posChanged || oriChanged)
+                    dst.Session.SendTeleport(p.id, p.tempPos, rot);
+
+                //Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
+                //                           p.tempPos, p.lastPos, rot, p.lastRot);
             }
             
             int count = (int)(ptr - src);

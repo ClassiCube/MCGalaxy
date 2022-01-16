@@ -43,6 +43,7 @@ namespace MCGalaxy.Network
 
         const int OPCODE_ARM_ANIM  = 0x12;
         const int OPCODE_NAMED_ADD = 0x14;
+        const int OPCODE_REMOVE_ENTITY = 0x1D;
         const int OPCODE_REL_MOVE  = 0x1F;
         const int OPCODE_LOOK      = 0x20;
         const int OPCODE_REL_MOVE_LOOK = 0x21;
@@ -61,6 +62,7 @@ namespace MCGalaxy.Network
         void Send(byte[] data) { socket.Send(data, SendFlags.None); }
 
         protected override int HandlePacket(byte[] buffer, int offset, int left) {
+            //Console.WriteLine("IN: " + buffer[offset]);
             switch (buffer[offset]) {
                 case OPCODE_PING:      return 1; // Ping
                 case OPCODE_LOGIN:     return HandleLogin(buffer, offset, left);
@@ -120,10 +122,10 @@ namespace MCGalaxy.Network
         }
 
         unsafe static double ReadF64(byte[] array, int offset) {
-            long value =
-                 (ReadI32(array, offset + 0) << 32) |
-                 (ReadI32(array, offset + 4) <<  0);
+            long hi = ReadI32(array, offset + 0) & 0xFFFFFFFFL;
+            long lo = ReadI32(array, offset + 4) & 0xFFFFFFFFL;
 
+            long value = (hi << 32) | lo;
             return *(double*)&value;
         }
 
@@ -216,8 +218,8 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
 
             double x = ReadF64(buffer, offset + 1);
-            double y = ReadF64(buffer, offset + 9);
-            double s = ReadF64(buffer, offset + 17);
+            double s = ReadF64(buffer, offset + 9); // TODO probably wrong (e.g. when crouching)
+            double y = ReadF64(buffer, offset + 17);
             double z = ReadF64(buffer, offset + 25);
             // bool state
 
@@ -231,7 +233,7 @@ namespace MCGalaxy.Network
             int size = 1 + 4 + 4 + 1;
             if (left < size) return 0;
 
-            float yaw   = ReadF32(buffer, offset + 1);
+            float yaw   = ReadF32(buffer, offset + 1) + 180.0f;
             float pitch = ReadF32(buffer, offset + 5);
             // bool state
 
@@ -246,11 +248,11 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
 
             double x = ReadF64(buffer, offset + 1);
-            double y = ReadF64(buffer, offset + 9);
-            double s = ReadF64(buffer, offset + 17);
+            double s = ReadF64(buffer, offset + 9); // TODO probably wrong (e.g. when crouching)
+            double y = ReadF64(buffer, offset + 17);
             double z = ReadF64(buffer, offset + 25);
 
-            float yaw   = ReadF32(buffer, offset + 33);
+            float yaw   = ReadF32(buffer, offset + 33) + 180.0f;
             float pitch = ReadF32(buffer, offset + 37);
             // bool state
 
@@ -306,11 +308,15 @@ namespace MCGalaxy.Network
             if (id == Entities.SelfID) {
                 Send(MakeSelfMoveLook(pos, rot));
             } else {
-                // TODO
+                Send(MakeEntityTeleport(id, pos, rot));
             }
         }
 
         public override void SendRemoveEntity(byte id) {
+            byte[] data = new byte[1 + 4];
+            data[0] = OPCODE_REMOVE_ENTITY;
+            WriteI32(id, data, 1);
+            Send(data);
         }
 
         public override void SendChat(string message) {
@@ -328,6 +334,11 @@ namespace MCGalaxy.Network
             Send(MakeChat(message));
         }
         
+        public override void SendBlockChange(ushort x, ushort y, ushort z, BlockID block) {
+            // TODO convert
+            Send(MakeBlockChange((byte)block, x, y, z));
+        }
+
         public override void SendKick(string reason, bool sync) {
         }
 
@@ -500,6 +511,23 @@ namespace MCGalaxy.Network
             data[19 + nameLen] = rot.RotY;
             data[20 + nameLen] = rot.HeadX;
             WriteU16(0, data, 21 + nameLen); // current item
+            return data;
+        }
+
+        byte[] MakeEntityTeleport(byte id, Position pos, Orientation rot) {
+            int dataLen = 1 + 4 + (4 + 4 + 4) + (1 + 1);
+            byte[] data = new byte[dataLen];
+            data[0] = OPCODE_TELEPORT;
+            // TODO fixes Y kinda
+            pos.Y -= 51;
+
+            WriteI32(id, data, 1);
+            WriteI32(pos.X, data,  5);
+            WriteI32(pos.Y, data,  9);
+            WriteI32(pos.Z, data, 13);
+
+            data[17] = (byte)(rot.RotY + 128); // TODO fixed yaw kinda
+            data[18] = rot.HeadX;
             return data;
         }
 

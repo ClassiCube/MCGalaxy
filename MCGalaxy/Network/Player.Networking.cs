@@ -135,16 +135,7 @@ namespace MCGalaxy
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
-
-            byte[] buffer = new byte[hasExtBlocks ? 9 : 8];
-            buffer[0] = Opcode.SetBlock;
-            NetUtils.WriteU16(x, buffer, 1);
-            NetUtils.WriteU16(y, buffer, 3);
-            NetUtils.WriteU16(z, buffer, 5);
-            
-            BlockID raw = ConvertBlock(block);
-            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
-            Socket.Send(buffer, SendFlags.LowPriority);
+            Session.SendBlockChange(x, y, z, block);
         }
         
         

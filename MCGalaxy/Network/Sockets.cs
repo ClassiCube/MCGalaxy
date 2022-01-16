@@ -187,7 +187,7 @@ namespace MCGalaxy.Network
         public override void Send(byte[] buffer, SendFlags flags) {
             if (Disconnected || !socket.Connected) return;
 
-            Console.WriteLine("OUT: " + buffer[0] + ", " + buffer.Length);
+            //Console.WriteLine("OUT: " + buffer[0] + ", " + buffer.Length);
             // TODO: Low priority sending support
             try {
                 if ((flags & SendFlags.Synchronous) != 0) {
