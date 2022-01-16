@@ -598,6 +598,7 @@
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
     <Compile Include="Modules\Relay\RelayBotSender.cs" />
     <Compile Include="Modules\Security\IPThrottler.cs" />
+    <Compile Include="Network\AlphaProtocol.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\ClassicProtocol.cs" />
     <Compile Include="Network\CPESupport.cs" />

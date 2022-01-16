@@ -57,7 +57,12 @@ namespace MCGalaxy.Network
             if (opcode == Opcode.Handshake) {
                 pending.Remove(this);
                 return new ClassicProtocol(this);
-            } else if (opcode == 'G' && Server.Config.WebClient) {
+            } else if (opcode == 2)
+            {
+                pending.Remove(this);
+                return new AlphaProtocol(this);
+            }
+            else if (opcode == 'G' && Server.Config.WebClient) {
                 pending.Remove(this);
                 return new WebSocket(this);
             } 
@@ -182,6 +187,7 @@ namespace MCGalaxy.Network
         public override void Send(byte[] buffer, SendFlags flags) {
             if (Disconnected || !socket.Connected) return;
 
+            Console.WriteLine("OUT: " + buffer[0] + ", " + buffer.Length);
             // TODO: Low priority sending support
             try {
                 if ((flags & SendFlags.Synchronous) != 0) {
