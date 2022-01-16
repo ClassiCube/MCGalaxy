@@ -1,3 +1,20 @@
+This branch was a proof of concept for adding Minecraft Alpha 1.1.1 support, **but is abandoned and not being worked on** 
+
+Here's at least some of the many issues
+```
+- no survival/alpha functionality at all
+- bots are incompatible and will disconnect client
+- drawing commands are incompatible and will disconnect client
+- the client will get stuck in place if you move too close to edges of the map (i.e. within 1-3 chunks of world end)
+- can't place blocks because no pickup drops
+- other player movement looks choppy even on localhost
+- physics blocks will cause issues because they're not converted
+```
+
+but you can chat/join worlds/delete blocks/see other players
+
+---
+
 MCGalaxy is a fully featured and customisable **ClassiCube Server Software** based on MCForge/MCLawl.
 
 **Setup**
