@@ -371,7 +371,10 @@ namespace MCGalaxy.Network
         public override void SendUndefineBlock(BlockDefinition def) {
         }
 
+        bool sentMOTD;
         public override void SendMotd(string motd) {
+            if (sentMOTD) return; // TODO work out how to properly resend map
+            sentMOTD = true;
             Send(MakeLogin(motd));
         }
 
@@ -388,9 +391,18 @@ namespace MCGalaxy.Network
         }
 
         public override void SendLevel(Level prev, Level level) {
-            int chunksX = level.ChunksX, chunksZ = level.ChunksZ;
-            for (int z = 0; z < chunksZ; z++)
-                for (int x = 0; x < chunksX; x++)
+            // unload chunks from previous world
+            if (prev != null)
+            {
+                for (int z = 0; z < prev.ChunksZ; z++)
+                    for (int x = 0; x < prev.ChunksX; x++)
+                    {
+                        Send(MakePreChunk(x, z, false));
+                    }
+            }
+
+            for (int z = 0; z < level.ChunksZ; z++)
+                for (int x = 0; x < level.ChunksX; x++)
                 {
                     Send(MakePreChunk(x, z, true));
                     Send(MakeChunk(x, z, level));
@@ -434,40 +446,13 @@ namespace MCGalaxy.Network
             float pitch = rot.HeadX * 360.0f / 256.0f;
             data[0] = OPCODE_SELF_MOVE_LOOK;
 
-            byte[] TempArray;
-
-            TempArray = BitConverter.GetBytes((double)pos.X / 32.0);
-            Array.Reverse(TempArray);
-            Array.Copy(TempArray, 0, data, 1, 8);
-
-            TempArray = BitConverter.GetBytes((double)pos.Y / 32.0);
-            Array.Reverse(TempArray);
-            Array.Copy(TempArray, 0, data, 9, 8);
-
-            TempArray = BitConverter.GetBytes((double)pos.Y / 32.0);
-            Array.Reverse(TempArray);
-            Array.Copy(TempArray, 0, data, 17, 8);
-
-            TempArray = BitConverter.GetBytes((double)pos.Z / 32.0);
-            Array.Reverse(TempArray);
-            Array.Copy(TempArray, 0, data, 25, 8);
-
-            TempArray = BitConverter.GetBytes((float)yaw);
-            Array.Reverse(TempArray);
-            Array.Copy(TempArray, 0, data, 33, 4);
-
-            TempArray = BitConverter.GetBytes((float)pitch);
-            Array.Reverse(TempArray);
-            Array.Copy(TempArray, 0, data, 37, 4);
-
-            /*
             WriteF64(pos.X / 32.0, data,  1);
             WriteF64(pos.Y / 32.0, data,  9); // stance?
             WriteF64(pos.Y / 32.0, data, 17);
             WriteF64(pos.Z / 32.0, data, 25);
 
             WriteF32(yaw,   data, 33);
-            WriteF32(pitch, data, 37);*/
+            WriteF32(pitch, data, 37);
             data[41] = 1;
             return data;
         }
@@ -551,9 +536,11 @@ namespace MCGalaxy.Network
                 byte[] block_data  = new byte[16 * 16 * 128];
                 byte[] block_meta  = new byte[(16 * 16 * 128) / 2];
                 byte[] block_light = new byte[(16 * 16 * 128) / 2];
-                byte[] sky_light   = new byte[(16 * 16 * 128) / 2]; 
+                byte[] sky_light   = new byte[(16 * 16 * 128) / 2];
 
-                for (int YY = 0; YY < 16; YY++)
+                int height = Math.Min(128, (int)lvl.Height);
+
+                for (int YY = 0; YY < height; YY++)
                     for (int ZZ = 0; ZZ < 16; ZZ++)
                         for (int XX = 0; XX < 16; XX++)
                         {
