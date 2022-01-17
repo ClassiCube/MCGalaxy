@@ -93,13 +93,12 @@ namespace MCGalaxy {
             return col;
         }
 
-        public static void Update(ColorDesc col) {
-            List[col.Index]  = col;
-            Player[] players = PlayerInfo.Online.Items;
+        public static void Update(ColorDesc color) {
+            List[color.Index] = color;
+            Player[] players  = PlayerInfo.Online.Items;
             foreach (Player p in players) 
             {
-                if (!p.Supports(CpeExt.TextColors)) continue;
-                p.Send(Packet.SetTextColor(col));
+                p.Session.SendSetTextColor(color);
             }
             Save();
         }

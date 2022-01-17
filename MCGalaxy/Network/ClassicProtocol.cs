@@ -275,7 +275,7 @@ namespace MCGalaxy.Network
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
-            Send(Packet.Teleport(Entities.SelfID, pos, rot, p.hasExtPositions));
+            Send(Packet.Teleport(id, pos, rot, p.hasExtPositions));
         }
 
         public void SendRemoveEntity(byte id) {
@@ -369,6 +369,13 @@ namespace MCGalaxy.Network
             return true;
         }
 
+        public bool SendSetTextColor(ColorDesc color) {
+            if (!p.Supports(CpeExt.TextColors)) return false;
+
+            Send(Packet.SetTextColor(color));
+            return true;
+        }
+
         public void SendDefineBlock(BlockDefinition def) {
             byte[] packet;
 
@@ -452,8 +459,7 @@ namespace MCGalaxy.Network
             if (level.Config.LoadDelay > 0)
                 Thread.Sleep(level.Config.LoadDelay);
             
-            byte[] buffer = Packet.LevelFinalise(level.Width, level.Height, level.Length);
-            Send(buffer);
+            Send(Packet.LevelFinalise(level.Width, level.Height, level.Length));
         }
 
         void RemoveOldLevelCustomBlocks(Level oldLevel) {
