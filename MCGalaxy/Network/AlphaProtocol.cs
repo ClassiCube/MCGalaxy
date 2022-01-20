@@ -383,6 +383,9 @@ namespace MCGalaxy.Network
         }
 
         public override void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            name = name.Replace('&', '§');
+            skin = skin.Replace('&', '§');
+
             if (id == Entities.SelfID) {
                 Send(MakeSelfMoveLook(pos, rot));
             } else {
