@@ -233,7 +233,8 @@ namespace MCGalaxy.Games {
             if (cfg.TeamKills == teamKill) return;
             
             cfg.TeamKills = teamKill;
-            cfg.Save(Map.name);
+            // TODO rethink this
+            if (Map != null) cfg.Save(Map.name);
         }
         
         public class TWZone {

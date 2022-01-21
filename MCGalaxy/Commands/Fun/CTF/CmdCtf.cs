@@ -87,11 +87,6 @@ namespace MCGalaxy.Commands.Fun {
             return false;
         }
         
-        static void UpdateConfig(Player p, CTFMapConfig cfg) {
-            cfg.Save(p.level.name);
-            if (p.level == CTFGame.Instance.Map) CTFGame.Instance.UpdateMapConfig();
-        }
-        
         public override void Help(Player p, string message) {
             if (message.CaselessEq("set")) {
                 p.Message("&T/CTF set redspawn/bluespawn");
