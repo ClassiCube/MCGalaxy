@@ -576,18 +576,19 @@ namespace MCGalaxy
         
         Command GetCommand(ref string cmdName, ref string cmdArgs, CommandData data) {
             if (!CheckCommand(cmdName)) return null;
-            Command.Search(ref cmdName, ref cmdArgs);
             
+            string bound;
             byte bindIndex;
-            if (byte.TryParse(cmdName, out bindIndex) && bindIndex < CmdBindings.Length) {
-                if (CmdBindings[bindIndex] == null) { 
-                    Message("No command is bound to: &T/" + cmdName); return null; 
-                }
-                
-                CmdBindings[bindIndex].Separate(out cmdName, out cmdArgs);
-                Command.Search(ref cmdName, ref cmdArgs);
+            if (CmdBindings.TryGetValue(cmdName, out bound)) {
+                // user defined command shortcuts take priority
+                bound.Separate(out cmdName, out cmdArgs);
+            } else if (byte.TryParse(cmdName, out bindIndex) && bindIndex < 10) {
+                // backwards compatibility for old /cmdbind behaviour
+                Message("No command is bound to: &T/" + cmdName); 
+                return null;
             }
             
+            Command.Search(ref cmdName, ref cmdArgs);
             OnPlayerCommandEvent.Call(this, cmdName, cmdArgs, data);
             if (cancelcommand) { cancelcommand = false; return null; }
             

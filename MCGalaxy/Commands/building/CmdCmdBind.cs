@@ -29,39 +29,40 @@ namespace MCGalaxy.Commands.Building {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 bool anyBinds = false;
-                for (int i = 0; i < p.CmdBindings.Length; i++)  {
-                    if (p.CmdBindings[i] != null) {
-                        p.Message("&T/{0} &Sbound to &T/{1}", i, p.CmdBindings[i]);
-                        anyBinds = true;
-                    }
+                foreach (var kvp in p.CmdBindings)
+                {
+                    p.Message("&T/{0} &Sbound to &T/{1}", kvp.Key, kvp.Value);
+                    anyBinds = true;
                 }
                 
                 if (!anyBinds) p.Message("You currently have no commands bound.");
                 return;
             }
-            
+
             string[] parts = message.SplitSpaces(2);
-            int j = 0;
-            if (!CommandParser.GetInt(p, parts[0], "index", ref j, 0, p.CmdBindings.Length - 1)) return;
-            
+            string trigger = parts[0];
+
             if (parts.Length == 1) {
-                if (p.CmdBindings[j] == null) {
-                    p.Message("No command bound for &T/{0}", j);
+                string value;
+                if (!p.CmdBindings.TryGetValue(trigger, out value)) {
+                    p.Message("No command bound for &T/{0}", trigger);
                 } else {
-                    p.Message("&T/{0} &Sbound to &T/{1}", j, p.CmdBindings[j]);
+                    p.Message("&T/{0} &Sbound to &T/{1}", trigger, value);
                 }
             } else {
-                p.CmdBindings[j] = parts[1];
-                p.Message("Bound &T/{1} &Sto &T/{0}", j, p.CmdBindings[j]);
+                p.CmdBindings[trigger] = parts[1];
+                p.Message("Bound &T/{1} &Sto &T/{0}", trigger, parts[1]);
             }
         }
         
         public override void Help(Player p) {
-            p.Message("&T/CmdBind [num] [command]&H- Binds [num] to [command]");
-            p.Message("&H  Use with \"&T/[num]&H\" &b(example: &T/2&b)");
-            p.Message("&T/CmdBind [num] &H- Lists the command currently bound to [num]");
-            p.Message("&T/CmdBind &H- Lists all bound commands");
-            p.Message("&H[num] must be between 0 and 9");
+            p.Message("&T/CmdBind [shortcut] [command]");
+            p.Message("&HBinds [shortcut] to [command]");
+            p.Message("&H  Use with \"&T/[shortcut]&H\" &f(example: &T/2&f)");
+            p.Message("&T/CmdBind [shortcut]");
+            p.Message("&HLists the command currently bound to [shortcut]");
+            p.Message("&T/CmdBind &H");
+            p.Message("&HLists all currently bound commands");
         }
     }
 }
