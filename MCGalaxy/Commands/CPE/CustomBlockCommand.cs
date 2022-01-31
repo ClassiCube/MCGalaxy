@@ -35,7 +35,7 @@ namespace MCGalaxy.Commands.CPE {
             
             if (message.Length == 0) {
                 if (GetBD(p, global) != null) {
-                    SendStepHelp(p, global);
+                    SendStepHelp(p, global, cmd);
                 } else {
                     Help(p, cmd);
                 }
@@ -99,13 +99,13 @@ namespace MCGalaxy.Commands.CPE {
             BlockDefinition def = GetBD(p, global);
             def.SetBlock(target);
             
-            p.Message("Use &T{0} abort &Sat anytime to abort the creation process.", cmd);
+            p.Message("  Use &T{0} abort &Sat any time to stop making the block.", cmd);
             p.Message("  Use &T{0} revert &Sto go back a step", cmd);
             p.Message("  Use &T{0} [input] &Sto provide input", cmd);
             p.Message("&f----------------------------------------------------------");
             
             SetStep(p, global, 2);
-            SendStepHelp(p, global);
+            SendStepHelp(p, global, cmd);
         }
         
         static BlockDefinition[] GetDefs(Player p, CommandData data, string map, ref string coloredMap) {
@@ -323,7 +323,7 @@ namespace MCGalaxy.Commands.CPE {
                 else step--;
 
                 SetStep(p, global, step);
-                SendStepHelp(p, global);
+                SendStepHelp(p, global, cmd);
                 return;
             }
 
@@ -387,7 +387,7 @@ namespace MCGalaxy.Commands.CPE {
                 }
             } else if (step == 17) {
                 byte fallback = GetFallback(p, value);
-                if (fallback == Block.Invalid) { SendStepHelp(p, global); return; }
+                if (fallback == Block.Invalid) { SendStepHelp(p, global, cmd); return; }
                 bd.FallBack = fallback;
                 
                 if (!AddBlock(p, lvl, bd, global, cmd)) return;
@@ -399,7 +399,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             SetStep(p, global, step);
-            SendStepHelp(p, global);
+            SendStepHelp(p, global, cmd);
         }
         
         static bool DoEdit(Player p, Level lvl, BlockID block, string[] parts, 
@@ -732,7 +732,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         
-        static void SendStepHelp(Player p, bool global) {
+        static void SendStepHelp(Player p, bool global, string cmd) {
             int step = GetStep(p, global);
             string[] help = helpSections[stepsHelp[step]]; 
             BlockDefinition bd = GetBD(p, global);       
@@ -744,6 +744,7 @@ namespace MCGalaxy.Commands.CPE {
                 
                 p.Message(msg);
             }
+            if (step == 2) p.Message("Use &T{0} [answer] &Sto type your answers", cmd);
             p.Message("&f--------------------------");
         }
         
