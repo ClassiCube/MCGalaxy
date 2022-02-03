@@ -15,7 +15,7 @@ Run MCGalaxy.exe or MCGalaxyCLI.exe firstly. You'll see something like:
 
 If you are signed in to classicube.net, you can copy this URL straight into your web browser and start playing.
 
-#### Joining from the desktop client
+#### Joining from the ClassiCube client
 Click **Direct connect** at the main menu.
 ![opt1](https://user-images.githubusercontent.com/6509348/60258725-0e05bd00-9919-11e9-8f8c-fbbdc52f04f9.png)
 
@@ -32,29 +32,38 @@ Type ```/rank [your account] superop``` into the bottom text box, then press Ent
 
 Letting others join your server
 -----------------
-#### LAN players
+### LAN players
 You need to find out your LAN/local IP address.
-*  Windows: Type ```ipconfig``` into **Command Prompt**. Look for ```IPv4 address``` in the output.
+*  Windows: Type ```ipconfig``` into **Command Prompt**. Look for ```IPv4 address``` in the output
+*  macOS: Type ```ipconfig getifaddr en0``` or ```ipconfig getifaddr en1``` into **Terminal**
+*  Linux: Type ```hostname -I``` into **Terminal**. Lan IP is usually the first address in the output
 
-To join from a web browser, add ```?ip=[lan ip]``` to the server's URL.\
+#### Joining from a web browser
+Enter the server URL followed by ```?ip=[lan ip]``` into the web browser.<br>
 (e.g. http://www.classicube.net/server/play/d1362e7fee1a54365514712d007c8799?ip=192.168.1.30)
 
-To join from the desktop client, **Direct connect** to ```[lan ip]:25565``` instead. (e.g. ```192.168.1.30:25565```)
+#### Joining from the ClassiCube client
+* Click **Direct connect** at the main menu
+* Type your username into *Username* textbox
+* Type ```[lan ip]:25565``` into *IP:Port* textbox (e.g. ```192.168.1.30:25565```)
+* Click **Connect**
+
+### Across the internet
+You usually need to port forward in your router before other players can join.
+
+#### Joining from a web browser
+Enter the server URL into the web browser
+
+#### Joining from the ClassiCube client
+* Click **Sign in**
+* Type/paste the hash (e.g. ```d1362e7fee1a54365514712d007c8799```) into the *classicube.net/server/play* text box
+* Click **Connect**
 
 
-#### Across the internet
-You need to port forward your router. Players can then join by entering the server URL into their web browser.
-
-For the desktop client:
-* Click **Sign in**. 
-* Type/paste the hash (e.g. ```d1362e7fee1a54365514712d007c8799```) into the *classicube.net/server/play* text box. 
-* Click **Connect**.
-
-
-#### Show on classicube.net server list
+### Show on classicube.net server list
 Click **Settings** in the MCGalaxy window, then tick the **Public** checkbox. Then click **Save**.
 
-This makes your server appear in the server list on classicube.net and in the desktop client.
+This makes your server appear in the server list on classicube.net and in the ClassiCube client.
 
 Compiling
 -----------------
