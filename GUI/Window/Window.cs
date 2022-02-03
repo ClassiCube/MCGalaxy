@@ -126,7 +126,7 @@ Trying to mix two versions is unsupported - you may experience issues";
         }
 
         void notifyIcon_MouseClick(object sender, MouseEventArgs e) {
-            if (e.Button == MouseButtons.Left) openConsole_Click(sender, e);
+            if (e.Button == MouseButtons.Left) icon_OpenConsole_Click(sender, e);
         }
         
         void InitServer() {
@@ -332,19 +332,30 @@ Trying to mix two versions is unsupported - you may experience issues";
         public static bool hasPropsForm;
         PropertyWindow propsForm;
 
+        bool alwaysInTaskbar = true;
         void Window_Resize(object sender, EventArgs e) {
-            ShowInTaskbar = WindowState != FormWindowState.Minimized;
+            ShowInTaskbar = alwaysInTaskbar;
         }
 
-        void openConsole_Click(object sender, EventArgs e) {
+        void icon_HideWindow_Click(object sender, EventArgs e) {
+            alwaysInTaskbar      = !alwaysInTaskbar;
+            ShowInTaskbar        = alwaysInTaskbar;
+            icon_hideWindow.Text = alwaysInTaskbar ? "Hide from taskbar" : "Show in taskbar";
+        }
+
+        void icon_OpenConsole_Click(object sender, EventArgs e) {
             Show();
             BringToFront();
             WindowState = FormWindowState.Normal;
         }
 
-        void shutdownServer_Click(object sender, EventArgs e) {
+        void icon_Shutdown_Click(object sender, EventArgs e) {
             Close();
-        }      
+        }     
+
+        void icon_restart_Click(object sender, EventArgs e) {
+            main_BtnRestart_Click(sender, e);
+        }
 
        void tabs_Click(object sender, EventArgs e)  {
             try { Map_UpdateUnloadedList(); }
@@ -364,10 +375,6 @@ Trying to mix two versions is unsupported - you may experience issues";
                 control.Update();
             }
             tabs.Update();
-        }
-
-        void icon_restart_Click(object sender, EventArgs e) {
-            main_BtnRestart_Click(sender, e);
         }
 
         void main_players_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e) {

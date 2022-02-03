@@ -73,6 +73,8 @@ namespace MCGalaxy.Gui
             this.tsPlayer_promote = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPlayer_demote = new System.Windows.Forms.ToolStripMenuItem();
             this.icon_context = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.icon_separator = new System.Windows.Forms.ToolStripSeparator();
+            this.icon_hideWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.icon_openConsole = new System.Windows.Forms.ToolStripMenuItem();
             this.icon_shutdown = new System.Windows.Forms.ToolStripMenuItem();
             this.icon_restart = new System.Windows.Forms.ToolStripMenuItem();
@@ -365,25 +367,39 @@ namespace MCGalaxy.Gui
             // icon_context
             // 
             this.icon_context.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                                    this.icon_hideWindow,
+                                    this.icon_separator,
                                     this.icon_openConsole,
                                     this.icon_shutdown,
                                     this.icon_restart});
             this.icon_context.Name = "iconContext";
             this.icon_context.Size = new System.Drawing.Size(158, 70);
             // 
+            // icon_separator
+            // 
+            this.icon_separator.Name = "icon_separator";
+            this.icon_separator.Size = new System.Drawing.Size(157, 6);
+            // 
+            // icon_hideWindow
+            // 
+            this.icon_hideWindow.Name = "icon_hideWindow";
+            this.icon_hideWindow.Size = new System.Drawing.Size(157, 22);
+            this.icon_hideWindow.Text = "Hide from taskbar";
+            this.icon_hideWindow.Click += new System.EventHandler(this.icon_HideWindow_Click);
+            // 
             // icon_openConsole
             // 
             this.icon_openConsole.Name = "icon_openConsole";
             this.icon_openConsole.Size = new System.Drawing.Size(157, 22);
             this.icon_openConsole.Text = "Open console";
-            this.icon_openConsole.Click += new System.EventHandler(this.openConsole_Click);
+            this.icon_openConsole.Click += new System.EventHandler(this.icon_OpenConsole_Click);
             // 
             // icon_shutdown
             // 
             this.icon_shutdown.Name = "icon_shutdown";
             this.icon_shutdown.Size = new System.Drawing.Size(157, 22);
             this.icon_shutdown.Text = "Shutdown server";
-            this.icon_shutdown.Click += new System.EventHandler(this.shutdownServer_Click);
+            this.icon_shutdown.Click += new System.EventHandler(this.icon_Shutdown_Click);
             // 
             // icon_restart
             // 
@@ -1387,6 +1403,8 @@ namespace MCGalaxy.Gui
 
         private Button main_btnClose;
         private ContextMenuStrip icon_context;
+        private ToolStripMenuItem icon_hideWindow;
+        private ToolStripSeparator icon_separator;
         private ToolStripMenuItem icon_openConsole;
         private ToolStripMenuItem icon_shutdown;
         private ContextMenuStrip tsPlayer;
