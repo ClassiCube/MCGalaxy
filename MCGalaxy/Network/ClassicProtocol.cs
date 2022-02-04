@@ -82,7 +82,7 @@ namespace MCGalaxy.Network
         #if TEN_BIT_BLOCKS
         BlockID ReadBlock(byte[] buffer, int offset) {
             BlockID block;
-            if (p.hasExtBlocks) {
+            if (player.hasExtBlocks) {
                 block = NetUtils.ReadU16(buffer, offset);
             } else {
                 block = buffer[offset];

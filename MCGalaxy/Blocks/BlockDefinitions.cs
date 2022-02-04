@@ -209,7 +209,6 @@ namespace MCGalaxy {
                 if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
 
                 pl.Session.SendDefineBlock(def);
-                pl.SendCurrentBlockPermissions();
             }
         }
         
