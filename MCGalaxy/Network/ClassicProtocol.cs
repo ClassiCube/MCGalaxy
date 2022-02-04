@@ -29,7 +29,7 @@ namespace MCGalaxy.Network
         int extensionCount;
         bool finishedCpeLogin;
         // these are checked very frequently, so avoid overhead of .Supports(
-        bool hasEmoteFix, hasExtTexs;
+        bool hasEmoteFix, hasTwoWayPing, hasExtTexs;
 
         public ClassicProtocol(INetSocket s) {
             socket = s;
@@ -302,7 +302,7 @@ namespace MCGalaxy.Network
             } else if (ext.Name == CpeExt.ExtEntityPositions) {
                 p.hasExtPositions = true;
             } else if (ext.Name == CpeExt.TwoWayPing) {
-                p.hasTwoWayPing = true;
+                hasTwoWayPing = true;
             } else if (ext.Name == CpeExt.BulkBlockUpdate) {
                 p.hasBulkBlockUpdate = true;
             } else if (ext.Name == CpeExt.ExtTextures) {
@@ -453,8 +453,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendPing() {
-            return;
-            if (player.hasTwoWayPing) {
+            if (hasTwoWayPing) {
                 Send(Packet.TwoWayPing(true, player.Ping.NextTwoWayPingData()));
             } else {
                 Send(Packet.Ping());

@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Chatting {
                 if (who == null) return;
                 if (p != who && !CheckExtraPerm(p, data, 1)) return;
                 
-                if (!who.hasTwoWayPing) {
+                if (!who.Supports(CpeExt.TwoWayPing)) {
                     p.Message("{0} client does not support measuring ping", 
                               p == who ? "Your" : p.FormatNick(who) + "&S's");
                 } else if (who.Ping.Measures() == 0) {

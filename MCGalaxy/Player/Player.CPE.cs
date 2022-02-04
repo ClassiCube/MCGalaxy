@@ -38,7 +38,7 @@ namespace MCGalaxy
         
         // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
-        hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate;
+        hasChangeModel, hasExtList, hasCP437, hasBulkBlockUpdate;
 
         /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
         public bool Supports(string extName, int version = 1) {
