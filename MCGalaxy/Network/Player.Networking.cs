@@ -171,7 +171,7 @@ namespace MCGalaxy
             return raw;
         }
         
-        void UpdateFallbackTable() {
+        internal void UpdateFallbackTable() {
             for (byte b = 0; b < Block.CPE_COUNT; b++)
             {
                 fallback[b] = Block.ConvertLimited(b, this);

@@ -26,8 +26,10 @@ namespace MCGalaxy.Network
     {
         Player player;
         INetSocket socket;
-        bool finishedCpeLogin;
         int extensionCount;
+        bool finishedCpeLogin;
+        // these are checked very frequently, so avoid overhead of .Supports(
+        bool hasEmoteFix, hasExtTexs;
 
         public ClassicProtocol(INetSocket s) {
             socket = s;
@@ -214,7 +216,7 @@ namespace MCGalaxy.Network
             
             string extName = NetUtils.ReadString(buffer, offset + 1);
             int extVersion = NetUtils.ReadI32(buffer,    offset + 65);
-            player.AddExtension(extName, extVersion);
+            AddExtension(extName, extVersion);
             extensionCount--;
             CheckReadAllExtensions();
             return size;
@@ -267,6 +269,52 @@ namespace MCGalaxy.Network
 
             return size;
         }
+
+        internal void AddExtension(string extName, int version) {
+            Player p   = player;
+            CpeExt ext = p.FindExtension(extName);
+            if (ext == null) return;
+            ext.ClientVersion = (byte)version;
+            
+            if (ext.Name == CpeExt.CustomBlocks) {
+                if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
+                p.hasCustomBlocks = true;
+
+                p.UpdateFallbackTable();
+                if (p.MaxRawBlock < Block.CPE_MAX_BLOCK) p.MaxRawBlock = Block.CPE_MAX_BLOCK;
+            } else if (ext.Name == CpeExt.ChangeModel) {
+                p.hasChangeModel = true;
+            } else if (ext.Name == CpeExt.EmoteFix) {
+                hasEmoteFix = true;
+            } else if (ext.Name == CpeExt.FullCP437) {
+                p.hasCP437 = true;
+            } else if (ext.Name == CpeExt.ExtPlayerList) {
+                p.hasExtList = true;
+            } else if (ext.Name == CpeExt.BlockDefinitions) {
+                p.hasBlockDefs = true;
+                if (p.MaxRawBlock < 255) p.MaxRawBlock = 255;
+            } else if (ext.Name == CpeExt.TextColors) {
+                p.hasTextColors = true;
+                for (int i = 0; i < Colors.List.Length; i++) {
+                    if (!Colors.List[i].IsModified()) continue;
+                    Send(Packet.SetTextColor(Colors.List[i]));
+                }
+            } else if (ext.Name == CpeExt.ExtEntityPositions) {
+                p.hasExtPositions = true;
+            } else if (ext.Name == CpeExt.TwoWayPing) {
+                p.hasTwoWayPing = true;
+            } else if (ext.Name == CpeExt.BulkBlockUpdate) {
+                p.hasBulkBlockUpdate = true;
+            } else if (ext.Name == CpeExt.ExtTextures) {
+                hasExtTexs = true;
+            }
+            #if TEN_BIT_BLOCKS
+            else if (ext.Name == CpeExt.ExtBlocks) {
+                p.hasExtBlocks = true;
+                if (p.MaxRawBlock < 767) p.MaxRawBlock = 767;
+            }
+            #endif
+        }
 #endregion
 
 
@@ -283,7 +331,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendChat(string message) {
-            List<string> lines = LineWrapper.Wordwrap(message, player.hasEmoteFix);
+            List<string> lines = LineWrapper.Wordwrap(message, hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
             // multi-line messages from multiple threads don't interleave
@@ -380,11 +428,11 @@ namespace MCGalaxy.Network
             byte[] packet;
 
             if (player.Supports(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                packet = Packet.DefineBlockExt(def, true, player.hasCP437, player.hasExtBlocks, player.hasExtTexs);
+                packet = Packet.DefineBlockExt(def, true, player.hasCP437, player.hasExtBlocks, hasExtTexs);
             } else if (player.Supports(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                packet = Packet.DefineBlockExt(def, false, player.hasCP437, player.hasExtBlocks, player.hasExtTexs);
+                packet = Packet.DefineBlockExt(def, false, player.hasCP437, player.hasExtBlocks, hasExtTexs);
             } else {
-                packet = Packet.DefineBlock(def, player.hasCP437, player.hasExtBlocks, player.hasExtTexs);
+                packet = Packet.DefineBlock(def, player.hasCP437, player.hasExtBlocks, hasExtTexs);
             }
             Send(packet);
         }
@@ -405,6 +453,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendPing() {
+            return;
             if (player.hasTwoWayPing) {
                 Send(Packet.TwoWayPing(true, player.Ping.NextTwoWayPingData()));
             } else {

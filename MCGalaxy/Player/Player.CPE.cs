@@ -28,7 +28,7 @@ namespace MCGalaxy
         public string appName;
         CpeExt[] extensions = CpeExtension.Empty;
         
-        CpeExt FindExtension(string extName) {
+        internal CpeExt FindExtension(string extName) {
             foreach (CpeExt ext in extensions) 
             {
                 if (ext.Name.CaselessEq(extName)) return ext;
@@ -37,8 +37,8 @@ namespace MCGalaxy
         }
         
         // these are checked very frequently, so avoid overhead of .Supports(
-        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks, hasEmoteFix,
-        hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate, hasExtTexs;
+        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
+        hasChangeModel, hasExtList, hasCP437, hasTwoWayPing, hasBulkBlockUpdate;
 
         /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
         public bool Supports(string extName, int version = 1) {
@@ -53,52 +53,6 @@ namespace MCGalaxy
                 url = Server.Config.DefaultTexture.Length == 0 ? Server.Config.DefaultTerrain : Server.Config.DefaultTexture;
             }
             return url;
-        }
-
-        
-        internal void AddExtension(string extName, int version) {
-            CpeExt ext = FindExtension(extName.Trim());
-            if (ext == null) return;
-            ext.ClientVersion = (byte)version;
-            
-            if (ext.Name == CpeExt.CustomBlocks) {
-                if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
-                hasCustomBlocks = true;
-                
-                UpdateFallbackTable();
-                if (MaxRawBlock < Block.CPE_MAX_BLOCK) MaxRawBlock = Block.CPE_MAX_BLOCK;
-            } else if (ext.Name == CpeExt.ChangeModel) {
-                hasChangeModel = true;
-            } else if (ext.Name == CpeExt.EmoteFix) {
-                hasEmoteFix = true;
-            } else if (ext.Name == CpeExt.FullCP437) {
-                hasCP437 = true;
-            } else if (ext.Name == CpeExt.ExtPlayerList) {
-                hasExtList = true;
-            } else if (ext.Name == CpeExt.BlockDefinitions) {
-                hasBlockDefs = true;
-                if (MaxRawBlock < 255) MaxRawBlock = 255;
-            } else if (ext.Name == CpeExt.TextColors) {
-                hasTextColors = true;
-                for (int i = 0; i < Colors.List.Length; i++) {
-                    if (!Colors.List[i].IsModified()) continue;
-                    Send(Packet.SetTextColor(Colors.List[i]));
-                }
-            } else if (ext.Name == CpeExt.ExtEntityPositions) {
-                hasExtPositions = true;
-            } else if (ext.Name == CpeExt.TwoWayPing) {
-                hasTwoWayPing = true;
-            } else if (ext.Name == CpeExt.BulkBlockUpdate) {
-                hasBulkBlockUpdate = true;
-            } else if (ext.Name == CpeExt.ExtTextures) {
-                hasExtTexs = true;
-            }
-            #if TEN_BIT_BLOCKS
-            else if (ext.Name == CpeExt.ExtBlocks) {
-                hasExtBlocks = true;
-                if (MaxRawBlock < 767) MaxRawBlock = 767;
-            }
-            #endif
         }
         
         
