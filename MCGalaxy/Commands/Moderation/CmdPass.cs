@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Formatter.MessageNeedMinPerm(p, "+ can verify or set a password", Server.Config.VerifyAdminsRank); return;
             }
             
-            if (!Server.Config.verifyadmins) { p.Message("Admin verification is not currently enabled."); return; }
+            if (!Server.Config.verifyadmins) { p.Message("Password verification is not currently enabled."); return; }
             if (message.Length == 0) { Help(p); return; }
             
             string[] args = message.SplitSpaces(2);
@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Moderation {
             } 
             
             if (Authenticator.Current.VerifyPassword(p.name, password)) {
-                p.Message("You are now &averified &Sand have &aaccess to admin commands and features.");
+                p.Message("You are now &averified &Sand can now &ause commands, modify blocks, and chat.");
                 p.verifiedPass = true;
                 p.Unverified   = false;
             } else {
@@ -109,7 +109,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("&H Note: &WDo NOT set this as your Minecraft password!");
             p.Message("&T/Pass [password]");
             p.Message("&HIf you are an admin, use this command to verify your login.");
-            p.Message("&H You will need to be verified to be able to use commands.");
+            p.Message("&H You must be verified to use commands, modify blocks, and chat");
         }
     }
 }

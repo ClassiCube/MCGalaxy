@@ -59,9 +59,9 @@ namespace MCGalaxy.Authentication
         /// otherwise they will be unable to perform some actions </summary>
         public virtual void NeedVerification(Player p) {
             if (!HasPassword(p.name)) {
-                p.Message("&WPlease set your admin verification password with &T/SetPass [password]!");
+                p.Message("&WPlease set your account verification password with &T/SetPass [password]!");
             } else {
-                p.Message("&WPlease complete admin verification with &T/Pass [password]!");
+                p.Message("&WPlease complete account verification with &T/Pass [password]!");
             }
         }
         
