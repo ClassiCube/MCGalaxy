@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (!Formatter.ValidFilename(p, args[0])) return;
 
             string language    = args.Length > 1 ? args[1] : "";
-            ICompiler compiler = ICompiler.Lookup(language, p);
+            ICompiler compiler = ScriptingOperations.GetCompiler(p, language);
             if (compiler == null) return;
  
             // either "source" or "source1,source2,source3"

@@ -61,7 +61,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         static void CompilePlugin(Player p, string name, string language) {
-            ICompiler compiler = ICompiler.Lookup(language, p);
+            ICompiler compiler = ScriptingOperations.GetCompiler(p, language);
             if (compiler == null) return;
             
             // either "source" or "source1,source2,source3"
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         static void CreatePlugin(Player p, string name, string language) {
-            ICompiler engine = ICompiler.Lookup(language, p);
+            ICompiler engine = ScriptingOperations.GetCompiler(p, language);
             if (engine == null) return;
             
             string path = engine.PluginPath(name);

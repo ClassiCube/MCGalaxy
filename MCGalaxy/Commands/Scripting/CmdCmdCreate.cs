@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (!Formatter.ValidFilename(p, args[0])) return;
 
             string language  = args.Length > 1 ? args[1] : "";
-            ICompiler engine = ICompiler.Lookup(language, p);
+            ICompiler engine = ScriptingOperations.GetCompiler(p, language);
             if (engine == null) return;
             
             string path = engine.CommandPath(args[0]);

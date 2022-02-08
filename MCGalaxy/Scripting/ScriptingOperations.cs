@@ -28,6 +28,21 @@ namespace MCGalaxy.Scripting
 {    
     public static class ScriptingOperations 
     {   
+        public static ICompiler GetCompiler(Player p, string name) {
+            if (name.Length == 0) return ICompiler.Compilers[0];
+            
+            foreach (ICompiler comp in ICompiler.Compilers) 
+            {
+                if (comp.ShortName.CaselessEq(name)) return comp;
+            }
+            
+            p.Message("&WUnknown language \"{0}\"", name);
+            p.Message("&HAvailable languages: &f{0}",
+                      ICompiler.Compilers.Join(c => c.ShortName + " (" + c.FullName + ")"));
+            return null;
+        }
+
+
         const int MAX_LOG = 2;
     	
         /// <summary> Attempts to compile the given source code files into a .dll </summary>
@@ -48,7 +63,8 @@ namespace MCGalaxy.Scripting
             
             CompilerResults results = compiler.Compile(srcs, dst);
             if (!results.Errors.HasErrors) {
-                p.Message("{0} compiled successfully.", type);
+                p.Message("{0} compiled successfully from {1}", 
+                        type, srcs.Join(file => Path.GetFileName(file)));
                 return results;
             }
             

@@ -200,20 +200,7 @@ namespace MCGalaxy.Scripting
         public static ICompiler VB = new VBCompiler();
         
         public static List<ICompiler> Compilers = new List<ICompiler>() { CS, VB };
-        
-        
-        public static ICompiler Lookup(string name, Player p) {
-            if (name.Length == 0) return Compilers[0];
-            
-            foreach (ICompiler comp in Compilers) {
-                if (comp.ShortName.CaselessEq(name)) return comp;
-            }
-            
-            p.Message("&WUnknown language \"{0}\"", name);
-            p.Message("&HAvailable languages: &f{0}",
-                      Compilers.Join(c => c.ShortName + " (" + c.FullName + ")"));
-            return null;
-        }
+
 
         static string FormatSource(string source, params string[] args) {
             // Always use \r\n line endings so it looks correct in Notepad
