@@ -34,11 +34,11 @@ namespace MCGalaxy.Commands.Scripting {
             }
             
             if (Command.IsCore(cmd)) {
-                p.Message("/{0} is a core command, you cannot unload it.", cmdName); return;
+                p.Message("&T/{0} &Sis a core command, you cannot unload it.", cmdName); return;
             }
    
             Command.Unregister(cmd);
-            p.Message("Command was successfully unloaded.");
+            p.Message("Command &T/{0} &Swas successfully unloaded.", cmd.name);
         }
 
         public override void Help(Player p) {

@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (error != null) { 
                 p.Message(error);
             } else {
-                p.Message("Successfully loaded {0}", cmds.Join(c => "/" + c.name));
+                p.Message("Successfully loaded &T{0}", cmds.Join(c => "/" + c.name));
             }
         }
 
