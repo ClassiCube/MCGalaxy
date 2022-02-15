@@ -42,14 +42,17 @@ namespace MCGalaxy.Core {
         }
         
         static void LogAction(ModAction e, Player target, string action) {
+            // TODO should use per-player nick settings
+            string targetNick = e.Actor.FormatNick(e.Target);
+
             if (e.Announce) {
                 // TODO: Chat.MessageFrom if target is online?
                 Player who = PlayerInfo.FindExact(e.Target);
                 // TODO: who.SharesChatWith
-                Chat.Message(ChatScope.Global, e.FormatMessage(e.TargetName, action),
+                Chat.Message(ChatScope.Global, e.FormatMessage(targetNick, action),
                              null, null, true);
             } else {
-                Chat.MessageOps(e.FormatMessage(e.TargetName, action));
+                Chat.MessageOps(e.FormatMessage(targetNick, action));
             }
             
             action = Colors.StripUsed(action);

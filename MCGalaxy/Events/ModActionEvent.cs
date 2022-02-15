@@ -24,9 +24,6 @@ namespace MCGalaxy.Events {
         
         /// <summary> Target player name or IP. </summary>
         public string Target;
-
-        /// <summary> Gets the colored name of the target. (Not nickname) </summary>
-        public string TargetName { get { return Actor.FormatNick(Target); } }
         
         internal Group targetGroup;
         /// <summary> Gets the rank/group target is in. </summary>
