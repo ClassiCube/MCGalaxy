@@ -34,7 +34,7 @@ namespace MCGalaxy.Modules.Awards
 
             if (args.Length == 2 || (message.Length > 0 && !IsListModifier(args[0]))) {
                 offset = 1;
-                name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);               
+                name = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
                 if (name == null) return;
             }
 
