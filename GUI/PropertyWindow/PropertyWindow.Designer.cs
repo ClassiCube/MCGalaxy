@@ -2988,7 +2988,7 @@ namespace MCGalaxy.Gui
             this.srv_numPlayers.BackColor = System.Drawing.SystemColors.Window;
             this.srv_numPlayers.Location = new System.Drawing.Point(83, 20);
             this.srv_numPlayers.Maximum = new decimal(new int[] {
-                                    128,
+                                    MCGalaxy.Server.MAX_PLAYERS,
                                     0,
                                     0,
                                     0});
@@ -3027,7 +3027,7 @@ namespace MCGalaxy.Gui
             this.srv_numGuests.BackColor = System.Drawing.SystemColors.Window;
             this.srv_numGuests.Location = new System.Drawing.Point(83, 47);
             this.srv_numGuests.Maximum = new decimal(new int[] {
-                                    128,
+                                    MCGalaxy.Server.MAX_PLAYERS,
                                     0,
                                     0,
                                     0});

@@ -77,6 +77,7 @@ namespace MCGalaxy {
         
         public static int YesVotes, NoVotes;
         public static bool voting;
+        public const int MAX_PLAYERS = 256;
         
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");

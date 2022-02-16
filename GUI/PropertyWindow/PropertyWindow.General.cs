@@ -53,8 +53,8 @@ namespace MCGalaxy.Gui {
             Server.Config.OwnerName = srv_txtOwner.Text;
             Server.Config.Public = srv_chkPublic.Checked;
             
-            Server.Config.MaxPlayers = (byte)srv_numPlayers.Value;
-            Server.Config.MaxGuests = (byte)srv_numGuests.Value;
+            Server.Config.MaxPlayers = (int)srv_numPlayers.Value;
+            Server.Config.MaxGuests = (int)srv_numGuests.Value;
             Server.Config.AgreeToRulesOnEntry = srv_cbMustAgree.Checked;  
             
             Server.Config.MainLevel = lvl_txtMain.Text;
