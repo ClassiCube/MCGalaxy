@@ -60,7 +60,10 @@ namespace MCGalaxy.Network
             } else if (opcode == 'G' && Server.Config.WebClient) {
                 pending.Remove(this);
                 return new WebSocket(this);
-            } 
+            } else if (opcode == 2) {
+                pending.Remove(this);
+                return new IndevProtocol(this);
+            }
 #if SECURE_WEBSOCKETS
             else if (opcode == 0x16 && Server.Config.WebClient) {
                 pending.Remove(this);
@@ -204,6 +207,13 @@ namespace MCGalaxy.Network
         }
         
         bool TrySendAsync(byte[] buffer) {
+            // TODO awful
+            if (buffer.Length > sendBuffer.Length)
+            {
+                sendBuffer = new byte[buffer.Length];
+                sendArgs.SetBuffer(sendBuffer, 0, buffer.Length);
+            }
+
             // BlockCopy has some overhead, not worth it for very small data
             if (buffer.Length <= 16) {
                 for (int i = 0; i < buffer.Length; i++) {

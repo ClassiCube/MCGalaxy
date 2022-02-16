@@ -136,39 +136,13 @@ namespace MCGalaxy
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
-            byte[] buffer = new byte[hasExtBlocks ? 9 : 8];
-            buffer[0] = Opcode.SetBlock;
-            NetUtils.WriteU16(x, buffer, 1);
-            NetUtils.WriteU16(y, buffer, 3);
-            NetUtils.WriteU16(z, buffer, 5);
-            
-            BlockID raw = ConvertBlock(block);
-            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
-            Socket.Send(buffer, SendFlags.LowPriority);
+            Session.SendBlockchange(x, y, z, block);
         }
         
         
         /// <summary> Converts the given block ID into a raw block ID that can be sent to this player </summary>
         public BlockID ConvertBlock(BlockID block) {
-            BlockID raw;
-            if (block >= Block.Extended) {
-                raw = Block.ToRaw(block);
-            } else {
-                raw = Block.Convert(block);
-                // show invalid physics blocks as Orange
-                if (raw >= Block.CPE_COUNT) raw = Block.Orange;
-            }
-            if (raw > MaxRawBlock) raw = level.GetFallback(block);
-            
-            // Check if a custom block replaced a core block
-            //  If so, assume fallback is the better block to display
-            if (!hasBlockDefs && raw < Block.CPE_COUNT) {
-                BlockDefinition def = level.CustomBlockDefs[raw];
-                if (def != null) raw = def.FallBack;
-            }
-            
-            if (!hasCustomBlocks) raw = fallback[(BlockRaw)raw];
-            return raw;
+            return Session.ConvertBlock(block);
         }
         
         internal void UpdateFallbackTable() {
