@@ -76,7 +76,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         
         public DiscordWebsocket() {
-            path = "/?v=6&encoding=json";
+            path = "/?v=8&encoding=json";
         }
         
         const string host = "gateway.discord.gg";
