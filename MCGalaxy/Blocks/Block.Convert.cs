@@ -80,55 +80,72 @@ namespace MCGalaxy {
         /// block supported by the given player's client </summary>
         internal static byte ConvertLimited(byte block, Player p) {
         	if (p.hasCustomBlocks) return block;
-        	
+
             // protocol version 7 only supports up to Obsidian block
-            switch (block) {
-                case CobblestoneSlab: block = Slab; break;
-                case Rope:        block = Mushroom; break;
-                case Sandstone:   block = Sand; break;
-                case Snow:        block = Air; break;
-                case Fire:        block = Lava; break;
-                case LightPink:   block = Pink; break;
-                case ForestGreen: block = Green; break;
-                case Brown:       block = Dirt; break;
-                case DeepBlue:    block = Blue; break;
-                case Turquoise:   block = Cyan; break;
-                case Ice:         block = Glass; break;
-                case CeramicTile: block = Iron; break;
-                case MagmaBlock:  block = Obsidian; break;
-                case Pillar:      block = White; break;
-                case Crate:       block = Wood; break;
-                case StoneBrick:  block = Stone; break;
+            if (p.ProtocolVersion >= Server.VERSION_0030) {
+                return block <= Obsidian ? block : v7_fallback[block - CobblestoneSlab];
             }
-            if (p.ProtocolVersion >= Server.VERSION_0030) return block;
             
             // protocol version 6 only supports up to Gold block
-            switch (block) {
-                case Iron:       block = Gold; break;
-                case DoubleSlab: block = Gray; break;
-                case Slab:       block = Gray; break;
-                case Brick:      block = Red; break;
-                case TNT:        block = Red; break;
-                case Bookshelf:  block = Wood; break;
-                case MossyRocks: block = Cobblestone; break;
-                case Obsidian:   block = Cobblestone; break;
+            if (p.ProtocolVersion >= Server.VERSION_0020) {
+                return block <= Gold ? block : v6_fallback[block - Iron];
             }
-            if (p.ProtocolVersion >= Server.VERSION_0020) return block;
             
             // protocol version 5 only supports up to Glass block
-            if (block == Block.Gold)      block = Block.Sponge;
-            if (block >= Block.Dandelion) block = Block.Sapling;
-            if (block >= Block.Red)       block = Block.Sand;
-            if (p.ProtocolVersion >= Server.VERSION_0019) return block;
-            
+            if (p.ProtocolVersion >= Server.VERSION_0019) {
+                return block <= Glass ? block : v5_fallback[block - Red];
+            }
+
             // protocol version 4 only supports up to Leaves block
-            if (block == Block.Glass)  block = Block.Leaves;
-            if (block == Block.Sponge) block = Block.GoldOre;
-            
-            // protocol version 3 seems to have same support
-            // TODO what even changed between 3 and 4?
-            return block;
+            //  protocol version 3 seems to have same support
+            //  TODO what even changed between 3 and 4?
+            return block <= Leaves ? block : v4_fallback[block - Sponge];
         }
+
+        static byte[] v7_fallback = {
+            // CobbleSlab Rope      Sandstone Snow Fire  LightPink ForestGreen Brown
+               Slab,      Mushroom, Sand,     Air, Lava, Pink,     Green,      Dirt,
+            // DeepBlue Turquoise Ice    CeramicTile Magma     Pillar Crate StoneBrick
+               Blue,    Cyan,     Glass, Iron,       Obsidian, White, Wood, Stone
+        };
+        static byte[] v6_fallback = {
+            // Iron   DoubleSlab Slab  Brick TNT  Bookshelf MossyRocks   Obsidian
+               Stone, Gray,      Gray, Red,  Red, Wood,     Cobblestone, Cobblestone,
+            // CobbleSlab   Rope      Sandstone Snow Fire  LightPink ForestGreen Brown
+               Cobblestone, Mushroom, Sand,     Air, Lava, Pink,     Green,      Dirt,
+            // DeepBlue Turquoise Ice    CeramicTile Magma        Pillar Crate StoneBrick
+               Blue,    Cyan,     Glass, Gold,       Cobblestone, White, Wood, Stone
+        };
+        static byte[] v5_fallback = {
+            // Red   Orange Yellow Lime  Green Teal  Aqua  Cyan
+               Sand, Sand,  Sand,  Sand, Sand, Sand, Sand, Sand,
+            // Blue  Indigo Violet Magenta Pink  Black  Gray   White
+               Sand, Sand,  Sand,  Sand,   Sand, Stone, Stone, Sand,
+            // Dandelion Rose     BrownShroom RedShroom Gold
+               Sapling,  Sapling, Sapling,    Sapling,  Sponge,
+            // Iron   DoubleSlab Slab   Brick        TNT   Bookshelf MossyRocks   Obsidian
+               Stone, Stone,     Stone, Cobblestone, Sand, Wood,     Cobblestone, Cobblestone,
+            // CobbleSlab   Rope     Sandstone Snow Fire  LightPink ForestGreen Brown
+               Cobblestone, Sapling, Sand,     Air, Lava, Sand,     Sand,       Dirt,
+            // DeepBlue Turquoise Ice    CeramicTile Magma        Pillar Crate StoneBrick
+               Sand,    Sand,     Glass, Stone,      Cobblestone, Stone, Wood, Stone
+        };
+        static byte[] v4_fallback = {
+            // Sponge   Glass
+               GoldOre, Leaves,
+            // Red   Orange Yellow Lime  Green Teal  Aqua  Cyan
+               Sand, Sand,  Sand,  Sand, Sand, Sand, Sand, Sand,
+            // Blue  Indigo Violet Magenta Pink  Black  Gray   White
+               Sand, Sand,  Sand,  Sand,   Sand, Stone, Stone, Sand,
+            // Dandelion Rose     BrownShroom RedShroom Gold
+               Sapling,  Sapling, Sapling,    Sapling,  GoldOre,
+            // Iron   DoubleSlab Slab   Brick        TNT   Bookshelf MossyRocks   Obsidian
+               Stone, Stone,     Stone, Cobblestone, Sand, Wood,     Cobblestone, Cobblestone,
+            // CobbleSlab   Rope     Sandstone Snow Fire  LightPink ForestGreen Brown
+               Cobblestone, Sapling, Sand,     Air, Lava, Sand,     Sand,       Dirt,
+            // DeepBlue Turquoise Ice     CeramicTile Magma        Pillar Crate StoneBrick
+               Sand,    Sand,     Leaves, Stone,      Cobblestone, Stone, Wood, Stone
+        };
         
         public static BlockID Convert(BlockID block) {
             switch (block) {
