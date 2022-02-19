@@ -22,7 +22,7 @@ namespace MCGalaxy {
         public static bool Handle(Player p, string text) {
             if (text.Length >= 2 && text[0] == '@' && text[1] == '@') {
                 text = text.Remove(0, 2);
-                DoPM(p, Player.Console, text);
+                MessageDirect(p, Player.Console, text);
                 return true;
             }
             
@@ -42,8 +42,8 @@ namespace MCGalaxy {
                 Player who = PlayerInfo.FindMatches(p, target);
                 if (who == null) return true;
                 if (who == p) { p.Message("Trying to talk to yourself, huh?"); return true; }
-                
-                DoPM(p, who, text);
+
+                MessageDirect(p, who, text);
                 return true;
             }
             
@@ -89,7 +89,7 @@ namespace MCGalaxy {
             Chat.MessageChat(ChatScope.Perms, p, chatMsg, perms, null, true);
         }
         
-        static void DoPM(Player p, Player target, string message) {
+        public static void MessageDirect(Player p, Player target, string message) {
             if (message.Length == 0) { p.Message("No message entered"); return; }
             Logger.Log(LogType.PrivateChat, "{0} @{1}: {2}", p.name, target.name, message);
             
