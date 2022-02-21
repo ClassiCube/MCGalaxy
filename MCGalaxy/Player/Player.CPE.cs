@@ -84,6 +84,11 @@ namespace MCGalaxy
             }
         }
 
+        [Obsolete("Use Session.SendSetEnvColor instead", true)]
+        public void SendEnvColor(byte type, string hex) {
+            Session.SendSetEnvColor(type, hex);
+        }
+
         public void SendCurrentBlockPermissions() {
             if (!Supports(CpeExt.BlockPermissions)) return;
             // Write the block permissions as one bulk TCP packet

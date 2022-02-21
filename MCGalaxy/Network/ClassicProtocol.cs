@@ -478,6 +478,16 @@ namespace MCGalaxy.Network
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
+            // SpawnEntity for self ID behaves differently in Classic 0.0.16a
+            //  - yaw and pitch fields are swapped
+            //  - pitch is inverted
+            // (other entities do NOT require this adjustment however)
+            if (id == Entities.SelfID && player.ProtocolVersion == Server.VERSION_0016) {
+                byte temp = rot.HeadX;
+                rot.HeadX = rot.RotY;
+                rot.RotY  = (byte)(256 - temp);
+            }
+
             if (player.Supports(CpeExt.ExtPlayerList, 2)) {
                 Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, player.hasCP437, player.hasExtPositions));
             } else if (player.hasExtList) {
