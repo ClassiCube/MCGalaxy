@@ -320,6 +320,20 @@ namespace MCGalaxy.Network
 
 #region Classic packet sending
         public void SendTeleport(byte id, Position pos, Orientation rot) {
+            // Some classic < 0.0.19 versions have issues with sending teleport packet with ID 255
+            //   0.0.16a - does nothing
+            //   0.0.17a - does nothing
+            //   0.0.18a - works fine (https://minecraft.fandom.com/wiki/Java_Edition_Classic_0.0.18a)
+            // Skins weren't implemented until 0.0.19a, so it's fine to spam send SpawnEntity packets
+            //  (downside is that client's respawn position is also changed due to using SpawnEntity)
+            // Unfortunately, there is no easy way to tell the difference between 0.0.17a and 0.0.18a,
+            //  so this workaround still affects 0.0.18 clients even though it is unnecessary
+            if (id == Entities.SelfID && player.ProtocolVersion < Server.VERSION_0019) {
+                // TODO keep track of 'last spawn name', in case self entity name was changed by OnEntitySpawnedEvent
+                SendSpawnEntity(id, player.color + player.truename, player.SkinName, pos, rot);
+                return;
+            }
+
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
