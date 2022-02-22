@@ -379,10 +379,94 @@ namespace MCGalaxy.Network
             }
         }
 
+        byte[] GetBlocks(Level level)
+        {
+            // so apparently indev client always overwrites bottom 2 layers with lava.. ?
+            byte[] blocks = new byte[level.blocks.Length];
+            int i = level.PosToInt(0, 2, 0);
+            //for (int j = 0; j < i; j++) blocks[j] = Block.Bedrock;
+
+
+            // TODO TERRIBLY AWFULLY EXTREMELY SLOW
+            for (int y = 0; y < level.Height - 2; y++)
+                for (int z = 0; z < level.Length; z++)
+                    for (int x = 0; x < level.Width; x++)
+                    {
+                        blocks[i++] = (byte)level.FastGetBlock((ushort)x, (ushort)y, (ushort)z);
+                    }
+            return blocks;
+
+            //return level.blocks;
+            // the block type array is indexed with:
+            // index = y + (z * (Size_Y + 1)) + (x * (Size_Y + 1) * (Size_Z + 1))
+
+            // TODO TERRIBLE
+            /*byte[] blocks = new byte[level.blocks.Length];
+            int i = 0;
+            for (int x = 0; x < level.Width; x++)
+                for (int z = 0; z < level.Length; z++)
+                    for (int y = 0; x < level.Height; y++)
+                    {
+                        blocks[i++] = (byte)level.FastGetBlock((ushort)x, (ushort)y, (ushort)z);
+                    }
+            return blocks;*/
+        }
+
         public override void SendLevel(Level prev, Level level) {
 
             // TODO what even this
-            byte[] C_blks = CompressData(new byte[level.blocks.Length]);//CompressData(level.blocks);
+            byte[] C_blks = CompressData(GetBlocks(level));
+            byte[] C_meta = CompressData(new byte[level.blocks.Length]);
+            byte[] tmp = new byte[4];
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                byte[] map_data = new byte[1 + 4 + 4 + 4];
+                map_data[0] = OPCODE_PRE_CHUNK;
+                NetUtils.WriteI32(C_blks.Length, map_data, 1);
+                NetUtils.WriteI32(C_meta.Length, map_data, 5);
+                NetUtils.WriteI32(100, map_data, 9); // TODO what even is this
+                ms.Write(map_data, 0, map_data.Length);
+
+                // TODO this seems wrong
+                NetUtils.WriteI32(C_blks.Length, tmp, 0);
+                ms.Write(tmp, 0, tmp.Length);
+                ms.Write(C_blks, 0, C_blks.Length);
+
+                NetUtils.WriteI32(C_meta.Length, tmp, 0);
+                ms.Write(tmp, 0, tmp.Length);
+                ms.Write(C_meta, 0, C_meta.Length);
+
+                Send(ms.ToArray());
+            }
+
+            byte[] final = new byte[1 + 4 + 4 + 4 + 4 + 4];
+            final[0] = OPCODE_CHUNK;
+
+            // 4 bytes ??
+            // 01 00 00 00 - 128x64x128 world
+            // 01 01 00 00 - 256x64x256 world
+            // 01 02 00 00 - 512x64x512 world
+            NetUtils.WriteI32(0x10303040, final,  5); // TODO why is world always 32 wide. is this even right????
+            //NetUtils.WriteI32(level.Width, final,  5);
+            NetUtils.WriteI32(level.Height, final,  9);
+            NetUtils.WriteI32(level.Length, final, 13);
+            // 4 bytes ???? checksum???
+            //final[19] = 0x01; final[20] = 0x2E;
+            Send(final);
+
+            byte[] spawn = new byte[1 + 4 + 4 + 4];
+            spawn[0] = OPCODE_SPAWN_POSITION;
+            NetUtils.WriteI32(level.Width / 2,  final, 1);
+            NetUtils.WriteI32(level.Height / 2, final, 5);
+            NetUtils.WriteI32(level.Length / 2, final, 9);
+            Send(spawn);
+        }
+
+        public void SendLevel2(Level prev, Level level) {
+
+            // TODO what even this
+            byte[] C_blks = CompressData(level.blocks);
             byte[] C_meta = CompressData(new byte[level.blocks.Length]);
             byte[] tmp = new byte[4];
 
