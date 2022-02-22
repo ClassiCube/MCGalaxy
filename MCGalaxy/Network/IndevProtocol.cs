@@ -447,8 +447,7 @@ namespace MCGalaxy.Network
             // 01 00 00 00 - 128x64x128 world
             // 01 01 00 00 - 256x64x256 world
             // 01 02 00 00 - 512x64x512 world
-            NetUtils.WriteI32(0x10303040, final,  5); // TODO why is world always 32 wide. is this even right????
-            //NetUtils.WriteI32(level.Width, final,  5);
+            NetUtils.WriteI32(level.Width, final,  5);
             NetUtils.WriteI32(level.Height, final,  9);
             NetUtils.WriteI32(level.Length, final, 13);
             // 4 bytes ???? checksum???
@@ -457,9 +456,9 @@ namespace MCGalaxy.Network
 
             byte[] spawn = new byte[1 + 4 + 4 + 4];
             spawn[0] = OPCODE_SPAWN_POSITION;
-            NetUtils.WriteI32(level.Width / 2,  final, 1);
-            NetUtils.WriteI32(level.Height / 2, final, 5);
-            NetUtils.WriteI32(level.Length / 2, final, 9);
+            NetUtils.WriteI32(level.Width / 2,  spawn, 1);
+            NetUtils.WriteI32(level.Height / 2, spawn, 5);
+            NetUtils.WriteI32(level.Length / 2, spawn, 9);
             Send(spawn);
         }
 
