@@ -36,6 +36,7 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
             if (curPlayer == null) { NoPlayerSelected(); return; }
+
             string text = pl_txtMessage.Text.Trim();
             if (text.Length == 0) { Players_AppendStatus("No message to send"); return; }
             
@@ -46,10 +47,12 @@ namespace MCGalaxy.Gui {
 
         void pl_BtnSendCommand_Click(object sender, EventArgs e) {
             if (curPlayer == null) { NoPlayerSelected(); return; }
-            string text = pl_txtImpersonate.Text.Trim();
+
+            string text = pl_txtSendCommand.Text.Trim()
+                                                .TrimStart('/');
             if (text.Length == 0) { Players_AppendStatus("No command to execute"); return; }
-            
-            string[] args = text.SplitSpaces(2);
+
+            string[] args  = text.SplitSpaces(2);
             string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
             
             CommandData data = default(CommandData);
@@ -62,7 +65,7 @@ namespace MCGalaxy.Gui {
             } else {
                 Players_AppendStatus("Made player do /" + cmdName);
             }
-            pl_txtImpersonate.Text = "";
+            pl_txtSendCommand.Text = "";
         }
 
         void pl_BtnMute_Click(object sender, EventArgs e)  { DoCmd("mute", "Muted @p"); }
@@ -94,7 +97,7 @@ namespace MCGalaxy.Gui {
             Players_UpdateSelected();
         }
 
-        void pl_txtImpersonate_KeyDown(object sender, KeyEventArgs e) {
+        void pl_txtSendCommand_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) pl_BtnSendCommand_Click(sender, e);
         }
         void pl_txtUndo_KeyDown(object sender, KeyEventArgs e) {

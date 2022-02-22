@@ -143,7 +143,7 @@ namespace MCGalaxy.Gui
             this.pl_gbProps = new System.Windows.Forms.GroupBox();
             this.pl_pgProps = new MCGalaxy.Gui.HackyPropertyGrid();
             this.pl_gbOther = new System.Windows.Forms.GroupBox();
-            this.pl_txtImpersonate = new System.Windows.Forms.TextBox();
+            this.pl_txtSendCommand = new System.Windows.Forms.TextBox();
             this.pl_btnSendCommand = new System.Windows.Forms.Button();
             this.pl_txtMessage = new System.Windows.Forms.TextBox();
             this.pl_btnMessage = new System.Windows.Forms.Button();
@@ -1114,7 +1114,7 @@ namespace MCGalaxy.Gui
             // 
             // pl_gbOther
             // 
-            this.pl_gbOther.Controls.Add(this.pl_txtImpersonate);
+            this.pl_gbOther.Controls.Add(this.pl_txtSendCommand);
             this.pl_gbOther.Controls.Add(this.pl_btnSendCommand);
             this.pl_gbOther.Controls.Add(this.pl_txtMessage);
             this.pl_gbOther.Controls.Add(this.pl_btnMessage);
@@ -1125,14 +1125,14 @@ namespace MCGalaxy.Gui
             this.pl_gbOther.TabStop = false;
             this.pl_gbOther.Text = "Other";
             // 
-            // pl_txtImpersonate
+            // pl_txtSendCommand
             // 
-            this.pl_txtImpersonate.BackColor = System.Drawing.SystemColors.Window;
-            this.pl_txtImpersonate.Location = new System.Drawing.Point(115, 50);
-            this.pl_txtImpersonate.Name = "pl_txtImpersonate";
-            this.pl_txtImpersonate.Size = new System.Drawing.Size(485, 21);
-            this.pl_txtImpersonate.TabIndex = 38;
-            this.pl_txtImpersonate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_txtImpersonate_KeyDown);
+            this.pl_txtSendCommand.BackColor = System.Drawing.SystemColors.Window;
+            this.pl_txtSendCommand.Location = new System.Drawing.Point(115, 50);
+            this.pl_txtSendCommand.Name = "pl_txtSendCommand";
+            this.pl_txtSendCommand.Size = new System.Drawing.Size(485, 21);
+            this.pl_txtSendCommand.TabIndex = 38;
+            this.pl_txtSendCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_txtSendCommand_KeyDown);
             // 
             // pl_btnImpersonate
             // 
@@ -1438,7 +1438,7 @@ namespace MCGalaxy.Gui
         private TextBox pl_txtMessage;
         private Button pl_btnWarn;
         private Button pl_btnFreeze;
-        private TextBox pl_txtImpersonate;
+        private TextBox pl_txtSendCommand;
         private Button pl_btnSendCommand;
         private Button pl_btnKill;
         private TextBox pl_txtUndo;
