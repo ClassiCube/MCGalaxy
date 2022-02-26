@@ -1,4 +1,22 @@
-﻿v 1.9.3.8
+﻿v 1.9.3.9
+Improved: Hiding GUI from taskbar when minimised is disabled by default now
+Improved: Update Discord Gateway api from v6 to v8
+Improved: Cmdbind can be used with any shortcut, not just /0 to /9
+Improved: Clarify how to provide input when creating blocks in /gb and /lb (Thanks Goodly)
+Improved: Increase max player limit to 256
+Improved: Some fallback blocks for < 0.30 classic versions
+Improved: Change 'admin verification required' messages to more generic 'account/password verification required'
+Improved: Clarity of /vote message
+Improved: In Players tab in GUI, change 'Send message' to behave the same as @player
+Improved: In Players tab in GUI, 'Do command' now supports either '/cmd' or 'cmd' in input
+Improved: Compiling now includes source filenames at end in success message
+Improved: Cmdunload now includes name of command in output
+Improved: Change classic map gen to standard/simple theme instead of advanced theme
+Fixed: /tw set difficulty sometimes erroring
+Fixed: Teleporting self in classic 0.0.16a - 0.0.17a doing nothing
+Fixed: Wrong yaw/pitch when spawning self in classic 0.0.16a
+
+v 1.9.3.8
 Fixed: Username clone detection being case sensitive
 Fixed: Database.TableExists very rarely returning false positive with MySQL (SQLite is used by default)
 Improved: Allow using -1 for /env variables
