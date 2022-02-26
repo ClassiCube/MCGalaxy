@@ -17,7 +17,7 @@ namespace ClassicalSharp.Generator {
         
         const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         public static void RegisterGenerators() {                                                
-            MCGalaxy.Generator.MapGen.Register("Classic", MCGalaxy.Generator.GenType.Advanced, Gen, defHelp);
+            MCGalaxy.Generator.MapGen.Register("Classic", MCGalaxy.Generator.GenType.Simple, Gen, defHelp);
         }
         
         static bool Gen(Player p, Level lvl, string seed) {      

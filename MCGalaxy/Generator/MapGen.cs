@@ -73,7 +73,7 @@ namespace MCGalaxy.Generator
             return Generators.Join(g => g.Type == type ? g.Theme : null); 
         }
         public static void PrintThemes(Player p) {
-            p.Message("&HSimple themes: &f"   + FilterThemes(GenType.Simple));
+            p.Message("&HStandard themes: &f" + FilterThemes(GenType.Simple));
             p.Message("&HfCraft themes: &f"   + FilterThemes(GenType.fCraft));
             p.Message("&HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
