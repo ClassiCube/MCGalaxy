@@ -40,7 +40,6 @@ namespace MCGalaxy.Blocks {
             def.WalkSound = (byte)StepSound(b);
             
             def.FullBright = FullBright(b);
-            def.Shape = Draw(b) == DrawType.Sprite ? (byte)0 : (byte)1;
             def.BlockDraw = Draw(b);
             if (def.BlockDraw == DrawType.Sprite)
                 def.BlockDraw = DrawType.Transparent;
@@ -51,6 +50,8 @@ namespace MCGalaxy.Blocks {
             def.FallBack = (BlockRaw)b;
             
             def.MaxX = 16; def.MaxZ = Height(b); def.MaxY = 16;
+
+            def.Shape = Draw(b) == DrawType.Sprite ? (byte)0 : def.MaxZ;
             return def;
         }
         

@@ -89,7 +89,7 @@ namespace LibNoise
             int z0 = (zCandidate > 0.0 ? (int)zCandidate : (int)zCandidate - 1);
 
             // Return the calculated distance with the displacement value applied.
-            return Displacement * (double)ValueNoise(x0, y0, z0);
+            return Displacement * (double)ValueNoise(x0, y0, z0, 0);
         }
         
         
@@ -98,7 +98,7 @@ namespace LibNoise
         const int ZNoiseGen = 6971;
         const int SeedNoiseGen = 1013;
 
-        static int IntValueNoise(int x, int y, int z, int seed)
+        static double ValueNoise(int x, int y, int z, int seed)
         {
             // All constants are primes and must remain prime in order for this noise
             // function to work correctly.
@@ -109,17 +109,9 @@ namespace LibNoise
               + SeedNoiseGen * seed)
               & 0x7fffffff;
             n = (n >> 13) ^ n;
-            return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
-        }
+            n = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
 
-        static double ValueNoise(int x, int y, int z)
-        {
-            return ValueNoise(x, y, z, 0);
-        }
-
-        static double ValueNoise(int x, int y, int z, int seed)
-        {
-            return 1.0 - ((double)IntValueNoise(x, y, z, seed) / 1073741824.0);
+            return 1.0 - ((double)n / 1073741824.0);
         }
     }
 }
