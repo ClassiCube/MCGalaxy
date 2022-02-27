@@ -294,6 +294,7 @@ namespace LibNoise
 
         public static double GradientCoherentNoise(double x, double y, double z, int seed)
         {
+            // NOTE: Incorrect logic, should be >= 0.0 (kept for compatibility)
             int x0 = (x > 0.0 ? (int)x : (int)x - 1);
             int x1 = x0 + 1;
             int y0 = (y > 0.0 ? (int)y : (int)y - 1);

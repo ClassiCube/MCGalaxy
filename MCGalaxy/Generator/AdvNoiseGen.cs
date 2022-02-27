@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using LibNoise;
 
 namespace MCGalaxy.Generator 
@@ -119,8 +118,8 @@ namespace MCGalaxy.Generator
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
             {
-                double value = Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
-                if (value > 20)
+                double value = module.GetValue(x / 100.0, y / 100.0, z / 100.0);
+                if (value >= 0.1)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }
             return true;
