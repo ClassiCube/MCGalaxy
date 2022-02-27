@@ -185,6 +185,13 @@ namespace MCGalaxy.Levels.IO {
                 // Don't define level custom block if same as global custom block
                 BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
                 if (PropsEquals(def, globalDef)) continue;
+
+                // Attempt to give this block a better fallback block than air
+                if (globalDef != null) {
+                    def.FallBack = globalDef.FallBack;
+                } else if (def.RawID <= Block.CPE_MAX_BLOCK) {
+                    def.FallBack = (byte)def.RawID;
+                }
                 
                 lvl.UpdateCustomBlock(block, def);
                 hasBlockDefs = true;
