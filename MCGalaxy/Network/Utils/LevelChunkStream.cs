@@ -38,14 +38,14 @@ namespace MCGalaxy.Network {
         
         int index;
         byte chunkValue;
-        Player p;
+        ClassicProtocol session;
         byte[] data = new byte[chunkSize + 4];
         const int chunkSize = 1024;
-        public LevelChunkStream(Player p) { this.p = p; }
+        public LevelChunkStream(ClassicProtocol s) { session = s; }
         
         public override void Close() {
             if (index > 0) WritePacket();
-            p = null;
+            session = null;
             base.Close();
         }
         
@@ -79,39 +79,53 @@ namespace MCGalaxy.Network {
             data[0] = Opcode.LevelDataChunk;
             NetUtils.WriteU16((ushort)index, data, 1);
             data[1027] = chunkValue;
-            p.Send(data);
+
+            session.Send(data);
             index = 0;
         }
-        
-        
-        public static Stream CompressMapHeader(Player p, int volume, LevelChunkStream dst) {
-            Stream stream = null;
-            if (p.Supports(CpeExt.FastMap)) {
-                stream = new DeflateStream(dst, CompressionMode.Compress, true);
-            } else {
-                stream = new GZipStream(dst, CompressionMode.Compress, true);
-                byte[] buffer = new byte[4];
-                
-                NetUtils.WriteI32(volume, buffer, 0);
-                stream.Write(buffer, 0, 4);
+
+
+        public static void SendLevel(Player player, Level level, int volume) {
+            using (LevelChunkStream dst = new LevelChunkStream(player.Session))
+                using (Stream stream = dst.CompressMapHeader(player, volume))
+            {
+                if (level.MightHaveCustomBlocks()) {
+                    CompressMap(level, stream, dst);
+                } else {
+                    CompressMapSimple(level, stream, dst);
+                }
             }
+        }
+        
+        Stream CompressMapHeader(Player p, int volume) {
+            // FastMap sends volume in LevelInit packet instead
+            if (p.Supports(CpeExt.FastMap)) {
+               return new DeflateStream(this, CompressionMode.Compress, true);
+            }
+           
+            Stream stream = new GZipStream(this, CompressionMode.Compress, true);
+            byte[] buffer = new byte[4];
+
+            NetUtils.WriteI32(volume, buffer, 0);
+            stream.Write(buffer, 0, 4);
             return stream;
         }
         
-        public unsafe static void CompressMapSimple(Player p, Stream stream, LevelChunkStream dst) {
+        unsafe static void CompressMapSimple(Level lvl, Stream stream, LevelChunkStream dst) {
             const int bufferSize = 64 * 1024;
             byte[] buffer = new byte[bufferSize];
             int bIndex = 0;
-            
+
+            ClassicProtocol s = dst.session;
+            byte[] blocks     = lvl.blocks;
+            float progScale   = 100.0f / blocks.Length;
+
             // Store on stack instead of performing function call for every block in map
             byte* conv = stackalloc byte[256];
-            for (int i = 0; i < 256; i++) {
-                conv[i] = (byte)p.ConvertBlock((BlockID)i);
+            for (int i = 0; i < 256; i++) 
+            {
+                conv[i] = (byte)s.ConvertBlock((BlockID)i);
             }
-            
-            Level lvl = p.level;
-            byte[] blocks = lvl.blocks;
-            float progScale = 100.0f / blocks.Length;
             
             // compress the map data in 64 kb chunks
             for (int i = 0; i < blocks.Length; ++i) {
@@ -120,18 +134,22 @@ namespace MCGalaxy.Network {
                 
                 if (bIndex == bufferSize) {
                     // '0' to indicate this chunk has lower 8 bits of block ids
-                    dst.chunkValue = p.hasExtBlocks ? (byte)0 : (byte)(i * progScale);
+                    dst.chunkValue = s.hasExtBlocks ? (byte)0 : (byte)(i * progScale);
                     stream.Write(buffer, 0, bufferSize); bIndex = 0;
                 }
             }
             if (bIndex > 0) stream.Write(buffer, 0, bIndex);
         }
         
-        public unsafe static void CompressMap(Player p, Stream stream, LevelChunkStream dst) {
+        unsafe static void CompressMap(Level lvl, Stream stream, LevelChunkStream dst) {
             const int bufferSize = 64 * 1024;
             byte[] buffer = new byte[bufferSize];
             int bIndex = 0;
-            
+
+            ClassicProtocol s = dst.session;
+            byte[] blocks     = lvl.blocks;
+            float progScale   = 100.0f / blocks.Length;
+
             // Store on stack instead of performing function call for every block in map
             byte* conv = stackalloc byte[Block.ExtendedCount];
             byte* convExt  = conv + Block.Count;
@@ -141,19 +159,16 @@ namespace MCGalaxy.Network {
             #endif
 
             for (int j = 0; j < Block.ExtendedCount; j++) {
-                conv[j] = (byte)p.ConvertBlock((BlockID)j);
+                conv[j] = (byte)s.ConvertBlock((BlockID)j);
             }
-            
-            Level lvl = p.level;
-            byte[] blocks = lvl.blocks;
-            float progScale = 100.0f / blocks.Length;
             
             // compress the map data in 64 kb chunks
             #if TEN_BIT_BLOCKS
-            if (p.hasExtBlocks) {
+            if (s.hasExtBlocks) {
                 // Initially assume all custom blocks are <= 255
                 int i;
-                for (i = 0; i < blocks.Length; i++) {
+                for (i = 0; i < blocks.Length; i++) 
+                {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
                         buffer[bIndex] = lvl.GetExtTile(i);
@@ -178,8 +193,8 @@ namespace MCGalaxy.Network {
                 bIndex = 0;
                 
                 // Nope - have to go slower path now                
-                using (LevelChunkStream dst2 = new LevelChunkStream(p))
-                    using (Stream stream2 = LevelChunkStream.CompressMapHeader(p, blocks.Length, dst2))
+                using (LevelChunkStream dst2 = new LevelChunkStream(s))
+                    using (Stream stream2 = CompressMapHeader(p, blocks.Length, dst2))
                 {
                     dst2.chunkValue = 1; // 'extended' blocks
                     byte[] buffer2 = new byte[bufferSize];
@@ -190,7 +205,8 @@ namespace MCGalaxy.Network {
                         stream2.Write(buffer2, 0, len);
                     }
                     
-                    for (; i < blocks.Length; i++) {
+                    for (; i < blocks.Length; i++) 
+                    {
                         byte block = blocks[i];
                         if (block == Block.custom_block) {
                             buffer[bIndex]  = lvl.GetExtTile(i);
@@ -216,7 +232,8 @@ namespace MCGalaxy.Network {
                     if (bIndex > 0) stream2.Write(buffer2, 0, bIndex);
                 }
             } else {
-                for (int i = 0; i < blocks.Length; i++) {
+                for (int i = 0; i < blocks.Length; i++) 
+                {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
                         buffer[bIndex] = convExt[lvl.GetExtTile(i)];
@@ -236,8 +253,9 @@ namespace MCGalaxy.Network {
                 }
             }
             #else
-            if (p.hasBlockDefs) {
-                for (int i = 0; i < blocks.Length; i++) {
+            if (s.hasBlockDefs) {
+                for (int i = 0; i < blocks.Length; i++) 
+                {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
                         buffer[bIndex] = lvl.GetExtTile(i);
@@ -252,7 +270,8 @@ namespace MCGalaxy.Network {
                     }
                 }
             } else {
-                for (int i = 0; i < blocks.Length; i++) {
+                for (int i = 0; i < blocks.Length; i++) 
+                {
                     byte block = blocks[i];
                     if (block == Block.custom_block) {
                         buffer[bIndex] = convExt[lvl.GetExtTile(i)];

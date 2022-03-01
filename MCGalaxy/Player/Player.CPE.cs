@@ -37,8 +37,7 @@ namespace MCGalaxy
         }
         
         // these are checked very frequently, so avoid overhead of .Supports(
-        public bool hasCustomBlocks, hasBlockDefs, hasTextColors, hasExtBlocks,
-        hasChangeModel, hasExtList, hasCP437, hasBulkBlockUpdate;
+        public bool hasTextColors, hasChangeModel, hasExtList, hasCP437;
 
         /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
         public bool Supports(string extName, int version = 1) {
@@ -96,8 +95,9 @@ namespace MCGalaxy
         }
         
         void SendAllBlockPermissions() {
-            int count = MaxRawBlock + 1;
-            int size = hasExtBlocks ? 5 : 4;
+            bool extBlocks = Session.hasExtBlocks;
+            int count = Session.MaxRawBlock + 1;
+            int size  = extBlocks ? 5 : 4;
             byte[] bulk = new byte[count * size];
             
             for (int i = 0; i < count; i++) {
@@ -110,7 +110,7 @@ namespace MCGalaxy
                 
                 // Placing air is the same as deleting existing block at that position in the world
                 if (block == Block.Air) place &= delete;
-                Packet.WriteBlockPermission((BlockID)i, place, delete, hasExtBlocks, bulk, i * size);
+                Packet.WriteBlockPermission((BlockID)i, place, delete, extBlocks, bulk, i * size);
             }
             Send(bulk);
         }

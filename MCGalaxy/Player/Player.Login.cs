@@ -35,7 +35,7 @@ namespace MCGalaxy
             name     = user; truename    = user;
             SkinName = user; DisplayName = user; 
             
-            if (ProtocolVersion > Server.VERSION_0030) {
+            if (Session.ProtocolVersion > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version", true); return false; 
             }
             if (user.Length < 1 || user.Length > 16) {
@@ -53,7 +53,7 @@ namespace MCGalaxy
             Loading = true;
             if (Socket.Disconnected) return true;
             
-            UpdateFallbackTable();
+            Session.UpdateFallbackTable();
             if (hasCpe) { SendCpeExtensions(); }
             else { CompleteLoginProcess(); }
             return true;

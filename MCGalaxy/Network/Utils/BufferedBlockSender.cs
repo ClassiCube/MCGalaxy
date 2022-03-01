@@ -91,9 +91,10 @@ namespace MCGalaxy.Network
         
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
                           ref byte[] classic, ref byte[] ext, ref byte[] extBulk) {
+            ClassicProtocol s = p.Session;
             #if TEN_BIT_BLOCKS
-            if (p.hasExtBlocks) {
-                if (p.hasBulkBlockUpdate && count >= 150) {
+            if (s.hasExtBlocks) {
+                if (s.hasBulkBlockUpdate && count >= 150) {
                     if (extBulk == null) extBulk = MakeBulkExt();
                     return extBulk;
                 } else {
@@ -104,21 +105,21 @@ namespace MCGalaxy.Network
             #endif
             
             // Different clients support varying types of blocks
-            if (p.hasBulkBlockUpdate && p.hasBlockDefs && count >= 160) {
+            if (s.hasBulkBlockUpdate && s.hasBlockDefs && count >= 160) {
                 if (bulk == null) bulk = MakeBulk();
                 return bulk;
-            } else if (p.hasBlockDefs) {
+            } else if (s.hasBlockDefs) {
                 // supports all 255 blocks (classicube enhanced client)
                 if (normal == null) normal = MakeNormal();
                 return normal;
-            } else if (!p.hasCustomBlocks && p.ProtocolVersion == Server.VERSION_0030) {
+            } else if (!s.hasCustomBlocks && s.ProtocolVersion == Server.VERSION_0030) {
                 // support original 45 blocks (classic client)
-                if (classic == null) classic = MakeLimited(p.fallback);
+                if (classic == null) classic = MakeLimited(s.fallback);
                 return classic;
             } else {
                 // other support combination (CPE only, preclassic, etc)
                 //  don't bother trying to optimise for this case
-                return MakeLimited(p.fallback);
+                return MakeLimited(s.fallback);
             }
         }
 

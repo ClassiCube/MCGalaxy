@@ -205,7 +205,6 @@ namespace MCGalaxy {
             foreach (Player pl in players) 
             {
                 if (!global && pl.level != level) continue;
-                if (!pl.hasBlockDefs || def.RawID > pl.MaxRawBlock) continue;
                 if (global && pl.level.CustomBlockDefs[block] != GlobalDefs[block]) continue;
 
                 pl.Session.SendDefineBlock(def);
@@ -225,7 +224,6 @@ namespace MCGalaxy {
             foreach (Player pl in players) 
             {
                 if (!global && pl.level != level) continue;
-                if (!pl.hasBlockDefs || def.RawID > pl.MaxRawBlock) continue;
                 if (global && pl.level.CustomBlockDefs[block] != null) continue;
 
                 pl.Session.SendUndefineBlock(def);
@@ -237,7 +235,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) 
             {
                 if (!global && pl.level != level) continue;
-                if (!pl.Supports(CpeExt.InventoryOrder) || def.RawID > pl.MaxRawBlock) continue;
+                if (!pl.Supports(CpeExt.InventoryOrder) || def.RawID > pl.Session.MaxRawBlock) continue;
                 SendLevelInventoryOrder(pl);
             }
         }
@@ -266,15 +264,17 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) 
             {
                 BlockDefinition def = defs[i];
-                if (def == null || def.RawID > pl.MaxRawBlock) continue;
+                if (def == null) continue;
+
                 pl.Session.SendDefineBlock(def);
             }
         }
         
         internal unsafe static void SendLevelInventoryOrder(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;
-            
-            int count = pl.MaxRawBlock + 1;
+            int maxRaw = pl.Session.MaxRawBlock;
+            int count  = maxRaw + 1;
+
             int* order_to_blocks = stackalloc int[Block.ExtendedCount];
             int* block_to_orders = stackalloc int[Block.ExtendedCount];
             for (int b = 0; b < Block.ExtendedCount; b++) 
@@ -287,7 +287,7 @@ namespace MCGalaxy {
             for (int i = 0; i < defs.Length; i++) 
             {
                 BlockDefinition def = defs[i];
-                if (def == null || def.RawID > pl.MaxRawBlock) continue;
+                if (def == null || def.RawID > maxRaw) continue;
                 if (def.InventoryOrder == -1) continue;
                 
                 if (def.InventoryOrder != 0) {
@@ -302,7 +302,7 @@ namespace MCGalaxy {
             {
                 BlockDefinition def = defs[i];
                 int raw = def != null ? def.RawID : i;
-                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CPE_COUNT)) continue;
+                if (raw > maxRaw || (def == null && raw >= Block.CPE_COUNT)) continue;
                 
                 if (def != null && def.InventoryOrder >= 0) continue;
                 if (order_to_blocks[raw] == -1) {
@@ -316,7 +316,7 @@ namespace MCGalaxy {
             {
                 BlockDefinition def = defs[i];
                 int raw = def != null ? def.RawID : i;
-                if (raw > pl.MaxRawBlock || (def == null && raw >= Block.CPE_COUNT)) continue;
+                if (raw > maxRaw || (def == null && raw >= Block.CPE_COUNT)) continue;
                 
                 if (block_to_orders[raw] != -1) continue;
                 for (int slot = count - 1; slot >= 1; slot--) {
@@ -338,7 +338,7 @@ namespace MCGalaxy {
                 // Special case, don't want 255 getting hidden by default
                 if (raw == 255 && def.InventoryOrder == -1) continue;
                 
-                pl.Send(Packet.SetInventoryOrder((BlockID)raw, (BlockID)order, pl.hasExtBlocks));
+                pl.Send(Packet.SetInventoryOrder((BlockID)raw, (BlockID)order, pl.Session.hasExtBlocks));
             }
         }
         
@@ -347,7 +347,7 @@ namespace MCGalaxy {
             foreach (Player pl in players) 
             {
                 if (!global && pl.level != level) continue;
-                if (pl.hasBlockDefs) continue;
+                if (pl.Session.hasBlockDefs) continue;
                 
                 // If custom block is replacing core block, need to always reload for fallback
                 // But if level doesn't use custom blocks, don't need to reload for the player
