@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Info {
 
             string type = args[0].ToLower();
             if (type == "short" || type == "shortcut" || type == "shortcuts") {
-                 PrintShortcuts(p, sort);
+                 PrintShortcuts(p, modifier);
             } else if (type == "old" || type == "oldmenu" || type == "" || type == "command") {
                  PrintRankCommands(p, sort, modifier, p.group, true);
             } else if (type == "all" || type == "commandall" || type == "commandsall") {

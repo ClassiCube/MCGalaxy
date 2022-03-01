@@ -17,14 +17,13 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    
-    public struct ModelInfo {
-        
+namespace MCGalaxy 
+{ 
+    public struct ModelInfo 
+    {
         public readonly string Model;
         public readonly Vec3S32 BaseSize;
         public readonly int EyeHeight;

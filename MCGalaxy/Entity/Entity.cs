@@ -17,12 +17,12 @@
  */
 using System;
 using System.Threading;
-using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy {
-    public abstract class Entity {
-        
+namespace MCGalaxy 
+{
+    public abstract class Entity 
+    {
         // Raw orientation/position - access must be threadsafe
         volatile uint _rot;
         long _pos;

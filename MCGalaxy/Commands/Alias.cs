@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
-    public class Alias {
-        
+namespace MCGalaxy.Commands 
+{  
+    public class Alias 
+    {
         public static List<Alias> coreAliases = new List<Alias>();
         public static List<Alias> aliases = new List<Alias>();
         public string Trigger, Target, Format;
