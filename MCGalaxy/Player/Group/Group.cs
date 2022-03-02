@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
-using MCGalaxy.DB;
 using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
 using BlockID = System.UInt16;
@@ -70,17 +69,6 @@ namespace MCGalaxy {
         public PlayerList Players;
         public List<Command> Commands;
         public bool[] Blocks = new bool[Block.ExtendedCount];
-        public Group() { }
-        
-        private Group(LevelPermission perm, int drawLimit, int undoSecs, string name, char colCode) {
-            Permission = perm;
-            DrawLimit = drawLimit;
-            MaxUndo = TimeSpan.FromSeconds(undoSecs);
-            Name = name;
-            Color = "&" + colCode;
-            GenVolume = perm < LevelPermission.Admin ? mapGenLimit : mapGenLimitAdmin;
-            AfkKicked = perm <= LevelPermission.AdvBuilder;
-        }
         
         
         public void SetUsableCommands() {
@@ -178,6 +166,21 @@ namespace MCGalaxy {
         public string GetFormattedName() { return Color + GetPlural(Name); }
         
         
+        static void Add(LevelPermission perm, int drawLimit, int undoMins, string name, char colCode, int realms) {
+            Group grp   = new Group();
+            int afkMins = perm <= LevelPermission.AdvBuilder ? 45 : 60;
+
+            grp.Permission   = perm;
+            grp.DrawLimit    = drawLimit;
+            grp.MaxUndo      = TimeSpan.FromMinutes(undoMins);
+            grp.Name         = name;
+            grp.Color        = "&" + colCode;
+            grp.GenVolume    = perm < LevelPermission.Admin ? mapGenLimit : mapGenLimitAdmin;
+            grp.AfkKickTime  = TimeSpan.FromMinutes(afkMins);
+            grp.OverseerMaps = realms;
+            Register(grp);
+        }
+
         public static void Register(Group grp) {
             GroupList.Add(grp);
             grp.LoadPlayers();
@@ -195,18 +198,18 @@ namespace MCGalaxy {
                 GroupProperties.InitAll();
             } else {
                 // Add some default ranks
-                Register(new Group(LevelPermission.Builder, 4096, 300, "Builder", '2'));            // 16^3 draw volume
-                Register(new Group(LevelPermission.AdvBuilder, 262144, 900, "AdvBuilder", '3'));    // 64^3
-                Register(new Group(LevelPermission.Operator, 2097152, 5400, "Operator", 'c'));      // 128^3
-                Register(new Group(LevelPermission.Admin, 16777216, int.MaxValue, "SuperOP", 'e')); // 256^3
+                Add(LevelPermission.Builder,      4096,        5, "Builder",    '2',  3); // 16^3 draw volume
+                Add(LevelPermission.AdvBuilder, 262144,       15, "AdvBuilder", '3',  5); // 64^3
+                Add(LevelPermission.Operator,  2097152,       90, "Operator",   'c',  8); // 128^3
+                Add(LevelPermission.Admin,    16777216, 21024000, "Admin",      'e', 12); // 256^3
             }
 
             if (BannedRank == null)
-                Register(new Group(LevelPermission.Banned, 1, 1, "Banned", '8'));
+                Add(LevelPermission.Banned,         1,        0, "Banned", '8',  0);
             if (GuestRank == null)
-                Register(new Group(LevelPermission.Guest, 1, 120, "Guest", '7'));
+                Add(LevelPermission.Guest,          1,        2, "Guest",  '7',  3);
             if (NobodyRank == null)
-                Register(new Group(LevelPermission.Nobody, 65536, int.MaxValue, "Nobody", '0'));
+                Add(LevelPermission.Nobody, 134217728, 21024000, "Owner",  '0', 16); // 512^3
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             DefaultRank = Find(Server.Config.DefaultRankName);

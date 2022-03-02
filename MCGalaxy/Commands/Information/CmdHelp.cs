@@ -59,8 +59,9 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void PrintRanks(Player p) {
-            foreach (Group grp in Group.GroupList) {
-                if (grp.Permission >= LevelPermission.Nobody) continue;
+            foreach (Group grp in Group.GroupList) 
+            {
+                if (grp.Permission > LevelPermission.Nobody) continue;
 
                 p.Message("{0} &S- Draw: {1}, Perm: {2}, max realms: {3}",
                           grp.ColoredName, grp.DrawLimit, (int)grp.Permission, grp.OverseerMaps);
