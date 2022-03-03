@@ -23,8 +23,6 @@ namespace MCGalaxy
     {
         /// <summary> Highest block ID supported in Classic </summary>
         public const byte CLASSIC_MAX_BLOCK = Obsidian;
-        /// <summary> Total number of blocks in Classic </summary>
-        public const byte CLASSIC_COUNT     = CLASSIC_MAX_BLOCK + 1;
         /// <summary> Highest block ID supported in Classic + CPE custom blocks </summary>
         public const byte CPE_MAX_BLOCK     = StoneBrick;
         /// <summary> Total number of blocks in Classic + CPE CustomBlocks </summary>

@@ -47,7 +47,8 @@ namespace MCGalaxy.Gui {
             copiedGroups.Clear();
             curGroup = null;
             
-            foreach (Group grp in Group.GroupList) {
+            foreach (Group grp in Group.GroupList) 
+            {
                 copiedGroups.Add(grp.CopyConfig());
                 rank_list.Items.Add(grp.Name + " = " + (int)grp.Permission);
             }
@@ -151,7 +152,8 @@ namespace MCGalaxy.Gui {
         void rank_btnAdd_Click(object sender, EventArgs e) {
             // Find first free rank permission
             int perm = 5;
-            for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) {
+            for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) 
+            {
                 if (PermissionFree(i)) { perm = i; break; }
             }
             

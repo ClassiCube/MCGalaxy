@@ -121,7 +121,7 @@ namespace MCGalaxy.Commands.Moderation {
             int index = Group.GroupList.IndexOf(curRank);
             if (index < Group.GroupList.Count - 1) {
                 Group next = Group.GroupList[index + 1];
-                if (next.Permission <= LevelPermission.Nobody) return next;
+                return next;
             }
             p.Message("No higher ranks exist"); return null;
         }

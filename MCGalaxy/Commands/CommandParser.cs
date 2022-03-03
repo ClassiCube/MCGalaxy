@@ -77,6 +77,8 @@ namespace MCGalaxy.Commands {
         public const string TimespanHelp = "For example, to {0} 25 and a half hours, use \"1d1h30m\".";
         
         
+        /// <summary> Returns whether the given value lies within the given range </summary>
+        /// <remarks> If given value is not in range, messages the player the valid range of values </remarks>
         public static bool CheckRange(Player p, int value, string argName, int min, int max) {
             if (value >= min && value <= max) return true;
             
@@ -129,7 +131,7 @@ namespace MCGalaxy.Commands {
             result = (byte)temp; return true;
         }
         
-        /// <summary> Attempts to parse the given argument as an byte. </summary>
+        /// <summary> Attempts to parse the given argument as a ushort. </summary>
         public static bool GetUShort(Player p, string input, string argName, ref ushort result,
                                      ushort min = ushort.MinValue, ushort max = ushort.MaxValue) {
             int temp = 0;
@@ -151,21 +153,39 @@ namespace MCGalaxy.Commands {
         /// <summary> Attempts to parse the 3 given arguments as coordinates. </summary>
         public static bool GetCoords(Player p, string[] args, int argsOffset, ref Vec3S32 P) {
             return
-                GetCoord(p, args[argsOffset + 0], "X coordinate", ref P.X) &&
-                GetCoord(p, args[argsOffset + 1], "Y coordinate", ref P.Y) &&
-                GetCoord(p, args[argsOffset + 2], "Z coordinate", ref P.Z);
+                GetCoordInt(p, args[argsOffset + 0], "X coordinate", ref P.X) &&
+                GetCoordInt(p, args[argsOffset + 1], "Y coordinate", ref P.Y) &&
+                GetCoordInt(p, args[argsOffset + 2], "Z coordinate", ref P.Z);
         }
         
-        static bool GetCoord(Player p, string arg, string axis, ref int value) {
-            bool relative = arg.Length > 0 && arg[0] == '~';
+        static bool ParseRelative(ref string arg) {
+            // ~ is preferred for compatibility with modern minecraft command syntax
+            // # is also accepted since ~ cannot be typed in original minecraft classic
+            bool relative = arg.Length > 0 && (arg[0] == '~' || arg[0] == '#');
             if (relative) arg = arg.Substring(1);
+            return relative;
+        }
+
+        /// <summary> Attempts to parse the given argument as a coordinate integer. </summary>
+        public static bool GetCoordInt(Player p, string arg, string argName, ref int value) {
+            bool relative = ParseRelative(ref arg);
             // ~ should work as ~0
             if (relative && arg.Length == 0) return true;
-            
             int cur = value;
-            value   = 0;
             
-            if (!GetInt(p, arg, axis, ref value)) return false;
+            if (!GetInt(p, arg, argName, ref value)) return false;
+            if (relative) value += cur;
+            return true;
+        }
+        
+        /// <summary> Attempts to parse the given argument as a coordinate real number. </summary>
+        public static bool GetCoordFloat(Player p, string arg, string argName, ref float value) {
+            bool relative = ParseRelative(ref arg);
+            // ~ should work as ~0
+            if (relative && arg.Length == 0) return true;
+            float cur = value;
+            
+            if (!GetReal(p, arg, argName, ref value)) return false;
             if (relative) value += cur;
             return true;
         }

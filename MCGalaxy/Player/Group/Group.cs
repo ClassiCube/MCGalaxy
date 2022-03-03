@@ -73,7 +73,8 @@ namespace MCGalaxy {
         
         public void SetUsableCommands() {
             List<Command> commands = new List<Command>();
-            foreach (CommandPerms perms in CommandPerms.List) {
+            foreach (CommandPerms perms in CommandPerms.List) 
+            {
                 if (!perms.UsableBy(Permission)) continue;
                 
                 Command cmd = Command.Find(perms.CmdName);
@@ -83,7 +84,8 @@ namespace MCGalaxy {
         }
         
         public void SetUsableBlocks() {
-            foreach (BlockPerms perms in BlockPerms.List) {
+            foreach (BlockPerms perms in BlockPerms.List) 
+            {
                 Blocks[perms.ID] = perms.UsableBy(Permission);
             }
         }

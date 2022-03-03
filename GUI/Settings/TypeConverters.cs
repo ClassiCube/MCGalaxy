@@ -41,8 +41,9 @@ namespace MCGalaxy.Gui {
         
         public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
             List<string> ranks = new List<string>();
-            foreach (Group g in Group.GroupList) {
-                if (g.Permission <= LevelPermission.Banned || g.Permission >= LevelPermission.Nobody) continue;
+            foreach (Group g in Group.GroupList) 
+            {
+                if (g.Permission <= LevelPermission.Banned) continue;
                 ranks.Add(g.Name);
             }
             return new StandardValuesCollection(ranks);
