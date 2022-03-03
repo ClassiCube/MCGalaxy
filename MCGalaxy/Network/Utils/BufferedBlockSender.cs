@@ -25,12 +25,14 @@ namespace MCGalaxy.Network
     /// <remarks> Sends block changes as either a single CPE BulkBlockUpdate packet,
     /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </remarks>
     public sealed class BufferedBlockSender 
-    {  
-        int[] indices = new int[256];
-        BlockID[] blocks = new BlockID[256];
-        int count = 0;
+    {
         public Level level;
         public Player player;
+        // fields below should not be modified by code outside of BufferedBlockSender
+        public int[] indices   = new int[256];
+        public BlockID[] blocks = new BlockID[256];
+        public int count;
+        
         public BufferedBlockSender() { }
         
         /// <summary> Constructs a bulk sender that will send block changes to all players on that level </summary>
@@ -113,13 +115,13 @@ namespace MCGalaxy.Network
                 if (normal == null) normal = MakeNormal();
                 return normal;
             } else if (!s.hasCustomBlocks && s.ProtocolVersion == Server.VERSION_0030) {
-                // support original 45 blocks (classic client)
+                // supports original 45 blocks (classic client)
                 if (classic == null) classic = MakeLimited(s.fallback);
                 return classic;
             } else {
                 // other support combination (CPE only, preclassic, etc)
                 //  don't bother trying to optimise for this case
-                return MakeLimited(s.fallback);
+                return s.MakeBulkBlockchange(this);
             }
         }
 
@@ -173,8 +175,8 @@ namespace MCGalaxy.Network
         }
         #endif
 
-        
-        byte[] MakeBulk() {
+
+        internal byte[] MakeBulk() {
             byte[] data = new byte[2 + 256 * 5];
             data[0] = Opcode.CpeBulkBlockUpdate;
             data[1] = (byte)(count - 1);
@@ -196,7 +198,7 @@ namespace MCGalaxy.Network
             return data;
         }
         
-        byte[] MakeNormal() {
+        internal byte[] MakeNormal() {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) 
             {
@@ -218,8 +220,8 @@ namespace MCGalaxy.Network
             }
             return data;
         }
-        
-        byte[] MakeLimited(byte[] fallback) {
+
+        internal byte[] MakeLimited(byte[] fallback) {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) 
             {

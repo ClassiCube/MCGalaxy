@@ -18,6 +18,7 @@ using System.IO;
 using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Games;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
@@ -487,6 +488,15 @@ namespace MCGalaxy.Network
             }
         }
 
+        public void SendSetSpawnpoint(Position pos, Orientation rot) {
+            if (player.Supports(CpeExt.SetSpawnpoint)) {
+                Send(Packet.SetSpawnpoint(pos, rot, player.hasExtPositions));
+            } else {
+                // TODO respawn self directly instead of using Entities.Spawn
+                Entities.Spawn(player, player, pos, rot);
+            }
+        }
+
         public void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
@@ -551,23 +561,6 @@ namespace MCGalaxy.Network
         }
 #endregion
 
-
-        /// <summary> Returns an appropriate name for the associated player's client </summary>
-        /// <remarks> Determines name based on appname or protocol version supported </remarks>
-        public string ClientName() {
-            if (!string.IsNullOrEmpty(player.appName)) return player.appName;
-            byte version = ProtocolVersion;
-                  
-            if (version == Server.VERSION_0016) return "Classic 0.0.16";
-            if (version == Server.VERSION_0017) return "Classic 0.0.17-0.0.18";
-            if (version == Server.VERSION_0019) return "Classic 0.0.19";
-            if (version == Server.VERSION_0020) return "Classic 0.0.20-0.0.23";
-            
-            // Might really be Classicube in Classic Mode, Charged Miners, etc though
-            return "Classic 0.28-0.30";
-        }
-
-
                 
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {
             byte[] buffer = new byte[hasExtBlocks ? 9 : 8];
@@ -580,7 +573,10 @@ namespace MCGalaxy.Network
             NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
             socket.Send(buffer, SendFlags.LowPriority);
         }
-        
+
+        public byte[] MakeBulkBlockchange(BufferedBlockSender buffer) {
+            return buffer.MakeLimited(fallback);
+        }
         
         /// <summary> Converts the given block ID into a raw block ID that can be sent to this player </summary>
         public BlockID ConvertBlock(BlockID block) {
@@ -612,6 +608,59 @@ namespace MCGalaxy.Network
             {
                 fallback[b] = Block.ConvertLimited(b, this);
             }
+        }
+
+
+        /// <summary> Returns an appropriate name for the associated player's client </summary>
+        /// <remarks> Determines name based on appname or protocol version supported </remarks>
+        public string ClientName() {
+            if (!string.IsNullOrEmpty(player.appName)) return player.appName;
+            byte version = ProtocolVersion;
+                  
+            if (version == Server.VERSION_0016) return "Classic 0.0.16";
+            if (version == Server.VERSION_0017) return "Classic 0.0.17-0.0.18";
+            if (version == Server.VERSION_0019) return "Classic 0.0.19";
+            if (version == Server.VERSION_0020) return "Classic 0.0.20-0.0.23";
+            
+            // Might really be Classicube in Classic Mode, Charged Miners, etc though
+            return "Classic 0.28-0.30";
+        }
+
+        // TODO modularise and move common code back into Entities.c
+        public unsafe void UpdatePlayerPositions() {
+            Player[] players = PlayerInfo.Online.Items;
+            byte* src  = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
+            byte* ptr  = src;
+            Player dst = player;
+
+            foreach (Player p in players) {
+                if (dst == p || dst.level != p.level || !dst.CanSeeEntity(p)) continue;
+                
+                Orientation rot = p.Rot; byte pitch = rot.HeadX;
+                if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
+                
+                // flip head when infected, but doesn't support model
+                if (!dst.hasChangeModel) {
+                    ZSData data = ZSGame.TryGet(p);
+                    if (data != null && data.Infected) pitch = FlippedPitch(pitch);
+                }
+            
+                rot.HeadX = pitch;
+                Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
+                                           p.tempPos, p.lastPos, rot, p.lastRot);
+            }
+            
+            int count = (int)(ptr - src);
+            if (count == 0) return;
+            
+            byte[] packet = new byte[count];
+            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
+            dst.Send(packet);
+        }
+
+        static byte FlippedPitch(byte pitch) {
+             if (pitch > 64 && pitch < 192) return pitch;
+             else return 128;
         }
     }
 }
