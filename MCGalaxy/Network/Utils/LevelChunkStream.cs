@@ -87,7 +87,7 @@ namespace MCGalaxy.Network {
 
         public static void SendLevel(Player player, Level level, int volume) {
             using (LevelChunkStream dst = new LevelChunkStream(player.Session))
-                using (Stream stream = dst.CompressMapHeader(player, volume))
+                using (Stream stream = dst.CompressMapHeader(volume))
             {
                 if (level.MightHaveCustomBlocks()) {
                     CompressMap(level, stream, dst);
@@ -97,9 +97,9 @@ namespace MCGalaxy.Network {
             }
         }
         
-        Stream CompressMapHeader(Player p, int volume) {
+        Stream CompressMapHeader(int volume) {
             // FastMap sends volume in LevelInit packet instead
-            if (p.Supports(CpeExt.FastMap)) {
+            if (session.Supports(CpeExt.FastMap)) {
                return new DeflateStream(this, CompressionMode.Compress, true);
             }
            
@@ -194,7 +194,7 @@ namespace MCGalaxy.Network {
                 
                 // Nope - have to go slower path now                
                 using (LevelChunkStream dst2 = new LevelChunkStream(s))
-                    using (Stream stream2 = CompressMapHeader(p, blocks.Length, dst2))
+                    using (Stream stream2 = CompressMapHeader(blocks.Length, dst2))
                 {
                     dst2.chunkValue = 1; // 'extended' blocks
                     byte[] buffer2 = new byte[bufferSize];

@@ -14,19 +14,18 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy 
 {
     public partial class Player : IDisposable
     {
+        public string appName;
+        // these are checked very frequently, so avoid overhead of .Supports(
+        public bool hasChangeModel, hasExtList, hasCP437;
+
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
         
         public void MessageLines(IEnumerable<string> lines) {
@@ -135,6 +134,76 @@ namespace MCGalaxy
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
             Session.SendBlockchange(x, y, z, block);
+        }
+
+
+        /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
+        public bool Supports(string extName, int version = 1) {
+            return Session != null && Session.Supports(extName, version);
+        }
+        
+        public string GetTextureUrl() {
+            string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
+            if (url.Length == 0) {
+                url = Server.Config.DefaultTexture.Length == 0 ? Server.Config.DefaultTerrain : Server.Config.DefaultTexture;
+            }
+            return url;
+        }
+        
+        
+        string lastUrl = "";
+        public void SendCurrentTextures() {
+            Zone zone = ZoneIn;
+            int cloudsHeight = CurrentEnvProp(EnvProp.CloudsLevel, zone);
+            int edgeHeight   = CurrentEnvProp(EnvProp.EdgeLevel,   zone);
+            int maxFogDist   = CurrentEnvProp(EnvProp.MaxFog,      zone);
+            
+            byte side = (byte)CurrentEnvProp(EnvProp.SidesBlock, zone);
+            byte edge = (byte)CurrentEnvProp(EnvProp.EdgeBlock,  zone);
+
+            string url = GetTextureUrl();
+            if (Supports(CpeExt.EnvMapAspect)) {
+                // reset all other textures back to client default.
+                if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
+                Send(Packet.EnvMapUrl(url, hasCP437));
+            } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
+                // reset all other textures back to client default.
+                if (url != lastUrl) {
+                    Send(Packet.MapAppearanceV2("", side, edge, edgeHeight, cloudsHeight, maxFogDist, hasCP437));
+                }
+                Send(Packet.MapAppearanceV2(url, side, edge, edgeHeight, cloudsHeight, maxFogDist, hasCP437));
+                lastUrl = url;
+            } else if (Supports(CpeExt.EnvMapAppearance)) {
+                url = level.Config.Terrain.Length == 0 ? Server.Config.DefaultTerrain : level.Config.Terrain;
+                Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
+            }
+        }
+
+        public void SendCurrentBlockPermissions() {
+            if (!Supports(CpeExt.BlockPermissions)) return;
+            // Write the block permissions as one bulk TCP packet
+            SendAllBlockPermissions();
+        }
+        
+        void SendAllBlockPermissions() {
+            bool extBlocks = Session.hasExtBlocks;
+            int count = Session.MaxRawBlock + 1;
+            int size  = extBlocks ? 5 : 4;
+            byte[] bulk = new byte[count * size];
+            
+            for (int i = 0; i < count; i++) {
+                BlockID block = Block.FromRaw((BlockID)i);
+                bool place  = group.Blocks[block] && level.CanPlace;
+                // NOTE: If you can't delete air, then you're no longer able to place blocks
+                // (see ClassiCube client #815)
+                // TODO: Maybe better solution than this?
+                bool delete = group.Blocks[block] && (level.CanDelete || i == Block.Air);
+                
+                // Placing air is the same as deleting existing block at that position in the world
+                if (block == Block.Air) place &= delete;
+                Packet.WriteBlockPermission((BlockID)i, place, delete, extBlocks, bulk, i * size);
+            }
+            Send(bulk);
         }
     }
 }

@@ -52,18 +52,6 @@ namespace MCGalaxy
             return !Socket.Disconnected;
         }
         
-        internal void SendCpeExtensions() {
-            extensions = CpeExtension.GetAllEnabled();
-            Send(Packet.ExtInfo((byte)(extensions.Length + 1)));
-            // fix for old classicube java client, doesn't reply if only send EnvMapAppearance with version 2
-            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));
-            
-            foreach (CpeExt ext in extensions) 
-            {
-                Send(Packet.ExtEntry(ext.Name, ext.ServerVersion));
-            }
-        }
-        
         internal void CompleteLoginProcess() {
             Player clone = null;
             OnPlayerFinishConnectingEvent.Call(this);
