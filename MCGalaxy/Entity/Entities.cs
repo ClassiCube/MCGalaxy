@@ -280,7 +280,7 @@ namespace MCGalaxy {
             *ptr = (byte)(value >> 8); ptr++; *ptr = (byte)value; ptr++;
         }
         
-        static Position GetDelta(Position pos, Position old, bool extPositions) {
+        public static Position GetDelta(Position pos, Position old, bool extPositions) {
             Position delta = new Position(pos.X - old.X, pos.Y - old.Y, pos.Z - old.Z);
             if (extPositions) return delta;
             

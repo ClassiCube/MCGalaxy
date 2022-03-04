@@ -54,9 +54,13 @@ namespace MCGalaxy.Network
         internal static VolatileArray<INetSocket> pending = new VolatileArray<INetSocket>(false);
 
         INetProtocol IdentifyProtocol(byte opcode) {
-            if (opcode == Opcode.Handshake) {
+            if (opcode == 2)
+            {
                 pending.Remove(this);
-                return new ClassicProtocol(this);
+                return new AlphaIndevParser(this);
+            } else if (opcode == Opcode.Handshake) {
+                pending.Remove(this);
+                return new ClassicHandshakeParser(this);
             } else if (opcode == 'G' && Server.Config.WebClient) {
                 pending.Remove(this);
                 return new WebSocket(this);
@@ -204,6 +208,12 @@ namespace MCGalaxy.Network
         }
         
         bool TrySendAsync(byte[] buffer) {
+            if (buffer.Length > sendBuffer.Length)
+            {
+                sendBuffer = new byte[buffer.Length];
+                sendArgs.SetBuffer(sendBuffer, 0, sendBuffer.Length);
+            }
+
             // BlockCopy has some overhead, not worth it for very small data
             if (buffer.Length <= 16) {
                 for (int i = 0; i < buffer.Length; i++) {

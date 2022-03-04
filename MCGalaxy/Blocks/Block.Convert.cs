@@ -79,7 +79,7 @@ namespace MCGalaxy
         
         /// <summary> Converts a block &lt; CPE_COUNT into a suitable
         /// block supported by the given player's client </summary>
-        internal static byte ConvertLimited(byte block, ClassicProtocol session) {
+        internal static byte ConvertLimited(byte block, GameSession session) {
         	if (session.hasCustomBlocks) return block;
 
             // protocol version 7 only supports up to Obsidian block

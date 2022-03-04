@@ -598,12 +598,16 @@
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
     <Compile Include="Modules\Relay\RelayBotSender.cs" />
     <Compile Include="Modules\Security\IPThrottler.cs" />
+    <Compile Include="Network\AlphaProtocol.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
+    <Compile Include="Network\Classic0015Protocol.cs" />
     <Compile Include="Network\ClassicProtocol.cs" />
     <Compile Include="Network\CPESupport.cs" />
+    <Compile Include="Network\GameSession.cs" />
     <Compile Include="Network\Heartbeat\ClassiCube.cs" />
     <Compile Include="Network\Heartbeat\Heartbeat.cs" />
     <Compile Include="Modules\Relay\IRC\IRCBot.cs" />
+    <Compile Include="Network\IndevProtocol.cs" />
     <Compile Include="Network\Listeners.cs" />
     <Compile Include="Network\Packets\Opcode.cs" />
     <Compile Include="Network\Packets\Packet.cs" />

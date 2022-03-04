@@ -38,10 +38,10 @@ namespace MCGalaxy.Network {
         
         int index;
         byte chunkValue;
-        ClassicProtocol session;
+        GameSession session;
         byte[] data = new byte[chunkSize + 4];
         const int chunkSize = 1024;
-        public LevelChunkStream(ClassicProtocol s) { session = s; }
+        public LevelChunkStream(GameSession s) { session = s; }
         
         public override void Close() {
             if (index > 0) WritePacket();
@@ -116,7 +116,7 @@ namespace MCGalaxy.Network {
             byte[] buffer = new byte[bufferSize];
             int bIndex = 0;
 
-            ClassicProtocol s = dst.session;
+            GameSession s     = dst.session;
             byte[] blocks     = lvl.blocks;
             float progScale   = 100.0f / blocks.Length;
 
@@ -146,7 +146,7 @@ namespace MCGalaxy.Network {
             byte[] buffer = new byte[bufferSize];
             int bIndex = 0;
 
-            ClassicProtocol s = dst.session;
+            GameSession s     = dst.session;
             byte[] blocks     = lvl.blocks;
             float progScale   = 100.0f / blocks.Length;
 
