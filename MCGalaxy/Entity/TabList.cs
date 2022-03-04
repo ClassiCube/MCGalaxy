@@ -36,10 +36,8 @@ namespace MCGalaxy {
             string name, group;
             GetEntry(p, dst, out name, out group);
             
-            name  = Colors.Escape(name); // for nicks
-            name  = LineWrapper.CleanupColors(name,  dst);
-            group = LineWrapper.CleanupColors(group, dst);
-            dst.Send(Packet.ExtAddPlayerName(id, p.truename, name, group, grpPerm, dst.hasCP437));
+            name = Colors.Escape(name); // for nicks
+            dst.Session.SendAddTabEntry(id, p.truename, name, group, grpPerm);
         }
         
         static void GetEntry(Player p, Player dst, out string name, out string group) {
@@ -61,7 +59,7 @@ namespace MCGalaxy {
             
             string name = b.color + b.name, group = "Bots";
             OnTabListEntryAddedEvent.Call(b, ref name, ref group, dst);
-            dst.Send(Packet.ExtAddPlayerName(b.id, b.name, name, group, 0, dst.hasCP437));
+            dst.Session.SendAddTabEntry(b.id, b.name, name, group, 0);
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
@@ -70,7 +68,7 @@ namespace MCGalaxy {
             
             OnTabListEntryRemovedEvent.Call(entity, dst);
             byte id = dst == entity ? Entities.SelfID : entity.EntityID;
-            dst.Send(Packet.ExtRemovePlayerName(id));
+            dst.Session.SendRemoveTabEntry(id);
         }
         
         

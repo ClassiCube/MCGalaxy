@@ -133,7 +133,6 @@ namespace MCGalaxy {
         
         static void SpawnRaw(Player dst, byte id, Entity e, Position pos, Orientation rot,
                              string skin, string name, string model) {
-            name = LineWrapper.CleanupColors(name, dst);
             dst.Session.SendSpawnEntity(id, name, skin, pos, rot);
 
             if (dst.hasChangeModel) {

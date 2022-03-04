@@ -32,7 +32,7 @@ namespace MCGalaxy.Network
 
         // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasCustomBlocks, hasExtBlocks, hasBlockDefs, hasBulkBlockUpdate;
-        bool hasEmoteFix, hasTwoWayPing, hasExtTexs;
+        bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
 
         Player player;
         INetSocket socket;
@@ -131,7 +131,12 @@ namespace MCGalaxy.Network
             
             string name   = NetUtils.ReadString(buffer, offset +  2);
             string mppass = NetUtils.ReadString(buffer, offset + 66);
-            return player.ProcessLogin(name, mppass) ? size : -1;
+            if (!player.ProcessLogin(name, mppass)) return -1;
+
+            UpdateFallbackTable();
+            if (player.hasCpe) { player.SendCpeExtensions(); }
+            else { player.CompleteLoginProcess(); }
+            return size;
         }
         
         int HandleBlockchange(byte[] buffer, int offset, int left) {
@@ -302,8 +307,9 @@ namespace MCGalaxy.Network
                 hasBlockDefs = true;
                 if (MaxRawBlock < 255) MaxRawBlock = 255;
             } else if (ext.Name == CpeExt.TextColors) {
-                p.hasTextColors = true;
-                for (int i = 0; i < Colors.List.Length; i++) {
+                hasTextColors = true;
+                for (int i = 0; i < Colors.List.Length; i++)
+                {
                     if (!Colors.List[i].IsModified()) continue;
                     Send(Packet.SetTextColor(Colors.List[i]));
                 }
@@ -353,6 +359,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendChat(string message) {
+            message = CleanupColors(message);
             List<string> lines = LineWrapper.Wordwrap(message, hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
@@ -373,6 +380,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendMessage(CpeMessageType type, string message) {
+            message = CleanupColors(message);
             Send(Packet.Message(message, type, player.hasCP437));
         }
         
@@ -388,10 +396,20 @@ namespace MCGalaxy.Network
             Send(Packet.UserType(type));
             return true;
         }
-#endregion
+        #endregion
 
 
-#region CPE packet sending
+        #region CPE packet sending
+        public void SendAddTabEntry(byte id, string name, string nick, string group, byte groupRank) {
+            nick  = CleanupColors(nick);
+            group = CleanupColors(group);
+            Send(Packet.ExtAddPlayerName(id, name, nick, group, groupRank, player.hasCP437));
+        }
+
+        public void SendRemoveTabEntry(byte id) {
+            Send(Packet.ExtRemovePlayerName(id));
+        }
+        
         public bool SendSetReach(float reach) {
             if (!player.Supports(CpeExt.HeldBlock)) return false;
 
@@ -440,7 +458,7 @@ namespace MCGalaxy.Network
         }
 
         public bool SendSetTextColor(ColorDesc color) {
-            if (!player.Supports(CpeExt.TextColors)) return false;
+            if (!hasTextColors) return false;
 
             Send(Packet.SetTextColor(color));
             return true;
@@ -498,6 +516,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            name = CleanupColors(name);
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
@@ -610,6 +629,15 @@ namespace MCGalaxy.Network
             }
         }
 
+
+        string CleanupColors(string value) {
+            // Although ClassiCube in classic mode supports invalid colours,
+            //  the original vanilla client crashes with invalid colour codes
+            // Since it's impossible to identify which client is being used,
+            //  just remove the ampersands to be on the safe side
+            //  when text colours extension is not supported
+            return LineWrapper.CleanupColors(value, hasTextColors, hasTextColors);
+        }
 
         /// <summary> Returns an appropriate name for the associated player's client </summary>
         /// <remarks> Determines name based on appname or protocol version supported </remarks>

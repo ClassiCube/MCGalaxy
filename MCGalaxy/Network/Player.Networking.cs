@@ -50,7 +50,6 @@ namespace MCGalaxy
             if (cancel) return;
             
             try {
-                message = LineWrapper.CleanupColors(message, this);
                 Session.SendChat(message);
             } catch (Exception e) {
                 Logger.LogError(e);
@@ -64,7 +63,6 @@ namespace MCGalaxy
             }
             
             message = Chat.Format(message, this);
-            message = LineWrapper.CleanupColors(message, this);
             Session.SendMessage(type, message);
         }
 

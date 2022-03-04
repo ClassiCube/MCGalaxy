@@ -14,13 +14,10 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
@@ -47,19 +44,15 @@ namespace MCGalaxy
             
             if (Server.Config.ClassicubeAccountPlus) name += "+";
             OnPlayerStartConnectingEvent.Call(this, mppass);
-            if (cancelconnecting) { cancelconnecting = false; return true; }
+            if (cancelconnecting) { cancelconnecting = false; return false; }
             
             level   = Server.mainLevel;
             Loading = true;
-            if (Socket.Disconnected) return true;
-            
-            Session.UpdateFallbackTable();
-            if (hasCpe) { SendCpeExtensions(); }
-            else { CompleteLoginProcess(); }
-            return true;
+            // returns false if disconnected during login
+            return !Socket.Disconnected;
         }
         
-        void SendCpeExtensions() {
+        internal void SendCpeExtensions() {
             extensions = CpeExtension.GetAllEnabled();
             Send(Packet.ExtInfo((byte)(extensions.Length + 1)));
             // fix for old classicube java client, doesn't reply if only send EnvMapAppearance with version 2

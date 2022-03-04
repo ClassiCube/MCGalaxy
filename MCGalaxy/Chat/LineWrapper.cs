@@ -144,15 +144,6 @@ namespace MCGalaxy {
             }
             return lines;
         }
-
-        public static string CleanupColors(string value, Player p) {
-            // Although ClassiCube in classic mode supports invalid colours,
-            //  the original vanilla client crashes with invalid colour codes
-            // Since it's impossible to identify which client is being used,
-            //  just remove the ampersands to be on the safe side
-            //  when text colours extension is not supported
-            return CleanupColors(value, p.hasTextColors, p.hasTextColors);
-        }
         
         /// <summary> Removes redundant colour codes and fixes some colour codes to behave correctly for older clients </summary>
         /// <param name="fullAmpersands"> if false, ampersands not followed by valid colour code are removed </param>

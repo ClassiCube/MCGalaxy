@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
@@ -37,7 +36,7 @@ namespace MCGalaxy
         }
         
         // these are checked very frequently, so avoid overhead of .Supports(
-        public bool hasTextColors, hasChangeModel, hasExtList, hasCP437;
+        public bool hasChangeModel, hasExtList, hasCP437;
 
         /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
         public bool Supports(string extName, int version = 1) {
@@ -81,11 +80,6 @@ namespace MCGalaxy
                 url = level.Config.Terrain.Length == 0 ? Server.Config.DefaultTerrain : level.Config.Terrain;
                 Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
             }
-        }
-
-        [Obsolete("Use Session.SendSetEnvColor instead", true)]
-        public void SendEnvColor(byte type, string hex) {
-            Session.SendSetEnvColor(type, hex);
         }
 
         public void SendCurrentBlockPermissions() {
