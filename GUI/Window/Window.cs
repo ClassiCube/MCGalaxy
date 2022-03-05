@@ -101,8 +101,7 @@ Trying to mix two versions is unsupported - you may experience issues";
             // Normally this code would be in InitializeComponent method in Window.Designer.cs,
             //  however that doesn't work properly with some WINE versions (you get WINE icon instead)
             try {
-                ComponentResourceManager resources = new ComponentResourceManager(typeof(Window));
-                Icon = (Icon)(resources.GetObject("$this.Icon"));
+                Icon = GetIcon();
                 GuiUtils.WinIcon = Icon;
             } catch { }
         }
