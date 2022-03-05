@@ -20,7 +20,6 @@ using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Events.LevelEvents;
-using MCGalaxy.Games;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 

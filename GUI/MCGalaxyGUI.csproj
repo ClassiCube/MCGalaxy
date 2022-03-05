@@ -123,10 +123,6 @@
     <Compile Include="Window\Window.Main.cs" />
     <Compile Include="Window\Window.Map.cs" />
     <Compile Include="Window\Window.Players.cs" />
-    <EmbeddedResource Include="Window\Window.resx">
-      <DependentUpon>Window.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

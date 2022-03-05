@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Generator.Realistic;
 
 namespace MCGalaxy.Generator 

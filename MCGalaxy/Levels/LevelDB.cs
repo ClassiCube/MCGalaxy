@@ -21,7 +21,6 @@ using System.Data;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
-using MCGalaxy.Util;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {

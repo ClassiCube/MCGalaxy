@@ -16,11 +16,9 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-using MCGalaxy.Util;
 
 namespace MCGalaxy.Levels.IO {
 
