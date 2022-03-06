@@ -310,7 +310,7 @@ namespace MCGalaxy.Network
             return size;
         }
 
-        internal void AddExtension(string extName, int version) {
+        void AddExtension(string extName, int version) {
             Player p   = player;
             CpeExt ext = FindExtension(extName);
             if (ext == null) return;
@@ -650,9 +650,9 @@ namespace MCGalaxy.Network
         }
         
         internal void UpdateFallbackTable() {
-            for (byte b = 0; b < Block.CPE_COUNT; b++)
+            for (byte b = 0; b <= Block.CPE_MAX_BLOCK; b++)
             {
-                fallback[b] = Block.ConvertLimited(b, this);
+                fallback[b] = hasCustomBlocks ? b : Block.ConvertLimited(b, ProtocolVersion);
             }
         }
 

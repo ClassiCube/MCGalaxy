@@ -194,7 +194,7 @@ namespace MCGalaxy.Network {
                 
                 // Nope - have to go slower path now                
                 using (LevelChunkStream dst2 = new LevelChunkStream(s))
-                    using (Stream stream2 = CompressMapHeader(blocks.Length, dst2))
+                    using (Stream stream2 = dst2.CompressMapHeader(blocks.Length))
                 {
                     dst2.chunkValue = 1; // 'extended' blocks
                     byte[] buffer2 = new byte[bufferSize];
