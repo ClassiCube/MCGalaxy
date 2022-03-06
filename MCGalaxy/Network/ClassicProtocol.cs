@@ -18,18 +18,28 @@ using System.IO;
 using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Games;
 using BlockID = System.UInt16;
+using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Network
 {
     public class ClassicProtocol : INetProtocol 
     {
+        public byte ProtocolVersion;
+        internal byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
+        public BlockID MaxRawBlock = Block.CLASSIC_MAX_BLOCK;
+        public bool hasCpe;
+
+        // these are checked very frequently, so avoid overhead of .Supports(
+        public bool hasCustomBlocks, hasExtBlocks, hasBlockDefs, hasBulkBlockUpdate;
+        bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
+
         Player player;
         INetSocket socket;
         int extensionCount;
         bool finishedCpeLogin;
-        // these are checked very frequently, so avoid overhead of .Supports(
-        bool hasEmoteFix, hasTwoWayPing, hasExtTexs;
+        CpeExt[] extensions = CpeExtension.Empty;
 
         public ClassicProtocol(INetSocket s) {
             socket = s;
@@ -82,7 +92,7 @@ namespace MCGalaxy.Network
         #if TEN_BIT_BLOCKS
         BlockID ReadBlock(byte[] buffer, int offset) {
             BlockID block;
-            if (player.hasExtBlocks) {
+            if (hasExtBlocks) {
                 block = NetUtils.ReadU16(buffer, offset);
             } else {
                 block = buffer[offset];
@@ -107,9 +117,9 @@ namespace MCGalaxy.Network
             // the packet must be at least old_size long
             if (left < old_size) return 0;  
             
-            player.ProtocolVersion = buffer[offset + 1];
+            ProtocolVersion = buffer[offset + 1];
             // check size now that know whether usertype field is included or not
-            int size = player.ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
+            int size = ProtocolVersion >= Server.VERSION_0020 ? new_size : old_size;
             if (left < size) return 0;
             if (player.loggedIn)  return size;
 
@@ -117,17 +127,22 @@ namespace MCGalaxy.Network
             //  Version 7 - 0x42 for CPE supporting client, should be 0 otherwise
             //  Version 6 - should be 0
             //  Version 5 - field does not exist
-            if (player.ProtocolVersion >= Server.VERSION_0030) {
-                player.hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
+            if (ProtocolVersion >= Server.VERSION_0030) {
+                hasCpe = buffer[offset + 130] == 0x42 && Server.Config.EnableCPE;
             }
             
             string name   = NetUtils.ReadString(buffer, offset +  2);
             string mppass = NetUtils.ReadString(buffer, offset + 66);
-            return player.ProcessLogin(name, mppass) ? size : -1;
+            if (!player.ProcessLogin(name, mppass)) return -1;
+
+            UpdateFallbackTable();
+            if (hasCpe) { SendCpeExtensions(); }
+            else { player.CompleteLoginProcess(); }
+            return size;
         }
         
         int HandleBlockchange(byte[] buffer, int offset, int left) {
-            int size = 1 + 6 + 1 + (player.hasExtBlocks ? 2 : 1);
+            int size = 1 + 6 + 1 + (hasExtBlocks ? 2 : 1);
             if (left < size) return 0;
             if (!player.loggedIn) return size;
 
@@ -146,14 +161,14 @@ namespace MCGalaxy.Network
         }
         
         int HandleMovement(byte[] buffer, int offset, int left) {
-            int size = 1 + 6 + 2 + (player.hasExtPositions ? 6 : 0) + (player.hasExtBlocks ? 2 : 1);
+            int size = 1 + 6 + 2 + (player.hasExtPositions ? 6 : 0) + (hasExtBlocks ? 2 : 1);
             if (left < size) return 0;
             if (!player.loggedIn) return size;
 
             int held = -1;
-            if (player.Supports(CpeExt.HeldBlock)) {
+            if (Supports(CpeExt.HeldBlock)) {
                 held = ReadBlock(buffer, offset + 1);
-                if (player.hasExtBlocks) offset++; // correct offset for position later
+                if (hasExtBlocks) offset++; // correct offset for position later
             }
             
             int x, y, z;
@@ -182,7 +197,7 @@ namespace MCGalaxy.Network
             // In original clasic, this field is 'player ID' and so useless
             // With LongerMessages extension, this field has been repurposed
             bool continued = false;
-            if (player.Supports(CpeExt.LongerMessages))
+            if (Supports(CpeExt.LongerMessages))
                 continued  = buffer[offset + 1] != 0;
 
             string text = NetUtils.ReadString(buffer, offset + 2);
@@ -193,6 +208,31 @@ namespace MCGalaxy.Network
 
 
 #region CPE processing
+        public bool Supports(string extName, int version = 1) {
+            CpeExt ext = FindExtension(extName);
+            return ext != null && ext.ClientVersion == version;
+        }
+
+        CpeExt FindExtension(string extName) {
+            foreach (CpeExt ext in extensions) 
+            {
+                if (ext.Name.CaselessEq(extName)) return ext;
+            }
+            return null;
+        }
+
+        void SendCpeExtensions() {
+            extensions = CpeExtension.GetAllEnabled();
+            Send(Packet.ExtInfo((byte)(extensions.Length + 1)));
+            // fix for old classicube java client, doesn't reply if only send EnvMapAppearance with version 2
+            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));
+            
+            foreach (CpeExt ext in extensions) 
+            {
+                Send(Packet.ExtEntry(ext.Name, ext.ServerVersion));
+            }
+        }
+
         void CheckReadAllExtensions() {
             if (extensionCount <= 0 && !finishedCpeLogin) {
                 player.CompleteLoginProcess();
@@ -270,18 +310,18 @@ namespace MCGalaxy.Network
             return size;
         }
 
-        internal void AddExtension(string extName, int version) {
+        void AddExtension(string extName, int version) {
             Player p   = player;
-            CpeExt ext = p.FindExtension(extName);
+            CpeExt ext = FindExtension(extName);
             if (ext == null) return;
             ext.ClientVersion = (byte)version;
             
             if (ext.Name == CpeExt.CustomBlocks) {
                 if (version == 1) Send(Packet.CustomBlockSupportLevel(1));
-                p.hasCustomBlocks = true;
+                hasCustomBlocks = true;
 
-                p.UpdateFallbackTable();
-                if (p.MaxRawBlock < Block.CPE_MAX_BLOCK) p.MaxRawBlock = Block.CPE_MAX_BLOCK;
+                UpdateFallbackTable();
+                if (MaxRawBlock < Block.CPE_MAX_BLOCK) MaxRawBlock = Block.CPE_MAX_BLOCK;
             } else if (ext.Name == CpeExt.ChangeModel) {
                 p.hasChangeModel = true;
             } else if (ext.Name == CpeExt.EmoteFix) {
@@ -291,11 +331,12 @@ namespace MCGalaxy.Network
             } else if (ext.Name == CpeExt.ExtPlayerList) {
                 p.hasExtList = true;
             } else if (ext.Name == CpeExt.BlockDefinitions) {
-                p.hasBlockDefs = true;
-                if (p.MaxRawBlock < 255) p.MaxRawBlock = 255;
+                hasBlockDefs = true;
+                if (MaxRawBlock < 255) MaxRawBlock = 255;
             } else if (ext.Name == CpeExt.TextColors) {
-                p.hasTextColors = true;
-                for (int i = 0; i < Colors.List.Length; i++) {
+                hasTextColors = true;
+                for (int i = 0; i < Colors.List.Length; i++)
+                {
                     if (!Colors.List[i].IsModified()) continue;
                     Send(Packet.SetTextColor(Colors.List[i]));
                 }
@@ -304,14 +345,14 @@ namespace MCGalaxy.Network
             } else if (ext.Name == CpeExt.TwoWayPing) {
                 hasTwoWayPing = true;
             } else if (ext.Name == CpeExt.BulkBlockUpdate) {
-                p.hasBulkBlockUpdate = true;
+                hasBulkBlockUpdate = true;
             } else if (ext.Name == CpeExt.ExtTextures) {
                 hasExtTexs = true;
             }
             #if TEN_BIT_BLOCKS
             else if (ext.Name == CpeExt.ExtBlocks) {
-                p.hasExtBlocks = true;
-                if (p.MaxRawBlock < 767) p.MaxRawBlock = 767;
+                hasExtBlocks = true;
+                if (MaxRawBlock < 767) MaxRawBlock = 767;
             }
             #endif
         }
@@ -328,7 +369,7 @@ namespace MCGalaxy.Network
             //  (downside is that client's respawn position is also changed due to using SpawnEntity)
             // Unfortunately, there is no easy way to tell the difference between 0.0.17a and 0.0.18a,
             //  so this workaround still affects 0.0.18 clients even though it is unnecessary
-            if (id == Entities.SelfID && player.ProtocolVersion < Server.VERSION_0019) {
+            if (id == Entities.SelfID && ProtocolVersion < Server.VERSION_0019) {
                 // TODO keep track of 'last spawn name', in case self entity name was changed by OnEntitySpawnedEvent
                 SendSpawnEntity(id, player.color + player.truename, player.SkinName, pos, rot);
                 return;
@@ -345,6 +386,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendChat(string message) {
+            message = CleanupColors(message);
             List<string> lines = LineWrapper.Wordwrap(message, hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
@@ -365,6 +407,7 @@ namespace MCGalaxy.Network
         }
 
         public void SendMessage(CpeMessageType type, string message) {
+            message = CleanupColors(message);
             Send(Packet.Message(message, type, player.hasCP437));
         }
         
@@ -375,32 +418,42 @@ namespace MCGalaxy.Network
 
         public bool SendSetUserType(byte type) {
             // this packet doesn't exist before protocol version 7
-            if (player.ProtocolVersion < Server.VERSION_0030) return false;
+            if (ProtocolVersion < Server.VERSION_0030) return false;
 
             Send(Packet.UserType(type));
             return true;
         }
-#endregion
+        #endregion
 
 
-#region CPE packet sending
+        #region CPE packet sending
+        public void SendAddTabEntry(byte id, string name, string nick, string group, byte groupRank) {
+            nick  = CleanupColors(nick);
+            group = CleanupColors(group);
+            Send(Packet.ExtAddPlayerName(id, name, nick, group, groupRank, player.hasCP437));
+        }
+
+        public void SendRemoveTabEntry(byte id) {
+            Send(Packet.ExtRemovePlayerName(id));
+        }
+        
         public bool SendSetReach(float reach) {
-            if (!player.Supports(CpeExt.HeldBlock)) return false;
+            if (!Supports(CpeExt.ClickDistance)) return false;
 
             Send(Packet.ClickDistance((short)(reach * 32)));
             return true;
         }
 
         public bool SendHoldThis(BlockID block, bool locked) {
-            if (!player.Supports(CpeExt.HeldBlock)) return false;
+            if (!Supports(CpeExt.HeldBlock)) return false;
 
-            BlockID raw = player.ConvertBlock(block);
-            Send(Packet.HoldThis(raw, locked, player.hasExtBlocks));
+            BlockID raw = ConvertBlock(block);
+            Send(Packet.HoldThis(raw, locked, hasExtBlocks));
             return true;
         }
 
         public bool SendSetEnvColor(byte type, string hex) {
-            if (!player.Supports(CpeExt.EnvColors)) return false;
+            if (!Supports(CpeExt.EnvColors)) return false;
 
             ColorDesc c;
             if (Colors.TryParseHex(hex, out c)) {
@@ -413,46 +466,52 @@ namespace MCGalaxy.Network
 
         public void SendChangeModel(byte id, string model) {
             BlockID raw;
-            if (BlockID.TryParse(model, out raw) && raw > player.MaxRawBlock) {
+            if (BlockID.TryParse(model, out raw) && raw > MaxRawBlock) {
                 BlockID block = Block.FromRaw(raw);
                 if (block >= Block.ExtendedCount) {
                     model = "humanoid"; // invalid block ids
                 } else {
-                    model = player.ConvertBlock(block).ToString();
+                    model = ConvertBlock(block).ToString();
                 }                
             }
             Send(Packet.ChangeModel(id, model, player.hasCP437));
         }
 
         public bool SendSetWeather(byte weather) {
-            if (!player.Supports(CpeExt.EnvWeatherType)) return false;
+            if (!Supports(CpeExt.EnvWeatherType)) return false;
 
             Send(Packet.EnvWeatherType(weather));
             return true;
         }
 
         public bool SendSetTextColor(ColorDesc color) {
-            if (!player.Supports(CpeExt.TextColors)) return false;
+            if (!hasTextColors) return false;
 
             Send(Packet.SetTextColor(color));
             return true;
         }
 
-        public void SendDefineBlock(BlockDefinition def) {
+        public bool SendDefineBlock(BlockDefinition def) {
+            if (!hasBlockDefs || def.RawID > MaxRawBlock) return false;
             byte[] packet;
 
-            if (player.Supports(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
-                packet = Packet.DefineBlockExt(def, true, player.hasCP437, player.hasExtBlocks, hasExtTexs);
-            } else if (player.Supports(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
-                packet = Packet.DefineBlockExt(def, false, player.hasCP437, player.hasExtBlocks, hasExtTexs);
+            if (Supports(CpeExt.BlockDefinitionsExt, 2) && def.Shape != 0) {
+                packet = Packet.DefineBlockExt(def, true, player.hasCP437, hasExtBlocks, hasExtTexs);
+            } else if (Supports(CpeExt.BlockDefinitionsExt) && def.Shape != 0) {
+                packet = Packet.DefineBlockExt(def, false, player.hasCP437, hasExtBlocks, hasExtTexs);
             } else {
-                packet = Packet.DefineBlock(def, player.hasCP437, player.hasExtBlocks, hasExtTexs);
+                packet = Packet.DefineBlock(def, player.hasCP437, hasExtBlocks, hasExtTexs);
             }
+
             Send(packet);
+            return true;
         }
 
-        public void SendUndefineBlock(BlockDefinition def) {
-            Send(Packet.UndefineBlock(def, player.hasExtBlocks));
+        public bool SendUndefineBlock(BlockDefinition def) {
+            if (!hasBlockDefs || def.RawID > MaxRawBlock) return false;
+
+            Send(Packet.UndefineBlock(def, hasExtBlocks));
+            return true;
         }
 #endregion
 
@@ -462,7 +521,7 @@ namespace MCGalaxy.Network
             byte[] packet = Packet.Motd(player, motd);
             Send(packet);
             
-            if (!player.Supports(CpeExt.HackControl)) return;
+            if (!Supports(CpeExt.HackControl)) return;
             Send(Hacks.MakeHackControl(player, motd));
         }
 
@@ -474,7 +533,17 @@ namespace MCGalaxy.Network
             }
         }
 
+        public void SendSetSpawnpoint(Position pos, Orientation rot) {
+            if (Supports(CpeExt.SetSpawnpoint)) {
+                Send(Packet.SetSpawnpoint(pos, rot, player.hasExtPositions));
+            } else {
+                // TODO respawn self directly instead of using Entities.Spawn
+                Entities.Spawn(player, player, pos, rot);
+            }
+        }
+
         public void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            name = CleanupColors(name);
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
@@ -482,13 +551,13 @@ namespace MCGalaxy.Network
             //  - yaw and pitch fields are swapped
             //  - pitch is inverted
             // (other entities do NOT require this adjustment however)
-            if (id == Entities.SelfID && player.ProtocolVersion == Server.VERSION_0016) {
+            if (id == Entities.SelfID && ProtocolVersion == Server.VERSION_0016) {
                 byte temp = rot.HeadX;
                 rot.HeadX = rot.RotY;
                 rot.RotY  = (byte)(256 - temp);
             }
 
-            if (player.Supports(CpeExt.ExtPlayerList, 2)) {
+            if (Supports(CpeExt.ExtPlayerList, 2)) {
                 Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, player.hasCP437, player.hasExtPositions));
             } else if (player.hasExtList) {
                 Send(Packet.ExtAddEntity(id, skin, name, player.hasCP437));
@@ -500,32 +569,24 @@ namespace MCGalaxy.Network
 
         public void SendLevel(Level prev, Level level) {
             int volume = level.blocks.Length;
-            if (player.Supports(CpeExt.FastMap)) {
+            if (Supports(CpeExt.FastMap)) {
                 Send(Packet.LevelInitaliseExt(volume));
             } else {
                 Send(Packet.LevelInitalise());
             }
             
-            if (player.hasBlockDefs) {
+            if (hasBlockDefs) {
                 if (prev != null && prev != level) {
                     RemoveOldLevelCustomBlocks(prev);
                 }
                 BlockDefinition.SendLevelCustomBlocks(player);
                 
-                if (player.Supports(CpeExt.InventoryOrder)) {
+                if (Supports(CpeExt.InventoryOrder)) {
                     BlockDefinition.SendLevelInventoryOrder(player);
                 }
             }
-            
-            using (LevelChunkStream dst = new LevelChunkStream(player))
-                using (Stream stream = LevelChunkStream.CompressMapHeader(player, volume, dst))
-            {
-                if (level.MightHaveCustomBlocks()) {
-                    LevelChunkStream.CompressMap(player, stream, dst);
-                } else {
-                    LevelChunkStream.CompressMapSimple(player, stream, dst);
-                }
-            }
+
+            LevelChunkStream.SendLevel(player, level, volume);
             
             // Force players to read the MOTD (clamped to 3 seconds at most)
             if (level.Config.LoadDelay > 0)
@@ -541,18 +602,75 @@ namespace MCGalaxy.Network
                 BlockDefinition def = defs[i];
                 if (def == BlockDefinition.GlobalDefs[i] || def == null) continue;
 
-                if (def.RawID > player.MaxRawBlock) continue;
                 SendUndefineBlock(def);
             }
         }
 #endregion
 
+                
+        public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {
+            byte[] buffer = new byte[hasExtBlocks ? 9 : 8];
+            buffer[0] = Opcode.SetBlock;
+            NetUtils.WriteU16(x, buffer, 1);
+            NetUtils.WriteU16(y, buffer, 3);
+            NetUtils.WriteU16(z, buffer, 5);
+            
+            BlockID raw = ConvertBlock(block);
+            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
+            socket.Send(buffer, SendFlags.LowPriority);
+        }
+
+        public byte[] MakeBulkBlockchange(BufferedBlockSender buffer) {
+            return buffer.MakeLimited(fallback);
+        }
+        
+        /// <summary> Converts the given block ID into a raw block ID that can be sent to this player </summary>
+        public BlockID ConvertBlock(BlockID block) {
+            BlockID raw;
+            Player p = player;
+
+            if (block >= Block.Extended) {
+                raw = Block.ToRaw(block);
+            } else {
+                raw = Block.Convert(block);
+                // show invalid physics blocks as Orange
+                if (raw >= Block.CPE_COUNT) raw = Block.Orange;
+            }
+            if (raw > MaxRawBlock) raw = p.level.GetFallback(block);
+            
+            // Check if a custom block replaced a core block
+            //  If so, assume fallback is the better block to display
+            if (!hasBlockDefs && raw < Block.CPE_COUNT) {
+                BlockDefinition def = p.level.CustomBlockDefs[raw];
+                if (def != null) raw = def.FallBack;
+            }
+            
+            if (!hasCustomBlocks) raw = fallback[(BlockRaw)raw];
+            return raw;
+        }
+        
+        internal void UpdateFallbackTable() {
+            for (byte b = 0; b <= Block.CPE_MAX_BLOCK; b++)
+            {
+                fallback[b] = hasCustomBlocks ? b : Block.ConvertLimited(b, ProtocolVersion);
+            }
+        }
+
+
+        string CleanupColors(string value) {
+            // Although ClassiCube in classic mode supports invalid colours,
+            //  the original vanilla client crashes with invalid colour codes
+            // Since it's impossible to identify which client is being used,
+            //  just remove the ampersands to be on the safe side
+            //  when text colours extension is not supported
+            return LineWrapper.CleanupColors(value, hasTextColors, hasTextColors);
+        }
 
         /// <summary> Returns an appropriate name for the associated player's client </summary>
         /// <remarks> Determines name based on appname or protocol version supported </remarks>
         public string ClientName() {
             if (!string.IsNullOrEmpty(player.appName)) return player.appName;
-            byte version = player.ProtocolVersion;
+            byte version = ProtocolVersion;
                   
             if (version == Server.VERSION_0016) return "Classic 0.0.16";
             if (version == Server.VERSION_0017) return "Classic 0.0.17-0.0.18";
@@ -561,6 +679,43 @@ namespace MCGalaxy.Network
             
             // Might really be Classicube in Classic Mode, Charged Miners, etc though
             return "Classic 0.28-0.30";
+        }
+
+        // TODO modularise and move common code back into Entities.c
+        public unsafe void UpdatePlayerPositions() {
+            Player[] players = PlayerInfo.Online.Items;
+            byte* src  = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
+            byte* ptr  = src;
+            Player dst = player;
+
+            foreach (Player p in players) {
+                if (dst == p || dst.level != p.level || !dst.CanSeeEntity(p)) continue;
+                
+                Orientation rot = p.Rot; byte pitch = rot.HeadX;
+                if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
+                
+                // flip head when infected, but doesn't support model
+                if (!dst.hasChangeModel) {
+                    ZSData data = ZSGame.TryGet(p);
+                    if (data != null && data.Infected) pitch = FlippedPitch(pitch);
+                }
+            
+                rot.HeadX = pitch;
+                Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
+                                           p.tempPos, p.lastPos, rot, p.lastRot);
+            }
+            
+            int count = (int)(ptr - src);
+            if (count == 0) return;
+            
+            byte[] packet = new byte[count];
+            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
+            dst.Send(packet);
+        }
+
+        static byte FlippedPitch(byte pitch) {
+             if (pitch > 64 && pitch < 192) return pitch;
+             else return 128;
         }
     }
 }

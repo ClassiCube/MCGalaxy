@@ -25,12 +25,14 @@ namespace MCGalaxy.Network
     /// <remarks> Sends block changes as either a single CPE BulkBlockUpdate packet,
     /// or 256 SetBlock packets combined as a single byte array to reduce overhead. </remarks>
     public sealed class BufferedBlockSender 
-    {  
-        int[] indices = new int[256];
-        BlockID[] blocks = new BlockID[256];
-        int count = 0;
+    {
         public Level level;
         public Player player;
+        // fields below should not be modified by code outside of BufferedBlockSender
+        public int[] indices   = new int[256];
+        public BlockID[] blocks = new BlockID[256];
+        public int count;
+        
         public BufferedBlockSender() { }
         
         /// <summary> Constructs a bulk sender that will send block changes to all players on that level </summary>
@@ -91,9 +93,10 @@ namespace MCGalaxy.Network
         
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
                           ref byte[] classic, ref byte[] ext, ref byte[] extBulk) {
+            ClassicProtocol s = p.Session;
             #if TEN_BIT_BLOCKS
-            if (p.hasExtBlocks) {
-                if (p.hasBulkBlockUpdate && count >= 150) {
+            if (s.hasExtBlocks) {
+                if (s.hasBulkBlockUpdate && count >= 150) {
                     if (extBulk == null) extBulk = MakeBulkExt();
                     return extBulk;
                 } else {
@@ -104,21 +107,21 @@ namespace MCGalaxy.Network
             #endif
             
             // Different clients support varying types of blocks
-            if (p.hasBulkBlockUpdate && p.hasBlockDefs && count >= 160) {
+            if (s.hasBulkBlockUpdate && s.hasBlockDefs && count >= 160) {
                 if (bulk == null) bulk = MakeBulk();
                 return bulk;
-            } else if (p.hasBlockDefs) {
+            } else if (s.hasBlockDefs) {
                 // supports all 255 blocks (classicube enhanced client)
                 if (normal == null) normal = MakeNormal();
                 return normal;
-            } else if (!p.hasCustomBlocks && p.ProtocolVersion == Server.VERSION_0030) {
-                // support original 45 blocks (classic client)
-                if (classic == null) classic = MakeLimited(p.fallback);
+            } else if (!s.hasCustomBlocks && s.ProtocolVersion == Server.VERSION_0030) {
+                // supports original 45 blocks (classic client)
+                if (classic == null) classic = MakeLimited(s.fallback);
                 return classic;
             } else {
                 // other support combination (CPE only, preclassic, etc)
                 //  don't bother trying to optimise for this case
-                return MakeLimited(p.fallback);
+                return s.MakeBulkBlockchange(this);
             }
         }
 
@@ -172,8 +175,8 @@ namespace MCGalaxy.Network
         }
         #endif
 
-        
-        byte[] MakeBulk() {
+
+        internal byte[] MakeBulk() {
             byte[] data = new byte[2 + 256 * 5];
             data[0] = Opcode.CpeBulkBlockUpdate;
             data[1] = (byte)(count - 1);
@@ -195,7 +198,7 @@ namespace MCGalaxy.Network
             return data;
         }
         
-        byte[] MakeNormal() {
+        internal byte[] MakeNormal() {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) 
             {
@@ -217,8 +220,8 @@ namespace MCGalaxy.Network
             }
             return data;
         }
-        
-        byte[] MakeLimited(byte[] fallback) {
+
+        internal byte[] MakeLimited(byte[] fallback) {
             byte[] data = new byte[count * 8];
             for (int i = 0, j = 0; i < count; i++) 
             {

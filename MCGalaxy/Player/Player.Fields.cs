@@ -45,7 +45,6 @@ namespace MCGalaxy {
         public INetSocket Socket;
         public ClassicProtocol Session;
         public PingList Ping = new PingList();
-        public BlockID MaxRawBlock = Block.CLASSIC_MAX_BLOCK;
         
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk, AutoAfk;
@@ -233,9 +232,6 @@ namespace MCGalaxy {
         public bool loggedIn;
         public bool verifiedName;
         bool gotSQLData;
-        
-        public byte ProtocolVersion;
-        internal byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
         
         
         public bool cancelcommand, cancelchat, cancelmove;

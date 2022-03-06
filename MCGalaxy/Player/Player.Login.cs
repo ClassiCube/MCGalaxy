@@ -14,13 +14,10 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
@@ -35,7 +32,7 @@ namespace MCGalaxy
             name     = user; truename    = user;
             SkinName = user; DisplayName = user; 
             
-            if (ProtocolVersion > Server.VERSION_0030) {
+            if (Session.ProtocolVersion > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version", true); return false; 
             }
             if (user.Length < 1 || user.Length > 16) {
@@ -47,28 +44,12 @@ namespace MCGalaxy
             
             if (Server.Config.ClassicubeAccountPlus) name += "+";
             OnPlayerStartConnectingEvent.Call(this, mppass);
-            if (cancelconnecting) { cancelconnecting = false; return true; }
+            if (cancelconnecting) { cancelconnecting = false; return false; }
             
             level   = Server.mainLevel;
             Loading = true;
-            if (Socket.Disconnected) return true;
-            
-            UpdateFallbackTable();
-            if (hasCpe) { SendCpeExtensions(); }
-            else { CompleteLoginProcess(); }
-            return true;
-        }
-        
-        void SendCpeExtensions() {
-            extensions = CpeExtension.GetAllEnabled();
-            Send(Packet.ExtInfo((byte)(extensions.Length + 1)));
-            // fix for old classicube java client, doesn't reply if only send EnvMapAppearance with version 2
-            Send(Packet.ExtEntry(CpeExt.EnvMapAppearance, 1));
-            
-            foreach (CpeExt ext in extensions) 
-            {
-                Send(Packet.ExtEntry(ext.Name, ext.ServerVersion));
-            }
+            // returns false if disconnected during login
+            return !Socket.Disconnected;
         }
         
         internal void CompleteLoginProcess() {

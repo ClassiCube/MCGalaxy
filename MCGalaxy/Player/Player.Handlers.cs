@@ -209,7 +209,7 @@ namespace MCGalaxy
                 }
                 
                 if (held >= Block.Extended) {
-                    if (!hasBlockDefs || level.CustomBlockDefs[held] == null) {
+                    if (!Session.hasBlockDefs || level.CustomBlockDefs[held] == null) {
                         Message("Invalid block type: " + Block.ToRaw(held));
                         RevertBlock(x, y, z); return;
                     }
@@ -278,7 +278,7 @@ namespace MCGalaxy
             }
                 
             if (value == default_) value = level.Config.DefaultEnvProp(i, level.Height);
-            if (block)             value = ConvertBlock((BlockID)value);
+            if (block)             value = Session.ConvertBlock((BlockID)value);
             return value;
         }
         

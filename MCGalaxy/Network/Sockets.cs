@@ -35,7 +35,7 @@ namespace MCGalaxy.Network
     /// <summary> Abstracts sending to/receiving from a network socket. </summary>
     public abstract class INetSocket 
     {
-        protected INetProtocol protocol;        
+        public INetProtocol protocol;        
         /// <summary> Whether the socket has been closed/disconnected. </summary>
         public bool Disconnected;
         

@@ -16,12 +16,13 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Network;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
-namespace MCGalaxy {
-    public static partial class Block {
-        
+namespace MCGalaxy 
+{
+    public static partial class Block 
+    {
         internal static string[] coreNames = new string[Block.Count];
         public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
@@ -76,23 +77,21 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Converts a block &lt; CPE_COUNT into a suitable
-        /// block supported by the given player's client </summary>
-        internal static byte ConvertLimited(byte block, Player p) {
-        	if (p.hasCustomBlocks) return block;
-
+        /// <summary> Converts a block &lt;= CPE_MAX_BLOCK into a suitable
+        /// block compatible for the given classic protocol version </summary>
+        internal static byte ConvertLimited(byte block, byte protocolVersion) {
             // protocol version 7 only supports up to Obsidian block
-            if (p.ProtocolVersion >= Server.VERSION_0030) {
+            if (protocolVersion >= Server.VERSION_0030) {
                 return block <= Obsidian ? block : v7_fallback[block - CobblestoneSlab];
             }
             
             // protocol version 6 only supports up to Gold block
-            if (p.ProtocolVersion >= Server.VERSION_0020) {
+            if (protocolVersion >= Server.VERSION_0020) {
                 return block <= Gold ? block : v6_fallback[block - Iron];
             }
             
             // protocol version 5 only supports up to Glass block
-            if (p.ProtocolVersion >= Server.VERSION_0019) {
+            if (protocolVersion >= Server.VERSION_0019) {
                 return block <= Glass ? block : v5_fallback[block - Red];
             }
 

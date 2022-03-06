@@ -60,13 +60,9 @@ namespace MCGalaxy.Blocks {
             if (index != p.lastCheckpointIndex) {
                 Position pos = p.Pos;
                 pos.X = x * 32 + 16; pos.Z = z * 32 + 16;
+
                 if (Server.Config.CheckpointsRespawnClientside) {
-                    if (p.Supports(CpeExt.SetSpawnpoint)) {
-                        p.Send(Packet.SetSpawnpoint(pos, p.Rot, p.hasExtPositions));
-                    } else {
-                        p.SendPos(Entities.SelfID, pos, p.Rot);
-                        Entities.Spawn(p, p);
-                    }
+                    p.Session.SendSetSpawnpoint(pos, p.Rot);
                     p.Message("Your spawnpoint was updated.");
                 }
                 p.lastCheckpointIndex = index;

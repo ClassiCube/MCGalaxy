@@ -131,7 +131,6 @@ namespace MCGalaxy
         
         static void SpawnRaw(Player dst, byte id, Entity e, Position pos, Orientation rot,
                              string skin, string name, string model) {
-            name = LineWrapper.CleanupColors(name, dst);
             dst.Session.SendSpawnEntity(id, name, skin, pos, rot);
 
             if (dst.hasChangeModel) {
@@ -293,49 +292,17 @@ namespace MCGalaxy
             // We need to cache the player's position before iterating.
             // Avoids the very rare issue of player's position changing mid-way through iteration,
             // which can cause this player to show minorly offset to other players.
-            foreach (Player p in players)
+            foreach (Player p in players) {
                 p.tempPos = p.Pos;
-            
-            foreach (Player p in players)
-                UpdatePosition(p);
+            }
+
+            foreach (Player p in players) {
+                p.Session.UpdatePlayerPositions();
+            }
+
             foreach (Player p in players) {
                 p.lastPos = p.tempPos; p.lastRot = p.Rot;
             }
-        }
-        
-        unsafe static void UpdatePosition(Player dst) {
-            Player[] players = PlayerInfo.Online.Items;
-            byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
-            byte* ptr = src;
-            
-            foreach (Player p in players) {
-                if (dst == p || dst.level != p.level || !dst.CanSeeEntity(p)) continue;
-                
-                Orientation rot = p.Rot; byte pitch = rot.HeadX;
-                if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
-                
-                // flip head when infected, but doesn't support model
-                if (!dst.hasChangeModel) {
-                    ZSData data = ZSGame.TryGet(p);
-                    if (data != null && data.Infected) pitch = FlippedPitch(pitch);
-                }
-            
-                rot.HeadX = pitch;
-                Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
-                                           p.tempPos, p.lastPos, rot, p.lastRot);
-            }
-            
-            int count = (int)(ptr - src);
-            if (count == 0) return;
-            
-            byte[] packet = new byte[count];
-            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
-            dst.Send(packet);
-        }
-        
-        static byte FlippedPitch(byte pitch) {
-             if (pitch > 64 && pitch < 192) return pitch;
-             else return 128;
         }
         #endregion
     }

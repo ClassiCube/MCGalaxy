@@ -689,7 +689,6 @@
     <Compile Include="sharkbite.thresher\UserInfo.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
-    <Compile Include="Player\Player.CPE.cs" />
     <Compile Include="Database\PlayerDB.cs" />
   </ItemGroup>
   <ItemGroup>

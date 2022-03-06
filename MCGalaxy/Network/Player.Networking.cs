@@ -14,19 +14,18 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy 
 {
     public partial class Player : IDisposable
     {
+        public string appName;
+        // these are checked very frequently, so avoid overhead of .Supports(
+        public bool hasChangeModel, hasExtList, hasCP437;
+
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
         
         public void MessageLines(IEnumerable<string> lines) {
@@ -50,7 +49,6 @@ namespace MCGalaxy
             if (cancel) return;
             
             try {
-                message = LineWrapper.CleanupColors(message, this);
                 Session.SendChat(message);
             } catch (Exception e) {
                 Logger.LogError(e);
@@ -64,7 +62,6 @@ namespace MCGalaxy
             }
             
             message = Chat.Format(message, this);
-            message = LineWrapper.CleanupColors(message, this);
             Session.SendMessage(type, message);
         }
 
@@ -136,46 +133,77 @@ namespace MCGalaxy
             //if (x < 0 || y < 0 || z < 0) return;
             if (x >= level.Width || y >= level.Height || z >= level.Length) return;
 
-            byte[] buffer = new byte[hasExtBlocks ? 9 : 8];
-            buffer[0] = Opcode.SetBlock;
-            NetUtils.WriteU16(x, buffer, 1);
-            NetUtils.WriteU16(y, buffer, 3);
-            NetUtils.WriteU16(z, buffer, 5);
-            
-            BlockID raw = ConvertBlock(block);
-            NetUtils.WriteBlock(raw, buffer, 7, hasExtBlocks);
-            Socket.Send(buffer, SendFlags.LowPriority);
+            Session.SendBlockchange(x, y, z, block);
+        }
+
+
+        /// <summary> Whether this player's client supports the given CPE extension at the given version </summary>
+        public bool Supports(string extName, int version = 1) {
+            return Session != null && Session.Supports(extName, version);
+        }
+        
+        public string GetTextureUrl() {
+            string url = level.Config.TexturePack.Length == 0 ? level.Config.Terrain : level.Config.TexturePack;
+            if (url.Length == 0) {
+                url = Server.Config.DefaultTexture.Length == 0 ? Server.Config.DefaultTerrain : Server.Config.DefaultTexture;
+            }
+            return url;
         }
         
         
-        /// <summary> Converts the given block ID into a raw block ID that can be sent to this player </summary>
-        public BlockID ConvertBlock(BlockID block) {
-            BlockID raw;
-            if (block >= Block.Extended) {
-                raw = Block.ToRaw(block);
-            } else {
-                raw = Block.Convert(block);
-                // show invalid physics blocks as Orange
-                if (raw >= Block.CPE_COUNT) raw = Block.Orange;
-            }
-            if (raw > MaxRawBlock) raw = level.GetFallback(block);
+        string lastUrl = "";
+        public void SendCurrentTextures() {
+            Zone zone = ZoneIn;
+            int cloudsHeight = CurrentEnvProp(EnvProp.CloudsLevel, zone);
+            int edgeHeight   = CurrentEnvProp(EnvProp.EdgeLevel,   zone);
+            int maxFogDist   = CurrentEnvProp(EnvProp.MaxFog,      zone);
             
-            // Check if a custom block replaced a core block
-            //  If so, assume fallback is the better block to display
-            if (!hasBlockDefs && raw < Block.CPE_COUNT) {
-                BlockDefinition def = level.CustomBlockDefs[raw];
-                if (def != null) raw = def.FallBack;
+            byte side = (byte)CurrentEnvProp(EnvProp.SidesBlock, zone);
+            byte edge = (byte)CurrentEnvProp(EnvProp.EdgeBlock,  zone);
+
+            string url = GetTextureUrl();
+            if (Supports(CpeExt.EnvMapAspect)) {
+                // reset all other textures back to client default.
+                if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
+                Send(Packet.EnvMapUrl(url, hasCP437));
+            } else if (Supports(CpeExt.EnvMapAppearance, 2)) {
+                // reset all other textures back to client default.
+                if (url != lastUrl) {
+                    Send(Packet.MapAppearanceV2("", side, edge, edgeHeight, cloudsHeight, maxFogDist, hasCP437));
+                }
+                Send(Packet.MapAppearanceV2(url, side, edge, edgeHeight, cloudsHeight, maxFogDist, hasCP437));
+                lastUrl = url;
+            } else if (Supports(CpeExt.EnvMapAppearance)) {
+                url = level.Config.Terrain.Length == 0 ? Server.Config.DefaultTerrain : level.Config.Terrain;
+                Send(Packet.MapAppearance(url, side, edge, edgeHeight, hasCP437));
             }
-            
-            if (!hasCustomBlocks) raw = fallback[(BlockRaw)raw];
-            return raw;
+        }
+
+        public void SendCurrentBlockPermissions() {
+            if (!Supports(CpeExt.BlockPermissions)) return;
+            // Write the block permissions as one bulk TCP packet
+            SendAllBlockPermissions();
         }
         
-        internal void UpdateFallbackTable() {
-            for (byte b = 0; b < Block.CPE_COUNT; b++)
-            {
-                fallback[b] = Block.ConvertLimited(b, this);
+        void SendAllBlockPermissions() {
+            bool extBlocks = Session.hasExtBlocks;
+            int count = Session.MaxRawBlock + 1;
+            int size  = extBlocks ? 5 : 4;
+            byte[] bulk = new byte[count * size];
+            
+            for (int i = 0; i < count; i++) {
+                BlockID block = Block.FromRaw((BlockID)i);
+                bool place  = group.Blocks[block] && level.CanPlace;
+                // NOTE: If you can't delete air, then you're no longer able to place blocks
+                // (see ClassiCube client #815)
+                // TODO: Maybe better solution than this?
+                bool delete = group.Blocks[block] && (level.CanDelete || i == Block.Air);
+                
+                // Placing air is the same as deleting existing block at that position in the world
+                if (block == Block.Air) place &= delete;
+                Packet.WriteBlockPermission((BlockID)i, place, delete, extBlocks, bulk, i * size);
             }
+            Send(bulk);
         }
     }
 }
