@@ -23,13 +23,13 @@ namespace MCGalaxy
 {
     public static partial class Block 
     {
-        internal static string[] coreNames = new string[Block.Count];
+        internal static string[] coreNames = new string[Block.CORE_COUNT];
         public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
         public static bool ExistsGlobal(BlockID b) { return ExistsFor(Player.Console, b); }
         
         public static bool ExistsFor(Player p, BlockID b) {
-            if (b < Block.Count) return !Undefined(b);
+            if (b < Block.CORE_COUNT) return !Undefined(b);
             
             if (!p.IsSuper) return p.level.GetBlockDef(b) != null;
             return BlockDefinition.GlobalDefs[b] != null;

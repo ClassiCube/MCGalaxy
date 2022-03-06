@@ -468,7 +468,7 @@ namespace MCGalaxy.Network
             BlockID raw;
             if (BlockID.TryParse(model, out raw) && raw > MaxRawBlock) {
                 BlockID block = Block.FromRaw(raw);
-                if (block >= Block.ExtendedCount) {
+                if (block >= Block.SUPPORTED_COUNT) {
                     model = "humanoid"; // invalid block ids
                 } else {
                     model = ConvertBlock(block).ToString();

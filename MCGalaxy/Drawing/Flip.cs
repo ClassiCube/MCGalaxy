@@ -199,7 +199,7 @@ namespace MCGalaxy.Drawing
  
         
         static BlockID[] Transform(BlockDefinition[] defs, string[] mirrorDirs, string[] rotateDirs) {
-            BlockID[] transform = new BlockID[Block.ExtendedCount];
+            BlockID[] transform = new BlockID[Block.SUPPORTED_COUNT];
             for (int i = 0; i < transform.Length; i++) {
                 transform[i] = (BlockID)i;
             }

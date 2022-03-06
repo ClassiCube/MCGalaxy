@@ -23,7 +23,7 @@ using BlockID = System.UInt16;
 namespace MCGalaxy {
     public static partial class Block {
         
-        public static BlockProps[] Props = new BlockProps[Block.ExtendedCount];
+        public static BlockProps[] Props = new BlockProps[Block.SUPPORTED_COUNT];
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         
         internal static BlockProps MakeDefaultProps(BlockID b) {
@@ -174,7 +174,7 @@ const string default_names =
     "Blue_Bird@@Killer_Phoenix@@@GoldFish@Sea_Sponge@Shark@" +
     "Salmon@Betta_Fish@Lava_Shark@Snake@Snake_Tail@Door_Gold@@@";
     
-            for (int b = 0; b < Block.Count; b++) {
+            for (int b = 0; b < Block.CORE_COUNT; b++) {
                 int end = default_names.IndexOf('@', start);
                 string name = start == end ? "unknown" : default_names.Substring(start, end - start);
                 start = end + 1;

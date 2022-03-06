@@ -37,7 +37,7 @@ namespace MCGalaxy.Blocks {
             CopyTo(copy); return copy;
         }
         
-        public static BlockPerms[] List = new BlockPerms[Block.ExtendedCount];
+        public static BlockPerms[] List = new BlockPerms[Block.SUPPORTED_COUNT];
 
         /// <summary> Find the permissions for the given block. </summary>
         public static BlockPerms Find(BlockID b) { return List[b]; }
@@ -139,7 +139,7 @@ namespace MCGalaxy.Blocks {
         }
         
         static void SetDefaultPerms() {
-            for (BlockID block = 0; block < Block.ExtendedCount; block++) {
+            for (BlockID block = 0; block < Block.SUPPORTED_COUNT; block++) {
                 BlockProps props = Block.Props[block];
                 LevelPermission min;
                 

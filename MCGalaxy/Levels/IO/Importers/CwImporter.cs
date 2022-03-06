@@ -176,7 +176,7 @@ namespace MCGalaxy.Levels.IO {
                 def.MaxX = coords[3]; def.MaxZ = coords[4]; def.MaxY = coords[5];
                 
                 BlockID block = def.GetBlock();
-                if (block >= Block.ExtendedCount) {
+                if (block >= Block.SUPPORTED_COUNT) {
                     Logger.Log(LogType.Warning, "Cannot import custom block {0} (ID {1})",
                                def.Name, def.RawID);
                     continue;

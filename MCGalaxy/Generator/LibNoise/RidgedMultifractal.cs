@@ -39,7 +39,6 @@ namespace LibNoise
             Frequency = 1.0;
             Lacunarity = 2.0;
             OctaveCount = 6;
-            Seed = 0;
         }
 
         public double GetValue(double x, double y, double z)

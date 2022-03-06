@@ -68,7 +68,7 @@ namespace MCGalaxy {
         
         public PlayerList Players;
         public List<Command> Commands;
-        public bool[] Blocks = new bool[Block.ExtendedCount];
+        public bool[] Blocks = new bool[Block.SUPPORTED_COUNT];
         
         
         public void SetUsableCommands() {

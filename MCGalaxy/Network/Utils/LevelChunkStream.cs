@@ -151,14 +151,14 @@ namespace MCGalaxy.Network {
             float progScale   = 100.0f / blocks.Length;
 
             // Store on stack instead of performing function call for every block in map
-            byte* conv = stackalloc byte[Block.ExtendedCount];
-            byte* convExt  = conv + Block.Count;
+            byte* conv = stackalloc byte[Block.SUPPORTED_COUNT];
+            byte* convExt  = conv + 256; // 256 blocks per group/class
             #if TEN_BIT_BLOCKS
-            byte* convExt2 = conv + Block.Count * 2;
-            byte* convExt3 = conv + Block.Count * 3;
+            byte* convExt2 = conv + 256 * 2;
+            byte* convExt3 = conv + 256 * 3;
             #endif
 
-            for (int j = 0; j < Block.ExtendedCount; j++) {
+            for (int j = 0; j < Block.SUPPORTED_COUNT; j++) {
                 conv[j] = (byte)s.ConvertBlock((BlockID)j);
             }
             

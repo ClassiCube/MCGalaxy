@@ -21,13 +21,14 @@ namespace MCGalaxy
 {
     public static partial class Block 
     {
-        /// <summary> Highest block ID supported in Classic </summary>
+        /// <summary> Highest block ID  in Classic </summary>
         public const byte CLASSIC_MAX_BLOCK = Obsidian;
-        /// <summary> Highest block ID supported in Classic + CPE custom blocks </summary>
+        /// <summary> Highest block ID supported in Classic + CPE CustomBlocks </summary>
         public const byte CPE_MAX_BLOCK     = StoneBrick;
         /// <summary> Total number of blocks in Classic + CPE CustomBlocks </summary>
         public const byte CPE_COUNT         = CPE_MAX_BLOCK + 1;
-        public const int Count = 256;
+        /// <summary> Total number of blocks in Classic + CPE CustomBlocks + physics blocks </summary>
+        public const int  CORE_COUNT = 256;
 
         // 10 bit block ids are broken down into: 2 bits of class/type, 8 bits value
         // class | value meaning
@@ -48,9 +49,9 @@ namespace MCGalaxy
         
         #if TEN_BIT_BLOCKS
         public const ushort MaxRaw = 767;
-        public const int ExtendedCount = 256 * 4;
-        public static ushort[] ExtendedBase = new ushort[Block.Count];
-        public static byte[] ExtendedClass = new byte[4];
+        internal const int SUPPORTED_COUNT = 256 * 4;
+        internal static ushort[] ExtendedBase = new ushort[Block.Count];
+        internal static byte[] ExtendedClass  = new byte[4];
         
         static Block() {
             ExtendedBase[custom_block]   = Extended;
@@ -64,8 +65,11 @@ namespace MCGalaxy
         }
         #else
         public const ushort MaxRaw = 255;
-        public const int ExtendedCount = 256 * 2;
-        #endif
+        internal const int SUPPORTED_COUNT = 256 * 2;
+#endif
+
+        // non-const for external code (SUPPORTED_COUNT value differs when TEN_BIT_BLOCKS)
+        public static readonly int ExtendedCount = SUPPORTED_COUNT;
         
         // Original blocks
         public const byte Air = 0;

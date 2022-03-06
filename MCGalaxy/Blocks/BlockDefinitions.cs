@@ -92,7 +92,7 @@ namespace MCGalaxy {
         
         static ConfigElement[] elems;
         public static BlockDefinition[] Load(string path) {
-            BlockDefinition[] defs = new BlockDefinition[Block.ExtendedCount];
+            BlockDefinition[] defs = new BlockDefinition[Block.SUPPORTED_COUNT];
             if (!File.Exists(path)) return defs;
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
             
@@ -275,9 +275,9 @@ namespace MCGalaxy {
             int maxRaw = pl.Session.MaxRawBlock;
             int count  = maxRaw + 1;
 
-            int* order_to_blocks = stackalloc int[Block.ExtendedCount];
-            int* block_to_orders = stackalloc int[Block.ExtendedCount];
-            for (int b = 0; b < Block.ExtendedCount; b++) 
+            int* order_to_blocks = stackalloc int[Block.SUPPORTED_COUNT];
+            int* block_to_orders = stackalloc int[Block.SUPPORTED_COUNT];
+            for (int b = 0; b < Block.SUPPORTED_COUNT; b++) 
             {
                 order_to_blocks[b] = -1;
                 block_to_orders[b] = -1;

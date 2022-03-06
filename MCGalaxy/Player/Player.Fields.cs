@@ -199,7 +199,7 @@ namespace MCGalaxy {
         /// <summary> The block ID this player's client specifies it is currently holding in hand. </summary>
         /// <remarks> This ignores /bind and /mode. GetHeldBlock() is usually preferred. </remarks>
         public BlockID ClientHeldBlock = Block.Stone;
-        public BlockID[] BlockBindings = new BlockID[Block.ExtendedCount];
+        public BlockID[] BlockBindings = new BlockID[Block.SUPPORTED_COUNT];
         public Dictionary<string, string> CmdBindings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         
         public string lastCMD = "";

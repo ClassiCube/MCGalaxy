@@ -59,8 +59,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void OutputBlocks(Player p, string type, string modifier, Predicate<BlockID> selector) {
-            List<BlockID> blocks = new List<BlockID>(Block.ExtendedCount);
-            for (BlockID b = 0; b < Block.ExtendedCount; b++) {
+            List<BlockID> blocks = new List<BlockID>(Block.SUPPORTED_COUNT);
+            for (BlockID b = 0; b < Block.SUPPORTED_COUNT; b++) {
                 if (Block.ExistsFor(p, b) && selector(b)) blocks.Add(b);
             }
 
@@ -84,7 +84,8 @@ namespace MCGalaxy.Commands.Info {
             }
             
             string msg = "";
-            for (BlockID b = Block.CPE_COUNT; b < Block.Count; b++) {
+            for (BlockID b = Block.CPE_COUNT; b < Block.CORE_COUNT; b++) 
+            {
                 if (Block.Convert(b) != block) continue;
                 msg += FormatBlockName(p, b) + ", ";
             }

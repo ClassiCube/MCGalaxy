@@ -65,7 +65,7 @@ namespace MCGalaxy.Config {
             : base(name, section) { defBlock = def; }
         
         public override object Parse(string raw) {
-            BlockID block = (BlockID)ParseInteger(raw, defBlock, 0, Block.ExtendedCount - 1);
+            BlockID block = (BlockID)ParseInteger(raw, defBlock, 0, Block.SUPPORTED_COUNT - 1);
             if (block == Block.Invalid) return Block.Invalid;
             return Block.MapOldRaw(block);
         }
