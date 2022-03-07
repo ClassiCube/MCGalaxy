@@ -412,6 +412,7 @@ namespace MCGalaxy.Network
         }
         
         public void SendKick(string reason, bool sync) {
+            reason = CleanupColors(reason);
             byte[] buffer = Packet.Kick(reason, player.hasCP437);
             socket.Send(buffer, sync ? SendFlags.Synchronous : SendFlags.None);
         }
