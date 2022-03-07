@@ -32,7 +32,11 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "level name")) return;
-            if (message.Length == 0) message = p.level.name;
+
+            if (message.Length == 0) {
+                PrintMapInfo(p, p.level.Config); return;
+            }
+
             string[] args = message.SplitSpaces(3);
             Level lvl = null;
             string optName = null, value = null;
