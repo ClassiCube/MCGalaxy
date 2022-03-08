@@ -150,9 +150,9 @@ namespace MCGalaxy {
         /// <param name="customCols"> if false, converts custom colour codes into fallback colour code </param>
         public static string CleanupColors(string value, bool fullAmpersands, bool customCols) {
             if (value.IndexOf('&') == -1) return value;
-            StringBuilder sb = new StringBuilder(value.Length);
-            int lastIdx  = -1;
-            char lastCol = 'f', col;
+            char[] chars = new char[value.Length];
+            int lastIdx  = -1, len = 0;
+            char lastColor  = 'f', col;
             bool combinable = false;
             
             for (int i = 0; i < value.Length; i++) {
@@ -160,40 +160,49 @@ namespace MCGalaxy {
                 // Definitely not a colour code
                 if (c != '&') {
                     if (c != ' ') combinable = false;
-                    sb.Append(c); continue;
+                    chars[len++] = c; 
+                    continue;
                 }
                 
                 // Maybe still not a colour code
                 if (i == value.Length - 1 || (col = Colors.Lookup(value[i + 1])) == '\0') {
                     // Treat the & like a normal character
                     //  For clients not supporting standalone '&', show '%' instead
-                    combinable = false;
-                    sb.Append(fullAmpersands ? '&' : '%');
+                    combinable   = false;
+                    chars[len++] = fullAmpersands ? '&' : '%';
                     continue;
                 }
                 if (!customCols) col = Colors.Get(col).Fallback;
                 
                 // Don't append duplicate colour codes
-                if (lastCol != col) {
-                    // Remove first colour code in "&a&b or "&a   &b"
-                    if (combinable) sb.Remove(lastIdx, 2);
+                if (lastColor != col) {
+                    // If no gap or only whitepsace since prior color code,
+                    //  then just replace the prior color code with this one
+                    if (combinable) {
+                        // e.g. "&a&bTest"   -> "&bTest"
+                        // e.g. "&a  &bTest" -> "&b  Test"
+                        chars[lastIdx + 1] = col;
+                    } else {
+                        // can't simplify, so just append this color code
+                        lastIdx      = len;
+                        chars[len++] = '&';
+                        chars[len++] = col;
+                    }
                     
-                    sb.Append('&').Append(col);
-                    lastIdx = sb.Length - 2;
-                    lastCol = col;
+                    lastColor  = col;
                     combinable = true;
                 }
                 i++; // skip over color code
             }
             
             // Trim trailing color codes
-            while (sb.Length >= 2) {
-                if (sb[sb.Length - 2] != '&') break;
-                if (Colors.Lookup(sb[sb.Length - 1]) == '\0') break;
+            while (len >= 2) {
+                if (chars[len - 2] != '&') break;
+                if (Colors.Lookup(chars[len - 1]) == '\0') break;
                 // got a color code at the end, remove
-                sb.Remove(sb.Length - 2, 2);
+                len -= 2;
             }
-            return sb.ToString();
+            return new string(chars, 0, len);
         }
     }
 }
