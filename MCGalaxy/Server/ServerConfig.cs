@@ -147,8 +147,8 @@ namespace MCGalaxy {
         
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;
-        [ConfigInt("irc-port", "IRC bot", 6667, 0, 65535)]
-        public int IRCPort = 6667;
+        [ConfigInt("irc-port", "IRC bot", 6697, 0, 65535)]
+        public int IRCPort = 6697;
         [ConfigString("irc-server", "IRC bot", "irc.esper.net")]
         public string IRCServer = "irc.esper.net";
         [ConfigString("irc-nick", "IRC bot", "ForgeBot")]
