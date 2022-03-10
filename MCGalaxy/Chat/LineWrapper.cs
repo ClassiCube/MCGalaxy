@@ -42,6 +42,10 @@ namespace MCGalaxy {
         }
         
         static string MakeLine(char[] line, int length, bool emotePad) {
+            // necessary to remove useless trailing color codes, 
+            //  as crashes original minecraft classic otherwise
+            length = TrimTrailingInvisible(line, length);
+
             if (emotePad) line[length++] = '\'';
             return new string(line, 0, length);
         }
@@ -196,15 +200,23 @@ namespace MCGalaxy {
                 }
                 i++; // skip over color code
             }
-            
-            // Trim trailing color codes
-            while (len >= 2) {
-                if (chars[len - 2] != '&') break;
-                if (Colors.Lookup(chars[len - 1]) == '\0') break;
-                // got a color code at the end, remove
-                len -= 2;
-            }
+
+            len = TrimTrailingInvisible(chars, len);
             return new string(chars, 0, len);
+        }
+
+        // Trims trailing color codes and whitespace
+        static int TrimTrailingInvisible(char[] chars, int len) {
+            while (len >= 2)
+            {
+                char c = chars[len - 1];
+                if (c == ' ') { len--; continue; }
+
+                if (chars[len - 2] != '&')    break;
+                if (Colors.Lookup(c) == '\0') break;
+                len -= 2; // remove color code
+            }
+            return len;
         }
     }
 }
