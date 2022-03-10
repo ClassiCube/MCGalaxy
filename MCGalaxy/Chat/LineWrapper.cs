@@ -79,10 +79,10 @@ namespace MCGalaxy {
                         length += 2;
                     }
                 } else if (!supportsEmotes) {
-                    // If message starts with emote then prepend &f
+                    // If message starts with emote or space then prepend &f
                     // (otherwise original minecraft classic trims it)
                     char first = message[0];
-                    if (first < ' ' || first > '~') {
+                    if (first <= ' ' || first > '~') {
                         line[0] = '&'; line[1] = 'f';
                         length += 2;
                     }
@@ -179,8 +179,10 @@ namespace MCGalaxy {
                     // If no gap or only whitepsace since prior color code,
                     //  then just replace the prior color code with this one
                     if (combinable) {
-                        // e.g. "&a&bTest"   -> "&bTest"
-                        // e.g. "&a  &bTest" -> "&b  Test"
+                        //  e.g. "&a&bTest"   -> "&bTest"
+                        //  e.g. "&a  &bTest" -> "&b  Test"
+                        // (it's particularly useful to replace prior color codes
+                        //  since original classic trims leading whitespace)
                         chars[lastIdx + 1] = col;
                     } else {
                         // can't simplify, so just append this color code
