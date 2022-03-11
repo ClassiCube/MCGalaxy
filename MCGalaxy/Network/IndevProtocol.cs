@@ -38,6 +38,13 @@ namespace MCGalaxy.Network
 
         const int PROTOCOL_VERSION = 9;
 
+        // NOTE indev replaces bottom 2 layers with lava
+        //  although second layer *can* be replaced via SetBlock,
+        //  bottom client will always be hardcoded to lava
+        // so have to shift the whole world up instead
+        const int WORLD_SHIFT_BLOCKS = 2;
+        const int WORLD_SHIFT_COORDS = 64;
+
         public IndevProtocol(INetSocket s) {
             socket = s;
             player = new Player(s, this);
@@ -157,6 +164,7 @@ namespace MCGalaxy.Network
             {
                 fallback[b] = Block.ConvertLimited(b, this);
             }
+            ProtocolVersion = 0;
 
             player.CompleteLoginProcess();
             return size;
@@ -215,6 +223,9 @@ namespace MCGalaxy.Network
             float z = ReadF32(buffer, offset + 13);
             // bool state
 
+            y += 1.59375f; // feet -> 'head' position
+            y -= WORLD_SHIFT_BLOCKS;
+
             Orientation rot = player.Rot;
             player.ProcessMovement((int)(x * 32), (int)(y * 32), (int)(z * 32),
                               rot.RotY, rot.HeadX, 0);
@@ -225,7 +236,7 @@ namespace MCGalaxy.Network
             int size = 1 + 4 + 4 + 1;
             if (left < size) return 0;
 
-            float yaw   = ReadF32(buffer, offset + 1);
+            float yaw   = ReadF32(buffer, offset + 1) + 180.0f;
             float pitch = ReadF32(buffer, offset + 5);
             // bool state
 
@@ -244,9 +255,12 @@ namespace MCGalaxy.Network
             float s = ReadF32(buffer, offset + 9);
             float z = ReadF32(buffer, offset + 13);
 
-            float yaw   = ReadF32(buffer, offset + 17);
+            float yaw   = ReadF32(buffer, offset + 17) + 180.0f;
             float pitch = ReadF32(buffer, offset + 21);
             // bool state
+
+            y += 1.59375f; // feet -> 'head' position
+            y -= WORLD_SHIFT_BLOCKS;
 
             player.ProcessMovement((int)(x * 32), (int)(y * 32), (int)(z * 32),
                               (byte)(yaw / 360.0f * 256.0f), (byte)(pitch / 360.0f * 256.0f), 0);
@@ -262,8 +276,9 @@ namespace MCGalaxy.Network
             int y    = buffer[offset + 6];
             int z    = ReadI32(buffer, offset + 7);
             byte dir = buffer[offset + 11];
+            y -= WORLD_SHIFT_BLOCKS;
 
-            if (status == 3)
+            if (status == 2)
                 player.ProcessBlockchange((ushort)x, (ushort)y, (ushort)z, 0, 0);
             return size;
         }
@@ -277,6 +292,7 @@ namespace MCGalaxy.Network
             int y    = buffer[offset + 7];
             int z    = ReadI32(buffer, offset + 8);
             byte dir = buffer[offset + 12];
+            y -= WORLD_SHIFT_BLOCKS;
 
             player.ProcessBlockchange((ushort)x, (ushort)y, (ushort)z, 1, block);
             return size;
@@ -357,7 +373,7 @@ namespace MCGalaxy.Network
 
         byte[] GetBlocks(Level level)
         {
-            // so apparently indev client always overwrites bottom 2 layers with lava.. ?
+            // NOTE indev client always overwrites bottom 2 layers with lava.. ?
             byte[] blocks = new byte[level.blocks.Length];
             int i = level.PosToInt(0, 2, 0);
             //for (int j = 0; j < i; j++) blocks[j] = Block.Bedrock;
@@ -371,21 +387,6 @@ namespace MCGalaxy.Network
                         blocks[i++] = (byte)level.FastGetBlock((ushort)x, (ushort)y, (ushort)z);
                     }
             return blocks;
-
-            //return level.blocks;
-            // the block type array is indexed with:
-            // index = y + (z * (Size_Y + 1)) + (x * (Size_Y + 1) * (Size_Z + 1))
-
-            // TODO TERRIBLE
-            /*byte[] blocks = new byte[level.blocks.Length];
-            int i = 0;
-            for (int x = 0; x < level.Width; x++)
-                for (int z = 0; z < level.Length; z++)
-                    for (int y = 0; x < level.Height; y++)
-                    {
-                        blocks[i++] = (byte)level.FastGetBlock((ushort)x, (ushort)y, (ushort)z);
-                    }
-            return blocks;*/
         }
 
         public override void SendLevel(Level prev, Level level) {
@@ -438,66 +439,10 @@ namespace MCGalaxy.Network
         {
             byte[] spawn = new byte[1 + 4 + 4 + 4];
             spawn[0] = OPCODE_SPAWN_POSITION;
-            NetUtils.WriteI32(pos.BlockX,  spawn, 1);
+            NetUtils.WriteI32(pos.BlockX, spawn, 1);
             NetUtils.WriteI32(pos.BlockY, spawn, 5);
             NetUtils.WriteI32(pos.BlockZ, spawn, 9);
             Send(spawn);
-        }
-
-        public void SendLevel2(Level prev, Level level) {
-
-            // TODO what even this
-            byte[] C_blks = CompressData(level.blocks);
-            byte[] C_meta = CompressData(new byte[level.blocks.Length]);
-            byte[] tmp = new byte[4];
-
-            byte[] map_data = new byte[1 + 4 + 4 + 4];
-            map_data[0] = OPCODE_PRE_CHUNK;
-            NetUtils.WriteI32(C_blks.Length, map_data, 1);
-            NetUtils.WriteI32(C_meta.Length, map_data, 5);
-            NetUtils.WriteI32(100,           map_data, 9); // TODO what even is this
-            Send(map_data);
-
-            // TODO this seems wrong
-            NetUtils.WriteI32(C_blks.Length, tmp, 0);
-            Send(tmp);
-            Send(C_blks);
-
-            NetUtils.WriteI32(C_meta.Length, tmp, 0);
-            Send(tmp);
-            Send(C_meta);
-
-            byte[] final = new byte[1 + 4 + 4 + 4 + 4 + 4];
-            final[0] = OPCODE_CHUNK;
-            // 4 bytes ??
-            // 01 00 00 00 - 128x64x128 world
-            // 01 01 00 00 - 256x64x256 world
-            final[1] = 0x01;
-            NetUtils.WriteI32(level.Width,  final,  5);
-            NetUtils.WriteI32(level.Height, final,  9);
-            NetUtils.WriteI32(level.Length, final, 13);
-            // 4 bytes ???? checksum???
-            //final[19] = 0x01; final[20] = 0x2E;
-            Send(final);
-
-
-            byte[] spawn = new byte[1 + 4 + 4 + 4];
-            spawn[0] = OPCODE_SPAWN_POSITION;
-            NetUtils.WriteI32(level.Width / 2,  final, 1);
-            NetUtils.WriteI32(level.Height / 2, final, 5);
-            NetUtils.WriteI32(level.Length / 2, final, 9);
-            Send(spawn);
-        }
-
-        byte[] DecompressChunk(byte[] data)
-        {
-            using (MemoryStream src = new MemoryStream(data))
-            using (GZipStream gz = new GZipStream(src, CompressionMode.Decompress))
-            using (MemoryStream dst = new MemoryStream())
-            {
-                gz.CopyTo(dst);
-                return dst.ToArray();
-            }
         }
 
         byte[] CompressData(byte[] data)
@@ -555,6 +500,9 @@ namespace MCGalaxy.Network
             float pitch = rot.HeadX * 360.0f / 256.0f;
             data[0] = OPCODE_SELF_MOVE_LOOK;
 
+            pos.Y += 83; // TODO not sure why this much 
+            pos.Y += WORLD_SHIFT_COORDS;
+
             WriteF32(pos.X / 32.0f, data,  1);
             WriteF32(pos.Y / 32.0f, data,  5); // stance?
             WriteF32(pos.Y / 32.0f, data,  9);
@@ -584,6 +532,9 @@ namespace MCGalaxy.Network
             int nameLen = CalcStringLength(name);
             int dataLen = 1 + 4 + (2 + nameLen) + (4 + 4 + 4) + (1 + 1) + 2;
             byte[] data = new byte[dataLen];
+            // TODO fixes Y kinda
+            pos.Y -= 19;
+            pos.Y += WORLD_SHIFT_COORDS;
 
             data[0] = OPCODE_NAMED_ADD;
             WriteI32(id, data, 1);
@@ -593,7 +544,7 @@ namespace MCGalaxy.Network
             WriteI32(pos.Y, data, 11 + nameLen);
             WriteI32(pos.Z, data, 15 + nameLen);
 
-            data[19 + nameLen] = rot.RotY;
+            data[19 + nameLen] = (byte)(rot.RotY + 128); // TODO fixed yaw kinda
             data[20 + nameLen] = rot.HeadX;
             WriteU16(0, data, 21 + nameLen); // current item
             return data;
@@ -604,7 +555,8 @@ namespace MCGalaxy.Network
             byte[] data = new byte[dataLen];
             data[0] = OPCODE_TELEPORT;
             // TODO fixes Y kinda
-            pos.Y -= 51;
+            pos.Y -= 19;
+            pos.Y += WORLD_SHIFT_COORDS;
 
             WriteI32(id, data, 1);
             WriteI32(pos.X, data,  5);
@@ -672,6 +624,7 @@ namespace MCGalaxy.Network
 
         void WriteBlockChange(byte[] data, int offset, byte block, int x, int y, int z)
         {
+            y += WORLD_SHIFT_BLOCKS;
             data[offset + 0] = OPCODE_BLOCK_CHANGE;
             WriteI32(x, data, offset + 1);
             data[offset + 5] = (byte)y;
