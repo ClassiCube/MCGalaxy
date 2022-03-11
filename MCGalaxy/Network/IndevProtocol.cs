@@ -328,6 +328,7 @@ namespace MCGalaxy.Network
         }
 
         public override void SendChat(string message) {
+            message = CleanupColors(message);
             List<string> lines = LineWrapper.Wordwrap(message, true);
             for (int i = 0; i < lines.Count; i++)
             {
@@ -337,12 +338,14 @@ namespace MCGalaxy.Network
         }
 
         public override void SendMessage(CpeMessageType type, string message) {
+            message = CleanupColors(message);
             if (type != CpeMessageType.Normal) return;
             message = message.Replace('&', '§');
             Send(MakeChat(message));
         }
 
         public override void SendKick(string reason, bool sync) {
+            reason = CleanupColors(reason);
         }
 
 
@@ -361,6 +364,7 @@ namespace MCGalaxy.Network
         }
 
         public override void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            name = CleanupColors(name);
             name = name.Replace('&', '§');
             skin = skin.Replace('&', '§');
 
@@ -566,6 +570,10 @@ namespace MCGalaxy.Network
             data[17] = (byte)(rot.RotY + 128); // TODO fixed yaw kinda
             data[18] = rot.HeadX;
             return data;
+        }
+
+        string CleanupColors(string value) {
+            return LineWrapper.CleanupColors(value, false, false);
         }
 
         public override string ClientName() {

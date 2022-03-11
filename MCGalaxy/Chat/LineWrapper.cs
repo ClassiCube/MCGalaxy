@@ -30,6 +30,12 @@ namespace MCGalaxy {
             char last = line[length - 1];
             return last.UnicodeToCp437() != last;
         }
+
+        static bool StartsWithColor(string message, int offset) {
+            return message[offset] == '&' 
+                && (offset + 1) < message.Length
+                && Colors.Lookup(message[offset + 1]) != '\0';
+        }
         
         static char LastColor(char[] line, int length) {
             for (int i = length - 2; i >= 0; i--) {
@@ -42,6 +48,10 @@ namespace MCGalaxy {
         }
         
         static string MakeLine(char[] line, int length, bool emotePad) {
+            // necessary to remove useless trailing color codes, 
+            //  as crashes original minecraft classic otherwise
+            length = TrimTrailingInvisible(line, length);
+
             if (emotePad) line[length++] = '\'';
             return new string(line, 0, length);
         }
@@ -74,15 +84,15 @@ namespace MCGalaxy {
                     length += 2;
                     
                     // Make sure split up lines have the right colour
-                    if (lastColor != 'f') {
+                    if (lastColor != 'f' && !StartsWithColor(message, offset)) {
                         line[2] = '&'; line[3] = lastColor;
                         length += 2;
                     }
                 } else if (!supportsEmotes) {
-                    // If message starts with emote then prepend &f
-                    // (otherwise original minecraft classic trims it)
+                    // If message starts with emote or space then prepend &f
+                    // (otherwise original minecraft classic client trims it)
                     char first = message[0];
-                    if (first < ' ' || first > '~') {
+                    if (first <= ' ' || first > '~') {
                         line[0] = '&'; line[1] = 'f';
                         length += 2;
                     }
@@ -150,9 +160,9 @@ namespace MCGalaxy {
         /// <param name="customCols"> if false, converts custom colour codes into fallback colour code </param>
         public static string CleanupColors(string value, bool fullAmpersands, bool customCols) {
             if (value.IndexOf('&') == -1) return value;
-            StringBuilder sb = new StringBuilder(value.Length);
-            int lastIdx  = -1;
-            char lastCol = 'f', col;
+            char[] chars = new char[value.Length];
+            int lastIdx  = -1, len = 0;
+            char lastColor  = 'f', col;
             bool combinable = false;
             
             for (int i = 0; i < value.Length; i++) {
@@ -160,40 +170,59 @@ namespace MCGalaxy {
                 // Definitely not a colour code
                 if (c != '&') {
                     if (c != ' ') combinable = false;
-                    sb.Append(c); continue;
+                    chars[len++] = c; 
+                    continue;
                 }
                 
                 // Maybe still not a colour code
                 if (i == value.Length - 1 || (col = Colors.Lookup(value[i + 1])) == '\0') {
                     // Treat the & like a normal character
                     //  For clients not supporting standalone '&', show '%' instead
-                    combinable = false;
-                    sb.Append(fullAmpersands ? '&' : '%');
+                    combinable   = false;
+                    chars[len++] = fullAmpersands ? '&' : '%';
                     continue;
                 }
                 if (!customCols) col = Colors.Get(col).Fallback;
                 
                 // Don't append duplicate colour codes
-                if (lastCol != col) {
-                    // Remove first colour code in "&a&b or "&a   &b"
-                    if (combinable) sb.Remove(lastIdx, 2);
+                if (lastColor != col) {
+                    // If no gap or only whitepsace since prior color code,
+                    //  then just replace the prior color code with this one
+                    if (combinable) {
+                        //  e.g. "&a&bTest"   -> "&bTest"
+                        //  e.g. "&a  &bTest" -> "&b  Test"
+                        // (it's particularly useful to replace prior color codes
+                        //  since original classic trims leading whitespace)
+                        chars[lastIdx + 1] = col;
+                    } else {
+                        // can't simplify, so just append this color code
+                        lastIdx      = len;
+                        chars[len++] = '&';
+                        chars[len++] = col;
+                    }
                     
-                    sb.Append('&').Append(col);
-                    lastIdx = sb.Length - 2;
-                    lastCol = col;
+                    lastColor  = col;
                     combinable = true;
                 }
                 i++; // skip over color code
             }
-            
-            // Trim trailing color codes
-            while (sb.Length >= 2) {
-                if (sb[sb.Length - 2] != '&') break;
-                if (Colors.Lookup(sb[sb.Length - 1]) == '\0') break;
-                // got a color code at the end, remove
-                sb.Remove(sb.Length - 2, 2);
+
+            len = TrimTrailingInvisible(chars, len);
+            return new string(chars, 0, len);
+        }
+
+        // Trims trailing color codes and whitespace
+        static int TrimTrailingInvisible(char[] chars, int len) {
+            while (len >= 2)
+            {
+                char c = chars[len - 1];
+                if (c == ' ') { len--; continue; }
+
+                if (chars[len - 2] != '&')    break;
+                if (Colors.Lookup(c) == '\0') break;
+                len -= 2; // remove color code
             }
-            return sb.ToString();
+            return len;
         }
     }
 }
