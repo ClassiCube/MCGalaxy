@@ -81,12 +81,24 @@ namespace MCGalaxy.Network
         }
 
         static int CalcStringLength(string value) {
-            return Encoding.BigEndianUnicode.GetByteCount(value);
+            //return Encoding.BigEndianUnicode.GetByteCount(value);
+            return value.Length * 2;
         }
 
         static void WriteString(byte[] buffer, int offset, string value) {
-            int len = Encoding.BigEndianUnicode.GetBytes(value, 0, value.Length, buffer, offset + 2);
-            WriteU16((ushort)(len / 2), buffer, offset);
+            // actually trying to send unicode tends to kill the client with
+            //  java.lang.ArrayIndexOutOfBoundsException: 9787
+
+            //int len = Encoding.BigEndianUnicode.GetBytes(value, 0, value.Length, buffer, offset + 2);
+            WriteU16((ushort)value.Length, buffer, offset);
+            offset += 2;
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                char c = value[i] == '§' ? '§' : value[i].UnicodeToCp437();
+                buffer[offset++] = (byte)(c >> 8);
+                buffer[offset++] = (byte)c;
+            }
         }
 
         static ushort ReadU16(byte[] array, int index) {
