@@ -376,6 +376,12 @@ namespace MCGalaxy.Network
         }
 
         public override void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
+            // indev client disconnects when receiving an entity with nametag > 16 characters
+            //  "java.io.IOException: Received string length longer than maximum allowed (18 > 16)"
+            // try to remove colors and then if still too long, rest of name too
+            if (name.Length > 16) name = Colors.StripUsed(name);
+            if (name.Length > 16) name = name.Substring(0, 16);
+
             name = CleanupColors(name);
             name = name.Replace('&', '§');
             skin = skin.Replace('&', '§');
