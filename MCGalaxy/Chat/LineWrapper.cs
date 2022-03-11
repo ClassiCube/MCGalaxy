@@ -30,6 +30,12 @@ namespace MCGalaxy {
             char last = line[length - 1];
             return last.UnicodeToCp437() != last;
         }
+
+        static bool StartsWithColor(string message, int offset) {
+            return message[offset] == '&' 
+                && (offset + 1) < message.Length
+                && Colors.Lookup(message[offset + 1]) != '\0';
+        }
         
         static char LastColor(char[] line, int length) {
             for (int i = length - 2; i >= 0; i--) {
@@ -78,13 +84,13 @@ namespace MCGalaxy {
                     length += 2;
                     
                     // Make sure split up lines have the right colour
-                    if (lastColor != 'f') {
+                    if (lastColor != 'f' && !StartsWithColor(message, offset)) {
                         line[2] = '&'; line[3] = lastColor;
                         length += 2;
                     }
                 } else if (!supportsEmotes) {
                     // If message starts with emote or space then prepend &f
-                    // (otherwise original minecraft classic trims it)
+                    // (otherwise original minecraft classic client trims it)
                     char first = message[0];
                     if (first <= ' ' || first > '~') {
                         line[0] = '&'; line[1] = 'f';
