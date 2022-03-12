@@ -516,7 +516,7 @@ namespace MCGalaxy.Modules.Relay
                 Bot     = bot;
                 
                 if (user != null) {
-                    string nick = "(" + bot.RelayName + user.Nick + ")";
+                    string nick = "(" + bot.RelayName + " " + user.Nick + ")";
                     DatabaseID = NameConverter.InvalidNameID(nick);
                 }
                 SuperName = bot.RelayName;

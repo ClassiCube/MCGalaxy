@@ -19,11 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading;
 using MCGalaxy.Config;
-using MCGalaxy.Events.GroupEvents;
 using MCGalaxy.Events.PlayerEvents;
-using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Modules.Relay.Discord 

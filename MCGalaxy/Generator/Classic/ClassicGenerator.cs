@@ -232,7 +232,7 @@ namespace ClassicalSharp.Generator {
             for (int i = 0; i < numSources; i++) {
                 int x = rnd.Next(Width), z = rnd.Next(Length);
                 int y = waterLevel - rnd.Next(1, 3);
-                FloodFill((y * Length + z) * Width + x, Block.Water);
+                FloodFill((y * Length + z) * Width + x, Block.StillWater);
             }
         }
         
@@ -243,7 +243,7 @@ namespace ClassicalSharp.Generator {
             for (int i = 0; i < numSources; i++) {
                 int x = rnd.Next(Width), z = rnd.Next(Length);
                 int y = (int)((waterLevel - 3) * rnd.NextFloat() * rnd.NextFloat());
-                FloodFill((y * Length + z) * Width + x, Block.Lava);
+                FloodFill((y * Length + z) * Width + x, Block.StillLava);
             }
         }
         
