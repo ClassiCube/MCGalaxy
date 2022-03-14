@@ -31,12 +31,10 @@ namespace MCGalaxy.Drawing.Ops
         public int Radius { get { return (Max.X - Min.X) / 2; } }
         
         public bool Invert;
-        public virtual bool UsesHeight { get { return true; } }
     }
     
     public class AdvSphereDrawOp : AdvDrawOp 
     {
-        public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Sphere"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -62,7 +60,6 @@ namespace MCGalaxy.Drawing.Ops
     
     public class AdvHollowSphereDrawOp : AdvDrawOp 
     {
-        public override bool UsesHeight { get { return false; } }
         public override string Name { get { return "Adv Hollow Sphere"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {

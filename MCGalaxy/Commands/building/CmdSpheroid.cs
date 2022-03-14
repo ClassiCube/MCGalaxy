@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("eh", "hollow"), new CommandAlias("cylinder", "vertical") }; }
+            get { return new[] { new CommandAlias("eh", "hollow"), new CommandAlias("Cylinder", "cylinder"), new CommandAlias("Cone", "cone") }; }
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
@@ -37,6 +37,8 @@ namespace MCGalaxy.Commands.Building {
             if (msg == "solid")    return DrawMode.solid;
             if (msg == "hollow")   return DrawMode.hollow;
             if (msg == "vertical") return DrawMode.vertical;
+            if (msg == "cylinder") return DrawMode.vertical;
+            if (msg == "cone")     return DrawMode.cone;
             return DrawMode.normal;
         }
         
@@ -44,6 +46,7 @@ namespace MCGalaxy.Commands.Building {
             switch (dArgs.Mode) {
                 case DrawMode.hollow:   return new EllipsoidHollowDrawOp();
                 case DrawMode.vertical: return new CylinderDrawOp();
+                case DrawMode.cone:     return new ConeDrawOp();
             }
             return new EllipsoidDrawOp();
         }
@@ -52,7 +55,7 @@ namespace MCGalaxy.Commands.Building {
             p.Message("&T/Spheroid <brush args>");
             p.Message("&HDraws a spheroid between two points.");
             p.Message("&T/Spheroid [mode] <brush args>");
-            p.Message("&HModes: &fsolid/hollow/vertical(a vertical tube)");    
+            p.Message("&HModes: &fsolid/hollow/cylinder/cone");    
             p.Message(BrushHelpLine);
         }
     }

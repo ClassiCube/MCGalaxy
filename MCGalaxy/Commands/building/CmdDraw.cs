@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            AdvDrawOp op = null;
+            DrawOp op = null;
             switch (dArgs.Mode) {
-                case DrawMode.cone:   op = new AdvConeDrawOp(); break;
+                case DrawMode.cone:   op = new ConeDrawOp(); break;
                 case DrawMode.hcone:  op = new AdvHollowConeDrawOp(); break;
-                case DrawMode.icone:  op = new AdvConeDrawOp(true); break;
+                case DrawMode.icone:  op = new ConeDrawOp(true); break;
                 case DrawMode.hicone: op = new AdvHollowConeDrawOp(true); break;
                 case DrawMode.pyramid:   op = new AdvPyramidDrawOp(); break;
                 case DrawMode.hpyramid:  op = new AdvHollowPyramidDrawOp(); break;
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Building {
             string[] args = dArgs.Message.SplitSpaces();
             Player p = dArgs.Player;
             
-            if (op.UsesHeight) {
+            if (UsesHeight(dArgs)) {
                 if (args.Length < 3) {
                     p.Message("You need to provide the radius and the height for the {0}.", args[0]);
                 } else {
@@ -87,7 +87,6 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override void GetMarks(DrawArgs dArgs, ref Vec3S32[] m) {
-            AdvDrawOp op = (AdvDrawOp)dArgs.Op;
             AdvDrawMeta meta = (AdvDrawMeta)dArgs.Meta;
             int radius = meta.radius;
             
@@ -97,7 +96,7 @@ namespace MCGalaxy.Commands.Building {
                 new Vec3S32(P.X + radius, P.Y, P.Z + radius),
             };
 
-            if (op.UsesHeight) {
+            if (UsesHeight(dArgs)) {
                 m[1].Y += meta.height;
             } else {
                 m[0].Y -= radius; m[1].Y += radius;
@@ -105,11 +104,16 @@ namespace MCGalaxy.Commands.Building {
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
-            int argsUsed = ((AdvDrawOp)dArgs.Op).UsesHeight ? 3 : 2;
+            int argsUsed = UsesHeight(dArgs) ? 3 : 2;
             dArgs.BrushArgs = dArgs.Message.Splice(argsUsed, 0);
         }
         
         class AdvDrawMeta { public int radius, height; }
+
+        static bool UsesHeight(DrawArgs args) {
+            DrawMode mode = args.Mode;
+            return !(mode == DrawMode.sphere || mode == DrawMode.hsphere);
+        }
         
         public override void Help(Player p) {
             p.Message("&T/Draw [object] [baseradius] [height] <brush args>");

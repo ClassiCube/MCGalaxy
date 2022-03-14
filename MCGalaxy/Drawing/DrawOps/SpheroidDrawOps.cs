@@ -97,9 +97,8 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cylinder"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            double rx = XRadius, rz = ZRadius;
             int height = (Max.Y - Min.Y + 1);
-            return (int)(Math.PI * rx * rz * height);
+            return (int)(Math.PI * XRadius * ZRadius * height);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {            
@@ -120,6 +119,45 @@ namespace MCGalaxy.Drawing.Ops
                 bool inRange = dx * rx2 + dz * rz2 <= 1;
                 if (inRange && (dx * smallrx2 + dz * smallrz2 > 1))
                     output(Place(xx, yy, zz, brush));
+            }
+        }
+    }
+
+    public class ConeDrawOp : ShapedDrawOp 
+    {
+        public bool Invert;
+        public override string Name { get { return "Cone"; } }
+        public ConeDrawOp(bool invert = false) { Invert = invert; }
+        
+        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
+            long H = Max.Y - Min.Y;
+            return (long)(Math.PI / 3 * (XRadius * ZRadius * H));
+        }
+        
+        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
+            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
+            // Based on SpheroidDrawOp
+            double cx  = XCentre, cz = ZCentre;
+            int height = Max.Y - Min.Y;
+
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+            {
+                int curHeight = Invert ? y - Min.Y : Max.Y - y;
+                if (curHeight == 0) continue;
+                double T = (double)curHeight / height;
+
+                double rx  = ((Max.X - Min.X) / 2.0) * T + 0.25;
+                double rz  = ((Max.Z - Min.Z) / 2.0) * T + 0.25;
+                double rx2 = 1 / (rx * rx), rz2 = 1 / (rz * rz);
+
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
+                {
+                    double dx = x - cx, dz = z - cz;
+
+                    if ((dx * dx) * rx2 + (dz * dz) * rz2 <= 1)
+                        output(Place(x, y, z, brush));
+                 }
             }
         }
     }

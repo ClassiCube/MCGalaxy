@@ -27,43 +27,6 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops 
 {
-    public class AdvConeDrawOp : AdvDrawOp 
-    {
-        public override string Name { get { return "Adv Cone"; } }
-        public AdvConeDrawOp(bool invert = false) { Invert = invert; }
-        
-        public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Max.Y - Min.Y;
-            return (long)(Math.PI / 3 * (R * R * H));
-        }
-        
-        public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
-            Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            // Based on SpheroidDrawOp
-            double cx  = (Min.X + Max.X) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
-            int height = Max.Y - Min.Y;
-
-            for (ushort y = p1.Y; y <= p2.Y; y++)
-            {
-                int curHeight = Invert ? y - Min.Y : Max.Y - y;
-                if (curHeight == 0) continue;
-                double curRadius = (double)Radius * curHeight / height;
-
-                double r  = curRadius + 0.25;
-                double r2 = 1 / (r * r);
-
-                for (ushort z = p1.Z; z <= p2.Z; z++)
-                    for (ushort x = p1.X; x <= p2.X; x++)
-                {
-                    double dx = x - cx, dz = z - cz;
-
-                    if (dx * dx * r2 + dz * dz * r2 <= 1)
-                        output(Place(x, y, z, brush));
-                 }
-            }
-        }
-    }
-    
     public class AdvHollowConeDrawOp : AdvDrawOp 
     {
         public override string Name { get { return "Adv Hollow Cone"; } }
