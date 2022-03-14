@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Building {
         public override string name { get { return "Spheroid"; } }
         public override string shortcut { get { return "e"; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("eh", "hollow"), new CommandAlias("Cylinder", "cylinder"), new CommandAlias("Cone", "cone") }; }
+            get { return new[] { new CommandAlias("eh", "hollow"), new CommandAlias("Cone", "cone"), new CommandAlias("Cylinder", "cylinder") }; }
         }
         
         protected override void GetBrush(DrawArgs dArgs) {

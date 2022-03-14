@@ -32,21 +32,19 @@ namespace MCGalaxy.Drawing.Ops
         public AdvPyramidDrawOp(bool invert = false) { Invert = invert; }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Max.Y - Min.Y;
+            long R = Radius, H = Height;
             return (R * R * H) / 3;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C  = (Min + Max) / 2;
-            int height = Max.Y - Min.Y;
+            int height = Height;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
             {
-                int dy = y - Min.Y;
-                int curHeight = Invert ? dy : height - dy;
-                if (curHeight == 0) continue;
-                int curRadius = Radius * curHeight / height;
+                int dy = Invert ? y - Min.Y : Max.Y - y;
+                int curRadius = Radius * (dy + 1) / height;
                 
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
@@ -65,7 +63,7 @@ namespace MCGalaxy.Drawing.Ops
         public AdvHollowPyramidDrawOp(bool invert = false) { Invert = invert; }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Max.Y - Min.Y;
+            long R = Radius, H = Height;
             long outer = (R * R * H) / 3;
             long inner = ((R - 1) * (R - 1) * (H - 1)) / 3;
             return outer - inner;
@@ -74,16 +72,13 @@ namespace MCGalaxy.Drawing.Ops
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             Vec3S32 C  = (Min + Max) / 2;
-            int height = Max.Y - Min.Y;
+            int height = Height;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
             {
-                int dy = y - Min.Y;
-                int curHeight = Invert ? dy : height - dy;
-                if (curHeight == 0) continue;
-                
-                int curRadius  = Radius * curHeight       / height;
-                int curRadius2 = Radius * (curHeight - 1) / height;
+                int dy         = Invert ? y - Min.Y : Max.Y - y;
+                int curRadius  = Radius * (dy + 1) / height;
+                int curRadius2 = Radius * (dy    ) / height;
                 
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)

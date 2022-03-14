@@ -30,6 +30,8 @@ namespace MCGalaxy.Drawing.Ops
         public double XCentre { get { return (Min.X + Max.X) / 2.0; } }
         public double YCentre { get { return (Min.Y + Max.Y) / 2.0; } }
         public double ZCentre { get { return (Min.Z + Max.Z) / 2.0; } }
+
+        public int Height { get { return (Max.Y - Min.Y) + 1; } }
     }
 
     public class EllipsoidDrawOp : ShapedDrawOp
@@ -97,8 +99,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cylinder"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            int height = (Max.Y - Min.Y + 1);
-            return (int)(Math.PI * XRadius * ZRadius * height);
+            return (int)(Math.PI * XRadius * ZRadius * Height);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {            
@@ -130,21 +131,18 @@ namespace MCGalaxy.Drawing.Ops
         public ConeDrawOp(bool invert = false) { Invert = invert; }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long H = Max.Y - Min.Y;
-            return (long)(Math.PI / 3 * (XRadius * ZRadius * H));
+            return (long)(Math.PI / 3 * (XRadius * ZRadius * Height));
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            // Based on SpheroidDrawOp
             double cx  = XCentre, cz = ZCentre;
-            int height = Max.Y - Min.Y;
+            int height = Height;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
             {
-                int curHeight = Invert ? y - Min.Y : Max.Y - y;
-                if (curHeight == 0) continue;
-                double T = (double)curHeight / height;
+                int dy   = Invert ? y - Min.Y : Max.Y - y;
+                double T = (double)(dy + 1) / height;
 
                 double rx  = ((Max.X - Min.X) / 2.0) * T + 0.25;
                 double rz  = ((Max.Z - Min.Z) / 2.0) * T + 0.25;

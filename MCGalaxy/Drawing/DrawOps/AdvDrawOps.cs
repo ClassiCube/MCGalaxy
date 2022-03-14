@@ -29,6 +29,7 @@ namespace MCGalaxy.Drawing.Ops
     public abstract class AdvDrawOp : DrawOp 
     {
         public int Radius { get { return (Max.X - Min.X) / 2; } }
+        public int Height { get { return (Max.Y - Min.Y) + 1; } }
         
         public bool Invert;
     }

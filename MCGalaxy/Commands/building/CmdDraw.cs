@@ -41,6 +41,7 @@ namespace MCGalaxy.Commands.Building {
             if (msg == "sphere")    return DrawMode.sphere;
             if (msg == "hsphere")   return DrawMode.hsphere;
             if (msg == "volcano")   return DrawMode.volcano;
+            if (msg == "cylinder")  return DrawMode.hollow;
             return DrawMode.normal;
         }
         
@@ -58,6 +59,7 @@ namespace MCGalaxy.Commands.Building {
                 case DrawMode.sphere:  op = new AdvSphereDrawOp(); break;
                 case DrawMode.hsphere: op = new AdvHollowSphereDrawOp(); break;
                 case DrawMode.volcano: op = new AdvVolcanoDrawOp(); break;
+                case DrawMode.hollow:  op = new CylinderDrawOp(); break;
             }
             if (op == null) { Help(dArgs.Player); return null; }
 
@@ -97,7 +99,7 @@ namespace MCGalaxy.Commands.Building {
             };
 
             if (UsesHeight(dArgs)) {
-                m[1].Y += meta.height;
+                m[1].Y += meta.height - 1;
             } else {
                 m[0].Y -= radius; m[1].Y += radius;
             }
@@ -119,7 +121,7 @@ namespace MCGalaxy.Commands.Building {
             p.Message("&T/Draw [object] [baseradius] [height] <brush args>");
             p.Message("&T/Draw [object] [radius] <brush args>");
             p.Message("&HDraws an object at the specified point.");
-            p.Message("   &HObjects: &fcone/hcone/icone/hicone");
+            p.Message("   &HObjects: &fcone/hcone/icone/hicone/cylinder/");
             p.Message("     &fpyramid/hpyramid/ipyramid/hipyramid/volcano");
             p.Message("   &HObjects with only radius: &fsphere/hsphere");
             p.Message("   &HNote 'h' means hollow, 'i' means inverse");
