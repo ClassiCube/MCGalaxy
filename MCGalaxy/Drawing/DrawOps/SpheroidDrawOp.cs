@@ -21,19 +21,30 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops 
 {
-    public class EllipsoidDrawOp : DrawOp 
+    public abstract class ShapedDrawOp : DrawOp
+    {
+        public double XRadius { get { return (Max.X - Min.X) / 2.0 + 0.25; } }
+        public double YRadius { get { return (Max.Y - Min.Y) / 2.0 + 0.25; } }
+        public double ZRadius { get { return (Max.Z - Min.Z) / 2.0 + 0.25; } }
+
+        public double XCentre { get { return (Min.X + Max.X) / 2.0; } }
+        public double YCentre { get { return (Min.Y + Max.Y) / 2.0; } }
+        public double ZCentre { get { return (Min.Z + Max.Z) / 2.0; } }
+    }
+
+    public class EllipsoidDrawOp : ShapedDrawOp
     {
         public override string Name { get { return "Ellipsoid"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double rx = XRadius, ry = YRadius, rz = ZRadius;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
-            double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double cx = XCentre, cy = YCentre, cz = ZCentre;
+            double rx = XRadius, ry = YRadius, rz = ZRadius;
             double rx2 = 1 / (rx * rx), ry2 = 1 / (ry * ry), rz2 = 1 / (rz * rz);
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             
@@ -48,19 +59,19 @@ namespace MCGalaxy.Drawing.Ops
         }
     }
     
-    public class EllipsoidHollowDrawOp : DrawOp 
+    public class EllipsoidHollowDrawOp : ShapedDrawOp
     {       
         public override string Name { get { return "Ellipsoid Hollow"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double rx = XRadius, ry = YRadius, rz = ZRadius;
             return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
-            double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double cx = XCentre, cy = YCentre, cz = ZCentre;
+            double rx = XRadius, ry = YRadius, rz = ZRadius;
             double rx2 = 1 / (rx * rx), ry2 = 1 / (ry * ry), rz2 = 1 / (rz * rz);
             
             double smallrx2 = 1 / ((rx - 1) * (rx - 1));
@@ -81,20 +92,20 @@ namespace MCGalaxy.Drawing.Ops
         }
     }
     
-    public class CylinderDrawOp : DrawOp 
+    public class CylinderDrawOp : ShapedDrawOp
     {
         public override string Name { get { return "Cylinder"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double rx = XRadius, rz = ZRadius;
             int height = (Max.Y - Min.Y + 1);
             return (int)(Math.PI * rx * rz * height);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {            
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
-            double cx = (Min.X + Max.X) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double cx = XCentre, cz = ZCentre;
+            double rx = XRadius, rz = ZRadius;
             double rx2 = 1 / (rx * rx), rz2 = 1 / (rz * rz);
             double smallrx2 = 1 / ((rx - 1) * (rx - 1));
             double smallrz2 = 1 / ((rz - 1) * (rz - 1));
