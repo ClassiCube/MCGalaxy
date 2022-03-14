@@ -39,24 +39,27 @@ namespace MCGalaxy.Drawing.Ops
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            Vec3S32 C  = (Min + Max) / 2;
+            // Based on SpheroidDrawOp
+            double cx  = (Min.X + Max.X) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
             int height = Max.Y - Min.Y;
 
             for (ushort y = p1.Y; y <= p2.Y; y++)
             {
-                int dy = y - Min.Y;
-                int curHeight = Invert ? dy : height - dy;
+                int curHeight = Invert ? y - Min.Y : Max.Y - y;
                 if (curHeight == 0) continue;
-                int curRadius = Radius * curHeight / height;
-                
+                double curRadius = (double)Radius * curHeight / height;
+
+                double r  = curRadius + 0.25;
+                double r2 = 1 / (r * r);
+
                 for (ushort z = p1.Z; z <= p2.Z; z++)
                     for (ushort x = p1.X; x <= p2.X; x++)
                 {
-                    int dx   = C.X - x, dz = C.Z - z;
-                    int dist = dx * dx + dz * dz;
-                    if (dist > curRadius * curRadius) continue;
-                    output(Place(x, y, z, brush));
-                }
+                    double dx = x - cx, dz = z - cz;
+
+                    if (dx * dx * r2 + dz * dz * r2 <= 1)
+                        output(Place(x, y, z, brush));
+                 }
             }
         }
     }
