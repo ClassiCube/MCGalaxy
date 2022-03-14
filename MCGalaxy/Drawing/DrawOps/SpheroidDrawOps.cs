@@ -32,6 +32,19 @@ namespace MCGalaxy.Drawing.Ops
         public double ZCentre { get { return (Min.Z + Max.Z) / 2.0; } }
 
         public int Height { get { return (Max.Y - Min.Y) + 1; } }
+
+
+        public static double EllipsoidVolume(double rx, double ry, double rz) {
+            return Math.PI * 4.0 / 3.0 * (rx * ry * rz);
+        }
+
+        public static double ConeVolume(double rx, double rz, double height) {
+            return Math.PI / 3.0 * (rx * rz * height);
+        }
+
+        public static double CylinderVolume(double rx, double rz, double height) {
+            return Math.PI * (rx * rz * height);
+        }
     }
 
     public class EllipsoidDrawOp : ShapedDrawOp
@@ -39,8 +52,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Ellipsoid"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            double rx = XRadius, ry = YRadius, rz = ZRadius;
-            return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
+            return (long)EllipsoidVolume(XRadius, YRadius, ZRadius);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -67,7 +79,9 @@ namespace MCGalaxy.Drawing.Ops
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
             double rx = XRadius, ry = YRadius, rz = ZRadius;
-            return (int)(Math.PI * 4.0/3.0 * rx * ry * rz);
+            double outer = EllipsoidVolume(rx,     ry,     rz    );
+            double inner = EllipsoidVolume(rx - 1, ry - 1, rz - 1);
+            return (long)(outer - inner);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -102,7 +116,10 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cylinder"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            return (int)(Math.PI * XRadius * ZRadius * Height);
+            double rx = XRadius, rz = ZRadius, h = Height;
+            double outer = CylinderVolume(rx,     rz,     h);
+            double inner = CylinderVolume(rx - 1, rz - 1, h);
+            return (long)(outer - inner);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {            
@@ -137,7 +154,7 @@ namespace MCGalaxy.Drawing.Ops
         public ConeDrawOp(bool invert = false) { Invert = invert; }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            return (long)(Math.PI / 3 * (XRadius * ZRadius * Height));
+            return (long)ConeVolume(XRadius, ZRadius, Height);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {

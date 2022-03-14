@@ -39,8 +39,8 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Adv Sphere"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius;
-            return (long)(Math.PI * 4.0 / 3.0 * (R * R * R));
+            double R = Radius;
+            return (long)ShapedDrawOp.EllipsoidVolume(R, R, R);
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -64,9 +64,9 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Adv Hollow Sphere"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius;
-            double outer = (int)(Math.PI * 4.0 / 3.0 * (R * R * R));
-            double inner = (int)(Math.PI * 4.0 / 3.0 * ((R - 1) * (R - 1) * (R - 1)));
+            double R = Radius;
+            double outer = ShapedDrawOp.EllipsoidVolume(R,     R,     R    );
+            double inner = ShapedDrawOp.EllipsoidVolume(R - 1, R - 1, R - 1);
             return (long)(outer - inner);
         }
         
