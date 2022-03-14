@@ -50,13 +50,13 @@ namespace MCGalaxy.Drawing.Ops
             double rx2 = 1 / (rx * rx), ry2 = 1 / (ry * ry), rz2 = 1 / (rz * rz);
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             
-            for (ushort yy = min.Y; yy <= max.Y; yy++)
-                for (ushort zz = min.Z; zz <= max.Z; zz++)
-                    for (ushort xx = min.X; xx <= max.X; xx++)
+            for (ushort y = min.Y; y <= max.Y; y++)
+                for (ushort z = min.Z; z <= max.Z; z++)
+                    for (ushort x = min.X; x <= max.X; x++)
             {
-                double dx = xx - cx, dy = yy - cy, dz = zz - cz;
+                double dx = x - cx, dy = y - cy, dz = z - cz;
                 if ((dx * dx) * rx2 + (dy * dy) * ry2 + (dz * dz) * rz2 <= 1)
-                    output(Place(xx, yy, zz, brush));
+                    output(Place(x, y, z, brush));
             }
         }
     }
@@ -74,22 +74,25 @@ namespace MCGalaxy.Drawing.Ops
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = XCentre, cy = YCentre, cz = ZCentre;
             double rx = XRadius, ry = YRadius, rz = ZRadius;
-            double rx2 = 1 / (rx * rx), ry2 = 1 / (ry * ry), rz2 = 1 / (rz * rz);
-            
-            double smallrx2 = 1 / ((rx - 1) * (rx - 1));
-            double smallry2 = 1 / ((ry - 1) * (ry - 1));
-            double smallrz2 = 1 / ((rz - 1) * (rz - 1));
+            double outer_rx2 = 1 / (rx * rx);
+            double outer_ry2 = 1 / (ry * ry);
+            double outer_rz2 = 1 / (rz * rz);
+            double inner_rx2 = 1 / ((rx - 1) * (rx - 1));
+            double inner_ry2 = 1 / ((ry - 1) * (ry - 1));
+            double inner_rz2 = 1 / ((rz - 1) * (rz - 1));
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             
-            for (ushort yy = min.Y; yy <= max.Y; yy++)
-                for (ushort zz = min.Z; zz <= max.Z; zz++)
-                    for (ushort xx = min.X; xx <= max.X; xx++)
+            for (ushort y = min.Y; y <= max.Y; y++)
+                for (ushort z = min.Z; z <= max.Z; z++)
+                    for (ushort x = min.X; x <= max.X; x++)
             {
-                double dx = xx - cx, dy = yy - cy, dz = zz - cz;
+                double dx = x - cx, dy = y - cy, dz = z - cz;
                 dx *= dx; dy *= dy; dz *= dz;
-                bool inRange = dx * rx2 + dy * ry2 + dz * rz2 <= 1;
-                if (inRange && (dx * smallrx2 + dy * smallry2 + dz * smallrz2 > 1))
-                    output(Place(xx, yy, zz, brush));
+
+                if (dx * outer_rx2 + dy * outer_ry2 + dz * outer_rz2 > 1)
+                    continue; // outside ellipsoid radius
+                if (dx * inner_rx2 + dy * inner_ry2 + dz * inner_rz2 > 1)
+                    output(Place(x, y, z, brush));
             }
         }
     }
@@ -106,20 +109,23 @@ namespace MCGalaxy.Drawing.Ops
             /* Courtesy of fCraft's awesome Open-Source'ness :D */
             double cx = XCentre, cz = ZCentre;
             double rx = XRadius, rz = ZRadius;
-            double rx2 = 1 / (rx * rx), rz2 = 1 / (rz * rz);
-            double smallrx2 = 1 / ((rx - 1) * (rx - 1));
-            double smallrz2 = 1 / ((rz - 1) * (rz - 1));
+            double outer_rx2 = 1 / (rx * rx);
+            double outer_rz2 = 1 / (rz * rz);
+            double inner_rx2 = 1 / ((rx - 1) * (rx - 1));
+            double inner_rz2 = 1 / ((rz - 1) * (rz - 1));
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             
-            for (ushort yy = p1.Y; yy <= p2.Y; yy++)
-                for (ushort zz = p1.Z; zz <= p2.Z; zz++)
-                    for (ushort xx = p1.X; xx <= p2.X; xx++)
+            for (ushort y = p1.Y; y <= p2.Y; y++)
+                for (ushort z = p1.Z; z <= p2.Z; z++)
+                    for (ushort x = p1.X; x <= p2.X; x++)
             {
-                double dx = xx - cx, dz = zz - cz;
+                double dx = x - cx, dz = z - cz;
                 dx *= dx; dz *= dz;
-                bool inRange = dx * rx2 + dz * rz2 <= 1;
-                if (inRange && (dx * smallrx2 + dz * smallrz2 > 1))
-                    output(Place(xx, yy, zz, brush));
+
+                if (dx * outer_rx2 + dz * outer_rz2 > 1)
+                    continue; // outside cylinder radius
+                if (dx * inner_rx2 + dz * inner_rz2 > 1)
+                    output(Place(x, y, z, brush));
             }
         }
     }

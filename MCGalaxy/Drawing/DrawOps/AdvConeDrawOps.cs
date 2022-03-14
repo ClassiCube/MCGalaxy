@@ -70,7 +70,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Adv Volcano"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            long R = Radius, H = Max.Y - Min.Y;
+            long R = Radius, H = Height;
             return (long)(Math.PI / 3 * (R * R * H));
         }
         
