@@ -148,15 +148,11 @@ namespace MCGalaxy.Commands.World {
             string level = NextLevel(p);
             if (level == null) return;
 
-            if (value.Length == 0) value = "128 128 128 flat";
+            if (value.Length == 0) value = "128 128 128";
             else if (value.IndexOf(' ') == -1) value = "128 128 128 " + value;
-            
-            string[] args = value.TrimEnd().SplitSpaces();
-            if (args.Length == 3) value += " flat";
+            string[] args = (level + " " + value.TrimEnd()).SplitSpaces();
 
             CmdNewLvl newLvl = (CmdNewLvl)Command.Find("NewLvl"); // TODO: this is a nasty hack, find a better way
-            args = (level + " " + value).SplitSpaces();
-            
             Level lvl = newLvl.GenerateMap(p, args, p.DefaultCmdData);
             if (lvl == null) return;
             

@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
-            if (args.Length < 5 || args.Length > 6) { Help(p); return; }
+            if (args.Length < 4 || args.Length > 6) { Help(p); return; }
             
             Level lvl = null;
             try {
@@ -46,13 +46,14 @@ namespace MCGalaxy.Commands.World {
         }
         
         internal Level GenerateMap(Player p, string[] args, CommandData data) {
-            if (args.Length < 5) return null;
-            MapGen gen = MapGen.Find(args[4]);
-            ushort x = 0, y = 0, z = 0;
-            
+            if (args.Length < 4) return null;
+            string theme = args.Length > 4 ? args[4] : "flat";
+            string seed  = args.Length > 5 ? args[5] : "";
+
+            MapGen gen = MapGen.Find(theme);
+            ushort x = 0, y = 0, z = 0; 
             if (!MapGen.GetDimensions(p, args, 1, ref x, ref y, ref z)) return null;
-            string seed = args.Length == 6 ? args[5] : "";
-            
+
             if (gen != null && gen.Type == GenType.Advanced && !CheckExtraPerm(p, data, 1)) return null;
             return MapGen.Generate(p, gen, args[0], x, y, z, seed);
         }
