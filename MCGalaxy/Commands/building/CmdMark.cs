@@ -70,13 +70,25 @@ namespace MCGalaxy.Commands.Building {
                 args = new string[] { message, message, message };
             }
             if (args.Length != 3) { Help(p); return false; }
-            
-            // Hacky workaround for backwards compatibility
-            if (args[0].CaselessEq("X")) args[0] = p.lastClick.X.ToString();
-            if (args[1].CaselessEq("Y")) args[1] = p.lastClick.Y.ToString();
-            if (args[2].CaselessEq("Z")) args[2] = p.lastClick.Z.ToString();
-            
+
+            AdjustArg(ref args[0], ref P.X, "X", p.lastClick.X);
+            AdjustArg(ref args[1], ref P.Y, "Y", p.lastClick.Y);
+            AdjustArg(ref args[2], ref P.Z, "Z", p.lastClick.Z);
+
             return CommandParser.GetCoords(p, args, 0, ref P);
+        }
+
+        void AdjustArg(ref string arg, ref int value, string axis, int last) {
+            if (!arg.CaselessStarts(axis)) return;
+
+            if (arg.Length == 1) {
+                // just 'X' changes input to coordinate of last click
+                arg   = last.ToString();
+            } else {
+                // assume wanting input relative to last click, e.g. 'X~3'
+                arg   = arg.Substring(1);
+                value = last;
+            }
         }
         
         internal static bool DoMark(Player p, int x, int y, int z) {
