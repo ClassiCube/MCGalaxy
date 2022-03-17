@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using MCGalaxy.Blocks;
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
@@ -126,11 +127,14 @@ namespace MCGalaxy
         
         void Cleanup() {
             Physicsint = 0;
+            Thread t;
+
             try {
+                t = physThread;
                 // Wake up physics thread from Thread.Sleep
-                physThread.Interrupt();
+                if (t != null) t.Interrupt();
                 // Wait up to 1 second for physics thread to finish
-                physThread.Join(1000);
+                if (t != null) t.Join(1000);
             } catch {
                 // No physics thread at all
             }
