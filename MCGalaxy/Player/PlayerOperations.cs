@@ -51,7 +51,7 @@ namespace MCGalaxy {
                 // Don't allow changing while muted
                 if (!p.CheckCanSpeak("change logout messages")) return false;
                 
-                p.Message("Loggout message of {0} &Swas changed to: {1}",
+                p.Message("Logout message of {0} &Swas changed to: {1}",
                           p.FormatNick(target), message);
             }
             
