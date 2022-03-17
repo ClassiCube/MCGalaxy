@@ -21,19 +21,19 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy.Drawing.Ops 
 {
-    public class TorusDrawOp : DrawOp 
+    public class TorusDrawOp : ShapedDrawOp 
     {
         public override string Name { get { return "Torus"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double rx = XRadius, ry = YRadius, rz = ZRadius;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
             return (int)(2 * Math.PI * Math.PI * rTube * rTube * Math.Abs(rCentre));
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {          
-            double cx = (Min.X + Max.X) / 2.0, cy = (Min.Y + Max.Y) / 2.0, cz = (Min.Z + Max.Z) / 2.0;
-            double rx = (Max.X - Min.X) / 2.0 + 0.25, ry = (Max.Y - Min.Y) / 2.0 + 0.25, rz = (Max.Z - Min.Z) / 2.0 + 0.25;
+            double cx = XCentre, cy = YCentre, cz = ZCentre;
+            double rx = XRadius, ry = YRadius, rz = ZRadius;
             double rTube = ry, rCentre = Math.Min(rx, rz) - rTube;
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
             
