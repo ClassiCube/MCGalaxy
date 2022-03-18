@@ -38,7 +38,6 @@ namespace MCGalaxy.Commands.Building {
             p.DefaultBrushArgs = "";
             p.Transform = NoTransform.Instance;
             
-            p.level.blockqueue.RemoveAll(p);
             if (p.weapon != null) p.weapon.Disable();
             p.Message("Every toggle or action was aborted.");
         }

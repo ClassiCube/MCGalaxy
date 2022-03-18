@@ -31,10 +31,7 @@ namespace MCGalaxy {
         public static int UpdatesPerTick = 750;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
         
-        const int posShift  = 32;
-        const int idShift   = 12;
-        const int blockMask = (1 << 12) - 1;
-        
+        const int posShift = 32;
         readonly object locker = new object();
 
         /// <summary> Flushes the block updates queue for each loaded level. </summary>
@@ -51,23 +48,14 @@ namespace MCGalaxy {
         }
 
         /// <summary> Adds a block update to the end of the queue. </summary>
-        public void Add(Player p, int index, BlockID block) {
+        public void Add(int index, BlockID block) {
             // Bit packing format
             // 32-63: index
-            // 12-31: session ID
-            // 0-11: block type
+            // 0-31 : block type
             ulong flags = (ulong)index << posShift;
-            flags |= (ulong)p.SessionID << idShift;
-            flags |= (ulong)block & blockMask;
+            flags |= (ulong)block;
             
             lock (locker) Add(flags);
-        }
-        
-        /// <summary> Removes all block updates from the queue associated with the given player. </summary>
-        public void RemoveAll(Player p) {
-            lock (locker) {
-                RemoveAll(b => (int)((b >> idShift) & Player.SessionIDMask) == p.SessionID);
-            }
         }
         
         /// <summary> Removes all block updates from the queue. </summary>
@@ -85,7 +73,7 @@ namespace MCGalaxy {
                 for (int i = 0; i < count; i++) {
                     ulong flags   = this[i];
                     int index     = (int)(flags >> posShift);
-                    BlockID block = (BlockID)(flags & blockMask);
+                    BlockID block = (BlockID)flags;
                     bulkSender.Add(index, block);
                 }
                 bulkSender.Flush();

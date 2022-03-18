@@ -106,7 +106,7 @@ namespace Sharkbite.Irc
             // prefer just adding _ to end of real nick
             if (Nick.Length < MAX_NICKNAME_LEN) return Nick + "_";
 
-            // .. and then just randomly mutate a character
+            // .. and then just randomly mutate a leading character
             int idx  = rnd.Next(MAX_NICKNAME_LEN / 3);
 			char val = (char)('A' + rnd.Next(26));
 			return Nick.Substring(0, idx) + val + Nick.Substring(idx + 1);

@@ -199,7 +199,7 @@ namespace MCGalaxy.Drawing.Ops
                     lvl.blockqueue.ClearAll();
                 } else if (op.TotalModified < reloadThreshold) {
                     if (!Block.VisuallyEquals(old, b.Block)) {
-                        lvl.blockqueue.Add(p, index, b.Block);
+                        lvl.blockqueue.Add(index, b.Block);
                     }
 
                     if (lvl.physics > 0) {

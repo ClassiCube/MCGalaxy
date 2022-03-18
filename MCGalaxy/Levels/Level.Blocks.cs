@@ -458,7 +458,7 @@ namespace MCGalaxy {
             if (result == ChangeResult.VisuallySame) return;
             
             if (buffered) {
-                p.level.blockqueue.Add(p, index, block);
+                p.level.blockqueue.Add(index, block);
             } else {
                 BroadcastChange(x, y, z, block);
             }
