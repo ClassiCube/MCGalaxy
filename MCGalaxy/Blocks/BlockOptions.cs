@@ -106,7 +106,7 @@ namespace MCGalaxy.Blocks {
             // If blocks have multiple behaviour, this would confuse users because only 1 behaviour works
             if (!on && (behaviour = CheckBehaviour(scope, block)) != null) {
                 string name = BlockProps.ScopedName(scope, p, block);
-                p.Message("&WBlock {0} cannot be made {1}, is it already a {2}", name, type, behaviour);
+                p.Message("&WBlock {0} cannot be made {1}, it is already a {2}", name, type, behaviour);
                 return;
             }         
             Toggle(p, scope, block, type, ref on);

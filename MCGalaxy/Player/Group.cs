@@ -22,7 +22,6 @@ using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
-using BlockID = System.UInt16;
 
 namespace MCGalaxy {
     /// <summary> This is the group object, where ranks and their data are stored </summary>
@@ -197,7 +196,7 @@ namespace MCGalaxy {
         public static void LoadAll() {
             GroupList = new List<Group>();
             if (File.Exists(Paths.RankPropsFile)) {
-                GroupProperties.InitAll();
+                LoadFromDisc();
             } else {
                 // Add some default ranks
                 Add(LevelPermission.Builder,      4096,        5, "Builder",    '2',  3); // 16^3 draw volume
@@ -239,7 +238,7 @@ namespace MCGalaxy {
         static readonly object saveLock = new object();
         public static void SaveAll(List<Group> givenList) {
             lock (saveLock) {
-                GroupProperties.SaveGroups(givenList);
+                SaveGroups(givenList);
             }
             OnGroupSaveEvent.Call();
         }
@@ -279,6 +278,99 @@ namespace MCGalaxy {
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 return false;
+            }
+        }
+
+
+        static ConfigElement[] cfg;
+        static void LoadFromDisc() {
+            Group temp = null;
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(Group));
+            
+            PropertiesFile.Read(Paths.RankPropsFile, ref temp, ParseProperty, '=', false);
+            if (temp != null) AddGroup(temp);
+        }
+        
+        static void ParseProperty(string key, string value, ref Group temp) {
+            if (key.CaselessEq("RankName")) {
+                if (temp != null) AddGroup(temp);
+                temp  = null;
+                value = value.Replace(" ", "");
+
+                if (value.CaselessEq("op")) {
+                    Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", value);
+                } else if (Group.Find(value) == null) {
+                    temp = new Group();
+                    temp.Name = value;
+                } else {
+                    Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", value);
+                }
+            } else {
+                if (temp == null) return;
+                // for prefix we need to keep space at end
+                if (!key.CaselessEq("Prefix")) {
+                    value = value.Trim();
+                } else {
+                    value = value.TrimStart();
+                }
+                
+                ConfigElement.Parse(cfg, temp, key, value);
+            }
+        }
+        
+        static void AddGroup(Group temp) {
+            if (Find(temp.Permission) != null) {
+                Logger.Log(LogType.Warning, "Cannot have 2 ranks set at permission level " + (int)temp.Permission);
+            } else if (temp.Permission == LevelPermission.Null) {
+                Logger.Log(LogType.Warning, "Invalid permission level for rank " + temp.Name);
+            } else {
+                Register(temp);
+            }
+        }
+        
+        static void SaveGroups(List<Group> givenList) {
+            if (cfg == null) cfg = ConfigElement.GetAll(typeof(Group));
+            
+            using (StreamWriter w = new StreamWriter(Paths.RankPropsFile)) {
+                w.WriteLine("#Version 3");
+                w.WriteLine("#RankName = string");
+                w.WriteLine("#\tThe name of the rank (e.g. Guest)");
+                w.WriteLine("#Permission = num");
+                w.WriteLine("#\tThe \"permission\" of the rank. It's a number.");
+                w.WriteLine("#\tThere are pre-defined permissions already set. (for the old ranks)");
+                w.WriteLine("#\t\tBanned = -20, Guest = 0, Builder = 30, AdvBuilder = 50, Operator = 80");
+                w.WriteLine("#\t\tSuperOP = 100, Nobody = 120");
+                w.WriteLine("#\tMust be greater than -50 and less than 120");
+                w.WriteLine("#\tThe higher the number, the more commands do (such as undo allowing more seconds)");
+                w.WriteLine("#Limit = num");
+                w.WriteLine("#\tThe draw command limit for the rank (can be changed in-game with /limit)");
+                w.WriteLine("#\tMust be greater than 0");
+                w.WriteLine("#MaxUndo = num");
+                w.WriteLine("#\tThe undo limit for the rank, only applies when undoing others.");
+                w.WriteLine("#\tMust be greater than 0");
+                w.WriteLine("#Color = color");
+                w.WriteLine("#\tThe default color shown in tab and chat for players of the rank (e.g. &f)");
+                w.WriteLine("#MOTD = string");
+                w.WriteLine("#\tAlternate MOTD players of the rank will see when joining the server.");
+                w.WriteLine("#\tLeave blank to use the server MOTD.");
+                w.WriteLine("#OSMaps = num");
+                w.WriteLine("#\tThe number of maps the players will have in /os");
+                w.WriteLine("#Prefix = string");
+                w.WriteLine("#\tCharacters that always appear before names of players of the rank in chat.");
+                w.WriteLine("#\tLeave blank to have no characters before the names of players.");
+                w.WriteLine("#GenVolume = num");
+                w.WriteLine("#\tThe maximum volume of a map that can be generated by players of the rank.");
+                w.WriteLine("#AfkKickMinutes = num");
+                w.WriteLine("#\tNumber of minutes a player of the rank can be AFK for before they are automatically AFK kicked.");
+                w.WriteLine();
+                w.WriteLine();
+                
+                foreach (Group group in givenList) 
+                {
+                    w.WriteLine("RankName = " + group.Name);
+                    ConfigElement.SerialiseElements(cfg, w, group);
+                    w.WriteLine();
+                }
             }
         }
     }
