@@ -250,11 +250,16 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
-            
-            Zone z = Matcher.FindZones(p, p.level, message);
-            if (z == null) return;
-            
+            Zone z;
+
+            if (message.Length == 0) {
+                z = p.ZoneIn;
+                if (z == null) { p.Message("&STo use &T/ZoneMark &Swithout providing a zone name, you must be standing in a zone"); return; }
+            } else {
+                z = Matcher.FindZones(p, p.level, message);
+                if (z == null) return;
+            }
+
             if (!CmdMark.DoMark(p, z.MinX, z.MinY, z.MinZ)) {
                 p.Message("Cannot mark, no selection in progress.");
             } else {
@@ -265,6 +270,8 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             p.Message("&T/ZoneMark [name]");
             p.Message("&HUses corners of the given zone as a &T/Mark &Hfor selections");
+            p.Message("&T/ZoneMark");
+            p.Message("&HUses corners of the zone you are currently standing in");
         }
     }
 }
