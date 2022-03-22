@@ -33,10 +33,9 @@ namespace MCGalaxy {
         public static Group DefaultRank;
         public static List<Group> GroupList = new List<Group>();
         static bool reloading;
-        
-        const int mapGenLimitAdmin = 225 * 1000 * 1000;
-        const int mapGenLimit = 30 * 1000 * 1000;
-        
+        const int GEN_ADMIN = 225 * 1000 * 1000;
+        const int GEN_LIMIT = 30  * 1000 * 1000;       
+
         public string Name;
         [ConfigPerm("Permission", null, LevelPermission.Null)]
         public LevelPermission Permission = LevelPermission.Null;
@@ -50,8 +49,8 @@ namespace MCGalaxy {
         public TimeSpan MaxUndo;
         [ConfigString("MOTD", null, "", true)]
         public string MOTD = "";
-        [ConfigInt("GenVolume", null, mapGenLimit)]
-        public int GenVolume = mapGenLimit;
+        [ConfigInt("GenVolume", null, GEN_LIMIT)]
+        public int GenVolume = GEN_LIMIT;
         [ConfigInt("OSMaps", null, 3, 0)]
         public int OverseerMaps = 3;
         [ConfigBool("AfkKicked", null, true)]
@@ -165,9 +164,9 @@ namespace MCGalaxy {
         }
         
         public string GetFormattedName() { return Color + GetPlural(Name); }
-        
-        
-        static void Add(LevelPermission perm, int drawLimit, int undoMins, string name, char colCode, int realms) {
+
+
+        static void Add(LevelPermission perm, int drawLimit, int undoMins, string name, string color, int volume, int realms) {
             Group grp   = new Group();
             int afkMins = perm <= LevelPermission.AdvBuilder ? 45 : 60;
 
@@ -175,8 +174,8 @@ namespace MCGalaxy {
             grp.DrawLimit    = drawLimit;
             grp.MaxUndo      = TimeSpan.FromMinutes(undoMins);
             grp.Name         = name;
-            grp.Color        = "&" + colCode;
-            grp.GenVolume    = perm < LevelPermission.Admin ? mapGenLimit : mapGenLimitAdmin;
+            grp.Color        = color;
+            grp.GenVolume    = volume;
             grp.AfkKickTime  = TimeSpan.FromMinutes(afkMins);
             grp.OverseerMaps = realms;
             Register(grp);
@@ -199,18 +198,18 @@ namespace MCGalaxy {
                 LoadFromDisc();
             } else {
                 // Add some default ranks
-                Add(LevelPermission.Builder,      4096,        5, "Builder",    '2',  3); // 16^3 draw volume
-                Add(LevelPermission.AdvBuilder, 262144,       15, "AdvBuilder", '3',  5); // 64^3
-                Add(LevelPermission.Operator,  2097152,       90, "Operator",   'c',  8); // 128^3
-                Add(LevelPermission.Admin,    16777216, 21024000, "Admin",      'e', 12); // 256^3
+                Add(LevelPermission.Builder,      4096,        5, "Builder",    "&2", GEN_LIMIT,  3); // 16^3 draw volume
+                Add(LevelPermission.AdvBuilder, 262144,       15, "AdvBuilder", "&3", GEN_LIMIT,  5); // 64^3
+                Add(LevelPermission.Operator,  2097152,       90, "Operator",   "&c", GEN_LIMIT,  8); // 128^3
+                Add(LevelPermission.Admin,    16777216, 21024000, "Admin",      "&e", GEN_ADMIN, 12); // 256^3
             }
 
             if (BannedRank == null)
-                Add(LevelPermission.Banned,         1,        0, "Banned", '8',  0);
+                Add(LevelPermission.Banned,         1,        0, "Banned", "&8", GEN_LIMIT, 0);
             if (GuestRank == null)
-                Add(LevelPermission.Guest,          1,        2, "Guest",  '7',  3);
+                Add(LevelPermission.Guest,          1,        2, "Guest",  "&7", GEN_LIMIT, 3);
             if (NobodyRank == null)
-                Add(LevelPermission.Nobody, 134217728, 21024000, "Owner",  '0', 16); // 512^3
+                Add(LevelPermission.Nobody, 134217728, 21024000, "Owner",  "&0", GEN_ADMIN, 16); // 512^3
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             DefaultRank = Find(Server.Config.DefaultRankName);
@@ -337,11 +336,12 @@ namespace MCGalaxy {
                 w.WriteLine("#\tThe name of the rank (e.g. Guest)");
                 w.WriteLine("#Permission = number");
                 w.WriteLine("#\tThe \"permission\" level number of the rank.");
-                w.WriteLine("#\tThe default ranks have the following permission levels:");
+                w.WriteLine("#\tPermission level numbers must be between -20 and 120");
+                w.WriteLine("#\tThe higher the number, the more commands and blocks are available");
+                w.WriteLine("#");
+                w.WriteLine("#\tFor example, the default ranks use the following permission levels:");
                 w.WriteLine("#\t\tBanned = -20, Guest = 0, Builder = 30, AdvBuilder = 50");
                 w.WriteLine("#\t\tOperator = 80, Admin = 100, Owner = 120");
-                w.WriteLine("#\tMust be greater than -50 and less than 120");
-                w.WriteLine("#\tThe higher the number, the more commands and blocks are available");
                 w.WriteLine("#Limit = number");
                 w.WriteLine("#\tThe draw command limit for the rank (can be changed in-game with /limit)");
                 w.WriteLine("#\tMust be greater than 0");

@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Info {
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("Ops", "operator"), new CommandAlias("Admins", "superop"),
+            get { return new[] { new CommandAlias("Ops", "@80"), new CommandAlias("Admins", "@100"),
                     new CommandAlias("Banned", "banned"), new CommandAlias("BanList", "banned") }; }
         }
 
@@ -32,14 +32,28 @@ namespace MCGalaxy.Commands.Info {
             string[] args = message.SplitSpaces(2);
             if (message.Length == 0) { 
                 p.Message("Available ranks: " + Group.GroupList.Join(g => g.ColoredName)); return; 
-            }            
-            
-            Group grp = message.CaselessEq("banned") ? Group.BannedRank : Matcher.FindRanks(p, args[0]);
-            if (grp == null) return;
+            }
+            string rankName = args[0];
+            Group grp;
 
+            if (rankName.CaselessEq("banned")) {
+                grp = Group.BannedRank;
+            } else if (!rankName.StartsWith("@")) {
+                grp = Matcher.FindRanks(p, rankName);
+            } else {
+                // /viewranks @[permission level]
+                int perm = 0;
+                rankName = rankName.Substring(1);
+                if (!CommandParser.GetInt(p, rankName, "Permission level", ref perm)) return;
+
+                grp = Group.Find((LevelPermission)perm);
+                if (grp == null) p.Message("&WThere is no rank with permission level \"{0}\"", rankName);
+            }
+            
+            if (grp == null) return;
             string modifier = args.Length > 1 ? args[1] : "";
             grp.Players.OutputPlain(p, "players ranked " + grp.ColoredName,
-                                    "ViewRanks " + args[0], modifier);
+                                    "ViewRanks " + grp.Name, modifier);
         }
         
         public override void Help(Player p) {
