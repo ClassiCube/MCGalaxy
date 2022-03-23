@@ -142,8 +142,8 @@ namespace MCGalaxy {
         public float DrawReloadThreshold = 0.001f;
         [ConfigBool("allow-tp-to-higher-ranks", "Other", true)]
         public bool HigherRankTP = true;        
-        [ConfigPerm("os-perbuild-default", "Other", LevelPermission.Nobody)]
-        public LevelPermission OSPerbuildDefault = LevelPermission.Nobody;        
+        [ConfigPerm("os-perbuild-default", "Other", LevelPermission.Owner)]
+        public LevelPermission OSPerbuildDefault = LevelPermission.Owner;        
         
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;

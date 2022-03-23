@@ -214,8 +214,8 @@ namespace MCGalaxy
 
         [ConfigPerm("PerBuild", "Permissions", LevelPermission.Guest)]
         public LevelPermission BuildMin = LevelPermission.Guest;
-        [ConfigPerm("PerBuildMax", "Permissions", LevelPermission.Nobody)]
-        public LevelPermission BuildMax = LevelPermission.Nobody;
+        [ConfigPerm("PerBuildMax", "Permissions", LevelPermission.Owner)]
+        public LevelPermission BuildMax = LevelPermission.Owner;
         
         // Other blacklists/whitelists
         [ConfigStringList("BuildWhitelist", "Permissions")]
@@ -253,8 +253,8 @@ namespace MCGalaxy
         public string RealmOwner = "";
         [ConfigPerm("PerVisit", "Permissions", LevelPermission.Guest)]
         public LevelPermission VisitMin = LevelPermission.Guest;
-        [ConfigPerm("PerVisitMax", "Permissions", LevelPermission.Nobody)]
-        public LevelPermission VisitMax = LevelPermission.Nobody;
+        [ConfigPerm("PerVisitMax", "Permissions", LevelPermission.Owner)]
+        public LevelPermission VisitMax = LevelPermission.Owner;
         
         // Other blacklists/whitelists
         [ConfigStringList("VisitWhitelist", "Permissions")]

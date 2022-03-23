@@ -51,16 +51,19 @@ namespace MCGalaxy.Config {
         public override object Parse(string raw) {
             LevelPermission perm = Group.ParsePermOrName(raw, LevelPermission.Null);
             if (perm == LevelPermission.Null) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid permission '{2}', using default of {1}", Name, defPerm, raw);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid permission '{2}', using default of {1}", 
+                                            Name, defPerm, raw);
                 perm = defPerm;
             }
             
             if (perm < LevelPermission.Banned) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be below banned rank.", Name);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be below banned rank.", 
+                                            Name);
                 perm = LevelPermission.Banned;
             }
             if (perm > LevelPermission.Nobody) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be above nobody rank.", Name);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be above nobody rank.",
+                                            Name);
                 perm = LevelPermission.Nobody;
             }
             return perm;

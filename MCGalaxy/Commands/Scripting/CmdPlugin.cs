@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdPlugin : Command2 {
         public override string name { get { return "Plugin"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("PLoad", "load"), new CommandAlias("PUnload", "unload"),
                     new CommandAlias("PCreate", "create"), new CommandAlias("PCompile", "compile"),

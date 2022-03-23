@@ -33,7 +33,7 @@ namespace MCGalaxy.Gui {
         
         void ApplyRankProps() {
             Server.Config.DefaultRankName = rank_cmbDefault.SelectedItem.ToString();
-            Server.Config.OSPerbuildDefault = GuiPerms.GetPermission(rank_cmbOsMap, LevelPermission.Nobody);
+            Server.Config.OSPerbuildDefault = GuiPerms.GetPermission(rank_cmbOsMap, LevelPermission.Owner);
             Server.Config.HigherRankTP = rank_cbTPHigher.Checked;
             Server.Config.AdminsJoinSilently = rank_cbSilentAdmins.Checked;
             Server.Config.ListEmptyRanks = rank_cbEmpty.Checked;
@@ -152,7 +152,7 @@ namespace MCGalaxy.Gui {
         void rank_btnAdd_Click(object sender, EventArgs e) {
             // Find first free rank permission
             int perm = 5;
-            for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Nobody; i++) 
+            for (int i = (int)LevelPermission.Guest; i <= (int)LevelPermission.Owner; i++) 
             {
                 if (PermissionFree(i)) { perm = i; break; }
             }

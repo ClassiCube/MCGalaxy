@@ -205,11 +205,11 @@ namespace MCGalaxy {
             }
 
             if (BannedRank == null)
-                Add(LevelPermission.Banned,         1,        0, "Banned", "&8", GEN_LIMIT, 0);
+                Add(LevelPermission.Banned,        1,        0, "Banned", "&8", GEN_LIMIT, 0);
             if (GuestRank == null)
-                Add(LevelPermission.Guest,          1,        2, "Guest",  "&7", GEN_LIMIT, 3);
+                Add(LevelPermission.Guest,         1,        2, "Guest",  "&7", GEN_LIMIT, 3);
             if (NobodyRank == null)
-                Add(LevelPermission.Nobody, 134217728, 21024000, "Owner",  "&0", GEN_ADMIN, 16); // 512^3
+                Add(LevelPermission.Owner, 134217728, 21024000, "Owner",  "&0", GEN_ADMIN, 16); // 512^3
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             DefaultRank = Find(Server.Config.DefaultRankName);

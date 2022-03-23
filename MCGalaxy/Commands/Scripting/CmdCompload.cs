@@ -20,7 +20,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override string name { get { return "CompLoad"; } }
         public override string shortcut { get { return "cml"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {

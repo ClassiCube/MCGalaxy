@@ -24,7 +24,7 @@ namespace MCGalaxy.Commands.Maintenance {
     public sealed class CmdInfoSwap : Command2 {       
         public override string name { get { return "InfoSwap"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Nobody; } }
+        public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
 
         public override void Use(Player p, string text, CommandData data) {
             string[] args = text.SplitSpaces();
