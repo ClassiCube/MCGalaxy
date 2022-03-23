@@ -32,7 +32,7 @@ using BlockID = System.UInt16;
 namespace MCGalaxy {
     sealed class ConsolePlayer : Player {
         public ConsolePlayer() : base("(console)") {
-            group = Group.NobodyRank;
+            group = Group.ConsoleRank;
             color = "&S";
             SuperName = "Console";
         }

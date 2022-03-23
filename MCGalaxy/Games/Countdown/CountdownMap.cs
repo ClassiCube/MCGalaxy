@@ -32,7 +32,7 @@ namespace MCGalaxy.Games
             MakeSquares(lvl);
             
             lvl.VisitAccess.Min  = LevelPermission.Guest;
-            lvl.BuildAccess.Min  = LevelPermission.Nobody;
+            lvl.BuildAccess.Min  = LevelPermission.Owner;
             lvl.Config.Deletable = false;
             lvl.Config.Buildable = false;
             lvl.Config.MOTD = "Welcome to the Countdown map! -hax";

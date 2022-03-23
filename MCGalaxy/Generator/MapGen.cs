@@ -153,7 +153,7 @@ namespace MCGalaxy.Generator
         /// <summary> Sets default permissions for a newly generated realm map. </summary>
         internal static void SetRealmPerms(Player p, Level lvl) {
             lvl.Config.RealmOwner = p.name;
-            const LevelPermission rank = LevelPermission.Nobody;
+            const LevelPermission rank = LevelPermission.Console;
             lvl.BuildAccess.Whitelist(Player.Console, rank, lvl, p.name);
             lvl.VisitAccess.Whitelist(Player.Console, rank, lvl, p.name);
 

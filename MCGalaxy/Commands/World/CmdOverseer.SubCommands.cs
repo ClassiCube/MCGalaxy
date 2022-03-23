@@ -113,7 +113,7 @@ namespace MCGalaxy.Commands.World {
                 // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
                 AccessController access = p.level.VisitAccess;
                 if (!access.Whitelisted.CaselessContains(p.name)) {
-                    access.Whitelist(Player.Console, LevelPermission.Nobody, p.level, p.name);
+                    access.Whitelist(Player.Console, LevelPermission.Console, p.level, p.name);
                 }
                 
                 if (value.Length > 0) value = p.level.name + " " + value;

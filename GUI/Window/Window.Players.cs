@@ -56,7 +56,7 @@ namespace MCGalaxy.Gui {
             string cmdName = args[0], cmdArgs = args.Length > 1 ? args[1] : "";
             
             CommandData data = default(CommandData);
-            data.Rank    = LevelPermission.Nobody;
+            data.Rank    = LevelPermission.Console;
             data.Context = CommandContext.SendCmd;
             curPlayer.HandleCommand(cmdName, cmdArgs, data);
                 

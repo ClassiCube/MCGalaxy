@@ -130,7 +130,7 @@ namespace MCGalaxy.Gui
         public string Messages = "";
             
         public ConsoleHelpPlayer() : base("(console)") {
-            group = Group.NobodyRank;
+            group = Group.ConsoleRank;
             SuperName = "Console";
         }
             

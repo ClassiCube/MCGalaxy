@@ -87,7 +87,7 @@ namespace MCGalaxy.Commands.Moderation {
             Player target = PlayerInfo.FindMatches(p, name);
             if (target == null) return;
             
-            if (!p.IsConsole && p.Unverified) {
+            if (p.Unverified) {
                 Authenticator.Current.RequiresVerification(p, "can reset passwords");
                 return;
             }

@@ -93,7 +93,7 @@ namespace MCGalaxy {
         
         public void Describe(Player p, StringBuilder perms) {
             perms.Append(Group.GetColoredName(Min) + "&S+");
-            if (Max != LevelPermission.Nobody) {
+            if (Max < LevelPermission.Owner) {
                 perms.Append(" up to " + Group.GetColoredName(Max));
             }
             

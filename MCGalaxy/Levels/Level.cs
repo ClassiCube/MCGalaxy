@@ -117,7 +117,7 @@ namespace MCGalaxy
             if (p.IsConsole) return true;
             
             bool skip = p.summonedMap != null && p.summonedMap.CaselessEq(name);
-            LevelPermission plRank = skip ? LevelPermission.Nobody : p.Rank;
+            LevelPermission plRank = skip ? LevelPermission.Console : p.Rank;
             if (!VisitAccess.CheckDetailed(p, plRank)) return false;
             
             if (Server.lockdown.Contains(name)) {
