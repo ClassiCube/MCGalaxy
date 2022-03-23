@@ -21,13 +21,10 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Sharkbite.Irc
 {

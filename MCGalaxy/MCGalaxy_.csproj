@@ -683,8 +683,7 @@
     <Compile Include="sharkbite.thresher\Connection.cs" />
     <Compile Include="sharkbite.thresher\Listener.cs" />
     <Compile Include="sharkbite.thresher\ReplyCode.cs" />
-    <Compile Include="sharkbite.thresher\Rfc2812Util.cs" />
-    <Compile Include="sharkbite.thresher\UserInfo.cs" />
+    <Compile Include="sharkbite.thresher\Utils.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="Database\PlayerDB.cs" />

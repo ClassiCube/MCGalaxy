@@ -21,10 +21,8 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Sharkbite.Irc
 {
@@ -143,7 +141,6 @@ namespace Sharkbite.Irc
 		private const string JOIN = "JOIN";
 		private const string PRIVMSG = "PRIVMSG";
 		private const string NICK = "NICK";
-		private const string TOPIC = "TOPIC";
 		private const string PART = "PART";
 		private const string QUIT = "QUIT";
 		private const string INVITE = "INVITE";

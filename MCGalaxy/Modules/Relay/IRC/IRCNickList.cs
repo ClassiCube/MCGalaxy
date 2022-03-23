@@ -17,12 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using MCGalaxy.Events.PlayerEvents;
-using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Modules.Relay;
-using MCGalaxy.Network;
 using Sharkbite.Irc;
 
 namespace MCGalaxy.Modules.Relay.IRC 

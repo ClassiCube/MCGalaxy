@@ -58,36 +58,20 @@ namespace Sharkbite.Irc
 		/// <returns>A UserInfo object.</returns>
 		public static UserInfo UserInfoFromString( string fullUserName ) 
 		{
-			string[] parts = ParseUserInfoLine( fullUserName );
-			if( parts == null ) 
+			if( fullUserName == null || fullUserName.Trim().Length == 0 ) 
 			{
 				return UserInfo.Empty;
 			}
-			else 
-			{
-				return new UserInfo( parts[0], parts[1], parts[2] );
-			}
-		}
-		/// <summary>
-		/// Break up an IRC user string into its component parts. 
-		/// </summary>
-		/// <param name="fullUserName">The user in nick!user@host form</param>
-		/// <returns>A string array with the first item being nick, then user, and then host.</returns>
-		static string[] ParseUserInfoLine( string fullUserName ) 
-		{
-			if( fullUserName == null || fullUserName.Trim().Length == 0 ) 
-			{
-				return null;
-			}
+
 			Match match = nameSplitterRegex.Match( fullUserName );
 			if( match.Success ) 
 			{
 				string[] parts = nameSplitterRegex.Split( fullUserName );
-				return parts;
+				return new UserInfo( parts[0] );
 			}
 			else 
 			{
-				return new string[] { fullUserName, "","" };
+				return new UserInfo( fullUserName );
 			}
 		}
 
@@ -103,7 +87,7 @@ namespace Sharkbite.Irc
 				return false;
 			}
 
-			if( Rfc2812Util.ContainsSpace(channel) ) 
+			if( ContainsSpace(channel) ) 
 			{
 				return false;
 			}
@@ -128,7 +112,7 @@ namespace Sharkbite.Irc
 			{
 				return false;
 			}
-			if( Rfc2812Util.ContainsSpace( nick ) ) 
+			if( ContainsSpace( nick ) ) 
 			{
 				return false;
 			}
@@ -141,6 +125,25 @@ namespace Sharkbite.Irc
 
 		private static bool ContainsSpace( string text ) {
 			return text.IndexOf( ' ' ) != -1;
+		}
+	}
+
+	public class UserInfo 
+	{
+		/// <summary> Create a new UserInfo and set all its values. </summary>
+		public UserInfo(string nick) { Nick = nick; }
+
+		/// <summary> The IRC user's nick name. </summary>
+		public string Nick;
+		
+		/// <summary> A singleton blank instance of UserInfo used when an instance is required
+		/// by a method signature but no infomation is available, e.g. the last reply
+		/// from a Who request. </summary>
+		public static UserInfo Empty = new UserInfo("");
+
+		/// <summary> A string representation of this object which shows all its values. </summary>
+		public override string ToString() {
+			return string.Format("Nick={0}", Nick ); 
 		}
 	}
 }
