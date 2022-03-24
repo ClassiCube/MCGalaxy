@@ -29,7 +29,6 @@ namespace MCGalaxy {
 
         public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
         public static Group GuestRank  { get { return Find(LevelPermission.Guest); } }
-        public static Group NobodyRank { get { return Find(LevelPermission.Nobody); } }
         public static Group DefaultRank;
         public static Group ConsoleRank = new Group(LevelPermission.Console, int.MaxValue, 21024000, "Console", "&0", int.MaxValue, 16);
 
@@ -208,14 +207,13 @@ namespace MCGalaxy {
                 Add(LevelPermission.AdvBuilder, 262144,       15, "AdvBuilder", "&3", GEN_LIMIT,  5); // 64^3
                 Add(LevelPermission.Operator,  2097152,       90, "Operator",   "&c", GEN_LIMIT,  8); // 128^3
                 Add(LevelPermission.Admin,    16777216, 21024000, "Admin",      "&e", GEN_ADMIN, 12); // 256^3
+                Add(LevelPermission.Owner,   134217728, 21024000, "Owner",      "&0", GEN_ADMIN, 16); // 512^3
             }
 
             if (BannedRank == null)
                 Add(LevelPermission.Banned,        1,        0, "Banned", "&8", GEN_LIMIT, 0);
             if (GuestRank == null)
                 Add(LevelPermission.Guest,         1,        2, "Guest",  "&7", GEN_LIMIT, 3);
-            if (NobodyRank == null)
-                Add(LevelPermission.Owner, 134217728, 21024000, "Owner",  "&0", GEN_ADMIN, 16); // 512^3
             
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             DefaultRank = Find(Server.Config.DefaultRankName);

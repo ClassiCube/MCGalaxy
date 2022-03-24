@@ -57,13 +57,11 @@ namespace MCGalaxy.Config {
             }
             
             if (perm < LevelPermission.Banned) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be below banned rank.", 
-                                            Name);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be below banned rank.", Name);
                 perm = LevelPermission.Banned;
             }
             if (perm > LevelPermission.Console) {
-                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be above console rank.",
-                                            Name);
+                Logger.Log(LogType.Warning, "Config key \"{0}\" cannot be above console rank.", Name);
                 perm = LevelPermission.Console;
             }
             return perm;

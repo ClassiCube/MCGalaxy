@@ -312,10 +312,8 @@ namespace MCGalaxy.Modules.Relay
             if (scopeFilter(fakeGuest, arg) && (filter == null || filter(fakeGuest, arg))) {
                 SendPublicMessage(msg); return;
             }
-            
-            fakeStaff.group = Group.Find(Server.Config.IRCControllerRank);
-            if (fakeStaff.group == null) fakeStaff.group = Group.NobodyRank;
-            
+
+            fakeStaff.group = GetControllerRank();
             if (scopeFilter(fakeStaff, arg) && (filter == null || filter(fakeStaff, arg))) {
                 SendStaffMessage(msg);
             }
@@ -500,6 +498,18 @@ namespace MCGalaxy.Modules.Relay
         /// <summary> Returns whether the given controller is currently allowed to execute commands </summary>
         /// <remarks> e.g. a user may have to login before they are allowed to execute commands </remarks>
         protected abstract bool CheckController(string userID, ref string error);
+
+        protected Group GetControllerRank() {
+            LevelPermission perm = Server.Config.IRCControllerRank;
+
+            // find highest rank <= IRC controller rank
+            for (int i = Group.GroupList.Count - 1; i >= 0; i--)
+            {
+                Group grp = Group.GroupList[i];
+                if (grp.Permission <= perm) return grp;
+            }
+            return Group.DefaultRank;
+        }
         
         protected sealed class RelayPlayer : Player {
             public readonly string ChannelID;
@@ -507,9 +517,8 @@ namespace MCGalaxy.Modules.Relay
             public readonly RelayBot Bot;
             
             public RelayPlayer(string channel, RelayUser user, RelayBot bot) : base(bot.RelayName) {
-                group = Group.Find(Server.Config.IRCControllerRank);
-                if (group == null) group = Group.NobodyRank;
-                
+                group = bot.GetControllerRank();
+
                 ChannelID = channel;
                 User    = user;
                 color   = "&a";
