@@ -230,7 +230,7 @@ namespace MCGalaxy {
         }
         
         static void UpdateGroup(Player p) {
-            Group grp = Group.Find(p.group.Permission);
+            Group grp = Find(p.group.Permission);
             if (grp == null) grp = DefaultRank;
             p.group = grp;
             

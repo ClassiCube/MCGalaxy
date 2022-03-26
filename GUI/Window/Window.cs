@@ -17,11 +17,11 @@
 */
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using MCGalaxy.Events;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Generator;
@@ -228,6 +228,7 @@ Trying to mix two versions is unsupported - you may experience issues";
             OnPlayerConnectEvent.Register(Player_PlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(Player_PlayerDisconnect, Priority.Low);
             OnSentMapEvent.Register(Player_OnJoinedLevel, Priority.Low);
+            OnModActionEvent.Register(Player_OnModAction, Priority.Low);
 
             OnLevelAddedEvent.Register(Level_LevelAdded, Priority.Low);
             OnLevelRemovedEvent.Register(Level_LevelRemoved, Priority.Low);
@@ -258,6 +259,14 @@ Trying to mix two versions is unsupported - you may experience issues";
                 Main_UpdateMapList();
                 Main_UpdatePlayersList();
                 Players_UpdateSelected(); 
+            });
+        }
+
+        void Player_OnModAction(ModAction action) {
+            if (action.Type != ModActionType.Rank) return;
+
+            RunOnUI_Async(() => {
+                Main_UpdatePlayersList();
             });
         }
         

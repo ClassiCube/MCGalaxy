@@ -123,6 +123,11 @@ namespace MCGalaxy
                 return false;
             }
 
+            if (name.ContainsAllIn(".")) {
+                p.Message("&W\"{0}\" cannot consist entirely of dot characters", name);
+                return false;
+            }
+
             return true;
         }
     }
