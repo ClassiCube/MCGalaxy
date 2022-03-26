@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Bots{
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();
 
-            if (!Formatter.ValidName(p, ai, "bot AI")) return;
+            if (!Formatter.ValidFilename(p, ai)) return;
             if (ai == "hunt" || ai == "kill") { p.Message("Reserved for special AI."); return; }
 
             if (IsCreateCommand(cmd)) {

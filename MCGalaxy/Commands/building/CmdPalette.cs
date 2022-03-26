@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Building {
         
         void HandleCreate(Player p, string[] args) {
             if (args.Length != 2) { Help(p); return; }
-            if (!Formatter.ValidName(p, args[1], "palette")) return;
+            if (!Formatter.ValidFilename(p, args[1])) return;
             
             ImagePalette palette = ImagePalette.Find(args[1]);
             if (palette != null) {
