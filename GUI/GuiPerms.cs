@@ -27,10 +27,10 @@ namespace MCGalaxy.Gui
         internal static LevelPermission[] RankPerms;
         
         internal static void UpdateRankNames() {
-            List<string> names = new List<string>(Group.GroupList.Count);
-            List<LevelPermission> perms = new List<LevelPermission>(Group.GroupList.Count);
+            List<string> names = new List<string>(Group.AllRanks.Count);
+            List<LevelPermission> perms = new List<LevelPermission>(Group.AllRanks.Count);
             
-            foreach (Group group in Group.GroupList) {
+            foreach (Group group in Group.AllRanks) {
                 names.Add(group.Name);
                 perms.Add(group.Permission);
             }

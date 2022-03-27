@@ -57,7 +57,7 @@ namespace MCGalaxy
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
             allCmds.Clear();
             coreCmds.Clear();      
-            foreach (Group grp in Group.GroupList) { grp.Commands.Clear(); }
+            foreach (Group grp in Group.AllRanks) { grp.Commands.Clear(); }
             
             for (int i = 0; i < types.Length; i++) {
                 Type type = types[i];
@@ -75,13 +75,15 @@ namespace MCGalaxy
             allCmds.Add(cmd);
             
             CommandPerms perms = CommandPerms.GetOrAdd(cmd.name, cmd.defaultRank);
-            foreach (Group grp in Group.GroupList) {
+            foreach (Group grp in Group.AllRanks) 
+            {
                 if (perms.UsableBy(grp.Permission)) grp.Commands.Add(cmd);
             }
             
             CommandPerm[] extra = cmd.ExtraPerms;
             if (extra != null) {
-                for (int i = 0; i < extra.Length; i++) {
+                for (int i = 0; i < extra.Length; i++) 
+                {
                     CommandExtraPerms exPerms = CommandExtraPerms.GetOrAdd(cmd.name, i + 1, extra[i].Perm);
                     exPerms.Desc = extra[i].Description;
                 }
@@ -90,7 +92,8 @@ namespace MCGalaxy
         }
         
         public static Command Find(string name) {
-            foreach (Command cmd in allCmds) {
+            foreach (Command cmd in allCmds) 
+            {
                 if (cmd.name.CaselessEq(name)) return cmd;
             }
             return null;
@@ -98,7 +101,8 @@ namespace MCGalaxy
         
         public static bool Unregister(Command cmd) {
             bool removed = allCmds.Remove(cmd);
-            foreach (Group grp in Group.GroupList) {
+            foreach (Group grp in Group.AllRanks) 
+            {
                 grp.Commands.Remove(cmd);
             }
             
@@ -114,7 +118,8 @@ namespace MCGalaxy
             
             // Aliases override built in command shortcuts
             if (alias == null) {
-                foreach (Command cmd in allCmds) {
+                foreach (Command cmd in allCmds) 
+                {
                     if (!cmd.shortcut.CaselessEq(cmdName)) continue;
                     cmdName = cmd.name; return;
                 }

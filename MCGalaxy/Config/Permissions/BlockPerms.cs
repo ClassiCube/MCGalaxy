@@ -95,7 +95,8 @@ namespace MCGalaxy.Blocks {
         
         /// <summary> Applies new block permissions to server state. </summary>
         public static void ApplyChanges() {
-            foreach (Group grp in Group.GroupList) {
+            foreach (Group grp in Group.AllRanks) 
+            {
                 grp.SetUsableBlocks();
             }
         }

@@ -73,7 +73,7 @@ namespace MCGalaxy.Bots {
             string script = args.Length > 3 ? args[3] : "";
             if (script.Length == 0) {
                 p.Message("LinkScript requires a script name as a parameter");
-            } else {
+            } else if (Formatter.ValidFilename(p, script)) {
                 w.WriteLine(Name + " " + script);
             }
         }

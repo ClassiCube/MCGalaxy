@@ -34,6 +34,7 @@ namespace MCGalaxy {
 
 
         public static List<Group> GroupList = new List<Group>();
+        public static List<Group> AllRanks  = new List<Group>();
         static bool reloading;
         const int GEN_ADMIN = 225 * 1000 * 1000;
         const int GEN_LIMIT = 30  * 1000 * 1000;       
@@ -129,6 +130,8 @@ namespace MCGalaxy {
         }
 
         public static Group Find(LevelPermission perm) {
+            if (perm == LevelPermission.Console) return ConsoleRank;
+
             return GroupList.Find(grp => grp.Permission == perm);
         }
 
@@ -218,6 +221,10 @@ namespace MCGalaxy {
             GroupList.Sort((a, b) => a.Permission.CompareTo(b.Permission));
             DefaultRank = Find(Server.Config.DefaultRankName);
             if (DefaultRank == null) DefaultRank = GuestRank;
+
+            AllRanks.Clear();
+            AllRanks.AddRange(GroupList);
+            AllRanks.Add(ConsoleRank);
 
             OnGroupLoadEvent.Call();
             reloading = true;

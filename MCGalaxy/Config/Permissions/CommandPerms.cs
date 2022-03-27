@@ -114,7 +114,8 @@ namespace MCGalaxy.Commands {
 
         /// <summary> Applies new command permissions to server state. </summary>
         public static void ApplyChanges() {
-            foreach (Group grp in Group.GroupList) {
+            foreach (Group grp in Group.AllRanks) 
+            {
                 grp.SetUsableCommands();
             }
         }
