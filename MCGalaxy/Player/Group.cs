@@ -303,17 +303,9 @@ namespace MCGalaxy {
         static void ParseProperty(string key, string value, ref Group temp) {
             if (key.CaselessEq("RankName")) {
                 if (temp != null) AddGroup(temp);
-                temp  = null;
-                value = value.Replace(" ", "");
 
-                if (value.CaselessEq("op")) {
-                    Logger.Log(LogType.Warning, "Cannot have a rank named \"{0}\", this rank is hard-coded.", value);
-                } else if (Find(value) == null) {
-                    temp = new Group();
-                    temp.Name = value;
-                } else {
-                    Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", value);
-                }
+                temp      = new Group();
+                temp.Name = value.Replace(" ", "");
             } else {
                 if (temp == null) return;
                 // for prefix we need to keep space at end
@@ -328,10 +320,16 @@ namespace MCGalaxy {
         }
         
         static void AddGroup(Group temp) {
-            if (Find(temp.Permission) != null) {
+            string name = temp.Name;
+
+            if (name.CaselessEq("op") || name.CaselessEq("Console")) {
+                Logger.Log(LogType.Warning, "Cannot have a rank named 'op' or 'console'", name);
+            } else if (Find(name) != null) {
+                Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", name);
+            } else if (Find(temp.Permission) != null) {
                 Logger.Log(LogType.Warning, "Cannot have 2 ranks set at permission level " + (int)temp.Permission);
             } else if (temp.Permission > LevelPermission.Owner) { // also handles LevelPermission.Null
-                Logger.Log(LogType.Warning, "Invalid permission level for rank " + temp.Name);
+                Logger.Log(LogType.Warning, "Invalid permission level for rank {0}", name);
             } else {
                 Register(temp);
             }
