@@ -168,8 +168,6 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         RelayUser ExtractUser(JsonObject data) {
             JsonObject author = (JsonObject)data["author"];
-            string channel    = (string)data["channel_id"];
-            string message    = (string)data["content"];
             
             RelayUser user = new RelayUser();
             user.Nick = GetNick(data) ?? (string)author["username"];

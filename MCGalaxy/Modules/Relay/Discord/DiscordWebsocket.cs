@@ -28,7 +28,11 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Relay.Discord 
 {    
-    public sealed class DiscordSession { public string ID, LastSeq; }
+    public sealed class DiscordSession 
+    { 
+        public string ID, LastSeq;
+        public int Intents = DiscordWebsocket.DEFAULT_INTENTS;
+    }
     
     /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
@@ -62,7 +66,12 @@ namespace MCGalaxy.Modules.Relay.Discord
         SchedulerTask heartbeat;
         TcpClient client;
         SslStream stream;
-        
+
+        public const int DEFAULT_INTENTS = INTENT_GUILD_MESSAGES | INTENT_DIRECT_MESSAGES | INTENT_MESSAGE_CONTENT;
+        const int INTENT_GUILD_MESSAGES  = 1 << 9;
+        const int INTENT_DIRECT_MESSAGES = 1 << 12;
+        const int INTENT_MESSAGE_CONTENT = 1 << 15;
+
         const int OPCODE_DISPATCH        = 0;
         const int OPCODE_HEARTBEAT       = 1;
         const int OPCODE_IDENTIFY        = 2;
@@ -108,11 +117,19 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         const int REASON_INVALID_TOKEN = 4004;
+        const int REASON_DENIED_INTENT = 4014;
         
         protected override void OnDisconnected(int reason) {
             if (reason == REASON_INVALID_TOKEN) {
                 Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
                 CanReconnect = false;
+            }
+            if (reason == REASON_DENIED_INTENT) {
+                // privileged intent since 2022 https://support-dev.discord.com/hc/en-us/articles/4404772028055
+                Logger.Log(LogType.Warning, "Discord relay: Message Content Intent is not enabled in Bot Account settings, retrying without it..");
+                Logger.Log(LogType.Warning, "It is recommended to enable this - otherwise Discord may prevent the bot from seeing the contents of Discord messages"
+                                            + " (See " + Updater.SourceURL + "/wiki/Discord-relay-bot#read-permissions)");
+                Session.Intents &= ~INTENT_MESSAGE_CONTENT;
             }
             
             Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
@@ -231,9 +248,6 @@ namespace MCGalaxy.Modules.Relay.Discord
             SendMessage(obj);
         }
         
-        const int INTENT_GUILD_MESSAGES  = 1 << 9;
-        const int INTENT_DIRECT_MESSAGES = 1 << 12;
-        
         public void Identify() {
             if (Session.ID != null && Session.LastSeq != null) {
                 SendMessage(OPCODE_RESUME,   MakeResume());
@@ -267,7 +281,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             return new JsonObject()
             {
                 { "token",      Token },
-                { "intents",    INTENT_GUILD_MESSAGES | INTENT_DIRECT_MESSAGES },
+                { "intents",    Session.Intents },
                 { "properties", props },
                 { "presence",   MakePresence() }
             };

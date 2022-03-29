@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Info {
                 string reason = args.Length <= offset ? "(no reason given)" : args[offset].Replace("%20", " ");
                
                 p.Message("&aFrom {0} &ato {1} &a{2} ago", 
-                               Group.GetColoredName(oldRank), Group.GetColoredName(newRank), 
+                               Group.GetColoredName(oldRank), Group.GetColoredName(newRank),
                                delta.Shorten(true, false));
                 p.Message("&aBy &S{0}&a, reason: &S{1}", p.FormatNick(args[1]), reason);
             }
