@@ -56,9 +56,12 @@ namespace MCGalaxy.Commands.Moderation {
         static bool CheckIP(Player p, CommandData data, string ip) {
             if (p.IsConsole) return true;
             List<string> accounts = PlayerInfo.FindAccounts(ip);
-            if (accounts == null || accounts.Count == 0) return true;
             
-            foreach (string name in accounts) {
+            if (accounts == null || accounts.Count == 0) return true;
+            if (!Server.Config.ProtectStaffIPs) return true;
+            
+            foreach (string name in accounts) 
+            {
                 Group grp = PlayerInfo.GetGroup(name);
                 if (grp.Permission < data.Rank) continue;
                 
