@@ -441,18 +441,6 @@ namespace Sharkbite.Irc
 
 
 		#region Parsing
-		private const string PING = "PING";
-		private const string ERROR = "ERROR";
-		private const string NOTICE = "NOTICE";
-		private const string JOIN = "JOIN";
-		private const string PRIVMSG = "PRIVMSG";
-		private const string NICK = "NICK";
-		private const string PART = "PART";
-		private const string QUIT = "QUIT";
-		private const string INVITE = "INVITE";
-		private const string KICK = "KICK";
-		private const string MODE = "MODE";
-		private const string KILL = "KILL";
 		private const string ACTION = "\u0001ACTION";
 		private readonly char[] Separator = new char[] { ' ' };
 		private readonly Regex channelPattern = new Regex("([#!+&]\\w+)", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -461,24 +449,18 @@ namespace Sharkbite.Irc
 		void Parse(string message ) 
 		{
 			string[] tokens = message.Split( Separator );
-			if( tokens[0] == PING ) 
+			if( tokens[0] == "PING" ) 
 			{
-				if( OnPing != null ) 
-				{
-					tokens[1] = RemoveLeadingColon( tokens[1] );
-					OnPing( CondenseStrings(tokens, 1) );
-				}
+				tokens[1] = RemoveLeadingColon( tokens[1] );
+				OnPing( CondenseStrings(tokens, 1) );
 			}
-			else if( tokens[0] == NOTICE ) 
+			else if( tokens[0] == "NOTICE" ) 
 			{
-				if( OnPrivateNotice != null )
-				{
-					OnPrivateNotice(
-						UserInfo.Empty,
-						CondenseStrings( tokens, 2) );
-				}
+				OnPrivateNotice(
+					UserInfo.Empty,
+					CondenseStrings( tokens, 2) );
 			}
-			else if ( tokens[0] == ERROR ) 
+			else if ( tokens[0] == "ERROR" ) 
 			{
 				tokens[1] = RemoveLeadingColon( tokens[1] );
 				Error( ReplyCode.IrcServerError, CondenseStrings(tokens, 1) );
@@ -513,120 +495,84 @@ namespace Sharkbite.Irc
 			tokens[0] = RemoveLeadingColon( tokens[0] );
 			switch( tokens[1] ) 
 			{
-				case NOTICE:		
+				case "NOTICE":		
 					tokens[3] = RemoveLeadingColon( tokens[3] );
 					if( Rfc2812Util.IsValidChannelName( tokens[2] ) )
 					{			
-						if( OnPublicNotice != null )
-						{
-							OnPublicNotice(
-								Rfc2812Util.UserInfoFromString( tokens[0] ),
-								tokens[2],
-								CondenseStrings( tokens, 3) );
-						}
+						OnPublicNotice(
+							Rfc2812Util.UserInfoFromString( tokens[0] ),
+							tokens[2],
+							CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
-						if( OnPrivateNotice != null )
-						{
-							OnPrivateNotice(
-								Rfc2812Util.UserInfoFromString( tokens[0] ),
-								CondenseStrings( tokens, 3) );
-						}
+						OnPrivateNotice(
+							Rfc2812Util.UserInfoFromString( tokens[0] ),
+							CondenseStrings( tokens, 3) );
 					}
 					break;
-				case JOIN:
-					if( OnJoin != null )
-					{
-						OnJoin( Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
-					}
+				case "JOIN":
+					OnJoin( Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
 					break;
-				case PRIVMSG:
+				case "PRIVMSG":
 					tokens[3] = RemoveLeadingColon( tokens[3] );
 					if( tokens[3] == ACTION ) 
 					{
 						if( Rfc2812Util.IsValidChannelName( tokens[2] ) )
 						{
-							if( OnAction != null ) 
-							{
-								int last = tokens.Length - 1;
-								tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-								OnAction( Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 4) );
-							}
+							int last = tokens.Length - 1;
+							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
+							OnAction( Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 4) );
 						}
 						else 
 						{
-							if( OnPrivateAction != null ) 
-							{
-								int last = tokens.Length - 1;
-								tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-								OnPrivateAction( Rfc2812Util.UserInfoFromString( tokens[0] ),CondenseStrings( tokens, 4) );
-							}
+							int last = tokens.Length - 1;
+							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
+							OnPrivateAction( Rfc2812Util.UserInfoFromString( tokens[0] ),CondenseStrings( tokens, 4) );
 						}
 					}
 					else if( channelPattern.IsMatch( tokens[2] ) )
 					{
-						if( OnPublic != null )
-						{
-							OnPublic(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 3) );
-						}
+						OnPublic(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
-						if( OnPrivate != null )
-						{
-							OnPrivate(Rfc2812Util.UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 3) );
-						}
+						OnPrivate(Rfc2812Util.UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 3) );
 					}
 					break;
-				case NICK:
-					if( OnNick != null )
-					{
-						OnNick(	Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
-					}
+				case "NICK":
+					OnNick(	Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
 					break;
-				case PART:
-					if( OnPart != null )					
-					{
-						OnPart(
-							Rfc2812Util.UserInfoFromString( tokens[0] ), 
-							tokens[2],
-							tokens.Length >= 4 ? RemoveLeadingColon(CondenseStrings( tokens, 3)) : "" );
-					}
+				case "PART":
+					OnPart(
+						Rfc2812Util.UserInfoFromString( tokens[0] ), 
+						tokens[2],
+						tokens.Length >= 4 ? RemoveLeadingColon(CondenseStrings( tokens, 3)) : "" );
 					break;
-				case QUIT:
-					if( OnQuit != null ) 
-					{
-						tokens[2] = RemoveLeadingColon( tokens[2] );
-						OnQuit( Rfc2812Util.UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 2) );
-					}
+				case "QUIT":
+					tokens[2] = RemoveLeadingColon( tokens[2] );
+					OnQuit( Rfc2812Util.UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 2) );
 					break;
-				case INVITE:
+				case "INVITE":
 					if( OnInvite != null ) 
 					{
 						OnInvite(
 							Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[3] ) );
 					}
 					break;
-				case KICK:
-					if( OnKick != null )
-					{	
-						tokens[4] = RemoveLeadingColon( tokens[4] );
-						OnKick(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],tokens[3], CondenseStrings( tokens, 4) );
-					}
+				case "KICK":
+					tokens[4] = RemoveLeadingColon( tokens[4] );
+					OnKick(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],tokens[3], CondenseStrings( tokens, 4) );
 					break;
-				case MODE:
-					if( channelPattern.IsMatch( tokens[2] ) )
+				case "MODE":
+					if ( channelPattern.IsMatch( tokens[2] ) )
 					{
-						if( OnChannelModeChange != null ) 
-						{
-							UserInfo who = Rfc2812Util.UserInfoFromString( tokens[0] );
-							OnChannelModeChange( who, tokens[2] );
-						}
+						UserInfo who = Rfc2812Util.UserInfoFromString( tokens[0] );
+						OnChannelModeChange( who, tokens[2] );
 					}
 					break;
-				case KILL:
-					if( OnKill != null )
+				case "KILL":
+					if ( OnKill != null )
 					{
 						string reason = "";
 						if( tokens.Length >= 4 ) 
@@ -638,10 +584,7 @@ namespace Sharkbite.Irc
 					}
 					break;
 				default: 
-					if( OnError != null ) 
-					{
-						OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
-					}
+					OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
 					break;
 			}
 		}
@@ -655,10 +598,7 @@ namespace Sharkbite.Irc
 				//Messages sent upon successful registration 
 				case ReplyCode.RPL_WELCOME:
 				case ReplyCode.RPL_YOURESERVICE:
-					if( OnRegistered != null ) 
-					{
-						OnRegistered();
-					}
+					OnRegistered();
 					break;	
 				case ReplyCode.RPL_NAMREPLY:
 					if ( OnNames != null ) 
@@ -673,18 +613,12 @@ namespace Sharkbite.Irc
 					}
 					break;
 				case ReplyCode.RPL_ENDOFNAMES:
-					if( OnNames != null ) 
-					{
-						OnNames( tokens[3], new string[0], true );
-					}
+					OnNames( tokens[3], new string[0], true );
 					break;
 				case ReplyCode.ERR_NICKNAMEINUSE:
 				case ReplyCode.ERR_NICKCOLLISION:
-					if ( OnNickError != null ) 
-					{
-						tokens[4] = RemoveLeadingColon( tokens[4] );
-						OnNickError( tokens[3], CondenseStrings( tokens, 4) );
-					}
+					tokens[4] = RemoveLeadingColon( tokens[4] );
+					OnNickError( tokens[3], CondenseStrings( tokens, 4) );
 					break;
 				default:
 					HandleDefaultReply( code, tokens );
@@ -696,10 +630,7 @@ namespace Sharkbite.Irc
 		{
 			if (code >= ReplyCode.ERR_NOSUCHNICK && code <= ReplyCode.ERR_USERSDONTMATCH) 
 			{
-				if( OnError != null )
-				{
-					OnError(code, CondenseStrings( tokens, 3) );
-				}
+				OnError(code, CondenseStrings( tokens, 3) );
 			}
 			else if( OnReply != null )
 			{

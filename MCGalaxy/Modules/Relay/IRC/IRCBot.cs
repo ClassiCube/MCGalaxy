@@ -214,7 +214,9 @@ namespace MCGalaxy.Modules.Relay.IRC
             conn.OnNames += OnNames;
             conn.OnKick += OnKick;
             conn.OnKill += OnKill;
+            conn.OnPublicNotice += OnPublicNotice;
             conn.OnPrivateNotice += OnPrivateNotice;
+            conn.OnPrivateAction += OnPrivateAction;
         }
 
         void UnhookIRCEvents() {
@@ -232,7 +234,9 @@ namespace MCGalaxy.Modules.Relay.IRC
             conn.OnNames -= OnNames;
             conn.OnKick -= OnKick;
             conn.OnKill -= OnKill;
+            conn.OnPublicNotice -= OnPublicNotice;
             conn.OnPrivateNotice -= OnPrivateNotice;
+            conn.OnPrivateAction -= OnPrivateAction;
         }
 
         
@@ -298,9 +302,14 @@ namespace MCGalaxy.Modules.Relay.IRC
             ready = true;
         }
         
+        void OnPublicNotice(UserInfo user, string channel, string notice) {
+        }
+
         void OnPrivateNotice(UserInfo user, string notice) {
             if (!notice.CaselessStarts("You are now identified")) return;
             JoinChannels();
+        }
+        void OnPrivateAction(UserInfo user, string message) {
         }
         
         void Authenticate() {
