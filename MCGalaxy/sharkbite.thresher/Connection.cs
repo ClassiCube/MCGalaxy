@@ -210,10 +210,6 @@ namespace Sharkbite.Irc
 			return dccMatchRegex.IsMatch( message );
 		}
 
-		static bool IsEmpty( string aString )  {
-			return aString == null || aString.Trim().Length == 0;
-		}
-
 
 		#region Sending
 		const int MAX_COMMAND_SIZE = 512;
@@ -303,7 +299,7 @@ namespace Sharkbite.Irc
 
 		public void SendNick(string nick) 
 		{
-			if ( !Rfc2812Util.IsValidNick( nick ) )
+			if ( !IsValidNick( nick ) )
 				throw new ArgumentException(nick + " is not a valid nickname.");
 				
 			SendCommand("NICK " + nick);
@@ -497,77 +493,77 @@ namespace Sharkbite.Irc
 			{
 				case "NOTICE":		
 					tokens[3] = RemoveLeadingColon( tokens[3] );
-					if( Rfc2812Util.IsValidChannelName( tokens[2] ) )
+					if( IsValidChannelName( tokens[2] ) )
 					{			
 						OnPublicNotice(
-							Rfc2812Util.UserInfoFromString( tokens[0] ),
+							UserInfoFromString( tokens[0] ),
 							tokens[2],
 							CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
 						OnPrivateNotice(
-							Rfc2812Util.UserInfoFromString( tokens[0] ),
+							UserInfoFromString( tokens[0] ),
 							CondenseStrings( tokens, 3) );
 					}
 					break;
 				case "JOIN":
-					OnJoin( Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
+					OnJoin( UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
 					break;
 				case "PRIVMSG":
 					tokens[3] = RemoveLeadingColon( tokens[3] );
 					if( tokens[3] == ACTION ) 
 					{
-						if( Rfc2812Util.IsValidChannelName( tokens[2] ) )
+						if( IsValidChannelName( tokens[2] ) )
 						{
 							int last = tokens.Length - 1;
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnAction( Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 4) );
+							OnAction( UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 4) );
 						}
 						else 
 						{
 							int last = tokens.Length - 1;
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnPrivateAction( Rfc2812Util.UserInfoFromString( tokens[0] ),CondenseStrings( tokens, 4) );
+							OnPrivateAction( UserInfoFromString( tokens[0] ),CondenseStrings( tokens, 4) );
 						}
 					}
 					else if( channelPattern.IsMatch( tokens[2] ) )
 					{
-						OnPublic(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 3) );
+						OnPublic(UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
-						OnPrivate(Rfc2812Util.UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 3) );
+						OnPrivate(UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 3) );
 					}
 					break;
 				case "NICK":
-					OnNick(	Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
+					OnNick(	UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
 					break;
 				case "PART":
 					OnPart(
-						Rfc2812Util.UserInfoFromString( tokens[0] ), 
+						UserInfoFromString( tokens[0] ), 
 						tokens[2],
 						tokens.Length >= 4 ? RemoveLeadingColon(CondenseStrings( tokens, 3)) : "" );
 					break;
 				case "QUIT":
 					tokens[2] = RemoveLeadingColon( tokens[2] );
-					OnQuit( Rfc2812Util.UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 2) );
+					OnQuit( UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 2) );
 					break;
 				case "INVITE":
 					if( OnInvite != null ) 
 					{
 						OnInvite(
-							Rfc2812Util.UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[3] ) );
+							UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[3] ) );
 					}
 					break;
 				case "KICK":
 					tokens[4] = RemoveLeadingColon( tokens[4] );
-					OnKick(Rfc2812Util.UserInfoFromString( tokens[0] ),tokens[2],tokens[3], CondenseStrings( tokens, 4) );
+					OnKick(UserInfoFromString( tokens[0] ),tokens[2],tokens[3], CondenseStrings( tokens, 4) );
 					break;
 				case "MODE":
 					if ( channelPattern.IsMatch( tokens[2] ) )
 					{
-						UserInfo who = Rfc2812Util.UserInfoFromString( tokens[0] );
+						UserInfo who = UserInfoFromString( tokens[0] );
 						OnChannelModeChange( who, tokens[2] );
 					}
 					break;
@@ -580,7 +576,7 @@ namespace Sharkbite.Irc
 							tokens[3] = RemoveLeadingColon( tokens[3] );
 							reason = CondenseStrings( tokens, 3 );
 						}
-						OnKill( Rfc2812Util.UserInfoFromString( tokens[0] ), tokens[2], reason );
+						OnKill( UserInfoFromString( tokens[0] ), tokens[2], reason );
 					}
 					break;
 				default: 
@@ -668,6 +664,70 @@ namespace Sharkbite.Irc
 		string RemoveTrailingQuote( string text ) 
 		{
 			return text.Substring(0, text.Length -1 );		
+		}
+		#endregion
+
+
+		#region Utilities
+		// Odd chars that IRC allows in nicknames 
+		const string Special = "\\[\\]\\`_\\^\\{\\|\\}";
+		const string NickChars = "[" + Special + "a-zA-Z][\\w\\-" + Special + "]{0,8}";
+
+		// Regex that matches a legal IRC nick 
+		static readonly Regex nickRegex = new Regex( NickChars ); 
+		//Regex to create a UserInfo from a string
+		static readonly Regex nameSplitterRegex = new Regex("[!@]",RegexOptions.Compiled | RegexOptions.Singleline );
+		const string ChannelPrefix = "#!+&";
+
+		public static string ExtractNick( string fullUserName ) 
+		{
+			if( IsEmpty( fullUserName ) ) return "";
+
+			Match match = nameSplitterRegex.Match( fullUserName );
+			if( match.Success ) 
+			{
+				string[] parts = nameSplitterRegex.Split( fullUserName );
+				return parts[0];
+			}
+			return fullUserName;
+		}
+
+		static UserInfo UserInfoFromString( string fullUserName ) 
+		{
+			return new UserInfo( ExtractNick( fullUserName ) );
+		}
+
+		static bool IsValidChannelName(string channel) 
+		{
+			if( IsEmpty(  channel ) ) return false;
+			if( HasSpace( channel ) ) return false;
+
+			if (ChannelPrefix.IndexOf( channel[0] ) != -1) 
+			{
+				if (channel.Length <= 50) 
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		static bool IsValidNick( string nick) 
+		{
+			if( IsEmpty(  nick ) ) return false;
+			if( HasSpace( nick ) ) return false;
+
+			return nickRegex.IsMatch( nick );
+		}
+
+		static bool IsEmpty( string aString ) 
+		{
+			return aString == null || aString.Trim().Length == 0;
+		}
+
+		static bool HasSpace( string text ) 
+		{
+			return text.IndexOf( ' ' ) != -1;
 		}
 		#endregion
 	}
