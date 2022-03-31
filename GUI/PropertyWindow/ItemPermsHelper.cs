@@ -29,7 +29,7 @@ namespace MCGalaxy.Gui {
         
         public void Update(ItemPerms perms) {
             SupressEvents = true;
-            GuiPerms.SetDefaultIndex(MinBox, perms.MinRank);
+            GuiPerms.SetSelectedRank(MinBox, perms.MinRank);
             SetSpecificPerms(perms.Allowed, AllowBoxes);
             SetSpecificPerms(perms.Disallowed, DisallowBoxes);
             SupressEvents = false;
@@ -41,16 +41,16 @@ namespace MCGalaxy.Gui {
         }
         
         public void OnMinRankChanged(ComboBox box) {
-            int idx = box.SelectedIndex;
-            if (idx == -1 || SupressEvents) return;
+            GuiRank rank = (GuiRank)box.SelectedItem;
+            if (rank == null || SupressEvents) return;
             ItemPerms curPerms = GetCurPerms();
-            
-            curPerms.MinRank = GuiPerms.RankPerms[idx];
+
+            curPerms.MinRank = rank.Permission;
         }
         
         public void OnSpecificChanged(ComboBox box) {
-            int idx = box.SelectedIndex;
-            if (idx == -1 || SupressEvents) return;
+            GuiRank rank = (GuiRank)box.SelectedItem;
+            if (rank == null || SupressEvents) return;
             ItemPerms curPerms = GetCurPerms();
             
             List<LevelPermission> perms;
@@ -72,7 +72,7 @@ namespace MCGalaxy.Gui {
                 boxes = AllowBoxes;
             }
             
-            if (idx == box.Items.Count - 1) {
+            if (rank.Permission == LevelPermission.Null) {
                 if (boxIdx >= perms.Count) return;
                 perms.RemoveAt(boxIdx);
                 
@@ -80,15 +80,15 @@ namespace MCGalaxy.Gui {
                 SetSpecificPerms(perms, boxes);
                 SupressEvents = false;
             } else {
-                SetSpecific(boxes, boxIdx, perms, idx);
+                SetSpecific(boxes, boxIdx, perms, rank);
             }
         }
         
-        static void SetSpecific(ComboBox[] boxes, int boxIdx, List<LevelPermission> perms, int idx) {
+        static void SetSpecific(ComboBox[] boxes, int boxIdx, List<LevelPermission> perms, GuiRank rank) {
             if (boxIdx < perms.Count) {
-                perms[boxIdx] = GuiPerms.RankPerms[idx];
+                perms[boxIdx] = rank.Permission;
             } else {
-                perms.Add(GuiPerms.RankPerms[idx]);
+                perms.Add(rank.Permission);
             }
             
             // Activate next box
@@ -119,7 +119,7 @@ namespace MCGalaxy.Gui {
                 if (permsCount > i) {
                     box.Visible = true;
                     box.Enabled = true;
-                    GuiPerms.SetDefaultIndex(box, perms[i]);
+                    GuiPerms.SetSelectedRank(box, perms[i]);
                 }
             }
             

@@ -43,8 +43,6 @@ namespace MCGalaxy.Gui
             OnStateChangedEvent.Register(HandleStateChanged, Priority.Low);
             GuiPerms.UpdateRanks();
 
-            rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);
-            GuiPerms.SetRanks(rank_cmbOsMap);
             GuiPerms.SetRanks(blk_cmbMin);
             GuiPerms.SetRanks(cmd_cmbMin);
 

@@ -49,7 +49,7 @@ namespace MCGalaxy.Gui {
             ToggleIrcSettings(Server.Config.UseIRC);
 
             GuiPerms.SetRanks(irc_cmbRank);
-            GuiPerms.SetDefaultIndex(irc_cmbRank, Server.Config.IRCControllerRank);
+            GuiPerms.SetSelectedRank(irc_cmbRank, Server.Config.IRCControllerRank);
             irc_cmbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
             irc_cmbVerify.SelectedIndex = (int)Server.Config.IRCVerify;
             irc_txtPrefix.Text = Server.Config.IRCCommandPrefix;
@@ -69,7 +69,7 @@ namespace MCGalaxy.Gui {
             Server.Config.IRCShowWorldChanges = irc_cbWorldChanges.Checked;
             Server.Config.IRCShowAFK = irc_cbAFK.Checked;
             
-            Server.Config.IRCControllerRank = GuiPerms.GetPermission(irc_cmbRank, LevelPermission.Admin);
+            Server.Config.IRCControllerRank = GuiPerms.GetSelectedRank(irc_cmbRank, LevelPermission.Admin);
             Server.Config.IRCVerify = (IRCControllerVerify)irc_cmbVerify.SelectedIndex;
             Server.Config.IRCCommandPrefix = irc_txtPrefix.Text;  
         }        

@@ -137,7 +137,7 @@ namespace MCGalaxy.Gui {
             eco_numItemPrice.Value = eco_curItem.Price;
             Eco_UpdateItemEnables();
             
-            GuiPerms.SetDefaultIndex(eco_cmbItemRank, eco_curItem.PurchaseRank);
+            GuiPerms.SetSelectedRank(eco_cmbItemRank, eco_curItem.PurchaseRank);
         }
         
         void eco_cbItem_CheckedChanged(object sender, EventArgs e) {
@@ -153,7 +153,7 @@ namespace MCGalaxy.Gui {
             const LevelPermission perm = LevelPermission.Guest;
             if (eco_curItem == null) return;
 
-            eco_curItem.PurchaseRank = GuiPerms.GetPermission(eco_cmbItemRank, perm);
+            eco_curItem.PurchaseRank = GuiPerms.GetSelectedRank(eco_cmbItemRank, perm);
         }
 
         

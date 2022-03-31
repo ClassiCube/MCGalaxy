@@ -24,19 +24,32 @@ namespace MCGalaxy.Gui {
         bool rankSupressEvents = false;
         
         void LoadRankProps() {
-            GuiPerms.SetDefaultIndex(rank_cmbDefault, Group.DefaultRank.Permission);
-            GuiPerms.SetDefaultIndex(rank_cmbOsMap, Server.Config.OSPerbuildDefault);
-            rank_cbTPHigher.Checked = Server.Config.HigherRankTP;
-            rank_cbSilentAdmins.Checked = Server.Config.AdminsJoinSilently;
-            rank_cbEmpty.Checked = Server.Config.ListEmptyRanks;
+            LoadDefaultRank();
+            GuiPerms.SetRanks(rank_cmbOsMap);
+            GuiPerms.SetSelectedRank(rank_cmbOsMap, Server.Config.OSPerbuildDefault);
+
+            rank_cbTPHigher.Checked      = Server.Config.HigherRankTP;
+            rank_cbSilentAdmins.Checked  = Server.Config.AdminsJoinSilently;
+            rank_cbEmpty.Checked         = Server.Config.ListEmptyRanks;
+        }
+
+        void LoadDefaultRank() {
+            rank_cmbDefault.Items.Clear();
+            foreach (Group group in Group.GroupList) 
+            {
+                rank_cmbDefault.Items.Add(group.Name);
+            }
+
+            rank_cmbDefault.SelectedItem = Server.Config.DefaultRankName;
+            if (rank_cmbDefault.SelectedItem == null) rank_cmbDefault.SelectedIndex = 1; // guest rank (usually) TODO rethink
         }
         
         void ApplyRankProps() {
-            Server.Config.DefaultRankName = rank_cmbDefault.SelectedItem.ToString();
-            Server.Config.OSPerbuildDefault = GuiPerms.GetPermission(rank_cmbOsMap, LevelPermission.Owner);
-            Server.Config.HigherRankTP = rank_cbTPHigher.Checked;
+            Server.Config.DefaultRankName    = rank_cmbDefault.SelectedItem.ToString();
+            Server.Config.OSPerbuildDefault  = GuiPerms.GetSelectedRank(rank_cmbOsMap, LevelPermission.Owner);
+            Server.Config.HigherRankTP       = rank_cbTPHigher.Checked;
             Server.Config.AdminsJoinSilently = rank_cbSilentAdmins.Checked;
-            Server.Config.ListEmptyRanks = rank_cbEmpty.Checked;
+            Server.Config.ListEmptyRanks     = rank_cbEmpty.Checked;
         }
         
         

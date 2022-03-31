@@ -24,7 +24,7 @@ namespace MCGalaxy.Gui {
             sec_cbVerifyAdmins.Checked = Server.Config.verifyadmins;
             sec_cbWhitelist.Checked = Server.Config.WhitelistedOnly;
             GuiPerms.SetRanks(sec_cmbVerifyRank);
-            GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, Server.Config.VerifyAdminsRank);
+            GuiPerms.SetSelectedRank(sec_cmbVerifyRank, Server.Config.VerifyAdminsRank);
             sec_cmbVerifyRank.Enabled = Server.Config.verifyadmins;
             
             sec_cbChatAuto.Checked = Server.Config.ChatSpamCheck;
@@ -54,7 +54,7 @@ namespace MCGalaxy.Gui {
         void ApplySecurityProps() {
             Server.Config.LogNotes = sec_cbLogNotes.Checked;
             Server.Config.verifyadmins = sec_cbVerifyAdmins.Checked;
-            Server.Config.VerifyAdminsRank = GuiPerms.GetPermission(sec_cmbVerifyRank, LevelPermission.Operator);
+            Server.Config.VerifyAdminsRank = GuiPerms.GetSelectedRank(sec_cmbVerifyRank, LevelPermission.Operator);
             Server.Config.WhitelistedOnly  = sec_cbWhitelist.Checked;
 
             Server.Config.ChatSpamCheck = sec_cbChatAuto.Checked;

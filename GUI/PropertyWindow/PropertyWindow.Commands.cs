@@ -143,7 +143,7 @@ namespace MCGalaxy.Gui {
                 CommandExtraPerms perms = LookupExtraPerms(extraPermsList[i].CmdName, extraPermsList[i].Num);
                 if (perms == null) perms = extraPermsList[i];
                 
-                GuiPerms.SetDefaultIndex(commandExtraBoxes[i], perms.MinRank);
+                GuiPerms.SetSelectedRank(commandExtraBoxes[i], perms.MinRank);
                 commandExtraBoxes[i].Visible = true;
                 commandExtraLabels[i].Text = "+ " + perms.Desc;
                 commandExtraLabels[i].Visible = true;
@@ -161,8 +161,8 @@ namespace MCGalaxy.Gui {
         void cmd_cmbExtra_SelectedIndexChanged(object sender, EventArgs e) {
             ComboBox box = (ComboBox)sender;
             if (commandItems.SupressEvents) return;
-            int idx = box.SelectedIndex;
-            if (idx == -1) return;
+            GuiRank rank = (GuiRank)box.SelectedItem;
+            if (rank == null) return;
             
             int boxIdx = Array.IndexOf<ComboBox>(commandExtraBoxes, box);
             CommandExtraPerms orig = extraPermsList[boxIdx];
@@ -171,8 +171,8 @@ namespace MCGalaxy.Gui {
             if (copy == null) {
                 copy = orig.Copy();
                 commandExtraPermsChanged.Add(copy);
-            }            
-            copy.MinRank = GuiPerms.RankPerms[idx];
+            }
+            copy.MinRank = rank.Permission;
         }
     }
 }

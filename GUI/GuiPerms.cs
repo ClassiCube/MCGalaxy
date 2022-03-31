@@ -32,40 +32,33 @@ namespace MCGalaxy.Gui
 
     internal static class GuiPerms 
     {
-        internal static string[] RankNames;
-        internal static LevelPermission[] RankPerms;
         static List<GuiRank> Ranks, RanksRemove;
         
         internal static void UpdateRanks() {
-            List<string> names = new List<string>(Group.AllRanks.Count);
-            List<LevelPermission> perms = new List<LevelPermission>(Group.AllRanks.Count);
             Ranks = new List<GuiRank>(Group.AllRanks.Count);
             
-            foreach (Group group in Group.AllRanks) {
-                names.Add(group.Name);
-                perms.Add(group.Permission);
-
+            foreach (Group group in Group.AllRanks) 
+            {
                 Ranks.Add(new GuiRank(group.Name, group.Permission));
             }
-            RankNames = names.ToArray();
-            RankPerms = perms.ToArray();
 
             RanksRemove = new List<GuiRank>(Ranks);
             RanksRemove.Add(new GuiRank("(remove rank)", LevelPermission.Null));
         }
         
-        internal static LevelPermission GetPermission(ComboBox box, LevelPermission defPerm) {
+        internal static LevelPermission GetSelectedRank(ComboBox box, LevelPermission defPerm) {
             GuiRank rank = (GuiRank)box.SelectedItem;
             return rank == null ? defPerm : rank.Permission;
         }
         
-        internal static void SetDefaultIndex(ComboBox box, LevelPermission perm) {
-            Group grp = Group.Find(perm);
-            if (grp == null) {
+        internal static void SetSelectedRank(ComboBox box, LevelPermission perm) {
+            List<GuiRank> ranks = (List<GuiRank>)box.DataSource;
+            GuiRank rank = ranks.Find(r => r.Permission == perm);
+
+            if (rank == null) {
                 box.SelectedIndex = 1;
             } else {
-                int idx = Array.IndexOf<string>(RankNames, grp.Name);
-                box.SelectedIndex = idx >= 0 ? idx : 1;
+                box.SelectedItem  = rank;
             }
         }
 
