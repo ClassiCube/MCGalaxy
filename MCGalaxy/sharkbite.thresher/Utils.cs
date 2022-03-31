@@ -25,6 +25,27 @@ using System.Text.RegularExpressions;
 
 namespace Sharkbite.Irc
 {
+	public delegate void ReplyEventHandler( ReplyCode code, string message );
+	public delegate void ErrorMessageEventHandler( ReplyCode code, string message );
+	public delegate void NickErrorEventHandler( string badNick, string reason ) ;
+	public delegate void PingEventHandler( string message );
+	public delegate void RegisteredEventHandler();
+	public delegate void DisconnectedEventHandler();
+	public delegate void PublicNoticeEventHandler( UserInfo user, string channel, string notice );
+	public delegate void PrivateNoticeEventHandler( UserInfo user, string notice );
+	public delegate void JoinEventHandler( UserInfo user, string channel );
+	public delegate void PublicActionEventHandler( UserInfo user, string channel, string description );
+	public delegate void PrivateActionEventHandler( UserInfo user, string description );
+	public delegate void PublicMessageEventHandler( UserInfo user, string channel, string message );
+	public delegate void PrivateMessageEventHandler( UserInfo user, string message );
+	public delegate void NickEventHandler( UserInfo user, string newNick );
+	public delegate void PartEventHandler( UserInfo user, string channel, string reason);
+	public delegate void QuitEventHandler( UserInfo user, string reason);
+	public delegate void InviteEventHandler( UserInfo user, string channel );
+	public delegate void KickEventHandler( UserInfo user, string channel, string kickee, string reason );
+	public delegate void NamesEventHandler( string channel, string[] nicks, bool last );
+	public delegate void ChannelModeChangeEventHandler( UserInfo who, string channel );
+	public delegate void KillEventHandler( UserInfo user, string nick, string reason );
 
 	/// <summary>
 	/// RFC 2812 Utility methods.

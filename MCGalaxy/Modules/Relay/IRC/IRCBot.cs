@@ -201,38 +201,38 @@ namespace MCGalaxy.Modules.Relay.IRC
 
         void HookIRCEvents() {
             // Regster events for incoming
-            conn.Listener.OnNick += OnNick;
-            conn.Listener.OnRegistered += OnRegistered;
-            conn.Listener.OnAction += OnAction;
-            conn.Listener.OnPublic += OnPublic;
-            conn.Listener.OnPrivate += OnPrivate;
-            conn.Listener.OnError += OnError;
-            conn.Listener.OnQuit += OnQuit;
-            conn.Listener.OnJoin += OnJoin;
-            conn.Listener.OnPart += OnPart;
-            conn.Listener.OnChannelModeChange += OnChannelModeChange;
-            conn.Listener.OnNames += OnNames;
-            conn.Listener.OnKick += OnKick;
-            conn.Listener.OnKill += OnKill;
-            conn.Listener.OnPrivateNotice += OnPrivateNotice;
+            conn.OnNick += OnNick;
+            conn.OnRegistered += OnRegistered;
+            conn.OnAction += OnAction;
+            conn.OnPublic += OnPublic;
+            conn.OnPrivate += OnPrivate;
+            conn.OnError += OnError;
+            conn.OnQuit += OnQuit;
+            conn.OnJoin += OnJoin;
+            conn.OnPart += OnPart;
+            conn.OnChannelModeChange += OnChannelModeChange;
+            conn.OnNames += OnNames;
+            conn.OnKick += OnKick;
+            conn.OnKill += OnKill;
+            conn.OnPrivateNotice += OnPrivateNotice;
         }
 
         void UnhookIRCEvents() {
             // Regster events for incoming
-            conn.Listener.OnNick -= OnNick;
-            conn.Listener.OnRegistered -= OnRegistered;
-            conn.Listener.OnAction -= OnAction;
-            conn.Listener.OnPublic -= OnPublic;
-            conn.Listener.OnPrivate -= OnPrivate;
-            conn.Listener.OnError -= OnError;
-            conn.Listener.OnQuit -= OnQuit;
-            conn.Listener.OnJoin -= OnJoin;
-            conn.Listener.OnPart -= OnPart;
-            conn.Listener.OnChannelModeChange -= OnChannelModeChange;
-            conn.Listener.OnNames -= OnNames;
-            conn.Listener.OnKick -= OnKick;
-            conn.Listener.OnKill -= OnKill;
-            conn.Listener.OnPrivateNotice -= OnPrivateNotice;
+            conn.OnNick -= OnNick;
+            conn.OnRegistered -= OnRegistered;
+            conn.OnAction -= OnAction;
+            conn.OnPublic -= OnPublic;
+            conn.OnPrivate -= OnPrivate;
+            conn.OnError -= OnError;
+            conn.OnQuit -= OnQuit;
+            conn.OnJoin -= OnJoin;
+            conn.OnPart -= OnPart;
+            conn.OnChannelModeChange -= OnChannelModeChange;
+            conn.OnNames -= OnNames;
+            conn.OnKick -= OnKick;
+            conn.OnKill -= OnKill;
+            conn.OnPrivateNotice -= OnPrivateNotice;
         }
 
         
