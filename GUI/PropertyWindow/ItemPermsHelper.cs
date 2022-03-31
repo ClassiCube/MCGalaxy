@@ -36,8 +36,8 @@ namespace MCGalaxy.Gui {
         }
         
         public void FillInitial() {
-            GuiPerms.FillRanks(AllowBoxes);
-            GuiPerms.FillRanks(DisallowBoxes);
+            GuiPerms.SetRanks(AllowBoxes, true);
+            GuiPerms.SetRanks(DisallowBoxes, true);
         }
         
         public void OnMinRankChanged(ComboBox box) {

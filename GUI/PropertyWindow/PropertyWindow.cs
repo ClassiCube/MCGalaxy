@@ -41,11 +41,12 @@ namespace MCGalaxy.Gui
             
             OnMapsChangedEvent.Register(HandleMapsChanged, Priority.Low);
             OnStateChangedEvent.Register(HandleStateChanged, Priority.Low);
-            GuiPerms.UpdateRankNames();
+            GuiPerms.UpdateRanks();
+
             rank_cmbDefault.Items.AddRange(GuiPerms.RankNames);
-            rank_cmbOsMap.Items.AddRange(GuiPerms.RankNames);
-            blk_cmbMin.Items.AddRange(GuiPerms.RankNames);
-            cmd_cmbMin.Items.AddRange(GuiPerms.RankNames);
+            GuiPerms.SetRanks(rank_cmbOsMap);
+            GuiPerms.SetRanks(blk_cmbMin);
+            GuiPerms.SetRanks(cmd_cmbMin);
 
             //Load server stuff
             LoadProperties();

@@ -36,8 +36,8 @@ namespace MCGalaxy.Gui {
             }
             eco_cmbCfg.Items.Add("(none)");
             eco_cmbCfg.SelectedIndex = eco_cmbCfg.Items.Count - 1;
-            
-            eco_cmbItemRank.Items.AddRange(GuiPerms.RankNames);
+
+            GuiPerms.SetRanks(eco_cmbItemRank);
             eco_colRankPrice.CellTemplate = new NumericalCell();
             eco_dgvRanks.DataError += eco_dgv_DataError;
 
@@ -151,6 +151,8 @@ namespace MCGalaxy.Gui {
         
         void eco_cmbItemRank_SelectedIndexChanged(object sender, EventArgs e) {
             const LevelPermission perm = LevelPermission.Guest;
+            if (eco_curItem == null) return;
+
             eco_curItem.PurchaseRank = GuiPerms.GetPermission(eco_cmbItemRank, perm);
         }
 
@@ -161,10 +163,11 @@ namespace MCGalaxy.Gui {
         
         void Eco_UpdateRanks() {
             eco_dgvRanks.Rows.Clear();
-            for (int i = 0; i < GuiPerms.RankPerms.Length; i++) {
-                RankItem.RankEntry rank = Economy.Ranks.Find(GuiPerms.RankPerms[i]);
+            foreach (Group grp in Group.GroupList)
+            {
+                RankItem.RankEntry rank = Economy.Ranks.Find(grp.Permission);
                 int price = rank == null ? 0 : rank.Price;
-                eco_dgvRanks.Rows.Add(GuiPerms.RankNames[i], price);
+                eco_dgvRanks.Rows.Add(grp.Name, price);
             } 
             
             Eco_UpdateRankEnables();

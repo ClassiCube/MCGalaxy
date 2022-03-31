@@ -100,7 +100,7 @@ namespace MCGalaxy.Gui {
                 cmd_cmbExtra4, cmd_cmbExtra5, cmd_cmbExtra6, cmd_cmbExtra7 };
             commandExtraLabels = new Label[] { cmd_lblExtra1, cmd_lblExtra2, cmd_lblExtra3,
                 cmd_lblExtra4, cmd_lblExtra5, cmd_lblExtra6, cmd_lblExtra7 };
-            GuiPerms.FillRanks(commandExtraBoxes, false);
+            GuiPerms.SetRanks(commandExtraBoxes);
         }
         
         ItemPerms CommandGetOrAddPermsChanged() {

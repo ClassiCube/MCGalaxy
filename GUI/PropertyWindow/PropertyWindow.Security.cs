@@ -22,8 +22,8 @@ namespace MCGalaxy.Gui {
         void LoadSecurityProps() {
             sec_cbLogNotes.Checked = Server.Config.LogNotes;            
             sec_cbVerifyAdmins.Checked = Server.Config.verifyadmins;
-            sec_cbWhitelist.Checked = Server.Config.WhitelistedOnly;            
-            sec_cmbVerifyRank.Items.AddRange(GuiPerms.RankNames);
+            sec_cbWhitelist.Checked = Server.Config.WhitelistedOnly;
+            GuiPerms.SetRanks(sec_cmbVerifyRank);
             GuiPerms.SetDefaultIndex(sec_cmbVerifyRank, Server.Config.VerifyAdminsRank);
             sec_cmbVerifyRank.Enabled = Server.Config.verifyadmins;
             

@@ -48,7 +48,7 @@ namespace MCGalaxy.Gui {
             irc_cbAFK.Checked = Server.Config.IRCShowAFK;
             ToggleIrcSettings(Server.Config.UseIRC);
 
-            irc_cmbRank.Items.AddRange(GuiPerms.RankNames);
+            GuiPerms.SetRanks(irc_cmbRank);
             GuiPerms.SetDefaultIndex(irc_cmbRank, Server.Config.IRCControllerRank);
             irc_cmbVerify.Items.AddRange(Enum.GetNames(typeof(IRCControllerVerify)));
             irc_cmbVerify.SelectedIndex = (int)Server.Config.IRCVerify;
