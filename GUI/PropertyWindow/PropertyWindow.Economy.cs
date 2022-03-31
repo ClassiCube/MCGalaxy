@@ -167,7 +167,9 @@ namespace MCGalaxy.Gui {
             {
                 RankItem.RankEntry rank = Economy.Ranks.Find(grp.Permission);
                 int price = rank == null ? 0 : rank.Price;
-                eco_dgvRanks.Rows.Add(grp.Name, price);
+
+                int idx = eco_dgvRanks.Rows.Add(grp.Name, price);
+                eco_dgvRanks.Rows[idx].Tag = grp.Permission;
             } 
             
             Eco_UpdateRankEnables();
@@ -189,31 +191,30 @@ namespace MCGalaxy.Gui {
         
         void eco_dgvRanks_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex == -1) return;
-            object name  = eco_dgvRanks.Rows[e.RowIndex].Cells[0].Value;
-            object price = eco_dgvRanks.Rows[e.RowIndex].Cells[1].Value;
+            DataGridViewRow row = eco_dgvRanks.Rows[e.RowIndex];
+            object price        = row.Cells[1].Value;
             
             // On Mono this event is raised during initialising cells too
             // However, first time event is raised, price is not initialised yet
             if (price == null) return;
+            LevelPermission perm = (LevelPermission)row.Tag;
             
-            Group grp = Group.Find(name.ToString());
-            if (grp == null) return; // TODO: does this ever happen?
-            
-            RankItem.RankEntry rank = Economy.Ranks.GetOrAdd(grp.Permission);
+            RankItem.RankEntry rank = Economy.Ranks.GetOrAdd(perm);
             rank.Price = int.Parse(price.ToString());
-            if (rank.Price == 0) Economy.Ranks.Remove(grp.Permission);
+            if (rank.Price == 0) Economy.Ranks.Remove(perm);
         }
 
         
         void Eco_UpdateLevelEnables() {
-            eco_dgvMaps.Enabled    = eco_cbLvl.Checked;
-            eco_btnLvlAdd.Enabled  = eco_cbLvl.Checked;
-            eco_btnLvlDel.Enabled  = eco_cbLvl.Checked;
+            eco_dgvMaps.Enabled   = eco_cbLvl.Checked;
+            eco_btnLvlAdd.Enabled = eco_cbLvl.Checked;
+            eco_btnLvlDel.Enabled = eco_cbLvl.Checked;
         }
         
         void Eco_UpdateLevels() {
             eco_dgvMaps.Rows.Clear();
-            foreach (LevelItem.LevelPreset p in Economy.Levels.Presets) {
+            foreach (LevelItem.LevelPreset p in Economy.Levels.Presets) 
+            {
                 eco_dgvMaps.Rows.Add(p.name, p.price, p.x, p.y, p.z, p.type);
             }
             Eco_UpdateLevelEnables();
@@ -226,7 +227,8 @@ namespace MCGalaxy.Gui {
         
         void eco_dgvMaps_Apply() {
             List<LevelItem.LevelPreset> presets = new List<LevelItem.LevelPreset>();
-            foreach (DataGridViewRow row in eco_dgvMaps.Rows) {
+            foreach (DataGridViewRow row in eco_dgvMaps.Rows) 
+            {
                 LevelItem.LevelPreset p = new LevelItem.LevelPreset();
                 
                 p.name  = row.Cells[0].Value.ToString();
