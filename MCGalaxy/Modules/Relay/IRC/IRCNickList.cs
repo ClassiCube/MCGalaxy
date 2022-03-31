@@ -29,20 +29,22 @@ namespace MCGalaxy.Modules.Relay.IRC
         
         public void Clear() { userMap.Clear(); }
         
-        public void OnLeftChannel(UserInfo user, string channel) {
+        public void OnLeftChannel(string userNick, string channel) {
             List<string> chanNicks = GetNicks(channel);
-            RemoveNick(user.Nick, chanNicks);
+            RemoveNick(userNick, chanNicks);
         }
 
-        public void OnLeft(UserInfo user) {
-            foreach (var chans in userMap) {
-                RemoveNick(user.Nick, chans.Value);
+        public void OnLeft(string userNick) {
+            foreach (var chans in userMap) 
+            {
+                RemoveNick(userNick, chans.Value);
             }
         }
         
-        public void OnChangedNick(UserInfo user, string newNick) {
-            foreach (var chans in userMap) {
-                int index = GetNickIndex(user.Nick, chans.Value);
+        public void OnChangedNick(string userNick, string newNick) {
+            foreach (var chans in userMap)
+            {
+                int index = GetNickIndex(userNick, chans.Value);
                 if (index >= 0) {
                     string prefix = GetPrefix(chans.Value[index]);
                     chans.Value[index] = prefix + newNick;
@@ -61,7 +63,8 @@ namespace MCGalaxy.Modules.Relay.IRC
         
         
         List<string> GetNicks(string channel) {
-            foreach (var chan in userMap) {
+            foreach (var chan in userMap) 
+            {
                 if (chan.Key.CaselessEq(channel)) return chan.Value;
             }
             
@@ -72,7 +75,8 @@ namespace MCGalaxy.Modules.Relay.IRC
         
         void UpdateNick(string n, List<string> chanNicks) {
             string unprefixNick = Unprefix(n);
-            for (int i = 0; i < chanNicks.Count; i++ ) {
+            for (int i = 0; i < chanNicks.Count; i++ ) 
+            {
                 if (unprefixNick == Unprefix(chanNicks[i])) {
                     chanNicks[i] = n; return;
                 }
@@ -89,7 +93,8 @@ namespace MCGalaxy.Modules.Relay.IRC
             if (chanNicks == null) return -1;
             string unprefixNick = Unprefix(n);
             
-            for (int i = 0; i < chanNicks.Count; i++ ) {
+            for (int i = 0; i < chanNicks.Count; i++ ) 
+            {
                 if (unprefixNick == Unprefix(chanNicks[i]))
                     return i;
             }
@@ -106,7 +111,8 @@ namespace MCGalaxy.Modules.Relay.IRC
         
         int GetPrefixLength(string nick) {
             int prefixChars = 0;
-            for (int i = 0; i < nick.Length; i++) {
+            for (int i = 0; i < nick.Length; i++) 
+            {
                 if (!IsNickChar(nick[i]))
                     prefixChars++;
                 else

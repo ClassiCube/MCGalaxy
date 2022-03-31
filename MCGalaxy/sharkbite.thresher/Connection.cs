@@ -81,9 +81,10 @@ namespace Sharkbite.Irc
 			SendPong( message );
 		}
 
-		void MyNickChanged(UserInfo user, string newNick)
+		void MyNickChanged(string user, string newNick)
 		{
-			if ( Nick == user.Nick )
+			string nick = ExtractNick(user);
+			if ( Nick == nick )
 			{
 				Nick = newNick;
 			}
@@ -452,9 +453,7 @@ namespace Sharkbite.Irc
 			}
 			else if( tokens[0] == "NOTICE" ) 
 			{
-				OnPrivateNotice(
-					UserInfo.Empty,
-					CondenseStrings( tokens, 2) );
+				OnPrivateNotice( "", CondenseStrings( tokens, 2) );
 			}
 			else if ( tokens[0] == "ERROR" ) 
 			{
@@ -495,20 +494,15 @@ namespace Sharkbite.Irc
 					tokens[3] = RemoveLeadingColon( tokens[3] );
 					if( IsValidChannelName( tokens[2] ) )
 					{			
-						OnPublicNotice(
-							UserInfoFromString( tokens[0] ),
-							tokens[2],
-							CondenseStrings( tokens, 3) );
+						OnPublicNotice( tokens[0], tokens[2], CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
-						OnPrivateNotice(
-							UserInfoFromString( tokens[0] ),
-							CondenseStrings( tokens, 3) );
+						OnPrivateNotice( tokens[0], CondenseStrings( tokens, 3) );
 					}
 					break;
 				case "JOIN":
-					OnJoin( UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
+					OnJoin( tokens[0], RemoveLeadingColon( tokens[2] ) );
 					break;
 				case "PRIVMSG":
 					tokens[3] = RemoveLeadingColon( tokens[3] );
@@ -518,53 +512,48 @@ namespace Sharkbite.Irc
 						{
 							int last = tokens.Length - 1;
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnAction( UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 4) );
+							OnAction( tokens[0], tokens[2], CondenseStrings( tokens, 4) );
 						}
 						else 
 						{
 							int last = tokens.Length - 1;
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnPrivateAction( UserInfoFromString( tokens[0] ),CondenseStrings( tokens, 4) );
+							OnPrivateAction( tokens[0], CondenseStrings( tokens, 4) );
 						}
 					}
 					else if( channelPattern.IsMatch( tokens[2] ) )
 					{
-						OnPublic(UserInfoFromString( tokens[0] ),tokens[2],CondenseStrings( tokens, 3) );
+						OnPublic( tokens[0], tokens[2], CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
-						OnPrivate(UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 3) );
+						OnPrivate( tokens[0], CondenseStrings( tokens, 3) );
 					}
 					break;
 				case "NICK":
-					OnNick(	UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[2] ) );
+					OnNick(	tokens[0], RemoveLeadingColon( tokens[2] ) );
 					break;
 				case "PART":
-					OnPart(
-						UserInfoFromString( tokens[0] ), 
-						tokens[2],
-						tokens.Length >= 4 ? RemoveLeadingColon(CondenseStrings( tokens, 3)) : "" );
+					OnPart( tokens[0], tokens[2], tokens.Length >= 4 ? RemoveLeadingColon(CondenseStrings( tokens, 3)) : "" );
 					break;
 				case "QUIT":
 					tokens[2] = RemoveLeadingColon( tokens[2] );
-					OnQuit( UserInfoFromString( tokens[0] ), CondenseStrings( tokens, 2) );
+					OnQuit( tokens[0], CondenseStrings( tokens, 2) );
 					break;
 				case "INVITE":
 					if( OnInvite != null ) 
 					{
-						OnInvite(
-							UserInfoFromString( tokens[0] ), RemoveLeadingColon( tokens[3] ) );
+						OnInvite( tokens[0], RemoveLeadingColon( tokens[3] ) );
 					}
 					break;
 				case "KICK":
 					tokens[4] = RemoveLeadingColon( tokens[4] );
-					OnKick(UserInfoFromString( tokens[0] ),tokens[2],tokens[3], CondenseStrings( tokens, 4) );
+					OnKick( tokens[0],tokens[2],tokens[3], CondenseStrings( tokens, 4) );
 					break;
 				case "MODE":
 					if ( channelPattern.IsMatch( tokens[2] ) )
 					{
-						UserInfo who = UserInfoFromString( tokens[0] );
-						OnChannelModeChange( who, tokens[2] );
+						OnChannelModeChange( tokens[0], tokens[2] );
 					}
 					break;
 				case "KILL":
@@ -576,7 +565,7 @@ namespace Sharkbite.Irc
 							tokens[3] = RemoveLeadingColon( tokens[3] );
 							reason = CondenseStrings( tokens, 3 );
 						}
-						OnKill( UserInfoFromString( tokens[0] ), tokens[2], reason );
+						OnKill( tokens[0], tokens[2], reason );
 					}
 					break;
 				default: 
@@ -661,7 +650,7 @@ namespace Sharkbite.Irc
 		/// <summary>
 		/// Strip off the trailing CTCP quote.
 		/// </summary>
-		string RemoveTrailingQuote( string text ) 
+		static string RemoveTrailingQuote( string text ) 
 		{
 			return text.Substring(0, text.Length -1 );		
 		}
@@ -692,12 +681,7 @@ namespace Sharkbite.Irc
 			return fullUserName;
 		}
 
-		static UserInfo UserInfoFromString( string fullUserName ) 
-		{
-			return new UserInfo( ExtractNick( fullUserName ) );
-		}
-
-		static bool IsValidChannelName(string channel) 
+		static bool IsValidChannelName( string channel ) 
 		{
 			if( IsEmpty(  channel ) ) return false;
 			if( HasSpace( channel ) ) return false;
@@ -712,7 +696,7 @@ namespace Sharkbite.Irc
 			return false;
 		}
 
-		static bool IsValidNick( string nick) 
+		static bool IsValidNick( string nick ) 
 		{
 			if( IsEmpty(  nick ) ) return false;
 			if( HasSpace( nick ) ) return false;
@@ -720,14 +704,14 @@ namespace Sharkbite.Irc
 			return nickRegex.IsMatch( nick );
 		}
 
-		static bool IsEmpty( string aString ) 
+		static bool IsEmpty( string str ) 
 		{
-			return aString == null || aString.Trim().Length == 0;
+			return str == null || str.Trim().Length == 0;
 		}
 
-		static bool HasSpace( string text ) 
+		static bool HasSpace( string str ) 
 		{
-			return text.IndexOf( ' ' ) != -1;
+			return str.IndexOf( ' ' ) != -1;
 		}
 		#endregion
 	}

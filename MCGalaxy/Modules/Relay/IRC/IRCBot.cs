@@ -29,7 +29,7 @@ namespace MCGalaxy.Modules.Relay.IRC
     public sealed class IRCBot : RelayBot 
     {
         internal Connection conn;
-        string nick;
+        string botNick;
         IRCNickList nicks;
         bool ready;
         
@@ -79,8 +79,8 @@ namespace MCGalaxy.Modules.Relay.IRC
         protected override bool CanReconnect { get { return canReconnect; } }
         
         protected override void DoConnect() {
-            ready = false;
-            nick  = Server.Config.IRCNick.Replace(" ", "");
+            ready   = false;
+            botNick = Server.Config.IRCNick.Replace(" ", "");
             
             if (conn == null) conn = new Connection(new UTF8Encoding(false));
             conn.Hostname = Server.Config.IRCServer;
@@ -90,8 +90,8 @@ namespace MCGalaxy.Modules.Relay.IRC
             // most IRC servers supporting SSL/TLS do so on port 6697
             if (conn.Port == 6697) conn.UseSSL = true;
             
-            conn.Nick     = nick;
-            conn.UserName = nick;
+            conn.Nick     = botNick;
+            conn.UserName = botNick;
             conn.RealName = Server.SoftwareNameVersioned;
             HookIRCEvents();
             
@@ -240,19 +240,23 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
 
         
-        void OnAction(UserInfo user, string channel, string description) {
-            MessageInGame(user.Nick, string.Format("&I(IRC) * {0} {1}", user.Nick, description));
+        void OnAction(string user, string channel, string description) {
+            string nick = Connection.ExtractNick(user);
+            MessageInGame(nick, string.Format("&I(IRC) * {0} {1}", nick, description));
         }
         
-        void OnJoin(UserInfo user, string channel) {
+        void OnJoin(string user, string channel) {
+            string nick = Connection.ExtractNick(user);
             conn.SendNames(channel);
-            AnnounceJoinLeave(user.Nick, "joined", channel);
+            AnnounceJoinLeave(nick, "joined", channel);
         }
         
-        void OnPart(UserInfo user, string channel, string reason) {
-            nicks.OnLeftChannel(user, channel);
-            if (user.Nick == nick) return;
-            AnnounceJoinLeave(user.Nick, "left", channel);
+        void OnPart(string user, string channel, string reason) {
+            string nick = Connection.ExtractNick(user);
+            nicks.OnLeftChannel(nick, channel);
+
+            if (nick == botNick) return;
+            AnnounceJoinLeave(nick, "left", channel);
         }
 
         void AnnounceJoinLeave(string nick, string verb, string channel) {
@@ -261,31 +265,36 @@ namespace MCGalaxy.Modules.Relay.IRC
             MessageInGame(nick, string.Format("&I(IRC) {0} {1} the{2} channel", nick, verb, which));
         }
 
-        void OnQuit(UserInfo user, string reason) {
+        void OnQuit(string user, string reason) {   
+            string nick = Connection.ExtractNick(user);
             // Old bot was disconnected, try to reclaim it
-            if (user.Nick == nick) conn.SendNick(nick);
-            nicks.OnLeft(user);
+            if (nick == botNick) conn.SendNick(botNick);
+            nicks.OnLeft(nick);
             
-            if (user.Nick == nick) return;
-            Logger.Log(LogType.RelayActivity, user.Nick + " left IRC");
-            MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " left");
+            if (nick == botNick) return;
+            Logger.Log(LogType.RelayActivity, nick + " left IRC");
+            MessageInGame(nick, "&I(IRC) " + nick + " left");
         }
 
         void OnError(ReplyCode code, string message) {
             Logger.Log(LogType.RelayActivity, "IRC Error: " + message);
         }
 
-        void OnPrivate(UserInfo user, string message) {
+        void OnPrivate(string user, string message) {
+            string nick = Connection.ExtractNick(user);
+
             RelayUser rUser = new RelayUser();
-            rUser.ID        = user.Nick;
-            rUser.Nick      = user.Nick;
-            HandleDirectMessage(rUser, user.Nick, message);
+            rUser.ID        = nick;
+            rUser.Nick      = nick;
+            HandleDirectMessage(rUser, nick, message);
         }        
 
-        void OnPublic(UserInfo user, string channel, string message) {
+        void OnPublic(string user, string channel, string message) {
+            string nick = Connection.ExtractNick(user);
+
             RelayUser rUser = new RelayUser();
-            rUser.ID        = user.Nick;
-            rUser.Nick      = user.Nick;
+            rUser.ID        = nick;
+            rUser.Nick      = nick;
             HandleChannelMessage(rUser, channel, message);
         }
         
@@ -302,14 +311,14 @@ namespace MCGalaxy.Modules.Relay.IRC
             ready = true;
         }
         
-        void OnPublicNotice(UserInfo user, string channel, string notice) {
+        void OnPublicNotice(string user, string channel, string notice) {
         }
 
-        void OnPrivateNotice(UserInfo user, string notice) {
+        void OnPrivateNotice(string user, string notice) {
             if (!notice.CaselessStarts("You are now identified")) return;
             JoinChannels();
         }
-        void OnPrivateAction(UserInfo user, string message) {
+        void OnPrivateAction(string user, string message) {
         }
         
         void Authenticate() {
@@ -322,33 +331,36 @@ namespace MCGalaxy.Modules.Relay.IRC
             }
         }
 
-        void OnNick(UserInfo user, string newNick) {
+        void OnNick(string user, string newNick) {
+            string nick = Connection.ExtractNick(user);
             // We have successfully reclaimed our nick, so try to sign in again.
-            if (newNick == nick) Authenticate();
+            if (newNick == botNick) Authenticate();
             if (newNick.Trim().Length == 0) return;
-            
-            nicks.OnChangedNick(user, newNick);
-            MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " &Sis now known as &I" + newNick);
+
+            nicks.OnChangedNick(nick, newNick);
+            MessageInGame(nick, "&I(IRC) " + nick + " &Sis now known as &I" + newNick);
         }
         
         void OnNames(string channel, string[] _nicks, bool last) {
             nicks.UpdateFor(channel, _nicks);
         }
         
-        void OnChannelModeChange(UserInfo who, string channel) {
+        void OnChannelModeChange(string who, string channel) {
             conn.SendNames(channel);
         }
         
-        void OnKick(UserInfo user, string channel, string kickee, string reason) {
-            nicks.OnLeftChannel(user, channel);
+        void OnKick(string user, string channel, string kickee, string reason) {
+            string nick = Connection.ExtractNick(user);
+            nicks.OnLeftChannel(nick, channel);
             
             if (reason.Length > 0) reason = " (" + reason + ")";
-            Logger.Log(LogType.RelayActivity, "{0} kicked {1} from IRC{2}", user.Nick, kickee, reason);
-            MessageInGame(user.Nick, "&I(IRC) " + user.Nick + " kicked " + kickee + reason);
+            Logger.Log(LogType.RelayActivity, "{0} kicked {1} from IRC{2}", nick, kickee, reason);
+            MessageInGame(nick, "&I(IRC) " + nick + " kicked " + kickee + reason);
         }
         
-        void OnKill(UserInfo user, string nick, string reason) {
-            nicks.OnLeft(user);
+        void OnKill(string user, string killer, string reason) {
+            string nick = Connection.ExtractNick(user);
+            nicks.OnLeft(nick);
         }
         
         
