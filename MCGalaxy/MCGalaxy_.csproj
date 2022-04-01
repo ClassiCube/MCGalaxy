@@ -681,7 +681,6 @@
     <Compile Include="util\UIHelpers.cs" />
     <Compile Include="util\Utils.cs" />
     <Compile Include="sharkbite.thresher\Connection.cs" />
-    <Compile Include="sharkbite.thresher\ReplyCode.cs" />
     <Compile Include="sharkbite.thresher\Utils.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />

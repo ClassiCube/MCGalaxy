@@ -139,7 +139,7 @@ namespace MCGalaxy.Modules.Relay.IRC
             
             if (verify == IRCControllerVerify.HalfOp) {
                 string prefix = GetPrefix(chanNicks[index]);
-                if (prefix.Length == 0 || prefix == "+") {
+                if (prefix.Length == 0 || prefix == "+") { // + prefix is 'voiced user'
                     error = "You must be at least a half-op on the channel to use commands from IRC."; return false;
                 }
                 return true;

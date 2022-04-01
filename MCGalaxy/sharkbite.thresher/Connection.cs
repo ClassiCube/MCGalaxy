@@ -440,7 +440,6 @@ namespace Sharkbite.Irc
 		#region Parsing
 		private const string ACTION = "\u0001ACTION";
 		private readonly char[] Separator = new char[] { ' ' };
-		private readonly Regex channelPattern = new Regex("([#!+&]\\w+)", RegexOptions.Compiled | RegexOptions.Singleline);
 		private readonly Regex replyRegex = new Regex("^:([^\\s]*) ([\\d]{3}) ([^\\s]*) (.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
 		void Parse(string message ) 
@@ -448,17 +447,15 @@ namespace Sharkbite.Irc
 			string[] tokens = message.Split( Separator );
 			if( tokens[0] == "PING" ) 
 			{
-				tokens[1] = RemoveLeadingColon( tokens[1] );
-				OnPing( CondenseStrings(tokens, 1) );
+				OnPing( GetSuffix( tokens, 1 ) );
 			}
 			else if( tokens[0] == "NOTICE" ) 
 			{
-				OnPrivateNotice( "", CondenseStrings( tokens, 2) );
+				OnPrivateNotice( "", GetSuffix( tokens, 2 ) );
 			}
 			else if ( tokens[0] == "ERROR" ) 
 			{
-				tokens[1] = RemoveLeadingColon( tokens[1] );
-				Error( ReplyCode.IrcServerError, CondenseStrings(tokens, 1) );
+				OnError( ReplyCode.IrcServerError, GetSuffix( tokens, 1 ) );
 			}
 			else if( replyRegex.IsMatch( message ) )
 			{
@@ -469,16 +466,6 @@ namespace Sharkbite.Irc
 				ParseCommand( tokens );
 			}
 		}
-		/// <summary>
-		/// Tell listeners that an error has been encountered
-		/// </summary>
-		internal void Error( ReplyCode code, string message ) 
-		{
-			if( OnError != null )
-			{
-				OnError( code, message );
-			}
-		}
 
 		/// <summary>
 		/// Parse the message and call the callback methods on the listeners.
@@ -486,23 +473,23 @@ namespace Sharkbite.Irc
 		/// <param name="tokens">The text received from the IRC server</param>
 		void ParseCommand(string[] tokens ) 
 		{	
-			//Remove colon user info string
-			tokens[0] = RemoveLeadingColon( tokens[0] );
+			// Remove leading colon from user info
+			string user = RemoveLeadingColon( tokens[0] );
+
 			switch( tokens[1] ) 
 			{
-				case "NOTICE":		
-					tokens[3] = RemoveLeadingColon( tokens[3] );
+				case "NOTICE":
 					if( IsValidChannelName( tokens[2] ) )
 					{			
-						OnPublicNotice( tokens[0], tokens[2], CondenseStrings( tokens, 3) );
+						OnPublicNotice( user, tokens[2], GetSuffix( tokens, 3 ) );
 					}
 					else 
 					{
-						OnPrivateNotice( tokens[0], CondenseStrings( tokens, 3) );
+						OnPrivateNotice( user, GetSuffix( tokens, 3 ) );
 					}
 					break;
 				case "JOIN":
-					OnJoin( tokens[0], RemoveLeadingColon( tokens[2] ) );
+					OnJoin( user, RemoveLeadingColon( tokens[2] ) );
 					break;
 				case "PRIVMSG":
 					tokens[3] = RemoveLeadingColon( tokens[3] );
@@ -512,64 +499,53 @@ namespace Sharkbite.Irc
 						{
 							int last = tokens.Length - 1;
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnAction( tokens[0], tokens[2], CondenseStrings( tokens, 4) );
+							OnAction( user, tokens[2], CondenseStrings( tokens, 4) );
 						}
 						else 
 						{
 							int last = tokens.Length - 1;
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnPrivateAction( tokens[0], CondenseStrings( tokens, 4) );
+							OnPrivateAction( user, CondenseStrings( tokens, 4) );
 						}
 					}
-					else if( channelPattern.IsMatch( tokens[2] ) )
+					else if( IsValidChannelName( tokens[2] ) )
 					{
-						OnPublic( tokens[0], tokens[2], CondenseStrings( tokens, 3) );
+						OnPublic( user, tokens[2], CondenseStrings( tokens, 3) );
 					}
 					else 
 					{
-						OnPrivate( tokens[0], CondenseStrings( tokens, 3) );
+						OnPrivate( user, CondenseStrings( tokens, 3) );
 					}
 					break;
 				case "NICK":
-					OnNick(	tokens[0], RemoveLeadingColon( tokens[2] ) );
+					OnNick(	user, RemoveLeadingColon( tokens[2] ) );
 					break;
 				case "PART":
-					OnPart( tokens[0], tokens[2], tokens.Length >= 4 ? RemoveLeadingColon(CondenseStrings( tokens, 3)) : "" );
+					OnPart( user, tokens[2], GetSuffix( tokens, 3 ) );
 					break;
 				case "QUIT":
-					tokens[2] = RemoveLeadingColon( tokens[2] );
-					OnQuit( tokens[0], CondenseStrings( tokens, 2) );
+					OnQuit( user, GetSuffix( tokens, 2 ) );
 					break;
 				case "INVITE":
 					if( OnInvite != null ) 
 					{
-						OnInvite( tokens[0], RemoveLeadingColon( tokens[3] ) );
+						OnInvite( user, RemoveLeadingColon( tokens[3] ) );
 					}
 					break;
 				case "KICK":
-					tokens[4] = RemoveLeadingColon( tokens[4] );
-					OnKick( tokens[0],tokens[2],tokens[3], CondenseStrings( tokens, 4) );
+					OnKick( user, tokens[2], tokens[3], GetSuffix( tokens, 4 ) );
 					break;
 				case "MODE":
-					if ( channelPattern.IsMatch( tokens[2] ) )
+					if ( IsValidChannelName( tokens[2] ) )
 					{
 						OnChannelModeChange( tokens[0], tokens[2] );
 					}
 					break;
 				case "KILL":
-					if ( OnKill != null )
-					{
-						string reason = "";
-						if( tokens.Length >= 4 ) 
-						{
-							tokens[3] = RemoveLeadingColon( tokens[3] );
-							reason = CondenseStrings( tokens, 3 );
-						}
-						OnKill( tokens[0], tokens[2], reason );
-					}
+					OnKill( user, tokens[2], GetSuffix( tokens, 3 ) );
 					break;
 				default: 
-					OnError( ReplyCode.UnparseableMessage, CondenseStrings( tokens, 0 ) );
+					OnError( ReplyCode.UnparseableMessage, GetSuffix( tokens, 0 ) );
 					break;
 			}
 		}
@@ -602,8 +578,7 @@ namespace Sharkbite.Irc
 					break;
 				case ReplyCode.ERR_NICKNAMEINUSE:
 				case ReplyCode.ERR_NICKCOLLISION:
-					tokens[4] = RemoveLeadingColon( tokens[4] );
-					OnNickError( tokens[3], CondenseStrings( tokens, 4) );
+					OnNickError( tokens[3], GetSuffix( tokens, 4 ) );
 					break;
 				default:
 					HandleDefaultReply( code, tokens );
@@ -615,11 +590,11 @@ namespace Sharkbite.Irc
 		{
 			if (code >= ReplyCode.ERR_NOSUCHNICK && code <= ReplyCode.ERR_USERSDONTMATCH) 
 			{
-				OnError(code, CondenseStrings( tokens, 3) );
+				OnError(code, GetSuffix( tokens, 3 ) );
 			}
 			else if( OnReply != null )
 			{
-				OnReply(code, CondenseStrings( tokens, 3) );
+				OnReply(code, GetSuffix( tokens, 3 ) );
 			}
 		}
 		
@@ -645,6 +620,13 @@ namespace Sharkbite.Irc
 				return text.Substring(1);
 			}
 			return text;
+		}
+
+		static string GetSuffix( string[] strings, int start ) 
+		{
+			if( start >= strings.Length ) return "";
+
+			return RemoveLeadingColon( CondenseStrings( strings, start ) );
 		}
 		
 		/// <summary>
@@ -686,14 +668,8 @@ namespace Sharkbite.Irc
 			if( IsEmpty(  channel ) ) return false;
 			if( HasSpace( channel ) ) return false;
 
-			if (ChannelPrefix.IndexOf( channel[0] ) != -1) 
-			{
-				if (channel.Length <= 50) 
-				{
-					return true;
-				}
-			}
-			return false;
+			// valid channels start with #, !, + or &
+			return channel.Length > 1 && ChannelPrefix.IndexOf(channel[0]) >= 0;
 		}
 
 		static bool IsValidNick( string nick ) 
