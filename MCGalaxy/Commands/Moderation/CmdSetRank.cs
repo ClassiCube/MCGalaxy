@@ -81,14 +81,14 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason == null) return false;
             
             if (newRank == banned) {
-                p.Message("Use /ban to change a player's rank to {0}&S.", banned.ColoredName); return false;
+                p.Message("Use &T/Ban &Sto change a player's rank to {0}&S.", banned.ColoredName); return false;
             }
             if (curRank == banned) {
-                p.Message("Use /unban to change a player's rank from &S{0}.", banned.ColoredName); return false;
+                p.Message("Use &T/Unban &Sto change a player's rank from &S{0}.", banned.ColoredName); return false;
             }
             
             if (!CheckRank(p, data, name, curRank.Permission, "change the rank of", false)) return false;            
-            if (!p.IsConsole && newRank.Permission >= data.Rank) {
+            if (newRank.Permission >= data.Rank) {
                 p.Message("Cannot rank a player to a rank equal to or higher than yours."); return false;
             }
             
