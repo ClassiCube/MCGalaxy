@@ -222,8 +222,6 @@ namespace MCGalaxy {
         public string DefaultColor = "&e";
         [ConfigColor("irc-color", "Colors", "&5")]
         public string IRCColor = "&5";
-        [ConfigColor("global-chat-color", "Colors", "&6")]
-        public string GlobalChatColor = "&6";
         [ConfigColor("help-syntax-color", "Colors", "&a")]
         public string HelpSyntaxColor = "&a";
         [ConfigColor("help-desc-color", "Colors", "&e")]

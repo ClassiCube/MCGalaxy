@@ -210,7 +210,7 @@ namespace MCGalaxy {
                 Add(LevelPermission.AdvBuilder, 262144,       15, "AdvBuilder", "&3", GEN_LIMIT,  5); // 64^3
                 Add(LevelPermission.Operator,  2097152,       90, "Operator",   "&c", GEN_LIMIT,  8); // 128^3
                 Add(LevelPermission.Admin,    16777216, 21024000, "Admin",      "&e", GEN_ADMIN, 12); // 256^3
-                Add(LevelPermission.Owner,   134217728, 21024000, "Owner",      "&0", GEN_ADMIN, 16); // 512^3
+                Add(LevelPermission.Owner,   134217728, 21024000, "Owner",      "&4", GEN_ADMIN, 16); // 512^3
             }
 
             if (BannedRank == null)

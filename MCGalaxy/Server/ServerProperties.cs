@@ -164,12 +164,9 @@ namespace MCGalaxy {
             w.WriteLine("#   irc-port                      = The port to use to connect");
             w.WriteLine("#   irc-identify                  = (true/false)    Do you want the IRC bot to Identify itself with nickserv. Note: You will need to register it's name with nickserv manually.");
             w.WriteLine("#   irc-password                  = The password you want to use if you're identifying with nickserv");
-            w.WriteLine("#   anti-tunnels                  = Stops people digging below max-depth");
-            w.WriteLine("#   max-depth                     = The maximum allowed depth to dig down");
             w.WriteLine("#   backup-time                   = The number of seconds between automatic backups");
             w.WriteLine("#   overload                      = The higher this is, the longer the physics is allowed to lag.  Default 1500");
             w.WriteLine("#   use-whitelist                 = Switch to allow use of a whitelist to override IP bans for certain players.  Default false.");
-            w.WriteLine("#   premium-only                  = Only allow premium players (paid for minecraft) to access the server. Default false.");
             w.WriteLine("#   force-cuboid                  = Run cuboid until the limit is hit, instead of canceling the whole operation.  Default false.");
             w.WriteLine("#   profanity-filter              = Replace certain bad words in the chat.  Default false.");
             w.WriteLine("#   notify-on-join-leave          = Show a balloon popup in tray notification area when a player joins/leaves the server.  Default false.");
@@ -211,7 +208,6 @@ namespace MCGalaxy {
             w.WriteLine("#   spam-messages                 = 5");
             w.WriteLine("#   spam-mute-time                = 60");
             w.WriteLine("#   spam-counter-reset-time       = 2");
-            w.WriteLine("#   bufferblocks                  = Should buffer blocks by default for maps?");
             w.WriteLine();
             
             ConfigElement.Serialise(Server.serverConfig, w, Server.Config);
