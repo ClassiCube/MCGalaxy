@@ -27,6 +27,9 @@ namespace MCGalaxy.Commands.Moderation {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override bool LogUsage { get { return false; } }
         public override bool UpdatesLastCmd { get { return false; } }
+        public override CommandPerm[] ExtraPerms {
+            get { return new[] { new CommandPerm(LevelPermission.Owner, "can reset passwords") }; }
+        }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("SetPass", "set"), new CommandAlias("ResetPass", "reset") }; }
         }
@@ -43,7 +46,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (args.Length == 2 && args[0].CaselessEq("set")) {
                 SetPassword(p, args[1]);
             } else if (args.Length == 2 && args[0].CaselessEq("reset")) {
-                ResetPassword(p, args[1]);
+                ResetPassword(p, args[1], data);
             } else {
                 VerifyPassword(p, message);
             }
@@ -82,29 +85,30 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("Your password was &aset to: &c" + password);
         }
         
-        void ResetPassword(Player p, string name) {
-            if (name.Length == 0) { Help(p); return; }
-            Player target = PlayerInfo.FindMatches(p, name);
+        void ResetPassword(Player p, string name, CommandData data) {
+            string target = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (target == null) return;
             
             if (p.Unverified) {
                 Authenticator.Current.RequiresVerification(p, "can reset passwords");
                 return;
             }
-            if (!p.IsConsole && !Server.Config.OwnerName.CaselessEq(p.name))  {
-                p.Message("&WOnly console and the server owner may reset passwords."); return;
-            }
+            if (!CheckResetPerms(p, data)) return;
             
-            if (Authenticator.Current.ResetPassword(target.name)) {
+            if (Authenticator.Current.ResetPassword(target)) {
                 p.Message("Reset password for {0}", p.FormatNick(target));
             } else {
                 p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));
             }
         }
+
+        bool CheckResetPerms(Player p, CommandData data) {
+            // check server owner name for backwards compatibility
+            return Server.Config.OwnerName.CaselessEq(p.name) || CheckExtraPerm(p, data, 1);
+        }
         
         public override void Help(Player p) {
             p.Message("&T/Pass reset [player] &H- Resets the password for that player");
-            p.Message("&H Note: Can only be used by console and the server owner.");
             p.Message("&T/Pass set [password] &H- Sets your password to [password]");
             p.Message("&H Note: &WDo NOT set this as your Minecraft password!");
             p.Message("&T/Pass [password]");
