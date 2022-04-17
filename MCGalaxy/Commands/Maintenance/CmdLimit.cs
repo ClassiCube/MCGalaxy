@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Maintenance {
             }
             
             int limit = 0;
-            if (hasLimit && !CommandParser.GetInt(p, args[1], "Limit", ref limit, 1)) return;
+            if (hasLimit && !CommandParser.GetInt(p, args[1], "Limit", ref limit, 0)) return;
             
             switch (args[0].ToLower()) {
                 case "rp":
