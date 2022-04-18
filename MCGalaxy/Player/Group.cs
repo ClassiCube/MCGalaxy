@@ -321,15 +321,21 @@ namespace MCGalaxy {
         
         static void AddGroup(Group temp) {
             string name = temp.Name;
-
+            // Try to rename conflicing ranks first
             if (name.CaselessEq("op") || name.CaselessEq("Console")) {
                 Logger.Log(LogType.Warning, "Cannot have a rank named 'op' or 'console'", name);
+                temp.Name = "RENAMED_" + name;
             } else if (Find(name) != null) {
                 Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", name);
+                temp.Name = "RENAMED_" + name;
+            } 
+
+            if (Find(temp.Name) != null) {
+                Logger.Log(LogType.Warning, "Cannot add the rank {0} twice", temp.Name);
             } else if (Find(temp.Permission) != null) {
                 Logger.Log(LogType.Warning, "Cannot have 2 ranks set at permission level " + (int)temp.Permission);
             } else if (temp.Permission > LevelPermission.Owner) { // also handles LevelPermission.Null
-                Logger.Log(LogType.Warning, "Invalid permission level for rank {0}", name);
+                Logger.Log(LogType.Warning, "Invalid permission level for rank {0}", temp.Name);
             } else {
                 Register(temp);
             }
