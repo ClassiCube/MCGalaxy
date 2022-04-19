@@ -1,4 +1,39 @@
-﻿v 1.9.3.9
+﻿v 1.9.4.0
+Added: Separate Console rank with highest permission level
+Added: Option to allow banning staff IPs
+Fixed: Changing rank not immediately updating players table in main GUI
+Fixed: /cmds shortcuts [modifier] ignoring modifier
+Fixed: Allow /limit of 0
+Fixed: Prevent trying to save files with invalid windows filename characters
+Fixed: Kick messages with system color codes in them not being escaped
+Fixed: /abort rarely resulting in ghost block changes
+Fixed: /map without arguments now always prints information of current level
+Improved: /mark: Allow using relative to last marked coordinate too (e.g. /m x~3 y~4 z~-2)
+Improved: /draw cone look
+Improved: Add cone mode for /spheroid 
+Improved: Add cylinder to /draw
+Improved: Try to use better fallback block ids when importing custom blocks from .cw files
+Improved: Default rank names (Superop->Admin, Nobody->Owner)
+Improved: More appropriate default rank properties (e.g. operator has more /realm maps)
+Improved: rank.properties informational text
+Improved: IRC bot default to using port 6697 instead of 6667 
+Improved: IRC bot always uses SSL/TLS when connecting on port 6697
+Improved: Change classicgen to use still lava/water instead of active lava/water
+Improved: More accurate 'blocks affected' calculation for /eh and /cylinder
+Improved: Default to flatgrass theme in /gen instead of always requiring a theme
+Improved: /zonemark without a zone name assumes current zone (Thanks Goodly)
+Improved: Make /ops and /admins work with renamed ranks
+Improved: Allow more characters in bot ai/palette names
+Improved: Allow /take ing money from yourself
+Improved: Allow resetting passwords of offline players
+Improved: Fallback IRC nick generation upon nick conflict (now mutates a character instead of complete random name)
+Improved: If two ranks in ranks.properties have same name, try to rename second conflicting rank
+Fixed: Allow # as ~ alternative for relative coords (since ~ can't be entered in original Classic client)
+Fixed: Leading whitespace not appearing in chat messages (in original Classic client)
+Fixed: crashing when receiving a chat message packet that ended with a color code (in original Classic client)
+Fixed: 'Two color codes in a row' appearing incorrectly (in original Classic client)
+
+v 1.9.3.9
 Improved: Hiding GUI from taskbar when minimised is disabled by default now
 Improved: Update Discord Gateway api from v6 to v8
 Improved: Cmdbind can be used with any shortcut, not just /0 to /9
