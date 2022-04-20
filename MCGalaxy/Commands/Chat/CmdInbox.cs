@@ -40,7 +40,10 @@ namespace MCGalaxy.Commands.Chatting {
 
             string[] args = message.SplitSpaces(2);
             if (message.Length == 0) {
-                foreach (string[] entry in entries) { Output(p, entry); }
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    Output(p, i + 1, entries[i]);
+                }
             } else if (IsDeleteCommand(args[0])) {
                 if (args.Length == 1) {
                     p.Message("You need to provide either \"all\" or a number."); return;
@@ -76,17 +79,17 @@ namespace MCGalaxy.Commands.Chatting {
             if (num > entries.Count) {
                 p.Message("Message #{0} does not exist.", num);
             } else {
-                Output(p, entries[num - 1]);
+                Output(p, num, entries[num - 1]);
             }
         }
         
-        static void Output(Player p, string[] entry) {
+        static void Output(Player p, int num, string[] entry) {
             DateTime time = entry[i_sent].ParseDBDate();
             TimeSpan delta = DateTime.Now - time;
             string sender = p.FormatNick(entry[i_from]);
             
-            p.Message("From {0} &a{1} ago:", sender, delta.Shorten());
-            p.Message(entry[i_text]);
+            p.Message("{0}) From {1} &a{2} ago:", num, sender, delta.Shorten());
+            p.Message("  {0}", entry[i_text]);
         }
         
         public override void Help(Player p) {
