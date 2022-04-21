@@ -3,8 +3,9 @@ MCGalaxy is a fully featured and customisable **ClassiCube Server Software** bas
 **Setup**
 -----------------
 Download the latest MCGalaxy release [from here](https://github.com/UnknownShadow200/MCGalaxy/releases)
-* Windows: You need to install .NET framework 4.0. Windows 8/10 already have this included.
-* Linux/macOS: You need to install the [Mono framework](https://www.mono-project.com).
+* Windows: You need to install .NET framework 4.0. Windows 8/10/11 already have this included.
+* macOS:   You need to install the [Mono framework](https://www.mono-project.com).
+* Linux:   You need to install the [Mono framework](https://www.mono-project.com). (or just `apt install mono-complete` if on Ubuntu)
 
 Run **MCGalaxy.exe** for a graphical interface, or run **MCGalaxyCLI.exe** for command line only.
 
@@ -25,7 +26,7 @@ Type your username into *Username*, ```127.0.0.1:25565``` into *IP:Port*, and le
 #### Make yourself owner
 After joining, you will want to rank yourself owner so you can use all commands.
 
-Type ```/rank [your account] superop``` into the bottom text box, then press Enter.
+Type ```/rank [your account] owner``` into the bottom text box, then press Enter.
 
 ![opt4](https://user-images.githubusercontent.com/6509348/60258729-0e9e5380-9919-11e9-921d-ea7e0c4365af.png)
 
