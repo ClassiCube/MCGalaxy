@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 
@@ -27,11 +26,8 @@ namespace MCGalaxy.Drawing.Ops
     {
         public override string Name { get { return "Maze"; } }
         
-        internal int randomizer = 0;
+        public Random RNG;
         bool[,] wall;
-        RNGCryptoServiceProvider rng1;
-        Random rng2;
-        byte[] r = new byte[1];
         int width, length;
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -80,7 +76,6 @@ namespace MCGalaxy.Drawing.Ops
             QuadZ(max.Z, (ushort)(y + 1), min.X, (ushort)(y + 2), max.X, brush, output);
             
             Player.Message("Maze painted. Build the entrance and exit yourself");
-            randomizer = 0;
         }
         
         void GenerateMaze() {
@@ -91,8 +86,6 @@ namespace MCGalaxy.Drawing.Ops
             {
                 wall[w, h] = true;
             }
-            rng1 = new RNGCryptoServiceProvider();
-            rng2 = new Random();
             
             Stack<GridNode> stack = new Stack<GridNode>(width * length);
             stack.Push(new GridNode(0, 0));
@@ -118,15 +111,9 @@ namespace MCGalaxy.Drawing.Ops
         
         void MoveRandomDir(GridNode P, out GridNode P1, out GridNode P2) {        
             while (true) {
-                r[0] = 0;
-                if (randomizer == 0) {
-                    rng1.GetBytes(r);
-                    r[0] /= (255 / 4);
-                } else {
-                    r[0] = (byte)rng2.Next(4);
-                }
-
-                switch (r[0]) {
+                int dir = RNG.Next(4);
+        		
+                switch (dir) {
                     case 0: //go up
                         if (IsWall(P.X, P.Y + 2)) {
                             P1 = new GridNode(P.X, (ushort)(P.Y + 1));

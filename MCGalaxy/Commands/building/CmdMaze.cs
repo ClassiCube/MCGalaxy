@@ -17,19 +17,18 @@
  */
 using System;
 using MCGalaxy.Drawing.Ops;
+using MCGalaxy.Generator;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdMaze : DrawCmd {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdMaze : DrawCmd 
+    {
         public override string name { get { return "Maze"; } }
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
-            if (dArgs.Message.Length == 0) return new MazeDrawOp();            
-            int randomizer = 0;
-            if (!CommandParser.GetInt(dArgs.Player, dArgs.Message, "Randomizer", ref randomizer)) return null;
-            
             MazeDrawOp op = new MazeDrawOp();
-            op.randomizer = randomizer;
+            op.RNG        = MapGen.MakeRng(dArgs.Message);
             return op;
         }
         
