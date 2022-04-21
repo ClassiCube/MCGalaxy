@@ -94,11 +94,18 @@ namespace MCGalaxy {
             level.hasPortals     = coords.Count > 0;
             if (!level.hasPortals) return;
             
-            foreach (Vec3U16 p in coords) {
+            int deleted = 0;
+            foreach (Vec3U16 p in coords) 
+            {
                 BlockID block = level.GetBlock(p.X, p.Y, p.Z);
                 if (level.Props[block].IsPortal) continue;
+                
                 Portal.Delete(map, p.X, p.Y, p.Z);
+                deleted++;
             }
+            
+            if (deleted == 0) return;
+            Logger.Log(LogType.BackgroundActivity, "Autodeleted {0} non-existent portals in {1}", deleted, level.name);
         }
         
         internal static void LoadMessages(Level level, string map) {
@@ -106,11 +113,18 @@ namespace MCGalaxy {
             level.hasMessageBlocks = coords.Count > 0;
             if (!level.hasMessageBlocks) return;
             
-            foreach (Vec3U16 p in coords) {
+            int deleted = 0;
+            foreach (Vec3U16 p in coords) 
+            {
                 BlockID block = level.GetBlock(p.X, p.Y, p.Z);
                 if (level.Props[block].IsMessageBlock) continue;
+                
                 MessageBlock.Delete(map, p.X, p.Y, p.Z);
+                deleted++;
             }
+            
+            if (deleted == 0) return;
+            Logger.Log(LogType.BackgroundActivity, "Autodeleted {0} non-existent message blocks in {1}", deleted, level.name);
         }
         
         internal static ColumnDesc[] createPortals = new ColumnDesc[] {

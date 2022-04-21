@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Ops
     {
         public override string Name { get { return "Maze"; } }
         
-        public Random RNG;
+        public Random rng;
         bool[,] wall;
         int width, length;
         
@@ -58,7 +58,7 @@ namespace MCGalaxy.Drawing.Ops
                 for (ushort z = 0; z <= length; z++)
                     if (wall[x, z])
             {
-                output(Place((ushort)(min.X + x + 1), y, (ushort)(min.Z + z + 1), Block.DoubleSlab));
+                output(Place((ushort)(min.X + x + 1),               y, (ushort)(min.Z + z + 1), Block.DoubleSlab));
                 output(Place((ushort)(min.X + x + 1), (ushort)(y + 1), (ushort)(min.Z + z + 1), Block.Leaves));
                 output(Place((ushort)(min.X + x + 1), (ushort)(y + 2), (ushort)(min.Z + z + 1), Block.Leaves));
             }
@@ -111,7 +111,7 @@ namespace MCGalaxy.Drawing.Ops
         
         void MoveRandomDir(GridNode P, out GridNode P1, out GridNode P2) {        
             while (true) {
-                int dir = RNG.Next(4);
+                int dir = rng.Next(4);
         		
                 switch (dir) {
                     case 0: //go up

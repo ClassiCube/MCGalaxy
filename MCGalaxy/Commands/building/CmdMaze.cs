@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Building
 
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
             MazeDrawOp op = new MazeDrawOp();
-            op.RNG        = MapGen.MakeRng(dArgs.Message);
+            op.rng        = MapGen.MakeRng(dArgs.Message);
             return op;
         }
         

@@ -21,11 +21,11 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy {
-    
-    public static class FileLogger {
-        
-        public static string LogPath { get { return msgPath; } }
+namespace MCGalaxy 
+{
+    public static class FileLogger 
+    {       
+        public static string LogPath      { get { return msgPath; } }
         public static string ErrorLogPath { get { return errPath; } }
 
         static bool disposed;
@@ -52,8 +52,8 @@ namespace MCGalaxy {
             if (now.Year == last.Year && now.Month == last.Month && now.Day == last.Day) return;
             
             last = now;
-            msgPath = "logs/" + now.ToString("yyyy-MM-dd").Replace("/", "-") + ".txt";
-            errPath = "logs/errors/" + now.ToString("yyyy-MM-dd").Replace("/", "-") + "error.log";
+            msgPath = "logs/"        + now.ToString("yyyy-MM-dd") + ".txt";
+            errPath = "logs/errors/" + now.ToString("yyyy-MM-dd") + "error.log";
         }
         
         static void LogMessage(LogType type, string message) {

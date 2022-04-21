@@ -84,8 +84,8 @@ namespace MCGalaxy {
     
     /// <summary> Centralised class for outputting log messages. </summary>
     /// <remarks> Outputs can be a file on disc, GUI, the console, etc subscribed to the LogHandler delegate. </remarks>
-    public static class Logger {
-        
+    public static class Logger 
+    {
         public static LogHandler LogHandler;
         static readonly object logLock = new object();
         
