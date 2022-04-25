@@ -26,7 +26,7 @@ namespace MCGalaxy.Network
     public abstract class IGameSession : INetProtocol
     {
         public byte ProtocolVersion;
-        internal byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
+        public byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
         public BlockID MaxRawBlock = Block.CLASSIC_MAX_BLOCK;
         public bool hasCpe;
 
@@ -108,11 +108,34 @@ namespace MCGalaxy.Network
         public abstract void SendBlockchange(ushort x, ushort y, ushort z, BlockID block);
         
         public abstract byte[] MakeBulkBlockchange(BufferedBlockSender buffer);
-        /// <summary> Converts the given block ID into a raw block ID that the client supports </summary>
-        public abstract BlockID ConvertBlock(BlockID block);
         /// <summary> Gets the name of the software the client is using </summary>
         /// <example> ClassiCube, Classic 0.0.16, etc </example>
         public abstract string ClientName();
         public abstract void UpdatePlayerPositions();
+        
+        /// <summary> Converts the given block ID into a raw block ID that the client supports </summary>
+        public virtual BlockID ConvertBlock(BlockID block) {
+            BlockID raw;
+            Player p = player;
+
+            if (block >= Block.Extended) {
+                raw = Block.ToRaw(block);
+            } else {
+                raw = Block.Convert(block);
+                // show invalid physics blocks as Orange
+                if (raw >= Block.CPE_COUNT) raw = Block.Orange;
+            }
+            if (raw > MaxRawBlock) raw = p.level.GetFallback(block);
+            
+            // Check if a custom block replaced a core block
+            //  If so, assume fallback is the better block to display
+            if (!hasBlockDefs && raw < Block.CPE_COUNT) {
+                BlockDefinition def = p.level.CustomBlockDefs[raw];
+                if (def != null) raw = def.FallBack;
+            }
+            
+            if (!hasCustomBlocks) raw = fallback[(byte)raw];
+            return raw;
+        }
     }
 }

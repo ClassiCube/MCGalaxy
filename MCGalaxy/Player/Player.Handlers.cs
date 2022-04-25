@@ -377,7 +377,7 @@ namespace MCGalaxy
             return true;
         }
         
-        internal void ProcessChat(string text, bool continued) {
+        public void ProcessChat(string text, bool continued) {
             LastAction = DateTime.UtcNow;
             if (FilterChat(ref text, continued)) return;
 

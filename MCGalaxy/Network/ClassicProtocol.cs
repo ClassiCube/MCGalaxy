@@ -19,7 +19,6 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Games;
 using BlockID = System.UInt16;
-using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Network
 {
@@ -518,7 +517,7 @@ namespace MCGalaxy.Network
             //  - yaw and pitch fields are swapped
             //  - pitch is inverted
             // (other entities do NOT require this adjustment however)
-            if (id == Entities.SelfID && ProtocolVersion == Server.VERSION_0016) {
+            if (id == Entities.SelfID && ProtocolVersion <= Server.VERSION_0016) {
                 byte temp = rot.HeadX;
                 rot.HeadX = rot.RotY;
                 rot.RotY  = (byte)(256 - temp);
@@ -591,35 +590,10 @@ namespace MCGalaxy.Network
             return buffer.MakeLimited(fallback);
         }
         
-        /// <summary> Converts the given block ID into a raw block ID that can be sent to this player </summary>
-        public override BlockID ConvertBlock(BlockID block) {
-            BlockID raw;
-            Player p = player;
-
-            if (block >= Block.Extended) {
-                raw = Block.ToRaw(block);
-            } else {
-                raw = Block.Convert(block);
-                // show invalid physics blocks as Orange
-                if (raw >= Block.CPE_COUNT) raw = Block.Orange;
-            }
-            if (raw > MaxRawBlock) raw = p.level.GetFallback(block);
-            
-            // Check if a custom block replaced a core block
-            //  If so, assume fallback is the better block to display
-            if (!hasBlockDefs && raw < Block.CPE_COUNT) {
-                BlockDefinition def = p.level.CustomBlockDefs[raw];
-                if (def != null) raw = def.FallBack;
-            }
-            
-            if (!hasCustomBlocks) raw = fallback[(BlockRaw)raw];
-            return raw;
-        }
-        
-        protected void UpdateFallbackTable() {
+        void UpdateFallbackTable() {
             for (byte b = 0; b <= Block.CPE_MAX_BLOCK; b++)
             {
-                fallback[b] = hasCustomBlocks ? b : Block.ConvertLimited(b, ProtocolVersion);
+                fallback[b] = hasCustomBlocks ? b : Block.ConvertClassic(b, ProtocolVersion);
             }
         }
 

@@ -79,7 +79,7 @@ namespace MCGalaxy
         
         /// <summary> Converts a block &lt;= CPE_MAX_BLOCK into a suitable
         /// block compatible for the given classic protocol version </summary>
-        internal static byte ConvertLimited(byte block, byte protocolVersion) {
+        public static byte ConvertClassic(byte block, byte protocolVersion) {
             // protocol version 7 only supports up to Obsidian block
             if (protocolVersion >= Server.VERSION_0030) {
                 return block <= Obsidian ? block : v7_fallback[block - CobblestoneSlab];
