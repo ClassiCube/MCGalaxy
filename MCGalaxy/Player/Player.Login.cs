@@ -27,7 +27,7 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable 
     { 
-        internal bool ProcessLogin(string user, string mppass) {
+        public bool ProcessLogin(string user, string mppass) {
             LastAction = DateTime.UtcNow;
             name     = user; truename    = user;
             SkinName = user; DisplayName = user; 
@@ -52,7 +52,7 @@ namespace MCGalaxy
             return !Socket.Disconnected;
         }
         
-        internal void CompleteLoginProcess() {
+        public void CompleteLoginProcess() {
             Player clone = null;
             OnPlayerFinishConnectingEvent.Call(this);
             if (cancelconnecting) { cancelconnecting = false; return; }

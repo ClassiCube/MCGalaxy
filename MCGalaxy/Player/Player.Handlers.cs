@@ -190,7 +190,7 @@ namespace MCGalaxy
             return result;
         }
 
-        internal void ProcessBlockchange(ushort x, ushort y, ushort z, byte action, BlockID held) {
+        public void ProcessBlockchange(ushort x, ushort y, ushort z, byte action, BlockID held) {
             try {
                 if (spamChecker.CheckBlockSpam()) return;
 
@@ -223,7 +223,7 @@ namespace MCGalaxy
             }
         }
         
-        internal void ProcessMovement(int x, int y, int z, byte yaw, byte pitch, int held) {
+        public void ProcessMovement(int x, int y, int z, byte yaw, byte pitch, int held) {
             if (held >= 0) ClientHeldBlock = (BlockID)held;
 
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
@@ -327,7 +327,7 @@ namespace MCGalaxy
             }
         }
         
-        bool Moved() { return lastRot.RotY != Rot.RotY || lastRot.HeadX != Rot.HeadX; }
+        bool Moved() { return _lastRot.RotY != Rot.RotY || _lastRot.HeadX != Rot.HeadX; }
         
         void AnnounceDeath(string msg) {
             //Chat.MessageFrom(ChatScope.Level, this, msg.Replace("@p", "λNICK"), level, Chat.FilterVisible(this));

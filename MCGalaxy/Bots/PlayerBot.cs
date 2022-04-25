@@ -192,10 +192,10 @@ namespace MCGalaxy {
                 Position pos = bot.Pos; Orientation rot = bot.Rot;
                 
                 Entities.GetPositionPacket(ref ptrSrc, bot.id, true, false,
-                                           pos, bot.lastPos, rot, bot.lastRot);
+                                           pos, bot._lastPos, rot, bot._lastRot);
                 Entities.GetPositionPacket(ref ptrExt, bot.id, true, true,
-                                           pos, bot.lastPos, rot, bot.lastRot);
-                bot.lastPos = pos; bot.lastRot = rot;
+                                           pos, bot._lastPos, rot, bot._lastRot);
+                bot._lastPos = pos; bot._lastRot = rot;
             }
             
             int countSrc = (int)(ptrSrc - src);

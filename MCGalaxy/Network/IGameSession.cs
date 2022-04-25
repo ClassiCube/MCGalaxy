@@ -23,7 +23,7 @@ namespace MCGalaxy.Network
     /// <summary> Abstracts a network session with a client supporting a particular game protocol </summary>
     /// <remarks> By default only the Minecraft Classic game protocol is supported </remarks>
     /// <remarks> Generally, you should manipulate a session through wrapper methods in the Player class instead </remarks>
-    public abstract class IGameSession
+    public abstract class IGameSession : INetProtocol
     {
         public byte ProtocolVersion;
         internal byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
@@ -33,6 +33,7 @@ namespace MCGalaxy.Network
         // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasCustomBlocks, hasExtBlocks, hasBlockDefs, hasBulkBlockUpdate;
         protected INetSocket socket;
+        protected Player player;
 
         public int ProcessReceived(byte[] buffer, int bufferLen) {
             int read = 0;
@@ -50,6 +51,8 @@ namespace MCGalaxy.Network
             }
             return read;
         }
+        
+        public void Disconnect() { player.Disconnect(); }
         
         
         /// <summary> Sends raw data to the client </summary>
@@ -84,20 +87,20 @@ namespace MCGalaxy.Network
         public abstract void SendAddTabEntry(byte id, string name, string nick, string group, byte groupRank);
         public abstract void SendRemoveTabEntry(byte id);
         /// <summary> Sends a set reach/click distance packet to the client </summary>
-        public virtual bool SendSetReach(float reach)                { return false; }
+        public abstract bool SendSetReach(float reach);
         /// <summary> Sends a set held block packet to the client </summary>
-        public virtual bool SendHoldThis(BlockID block, bool locked) { return false; }
+        public abstract bool SendHoldThis(BlockID block, bool locked);
         /// <summary> Sends an update environment color packet to the client </summary>
-        public virtual bool SendSetEnvColor(byte type, string hex)   { return false; }
+        public abstract bool SendSetEnvColor(byte type, string hex);
         public abstract void SendChangeModel(byte id, string model);
         /// <summary> Sends an update weather packet </summary>
-        public virtual bool SendSetWeather(byte weather)             { return false; }
+        public abstract bool SendSetWeather(byte weather);
         /// <summary> Sends an update text color code packet to the client </summary>
-        public virtual bool SendSetTextColor(ColorDesc color)        { return false; }
+        public abstract bool SendSetTextColor(ColorDesc color);
         /// <summary> Sends a define custom block packet to the client </summary>
-        public virtual bool SendDefineBlock(BlockDefinition def)     { return false; }
+        public abstract bool SendDefineBlock(BlockDefinition def);
         /// <summary> Sends an undefine custom block packet to the client </summary>
-        public virtual bool SendUndefineBlock(BlockDefinition def)   { return false; }
+        public abstract bool SendUndefineBlock(BlockDefinition def);
 
         /// <summary> Sends a level to the client </summary>
         public abstract void SendLevel(Level prev, Level level);

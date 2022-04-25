@@ -27,8 +27,6 @@ namespace MCGalaxy.Network
     {
         // these are checked very frequently, so avoid overhead of .Supports(
         bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
-
-        Player player;
         int extensionCount;
         bool finishedCpeLogin;
         CpeExt[] extensions = CpeExtension.Empty;
@@ -74,8 +72,6 @@ namespace MCGalaxy.Network
         #else
         BlockID ReadBlock(byte[] buffer, int offset) { return Block.FromRaw(buffer[offset]); }
         #endif
-
-        public void Disconnect() { player.Disconnect(); }
 
 
 #region Classic processing
@@ -620,7 +616,7 @@ namespace MCGalaxy.Network
             return raw;
         }
         
-        internal void UpdateFallbackTable() {
+        protected void UpdateFallbackTable() {
             for (byte b = 0; b <= Block.CPE_MAX_BLOCK; b++)
             {
                 fallback[b] = hasCustomBlocks ? b : Block.ConvertLimited(b, ProtocolVersion);
@@ -673,7 +669,7 @@ namespace MCGalaxy.Network
             
                 rot.HeadX = pitch;
                 Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
-                                           p.tempPos, p.lastPos, rot, p.lastRot);
+                                           p._tempPos, p._lastPos, rot, p._lastRot);
             }
             
             int count = (int)(ptr - src);

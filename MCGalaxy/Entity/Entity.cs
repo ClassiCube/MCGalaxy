@@ -28,8 +28,8 @@ namespace MCGalaxy
         long _pos;
         
         // Last sent orientation/position, for delta calculation
-        protected internal Orientation lastRot;
-        protected internal Position lastPos;
+        public Orientation _lastRot;
+        public Position _lastPos;
         internal bool hasExtPositions;
         
         public string Model = "humanoid";
@@ -48,7 +48,7 @@ namespace MCGalaxy
         }
         
         public void SetInitialPos(Position pos) {
-            Pos = pos; lastPos = pos;
+            Pos = pos; _lastPos = pos;
         }
         
         public void SetYawPitch(byte yaw, byte pitch) {

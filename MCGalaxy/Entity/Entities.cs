@@ -50,7 +50,7 @@ namespace MCGalaxy
                     Spawn(other, p, pos, rot, possession);
                 } else if (p == other && self) {
                     other.Pos = pos; other.SetYawPitch(rot.RotY, rot.HeadX);
-                    other.lastPos = other.Pos; other.lastRot = other.Rot;
+                    other._lastPos = other.Pos; other._lastRot = other.Rot;
                     Spawn(other, p, pos, rot, possession);
                 }
             }
@@ -293,7 +293,7 @@ namespace MCGalaxy
             // Avoids the very rare issue of player's position changing mid-way through iteration,
             // which can cause this player to show minorly offset to other players.
             foreach (Player p in players) {
-                p.tempPos = p.Pos;
+                p._tempPos = p.Pos;
             }
 
             foreach (Player p in players) {
@@ -301,7 +301,7 @@ namespace MCGalaxy
             }
 
             foreach (Player p in players) {
-                p.lastPos = p.tempPos; p.lastRot = p.Rot;
+                p._lastPos = p._tempPos; p._lastRot = p.Rot;
             }
         }
         #endregion

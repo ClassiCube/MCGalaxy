@@ -216,7 +216,7 @@ namespace MCGalaxy {
         public string PreTeleportMap;
         
         public string summonedMap;
-        internal Position tempPos;
+        public Position _tempPos;
 
         // Extra storage for custom commands
         public ExtrasCollection Extras = new ExtrasCollection();

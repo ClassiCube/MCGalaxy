@@ -56,14 +56,9 @@ namespace MCGalaxy {
         public string DefaultTerrain = "";
         [ConfigString("default-texture-pack-url", "Level", "", true)]
         public string DefaultTexture = "";
-        
-        [ConfigString("ssl-certificate-path", "Other", "", true)]
-        public string SslCertPath = "";
-        [ConfigString("ssl-certificate-password", "Other", "", true)]
-        public string SslCertPass = "";
+
         [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.,")]
-        public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";
-        
+        public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";        
         [ConfigBool("core-secret-commands", "Other", true)]
         public bool CoreSecretCommands = true;
         [ConfigBool("restart-on-error", "Error handling", true)]
