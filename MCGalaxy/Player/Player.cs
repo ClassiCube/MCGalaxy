@@ -63,7 +63,7 @@ namespace MCGalaxy {
             IsSuper   = true;
         }
 
-        internal Player(INetSocket socket, ClassicProtocol session) {
+        internal Player(INetSocket socket, IGameSession session) {
             Socket  = socket;
             Session = session;
             SetIP(Socket.IP);

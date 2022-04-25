@@ -93,7 +93,7 @@ namespace MCGalaxy.Network
         
         byte[] MakePacket(Player p, ref byte[] bulk, ref byte[] normal,
                           ref byte[] classic, ref byte[] ext, ref byte[] extBulk) {
-            ClassicProtocol s = p.Session;
+            IGameSession s = p.Session;
             #if TEN_BIT_BLOCKS
             if (s.hasExtBlocks) {
                 if (s.hasBulkBlockUpdate && count >= 150) {

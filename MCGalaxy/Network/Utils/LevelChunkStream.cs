@@ -20,10 +20,11 @@ using System.IO;
 using System.IO.Compression;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Network {
-    
-    /// <summary> Streams the compressed form of a map directly to a player's network socket. </summary>
-    public sealed class LevelChunkStream : Stream {
+namespace MCGalaxy.Network 
+{
+    /// <summary> Streams the compressed form of a map directly to a Minecraft Classic client </summary>
+    public sealed class LevelChunkStream : Stream 
+    {
         public override bool CanRead { get { return false; } }
         public override bool CanSeek { get { return false; } }
         public override bool CanWrite { get { return true; } }
@@ -85,8 +86,8 @@ namespace MCGalaxy.Network {
         }
 
 
-        public static void SendLevel(Player player, Level level, int volume) {
-            using (LevelChunkStream dst = new LevelChunkStream(player.Session))
+        public static void SendLevel(ClassicProtocol session, Level level, int volume) {
+            using (LevelChunkStream dst = new LevelChunkStream(session))
                 using (Stream stream = dst.CompressMapHeader(volume))
             {
                 if (level.MightHaveCustomBlocks()) {
