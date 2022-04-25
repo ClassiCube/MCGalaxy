@@ -19,10 +19,11 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MCGalaxy.Network {
-    
+namespace MCGalaxy.Network 
+{
     /// <summary> Abstracts WebSocket handling </summary>
-    public abstract class BaseWebSocket : INetSocket, INetProtocol {        
+    public abstract class BaseWebSocket : INetSocket, INetProtocol 
+    {
         protected bool conn, upgrade;
         protected bool readingHeaders = true;
         
@@ -238,7 +239,8 @@ namespace MCGalaxy.Network {
     }
     
     /// <summary> Abstracts a server side WebSocket </summary>
-    public abstract class ServerWebSocket : BaseWebSocket {
+    public abstract class ServerWebSocket : BaseWebSocket 
+    {
         bool version;
         string verKey;
         
@@ -293,7 +295,8 @@ namespace MCGalaxy.Network {
     }
     
     /// <summary> Abstracts a client side WebSocket </summary>
-    public abstract class ClientWebSocket : BaseWebSocket {
+    public abstract class ClientWebSocket : BaseWebSocket 
+    {
         protected string path = "/";
         string verKey;
         // TODO: use a random securely generated key

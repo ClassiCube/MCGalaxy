@@ -17,25 +17,27 @@ using System.Net;
 using System.Net.Sockets;
 using MCGalaxy.Events.ServerEvents;
 
-namespace MCGalaxy.Network {
-    
-    /// <summary> Abstracts listening on network socket. </summary>
-    public abstract class INetListen {
-        /// <summary> The IP address this network socket is listening on. </summary>
+namespace MCGalaxy.Network 
+{
+    /// <summary> Abstracts listening on network socket </summary>
+    public abstract class INetListen 
+    {
+        /// <summary> The IP address this network socket is listening on </summary>
         public IPAddress IP;
-        /// <summary> The port this network socket is listening on. </summary>
+        /// <summary> The port this network socket is listening on </summary>
         public int Port;
 
-        /// <summary> Begins listening for connections on the given IP and port. </summary>
-        /// <remarks> Client connections are asynchronously accepted. </remarks>
+        /// <summary> Begins listening for connections on the given IP and port </summary>
+        /// <remarks> Client connections are asynchronously accepted </remarks>
         public abstract void Listen(IPAddress ip, int port);
         
-        /// <summary> Closes this network listener. </summary>
+        /// <summary> Closes this network listener </summary>
         public abstract void Close();
     }
     
-    /// <summary> Abstracts listening on a TCP socket. </summary>
-    public sealed class TcpListen : INetListen {
+    /// <summary> Abstracts listening on a TCP socket </summary>
+    public sealed class TcpListen : INetListen 
+    {
         Socket socket;
         
         void DisableIPV6OnlyListener() {

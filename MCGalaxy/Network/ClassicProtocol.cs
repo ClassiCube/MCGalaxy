@@ -14,7 +14,6 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
@@ -56,7 +55,7 @@ namespace MCGalaxy.Network
                     return left < 2 ? 0 : 2; // only ever one level anyways
                 default:
                     player.Leave("Unhandled opcode \"" + buffer[offset] + "\"!", true);
-                    return -1;
+                    return left;
             }
         }
         
@@ -104,7 +103,7 @@ namespace MCGalaxy.Network
             
             string name   = NetUtils.ReadString(buffer, offset +  2);
             string mppass = NetUtils.ReadString(buffer, offset + 66);
-            if (!player.ProcessLogin(name, mppass)) return -1;
+            if (!player.ProcessLogin(name, mppass)) return left;
 
             UpdateFallbackTable();
             if (hasCpe) { SendCpeExtensions(); }
@@ -123,7 +122,7 @@ namespace MCGalaxy.Network
 
             byte action = buffer[offset + 7];
             if (action > 1) {
-                player.Leave("Unknown block action!", true); return -1;
+                player.Leave("Unknown block action!", true); return left;
             }
 
             BlockID held = ReadBlock(buffer, offset + 8);

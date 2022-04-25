@@ -29,7 +29,7 @@ namespace MCGalaxy.Network
         public Level level;
         public Player player;
         // fields below should not be modified by code outside of BufferedBlockSender
-        public int[] indices   = new int[256];
+        public int[] indices    = new int[256];
         public BlockID[] blocks = new BlockID[256];
         public int count;
         
