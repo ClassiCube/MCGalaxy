@@ -22,7 +22,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network
 {
-    public class ClassicProtocol : IGameSession, INetProtocol 
+    public class ClassicProtocol : IGameSession 
     {
         // these are checked very frequently, so avoid overhead of .Supports(
         bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
@@ -607,8 +607,6 @@ namespace MCGalaxy.Network
             return LineWrapper.CleanupColors(value, hasTextColors, hasTextColors);
         }
 
-        /// <summary> Returns an appropriate name for the associated player's client </summary>
-        /// <remarks> Determines name based on appname or protocol version supported </remarks>
         public override string ClientName() {
             if (!string.IsNullOrEmpty(player.appName)) return player.appName;
             byte version = ProtocolVersion;

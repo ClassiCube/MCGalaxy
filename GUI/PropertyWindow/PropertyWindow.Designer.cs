@@ -1020,7 +1020,7 @@ namespace MCGalaxy.Gui
             this.sec_cmbVerifyRank.Name = "sec_cmbVerifyRank";
             this.sec_cmbVerifyRank.Size = new System.Drawing.Size(103, 21);
             this.sec_cmbVerifyRank.TabIndex = 22;
-            this.toolTip.SetToolTip(this.sec_cmbVerifyRank, "Minimum rank that is required to use /pass before they can use commands.");
+            this.toolTip.SetToolTip(this.sec_cmbVerifyRank, "Minimum rank that is required to use /pass before they can use commands, modify blocks, or chat");
             // 
             // sec_cbVerifyAdmins
             // 
@@ -1030,7 +1030,7 @@ namespace MCGalaxy.Gui
             this.sec_cbVerifyAdmins.Size = new System.Drawing.Size(111, 17);
             this.sec_cbVerifyAdmins.TabIndex = 23;
             this.sec_cbVerifyAdmins.Text = "Admin verification";
-            this.toolTip.SetToolTip(this.sec_cbVerifyAdmins, "If enabled, admins must verify with /pass before they can use commands.");
+            this.toolTip.SetToolTip(this.sec_cbVerifyAdmins, "If enabled, admins must verify with /pass before they can use commands, modify blocks, or chat");
             this.sec_cbVerifyAdmins.UseVisualStyleBackColor = true;
             this.sec_cbVerifyAdmins.CheckedChanged += new System.EventHandler(this.VerifyAdminsChecked);
             // 
@@ -1128,7 +1128,7 @@ namespace MCGalaxy.Gui
             this.irc_txtChannel.Name = "irc_txtChannel";
             this.irc_txtChannel.Size = new System.Drawing.Size(106, 21);
             this.irc_txtChannel.TabIndex = 17;
-            this.toolTip.SetToolTip(this.irc_txtChannel, "The IRC channel to be used.");
+            this.toolTip.SetToolTip(this.irc_txtChannel, "The IRC channel to be used for general chat");
             // 
             // irc_txtOpChannel
             // 
@@ -1137,7 +1137,7 @@ namespace MCGalaxy.Gui
             this.irc_txtOpChannel.Name = "irc_txtOpChannel";
             this.irc_txtOpChannel.Size = new System.Drawing.Size(106, 21);
             this.irc_txtOpChannel.TabIndex = 26;
-            this.toolTip.SetToolTip(this.irc_txtOpChannel, "The IRC channel to be used.");
+            this.toolTip.SetToolTip(this.irc_txtOpChannel, "The IRC channel to be used for opchat");
             // 
             // lvl_chkAutoload
             // 
