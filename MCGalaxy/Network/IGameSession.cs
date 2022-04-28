@@ -34,6 +34,8 @@ namespace MCGalaxy.Network
         public bool hasCustomBlocks, hasExtBlocks, hasBlockDefs, hasBulkBlockUpdate;
         protected INetSocket socket;
         protected Player player;
+        /// <summary> Temporary unique ID for this network session </summary>
+        public int ID;
 
         public int ProcessReceived(byte[] buffer, int bufferLen) {
             int read = 0;

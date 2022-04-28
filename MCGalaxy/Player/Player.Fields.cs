@@ -158,13 +158,9 @@ namespace MCGalaxy {
         public byte checkpointRotX, checkpointRotY;
         public bool voted;
         public bool flipHead;
-        public GameProps Game = new GameProps();
-        
+        public GameProps Game = new GameProps();     
         /// <summary> Persistent ID of this user in the Players table. </summary>
         public int DatabaseID;
-        public const int SessionIDMask = (1 << 20) - 1;
-        /// <summary> Temp unique ID for this session only. </summary>
-        public int SessionID;
 
         public List<CopyState> CopySlots = new List<CopyState>();
         public int CurrentCopySlot;

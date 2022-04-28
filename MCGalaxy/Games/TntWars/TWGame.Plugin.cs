@@ -158,10 +158,12 @@ namespace MCGalaxy.Games {
 
         void AddTntCheck(int b, Player p) {
             PhysicsArgs args = default(PhysicsArgs);
-            args.Type1 = PhysicsArgs.Custom;
-            args.Value1 = (byte)p.SessionID;
-            args.Value2 = (byte)(p.SessionID >> 8);
-            args.Data = (byte)(p.SessionID >> 16);
+            int sessionID = p.Session.ID;
+            
+            args.Type1  = PhysicsArgs.Custom;
+            args.Value1 = (byte)sessionID;
+            args.Value2 = (byte)(sessionID >> 8);
+            args.Data   = (byte)(sessionID >> 16);
             Map.AddCheck(b, false, args);
         }
         
@@ -210,8 +212,9 @@ namespace MCGalaxy.Games {
             
             int id = args.Value1 | args.Value2 << 8 | (args.Data & 0xF) << 16;
             Player[] players = PlayerInfo.Online.Items;
-            for (int i = 0; i < players.Length; i++) {
-                if (players[i].SessionID == id) return players[i];
+            for (int i = 0; i < players.Length; i++) 
+            {
+                if (players[i].Session.ID == id) return players[i];
             }
             return null;
         }

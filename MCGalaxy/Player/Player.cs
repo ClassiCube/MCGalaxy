@@ -59,19 +59,20 @@ namespace MCGalaxy {
             DisplayName = playername;
             
             SetIP(IPAddress.Loopback);
-            SessionID = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
             IsSuper   = true;
         }
 
+        const int SESSION_ID_MASK = (1 << 20) - 1;
         public Player(INetSocket socket, IGameSession session) {
             Socket  = socket;
             Session = session;
             SetIP(Socket.IP);
             
             spamChecker = new SpamChecker(this);
-            SessionID   = Interlocked.Increment(ref sessionCounter) & SessionIDMask;
+            session.ID  = Interlocked.Increment(ref sessionCounter) & SESSION_ID_MASK;
             
-            for (int b = 0; b < BlockBindings.Length; b++) {
+            for (int b = 0; b < BlockBindings.Length; b++) 
+            {
                 BlockBindings[b] = (BlockID)b;
             }
         }
