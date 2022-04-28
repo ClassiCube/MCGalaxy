@@ -230,7 +230,7 @@ namespace MCGalaxy {
         bool gotSQLData;
         
         
-        public bool cancelcommand, cancelchat, cancelmove;
+        public bool cancelcommand, cancelchat;
         public bool cancellogin, cancelconnecting, cancelDeath;     
       
         /// <summary> Called when a player removes or places a block.

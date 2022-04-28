@@ -28,7 +28,7 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Core {
     internal static class MiscHandlers {
         
-        internal static void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
+        internal static void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch, ref bool cancel) {
             if (!p.frozen) return;
             
             bool movedX = Math.Abs(next.X - p.Pos.X) > 4;  // moved more than 0.125 blocks horizontally
@@ -37,7 +37,7 @@ namespace MCGalaxy.Core {
             p.SetYawPitch(yaw, pitch);
             
             if (movedX || movedY || movedZ) { p.SendPosition(p.Pos, p.Rot); }
-            p.cancelmove = true;
+            cancel = true;
         }
         
         internal static void HandleSentMap(Player p, Level prevLevel, Level level) {

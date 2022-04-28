@@ -41,7 +41,7 @@ namespace MCGalaxy.Games
             base.UnhookEventHandlers();
         }
         
-        void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch) {
+        void HandlePlayerMove(Player p, Position next, byte yaw, byte pitch, ref bool cancel) {
             if (!RoundInProgress || !FreezeMode) return;
             if (!Remaining.Contains(p)) return;
             
@@ -54,7 +54,7 @@ namespace MCGalaxy.Games
             
             p.Pos = next;
             p.SetYawPitch(yaw, pitch);
-            p.cancelmove = true;
+            cancel = true;
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {

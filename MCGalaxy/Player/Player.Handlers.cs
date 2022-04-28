@@ -230,8 +230,9 @@ namespace MCGalaxy
             Position next = new Position(x, y, z);
             CheckBlocks(Pos, next);
 
-            OnPlayerMoveEvent.Call(this, next, yaw, pitch);
-            if (cancelmove) { cancelmove = false; return; }
+            bool cancel = false;
+            OnPlayerMoveEvent.Call(this, next, yaw, pitch, ref cancel);
+            if (cancel) { cancel = false; return; }
             
             Pos = next;
             SetYawPitch(yaw, pitch);

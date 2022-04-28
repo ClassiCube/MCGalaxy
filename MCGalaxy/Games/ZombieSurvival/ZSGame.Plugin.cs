@@ -119,7 +119,7 @@ namespace MCGalaxy.Games {
             p.Message("&3Zombie Survival &Sis running! Type &T/ZS go &Sto join");
         }
         
-        void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY) {
+        void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY, ref bool cancel) {
             if (!RoundInProgress || p.level != Map) return;
             
             // TODO: Maybe tidy this up?
@@ -127,7 +127,7 @@ namespace MCGalaxy.Games {
             if (p.Game.Speed  == null) p.Game.Speed  = new SpeedhackDetector(p);
             
             bool reverted = p.Game.Noclip.Detect(next) || p.Game.Speed.Detect(next, Config.MaxMoveDist);
-            if (reverted) p.cancelmove = true;
+            if (reverted) cancel = true;
         }
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
