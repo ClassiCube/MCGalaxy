@@ -153,7 +153,7 @@ namespace MCGalaxy.Commands.Info {
                       (data.Get(EnvProp.WeatherSpeed) / 256f).ToString("F2"));
             p.Message("Weather fade rate: &b{0}%&S, Exponential fog: {1}",
                       (data.Get(EnvProp.WeatherFade) / 128f).ToString("F2"),
-                      cfg.ExpFog > 0 ? "&aON" : "&cOFF");
+                      data.Get(EnvProp.ExpFog) > 0 ? "&aON" : "&cOFF");
             p.Message("Skybox rotations: Horizontal &b{0}&S, Vertical &b{1}",
                       data.GetSkybox(EnvProp.SkyboxHorSpeed), 
                       data.GetSkybox(EnvProp.SkyboxVerSpeed));

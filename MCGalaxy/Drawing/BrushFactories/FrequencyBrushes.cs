@@ -77,12 +77,15 @@ namespace MCGalaxy.Drawing.Brushes
             if (bCount == 0) blocks[0] = args.Block;
         }
         
+    	/// <summary> Combines arrays of block IDs and weights/counts into a single array of block IDs </summary>
+    	/// <example> [DIRT, GRASS] and [2, 1] becomes [DIRT, DIRT, GRASS] </example>
         public static BlockID[] Combine(BlockID[] toAffect, int[] count) {
             int sum = 0;
             for (int i = 0; i < count.Length; i++) sum += count[i];
             
             BlockID[] blocks = new BlockID[sum];
-            for (int i = 0, index = 0; i < toAffect.Length; i++) {
+            for (int i = 0, index = 0; i < toAffect.Length; i++) 
+            {
                 for (int j = 0; j < count[i]; j++)
                     blocks[index++] = toAffect[i];
             }
