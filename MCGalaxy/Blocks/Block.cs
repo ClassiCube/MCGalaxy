@@ -186,16 +186,15 @@ namespace MCGalaxy {
             }
         }
         
+        /// <summary> Converts a raw/client block ID to a server block ID </summary>
         public static BlockID FromRaw(BlockID raw) {
             return raw < CPE_COUNT ? raw : (BlockID)(raw + Block.Extended);
         }
         
+        /// <summary> Converts a server block ID to a raw/client block ID </summary>
+        /// <remarks> Undefined behaviour for physics block IDs </remarks>
         public static BlockID ToRaw(BlockID raw) {
             return raw < CPE_COUNT ? raw : (BlockID)(raw - Block.Extended);
-        }
-        
-        public static BlockID FromRaw(byte raw, bool extended) {
-            return (BlockID)(raw | (extended ? Block.Extended : Block.Air));
         }
         
         public static BlockID MapOldRaw(BlockID raw) {

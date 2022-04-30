@@ -22,9 +22,10 @@ using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
 
-namespace MCGalaxy {
-    public static class PlayerOperations {
-        
+namespace MCGalaxy 
+{
+    public static class PlayerOperations 
+    {        
         /// <summary> Attempts to change the login message of the target player </summary>
         /// <remarks> Not allowed when players who cannot speak (e.g. muted) </remarks>
         public static bool SetLoginMessage(Player p, string target, string message) {

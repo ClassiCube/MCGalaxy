@@ -37,7 +37,6 @@ namespace MCGalaxy {
         /// </summary>
         public string name;
 
-        public string Color { get { return Config.Color; } }
         public string ColoredName { get { return Config.Color + name; } }
         public LevelConfig Config = new LevelConfig();
         
@@ -58,7 +57,12 @@ namespace MCGalaxy {
         internal HandlePhysics[] physicsDoorsHandlers = new HandlePhysics[Block.SUPPORTED_COUNT];
         internal AABB[] blockAABBs = new AABB[Block.SUPPORTED_COUNT];
         
-        public ushort Width, Height, Length;
+        /// <summary> The width of this level (Number of blocks across in X dimension) </summary>
+        public ushort Width;
+        /// <summary> The height of this level (Number of blocks tall in Y dimension) </summary>
+        public ushort Height;
+        /// <summary> The length of this level (Number of blocks across in Z dimension) </summary>
+        public ushort Length;
         /// <summary> Whether this level should be treated as a readonly museum </summary>
         public bool IsMuseum;
 

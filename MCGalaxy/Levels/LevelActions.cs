@@ -26,10 +26,10 @@ using MCGalaxy.Levels.IO;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
-namespace MCGalaxy {
-    
-    public static class LevelActions {
-        
+namespace MCGalaxy 
+{    
+    public static class LevelActions 
+    {       
         static string BlockPropsLvlPath(string map) { return Paths.BlockPropsPath("_" + map); }
         static string BlockPropsOldPath(string map) { return Paths.BlockPropsPath("lvl_" + map); }
         

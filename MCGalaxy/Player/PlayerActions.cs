@@ -21,9 +21,10 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Commands.World;
 
-namespace MCGalaxy {
-    public static class PlayerActions {
-        
+namespace MCGalaxy 
+{
+    public static class PlayerActions 
+    {      
         public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
         public static bool ChangeMap(Player p, Level lvl)   { return ChangeMap(p, lvl, null); }
         
