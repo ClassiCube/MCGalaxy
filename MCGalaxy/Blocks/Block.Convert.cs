@@ -35,6 +35,8 @@ namespace MCGalaxy
             return BlockDefinition.GlobalDefs[b] != null;
         }
         
+        /// <summary> Gets the name for the block with the given block ID </summary>
+        /// <remarks> Block names can differ depending on the player's level </remarks>
         public static string GetName(Player p, BlockID block) {
             if (IsPhysicsType(block)) return coreNames[block];
             

@@ -17,7 +17,7 @@
  */
 //StormCom Object Generator
 //
-//Full use to all StormCom Server System codes (in regards to minecraft classic) have been granted to MCGalaxy without restriction.
+//Full use to all StormCom Server System codes (in regards to minecraft classic) have been granted to MCForge without restriction.
 //
 // ~Merlin33069
 using System;

@@ -23,6 +23,7 @@ using BlockRaw = System.Byte;
 
 namespace MCGalaxy.Drawing 
 {
+    /// <summary> Represents a copied region/area of blocks plus some additional data </summary>
     public sealed class CopyState 
     {  
         byte[] blocks;
@@ -33,7 +34,10 @@ namespace MCGalaxy.Drawing
         public bool PasteAir;
         public int UsedBlocks;
         public Vec3S32 Offset;
+        /// <summary> Point at time at which this copy was created </summary>
         public DateTime CopyTime;
+        /// <summary> Origin of this copy/where this copy came from </summary>
+        /// <example> "level example1", "file example2" </example>
         public string CopySource;
         
         internal int OppositeOriginX { get { return OriginX == X ? X + Width - 1 : X; } }
@@ -43,6 +47,7 @@ namespace MCGalaxy.Drawing
         const int chunkSize = 0x1000, chunkShift = 12, chunkMask = 0xFFF;
         public int Volume { get { return Width * Height * Length; } }
         public int ExtChunks { get { return (Volume + (chunkSize - 1)) / chunkSize; } }
+        
         public string Summary {
             get { return Volume + " blocks from " + CopySource + ", " + (DateTime.UtcNow - CopyTime).Shorten(true) + " ago"; }
         }

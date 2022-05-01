@@ -20,17 +20,8 @@ namespace MCGalaxy.Gui.Popups
                 rgb = Color.FromArgb(col.R, col.G, col.B);
             }
             
-            // https://stackoverflow.com/questions/596216/formula-to-determine-perceived-brightness-of-rgb-color
-            double r = Map(rgb.R), g = Map(rgb.G), b = Map(rgb.B);
-            double L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-            textCol = L > 0.179 ? Color.Black : Color.White;
+            textCol = ColorUtils.CalcBackgroundColor(rgb);
             return rgb;
-        }
-
-        static double Map(double c) {
-            c /= 255.0;
-            if (c <= 0.03928) return c / 12.92;
-            return Math.Pow((c + 0.055) / 1.055, 2.4);
         }
         
 

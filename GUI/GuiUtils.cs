@@ -50,13 +50,13 @@ namespace MCGalaxy.Gui
     
     public static class GuiUtils 
     {   
-    	/// <summary> MCGalaxy window icon (shared) </summary>
-    	public static Icon WinIcon;
-    	
-    	public static void SetIcon(Form form) {
-    	    try { form.Icon = WinIcon; } catch { }
-    	}
-    	
+        /// <summary> MCGalaxy window icon (shared) </summary>
+        public static Icon WinIcon;
+        
+        public static void SetIcon(Form form) {
+            try { form.Icon = WinIcon; } catch { }
+        }
+        
         /// <summary> Opens the given url in the system's default web browser </summary>
         /// <remarks> Catches and logs any unhandled errors </remarks>
         public static void OpenBrowser(string url) {
@@ -66,6 +66,38 @@ namespace MCGalaxy.Gui
                 Logger.LogError("Opening url in browser", ex);
                 Popup.Error("Failed to open " + url);
             }
+        }
+    }
+    
+    public static class ColorUtils
+    {
+        struct RGB { public double R, G, B; }
+        struct HSV { public double H, S, V; }
+        
+        
+        /// <summary> Returns black or white color depending on brightness of the given color </summary>
+        public static Color CalcBackgroundColor(Color color) {
+            // https://stackoverflow.com/questions/596216/formula-to-determine-perceived-brightness-of-rgb-color
+            RGB c = sRGBToLinear(color);
+            double L = 0.2126 * c.R + 0.7152 * c.G + 0.0722 * c.B;
+            return L > 0.179 ? Color.Black : Color.White;
+        }
+        
+        
+        /// <summary> Converts gamma corrected RGB to linear RGB </summary>
+        static RGB sRGBToLinear(Color c) {
+            RGB rgb;
+            rgb.R = Linear(c.R);
+            rgb.G = Linear(c.G);
+            rgb.B = Linear(c.B);
+            return rgb;
+        }
+        
+        /// <summary> Converts gamma corrected value to linear value </summary>
+        static double Linear(double c) {
+            c /= 255.0;
+            if (c <= 0.03928) return c / 12.92;
+            return Math.Pow((c + 0.055) / 1.055, 2.4);
         }
     }
 }

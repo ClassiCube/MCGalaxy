@@ -53,7 +53,7 @@ namespace MCGalaxy {
         }
         
         
-        /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
+        /// <summary> Adds a ban entry for the given user (who banned them and why they were banned) </summary>
         public static void BanPlayer(Player banner, string target, string reason, bool stealth, string oldrank) {
             if (reason.Length == 0) reason = Server.Config.DefaultBanMessage;
             reason = reason.Replace(" ", "%20");
@@ -62,7 +62,7 @@ namespace MCGalaxy {
             AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), oldrank);
         }
         
-        /// <summary> Adds a ban entry for the given user, and who banned them and why they were banned. </summary>
+        /// <summary> Adds an unban entry for the given user (who unbanned them and why they were unbanned) </summary>
         public static void UnbanPlayer(Player unbanner, string target, string reason) {
             if (reason.Length == 0) reason = "(none given)";
             reason = reason.Replace(" ", "%20");

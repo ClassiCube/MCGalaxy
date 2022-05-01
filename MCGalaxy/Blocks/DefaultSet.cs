@@ -16,16 +16,15 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Text;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy.Blocks {
-    
-    /// <summary> Stores default properties for blocks in Minecraft Classic. (and CPE blocks). </summary>
-    public static class DefaultSet {
-        
-        /// <summary> Constructs a custom block, with the default properties of the given classic/CPE block. </summary>
+namespace MCGalaxy.Blocks 
+{    
+    /// <summary> Stores default properties for blocks in Minecraft Classic (and CPE blocks) </summary>
+    public static class DefaultSet 
+    {    
+        /// <summary> Constructs a custom block, with the default properties of the given classic/CPE block </summary>
         public static BlockDefinition MakeCustomBlock(BlockID b) {
             BlockDefinition def = new BlockDefinition();
             def.SetBlock(b);
@@ -141,7 +140,7 @@ namespace MCGalaxy.Blocks {
         }
         
 
-        /// <summary> Gets the default draw type of a block, see Draw class. </summary>        
+        /// <summary> Gets the default draw type of a block, see DrawType class. </summary>        
         public static byte Draw(BlockID b) {
             if (b == Block.Air || b == Block.Invalid) return DrawType.Gas;
             if (b == Block.Leaves) return DrawType.TransparentThick;
@@ -192,7 +191,8 @@ namespace MCGalaxy.Blocks {
             36, 37, 16, 11, 57, 50, 38, 80, 81, 82, 83, 84, 51, 54, 86, 58, 53, 52 };
     }
     
-    public static class DrawType {
+    public static class DrawType 
+    {
         public const byte Opaque = 0;
         public const byte Transparent = 1;
         public const byte TransparentThick = 2; // e.g. leaves render all neighbours
@@ -201,7 +201,8 @@ namespace MCGalaxy.Blocks {
         public const byte Sprite = 5;
     }
     
-    public static class CollideType {
+    public static class CollideType 
+    {
         public const byte WalkThrough = 0; // Gas (usually also used by sprite)
         public const byte SwimThrough = 1; // Liquid
         public const byte Solid       = 2; // Solid
@@ -216,7 +217,8 @@ namespace MCGalaxy.Blocks {
         }
     }
     
-    public enum SoundType : byte {
+    public enum SoundType : byte 
+    {
         None, Wood, Gravel, Grass, Stone,
         Metal, Glass, Cloth, Sand, Snow,
     }

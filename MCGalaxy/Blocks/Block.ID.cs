@@ -373,7 +373,6 @@ namespace MCGalaxy
         public const byte Door_Gold = 253;
         //public const byte Door_Gold_air = 254;       // unused in core
         
-        public const byte Zero = 0xff; // backwards compatibility
         public const byte Invalid = 0xff;
         
         public const ushort Extended = 256;
