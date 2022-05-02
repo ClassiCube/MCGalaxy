@@ -28,7 +28,7 @@ namespace MCGalaxy.Drawing.Ops
         
         public PyramidDrawOp(DrawOp baseOp, int yDir) {
             this.baseOp = baseOp;
-            this.yDir = yDir;
+            this.yDir   = yDir;
         }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
@@ -48,8 +48,7 @@ namespace MCGalaxy.Drawing.Ops
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3S32 p1 = Min, p2 = Max;
-            baseOp.SetLevel(Level);
-            baseOp.Player = Player;
+            baseOp.Setup(Player, Level, marks);
             
             while (p1.Y >= 0 && p1.Y < Level.Height && p1.X <= p2.X && p1.Z <= p2.Z) {
                 baseOp.Min = p1; baseOp.Max = p2;
@@ -81,7 +80,7 @@ namespace MCGalaxy.Drawing.Ops
         DrawOp wallOp;
         Brush airBrush;
         public PyramidReverseDrawOp() : base(new CuboidDrawOp(), -1) {
-            wallOp = new CuboidWallsDrawOp();
+            wallOp   = new CuboidWallsDrawOp();
             airBrush = new SolidBrush(Block.Air);
         }
         
@@ -89,10 +88,8 @@ namespace MCGalaxy.Drawing.Ops
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
-            wallOp.Min = Min; wallOp.Max = Max;
-            baseOp.Min = Min; baseOp.Max = Max;
-            wallOp.SetLevel(Level); baseOp.SetLevel(Level);
-            wallOp.Player = Player; baseOp.Player = Player;
+            baseOp.Setup(Player, Level, marks);
+            wallOp.Setup(Player, Level, marks);
             
             while (true) {
                 wallOp.Perform(marks, brush, output);

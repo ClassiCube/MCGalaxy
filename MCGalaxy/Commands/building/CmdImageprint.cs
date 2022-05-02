@@ -121,8 +121,7 @@ namespace MCGalaxy.Commands.Building {
                 bmp = Resize(bmp, width, height);
             }
             
-            op.SetLevel(p.level);
-            op.Player = p; op.Source = bmp; op.Palette = dArgs.Pal;
+            op.Source = bmp; op.Palette = dArgs.Pal;
             DrawOpPerformer.Do(op, null, p, marks, false);
         }
         

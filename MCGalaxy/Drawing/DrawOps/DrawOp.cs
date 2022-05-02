@@ -85,10 +85,13 @@ namespace MCGalaxy.Drawing.Ops
         public abstract void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output);
         
         
+        /// <summary> Sets the player and level associated with this draw operation, then called SetMarks </summary>
         public void Setup(Player p, Level lvl, Vec3S32[] marks) {
             Player = p;
+            Level  = lvl;
+            clip   = new Vec3S32(lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
+            
             SetMarks(marks);
-            SetLevel(lvl);
         }
         
         public virtual bool CanDraw(Vec3S32[] marks, Player p, long affected) {
@@ -100,16 +103,11 @@ namespace MCGalaxy.Drawing.Ops
         
         public virtual void SetMarks(Vec3S32[] marks) {
             Origin = marks[0]; Min = marks[0]; Max = marks[0];
-            for (int i = 1; i < marks.Length; i++) {
+            for (int i = 1; i < marks.Length; i++) 
+            {
                 Min = Vec3S32.Min(Min, marks[i]);
                 Max = Vec3S32.Max(Max, marks[i]);
             }
-        }
-        
-        /// <summary> Sets the level associated with this draw operation. </summary>
-        public void SetLevel(Level lvl) {
-            Level = lvl;
-            clip = new Vec3S32(lvl.Width - 1, lvl.Height - 1, lvl.Length - 1);
         }
         
         
