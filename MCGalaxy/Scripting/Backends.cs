@@ -55,41 +55,39 @@ namespace MCGalaxy.Scripting
 
 // Add any other using statements you need after this
 using System;
+using MCGalaxy;
 
-namespace MCGalaxy 
+public class Cmd{0} : Command
 {{
-\tpublic class Cmd{0} : Command
+\t// The command's name (what you put after a slash to use this command)
+\tpublic override string name {{ get {{ return ""{0}""; }} }}
+
+\t// Command's shortcut, can be left blank (e.g. ""/Copy"" has a shortcut of ""c"")
+\tpublic override string shortcut {{ get {{ return """"; }} }}
+
+\t// Which submenu this command displays in under /Help
+\tpublic override string type {{ get {{ return ""other""; }} }}
+
+\t// Whether or not this command can be used in a museum. Block/map altering commands should return false to avoid errors.
+\tpublic override bool museumUsable {{ get {{ return true; }} }}
+
+\t// The default rank required to use this command. Valid values are:
+\t//   LevelPermission.Guest, LevelPermission.Builder, LevelPermission.AdvBuilder,
+\t//   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Owner
+\tpublic override LevelPermission defaultRank {{ get {{ return LevelPermission.Guest; }} }}
+
+\t// This is for when a player executes this command by doing /{0}
+\t//   p is the player object for the player executing the command. 
+\t//   message is the arguments given to the command. (e.g. for '/{0} this', message is ""this"")
+\tpublic override void Use(Player p, string message)
 \t{{
-\t\t// The command's name (what you put after a slash to use this command)
-\t\tpublic override string name {{ get {{ return ""{0}""; }} }}
+\t\tp.Message(""Hello World!"");
+\t}}
 
-\t\t// Command's shortcut, can be left blank (e.g. ""/Copy"" has a shortcut of ""c"")
-\t\tpublic override string shortcut {{ get {{ return """"; }} }}
-
-\t\t// Which submenu this command displays in under /Help
-\t\tpublic override string type {{ get {{ return ""other""; }} }}
-
-\t\t// Whether or not this command can be used in a museum. Block/map altering commands should return false to avoid errors.
-\t\tpublic override bool museumUsable {{ get {{ return true; }} }}
-
-\t\t// The default rank required to use this command. Valid values are:
-\t\t//   LevelPermission.Guest, LevelPermission.Builder, LevelPermission.AdvBuilder,
-\t\t//   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Owner
-\t\tpublic override LevelPermission defaultRank {{ get {{ return LevelPermission.Guest; }} }}
-
-\t\t// This is for when a player executes this command by doing /{0}
-\t\t//   p is the player object for the player executing the command. 
-\t\t//   message is the arguments given to the command. (e.g. for '/{0} this', message is ""this"")
-\t\tpublic override void Use(Player p, string message)
-\t\t{{
-\t\t\tp.Message(""Hello World!"");
-\t\t}}
-
-\t\t// This is for when a player does /Help {0}
-\t\tpublic override void Help(Player p)
-\t\t{{
-\t\t\tp.Message(""/{0} - Does stuff. Example command."");
-\t\t}}
+\t// This is for when a player does /Help {0}
+\tpublic override void Help(Player p)
+\t{{
+\t\tp.Message(""/{0} - Does stuff. Example command."");
 \t}}
 }}";
             }
@@ -157,61 +155,60 @@ namespace MCGalaxy
 
 ' Add any other Imports statements you need after this
 Imports System
+Imports MCGalaxy
 
-Namespace MCGalaxy
-\tPublic Class Cmd{0}
-\t\tInherits Command
+Public Class Cmd{0}
+\tInherits Command
 
-\t\t' The command's name (what you put after a slash to use this command)
-\t\tPublic Overrides ReadOnly Property name() As String
-\t\t\tGet
-\t\t\t\tReturn ""{0}""
-\t\t\tEnd Get
-\t\tEnd Property
+\t' The command's name (what you put after a slash to use this command)
+\tPublic Overrides ReadOnly Property name() As String
+\t\tGet
+\t\t\tReturn ""{0}""
+\t\tEnd Get
+\tEnd Property
 
-\t\t' Command's shortcut, can be left blank (e.g. ""/Copy"" has a shortcut of ""c"")
-\t\tPublic Overrides ReadOnly Property shortcut() As String
-\t\t\tGet
-\t\t\t\tReturn """"
-\t\t\tEnd Get
-\t\tEnd Property
+\t' Command's shortcut, can be left blank (e.g. ""/Copy"" has a shortcut of ""c"")
+\tPublic Overrides ReadOnly Property shortcut() As String
+\t\tGet
+\t\t\tReturn """"
+\t\tEnd Get
+\tEnd Property
 
-\t\t' Which submenu this command displays in under /Help   
-\t\tPublic Overrides ReadOnly Property type() As String
-\t\t\tGet
-\t\t\t\tReturn ""other""
-\t\t\tEnd Get
-\t\t End Property
+\t' Which submenu this command displays in under /Help   
+\tPublic Overrides ReadOnly Property type() As String
+\t\tGet
+\t\t\tReturn ""other""
+\t\tEnd Get
+\t End Property
 
-\t\t' Whether or not this command can be used in a museum. Block/map altering commands should return False to avoid errors.
-\t\tPublic Overrides ReadOnly Property museumUsable() As Boolean
-\t\t\tGet
-\t\t\t\tReturn True
-\t\t\tEnd Get
-\t\tEnd Property
+\t' Whether or not this command can be used in a museum. Block/map altering commands should return False to avoid errors.
+\tPublic Overrides ReadOnly Property museumUsable() As Boolean
+\t\tGet
+\t\t\tReturn True
+\t\tEnd Get
+\tEnd Property
 
-\t\t' The default rank required to use this command. Valid values are:
-\t\t'   LevelPermission.Guest, LevelPermission.Builder, LevelPermission.AdvBuilder,
-\t\t'   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Owner
-\t\tPublic Overrides ReadOnly Property defaultRank() As LevelPermission
-\t\t\tGet
-\t\t\t\tReturn LevelPermission.Guest
-\t\t\tEnd Get
-\t\tEnd Property
+\t' The default rank required to use this command. Valid values are:
+\t'   LevelPermission.Guest, LevelPermission.Builder, LevelPermission.AdvBuilder,
+\t'   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Owner
+\tPublic Overrides ReadOnly Property defaultRank() As LevelPermission
+\t\tGet
+\t\t\tReturn LevelPermission.Guest
+\t\tEnd Get
+\tEnd Property
 
-\t\t' This is for when a player executes this command by doing /{0}
-\t\t'   p is the player object for the player executing the command.
-\t\t'   message is the arguments given to the command. (e.g. for '/{0} this', message is ""this"")
-\t\tPublic Overrides Sub Use(p As Player, message As String)
-\t\t\tp.Message(""Hello World!"")
-\t\tEnd Sub
+\t' This is for when a player executes this command by doing /{0}
+\t'   p is the player object for the player executing the command.
+\t'   message is the arguments given to the command. (e.g. for '/{0} this', message is ""this"")
+\tPublic Overrides Sub Use(p As Player, message As String)
+\t\tp.Message(""Hello World!"")
+\tEnd Sub
 
-\t\t' This is for when a player does /Help {0}
-\t\tPublic Overrides Sub Help(p As Player)
-\t\t\tp.Message(""/{0} - Does stuff. Example command."")
-\t\tEnd Sub
-\tEnd Class
-End Namespace";
+\t' This is for when a player does /Help {0}
+\tPublic Overrides Sub Help(p As Player)
+\t\tp.Message(""/{0} - Does stuff. Example command."")
+\tEnd Sub
+End Class";
             }
         }
         
