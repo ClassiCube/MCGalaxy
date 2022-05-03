@@ -34,13 +34,13 @@ namespace MCGalaxy.Commands.Building {
             
             string replaceCmd = ReplaceNot ? "ReplaceNot" : "Replace";
             if (!p.CanUse(replaceCmd) || !p.CanUse("Brush")) {
-                p.Message("You cannot use /brush and/or /" + replaceCmd + 
-                                   ", so therefore cannot use this command."); return null;
+                p.Message("You cannot use &T/Brush &Sand/or &T/" + replaceCmd + 
+                          "&S, so therefore cannot use this command."); return null;
             }
             
             
             BlockID target;
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], "draw with", out target)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], "replace", out target)) return null;
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             if (factory == null) {

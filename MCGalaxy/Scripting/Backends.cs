@@ -74,7 +74,7 @@ namespace MCGalaxy
 
 \t\t// The default rank required to use this command. Valid values are:
 \t\t//   LevelPermission.Guest, LevelPermission.Builder, LevelPermission.AdvBuilder,
-\t\t//   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Nobody
+\t\t//   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Owner
 \t\tpublic override LevelPermission defaultRank {{ get {{ return LevelPermission.Guest; }} }}
 
 \t\t// This is for when a player executes this command by doing /{0}
@@ -192,7 +192,7 @@ Namespace MCGalaxy
 
 \t\t' The default rank required to use this command. Valid values are:
 \t\t'   LevelPermission.Guest, LevelPermission.Builder, LevelPermission.AdvBuilder,
-\t\t'   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Nobody
+\t\t'   LevelPermission.Operator, LevelPermission.Admin, LevelPermission.Owner
 \t\tPublic Overrides ReadOnly Property defaultRank() As LevelPermission
 \t\t\tGet
 \t\t\t\tReturn LevelPermission.Guest

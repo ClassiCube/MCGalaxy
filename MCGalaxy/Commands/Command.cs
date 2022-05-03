@@ -26,10 +26,16 @@ namespace MCGalaxy
 {
     public abstract partial class Command 
     {
+        /// <summary> The full name of this command (e.g. 'Copy') </summary>
         public abstract string name { get; }
+        /// <summary> The shortcut/short name of this command (e.g. `"c"`) </summary>
         public virtual string shortcut { get { return ""; } }
+        /// <summary> The type/group of this command (see `CommandTypes` class) </summary>
         public abstract string type { get; }
+        /// <summary> Whether this comand can be used in museums </summary>
+        /// <remarks> Level altering (e.g. places a block) commands should return false </remarks>
         public virtual bool museumUsable { get { return true; } }
+        /// <summary> The default minimum rank that is required to use this command </summary>
         public virtual LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
         public abstract void Use(Player p, string message);
@@ -41,10 +47,15 @@ namespace MCGalaxy
         public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
         public virtual CommandAlias[] Aliases { get { return null; } }
         
+        /// <summary> Whether this command is usable by 'super' players (Console, IRC, etc) </summary>
         public virtual bool SuperUseable { get { return true; } }
         public virtual bool MessageBlockRestricted { get { return false; } }
         public virtual bool UseableWhenFrozen { get { return false; } }
+        /// <summary> Whether using this command is logged to server logs </summary>
+        /// <remarks> return false to prevent this command showing in logs (e.g. /pass) </remarks>
         public virtual bool LogUsage { get { return true; } }
+        /// <summary> Whether this commands updates the 'most recent command used' by players </summary>
+        /// <remarks> return false to prevent this command showing in /last (e.g. /pass, /hide) </remarks>
         public virtual bool UpdatesLastCmd { get { return true; } }
         
         public static CommandList all = new CommandList();

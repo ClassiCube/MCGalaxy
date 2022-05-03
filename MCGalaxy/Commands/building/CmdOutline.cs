@@ -33,7 +33,9 @@ namespace MCGalaxy.Commands.Building {
             
             BlockID target;
             string[] parts = dArgs.Message.SplitSpaces(2);
-            if (!CommandParser.GetBlockIfAllowed(p, parts[0], "draw with", out target)) return null;
+            // NOTE: Don't need to check if allowed to use block here
+            // (OutlineDrawOp skips all blocks that are equal to target)
+            if (!CommandParser.GetBlock(p, parts[0], out target)) return null;
             
             OutlineDrawOp op = new OutlineDrawOp();
             // e.g. testing air 'above' grass - therefore op.Above needs to be false for 'up mode'
