@@ -103,7 +103,7 @@ namespace MCGalaxy.Commands.Moderation {
         }
 
         bool CheckResetPerms(Player p, CommandData data) {
-            // check server owner name for backwards compatibility
+            // check server owner name for permissions backwards compatibility
             return Server.Config.OwnerName.CaselessEq(p.name) || CheckExtraPerm(p, data, 1);
         }
         

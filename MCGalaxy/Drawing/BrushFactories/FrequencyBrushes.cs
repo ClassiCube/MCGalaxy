@@ -46,7 +46,7 @@ namespace MCGalaxy.Drawing.Brushes
                 
                 int sepIndex = parts[i].IndexOf('/'); 
                 string arg = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
-                if (!CommandParser.GetBlockIfAllowed(p, arg, out blocks[j], true)) return null;
+                if (!CommandParser.GetBlockIfAllowed(p, arg, "draw with", out blocks[j], true)) return null;
                 
                 if (sepIndex >= 0) {
                     arg = parts[i].Substring(sepIndex + 1);

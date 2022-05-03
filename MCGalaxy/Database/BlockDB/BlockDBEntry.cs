@@ -80,11 +80,11 @@ namespace MCGalaxy.DB {
         public const ushort Restored    = 1 << 7;
         public const ushort UndoOther   = 1 << 8;
         public const ushort UndoSelf    = 1 << 9;
-        public const ushort RedoSelf    = 1 << 10;        
+        public const ushort RedoSelf    = 1 << 10;
         public const ushort FixGrass    = 1 << 11;
         
         public const ushort OldExtended2 = 1 << 12;
-        public const ushort NewExtended2 = 1 << 13;        
+        public const ushort NewExtended2 = 1 << 13;
         public const ushort OldExtended  = 1 << 14;
         public const ushort NewExtended  = 1 << 15;
     }

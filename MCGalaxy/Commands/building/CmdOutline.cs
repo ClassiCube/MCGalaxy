@@ -26,13 +26,14 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         
         protected override DrawOp GetDrawOp(DrawArgs dArgs) {
+            Player p = dArgs.Player;
             if (dArgs.Message.Length == 0) {
-                dArgs.Player.Message("Block name is required."); return null;
+                p.Message("Block name is required."); return null;
             }
             
             BlockID target;
             string[] parts = dArgs.Message.SplitSpaces(2);
-            if (!CommandParser.GetBlockIfAllowed(dArgs.Player, parts[0], out target)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, parts[0], "draw with", out target)) return null;
             
             OutlineDrawOp op = new OutlineDrawOp();
             // e.g. testing air 'above' grass - therefore op.Above needs to be false for 'up mode'

@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.Building {
             
             
             BlockID target;
-            if (!CommandParser.GetBlockIfAllowed(p, args[0], out target)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, args[0], "draw with", out target)) return null;
             
             BrushFactory factory = BrushFactory.Find(args[1]);
             if (factory == null) {

@@ -33,20 +33,21 @@ namespace MCGalaxy.Drawing.Brushes
         };
         
         public override Brush Construct(BrushArgs args) {
+            Player p = args.Player;
             if (args.Message.Length == 0) {
-                if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
+                if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return null;
                 return new SolidBrush(args.Block);
             }
             
             BlockID block;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, args.Message, "draw with", out block)) return null;
             return new SolidBrush(block);
         }
         
         public override bool Validate(BrushArgs args) {
             if (args.Message.Length == 0) return true;
             BlockID block;
-            return CommandParser.GetBlockIfAllowed(args.Player, args.Message, out block);
+            return CommandParser.GetBlockIfAllowed(args.Player, args.Message, "draw with", out block);
         }
     }
     
@@ -63,26 +64,27 @@ namespace MCGalaxy.Drawing.Brushes
         };
         
         public override Brush Construct(BrushArgs args) {
+            Player p = args.Player;
             if (args.Message.Length == 0) {
-                if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
+                if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return null;
                 return new CheckeredBrush(args.Block, Block.Invalid);
             }
             string[] parts = args.Message.SplitSpaces();
             
             BlockID block1;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, parts[0], "draw with", out block1, true)) return null;
             if (parts.Length == 1)
                 return new CheckeredBrush(block1, Block.Invalid);
             
             if (parts.Length == 2) {
                 BlockID block2;
-                if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
+                if (!CommandParser.GetBlockIfAllowed(p, parts[1], "draw with", out block2, true)) return null;
                 return new CheckeredBrush(block1, block2);
             }
             
             BlockID[] blocks = new BlockID[parts.Length];
             for (int i = 0; i < blocks.Length; i++) {
-                if (!CommandParser.GetBlockIfAllowed(args.Player, parts[i], out blocks[i], true)) return null;
+                if (!CommandParser.GetBlockIfAllowed(p, parts[i], "draw with", out blocks[i], true)) return null;
             }            
             return new CheckeredPaletteBrush(blocks);
         }
@@ -138,19 +140,20 @@ namespace MCGalaxy.Drawing.Brushes
         };
         
         public override Brush Construct(BrushArgs args) {
+            Player p = args.Player;
             if (args.Message.Length == 0) {
-                if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return null;
+                if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return null;
                 return new StripedBrush(args.Block, Block.Air);
             }
             string[] parts = args.Message.SplitSpaces();
             
             BlockID block1;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[0], out block1, true)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, parts[0], "draw with", out block1, true)) return null;
             if (parts.Length == 1)
                 return new StripedBrush(block1, Block.Air);
             
             BlockID block2;
-            if (!CommandParser.GetBlockIfAllowed(args.Player, parts[1], out block2, true)) return null;
+            if (!CommandParser.GetBlockIfAllowed(p, parts[1], "draw with", out block2, true)) return null;
             return new StripedBrush(block1, block2);
         }
     }

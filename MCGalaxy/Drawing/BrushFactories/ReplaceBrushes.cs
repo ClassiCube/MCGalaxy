@@ -56,23 +56,25 @@ namespace MCGalaxy.Drawing.Brushes
             for (int i = 0; i < blocks.Length; i++)
                 blocks[i] = Block.Invalid;
             
-            for (int i = 0; start < max; start++, i++ ) {
+            for (int i = 0; start < max; start++, i++) 
+            {
                 BlockID block;
-                if (!CommandParser.GetBlockIfAllowed(p, parts[start], out block)) return null;
-
+                if (!CommandParser.GetBlockIfAllowed(p, parts[start], "draw with", out block)) return null;
                 blocks[i] = block;
             }
             return blocks;
         }
         
         static bool GetTargetBlock(BrushArgs args, string[] parts, out BlockID target) {
+            Player p = args.Player;
             target = 0;
+            
             if (parts.Length == 1) {
-                if (!CommandParser.IsBlockAllowed(args.Player, "draw with", args.Block)) return false;
+                if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return false;
                 
                 target = args.Block; return true;
             }            
-            return CommandParser.GetBlockIfAllowed(args.Player, parts[parts.Length - 1], out target);
+            return CommandParser.GetBlockIfAllowed(p, parts[parts.Length - 1], "draw with", out target);
         }
     }
     

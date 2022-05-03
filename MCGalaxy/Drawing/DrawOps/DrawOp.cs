@@ -40,26 +40,26 @@ namespace MCGalaxy.Drawing.Ops
         //public long TotalAffected; // blocks affected by the draw operation
         public long TotalModified; // blocks actually modified (e.g. some may not be due to permissions)
         
-        /// <summary> Minimum coordinates of the bounds of this drawing command. </summary>
+        /// <summary> Minimum coordinates of the bounds of this draw operation </summary>
         public Vec3S32 Min;
         
-        /// <summary> Maximum coordinates of the bounds of this drawing command. </summary>
+        /// <summary> Maximum coordinates of the bounds of this draw operation </summary>
         public Vec3S32 Max;
         
-        /// <summary> Coordinates of the first point selected by the user. </summary>
+        /// <summary> Coordinates of the first point selected by the player </summary>
         public Vec3S32 Origin;
         
-        /// <summary> Coordinates of the current block being processed by the drawing command. </summary>
+        /// <summary> Coordinates of the current block being processed by this draw operation </summary>
         /// <remarks> Note: You should treat this as coordinates, it is a DrawOpBlock struct for performance reasons. </remarks>
         public DrawOpBlock Coords;
         
-        /// <summary> Player that is executing the draw operation. </summary>
+        /// <summary> Player that is executing this draw operation </summary>
         public Player Player;
 
-        /// <summary> Level the draw operation is being performed upon. </summary>
+        /// <summary> Level that this draw operation is being performed on </summary>
         public Level Level;
         
-        /// <summary> BlockDB change flags for blocks affected by this draw operation. </summary>
+        /// <summary> BlockDB change flags for blocks affected by this draw operation </summary>
         public ushort Flags = BlockDBFlags.Drawn;
         
         /// <summary> Lock held on the associated level's BlockDB. Can be null. </summary>
@@ -78,8 +78,8 @@ namespace MCGalaxy.Drawing.Ops
         /// <summary> Whether the output of this draw operation is affected by the player's current Transform. </summary>
         public bool AffectedByTransform = true;
         
-        /// <summary> Estimates the total number of blocks that the drawing commands affects. <br/>
-        /// Note that this estimate assumes that all possibly affected blocks will be changed by the drawing command. </summary>
+        /// <summary> Estimates the total number of blocks that this draw operation may affect. </summary>
+        /// <remarks> This estimate assumes that all potentially affected blocks will be changed by the draw operation </remarks>
         public abstract long BlocksAffected(Level lvl, Vec3S32[] marks);
         
         public abstract void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output);
