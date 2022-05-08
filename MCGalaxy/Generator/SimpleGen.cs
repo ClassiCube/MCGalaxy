@@ -67,14 +67,16 @@ namespace MCGalaxy.Generator
         
         unsafe static bool GenFlat(Player p, Level lvl, string seed) {
             int grassHeight = lvl.Height / 2, v;
-            if (int.TryParse(seed, out v) && v >= 0 && v < lvl.Height) grassHeight = v;
-            lvl.Config.EdgeLevel = grassHeight + 1;
-            
-            fixed (byte* ptr = lvl.blocks) {
-                if (grassHeight > 0)
-                    MapSet(lvl.Width, lvl.Length, ptr, 0, grassHeight - 1, Block.Dirt);
-                if (grassHeight < lvl.Height)
-                    MapSet(lvl.Width, lvl.Length, ptr, grassHeight, grassHeight, Block.Grass);
+            if (int.TryParse(seed, out v) && v >= 0 && v <= lvl.Height) grassHeight = v;
+            lvl.Config.EdgeLevel = grassHeight;
+            int grassY = grassHeight - 1;
+
+            fixed (byte* ptr = lvl.blocks) 
+            {
+                if (grassY > 0)
+                    MapSet(lvl.Width, lvl.Length, ptr, 0, grassY - 1,  Block.Dirt);
+                if (grassY < lvl.Height)
+                    MapSet(lvl.Width, lvl.Length, ptr, grassY, grassY, Block.Grass);
             }
             return true;
         }

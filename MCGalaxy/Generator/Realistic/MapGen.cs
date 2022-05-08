@@ -273,17 +273,6 @@ namespace MCGalaxy.Generator.Realistic
                 terrain[bb] = filtered[bb];
         }
 
-        //Averages over 5 points
-        float GetAverage5(ushort x, ushort y, Level Lvl) {
-            int points = 0;
-            float sum = GetPixel(ref points, x, y, Lvl);
-            sum += GetPixel(ref points, (ushort)(x + 1), y, Lvl);
-            sum += GetPixel(ref points, (ushort)(x - 1), y, Lvl);
-            sum += GetPixel(ref points, x, (ushort)(y + 1), Lvl);
-            sum += GetPixel(ref points, x, (ushort)(y - 1), Lvl);
-
-            return sum / points;
-        }
         //Averages over 9 points
         float GetAverage9(ushort x, ushort y, Level Lvl) {
             int points = 0;
