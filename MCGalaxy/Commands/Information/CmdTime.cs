@@ -26,7 +26,7 @@ namespace MCGalaxy.Commands.Info {
         public override bool UseableWhenFrozen { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            p.Message("Server time: {0:HH:mm:ss} on {0:d}", DateTime.Now);
+            p.Message("Server time: {0:HH:mm:ss} on {0:yyyy-MM-dd}", DateTime.Now);
             if (!ZSGame.Instance.Running) return;
             
             TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
