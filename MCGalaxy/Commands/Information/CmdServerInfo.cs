@@ -41,8 +41,8 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Server's name: &b{0}&S", Server.Config.Name);
             p.Message("&a{0} &Splayers total. (&a{1} &Sonline, &8{2} banned&S)",
                       count, PlayerInfo.Online.Count, Group.BannedRank.Players.Count);
-            p.Message("&a{0} &Slevels currently loaded. Currency is &3{1}&S.",
-                      LevelInfo.Loaded.Count, Server.Config.Currency);
+            p.Message("&a{0} &Slevels total (&a{1} &Sloaded). Currency is &3{2}&S.",
+                      LevelInfo.AllMapFiles().Length, LevelInfo.Loaded.Count, Server.Config.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             p.Message("Been up for &b{0}&S, running &b{1} &a{2} &f" + Updater.SourceURL,
