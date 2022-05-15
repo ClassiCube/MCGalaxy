@@ -42,22 +42,16 @@ namespace MCGalaxy.Modules.Compiling
                 p.Message("File {0} already exists. Choose another name.", path); return;
             }
             
-            try {
-                string source = engine.GenExampleCommand(args[0]);
-                File.WriteAllText(path, source);
-            } catch (Exception ex) {
-                Logger.LogError("Error saving new command to " + path, ex);
-                p.Message("An error occurred creating the command.");
-                return;
-            }
-            p.Message("Successfully created a new command class.");
+            string source = engine.GenExampleCommand(args[0]);
+            File.WriteAllText(path, source);
+            p.Message("Successfully saved example command &fCmd{0} &Sto {1}", args[0], path);
         }
 
         public override void Help(Player p) {
             p.Message("&T/CmdCreate [name]");
-            p.Message("&HCreates a dummy C# command named Cmd[Name]");
+            p.Message("&HCreates an example C# command named Cmd[Name]");
             p.Message("&T/CmdCreate [name] vb");
-            p.Message("&HCreates a dummy Visual Basic command named Cmd[Name].");
+            p.Message("&HCreates an example Visual Basic command named Cmd[Name]");
             p.Message("&TThis file can be used as the basis for creating a new command.");
         }
     }

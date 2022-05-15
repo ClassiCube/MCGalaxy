@@ -45,11 +45,7 @@ namespace MCGalaxy.Commands.World {
             string path = LevelInfo.BackupFilePath(lvl.name, args[0]);
             
             if (File.Exists(path)) {
-                try {
-                    DoRestore(lvl, args[0]);
-                } catch (Exception ex) { 
-                    Logger.LogError("Error restoring map", ex); 
-                }
+                DoRestore(lvl, args[0]);
             } else {
                 p.Message("Backup {0} does not exist.", args[0]); 
                 LevelOperations.OutputBackups(p, lvl);
