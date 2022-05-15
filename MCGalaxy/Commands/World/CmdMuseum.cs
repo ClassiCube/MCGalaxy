@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.World {
         const string latestFlag = "*latest";
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { LevelInfo.OutputBackups(p, p.level.MapName); return; }
+            if (message.Length == 0) { LevelOperations.OutputBackups(p, p.level); return; }
 
             string[] args = message.ToLower().SplitSpaces();
             string mapArg = args.Length > 1 ? args[0] : p.level.MapName;
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.World {
                 if (!LevelInfo.MapExists(mapArg)) {
                     if (Directory.Exists(LevelInfo.BackupBasePath(mapArg))) {
                         p.Message("&WLevel \"{0}\" does not currently exist, &Showever:", mapArg);
-                        LevelInfo.OutputBackups(p, mapArg);
+                        LevelOperations.OutputBackups(p, mapArg, LevelInfo.GetConfig(mapArg));
                     } else {
                         p.Message("&WLevel \"{0}\" does not exist and no backups could be found.", mapArg);
                     }

@@ -69,20 +69,11 @@ namespace MCGalaxy.Commands.World {
             return saved;
         }
         
-        static void Save(Player p, Level lvl, string restoreName) {
+        static void Save(Player p, Level lvl, string backup) {
             if (!TrySave(p, lvl, true)) return;
             p.Message("Level {0} &Ssaved", lvl.ColoredName);
             
-            string backup = lvl.Backup(true, restoreName);
-            if (backup == null) return;
-            
-            if (restoreName.Length == 0) {
-                Logger.Log(LogType.SystemActivity, "Backup {1} saved for {0}", lvl.name, backup);
-                lvl.Message("Backup " + backup + " saved for " + lvl.ColoredName);
-            } else {
-                Logger.Log(LogType.SystemActivity, "{0} had a backup created named &b{1}", lvl.name, backup);
-                lvl.Message(lvl.ColoredName + " &Shad a backup created named &b" + backup);
-            }
+            LevelOperations.Backup(p, lvl, backup);
         }
         
         public override void Help(Player p) {

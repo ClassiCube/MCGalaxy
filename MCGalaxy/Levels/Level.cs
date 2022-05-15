@@ -258,10 +258,7 @@ namespace MCGalaxy
         /// <returns> The name of the backup, or null if no backup was saved. </returns>
         public string Backup(bool force = false, string backup = "") {
             if (ChangedSinceBackup || force) {
-                string backupPath = LevelInfo.BackupBasePath(name);
-                if (!Directory.Exists(backupPath)) Directory.CreateDirectory(backupPath);
-                int next = LevelInfo.LatestBackup(name) + 1;
-                if (backup.Length == 0) backup = next.ToString();
+                if (backup.Length == 0) backup = LevelInfo.NextBackup(name);
 
                 if (!LevelActions.Backup(name, backup)) {
                     Logger.Log(LogType.Warning, "FAILED TO INCREMENTAL BACKUP :" + name);

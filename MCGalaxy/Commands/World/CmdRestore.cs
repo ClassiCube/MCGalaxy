@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.World {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { LevelInfo.OutputBackups(p, p.level.MapName); return; }
+            if (message.Length == 0) { LevelOperations.OutputBackups(p, p.level); return; }
             
             Level lvl;
             string[] args = message.SplitSpaces();
@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.World {
                 }
             } else {
                 p.Message("Backup {0} does not exist.", args[0]); 
-                LevelInfo.OutputBackups(p, lvl.name);
+                LevelOperations.OutputBackups(p, lvl);
             }
         }
         

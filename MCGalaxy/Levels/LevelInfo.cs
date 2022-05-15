@@ -91,12 +91,13 @@ namespace MCGalaxy {
             return path.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
         }
         
-        public static int LatestBackup(string name) {
-            string dir = BackupBasePath(name);
-            string[] backups = Directory.GetDirectories(dir);
+        public static int LatestBackup(string map) {
+            string root = BackupBasePath(map);
+            string[] backups = Directory.GetDirectories(root);
             int latest = 0;
             
-            foreach (string path in backups) {
+            foreach (string path in backups) 
+            {
                 string backupName = BackupNameFrom(path);
                 int num;
                 
@@ -106,30 +107,11 @@ namespace MCGalaxy {
             return latest;
         }
         
-        public static void OutputBackups(Player p, string map) {
-            map = map.ToLower();
-            string backupPath = BackupBasePath(map);
-            if (!Directory.Exists(backupPath)) {
-                p.Message(map + " has no backups yet."); return;
-            }
-
-            string[] dirs = Directory.GetDirectories(backupPath);
-            p.Message(map + " has &b" + dirs.Length + " &Sbackups.");
-            int count = 0;
-            StringBuilder custom = new StringBuilder();
-
-            foreach (string path in dirs) {
-                string name = BackupNameFrom(path);
-                int num;
-                if (int.TryParse(name, out num)) continue;
-
-                count++;
-                custom.Append(", " + name);
-            }
-
-            if (count == 0) return;
-            p.Message("&b" + count + " &Sof these are custom-named restores:");
-            p.Message(custom.ToString(2, custom.Length - 2));
+        public static string NextBackup(string map) {
+            string root = BackupBasePath(map);
+            Directory.CreateDirectory(root);
+            
+            return (LatestBackup(map) + 1).ToString();
         }
 
         /// <summary> Relative path of a level's property file </summary>

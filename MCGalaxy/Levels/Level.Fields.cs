@@ -110,6 +110,7 @@ namespace MCGalaxy {
         readonly object physThreadLock = new object();
         internal readonly object physTickLock = new object();
         bool physThreadStarted = false;
+        internal DateTime lastBackup;
         
         public List<C4Data> C4list = new List<C4Data>();
 
