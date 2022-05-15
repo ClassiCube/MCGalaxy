@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using MCGalaxy.Scripting;
+using MCGalaxy.Modules.Compiling;
 
 namespace MCGalaxy.Gui.Popups {
     public partial class CustomCommands : Form {
@@ -117,7 +118,7 @@ namespace MCGalaxy.Gui.Popups {
             }
             
             ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
-            CompilerResults result = ScriptingOperations.Compile(p, compiler, "Command", new[] { path }, null);
+            CompilerResults result = CompilerOperations.Compile(p, compiler, "Command", new[] { path }, null);
             if (result != null) return result.CompiledAssembly;
             
             Popup.Error(Colors.StripUsed(p.Messages));

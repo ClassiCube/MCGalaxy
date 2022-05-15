@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using MCGalaxy.Scripting;
+using MCGalaxy.Modules.Compiling;
 
 namespace MCGalaxy.Commands.Scripting {
     public sealed class CmdPlugin : Command2 {
@@ -61,7 +62,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         static void CompilePlugin(Player p, string name, string language) {
-            ICompiler compiler = ScriptingOperations.GetCompiler(p, language);
+            ICompiler compiler = CompilerOperations.GetCompiler(p, language);
             if (compiler == null) return;
             
             // either "source" or "source1,source2,source3"
@@ -71,7 +72,7 @@ namespace MCGalaxy.Commands.Scripting {
             for (int i = 0; i < paths.Length; i++) {
                  paths[i] = compiler.PluginPath(paths[i]);
             }
-            ScriptingOperations.Compile(p, compiler, "Plugin", paths, dstPath);
+            CompilerOperations.Compile(p, compiler, "Plugin", paths, dstPath);
         }
         
         static void LoadPlugin(Player p, string name) {
@@ -110,7 +111,7 @@ namespace MCGalaxy.Commands.Scripting {
         }
         
         static void CreatePlugin(Player p, string name, string language) {
-            ICompiler engine = ScriptingOperations.GetCompiler(p, language);
+            ICompiler engine = CompilerOperations.GetCompiler(p, language);
             if (engine == null) return;
             
             string path = engine.PluginPath(name);

@@ -15,12 +15,14 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+#if !DISABLE_COMPILING
 using System;
 using System.IO;
-using MCGalaxy.Scripting;
 
-namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdCmdCreate : Command2 {      
+namespace MCGalaxy.Modules.Compiling
+{
+    public sealed class CmdCmdCreate : Command2 
+    {
         public override string name { get { return "CmdCreate"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
@@ -32,7 +34,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (!Formatter.ValidFilename(p, args[0])) return;
 
             string language  = args.Length > 1 ? args[1] : "";
-            ICompiler engine = ScriptingOperations.GetCompiler(p, language);
+            ICompiler engine = CompilerOperations.GetCompiler(p, language);
             if (engine == null) return;
             
             string path = engine.CommandPath(args[0]);
@@ -60,3 +62,4 @@ namespace MCGalaxy.Commands.Scripting {
         }
     }
 }
+#endif

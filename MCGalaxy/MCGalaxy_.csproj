@@ -332,11 +332,8 @@
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
-    <Compile Include="Commands\Scripting\CmdCmdCreate.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
-    <Compile Include="Commands\Scripting\CmdCompile.cs" />
-    <Compile Include="Commands\Scripting\CmdCompload.cs" />
     <Compile Include="Commands\Scripting\CmdPlugin.cs" />
     <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
@@ -587,6 +584,12 @@
     <Compile Include="Modules\Awards\CmdAwardMod.cs" />
     <Compile Include="Modules\Awards\CmdAwards.cs" />
     <Compile Include="Modules\Awards\AwardsList.cs" />
+    <Compile Include="Modules\Compiling\Backends.cs" />
+    <Compile Include="Modules\Compiling\CmdCmdCreate.cs" />
+    <Compile Include="Modules\Compiling\CmdCompile.cs" />
+    <Compile Include="Modules\Compiling\CmdCompload.cs" />
+    <Compile Include="Modules\Compiling\Compiler.cs" />
+    <Compile Include="Modules\Compiling\CompilerOperations.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
@@ -641,13 +644,11 @@
     <Compile Include="Games\CTF\CtfGame.cs" />
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Levels\Level.cs" />
-    <Compile Include="Scripting\ScriptingOperations.cs" />
     <Compile Include="Server\Authentication\Authenticator.cs" />
     <Compile Include="Server\Authentication\AuthService.cs" />
     <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Scripting\Backends.cs" />
     <Compile Include="Server\Maintenance\Backup.cs" />
     <Compile Include="Server\Maintenance\Updater.cs" />
     <Compile Include="Server\Maintenance\ZipReader.cs" />
@@ -725,7 +726,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Modules\Compiling" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

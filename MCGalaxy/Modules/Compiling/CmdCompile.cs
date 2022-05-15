@@ -15,12 +15,16 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+#if !DISABLE_COMPILING
 using System;
 using System.IO;
+using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
 
-namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdCompile : Command2 {        
+namespace MCGalaxy.Modules.Compiling 
+{
+    public sealed class CmdCompile : Command2 
+    {
         public override string name { get { return "Compile"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
@@ -32,7 +36,7 @@ namespace MCGalaxy.Commands.Scripting {
             if (!Formatter.ValidFilename(p, args[0])) return;
 
             string language    = args.Length > 1 ? args[1] : "";
-            ICompiler compiler = ScriptingOperations.GetCompiler(p, language);
+            ICompiler compiler = CompilerOperations.GetCompiler(p, language);
             if (compiler == null) return;
  
             // either "source" or "source1,source2,source3"
@@ -42,7 +46,7 @@ namespace MCGalaxy.Commands.Scripting {
             for (int i = 0; i < paths.Length; i++) {
                  paths[i] = compiler.CommandPath(paths[i]);
             }
-            ScriptingOperations.Compile(p, compiler, "Command", paths, dstPath);
+            CompilerOperations.Compile(p, compiler, "Command", paths, dstPath);
         }
 
         public override void Help(Player p) {
@@ -54,3 +58,4 @@ namespace MCGalaxy.Commands.Scripting {
         }
     }
 }
+#endif

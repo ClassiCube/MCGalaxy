@@ -17,6 +17,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+#if !DISABLE_COMPILING
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -24,9 +25,9 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace MCGalaxy.Scripting 
+namespace MCGalaxy.Modules.Compiling 
 {    
-    public static class ScriptingOperations 
+    public static class CompilerOperations 
     {   
         public static ICompiler GetCompiler(Player p, string name) {
             if (name.Length == 0) return ICompiler.Compilers[0];
@@ -89,3 +90,4 @@ namespace MCGalaxy.Scripting
         }
     }
 }
+#endif

@@ -150,7 +150,7 @@ namespace MCGalaxy {
             EnsureDirectoryExists(Paths.ImportsDir);
             EnsureDirectoryExists("blockdefs");
             EnsureDirectoryExists(IScripting.DllDir);
-            EnsureDirectoryExists(ICompiler.SourceDir);
+            EnsureDirectoryExists(MCGalaxy.Modules.Compiling.ICompiler.SourceDir); // TODO move to compiling module
             EnsureDirectoryExists("text/discord"); // TODO move to discord plugin
         }
         

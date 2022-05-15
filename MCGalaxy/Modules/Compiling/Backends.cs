@@ -17,13 +17,14 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+#if !DISABLE_COMPILING
 using System.CodeDom.Compiler;
 using System;
 #if NETSTANDARD
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 #endif
 
-namespace MCGalaxy.Scripting 
+namespace MCGalaxy.Modules.Compiling
 {
     public sealed class CSCompiler : ICodeDomCompiler 
     {
@@ -259,3 +260,4 @@ End Namespace";
         }
     }    
 }
+#endif
