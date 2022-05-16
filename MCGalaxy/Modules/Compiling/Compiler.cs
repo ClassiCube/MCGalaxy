@@ -30,8 +30,9 @@ namespace MCGalaxy.Modules.Compiling
     /// <summary> Compiles source code files for a particular programming language into a .dll </summary>
     public abstract class ICompiler 
     {   
-        public const string SourceDir = "extra/commands/source/";
-        public const string ErrorPath = "logs/errors/compiler.log";
+        public const string SOURCE_DIR_COMMANDS = "extra/commands/source/";
+        public const string SOURCE_DIR_PLUGINS  = "plugins/";
+        public const string ERROR_LOG_PATH      = "logs/errors/compiler.log";
         
         /// <summary> Default file extension used for source code files </summary>
         /// <example> .cs, .vb </example>
@@ -47,8 +48,8 @@ namespace MCGalaxy.Modules.Compiling
         /// <summary> Returns source code for an example Plugin </summary>
         public abstract string PluginSkeleton { get; }
         
-        public string CommandPath(string name) { return SourceDir + "Cmd" + name + FileExtension; }
-        public string PluginPath(string name)  { return "plugins/" + name + FileExtension; }
+        public string CommandPath(string name) { return SOURCE_DIR_COMMANDS + "Cmd" + name + FileExtension; }
+        public string PluginPath(string name)  { return SOURCE_DIR_PLUGINS  + name + FileExtension; }
         
         /// <summary> C# compiler instance. </summary>
         public static ICompiler CS = new CSCompiler();
@@ -115,7 +116,7 @@ namespace MCGalaxy.Modules.Compiling
                 sb.AppendLine();
             }
             
-            using (StreamWriter w = new StreamWriter(ErrorPath, true)) {
+            using (StreamWriter w = new StreamWriter(ERROR_LOG_PATH, true)) {
                 w.Write(sb.ToString());
             }
             return results;

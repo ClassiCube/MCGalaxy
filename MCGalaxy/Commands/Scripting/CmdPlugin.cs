@@ -27,8 +27,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("PLoad", "load"), new CommandAlias("PUnload", "unload"),
-                    new CommandAlias("PCreate", "create"), new CommandAlias("PCompile", "compile"),
-                    new CommandAlias("Plugins", "list") }; }
+                    new CommandAlias("PCreate", "create"), new CommandAlias("Plugins", "list") }; }
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
@@ -54,25 +53,9 @@ namespace MCGalaxy.Commands.Scripting {
                 UnloadPlugin(p, name);
             } else if (cmd.CaselessEq("create")) {
                 CreatePlugin(p, name, language);
-            } else if (cmd.CaselessEq("compile")) {
-                CompilePlugin(p, name, language);
             } else {
                 Help(p);
             }
-        }
-        
-        static void CompilePlugin(Player p, string name, string language) {
-            ICompiler compiler = CompilerOperations.GetCompiler(p, language);
-            if (compiler == null) return;
-            
-            // either "source" or "source1,source2,source3"
-            string[] paths = name.SplitComma();
-            string dstPath = IScripting.PluginPath(paths[0]);
-            
-            for (int i = 0; i < paths.Length; i++) {
-                 paths[i] = compiler.PluginPath(paths[i]);
-            }
-            CompilerOperations.Compile(p, compiler, "Plugin", paths, dstPath);
         }
         
         static void LoadPlugin(Player p, string name) {
@@ -125,8 +108,6 @@ namespace MCGalaxy.Commands.Scripting {
         public override void Help(Player p) {
             p.Message("&T/Plugin create [name]");
             p.Message("&HCreate a example .cs plugin file");
-            p.Message("&T/Plugin compile [name]");
-            p.Message("&HCompiles a .cs plugin file");
             p.Message("&T/Plugin load [filename]");
             p.Message("&HLoad a plugin from your plugins folder");
             p.Message("&T/Plugin unload [name]");

@@ -22,6 +22,7 @@ using MCGalaxy.Drawing.Brushes;
 namespace MCGalaxy.Commands.Building {  
     public sealed class CmdBrush : Command2 {
         public override string name { get { return "Brush"; } }
+        public override string shortcut { get { return "br"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         public override bool SuperUseable { get { return false; } }

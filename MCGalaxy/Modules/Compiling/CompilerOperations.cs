@@ -86,7 +86,7 @@ namespace MCGalaxy.Modules.Compiling
             if (results.Errors.Count > MAX_LOG) {
                 p.Message(" &W.. and {0} more", results.Errors.Count - MAX_LOG);
             }
-            p.Message("&WCompilation error. See " + ICompiler.ErrorPath + " for more information.");
+            p.Message("&WCompilation error. See " + ICompiler.ERROR_LOG_PATH + " for more information.");
         }
     }
 }

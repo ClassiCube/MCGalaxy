@@ -28,33 +28,83 @@ namespace MCGalaxy.Modules.Compiling
         public override string name { get { return "Compile"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
+        public override CommandAlias[] Aliases {
+            get { return new[] { new CommandAlias("PCompile", "plugin") }; }
+        }
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
             string[] args = message.SplitSpaces();
-            if (!Formatter.ValidFilename(p, args[0])) return;
+            bool plugin   = args[0].CaselessEq("plugin");
+            string name, lang;
 
-            string language    = args.Length > 1 ? args[1] : "";
-            ICompiler compiler = CompilerOperations.GetCompiler(p, language);
+            if (plugin) {
+                // compile plugin [name] <language>
+                name = args.Length > 1 ? args[1] : "";
+                lang = args.Length > 2 ? args[2] : "";
+            } else {
+                // compile [name] <language>
+                name = args[0];
+                lang = args.Length > 1 ? args[1] : "";
+            }
+            
+            if (name.Length == 0) { Help(p); return; }
+            if (!Formatter.ValidFilename(p, name)) return;
+            
+            ICompiler compiler = CompilerOperations.GetCompiler(p, lang);
             if (compiler == null) return;
  
+            if (plugin) {
+                CompilePlugin(p,  name, compiler);
+            } else {
+                CompileCommand(p, name, compiler);
+            }
+        }
+        
+        static void CompilePlugin(Player p, string name, ICompiler compiler) {
             // either "source" or "source1,source2,source3"
-            string[] paths = args[0].SplitComma();
+            string[] paths = name.SplitComma();
+            string dstPath = IScripting.PluginPath(paths[0]);
+            
+            for (int i = 0; i < paths.Length; i++) 
+            {
+                 paths[i] = compiler.PluginPath(paths[i]);
+            }
+            CompilerOperations.Compile(p, compiler, "Plugin", paths, dstPath);
+        }
+        
+        static void CompileCommand(Player p, string name, ICompiler compiler) {
+            // either "source" or "source1,source2,source3"
+            string[] paths = name.SplitComma();
             string dstPath = IScripting.CommandPath(paths[0]);
             
-            for (int i = 0; i < paths.Length; i++) {
+            for (int i = 0; i < paths.Length; i++) 
+            {
                  paths[i] = compiler.CommandPath(paths[i]);
             }
             CompilerOperations.Compile(p, compiler, "Command", paths, dstPath);
         }
 
+        // TODO avoid duplication and use compiler.CommandPath instead
         public override void Help(Player p) {
-            p.Message("&T/Compile [class name]");
-            p.Message("&HCompiles a command class file into a DLL.");
-            p.Message("&T/Compile [class name] vb");
-            p.Message("&HCompiles a command class (written in visual basic) file into a DLL.");
-            p.Message("&H  class name: &9Cmd&e<class name>&9.cs");
+            p.Message("&T/Compile [command name]");
+            p.Message("&HCompiles a .cs file containing a C# command into a DLL");
+            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_COMMANDS + "Cmd&H<name>&f.cs");
+            p.Message("&T/Compile plugin [plugin name]");
+            p.Message("&HCompiles a .cs file containing a C# plugin into a DLL");
+            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_PLUGINS + "&H<name>&f.cs");
+            p.Message("&HFor compiling Visual Basic commands, see &T/help compile VB");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (!message.CaselessEq("VB")) { base.Help(p, message); return; }
+            
+            p.Message("&T/Compile [command name] vb");
+            p.Message("&HCompiles a .vb file containing a Visual Basic command into a DLL");
+            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_COMMANDS + "Cmd&H<name>&f.vb");
+            p.Message("&T/Compile plugin [plugin name] vb");
+            p.Message("&HCompiles a .vb file containing a Visual Basic plugin into a DLL");
+            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_PLUGINS + "&H<name>&f.vb");
         }
     }
 }
