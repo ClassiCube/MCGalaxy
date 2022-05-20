@@ -47,7 +47,8 @@ namespace MCGalaxy.Network
             
             // IPv4 mapped addresses have the format
             //  0000:0000:0000:0000:0000:FFFF:[ipv4 address]
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++) 
+            {
                 if (addr[i] != 0) return false;
             }
             return addr[10] == 0xFF && addr[11] == 0xFF;
@@ -69,7 +70,12 @@ namespace MCGalaxy.Network
     { 
         /// <summary> Retrieves the remote IP address associated with the given socket </summary>
         public static IPAddress GetIP(Socket s) {
-            return ((IPEndPoint)s.RemoteEndPoint).Address;
+            IPAddress addr = ((IPEndPoint)s.RemoteEndPoint).Address;
+            
+            // Convert IPv4 mapped addresses to IPv4 addresses for consistency
+            //  (e.g. so IPv4 mapped LAN IPs are treated as LAN IPs)
+            if (IPUtil.IsIPv4Mapped(addr)) addr = IPUtil.MapToIPV4(addr);
+            return addr;
         }
     }
 }
