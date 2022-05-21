@@ -138,7 +138,6 @@ namespace MCGalaxy.Generator
         }
         
         static bool CheckMapVolume(Player p, int x, int y, int z) {
-            if (p.IsConsole) return true;
             int limit = p.group.GenVolume;
             if ((long)x * y * z <= limit) return true;
             
