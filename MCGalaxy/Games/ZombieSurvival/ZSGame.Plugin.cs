@@ -76,7 +76,7 @@ namespace MCGalaxy.Games {
         
         void HandleSendingModel(Entity e, ref string model, Player dst) {
             Player p = e as Player;
-            if (p == null || !Get(p).Infected) return;
+            if (p == null || !IsInfected(p)) return;
             model = p == dst ? p.Model : Config.ZombieModel;
         }
         
@@ -86,7 +86,7 @@ namespace MCGalaxy.Games {
             
             if (p.Game.Referee) {
                 tabGroup = "&2Referees";
-            } else if (Get(p).Infected) {
+            } else if (IsInfected(p)) {
                 tabGroup = Config.ZombieTabListGroup;
                 if (Config.ZombieName.Length > 0 && !Get(dst).AkaMode) {
                     tabName = "&c" + Config.ZombieName;
@@ -105,7 +105,7 @@ namespace MCGalaxy.Games {
         
         void HandleEntitySpawned(Entity e, ref string name, ref string skin, ref string model, Player dst) {
             Player p = e as Player;
-            if (p == null || !Get(p).Infected) return;
+            if (p == null || !IsInfected(p)) return;
 
             name = p.truename;
             if (Config.ZombieName.Length > 0 && !Get(dst).AkaMode) {
@@ -132,7 +132,7 @@ namespace MCGalaxy.Games {
         
         void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
             if (p.level != Map) return;
-            if (!p.Game.Referee && RoundInProgress && !Get(p).Infected) {
+            if (!p.Game.Referee && RoundInProgress && !IsInfected(p)) {
                 InfectPlayer(p, null);
             }
         }
@@ -166,12 +166,12 @@ namespace MCGalaxy.Games {
             if (message[0] == '~') {
                 message = message.Substring(1);
                 
-                if (Get(p).Infected) {
+                if (IsInfected(p)) {
                     Chat.MessageChat(ChatScope.Level, p, "&c- to zombies - λNICK: &f" + message,
-                                    Map, (pl, arg) => pl.Game.Referee || Get(pl).Infected);
+                                    Map, (pl, arg) => pl.Game.Referee ||  IsInfected(pl));
                 } else {
                     Chat.MessageChat(ChatScope.Level, p, "&a- to humans - λNICK: &f" + message,
-                                    Map, (pl, arg) => pl.Game.Referee || !Get(pl).Infected);
+                                    Map, (pl, arg) => pl.Game.Referee || !IsInfected(pl));
                 }
                 p.cancelchat = true;
             } else if (message[0] == '`') {

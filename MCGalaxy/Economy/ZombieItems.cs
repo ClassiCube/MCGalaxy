@@ -143,7 +143,7 @@ namespace MCGalaxy.Eco {
             if (data.Invisible) { p.Message("You are already invisible."); return; }
             ZSConfig cfg = ZSGame.Config;
             
-            int maxPotions = data.Infected ? cfg.ZombieInvisibilityPotions : cfg.InvisibilityPotions;
+            int maxPotions = p.infected ? cfg.ZombieInvisibilityPotions : cfg.InvisibilityPotions;
             if (data.InvisibilityPotions >= maxPotions) {
                 p.Message("You cannot buy any more invisibility potions this round."); return;
             }
@@ -153,7 +153,7 @@ namespace MCGalaxy.Eco {
                 p.Message("You cannot buy an invisibility potion during the last minute of a round."); return;
             }
             
-            int duration = data.Infected ? cfg.ZombieInvisibilityDuration : cfg.InvisibilityDuration;
+            int duration = p.infected ? cfg.ZombieInvisibilityDuration : cfg.InvisibilityDuration;
             data.InvisibilityPotions++;
             int left = maxPotions - data.InvisibilityPotions;
             
@@ -190,7 +190,7 @@ namespace MCGalaxy.Eco {
             }
             
             ZSData data = ZSGame.Get(p);
-            if (!data.Infected) {
+            if (!p.infected) {
                 p.Message("You are already a human."); return;
             }
             

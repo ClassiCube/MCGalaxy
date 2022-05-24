@@ -202,6 +202,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (IPAddress.TryParse(message, out ip) && ValidIP(message)) {
                 string account = Server.FromRawUsername(message);
+                // TODO ip.ToString()
                 if (PlayerDB.FindName(account) == null) return message;
 
                 // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.

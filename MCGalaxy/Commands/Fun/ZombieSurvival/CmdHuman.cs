@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Fun {
             if (p.Game.PledgeSurvive) {
                 p.Message("You cannot un-pledge that you will be infected."); return;
             }
-            if (ZSGame.Get(p).Infected) {
+            if (ZSGame.IsInfected(p)) {
                 p.Message("You cannot use &T/human &Sas you are currently infected."); return;
             }
             

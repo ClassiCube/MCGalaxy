@@ -102,16 +102,18 @@ namespace MCGalaxy.Games {
         
         void DoCollisions(Player[] aliveList, Player[] deadList, Random random) {
             int dist = (int)(Config.HitboxDist * 32);
-            foreach (Player killer in deadList) {
+            foreach (Player killer in deadList)
+            {
                 ZSData killerData = Get(killer);
-                killerData.Infected = true;
+                killer.infected = true;
                 aliveList = Alive.Items;
 
-                foreach (Player alive in aliveList) {
+                foreach (Player alive in aliveList) 
+                {
                     if (alive == killer) continue;
                     if (!InRange(alive, killer, dist)) continue;
                     
-                    if (killerData.Infected && !Get(alive).Infected
+                    if (killer.infected && !IsInfected(alive)
                         && !alive.Game.Referee && !killer.Game.Referee
                         && killer.level == Map && alive.level == Map)
                     {
@@ -143,7 +145,8 @@ namespace MCGalaxy.Games {
         void CheckInvisibilityTime() {
             DateTime now = DateTime.UtcNow;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (p.level != Map) continue;
                 ZSData data = Get(p);
                 if (!data.Invisible) continue;
@@ -281,7 +284,8 @@ namespace MCGalaxy.Games {
             Player[] online = PlayerInfo.Online.Items;
             Random rand = new Random();
             
-            foreach (Player pl in online) {
+            foreach (Player pl in online) 
+            {
                 if (pl.level != Map) continue;
                 ZSData data = Get(pl);
                 data.ResetInvisibility();
@@ -294,7 +298,7 @@ namespace MCGalaxy.Games {
                 }
                 
                 pl.SetMoney(pl.money + reward);
-                data.ResetState();
+                ResetRoundState(pl, data);
                 pl.Game.PledgeSurvive = false;
                 
                 if (pl.Game.Referee) {
@@ -312,9 +316,9 @@ namespace MCGalaxy.Games {
             
             if (alive.Length == 0) {
                 return rand.Next(1 + data.CurrentInfected, 5 + data.CurrentInfected);
-            } else if (alive.Length == 1 && !data.Infected) {
+            } else if (alive.Length == 1 && !pl.infected) {
                 return rand.Next(5, 10);
-            } else if (alive.Length > 1 && !data.Infected) {
+            } else if (alive.Length > 1 && !pl.infected) {
                 return rand.Next(2, 6);
             }
             return 0;

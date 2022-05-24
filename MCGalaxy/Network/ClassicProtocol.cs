@@ -633,11 +633,9 @@ namespace MCGalaxy.Network
                 Orientation rot = p.Rot; byte pitch = rot.HeadX;
                 if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
                 
-                // flip head when infected, but doesn't support model
-                if (!dst.hasChangeModel) {
-                    ZSData data = ZSGame.TryGet(p);
-                    if (data != null && data.Infected) pitch = FlippedPitch(pitch);
-                }
+                // flip head when infected in ZS, but doesn't support model
+                if (!dst.hasChangeModel && p.infected)
+                   pitch = FlippedPitch(pitch);
             
                 rot.HeadX = pitch;
                 Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,

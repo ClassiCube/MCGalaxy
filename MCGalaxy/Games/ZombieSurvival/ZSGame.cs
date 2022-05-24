@@ -23,9 +23,10 @@ using System.Threading;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Games {
-    
-    public class BountyData {
+namespace MCGalaxy.Games 
+{    
+    public class BountyData 
+    {
         public string Origin, Target;
         public int Amount;
         
@@ -34,11 +35,12 @@ namespace MCGalaxy.Games {
         }
     }
     
-    internal sealed class ZSData {
+    internal sealed class ZSData 
+    {
         public int BlocksLeft = 50, BlocksStacked;
         internal int LastX, LastY, LastZ;
         
-        public bool Infected, AkaMode, Invisible;
+        public bool AkaMode, Invisible;
         public DateTime TimeInfected, InvisibilityEnd;
         public List<string> InfectMessages;
         
@@ -54,18 +56,10 @@ namespace MCGalaxy.Games {
             InvisibilityEnd = DateTime.MinValue;
             InvisibilityTime = -1;
         }
-
-        public void ResetState() {
-            BlocksLeft = 50;
-            CurrentInfected = 0;
-            Infected = false;
-            InvisibilityPotions = 0;
-            RevivesUsed = 0;
-            TimeInfected = DateTime.MinValue;
-        }
     }
     
-    public sealed partial class ZSGame : RoundsGame {
+    public sealed partial class ZSGame : RoundsGame 
+    {
         public static ZSConfig Config = new ZSConfig();
         public override string GameName { get { return "Zombie Survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
@@ -129,6 +123,8 @@ namespace MCGalaxy.Games {
             Database.CreateTable("ZombieStats", zsTable);
             HookStats(); 
         }
+        
+        public static bool IsInfected(Player p) { return p.infected; }
 
         public void InfectPlayer(Player p, Player killer) {
             if (!RoundInProgress) return;
@@ -140,7 +136,7 @@ namespace MCGalaxy.Games {
             data.TimeInfected = DateTime.UtcNow;
             
             p.SetPrefix();
-            ResetPlayerState(p, data, true);
+            UpdatePlayer(p, data, true);
             RespawnPlayer(p);
             
             CheckHumanPledge(p, killer);
@@ -153,12 +149,22 @@ namespace MCGalaxy.Games {
             Alive.Add(p);
             
             ZSData data = Get(p);
-            ResetPlayerState(p, data, false);
+            UpdatePlayer(p, data, false);
             RespawnPlayer(p);
         }
         
-        void ResetPlayerState(Player p, ZSData data, bool infected) {
-            data.Infected = infected;
+        static void ResetRoundState(Player p, ZSData data) {
+            p.infected           = false;
+            data.BlocksLeft      = 50;
+            data.CurrentInfected = 0;
+            
+            data.InvisibilityPotions = 0;
+            data.RevivesUsed = 0;
+            data.TimeInfected = DateTime.MinValue;
+        }
+        
+        void UpdatePlayer(Player p, ZSData data, bool infected) {
+            p.infected      = infected;
             data.BlocksLeft = infected ? 25 : 50;
             
             ResetInvisibility(p, data);
@@ -166,7 +172,7 @@ namespace MCGalaxy.Games {
             UpdateStatus3(p);
         }
         
-        void ResetInvisibility(Player p, ZSData data) {
+        static void ResetInvisibility(Player p, ZSData data) {
             if (!data.Invisible) return;
             p.SendCpeMessage(CpeMessageType.BottomRight2, "");
             
@@ -187,7 +193,7 @@ namespace MCGalaxy.Games {
                 if (pl.level != Map) continue;
                 ZSData data = Get(pl);
                 
-                data.ResetState();
+                ResetRoundState(pl, data);
                 ResetInvisibility(pl, data);
             }
         }
@@ -208,7 +214,7 @@ namespace MCGalaxy.Games {
         public override void PlayerLeftGame(Player p) {
             Alive.Remove(p);
             Infected.Remove(p);
-            Get(p).Infected = false;
+            p.infected = false;
             RemoveAssociatedBounties(p);
             
             if (!Running || !RoundInProgress || Infected.Count > 0) return;
@@ -295,7 +301,7 @@ namespace MCGalaxy.Games {
 
         protected override string FormatStatus3(Player p) {
             string money = "&a" + p.money + " &S" + Server.Config.Currency;
-            string state = ", you are " + (Get(p).Infected ? "&cdead" : "&aalive");
+            string state = ", you are " + (IsInfected(p) ? "&cdead" : "&aalive");
             return money + state;
         }
         

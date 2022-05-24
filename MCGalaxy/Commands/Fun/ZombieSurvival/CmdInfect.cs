@@ -28,7 +28,7 @@ namespace MCGalaxy.Commands.Fun {
             Player who = message.Length == 0 ? p : PlayerInfo.FindMatches(p, message);
             if (who == null) return;
             
-            if (!ZSGame.Instance.RoundInProgress || ZSGame.Get(who).Infected) {
+            if (!ZSGame.Instance.RoundInProgress || ZSGame.IsInfected(who)) {
                 p.Message("Cannot infect player");
             } else if (!who.Game.Referee) {
                 ZSGame.Instance.InfectPlayer(who, p);
