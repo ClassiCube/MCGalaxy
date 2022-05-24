@@ -19,9 +19,10 @@ using System;
 using System.Data;
 using System.IO;
 
-namespace MCGalaxy.SQL {
-    public sealed class TableDumper {
-        
+namespace MCGalaxy.SQL 
+{
+    public sealed class TableDumper 
+    {
         bool gottenRows;
         string table, insertCols;
         internal StreamWriter sql;
@@ -29,7 +30,7 @@ namespace MCGalaxy.SQL {
         
         public void DumpTable(StreamWriter sql, string table) {
             gottenRows = false;
-            this.sql = sql;
+            this.sql   = sql;
             this.table = table;
             Database.ReadRows(table, "*", null, DumpRow);
             

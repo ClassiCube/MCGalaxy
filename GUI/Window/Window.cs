@@ -142,7 +142,7 @@ Trying to mix two versions is unsupported - you may experience issues";
         LogCallback logCallback;
         
         void LogMessage(LogType type, string message) {
-            if (!Server.Config.FileLogging[(int)type]) return;
+            if (!Server.Config.ConsoleLogging[(int)type]) return;
             
             if (InvokeRequired) {
                 try {

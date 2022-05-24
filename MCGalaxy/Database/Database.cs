@@ -204,14 +204,16 @@ namespace MCGalaxy.SQL {
         }
         
         internal static void ValidateName(string table) {
-            foreach (char c in table) {
+            foreach (char c in table) 
+            {
                 if (ValidNameChar(c)) continue;
                 throw new ArgumentException("Invalid character in table name: " + c);
             }
         }
     }
     
-    public static class DatabaseExts {
+    public static class DatabaseExts 
+    {
         public static string GetText(this IDataRecord record, int col) {
             return record.IsDBNull(col) ? "" : record.GetString(col);
         }

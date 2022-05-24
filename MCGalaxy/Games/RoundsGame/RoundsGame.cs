@@ -181,7 +181,7 @@ namespace MCGalaxy.Games {
                 ContinueOnSameMap();
             } else {
                 TransferPlayers(lastMap);
-                lastMap.Unload();
+                lastMap.Unload(true);
             }
         }
         
