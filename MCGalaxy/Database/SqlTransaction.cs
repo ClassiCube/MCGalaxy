@@ -18,9 +18,10 @@
 using System;
 using System.Data;
 
-namespace MCGalaxy.SQL {
-    
-    public sealed class SqlTransaction : IDisposable {
+namespace MCGalaxy.SQL 
+{    
+    public sealed class SqlTransaction : IDisposable 
+    {
         internal IDbConnection conn;
         internal IDbTransaction transaction;
         
@@ -66,7 +67,7 @@ namespace MCGalaxy.SQL {
             try {
                 using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
                     cmd.Transaction = transaction;
-                    SqlQuery.FillParams(cmd, args);
+                    db.FillParams(cmd, args);
                     cmd.ExecuteNonQuery();
                     return true;
                 }

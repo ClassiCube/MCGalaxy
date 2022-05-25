@@ -21,11 +21,11 @@ using System.Data;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.SQL {
-    
-    /// <summary> Simple abstraction for a database management system. </summary>
-    public abstract class IDatabaseBackend {
-        
+namespace MCGalaxy.SQL 
+{    
+    /// <summary> Abstracts a SQL based database management system </summary>
+    public abstract class IDatabaseBackend 
+    {        
         /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
         public abstract bool EnforcesTextLength { get; }        
         /// <summary> Whether this backend supports multiple database schemas. </summary>
@@ -135,14 +135,79 @@ namespace MCGalaxy.SQL {
             sql.Append(" `").Append(table).Append("` ");
             sql.Append('(').Append(columns).Append(')');
             
-            string[] names = SqlQuery.GetNames(args.Length);
+            string[] names = GetNames(args.Length);
             sql.Append(" VALUES (");
-            for (int i = 0; i < args.Length; i++) {
+            for (int i = 0; i < args.Length; i++) 
+            {
                 sql.Append(names[i]);
                 if (i < args.Length - 1) sql.Append(", ");
                 else sql.Append(")");
             }
             return sql.ToString();
         }
+        
+        
+        #region Raw SQL functions
+        
+        /// <summary> Executes an SQL command that does not return any results. </summary>
+        public void Execute(string sql, object[] parameters, bool createDB) {
+            using (IDbConnection conn = CreateConnection()) {
+                conn.Open();
+                if (!createDB && MultipleSchema)
+                    conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
+                
+                using (IDbCommand cmd = CreateCommand(sql, conn)) {
+                    FillParams(cmd, parameters);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
+
+        /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
+        public object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
+            using (IDbConnection conn = CreateConnection()) {
+                conn.Open();
+                if (MultipleSchema)
+                    conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
+                
+                using (IDbCommand cmd = CreateCommand(sql, conn)) {
+                    FillParams(cmd, parameters);
+                    using (IDataReader reader = cmd.ExecuteReader()) {
+                        while (reader.Read()) { arg = callback(reader, arg); }
+                    }
+                }
+                conn.Close();
+            }
+            return arg;
+        }
+        
+        
+        /// <summary> Adds IDbDataParameter for each argument to the given command. </summary>
+        public void FillParams(IDbCommand cmd, object[] parameters) {
+            if (parameters == null || parameters.Length == 0) return;
+            
+            string[] names = GetNames(parameters.Length);
+            for (int i = 0; i < parameters.Length; i++) 
+            {
+                IDbDataParameter arg = CreateParameter();
+                arg.ParameterName = names[i];
+                arg.Value         = parameters[i];
+                cmd.Parameters.Add(arg);
+            }
+        }
+        
+        volatile static string[] ids;
+        internal static string[] GetNames(int count) {
+            // Avoid allocation overhead from string concat every query by caching
+            string[] names = ids;
+            if (names == null || count > names.Length) {
+                names = new string[count];
+                for (int i = 0; i < names.Length; i++) { names[i] = "@" + i; }
+                ids = names;
+            }
+            return names;
+        }
+        #endregion
     }
 }

@@ -17,10 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy.SQL {
-
+namespace MCGalaxy.SQL 
+{
     /// <summary> Describes a column for an SQL create statement. </summary>
-    public struct ColumnDesc {
+    public struct ColumnDesc 
+    {
         public readonly string Column;
         public readonly ColumnType Type;
         public readonly ushort MaxLength;
@@ -57,7 +58,8 @@ namespace MCGalaxy.SQL {
         };
     }
     
-    public enum ColumnType {
+    public enum ColumnType 
+    {
         UInt8, UInt16, UInt24, UInt32, UInt64,
         Int8, Int16, Int24, Int32, Int64,
         Integer, DateTime, Char, VarChar

@@ -20,12 +20,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
-namespace MCGalaxy.SQL {
+namespace MCGalaxy.SQL 
+{
     /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
     public delegate object ReaderCallback(IDataRecord record, object arg);
     
     /// <summary> Abstracts a SQL database management engine. </summary>
-    public static class Database {
+    public static class Database 
+    {
         public static IDatabaseBackend Backend;
         public const string DateFormat = "yyyy-MM-dd HH:mm:ss";        
 
@@ -175,13 +177,15 @@ namespace MCGalaxy.SQL {
 
         internal static object Do(string sql, bool createDB, object arg,
                                   ReaderCallback callback, params object[] args) {
+            IDatabaseBackend db = Backend;
             Exception e = null;
+            
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
-                        arg = SqlQuery.Iterate(sql, args, arg, callback);
+                        arg = db.Iterate(sql, args, arg, callback);
                     } else {
-                        SqlQuery.Execute(sql, args, createDB);
+                        db.Execute(sql, args, createDB);
                     }
                     
                     return arg;
@@ -194,6 +198,7 @@ namespace MCGalaxy.SQL {
             return arg;
         }
         #endregion
+        
         
         internal static bool ValidNameChar(char c) {
             return 
