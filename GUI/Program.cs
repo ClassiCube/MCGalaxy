@@ -27,15 +27,32 @@ namespace MCGalaxy.Gui
     {   
         [STAThread]
         public static void Main(string[] args) {
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            
-            if (!File.Exists("MCGalaxy_.dll")) {
-                Popup.Error("Cannot start server as MCGalaxy_.dll is missing from " + Environment.CurrentDirectory 
-                            + "\r\nDownload it from " + Updater.UploadsURL);
-                return;
-            }
+            SetCurrentDirectory();
+
             // separate method, in case MCGalaxy_.dll is missing
-            StartGUI();
+            try {
+                StartGUI();
+            } catch (FileNotFoundException) {
+                // If MCGalaxy_.dll is missing, a FileNotFoundException will get thrown for MCGalaxy dll
+                Popup.Error("Cannot start server as MCGalaxy_.dll is missing from " + Environment.CurrentDirectory
+                            + "\n\nDownload it from " + Updater.UploadsURL);
+                return;
+            }    
+        }
+
+        static void SetCurrentDirectory() {
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            try {
+                Environment.CurrentDirectory = path;
+            } catch (Exception ex) {
+                // assembly.Location usually gives full path of the .exe, but has issues with mkbundle
+                //   https://mono-devel-list.ximian.narkive.com/KfCAxY1F/mkbundle-assembly-getentryassembly
+                //   https://stackoverflow.com/questions/57648241/reliably-get-location-of-bundled-executable-on-linux
+                // Rather than trying to guess when this issue happens, just don't bother at all
+                //  (since most users will not be trying to run .exe from a different folder anyways)
+                string msg = "Failed to set working directory to '{0}', running in current directory..\n\n{1}";
+                Popup.Warning(string.Format(msg, path, ex));
+            }
         }
         
         static void StartGUI() {
