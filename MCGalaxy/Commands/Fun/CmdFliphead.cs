@@ -18,18 +18,16 @@
 namespace MCGalaxy.Commands.Fun {    
     public sealed class CmdFlipHead : Command2 {    
         public override string name { get { return "FlipHead"; } }
-        public override string shortcut { get { return "fh"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message, CommandData data) {
             p.flipHead = !p.flipHead;
-            if (p.flipHead) p.Message("Your head was broken!");
-            else p.Message("Your head was healed!");
+            p.Message("Your head was {0}&S!", p.flipHead ? "&cbroken" : "&ahealed");
         }
         
         public override void Help(Player p) {
-            p.Message("/fliphead - Does as it says on the tin (only works while infected)");
+            p.Message("&T/FlipHead");
+            p.Message("&HMakes your head appear upside down to other players");
         }
     }
 }

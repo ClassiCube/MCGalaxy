@@ -214,6 +214,7 @@
     <Compile Include="Commands\EntityPropertyCmd.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
     <Compile Include="Commands\Fun\CmdExplode.cs" />
+    <Compile Include="Commands\Fun\CmdFliphead.cs" />
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
     <Compile Include="Commands\Fun\CmdGun.cs" />
     <Compile Include="Commands\Fun\CmdLavaSurvival.cs" />
@@ -231,7 +232,6 @@
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounties.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdBounty.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdDisinfect.cs" />
-    <Compile Include="Commands\Fun\ZombieSurvival\CmdFliphead.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdHuman.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfect.cs" />
     <Compile Include="Commands\Fun\ZombieSurvival\CmdInfected.cs" />
