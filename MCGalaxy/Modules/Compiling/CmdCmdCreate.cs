@@ -50,9 +50,7 @@ namespace MCGalaxy.Modules.Compiling
         public override void Help(Player p) {
             p.Message("&T/CmdCreate [name]");
             p.Message("&HCreates an example C# command named Cmd[Name]");
-            p.Message("&T/CmdCreate [name] vb");
-            p.Message("&HCreates an example Visual Basic command named Cmd[Name]");
-            p.Message("&TThis file can be used as the basis for creating a new command.");
+            p.Message("&HThis file can be used as the basis for creating a new command");
         }
     }
 }

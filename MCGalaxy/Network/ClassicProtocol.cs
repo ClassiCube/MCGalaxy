@@ -26,8 +26,9 @@ namespace MCGalaxy.Network
     {
         // these are checked very frequently, so avoid overhead of .Supports(
         bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
-        int extensionCount;
+        
         bool finishedCpeLogin;
+        int extensionCount;
         CpeExt[] extensions = CpeExtension.Empty;
 
         public ClassicProtocol(INetSocket s) {

@@ -14,7 +14,6 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {

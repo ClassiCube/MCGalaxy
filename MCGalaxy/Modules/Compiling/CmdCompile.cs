@@ -93,18 +93,6 @@ namespace MCGalaxy.Modules.Compiling
             p.Message("&T/Compile plugin [plugin name]");
             p.Message("&HCompiles a .cs file containing a C# plugin into a DLL");
             p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_PLUGINS + "&H<name>&f.cs");
-            p.Message("&HFor compiling Visual Basic commands, see &T/help compile VB");
-        }
-        
-        public override void Help(Player p, string message) {
-            if (!message.CaselessEq("VB")) { base.Help(p, message); return; }
-            
-            p.Message("&T/Compile [command name] vb");
-            p.Message("&HCompiles a .vb file containing a Visual Basic command into a DLL");
-            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_COMMANDS + "Cmd&H<name>&f.vb");
-            p.Message("&T/Compile plugin [plugin name] vb");
-            p.Message("&HCompiles a .vb file containing a Visual Basic plugin into a DLL");
-            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_PLUGINS + "&H<name>&f.vb");
         }
     }
 }
