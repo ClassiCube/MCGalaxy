@@ -127,6 +127,9 @@ namespace MCGalaxy
         /// <summary> Sends a packet indicating an absolute position + orientation change for this player. </summary>
         public void SendPosition(Position pos, Orientation rot) {
             Session.SendTeleport(Entities.SelfID, pos, rot);
+
+            // when frozen, position updates from the client are ignored
+            if (frozen) Pos = pos;
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {
