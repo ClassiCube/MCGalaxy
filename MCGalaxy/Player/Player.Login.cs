@@ -83,8 +83,6 @@ namespace MCGalaxy
             TotalTime = TimeSpan.FromSeconds(1);
             GetPlayerStats();
             ShowWelcome();
-            
-            Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
             CheckState();
             
             PlayerDB.LoadNick(this);
@@ -104,7 +102,9 @@ namespace MCGalaxy
 
             OnPlayerConnectEvent.Call(this);
             if (cancellogin) { cancellogin = false; return; }
-            
+
+            Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
+
             string joinMsg = "&a+ λFULL &S" + PlayerDB.GetLoginMessage(this);
             if (hidden) joinMsg = "&8(hidden)" + joinMsg;
             
