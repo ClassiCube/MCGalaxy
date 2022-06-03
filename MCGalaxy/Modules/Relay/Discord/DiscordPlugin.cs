@@ -19,7 +19,6 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Modules.Relay.Discord;
 
 namespace MCGalaxy.Modules.Relay.Discord 
 {

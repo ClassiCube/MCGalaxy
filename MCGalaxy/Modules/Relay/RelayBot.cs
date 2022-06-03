@@ -80,7 +80,7 @@ namespace MCGalaxy.Modules.Relay
         readonly Player fakeGuest = new Player("RelayBot");
         readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
-        
+
         protected bool canReconnect;
         protected byte retries;
         volatile Thread worker;
@@ -95,7 +95,7 @@ namespace MCGalaxy.Modules.Relay
         /// <summary> Whether this relay bot is currently enabled </summary>
         public abstract bool Enabled { get; }
         
-        /// <summary> Wehther this relay bot is connected to the external communication service </summary>
+        /// <summary> Whether this relay bot is connected to the external communication service </summary>
         public bool Connected { get { return worker != null; } }
 
         /// <summary> List of users allowed to run in-game commands from the external communication service </summary>

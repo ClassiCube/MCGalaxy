@@ -297,8 +297,13 @@ namespace MCGalaxy.Modules.Relay.Discord
             return Config.StatusMessage.Replace("{PLAYERS}", online);
         }
         
-        void UpdateDiscordStatus() {
-            try { socket.UpdateStatus(); } catch { }
+        public void UpdateDiscordStatus() {
+            DiscordWebsocket s = socket;
+            // websocket gets disconnected with code 4003 if tries to send data before identifying
+            //  https://discord.com/developers/docs/topics/opcodes-and-status-codes
+            if (s == null || !s.SentIdentify) return;
+
+            try { s.UpdateStatus(); } catch { }
         }
         
         

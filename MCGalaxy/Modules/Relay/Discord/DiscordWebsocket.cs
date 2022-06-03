@@ -41,7 +41,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     {       
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
-        public bool CanReconnect = true;
+        public bool CanReconnect = true, SentIdentify;
         public DiscordSession Session;
         
         /// <summary> Whether presence support is enabled </summary>
@@ -131,7 +131,8 @@ namespace MCGalaxy.Modules.Relay.Discord
                                             + " (See " + Updater.SourceURL + "/wiki/Discord-relay-bot#read-permissions)");
                 Session.Intents &= ~INTENT_MESSAGE_CONTENT;
             }
-            
+
+            SentIdentify = false;
             Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
             Close();
         }
@@ -254,6 +255,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             } else {
                 SendMessage(OPCODE_IDENTIFY, MakeIdentify());
             }
+            SentIdentify = true;
         }
         
         public void UpdateStatus() {
