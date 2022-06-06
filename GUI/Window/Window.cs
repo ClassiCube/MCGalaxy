@@ -40,7 +40,7 @@ namespace MCGalaxy.Gui {
         Player curPlayer;
 
         public Window() {
-            logCallback = LogMessage;
+            logCallback = LogMessageCore;
             InitializeComponent();
         }
         
@@ -144,15 +144,15 @@ Trying to mix two versions is unsupported - you may experience issues";
         void LogMessage(LogType type, string message) {
             if (!Server.Config.ConsoleLogging[(int)type]) return;
             
-            if (InvokeRequired) {
-                try {
-                    BeginInvoke(logCallback, type, message); 
-                } catch (InvalidOperationException) {
-                    // This exception is thrown when trying to log
-                    //  messages after window has already been closed
-                }
-                return;
+            try {
+                 BeginInvoke(logCallback, type, message); 
+            } catch (InvalidOperationException) {
+                // This exception is thrown when trying to log
+                //  messages after window has already been closed
             }
+        }
+
+        void LogMessageCore(LogType type, string message) {
             if (Server.shuttingDown) return;
             string newline = Environment.NewLine;
             
