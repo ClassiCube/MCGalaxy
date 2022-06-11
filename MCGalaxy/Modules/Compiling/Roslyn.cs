@@ -80,6 +80,16 @@ namespace MCGalaxy.Modules.Compiling
 
         static string Quote(string value) { return "\"" + value + "\""; }
 
+        static string GetBinaryFile(string varName, string desc) {
+            string path = Environment.GetEnvironmentVariable(varName);
+            if (string.IsNullOrEmpty(path))
+                throw new InvalidOperationException("Env variable '" + varName + " must specify the path to " + desc);
+
+            // make sure file exists
+            using (Stream tmp = File.OpenRead(path)) { }
+            return path;
+        }
+
         static int Compile(string path, string exeArgs, string args, List<string> output) {
             // e.g. /home/test/.dotnet/dotnet exec "/home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll" [COMPILER ARGS]
             args = "exec " + Quote(exeArgs) + " " + args;
@@ -160,29 +170,22 @@ namespace MCGalaxy.Modules.Compiling
             // https://stackoverflow.com/questions/58840995/roslyn-compilation-how-to-reference-a-net-standard-2-0-class-library
             // https://luisfsgoncalves.wordpress.com/2017/03/20/referencing-system-assemblies-in-roslyn-compilations/
             // https://github.com/dotnet/roslyn/issues/34111
-            // TODO investigate using AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator); instead
 
             string coreAssemblyFileName = typeof(object).Assembly.Location;
-            
+            string[] sysAssemblyPaths   = GetSystemAssemblyPaths();
+
             if (!string.IsNullOrWhiteSpace(coreAssemblyFileName)) {
                 sb.Append("/nostdlib+ ");
                 sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName.Trim()));
             }
 
-            //string[] trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator);
-            //foreach (string trusted in trustedAssembliesPaths)
-            //{
-            //    Console.WriteLine("TRUST: " + trusted);
-            //}
-            //Console.WriteLine("CORE FILE: " + coreAssemblyFileName);
+            AddReferencedAssembly(sb, sysAssemblyPaths, "System.Runtime.dll");
+            AddReferencedAssembly(sb, sysAssemblyPaths, "netstandard.dll");
 
-            LoadSystemAssembly(sb, "System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-            LoadSystemAssembly(sb, "netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51");
-
-            foreach (string path in parameters.ReferencedAssemblies) {
-                sb.AppendFormat("/R:{0} ", Quote(path));
+            foreach (string path in parameters.ReferencedAssemblies) 
+            {
+                AddReferencedAssembly(sb, sysAssemblyPaths, path);
             }
-
             sb.AppendFormat("/out:{0} ", Quote(parameters.OutputAssembly));
 
             // debug information
@@ -196,34 +199,34 @@ namespace MCGalaxy.Modules.Compiling
                 sb.Append(parameters.CompilerOptions + " ");
             }
 
-            foreach (string path in fileNames) {
+            foreach (string path in fileNames) 
+            {
                 sb.AppendFormat("{0} ", Quote(path));
             }
             return sb.ToString();
         }
 
-        static void LoadSystemAssembly(StringBuilder sb, string assemblyName) {
-            string assemblyPath = null;
-            try {
-                var assembly = Assembly.Load(assemblyName);
-                assemblyPath = assembly.Location;
-            } catch {
-                // swallow any exceptions if we cannot find the assembly
+        static string[] GetSystemAssemblyPaths() {
+            string assemblies = AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") as string;
+            if (string.IsNullOrEmpty(assemblies)) return new string[0];
+
+            return assemblies.Split(Path.PathSeparator);
+        }
+
+        static void AddReferencedAssembly(StringBuilder sb, string[] sysAssemblyPaths, string path) {
+            path = MapAssembly(sysAssemblyPaths, path);
+            sb.AppendFormat("/R:{0} ", Quote(path));
+        }
+
+        // Try to use full system .dll path (otherwise roslyn may not always find the .dll)
+        static string MapAssembly(string[] sysAssemblyPaths, string file) {
+            foreach (string sysPath in sysAssemblyPaths)
+            {
+                if (file == Path.GetFileName(sysPath)) return sysPath;
             }
-
-            if (assemblyPath == null) return;
-            sb.AppendFormat("/R:{0} ", Quote(assemblyPath));
+            return file;
         }
-
-        static string GetBinaryFile(string varName, string desc) {
-            string path = Environment.GetEnvironmentVariable(varName);
-            if (string.IsNullOrEmpty(path))
-                throw new InvalidOperationException("Env variable '" + varName + " must specify the path to " + desc);
-
-            // make sure file exists
-            using (Stream tmp = File.OpenRead(path)) { }
-            return path;
-        }
+        
     }
 }
 #endif
