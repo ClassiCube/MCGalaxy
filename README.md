@@ -79,7 +79,6 @@ Compiling - mono and .NET framework
 
 Compiling - .NET 6 / .NET 5 / .NET Core
 -----------------
-**Command line:**
 
 * Compiling for .NET 6: No changes necessary
 * Compiling for .NET 5: Change `TargetFramework` in CLI/MCGalaxyCLI_Core.csproj to `net5.0`

@@ -589,6 +589,7 @@
     <Compile Include="Modules\Compiling\CmdCompload.cs" />
     <Compile Include="Modules\Compiling\Compiler.cs" />
     <Compile Include="Modules\Compiling\CompilerOperations.cs" />
+    <Compile Include="Modules\Compiling\Roslyn.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
@@ -725,9 +726,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\Compiling" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

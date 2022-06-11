@@ -19,10 +19,6 @@
  */
 #if !DISABLE_COMPILING
 using System.CodeDom.Compiler;
-using System;
-#if NETSTANDARD
-using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
-#endif
 
 namespace MCGalaxy.Modules.Compiling
 {
@@ -34,7 +30,7 @@ namespace MCGalaxy.Modules.Compiling
 
         protected override CodeDomProvider CreateProvider() {
 #if NETSTANDARD
-            return new CSharpCodeProvider();
+            return new RoslynCSharpCodeProvider();
 #else
             return CodeDomProvider.CreateProvider("CSharp");
 #endif
