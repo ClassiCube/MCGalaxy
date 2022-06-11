@@ -154,26 +154,30 @@ namespace MCGalaxy.Modules.Compiling
             sb.Append("/noconfig ");
             sb.Append("/fullpaths ");
 
+            // If we don't reference netstandard, System.Runtime, and System.Private.CoreLib, get an error when compiling
+            //  "The type 'Object' is defined in an assembly that is not referenced. You must add a reference to assembly 'netstandard, Version=..."
+            // https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/cross-platform-targeting
+            // https://stackoverflow.com/questions/58840995/roslyn-compilation-how-to-reference-a-net-standard-2-0-class-library
+            // https://luisfsgoncalves.wordpress.com/2017/03/20/referencing-system-assemblies-in-roslyn-compilations/
+            // https://github.com/dotnet/roslyn/issues/34111
+            // TODO investigate using AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator); instead
+
             string coreAssemblyFileName = typeof(object).Assembly.Location;
-            Console.WriteLine("CORE FILE: " + coreAssemblyFileName);
+            
             if (!string.IsNullOrWhiteSpace(coreAssemblyFileName)) {
                 sb.Append("/nostdlib+ ");
                 sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName.Trim()));
             }
 
-            // Bug 913691: Explicitly add System.Runtime as a reference.
-            string systemRuntimeAssemblyPath = null;
-            try {
-                var systemRuntimeAssembly = Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-                systemRuntimeAssemblyPath = systemRuntimeAssembly.Location;
-            }
-            catch {
-                // swallow any exceptions if we cannot find the assembly
-            }
+            //string[] trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator);
+            //foreach (string trusted in trustedAssembliesPaths)
+            //{
+            //    Console.WriteLine("TRUST: " + trusted);
+            //}
+            //Console.WriteLine("CORE FILE: " + coreAssemblyFileName);
 
-            if (systemRuntimeAssemblyPath != null) {
-                sb.AppendFormat("/R:{0} ", Quote(systemRuntimeAssemblyPath));
-            }
+            LoadSystemAssembly(sb, "System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+            LoadSystemAssembly(sb, "netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51");
 
             foreach (string path in parameters.ReferencedAssemblies) {
                 sb.AppendFormat("/R:{0} ", Quote(path));
@@ -196,6 +200,19 @@ namespace MCGalaxy.Modules.Compiling
                 sb.AppendFormat("{0} ", Quote(path));
             }
             return sb.ToString();
+        }
+
+        static void LoadSystemAssembly(StringBuilder sb, string assemblyName) {
+            string assemblyPath = null;
+            try {
+                var assembly = Assembly.Load(assemblyName);
+                assemblyPath = assembly.Location;
+            } catch {
+                // swallow any exceptions if we cannot find the assembly
+            }
+
+            if (assemblyPath == null) return;
+            sb.AppendFormat("/R:{0} ", Quote(assemblyPath));
         }
 
         static string GetBinaryFile(string varName, string desc) {

@@ -21,6 +21,7 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace MCGalaxy.Modules.Compiling 
@@ -196,7 +197,10 @@ namespace MCGalaxy.Modules.Compiling
                 AddReferences(path, args);
                 srcPaths[i] = path;
             }
-            args.ReferencedAssemblies.Add("MCGalaxy_.dll");
+
+            // TODO use absolute path?
+            string serverDLL = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
+            args.ReferencedAssemblies.Add(serverDLL);
             
             PrepareArgs(args);
             InitCompiler();
