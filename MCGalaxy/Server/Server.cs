@@ -210,6 +210,7 @@ namespace MCGalaxy {
             OnConfigUpdatedEvent.Call();
         }
         
+
         static readonly object stopLock = new object();
         static volatile Thread stopThread;
         public static Thread Stop(bool restart, string msg) {
@@ -272,7 +273,7 @@ namespace MCGalaxy {
                 // first try to use excevp to restart in CLI mode under mono 
                 // - see detailed comment in HACK_Execvp for why this is required
                 if (HACK_TryExecvp()) HACK_Execvp();
-                Process.Start(RestartPath);
+                Process.Start(GetRestartPath());
             }
             Environment.Exit(0);
         }
@@ -312,7 +313,23 @@ namespace MCGalaxy {
             } catch {
             }
         }
-        
+
+        static string GetRestartPath() {
+#if !NETSTANDARD
+            return RestartPath;
+#else
+            // NET core/5/6 executables tend to use the following structure:
+            //   MCGalaxyCLI_core --> MCGalaxyCLI_core.dll
+            // in this case, 'RestartPath' will include '.dll' since this file
+            //  is actually the managed assembly, but we need to remove '.dll'
+            //   as the actual executable which must be started is the non .dll file
+            string path = RestartPath;
+            if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
+            return path;
+#endif
+        }
+
+
         static bool checkedOnMono, runningOnMono;
         public static bool RunningOnMono() {
             if (!checkedOnMono) {

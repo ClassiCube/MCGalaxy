@@ -259,7 +259,7 @@ namespace MCGalaxy.Network
                 Send(Packet.TwoWayPing(false, data));
             } else {
                 // Server -> client ping, set time received for reply.
-                player.Ping.Update(data);
+                Ping.Update(data);
             }
             return size;
         }
@@ -494,7 +494,7 @@ namespace MCGalaxy.Network
 
         public override void SendPing() {
             if (hasTwoWayPing) {
-                Send(Packet.TwoWayPing(true, player.Ping.NextTwoWayPingData()));
+                Send(Packet.TwoWayPing(true, Ping.NextTwoWayPingData()));
             } else {
                 Send(Packet.Ping());
             }

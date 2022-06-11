@@ -44,7 +44,6 @@ namespace MCGalaxy {
         /// <summary> The underlying socket for sending/receiving raw data </summary>
         public INetSocket Socket;
         public IGameSession Session;
-        public PingList Ping = new PingList();
         
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk, AutoAfk;

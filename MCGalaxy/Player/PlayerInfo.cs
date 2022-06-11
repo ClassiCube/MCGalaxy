@@ -130,7 +130,7 @@ namespace MCGalaxy
         }
         
         /// <summary> Filters input list to only players that the source player can see. </summary>
-        internal static List<Player> OnlyCanSee(Player p, LevelPermission plRank, 
+        public static List<Player> OnlyCanSee(Player p, LevelPermission plRank, 
                                                 IEnumerable<Player> players) {
             List<Player> list = new List<Player>();
             foreach (Player pl in players) {

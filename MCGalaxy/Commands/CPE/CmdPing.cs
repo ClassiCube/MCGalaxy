@@ -31,25 +31,30 @@ namespace MCGalaxy.Commands.Chatting {
 
                 Player who = PlayerInfo.FindMatches(p, message);
                 if (who == null) return;
+
                 if (p != who && !CheckExtraPerm(p, data, 1)) return;
-                
+                PingList ping = who.Session.Ping;
+
                 if (!who.Supports(CpeExt.TwoWayPing)) {
                     p.Message("{0} client does not support measuring ping", 
                               p == who ? "Your" : p.FormatNick(who) + "&S's");
-                } else if (who.Ping.Measures() == 0) {
+                } else if (ping.Measures() == 0) {
                     p.Message("No ping measurements yet. Try again in a bit.");
                 } else {
-                    p.Message(p.FormatNick(who) + " &S- " + who.Ping.Format());
+                    p.Message(p.FormatNick(who) + " &S- " + ping.Format());
                 }
             } else {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 Player[] players = PlayerInfo.Online.Items;
                 p.Message("Ping/latency list of online players: (&aLo&S:&7Avg&S:&cHi&S)ms");
 
-                foreach (Player target in players) {
+                foreach (Player target in players) 
+                {
                     if (!p.CanSee(target, data.Rank)) continue;
-                    if (target.Ping.Measures() == 0) continue;
-                    p.Message(target.Ping.FormatAll() + " &S- " + p.FormatNick(target));
+                    PingList ping = target.Session.Ping;
+
+                    if (ping.Measures() == 0) continue;
+                    p.Message(ping.FormatAll() + " &S- " + p.FormatNick(target));
                 }
             }
         }

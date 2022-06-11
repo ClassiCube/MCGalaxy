@@ -37,6 +37,8 @@ namespace MCGalaxy.Network
         /// <summary> Temporary unique ID for this network session </summary>
         public int ID;
 
+        public PingList Ping = new PingList();
+
         public int ProcessReceived(byte[] buffer, int bufferLen) {
             int read = 0;
             try {
