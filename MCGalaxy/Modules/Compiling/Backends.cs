@@ -18,6 +18,7 @@
     permissions and limitations under the Licenses.
  */
 #if !DISABLE_COMPILING
+using System;
 using System.CodeDom.Compiler;
 
 namespace MCGalaxy.Modules.Compiling
@@ -131,7 +132,7 @@ namespace MCGalaxy
         
         protected override CodeDomProvider CreateProvider() {
 #if NETSTANDARD
-            return new VBCodeProvider();
+            throw new NotSupportedException("Compiling Visual Basic is not supported in .NET standard build");
 #else
             return CodeDomProvider.CreateProvider("VisualBasic");
 #endif

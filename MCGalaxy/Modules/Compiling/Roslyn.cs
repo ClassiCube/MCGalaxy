@@ -14,13 +14,15 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform 
+namespace MCGalaxy.Modules.Compiling
 {
     public class RoslynCSharpCodeProvider : Microsoft.CSharp.CSharpCodeProvider
     {
@@ -52,30 +54,21 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
         }
 
         static CompilerResults FromFileBatch(CompilerParameters options, string[] fileNames) {
-            string outputFile = null;
-            var results = new CompilerResults(options.TempFiles);
+            CompilerResults results = new CompilerResults(options.TempFiles);
+            List<string> output     = new List<string>();
 
             results.TempFiles.AddExtension("pdb"); // for .pdb debug files
-
             string args = GetCommandLineArguments(options, fileNames);
 
-            // Use a response file if the compiler supports it
-            string responseFileArgs = GetResponseFileCmdArgs(options, args);
-            if (responseFileArgs != null) args = responseFileArgs;
+            string netPath = GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
+            string cscPath = GetBinaryFile("MCG_COMPILER_PATH", "'csc.dll' file - e.g. /home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll");
 
-            string compilerFullPath = GetCSharpCompilerPath();
-            // Try opening the file to make sure the compiler exist.  This will throw an exception
-            // if it doesn't
-            using (Stream tmp = File.OpenRead(compilerFullPath)) { }
-
-            int retValue = Compile(options, compilerFullPath, args, ref outputFile);
+            int retValue = Compile(netPath, cscPath, args, output);
             results.NativeCompilerReturnValue = retValue;
 
             // only look for errors/warnings if the compile failed or the caller set the warning level
             if (retValue != 0 || options.WarningLevel > 0) {
-                // The output of the compiler is in UTF8
-                string[] lines = File.ReadAllLines(outputFile, Encoding.UTF8);
-                foreach (string line in lines) 
+                foreach (string line in output) 
                 {
                     ProcessCompilerOutputLine(results, line);
                 }
@@ -87,24 +80,34 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
 
         static string Quote(string value) { return "\"" + value + "\""; }
 
-        static string GetResponseFileCmdArgs(CompilerParameters options, string cmdArgs) {
-            string responseFileName = options.TempFiles.AddExtension("cmdline");
-            File.WriteAllText(responseFileName, cmdArgs, Encoding.UTF8);
+        static int Compile(string path, string exeArgs, string args, List<string> output) {
+            // e.g. /home/test/.dotnet/dotnet exec "/home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll" [COMPILER ARGS]
+            args = "exec " + Quote(exeArgs) + " " + args;
 
-            // Always specify the /noconfig flag (outside of the response file)
-            return "/noconfig /fullpaths " + "@\"" + responseFileName + "\"";
-        }
+            // https://stackoverflow.com/questions/285760/how-to-spawn-a-process-and-capture-its-stdout-in-net
+            ProcessStartInfo psi = new ProcessStartInfo(path, args);
+            psi.WorkingDirectory       = Environment.CurrentDirectory;
+            psi.UseShellExecute        = false;
+            psi.CreateNoWindow         = true;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError  = true;
 
-        static int Compile(CompilerParameters options, string compilerFullPath, string arguments, ref string outputFile) {
-            string errorFile = null;
-            string cmdLine   = "\"" + compilerFullPath + "\" " + arguments;
-            outputFile = options.TempFiles.AddExtension("out");
+            using (Process p = new Process())
+            {
+                p.OutputDataReceived += (s, e) => { if (e.Data != null) output.Add(e.Data); };
+                p.ErrorDataReceived  += (s, e) => { }; // swallow stderr output
 
-            return Executor.ExecWaitWithCapture(
-                options.UserToken, cmdLine,
-                Environment.CurrentDirectory,
-                options.TempFiles,
-                ref outputFile, ref errorFile);
+                p.StartInfo = psi;
+                p.Start();
+
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+
+                if (!p.WaitForExit(120 * 1000))
+                    throw new InvalidOperationException("C# compiler ran for over two minutes! Giving up..");
+
+                return p.ExitCode;
+            }
         }
 
         static void ProcessCompilerOutputLine(CompilerResults results, string line) {
@@ -147,8 +150,9 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
             StringBuilder sb = new StringBuilder();
             sb.Append("/t:library ");
 
-            // Get UTF8 output from the compiler
             sb.Append("/utf8output ");
+            sb.Append("/noconfig ");
+            sb.Append("/fullpaths ");
 
             string coreAssemblyFileName = typeof(object).Assembly.Location;
             Console.WriteLine("CORE FILE: " + coreAssemblyFileName);
@@ -194,13 +198,14 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
             return sb.ToString();
         }
 
-        static string GetCSharpCompilerPath()
-        {
-            string fullPath = Environment.GetEnvironmentVariable("ROSLYN_COMPILER_LOCATION");
-            if (!string.IsNullOrEmpty(fullPath)) return fullPath;
+        static string GetBinaryFile(string varName, string desc) {
+            string path = Environment.GetEnvironmentVariable(varName);
+            if (string.IsNullOrEmpty(path))
+                throw new InvalidOperationException("Env variable '" + varName + " must specify the path to " + desc);
 
-            // try current directory as a fallback.. probably won't work though
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\roslyn\csc.exe");
+            // make sure file exists
+            using (Stream tmp = File.OpenRead(path)) { }
+            return path;
         }
     }
 }
