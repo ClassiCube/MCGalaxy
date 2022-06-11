@@ -66,7 +66,7 @@ Click **Settings** in the MCGalaxy window, then tick the **Public** checkbox. Th
 
 This makes your server appear in the server list on classicube.net and in the ClassiCube client.
 
-Compiling
+Compiling - mono and .NET framework
 -----------------
 **With an IDE:**
 * Visual Studio : Open `MCGalaxy.sln`, click `Build` in the menubar, then click `Build Solution`. (Or press F6)
@@ -76,6 +76,18 @@ Compiling
 * For Windows: Run `MSBuild command prompt for VS`, then type `msbuild MCGalaxy.sln` into command prompt
 * Modern mono: Type `msbuild MCGalaxy.sln` into Terminal
 * Older mono: Type `xbuild MCGalaxy.sln` into Terminal
+
+Compiling - .NET 6 / .NET 5 / .NET Core
+-----------------
+**Command line:**
+
+* Compiling for .NET 6: No changes necessary
+* Compiling for .NET 5: Change `TargetFramework` in CLI/MCGalaxyCLI_Core.csproj to `net5.0`
+* Compiling for .NET Core: Change `TargetFramework` in CLI/MCGalaxyCLI_Core.csproj to `netcoreapp3.1`
+
+Then navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_Core.csproj`
+
+**You will also need to copy `libsqlite3.so.0` from system libraries to `libsqlite3.so` in the server folder**
 
 Copyright/License
 -----------------
