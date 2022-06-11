@@ -41,14 +41,6 @@ namespace MCGalaxy
             return col.Length > 0 ? col : p.group.Color;
         }
         
-        /// <summary> Returns the number of non-hidden players that are currently online </summary>
-        public static int NonHiddenCount() {
-            Player[] players = Online.Items;
-            int count = 0;
-            foreach (Player p in players) { if (!p.hidden) count++; }
-            return count;
-        }
-        
         public static int NonHiddenUniqueIPCount() {
             Player[] players = Online.Items;
             Dictionary<string, bool> uniqueIPs = new Dictionary<string, bool>();
@@ -133,10 +125,15 @@ namespace MCGalaxy
         public static List<Player> OnlyCanSee(Player p, LevelPermission plRank, 
                                                 IEnumerable<Player> players) {
             List<Player> list = new List<Player>();
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (p.CanSee(pl, plRank)) list.Add(pl);
             }
             return list;
+        }
+
+        public static List<Player> GetOnlineCanSee(Player p, LevelPermission plRank) {
+            return OnlyCanSee(p, plRank, Online.Items);
         }
         
         

@@ -293,8 +293,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         string GetStatusMessage() {
-            string online = PlayerInfo.NonHiddenCount().ToString();
-            return Config.StatusMessage.Replace("{PLAYERS}", online);
+            fakeGuest.group     = Group.DefaultRank;
+            List<Player> online = PlayerInfo.GetOnlineCanSee(fakeGuest, fakeGuest.Rank); 
+
+            string numOnline = online.Count.ToString();
+            return Config.StatusMessage.Replace("{PLAYERS}", numOnline);
         }
         
         public void UpdateDiscordStatus() {

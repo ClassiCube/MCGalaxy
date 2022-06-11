@@ -324,7 +324,8 @@ namespace MCGalaxy {
             //  is actually the managed assembly, but we need to remove '.dll'
             //   as the actual executable which must be started is the non .dll file
             string path = RestartPath;
-            if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
+            //if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
+            // TODO this makes things worse, need to work out why
             return path;
 #endif
         }

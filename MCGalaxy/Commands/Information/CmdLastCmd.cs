@@ -28,7 +28,8 @@ namespace MCGalaxy.Commands.Info {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 Player[] players = PlayerInfo.Online.Items;
-                foreach (Player pl in players) {
+                foreach (Player pl in players) 
+                {
                     if (p.CanSee(pl, data.Rank)) ShowLastCommand(p, pl);
                 }
             } else {

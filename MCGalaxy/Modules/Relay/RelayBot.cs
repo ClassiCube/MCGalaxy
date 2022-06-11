@@ -77,8 +77,8 @@ namespace MCGalaxy.Modules.Relay
         /// <summary> List of user IDs that all chat from is ignored </summary>
         public string[] IgnoredUsers;
         
-        readonly Player fakeGuest = new Player("RelayBot");
-        readonly Player fakeStaff = new Player("RelayBot");
+        protected readonly Player fakeGuest = new Player("RelayBot");
+        protected readonly Player fakeStaff = new Player("RelayBot");
         DateTime lastWho, lastOpWho;
 
         protected bool canReconnect;
