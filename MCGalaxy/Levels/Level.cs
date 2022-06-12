@@ -96,12 +96,12 @@ namespace MCGalaxy
             ClearPhysicsLists();
             UndoBuffer.Clear();
             BlockDB.Cache.Clear();
-            Zones.Clear();
-            
             blockqueue.ClearAll();
+
             lock (saveLock) {
-                blocks = null;
+                blocks       = null;
                 CustomBlocks = null;
+                Zones.Clear();
             }
         }
         
