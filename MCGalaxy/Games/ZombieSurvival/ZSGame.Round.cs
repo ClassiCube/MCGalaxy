@@ -31,7 +31,7 @@ namespace MCGalaxy.Games {
         
         protected override void DoRound() {
             if (!Running) return;
-            List<Player> players = DoRoundCountdown(30);
+            List<Player> players = DoRoundCountdown(Config.CountdownDuration);
             if (players == null) return;
 
             if (!Running) return;

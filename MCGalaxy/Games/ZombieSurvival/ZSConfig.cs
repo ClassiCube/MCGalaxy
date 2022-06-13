@@ -68,7 +68,10 @@ namespace MCGalaxy.Games {
         public int ReviveChance = 80;
         [ConfigInt("revive-times", "Revive", 1, 0)]
         public int ReviveTimes = 1;
-        
+
+        [ConfigInt("countdown-duration", "Game", 30, 0)]
+        public int CountdownDuration = 30;
+
         static ConfigElement[] cfg;
         public override bool AllowAutoload { get { return true; } }
         protected override string GameName { get { return "Zombie Survival"; } }
