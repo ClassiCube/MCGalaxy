@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Config;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Modules.Relay.Discord 
@@ -291,22 +292,52 @@ namespace MCGalaxy.Modules.Relay.Discord
             }
             return sb.ToString();
         }
-        
-        string GetStatusMessage() {
-            fakeGuest.group     = Group.DefaultRank;
-            List<Player> online = PlayerInfo.GetOnlineCanSee(fakeGuest, fakeGuest.Rank); 
 
-            string numOnline = online.Count.ToString();
-            return Config.StatusMessage.Replace("{PLAYERS}", numOnline);
-        }
-        
+
+        readonly object updateLocker = new object();
+        volatile bool updateScheduled;
+        DateTime nextUpdate;
+
         public void UpdateDiscordStatus() {
+            TimeSpan delay = default(TimeSpan);
+            DateTime now   = DateTime.UtcNow;
+
+            // websocket gets disconnected with code 4008 if try to send too many updates too quickly
+            lock (updateLocker) {
+                // status update already pending?
+                if (updateScheduled) return;
+                updateScheduled = true;
+
+                // slowdown if sending too many status updates
+                if (nextUpdate > now) delay = nextUpdate - now;
+            }
+            
+            Server.MainScheduler.QueueOnce(DoUpdateStatus, null, delay);
+        }
+
+        void DoUpdateStatus(SchedulerTask task) {
+            DateTime now = DateTime.UtcNow;
+            // OK to queue next status update now
+            lock (updateLocker) {
+                updateScheduled = false;
+                nextUpdate      = now.AddSeconds(0.5);
+                // ensures status update can't be sent more than once every 0.5 seconds
+            }
+
             DiscordWebsocket s = socket;
             // websocket gets disconnected with code 4003 if tries to send data before identifying
             //  https://discord.com/developers/docs/topics/opcodes-and-status-codes
             if (s == null || !s.SentIdentify) return;
 
             try { s.UpdateStatus(); } catch { }
+        }
+
+        string GetStatusMessage() {
+            fakeGuest.group     = Group.DefaultRank;
+            List<Player> online = PlayerInfo.GetOnlineCanSee(fakeGuest, fakeGuest.Rank); 
+
+            string numOnline = online.Count.ToString();
+            return Config.StatusMessage.Replace("{PLAYERS}", numOnline);
         }
         
         
