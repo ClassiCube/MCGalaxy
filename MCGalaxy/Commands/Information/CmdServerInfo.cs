@@ -38,25 +38,24 @@ namespace MCGalaxy.Commands.Info {
 
         public override void Use(Player p, string message, CommandData data) {
             int count = Database.CountRows("Players");
-            p.Message("Server's name: &b{0}&S", Server.Config.Name);
-            p.Message("&a{0} &Splayers total. (&a{1} &Sonline, &8{2} banned&S)",
+            p.Message("About &b{0}&S", Server.Config.Name);
+            p.Message("  &a{0} &Splayers total. (&a{1} &Sonline, &8{2} banned&S)",
                       count, PlayerInfo.GetOnlineCanSee(p, data.Rank).Count, Group.BannedRank.Players.Count);
-            p.Message("&a{0} &Slevels total (&a{1} &Sloaded). Currency is &3{2}&S.",
+            p.Message("  &a{0} &Slevels total (&a{1} &Sloaded). Currency is &3{2}&S.",
                       LevelInfo.AllMapFiles().Length, LevelInfo.Loaded.Count, Server.Config.Currency);
             
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
-            p.Message("Been up for &b{0}&S, running &b{1} &a{2} &f" + Updater.SourceURL,
+            p.Message("  Been up for &a{0}&S, running &b{1} &a{2} &f" + Updater.SourceURL,
                       up.Shorten(true), Server.SoftwareName, Server.Version);
-            p.Message("Player positions are updated every &b"
-                      + Server.Config.PositionUpdateInterval + " &Smilliseconds.");
+
+            int updateInterval = 1000 / Server.Config.PositionUpdateInterval;
+            p.Message("  Player positions are updated &a{0} &Stimes/second", updateInterval);
             
             string owner = Server.Config.OwnerName;
             if (!owner.CaselessEq("Notch") && !owner.CaselessEq("the owner")) {
-                p.Message("Owner is &3{0}. &SConsole state: &3{1}", owner, Server.Config.ConsoleName);
-            } else {
-                p.Message("Console state: &3{0}", Server.Config.ConsoleName);
+                p.Message("  Owner is &3{0}", owner);
             }
-            
+
             if (HasExtraPerm(p, data.Rank, 1)) ShowServerStats(p);
         }
 
