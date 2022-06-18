@@ -18,10 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using MCGalaxy.Commands.World;
-using MCGalaxy.Network;
 
 namespace MCGalaxy.Games {
     

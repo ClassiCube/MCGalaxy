@@ -16,8 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using System.Diagnostics;
+using System.Threading;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info {
@@ -32,9 +32,6 @@ namespace MCGalaxy.Commands.Info {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Admin, "can see server CPU and memory usage") }; }
         }
-        
-        static PerformanceCounter allPCounter = null;
-        static PerformanceCounter cpuPCounter = null;
 
         public override void Use(Player p, string message, CommandData data) {
             int count = Database.CountRows("Players");
@@ -43,42 +40,71 @@ namespace MCGalaxy.Commands.Info {
                       count, PlayerInfo.GetOnlineCanSee(p, data.Rank).Count, Group.BannedRank.Players.Count);
             p.Message("  &a{0} &Slevels total (&a{1} &Sloaded). Currency is &3{2}&S.",
                       LevelInfo.AllMapFiles().Length, LevelInfo.Loaded.Count, Server.Config.Currency);
-            
+
             TimeSpan up = DateTime.UtcNow - Server.StartTime;
             p.Message("  Been up for &a{0}&S, running &b{1} &a{2} &f" + Updater.SourceURL,
                       up.Shorten(true), Server.SoftwareName, Server.Version);
 
             int updateInterval = 1000 / Server.Config.PositionUpdateInterval;
             p.Message("  Player positions are updated &a{0} &Stimes/second", updateInterval);
-            
+
             string owner = Server.Config.OwnerName;
             if (!owner.CaselessEq("Notch") && !owner.CaselessEq("the owner")) {
                 p.Message("  Owner is &3{0}", owner);
             }
 
-            if (HasExtraPerm(p, data.Rank, 1)) ShowServerStats(p);
+            if (HasExtraPerm(p, data.Rank, 1)) OutputResourceUsage(p);
         }
 
-        void ShowServerStats(Player p) {
-            Process proc = Process.GetCurrentProcess();
-            if (allPCounter == null) {
-                p.Message("Starting performance counters...one second");
-                allPCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-                allPCounter.BeginInit();
-                allPCounter.NextValue();
+        static PerformanceCounter allPCounter;
+        static DateTime startTime;
+        static TimeSpan startCPU;
 
-                cpuPCounter = new PerformanceCounter("Process", "% Processor Time", proc.ProcessName);
-                cpuPCounter.BeginInit();
-                cpuPCounter.NextValue();
-                System.Threading.Thread.Sleep(500);
+        static void OutputResourceUsage(Player p) {
+            Process proc = Process.GetCurrentProcess();
+            p.Message("Measuring resource usage...one second");
+
+            if (startTime == default(DateTime)) {
+                startTime = DateTime.UtcNow;
+                startCPU  = proc.TotalProcessorTime;
             }
-            
-            // Private Bytes because it is what the process has reserved for itself
-            int threads = proc.Threads.Count;
-            int mem = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
-            double cpu = cpuPCounter.NextValue(), all = allPCounter.NextValue();
-            p.Message("&a{0}% &SCPU usage, &a{1}% &Sby all processes", cpu.ToString("F2"), all.ToString("F2"));
-            p.Message("&a{0} &Sthreads, using &a{1} &Smegabytes of memory", threads, mem);
+            TimeSpan begCPU = proc.TotalProcessorTime;
+
+            try
+            {
+                if (allPCounter == null) {
+                    allPCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                    allPCounter.BeginInit();
+                    allPCounter.NextValue();
+                }
+            } catch (PlatformNotSupportedException) {
+                // .NET core throws this error on Linux
+            }
+
+            // measure CPU usage over one second
+            Thread.Sleep(1000);
+            TimeSpan endCPU = proc.TotalProcessorTime;
+
+            p.Message("&a{0}% &SCPU usage now, &a{1}% &Soverall",
+                MeasureCPU(begCPU,   endCPU, TimeSpan.FromSeconds(1)),
+                MeasureCPU(startCPU, endCPU, DateTime.UtcNow - startTime));
+
+            p.Message("  &a{0}% &Sby all processes",
+                allPCounter == null ? "(unknown)" : allPCounter.NextValue().ToString("F2"));
+
+            // Private Bytes = memory the process has reserved just for itself
+            int memory = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
+            p.Message("&a{0} &Sthreads, using &a{1} &Smegabytes of memory",
+                proc.Threads.Count, memory);
+        }
+
+        static string MeasureCPU(TimeSpan beg, TimeSpan end, TimeSpan interval) {
+            if (end < beg) return "0.00"; // TODO: Can this ever happen
+            int cores = Math.Max(1, Environment.ProcessorCount);
+
+            TimeSpan used  = end - beg;
+            double elapsed = 100.0 * (used.TotalSeconds / interval.TotalSeconds);
+            return (elapsed / cores).ToString("F2");
         }
         
         public override void Help(Player p) {
