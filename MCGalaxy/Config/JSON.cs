@@ -160,10 +160,15 @@ namespace MCGalaxy.Config {
         static bool IsNumber(char c) {
             return c == '-' || c == '.' || (c >= '0' && c <= '9');
         }
-        
+
+        static bool IsNumberPart(char c) {
+            // same as IsNumber, but also accepts exponential notation (e.g. "3.40E+38")
+            return c == '-' || c == '.' || (c >= '0' && c <= '9') || c == 'E' || c == '+';
+        }
+
         string ParseNumber() {
             int start = offset - 1;
-            for (; offset < Value.Length && IsNumber(Cur); offset++);
+            for (; offset < Value.Length && IsNumberPart(Cur); offset++);
             return Value.Substring(start, offset - start);
         }
     }
