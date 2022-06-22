@@ -26,6 +26,7 @@ namespace MCGalaxy.Network
     {
         // these are checked very frequently, so avoid overhead of .Supports(
         bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
+        bool hasHeldBlock, hasLongerMessages;
         
         bool finishedCpeLogin;
         int extensionCount;
@@ -132,7 +133,7 @@ namespace MCGalaxy.Network
             if (!player.loggedIn) return size;
 
             int held = -1;
-            if (Supports(CpeExt.HeldBlock)) {
+            if (hasHeldBlock) {
                 held = ReadBlock(buffer, offset + 1);
                 if (hasExtBlocks) offset++; // correct offset for position later
             }
@@ -162,9 +163,7 @@ namespace MCGalaxy.Network
 
             // In original clasic, this field is 'player ID' and so useless
             // With LongerMessages extension, this field has been repurposed
-            bool continued = false;
-            if (Supports(CpeExt.LongerMessages))
-                continued  = buffer[offset + 1] != 0;
+            bool continued = hasLongerMessages && buffer[offset + 1] != 0;
 
             string text = NetUtils.ReadString(buffer, offset + 2);
             player.ProcessChat(text, continued);
@@ -301,11 +300,7 @@ namespace MCGalaxy.Network
                 if (MaxRawBlock < 255) MaxRawBlock = 255;
             } else if (ext.Name == CpeExt.TextColors) {
                 hasTextColors = true;
-                for (int i = 0; i < Colors.List.Length; i++)
-                {
-                    if (!Colors.List[i].IsModified()) continue;
-                    Send(Packet.SetTextColor(Colors.List[i]));
-                }
+                SendGlobalColors();
             } else if (ext.Name == CpeExt.ExtEntityPositions) {
                 p.hasExtPositions = true;
             } else if (ext.Name == CpeExt.TwoWayPing) {
@@ -314,6 +309,10 @@ namespace MCGalaxy.Network
                 hasBulkBlockUpdate = true;
             } else if (ext.Name == CpeExt.ExtTextures) {
                 hasExtTexs = true;
+            } else if (ext.Name == CpeExt.HeldBlock) {
+                hasHeldBlock = true;
+            } else if (ext.Name == CpeExt.LongerMessages) {
+                hasLongerMessages = true;
             }
             #if TEN_BIT_BLOCKS
             else if (ext.Name == CpeExt.ExtBlocks) {
@@ -321,6 +320,14 @@ namespace MCGalaxy.Network
                 if (MaxRawBlock < 767) MaxRawBlock = 767;
             }
             #endif
+        }
+
+        void SendGlobalColors() {
+            for (int i = 0; i < Colors.List.Length; i++)
+            {
+                if (!Colors.List[i].IsModified()) continue;
+                Send(Packet.SetTextColor(Colors.List[i]));
+            }
         }
 #endregion
 
@@ -412,7 +419,7 @@ namespace MCGalaxy.Network
         }
 
         public override bool SendHoldThis(BlockID block, bool locked) {
-            if (!Supports(CpeExt.HeldBlock)) return false;
+            if (!hasHeldBlock) return false;
 
             BlockID raw = ConvertBlock(block);
             Send(Packet.HoldThis(raw, locked, hasExtBlocks));
