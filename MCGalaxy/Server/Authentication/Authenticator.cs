@@ -33,20 +33,12 @@ namespace MCGalaxy.Authentication
         
         /// <summary> Checks if the given player is allowed to login with the given mppass </summary>
         public virtual bool VerifyLogin(Player p, string mppass) {
-            if (!Server.Config.VerifyNames) return true;
-            
             foreach (AuthService auth in AuthService.Services)
             {
                 if (auth.Authenticate(p, mppass)) return true;
             }
-            return IPUtil.IsPrivate(p.IP);
-        }
-        
-        /// <summary> Checks if the given player is allowed to login with the 
-        /// given mppass to the given authentication service </summary>
-        public virtual bool VerifyLogin(Player p, string mppass, AuthService service) {
-            string calculated = Server.CalcMppass(p.truename, service.Beat.Salt);
-            return mppass.CaselessEq(calculated);
+            
+            return !Server.Config.VerifyNames || IPUtil.IsPrivate(p.IP);
         }
         
         /// <summary> Informs the given player that they must first

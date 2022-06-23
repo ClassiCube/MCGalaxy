@@ -38,8 +38,7 @@ namespace MCGalaxy.Authentication
         public AuthServiceConfig Config;
         
         public virtual bool Authenticate(Player p, string mppass) {
-            bool valid = Authenticator.Current.VerifyLogin(p, mppass, this);
-            if (!valid) return false;
+            if (!VerifyLogin(p, mppass)) return false;
             AuthServiceConfig cfg = Config;
             
             p.verifiedName = true;
@@ -49,6 +48,12 @@ namespace MCGalaxy.Authentication
             p.truename    += cfg.NameSuffix;
             p.DisplayName += cfg.NameSuffix;
             return true;
+        }
+        
+        /// <summary> Whether the given player is allowed to login with the given mppass </summary>
+        protected virtual bool VerifyLogin(Player p, string mppass) {
+            string calculated = Server.CalcMppass(p.truename, Beat.Salt);
+            return mppass.CaselessEq(calculated);
         }
         
         
