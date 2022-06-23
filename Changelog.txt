@@ -1,4 +1,38 @@
-﻿v 1.9.4.0
+﻿v 1.9.4.1
+Added: Custom network protocol support
+Added: /Whitelist enable/disable to turn on/off whitelisted only mode
+Added: Shortcut /br for /Brush
+Improved: /Maze now allows specifying an optional seed argument
+Improved: Inbox now includes message number and slightly offsets message
+Improved: Simplify /sinfo slightly and make its appearance more like /Info
+Improved: /sinfo now shows total number of levels
+Improved: Log when non-existent portals/message blocks are autodeleted from a level
+Improved: Make /FlipHead usable without ZS running
+Improved: Increase default maximum player count from 12 to 16
+Fixed: Frozen players not getting /summoned (and /TP, /Portal etc)
+Fixed: /sinfo not showing accurate CPU usage
+Fixed: /Outline should be usable even if you can't modify the target block
+Fixed: Very rare case where Zones would disappear when level was saved
+Fixed: Flatgrass map generator generating the grass layer one layer too high
+Fixed: /mi env sometimes wrongly showing exponential fog as enabled
+Fixed: Discord bot rarely triggering rate limiting and subsequently failing to reconnect
+Fixed: Can't compile commands/plugins in .NET core build
+Fixed: GUI logging options wrongly being controlled by 'file logging' instead of 'console logging' server option
+Fixed: Prevent console from trying to generate levels over 2 GB in size
+Fixed: Alts message rarely showing to lower ranked players while hidden
+Fixed: Some messages in /Restore and /Museum etc showing plain instead of colored level name
+Fixed: IPv4 mapped IPv6 addresses not triggering connection spam blocking (note IPv6 support isn't enabled by default)
+Fixed: Few minor issues in GUI tooltips
+Fixed: GUI not working with mkbundle
+Fixed: Make /Time and /Server backup db use yyyy-mm-dd format
+Fixed: Auto unloading of levels at game round end still showing a message to staff
+Fixed: Bots with ridiculously large model scales (e.g. 3.3 x 10^38) failing to load
+Fixed: Discord bot status player count not including hidden players visible to guests
+
+Removed
+- Visual Basic documentation in /Compile and /CmdCreate (still supported though)
+
+v 1.9.4.0
 Added: Separate Console rank with highest permission level
 Added: Option to allow banning staff IPs
 Fixed: Changing rank not immediately updating players table in main GUI
