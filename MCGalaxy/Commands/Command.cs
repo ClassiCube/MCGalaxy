@@ -49,8 +49,11 @@ namespace MCGalaxy
         
         /// <summary> Whether this command is usable by 'super' players (Console, IRC, etc) </summary>
         public virtual bool SuperUseable { get { return true; } }
-        public virtual bool MessageBlockRestricted { get { return false; } }
+        public virtual bool MessageBlockRestricted { get { return type.CaselessContains("mod"); } }
+        /// <summary> Whether this command can be used when a player is frozen </summary>
+        /// <remarks> Only informational commands should override this to return true </remarks>
         public virtual bool UseableWhenFrozen { get { return false; } }
+        
         /// <summary> Whether using this command is logged to server logs </summary>
         /// <remarks> return false to prevent this command showing in logs (e.g. /pass) </remarks>
         public virtual bool LogUsage { get { return true; } }

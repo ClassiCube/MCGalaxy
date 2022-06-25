@@ -20,15 +20,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Games {
-    
-    public sealed partial class ZSGame : RoundsGame {
+namespace MCGalaxy.Games 
+{    
+    public sealed partial class ZSGame : RoundsGame 
+    {
         string lastKiller = "";
         int infectCombo = 0;
         
         protected override void DoRound() {
             if (!Running) return;
-            List<Player> players = DoRoundCountdown(30);
+            List<Player> players = DoRoundCountdown(Config.InfectionCountdown);
             if (players == null) return;
 
             if (!Running) return;

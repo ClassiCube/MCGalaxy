@@ -21,9 +21,12 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Config;
 
-namespace MCGalaxy.Games {
-    
-    public sealed class ZSConfig : RoundsGameConfig {
+namespace MCGalaxy.Games 
+{    
+    public sealed class ZSConfig : RoundsGameConfig 
+    {
+        [ConfigInt("infection-start-countdown", "Round", 30, 0)]
+        public int InfectionCountdown = 30; 
         
         [ConfigFloat("zombie-hitbox-distance", "Zombie", 1f)]
         public float HitboxDist = 1f;

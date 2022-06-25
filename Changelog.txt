@@ -28,9 +28,7 @@ Fixed: Make /Time and /Server backup db use yyyy-mm-dd format
 Fixed: Auto unloading of levels at game round end still showing a message to staff
 Fixed: Bots with ridiculously large model scales (e.g. 3.3 x 10^38) failing to load
 Fixed: Discord bot status player count not including hidden players visible to guests
-
-Removed
-- Visual Basic documentation in /Compile and /CmdCreate (still supported though)
+Removed: Visual Basic documentation in /Compile and /CmdCreate (still supported though)
 
 v 1.9.4.0
 Added: Separate Console rank with highest permission level
