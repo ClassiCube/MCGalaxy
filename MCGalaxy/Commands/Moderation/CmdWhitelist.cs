@@ -32,9 +32,9 @@ namespace MCGalaxy.Commands.Moderation {
             string cmd    = args[0];
             
             if (cmd.CaselessEq("enable")) {
-                SetMode(true, "&aON"); return;
+                SetMode(true,  "&aON"); return;
             } else if (cmd.CaselessEq("disable")) {
-                SetMode(true, "&cOFF"); return;
+                SetMode(false, "&cOFF"); return;
             }
 
             if (!Server.Config.WhitelistedOnly) { p.Message("Whitelist is not enabled."); return; }

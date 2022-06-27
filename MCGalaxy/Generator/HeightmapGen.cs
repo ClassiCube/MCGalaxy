@@ -82,10 +82,10 @@ namespace MCGalaxy.Generator
                         byte layer = Block.Dirt, top = Block.Grass;
                         
                         if (
-                            IsShorterBy(height, pixels, x - 1, z) ||
-                            IsShorterBy(height, pixels, x + 1, z) ||
-                            IsShorterBy(height, pixels, x, z - 1) ||
-                            IsShorterBy(height, pixels, x, z + 1))
+                            IsCliff(height, pixels, x - 1, z) ||
+                            IsCliff(height, pixels, x + 1, z) ||
+                            IsCliff(height, pixels, x, z - 1) ||
+                            IsCliff(height, pixels, x, z + 1))
                         {
                             layer = Block.Stone; top = Block.Stone;
                         }
@@ -117,7 +117,7 @@ namespace MCGalaxy.Generator
             return resized;
         }
         
-        static bool IsShorterBy(int height, PixelGetter pixels, int x, int z) {
+        static bool IsCliff(int height, PixelGetter pixels, int x, int z) {
             if (x >= pixels.Width || x < 0 || z >= pixels.Height || z < 0) return false;
             int neighbourHeight = pixels.Get(x, z).R;
             return height >= neighbourHeight + 2;
