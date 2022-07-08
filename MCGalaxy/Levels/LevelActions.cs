@@ -175,18 +175,13 @@ namespace MCGalaxy
         }
         
         static void DeleteDatabaseTables(string map) {
-            if (Database.TableExists("Block" + map)) {
-                Database.DeleteTable("Block" + map);
-            }
+            Database.DeleteTable("Block" + map);
             
             object locker = ThreadSafeCache.DBCache.GetLocker(map);
             lock (locker) {
                 Portal.DeleteAll(map);
                 MessageBlock.DeleteAll(map);
-                
-                if (Database.TableExists("Zone" + map)) {
-                    Database.DeleteTable("Zone" + map);
-                }
+                Database.DeleteTable("Zone" + map);
             }
         }
         

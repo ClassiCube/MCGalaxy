@@ -82,7 +82,7 @@ namespace MCGalaxy.SQL
         
         /// <summary> Returns SQL for completely removing the given table. </summary>
         public virtual string DeleteTableSql(string table) {
-            return "DROP TABLE `" + table + "`";
+            return "DROP TABLE if exists `" + table + "`";
         }
         
         /// <summary> Prints/dumps the table schema of the given table. </summary>

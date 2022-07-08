@@ -105,7 +105,6 @@ namespace MCGalaxy.Blocks.Extended {
         
         /// <summary> Deletes all portals for the given map. </summary>
         public static void DeleteAll(string map) {
-            if (!ExistsInDB(map)) return;
             Database.DeleteTable("Portals" + map);
         }
         

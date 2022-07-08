@@ -120,7 +120,6 @@ namespace MCGalaxy.Blocks.Extended {
         
         /// <summary> Deletes all message blocks for the given map. </summary>
         public static void DeleteAll(string map) {
-            if (!ExistsInDB(map)) return;
             Database.DeleteTable("Messages" + map);
         }
         

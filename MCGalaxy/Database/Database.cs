@@ -70,13 +70,14 @@ namespace MCGalaxy.SQL
         
         #region High level table management
         
-        /// <summary> Returns whether a table (case sensitive) exists by that name. </summary>
+        /// <summary> Returns whether a table (case sensitive) exists by that name </summary>
         public static bool TableExists(string table) {
             ValidateName(table);
             return Backend.TableExists(table); 
         }
         
-        /// <summary> Creates a new table in the database (unless it already exists). </summary>
+        /// <summary> Creates a new table in the database. </summary>
+        /// <remarks> Does nothing if a table with the same name already exists. </remarks>
         public static void CreateTable(string table, ColumnDesc[] columns) {
             ValidateName(table);
             string sql = Backend.CreateTableSql(table, columns);
@@ -92,6 +93,7 @@ namespace MCGalaxy.SQL
         }
         
         /// <summary> Completely removes the given table. </summary>
+        /// <remarks> Does nothing if no table with the given name exists. </remarks>
         public static void DeleteTable(string table) {
             ValidateName(table);
             string sql = Backend.DeleteTableSql(table);
