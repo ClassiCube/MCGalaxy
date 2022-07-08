@@ -234,6 +234,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         static void LogResponse(string err) {
             if (string.IsNullOrEmpty(err)) return;
+            
+            // Discord sometimes returns <html>..</html> responses for internal server errors
+            //  most of this is useless content, so just truncate these particular errors 
+            if (err.Length > 200) err = err.Substring(0, 200) + "...";
+            
             Logger.Log(LogType.Warning, "Discord API returned: " + err);
         }
         

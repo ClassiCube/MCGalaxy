@@ -212,7 +212,7 @@ namespace MCGalaxy.SQL
             foreach (char c in table) 
             {
                 if (ValidNameChar(c)) continue;
-                throw new ArgumentException("Invalid character in table name: " + c);
+                throw new ArgumentException("Invalid character '" + c + "' in table name '" + table + "'");
             }
         }
     }
