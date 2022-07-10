@@ -19,15 +19,15 @@ using System;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy.Blocks.Physics {
-    
-    public static class TrainPhysics {
-        
+namespace MCGalaxy.Blocks.Physics 
+{
+    public static class TrainPhysics 
+    {
         public static void Do(Level lvl, ref PhysInfo C) {
             Random rand = lvl.physRandom;
-            int dirX = rand.Next(1, 10) <= 5 ? 1 : -1;
-            int dirY = rand.Next(1, 10) <= 5 ? 1 : -1;
-            int dirZ = rand.Next(1, 10) <= 5 ? 1 : -1;
+            int dirX = rand.Next(1, 100+1) <= 50 ? 1 : -1;
+            int dirY = rand.Next(1, 100+1) <= 50 ? 1 : -1;
+            int dirZ = rand.Next(1, 100+1) <= 50 ? 1 : -1;
             ushort x = C.X, y = C.Y, z = C.Z;
 
             for (int dx = -dirX; dx != 2 * dirX; dx += dirX)
