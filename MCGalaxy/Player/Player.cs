@@ -349,13 +349,16 @@ namespace MCGalaxy {
             return true;
         }
         
+        /// <summary> Checks if player is this player requires additional verification </summary>
+        public bool NeedsVerification() {
+            if (verifiedPass) return false;
+            Unverified = Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank;
+            return Unverified;
+        }
+        
         /// <summary> Checks if player is currently unverified, and if so, sends a message informing them </summary>
         public void CheckIsUnverified() {
-            if (verifiedPass) return;
-            Unverified = Server.Config.verifyadmins && Rank >= Server.Config.VerifyAdminsRank;
-            if (!Unverified) return;
-            
-            Authenticator.Current.NeedVerification(this);
+            if (NeedsVerification()) Authenticator.Current.NeedVerification(this);
         }
         
           

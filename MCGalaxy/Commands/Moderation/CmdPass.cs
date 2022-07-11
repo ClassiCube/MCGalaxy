@@ -62,15 +62,11 @@ namespace MCGalaxy.Commands.Moderation {
                 return;
             } 
             
-            if (Authenticator.Current.VerifyPassword(p.name, password)) {
-                p.Message("You are now &averified &Sand can now &ause commands, modify blocks, and chat.");
-                p.verifiedPass = true;
-                p.Unverified   = false;
-            } else {
-                p.passtries++;
-                p.Message("&WWrong Password. &SRemember your password is &Wcase sensitive.");
-                p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
-            }
+            if (Authenticator.VerifyPassword(p, password)) return;
+            
+             p.passtries++;
+             p.Message("&WWrong Password. &SRemember your password is &Wcase sensitive.");
+             p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
         }
         
         static void SetPassword(Player p, string password) {

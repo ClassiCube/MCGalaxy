@@ -71,6 +71,17 @@ namespace MCGalaxy.Authentication
         /// <summary> Returns whether the given pasword equals 
         /// the stored password for the given player </summary>
         public abstract bool VerifyPassword(string name, string password);
+        
+        
+        public static bool VerifyPassword(Player p, string password) {
+            if (!Current.VerifyPassword(p.name, password))
+                return false;
+            
+            p.Message("You are now &averified &Sand can now &ause commands, modify blocks, and chat.");
+            p.verifiedPass = true;
+            p.Unverified   = false;
+            return true;
+        }
     }
     
     /// <summary> Authenticator that loads/stores passwords in /extra/passwords folder </summary>

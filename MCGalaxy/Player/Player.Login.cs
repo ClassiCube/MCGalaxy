@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.Net;
+using MCGalaxy.Authentication;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
@@ -45,6 +46,10 @@ namespace MCGalaxy
             if (Server.Config.ClassicubeAccountPlus) name += "+";
             OnPlayerStartConnectingEvent.Call(this, mppass);
             if (cancelconnecting) { cancelconnecting = false; return false; }
+                
+            // mppass can be used as /pass when it is not used for name authentication            
+            if (!verifiedName && NeedsVerification() && Authenticator.Current.HasPassword(name))
+                Authenticator.VerifyPassword(this, mppass);
             
             level   = Server.mainLevel;
             Loading = true;
