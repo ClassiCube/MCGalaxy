@@ -221,6 +221,13 @@ namespace MCGalaxy.Network
             
             string extName = NetUtils.ReadString(buffer, offset + 1);
             int extVersion = NetUtils.ReadI32(buffer,    offset + 65);
+
+            // TODO: Classic+ client seems to use a custom protocol
+            if (extVersion == 0x03110003) {
+                player.Leave("Classic+ Client is unsupported");
+                return size;
+            }
+
             AddExtension(extName, extVersion);
             extensionCount--;
             CheckReadAllExtensions();
