@@ -65,14 +65,17 @@ namespace MCGalaxy
             lock (PlayerInfo.Online.locker) {
                 // Check if any players online have same name
                 clone = FindClone(truename);
+                
                 // Remove clone from list (hold lock for as short time as possible)
-                if (clone != null && Server.Config.VerifyNames) PlayerInfo.Online.Remove(clone);
+                //  NOTE: check 'Server.Config.VerifyNames' too for LAN/localhost IPs
+                if (clone != null && (verifiedName || Server.Config.VerifyNames)) 
+                    PlayerInfo.Online.Remove(clone);
 
                 id = NextFreeId();
                 PlayerInfo.Online.Add(this);
             }
             
-            if (clone != null && Server.Config.VerifyNames) {
+            if (clone != null && (verifiedName || Server.Config.VerifyNames)) {
                 string reason = ip == clone.ip ? "(Reconnecting)" : "(Reconnecting from a different IP)";
                 clone.Leave(reason);
             } else if (clone != null) {
