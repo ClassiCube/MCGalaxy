@@ -17,13 +17,12 @@
  */
 #if !DISABLE_COMPILING
 using System;
-using System.IO;
 using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Modules.Compiling 
 {
-    public sealed class CmdCompile : Command2 
+    public class CmdCompile : Command2 
     {
         public override string name { get { return "Compile"; } }
         public override string type { get { return CommandTypes.Other; } }
@@ -61,7 +60,7 @@ namespace MCGalaxy.Modules.Compiling
             }
         }
         
-        static void CompilePlugin(Player p, string name, ICompiler compiler) {
+        void CompilePlugin(Player p, string name, ICompiler compiler) {
             // either "source" or "source1,source2,source3"
             string[] paths = name.SplitComma();
             string dstPath = IScripting.PluginPath(paths[0]);
@@ -70,10 +69,13 @@ namespace MCGalaxy.Modules.Compiling
             {
                  paths[i] = compiler.PluginPath(paths[i]);
             }
+
             CompilerOperations.Compile(p, compiler, "Plugin", paths, dstPath);
+            OnPluginCompiled(p, name, dstPath);
         }
+        protected virtual void OnPluginCompiled(Player p, string name, string path) { }
         
-        static void CompileCommand(Player p, string name, ICompiler compiler) {
+        void CompileCommand(Player p, string name, ICompiler compiler) {
             // either "source" or "source1,source2,source3"
             string[] paths = name.SplitComma();
             string dstPath = IScripting.CommandPath(paths[0]);
@@ -82,8 +84,11 @@ namespace MCGalaxy.Modules.Compiling
             {
                  paths[i] = compiler.CommandPath(paths[i]);
             }
+
             CompilerOperations.Compile(p, compiler, "Command", paths, dstPath);
+            OnCommandCompiled(p, name, dstPath);
         }
+        protected virtual void OnCommandCompiled(Player p, string name, string path) { }
 
         // TODO avoid duplication and use compiler.CommandPath instead
         public override void Help(Player p) {

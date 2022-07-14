@@ -16,35 +16,34 @@
     permissions and limitations under the Licenses.
 */
 #if !DISABLE_COMPILING
+using MCGalaxy.Commands;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Modules.Compiling 
 {
-    public sealed class CmdCompLoad : Command2 
+    public sealed class CmdCompLoad : CmdCompile 
     {
         public override string name { get { return "CompLoad"; } }
         public override string shortcut { get { return "cml"; } }
         public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
-        public override bool MessageBlockRestricted { get { return true; } }
-        
-        public override void Use(Player p, string message, CommandData data) {
-            string[] args = message.SplitSpaces();
-            if (message.Length == 0) { Help(p); return; }
+        public override CommandAlias[] Aliases {  get { return null; } }
 
-            if (args.Length == 1 || args[1].CaselessEq("vb")) {
-                Command.Find("Compile").Use(p, message, data);
-                Command.Find("CmdLoad").Use(p, args[0], data);
-                Command.Find("Help").Use(p, args[0], data);
-            } else { 
-                Help(p);
-            }
+        protected override void OnCommandCompiled(Player p, string name, string path) {
+            ScriptingOperations.LoadCommands(p, path);
+            // TODO print command help directly
+            string cmd = name.SplitComma()[0];
+            Command.Find("Help").Use(p, cmd, p.DefaultCmdData);
         }
-        
+
+        protected override void OnPluginCompiled(Player p, string name, string path) {
+            ScriptingOperations.LoadPlugins(p, path);
+        }
+
         public override void Help(Player p) {
             p.Message("&T/CompLoad [command]");
             p.Message("&HCompiles and loads a C# command into the server for use.");
-            p.Message("&T/CompLoad [command] vb");
-            p.Message("&HCompiles and loads a Visual basic command into the server for use.");
+            p.Message("&T/CompLoad plugin [plugin]");
+            p.Message("&HCompiles and loads a C# plugin into the server for use.");
         }        
     }
 }

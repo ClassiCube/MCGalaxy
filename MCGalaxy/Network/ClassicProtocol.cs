@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network

@@ -48,26 +48,14 @@ namespace MCGalaxy.Commands.Scripting {
             string language = args.Length > 2 ? args[2] : "";
             
             if (cmd.CaselessEq("load")) {
-                LoadPlugin(p, name);
+                string path = IScripting.PluginPath(name);
+                ScriptingOperations.LoadPlugins(p, path);
             } else if (cmd.CaselessEq("unload")) {
                 UnloadPlugin(p, name);
             } else if (cmd.CaselessEq("create")) {
                 CreatePlugin(p, name, language);
             } else {
                 Help(p);
-            }
-        }
-        
-        static void LoadPlugin(Player p, string name) {
-            string path = IScripting.PluginPath(name);
-            if (!File.Exists(path)) {
-                p.Message("File &9{0} &Snot found.", path); return;
-            }
-            
-            if (IScripting.LoadPlugin(path, false)) {
-                p.Message("Plugin loaded successfully.");
-            } else {
-                p.Message("&WError loading plugin. See error logs for more information.");
             }
         }
         

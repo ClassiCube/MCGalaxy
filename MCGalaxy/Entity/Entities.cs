@@ -14,7 +14,6 @@ permissions and limitations under the Licenses.
  */
 using System;
 using MCGalaxy.Events.EntityEvents;
-using MCGalaxy.Games;
 using MCGalaxy.Network;
 
 namespace MCGalaxy 

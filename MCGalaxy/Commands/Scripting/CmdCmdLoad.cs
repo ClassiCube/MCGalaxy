@@ -15,7 +15,6 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-using System.IO;
 using System.Collections.Generic;
 using MCGalaxy.Scripting;
 
@@ -29,15 +28,9 @@ namespace MCGalaxy.Commands.Scripting {
         public override void Use(Player p, string cmdName, CommandData data) {
             if (cmdName.Length == 0) { Help(p); return; }
             if (!Formatter.ValidFilename(p, cmdName)) return;
+
             string path = IScripting.CommandPath(cmdName);
-            string error;
-            List<Command> cmds = IScripting.LoadCommands(path, out error);
-            
-            if (error != null) { 
-                p.Message(error);
-            } else {
-                p.Message("Successfully loaded &T{0}", cmds.Join(c => "/" + c.name));
-            }
+            ScriptingOperations.LoadCommands(p, path);
         }
 
         public override void Help(Player p) {
