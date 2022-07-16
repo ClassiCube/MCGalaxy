@@ -31,8 +31,6 @@ namespace MCGalaxy {
         public int MaxPlayers = 16;
         [ConfigInt("max-guests", "Server", 14, 1, Server.MAX_PLAYERS)]
         public int MaxGuests = 14;
-        [ConfigString("listen-ip", "Server", "0.0.0.0")]
-        public string ListenIP = "0.0.0.0";
         [ConfigInt("port", "Server", 25565, 0, 65535)]
         public int Port = 25565;
         [ConfigBool("public", "Server", false)]
@@ -43,7 +41,9 @@ namespace MCGalaxy {
         public bool WebClient = true;
         [ConfigString("default-rank", "Server", "guest")]
         public string DefaultRankName = "guest";
-        
+        [ConfigString("server-owner", "Server", "the owner")]
+        public string OwnerName = "the owner";
+
         [ConfigBool("autoload", "Level", true)]
         public bool AutoLoadMaps = true;        
         /// <summary> true if maps sees server-wide chat, false if maps have level-only/isolated chat </summary>
@@ -89,7 +89,7 @@ namespace MCGalaxy {
         public bool PhysicsRestart = true;
         [ConfigInt("physics-undo-max", "Other", 50000)]
         public int PhysicsUndo = 50000;
-        
+
         [ConfigTimespan("backup-time", "Backup", 300, false)]
         public TimeSpan BackupInterval = TimeSpan.FromSeconds(300);
         [ConfigTimespan("blockdb-backup-time", "Backup", 60, false)]
@@ -111,9 +111,7 @@ namespace MCGalaxy {
         [ConfigTimespan("announcement-interval", "Other", 5, true)]
         public TimeSpan AnnouncementInterval = TimeSpan.FromMinutes(5);
         [ConfigString("money-name", "Other", "moneys")]
-        public string Currency = "moneys";        
-        [ConfigString("server-owner", "Other", "the owner")]
-        public string OwnerName = "the owner";
+        public string Currency = "moneys";
         
         [ConfigBool("guest-limit-notify", "Other", false)]
         public bool GuestLimitNotify = false;
@@ -140,7 +138,11 @@ namespace MCGalaxy {
         public LevelPermission OSPerbuildDefault = LevelPermission.Owner; 
         [ConfigBool("protect-staff-ips", "Other", true)]
         public bool ProtectStaffIPs = true;
-        
+        // technically a Server option, but it's a common mistake to think
+        //  this option needs changing to server's IP (0.0.0.0 = listen on all network interfaces)
+        [ConfigString("listen-ip", "Other", "0.0.0.0")]
+        public string ListenIP = "0.0.0.0";
+
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;
         [ConfigInt("irc-port", "IRC bot", 6697, 0, 65535)]
@@ -223,7 +225,7 @@ namespace MCGalaxy {
         [ConfigColor("warning-error-color", "Colors", "&c")]
         public string WarningErrorColor = "&c";
         
-        [ConfigBool("cheapmessage", "Other", true)]
+        [ConfigBool("cheapmessage", "Messages", true)]
         public bool ShowInvincibleMessage = true;        
         [ConfigString("cheap-message-given", "Messages", " is now invincible")]
         public string InvincibleMessage = " is now invincible";

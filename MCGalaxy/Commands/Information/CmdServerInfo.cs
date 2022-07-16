@@ -138,7 +138,7 @@ namespace MCGalaxy.Commands.Info
         }
 
         [DllImport("kernel32.dll")]
-        internal static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
+        static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
 
 
         // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
