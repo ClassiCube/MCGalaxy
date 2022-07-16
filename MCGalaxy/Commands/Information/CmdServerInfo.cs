@@ -17,11 +17,15 @@
  */
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdServerInfo : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdServerInfo : Command2 
+    {
         public override string name { get { return "ServerInfo"; } }
         public override string shortcut { get { return "SInfo"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -56,7 +60,6 @@ namespace MCGalaxy.Commands.Info {
             if (HasExtraPerm(p, data.Rank, 1)) OutputResourceUsage(p);
         }
 
-        static PerformanceCounter allPCounter;
         static DateTime startTime;
         static TimeSpan startCPU;
 
@@ -68,29 +71,24 @@ namespace MCGalaxy.Commands.Info {
                 startTime = DateTime.UtcNow;
                 startCPU  = proc.TotalProcessorTime;
             }
-            TimeSpan begCPU = proc.TotalProcessorTime;
 
-            try
-            {
-                if (allPCounter == null) {
-                    allPCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-                    allPCounter.BeginInit();
-                    allPCounter.NextValue();
-                }
-            } catch (PlatformNotSupportedException) {
-                // .NET core throws this error on Linux
-            }
+            CPUTime beg     = MeasureAllCPUTime();
+            TimeSpan begCPU = proc.TotalProcessorTime;
 
             // measure CPU usage over one second
             Thread.Sleep(1000);
             TimeSpan endCPU = proc.TotalProcessorTime;
+            CPUTime end     = MeasureAllCPUTime();
 
             p.Message("&a{0}% &SCPU usage now, &a{1}% &Soverall",
                 MeasureCPU(begCPU,   endCPU, TimeSpan.FromSeconds(1)),
                 MeasureCPU(startCPU, endCPU, DateTime.UtcNow - startTime));
 
-            p.Message("  &a{0}% &Sby all processes",
-                allPCounter == null ? "(unknown)" : allPCounter.NextValue().ToString("F2"));
+            ulong idl  = (end.IdleTime - beg.IdleTime);
+            ulong sys  = (end.UserTime - beg.UserTime) + (end.KernelTime - beg.KernelTime);
+            double cpu = sys * 100.0 / (sys + idl);
+            p.Message("  &a{0}% &Sby all processes", 
+                double.IsNaN(cpu) ? "(unknown)" : cpu.ToString("F2"));
 
             // Private Bytes = memory the process has reserved just for itself
             int memory = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
@@ -105,6 +103,64 @@ namespace MCGalaxy.Commands.Info {
             TimeSpan used  = end - beg;
             double elapsed = 100.0 * (used.TotalSeconds / interval.TotalSeconds);
             return (elapsed / cores).ToString("F2");
+        }
+
+
+        static CPUTime MeasureAllCPUTime()
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                return MeasureAllWindows();
+            return MeasureAllLinux();
+        }
+
+        static CPUTime MeasureAllWindows() {
+            CPUTime all = default(CPUTime);
+            GetSystemTimes(out all.IdleTime, out all.KernelTime, out all.UserTime);
+
+            // https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
+            // lpKernelTime - "... This time value also includes the amount of time the system has been idle."
+            all.KernelTime -= all.IdleTime;
+            return all;
+        }
+
+        static CPUTime MeasureAllLinux() {
+            // https://stackoverflow.com/questions/15145241/is-there-an-equivalent-to-the-windows-getsystemtimes-function-in-linux
+            try {
+                using (StreamReader r = new StreamReader("/proc/stat"))
+                {
+                    string line = r.ReadLine();
+                    if (line.StartsWith("cpu ")) return ParseCpuLine(line);
+                }
+            } catch (FileNotFoundException) { }
+
+            return default(CPUTime);
+        }
+
+        static CPUTime ParseCpuLine(string line)
+        {
+            string[] bits = line.SplitSpaces();
+
+            ulong user = ulong.Parse(bits[2]);
+            ulong nice = ulong.Parse(bits[3]);
+            ulong kern = ulong.Parse(bits[4]);
+            ulong idle = ulong.Parse(bits[5]);
+            // TODO interrupt time too?
+
+            CPUTime all;
+            all.UserTime   = user + nice;
+            all.KernelTime = kern;
+            all.IdleTime   = idle;
+            return all;
+        }
+        
+        [DllImport("kernel32.dll")]
+        internal static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
+
+        struct CPUTime
+        {
+            public ulong IdleTime;
+            public ulong KernelTime;
+            public ulong UserTime;
         }
         
         public override void Help(Player p) {
