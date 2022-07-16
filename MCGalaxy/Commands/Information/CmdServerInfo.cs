@@ -105,13 +105,27 @@ namespace MCGalaxy.Commands.Info
             return (elapsed / cores).ToString("F2");
         }
 
+        struct CPUTime
+        {
+            public ulong IdleTime, KernelTime, UserTime;
+        }
 
-        static CPUTime MeasureAllCPUTime()
+        unsafe static CPUTime MeasureAllCPUTime()
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                 return MeasureAllWindows();
+
+            sbyte* ascii  = stackalloc sbyte[8192];
+            uname(ascii);
+            string kernel = new String(ascii);
+            if (kernel == "Darwin") return MeasureAllMac();
+
             return MeasureAllLinux();
         }
+
+        [DllImport("libc")]
+        unsafe static extern void uname(sbyte* uname_struct);
+
 
         static CPUTime MeasureAllWindows() {
             CPUTime all = default(CPUTime);
@@ -122,6 +136,31 @@ namespace MCGalaxy.Commands.Info
             all.KernelTime -= all.IdleTime;
             return all;
         }
+
+        [DllImport("kernel32.dll")]
+        internal static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
+
+
+        // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
+        // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
+        static CPUTime MeasureAllMac() {
+            uint[] info = new uint[4]; // CPU_STATE_MAX
+            uint count  = 4; // HOST_CPU_LOAD_INFO_COUNT 
+            int flavor  = 3; // HOST_CPU_LOAD_INFO
+            host_statistics(mach_host_self(), flavor, info, ref count);
+
+            CPUTime all;
+            all.IdleTime   = info[2]; // CPU_STATE_IDLE
+            all.UserTime   = info[0] + info[3]; // CPU_STATE_USER + CPU_STATE_NICE
+            all.KernelTime = info[1]; // CPU_STATE_SYSTEM
+            return all;
+        }
+
+        [DllImport("libc")]
+        static extern IntPtr mach_host_self();
+        [DllImport("libc")]
+        static extern int host_statistics(IntPtr port, int flavor, uint[] info, ref uint count);
+
 
         static CPUTime MeasureAllLinux() {
             // https://stackoverflow.com/questions/15145241/is-there-an-equivalent-to-the-windows-getsystemtimes-function-in-linux
@@ -152,17 +191,7 @@ namespace MCGalaxy.Commands.Info
             all.IdleTime   = idle;
             return all;
         }
-        
-        [DllImport("kernel32.dll")]
-        internal static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
 
-        struct CPUTime
-        {
-            public ulong IdleTime;
-            public ulong KernelTime;
-            public ulong UserTime;
-        }
-        
         public override void Help(Player p) {
             p.Message("&T/ServerInfo");
             p.Message("&HDisplays the server information.");
