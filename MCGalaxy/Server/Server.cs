@@ -22,6 +22,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using MCGalaxy.Authentication;
 using MCGalaxy.Commands;
@@ -278,13 +279,13 @@ namespace MCGalaxy {
             Environment.Exit(0);
         }
         
+        static bool HACK_TryExecvp() {
+            return CLIMode && Environment.OSVersion.Platform == PlatformID.Unix;
+        }
+
+#if !NETSTANDARD
         [DllImport("libc", SetLastError = true)]
         static extern int execvp(string path, string[] argv);
-        
-        static bool HACK_TryExecvp() {
-            return CLIMode && Environment.OSVersion.Platform == PlatformID.Unix 
-                && RunningOnMono();
-        }
         
         static void HACK_Execvp() {
             // With using normal Process.Start with mono, after Environment.Exit
@@ -314,22 +315,41 @@ namespace MCGalaxy {
             }
         }
 
-        static string GetRestartPath() {
-#if !NETSTANDARD
-            return RestartPath;
+        static string GetRestartPath() { return RestartPath; }
 #else
+        [DllImport("libc", SetLastError = true)]
+        unsafe static extern int execvp(byte* path, byte** argv);
+        
+        unsafe static void HACK_Execvp() {
+            // similar issue as with Mono, but happens with this instead
+            //  "IOException with 'I/O error' message
+            //     ...
+            //     at System.IO.StdInReader.ReadKey()
+            //
+            // Trying to use heap allocated string sometimes causes EFAULT error,
+            //  therefore manually allocate arguments on the stack instead
+            byte* path  = stackalloc byte[8192];
+            byte** args = stackalloc byte*[2];
+            args[0] = path;
+            args[1] = (byte*)IntPtr.Zero;
+
+            byte[] tmp = Encoding.UTF8.GetBytes(GetRestartPath());
+            Marshal.Copy(tmp, 0, (IntPtr)path, tmp.Length);
+
+            try { execvp(path, args); } catch { }
+        }
+
+        static string GetRestartPath() {
             // NET core/5/6 executables tend to use the following structure:
             //   MCGalaxyCLI_core --> MCGalaxyCLI_core.dll
             // in this case, 'RestartPath' will include '.dll' since this file
             //  is actually the managed assembly, but we need to remove '.dll'
             //   as the actual executable which must be started is the non .dll file
             string path = RestartPath;
-            //if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
-            // TODO this makes things worse, need to work out why
+            if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
             return path;
-#endif
         }
-
+#endif
 
         static bool checkedOnMono, runningOnMono;
         public static bool RunningOnMono() {
