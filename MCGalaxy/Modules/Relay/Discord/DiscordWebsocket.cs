@@ -108,7 +108,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         public override void Close() {
-            Server.Background.Cancel(heartbeat);
+            Server.Hearbeats.Cancel(heartbeat);
             try {
                 client.Close();
             } catch {
@@ -182,7 +182,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             string interval = (string)data["heartbeat_interval"];            
             int msInterval  = int.Parse(interval);
             
-            heartbeat = Server.Background.QueueRepeat(SendHeartbeat, null, 
+            heartbeat = Server.Hearbeats.QueueRepeat(SendHeartbeat, null, 
                                           TimeSpan.FromMilliseconds(msInterval));
             Identify();
         }

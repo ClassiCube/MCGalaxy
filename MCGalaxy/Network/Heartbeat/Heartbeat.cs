@@ -86,7 +86,7 @@ namespace MCGalaxy.Network
         /// <summary> Starts pumping heartbeats </summary>
         public static void Start() {
             OnBeat(null); // immedately call so URL is shown as soon as possible in console
-            Server.Background.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
+            Server.Hearbeats.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
         }
         
         static void OnBeat(SchedulerTask task) {

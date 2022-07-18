@@ -18,7 +18,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using MCGalaxy.Drawing.Ops;
 
 namespace MCGalaxy.Drawing 
 {
