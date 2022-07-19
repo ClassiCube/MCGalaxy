@@ -181,6 +181,7 @@ namespace MCGalaxy {
                     ListCheck.RemoveAt(i);
                 }
             }
+            // TODO: Inline this into the prior for loop, and remove PhysicsArgs.RemoveFromChecks
             RemoveExpiredChecks();
             
             lastUpdate = ListUpdate.Count;
@@ -211,10 +212,13 @@ namespace MCGalaxy {
             ListUpdate.Clear(); listUpdateExists.Clear();
         }
         
+        
+        /// <summary> Adds the given coordinates to the list of ticked coordinates with empty data </summary>
         public void AddCheck(int index, bool overRide = false) {
             AddCheck(index, overRide, default(PhysicsArgs));
         }
         
+        /// <summary> Adds the given coordinates to the list of ticked coordinates with the given data </summary>
         public void AddCheck(int index, bool overRide, PhysicsArgs data) {
             try {
                 int x = index % Width;
@@ -243,13 +247,17 @@ namespace MCGalaxy {
             }
         }
 
-        internal bool AddUpdate(int index, BlockID block, bool overRide = false) {
+        /// <summary> Adds the given entry to the list of updates to be applied at the end of the current physics tick </summary>
+        /// <remarks> Must only be called from the physics thread (i.e. in a HandlePhysics handler function) </remarks>
+        public bool AddUpdate(int index, BlockID block, bool overRide = false) {
             PhysicsArgs args = default(PhysicsArgs);
             args.Raw |= (uint)(PhysicsArgs.ExtBit * (block >> Block.ExtendedShift));
             return AddUpdate(index, block, args, overRide);
         }
         
-        internal bool AddUpdate(int index, BlockID block, PhysicsArgs data, bool overRide = false) {
+        /// <summary> Adds the given entry to the list of updates to be applied at the end of the current physics tick </summary>
+        /// <remarks> Must only be called from the physics thread (i.e. in a HandlePhysics handler function) </remarks>
+        public bool AddUpdate(int index, BlockID block, PhysicsArgs data, bool overRide = false) {
             try {
                 int x = index % Width;
                 int y = (index / Width) / Length;
@@ -396,19 +404,27 @@ namespace MCGalaxy {
         }
     }
     
-    public struct PhysInfo {
+    /// <summary> Represents a physics tick entry </summary>
+    public struct PhysInfo 
+    {
+        /// <summary> X/Y/Z coordinates of this tick entry </summary>
         public ushort X, Y, Z;
+        /// <summary> Block ID that is located at the coordinates of this tick entry </summary>
         public BlockID Block;
+        /// <summary> Packed coordinates of this tick entry </summary>
         public int Index;
+        /// <summary> Data/State of this tick entry </summary>
         public PhysicsArgs Data;
     }
     
-    public struct Check {
+    internal struct Check 
+    {
         public int Index;
         public PhysicsArgs data;
     }
 
-    public struct Update {
+    internal struct Update 
+    {
         public int Index;
         public PhysicsArgs data;
     }
