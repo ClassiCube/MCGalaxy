@@ -18,10 +18,11 @@
 using System;
 using System.IO;
 using MCGalaxy.Scripting;
-using MCGalaxy.Modules.Compiling;
 
-namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdPlugin : Command2 {
+namespace MCGalaxy.Commands.Scripting 
+{
+    public sealed class CmdPlugin : Command2 
+    {
         public override string name { get { return "Plugin"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
@@ -32,7 +33,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override bool MessageBlockRestricted { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            string[] args = message.SplitSpaces(3);
+            string[] args = message.SplitSpaces(2);
             if (IsListCommand(args[0])) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 
@@ -45,7 +46,6 @@ namespace MCGalaxy.Commands.Scripting {
             
             string cmd = args[0], name = args[1];
             if (!Formatter.ValidFilename(p, name)) return;
-            string language = args.Length > 2 ? args[2] : "";
             
             if (cmd.CaselessEq("load")) {
                 string path = IScripting.PluginPath(name);

@@ -34,15 +34,15 @@ namespace MCGalaxy.Modules.Compiling
             ScriptingOperations.LoadPlugins(p, dst);
         }
         
-		protected override void CompileCommand(Player p, string[] paths, ICompiler compiler) {
-        	string cmd = paths[0];
-        	string dst = IScripting.CommandPath(cmd);
-        	
-			base.CompileCommand(p, paths, compiler);
-			ScriptingOperations.LoadCommands(p, dst);
+        protected override void CompileCommand(Player p, string[] paths, ICompiler compiler) {
+            string cmd = paths[0];
+            string dst = IScripting.CommandPath(cmd);
+            
+            base.CompileCommand(p, paths, compiler);
+            ScriptingOperations.LoadCommands(p, dst);
             // TODO print command help directly
             Command.Find("Help").Use(p, cmd, p.DefaultCmdData);
-		}
+        }
 
         public override void Help(Player p) {
             p.Message("&T/CompLoad [command]");
