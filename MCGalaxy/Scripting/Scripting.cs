@@ -27,13 +27,13 @@ namespace MCGalaxy.Scripting
     /// <summary> Utility methods for loading assemblies, commands, and plugins </summary>
     public static class IScripting 
     {     
-        public const string AutoloadFile = "text/cmdautoload.txt";
-        public const string DllDir = "extra/commands/dll/";
+        public const string COMMANDS_DLL_DIR = "extra/commands/dll/";
+        public const string PLUGINS_DLL_DIR  = "plugins/";
         
         /// <summary> Returns the default .dll path for the custom command with the given name </summary>
-        public static string CommandPath(string name) { return DllDir + "Cmd" + name + ".dll"; }
+        public static string CommandPath(string name) { return COMMANDS_DLL_DIR + "Cmd" + name + ".dll"; }
         /// <summary> Returns the default .dll path for the plugin with the given name </summary>
-        public static string PluginPath(string name)  { return "plugins/" + name + ".dll"; }
+        public static string PluginPath(string name)  { return PLUGINS_DLL_DIR + name + ".dll"; }
         
         /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
         /// <returns> The list of constructed instances. </returns>
@@ -81,22 +81,24 @@ namespace MCGalaxy.Scripting
         
         
         public static void AutoloadCommands() {
-            if (!File.Exists(AutoloadFile)) { File.Create(AutoloadFile); return; }
-            string[] list = File.ReadAllLines(AutoloadFile);
+            string[] files = AtomicIO.TryGetFiles(COMMANDS_DLL_DIR, "*.dll");
             
-            foreach (string cmdName in list) 
-            {
-                if (cmdName.IsCommentLine()) continue;
-                string path  = CommandPath(cmdName);
-                string error;
-                List<Command> cmds = LoadCommands(path, out error);
-                
-                if (error != null) { 
-                    Logger.Log(LogType.Warning, error);
-                } else {
-                    Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from Cmd{1}.dll", 
-                               cmds.Join(c => "/" + c.name), cmdName);
-                }
+            if (files != null) {
+                foreach (string path in files) { AutoloadCommands(path); }
+            } else {
+                Directory.CreateDirectory(COMMANDS_DLL_DIR);
+            }
+        }
+        
+        static void AutoloadCommands(string path) {
+        	string error;
+            List<Command> cmds = LoadCommands(path, out error);
+            
+            if (error != null) { 
+                Logger.Log(LogType.Warning, error);
+            } else {
+                Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from {1}", 
+            	           cmds.Join(c => "/" + c.name), Path.GetFileName(path));
             }
         }
         
@@ -143,12 +145,12 @@ namespace MCGalaxy.Scripting
         
         
         public static void AutoloadPlugins() {
-            string[] files = AtomicIO.TryGetFiles("plugins", "*.dll");
+            string[] files = AtomicIO.TryGetFiles(PLUGINS_DLL_DIR, "*.dll");
             
             if (files != null) {
                 foreach (string path in files) { LoadPlugin(path, true); }
             } else {
-                Directory.CreateDirectory("plugins");
+                Directory.CreateDirectory(PLUGINS_DLL_DIR);
             }
         }
         
