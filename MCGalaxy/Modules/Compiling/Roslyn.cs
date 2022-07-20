@@ -143,8 +143,8 @@ namespace MCGalaxy.Modules.Compiling
 
             if (full) {
                 ce.FileName = m.Groups[2].Value;
-                ce.Line = int.Parse(m.Groups[4].Value, CultureInfo.InvariantCulture);
-                ce.Column = int.Parse(m.Groups[5].Value, CultureInfo.InvariantCulture);
+                ce.Line     = int.Parse(m.Groups[4].Value, CultureInfo.InvariantCulture);
+                ce.Column   = int.Parse(m.Groups[5].Value, CultureInfo.InvariantCulture);
             }
 
             if (string.Compare(m.Groups[full ? 6 : 1].Value, "warning", StringComparison.OrdinalIgnoreCase) == 0) {
@@ -152,7 +152,7 @@ namespace MCGalaxy.Modules.Compiling
             }
 
             ce.ErrorNumber = m.Groups[full ? 7 : 2].Value;
-            ce.ErrorText = m.Groups[full ? 8 : 3].Value;
+            ce.ErrorText   = m.Groups[full ? 8 : 3].Value;
             results.Errors.Add(ce);
         }
 

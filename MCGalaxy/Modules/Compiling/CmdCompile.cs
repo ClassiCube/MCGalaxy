@@ -52,43 +52,36 @@ namespace MCGalaxy.Modules.Compiling
             
             ICompiler compiler = CompilerOperations.GetCompiler(p, lang);
             if (compiler == null) return;
+            
+            // either "source" or "source1,source2,source3"
+            string[] paths = name.SplitComma();
  
             if (plugin) {
-                CompilePlugin(p,  name, compiler);
+                CompilePlugin(p,  paths, compiler);
             } else {
-                CompileCommand(p, name, compiler);
+                CompileCommand(p, paths, compiler);
             }
         }
         
-        void CompilePlugin(Player p, string name, ICompiler compiler) {
-            // either "source" or "source1,source2,source3"
-            string[] paths = name.SplitComma();
+        protected virtual void CompilePlugin(Player p, string[] paths, ICompiler compiler) {
             string dstPath = IScripting.PluginPath(paths[0]);
             
             for (int i = 0; i < paths.Length; i++) 
             {
                  paths[i] = compiler.PluginPath(paths[i]);
             }
-
             CompilerOperations.Compile(p, compiler, "Plugin", paths, dstPath);
-            OnPluginCompiled(p, name, dstPath);
         }
-        protected virtual void OnPluginCompiled(Player p, string name, string path) { }
         
-        void CompileCommand(Player p, string name, ICompiler compiler) {
-            // either "source" or "source1,source2,source3"
-            string[] paths = name.SplitComma();
+        protected virtual void CompileCommand(Player p, string[] paths, ICompiler compiler) {
             string dstPath = IScripting.CommandPath(paths[0]);
             
             for (int i = 0; i < paths.Length; i++) 
             {
                  paths[i] = compiler.CommandPath(paths[i]);
             }
-
             CompilerOperations.Compile(p, compiler, "Command", paths, dstPath);
-            OnCommandCompiled(p, name, dstPath);
         }
-        protected virtual void OnCommandCompiled(Player p, string name, string path) { }
 
         // TODO avoid duplication and use compiler.CommandPath instead
         public override void Help(Player p) {

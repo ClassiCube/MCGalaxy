@@ -17,40 +17,38 @@
  */
 #if !DISABLE_COMPILING
 using System;
-using System.IO;
+using MCGalaxy.Commands;
 
 namespace MCGalaxy.Modules.Compiling
 {
-    public sealed class CmdCmdCreate : Command2 
+    public sealed class CmdCmdCreate : CmdCompile 
     {
         public override string name { get { return "CmdCreate"; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
-        public override bool MessageBlockRestricted { get { return true; } }
+        public override string shortcut { get { return ""; } }
+        public override CommandAlias[] Aliases {
+        	get { return new[] { new CommandAlias("PCreate", "plugin") }; }
+        }
         
-        public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces();
-            if (!Formatter.ValidFilename(p, args[0])) return;
-
-            string language  = args.Length > 1 ? args[1] : "";
-            ICompiler engine = CompilerOperations.GetCompiler(p, language);
-            if (engine == null) return;
-            
-            string path = engine.CommandPath(args[0]);
-            if (File.Exists(path)) {
-                p.Message("File {0} already exists. Choose another name.", path); return;
+        protected override void CompileCommand(Player p, string[] paths, ICompiler compiler) {
+            foreach (string cmd in paths)
+            {
+                CompilerOperations.CreateCommand(p, cmd, compiler);
             }
-            
-            string source = engine.GenExampleCommand(args[0]);
-            File.WriteAllText(path, source);
-            p.Message("Successfully saved example command &fCmd{0} &Sto {1}", args[0], path);
+        }
+        
+        protected override void CompilePlugin(Player p, string[] paths, ICompiler compiler) {
+            foreach (string cmd in paths)
+            {
+                CompilerOperations.CreatePlugin(p, cmd, compiler);
+            }
         }
 
         public override void Help(Player p) {
             p.Message("&T/CmdCreate [name]");
-            p.Message("&HCreates an example C# command named Cmd[Name]");
-            p.Message("&HThis file can be used as the basis for creating a new command");
+            p.Message("&HCreates an example C# command named Cmd[name]");
+            p.Message("&H  This can be used as the basis for creating a new command");
+            p.Message("&T/CmdCreate plugin [name]");
+            p.Message("&HCreate a example C# plugin named [name]");
         }
     }
 }

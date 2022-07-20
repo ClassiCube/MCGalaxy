@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Scripting {
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("PLoad", "load"), new CommandAlias("PUnload", "unload"),
-                    new CommandAlias("PCreate", "create"), new CommandAlias("Plugins", "list") }; }
+                    new CommandAlias("Plugins", "list") }; }
         }
         public override bool MessageBlockRestricted { get { return true; } }
         
@@ -53,7 +53,9 @@ namespace MCGalaxy.Commands.Scripting {
             } else if (cmd.CaselessEq("unload")) {
                 UnloadPlugin(p, name);
             } else if (cmd.CaselessEq("create")) {
-                CreatePlugin(p, name, language);
+                p.Message("Use &T/PCreate &Sinstead");
+            } else if (cmd.CaselessEq("compile")) {
+                p.Message("Use &T/PCompile &Sinstead");
             } else {
                 Help(p);
             }
@@ -70,32 +72,14 @@ namespace MCGalaxy.Commands.Scripting {
                 return;
             }
             
-            if (plugin != null) {
-                if (Plugin.Unload(plugin, false)) {
-                    p.Message("Plugin unloaded successfully.");
-                } else {
-                    p.Message("&WError unloading plugin. See error logs for more information.");
-                }
+            if (Plugin.Unload(plugin, false)) {
+                p.Message("Plugin unloaded successfully.");
             } else {
-                p.Message("Loaded plugins: " + Plugin.all.Join(pl => pl.name));
+                p.Message("&WError unloading plugin. See error logs for more information.");
             }
         }
         
-        static void CreatePlugin(Player p, string name, string language) {
-            ICompiler engine = CompilerOperations.GetCompiler(p, language);
-            if (engine == null) return;
-            
-            string path = engine.PluginPath(name);
-            p.Message("Creating a plugin example source");
-            
-            string creator = p.IsSuper ? Server.Config.Name : p.truename;
-            string source  = engine.GenExamplePlugin(name, creator);
-            File.WriteAllText(path, source);
-        }
-        
         public override void Help(Player p) {
-            p.Message("&T/Plugin create [name]");
-            p.Message("&HCreate a example .cs plugin file");
             p.Message("&T/Plugin load [filename]");
             p.Message("&HLoad a plugin from your plugins folder");
             p.Message("&T/Plugin unload [name]");

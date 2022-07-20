@@ -42,10 +42,37 @@ namespace MCGalaxy.Modules.Compiling
                       ICompiler.Compilers.Join(c => c.ShortName + " (" + c.FullName + ")"));
             return null;
         }
+        
+        
+        public static bool CreateCommand(Player p, string name, ICompiler compiler) {
+            string path   = compiler.CommandPath(name);
+            string source = compiler.GenExampleCommand(name);
+            
+            return CreateFile(p, name, path, "command &fCmd", source);
+        }
+    	
+    	public static bool CreatePlugin(Player p, string name, ICompiler compiler) {
+            string path    = compiler.PluginPath(name);
+            string creator = p.IsSuper ? Server.Config.Name : p.truename;
+            string source  = compiler.GenExamplePlugin(name, creator);
+            
+            return CreateFile(p, name, path, "plugin &f", source);
+        }
+    	
+    	static bool CreateFile(Player p, string name, string path, string type, string source) {
+            if (File.Exists(path)) {
+                p.Message("File {0} already exists. Choose another name.", path); 
+                return false;
+            }
+    		
+            File.WriteAllText(path, source);
+            p.Message("Successfully saved example {2}{0} &Sto {1}", name, path, type);
+            return true;
+        }
 
 
         const int MAX_LOG = 2;
-    	
+        
         /// <summary> Attempts to compile the given source code files into a .dll </summary>
         /// <param name="p"> Player to send messages to </param>
         /// <param name="type"> Type of files being compiled (e.g. Plugin, Command) </param>

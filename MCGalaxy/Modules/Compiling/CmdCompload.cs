@@ -25,19 +25,24 @@ namespace MCGalaxy.Modules.Compiling
     {
         public override string name { get { return "CompLoad"; } }
         public override string shortcut { get { return "cml"; } }
-        public override string type { get { return CommandTypes.Other; } }
-        public override CommandAlias[] Aliases {  get { return null; } }
+        public override CommandAlias[] Aliases { get { return null; } }
 
-        protected override void OnCommandCompiled(Player p, string name, string path) {
-            ScriptingOperations.LoadCommands(p, path);
+        protected override void CompilePlugin(Player p, string[] paths, ICompiler compiler) {
+            string dst = IScripting.PluginPath(paths[0]);
+            
+            base.CompilePlugin(p, paths, compiler);
+            ScriptingOperations.LoadPlugins(p, dst);
+        }
+        
+		protected override void CompileCommand(Player p, string[] paths, ICompiler compiler) {
+        	string cmd = paths[0];
+        	string dst = IScripting.CommandPath(cmd);
+        	
+			base.CompileCommand(p, paths, compiler);
+			ScriptingOperations.LoadCommands(p, dst);
             // TODO print command help directly
-            string cmd = name.SplitComma()[0];
             Command.Find("Help").Use(p, cmd, p.DefaultCmdData);
-        }
-
-        protected override void OnPluginCompiled(Player p, string name, string path) {
-            ScriptingOperations.LoadPlugins(p, path);
-        }
+		}
 
         public override void Help(Player p) {
             p.Message("&T/CompLoad [command]");
