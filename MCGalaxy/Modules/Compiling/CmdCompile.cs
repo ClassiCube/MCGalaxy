@@ -83,14 +83,14 @@ namespace MCGalaxy.Modules.Compiling
             CompilerOperations.Compile(p, compiler, "Command", paths, dstPath);
         }
 
-        // TODO avoid duplication and use compiler.CommandPath instead
         public override void Help(Player p) {
+            ICompiler compiler = ICompiler.Compilers[0];
             p.Message("&T/Compile [command name]");
             p.Message("&HCompiles a .cs file containing a C# command into a DLL");
-            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_COMMANDS + "Cmd&H<name>&f.cs");
+            p.Message("&H  Compiles from &f{0}", compiler.CommandPath("&H<name>&f"));
             p.Message("&T/Compile plugin [plugin name]");
             p.Message("&HCompiles a .cs file containing a C# plugin into a DLL");
-            p.Message("&H  Compiles from &f" + ICompiler.SOURCE_DIR_PLUGINS + "&H<name>&f.cs");
+            p.Message("&H  Compiles from &f{0}", compiler.PluginPath("&H<name>&f"));
         }
     }
 }

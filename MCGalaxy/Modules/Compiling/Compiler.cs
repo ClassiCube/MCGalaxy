@@ -29,8 +29,8 @@ namespace MCGalaxy.Modules.Compiling
     /// <summary> Compiles source code files for a particular programming language into a .dll </summary>
     public abstract class ICompiler 
     {   
-        public const string SOURCE_DIR_COMMANDS = "extra/commands/source/";
-        public const string SOURCE_DIR_PLUGINS  = "plugins/";
+        public const string COMMANDS_SOURCE_DIR = "extra/commands/source/";
+        public const string PLUGINS_SOURCE_DIR  = "plugins/";
         public const string ERROR_LOG_PATH      = "logs/errors/compiler.log";
         
         /// <summary> Default file extension used for source code files </summary>
@@ -47,15 +47,12 @@ namespace MCGalaxy.Modules.Compiling
         /// <summary> Returns source code for an example Plugin </summary>
         public abstract string PluginSkeleton { get; }
         
-        public string CommandPath(string name) { return SOURCE_DIR_COMMANDS + "Cmd" + name + FileExtension; }
-        public string PluginPath(string name)  { return SOURCE_DIR_PLUGINS  + name + FileExtension; }
+        public string CommandPath(string name) { return COMMANDS_SOURCE_DIR + "Cmd" + name + FileExtension; }
+        public string PluginPath(string name)  { return PLUGINS_SOURCE_DIR  + name + FileExtension; }
         
-        /// <summary> C# compiler instance. </summary>
-        public static ICompiler CS = new CSCompiler();
-        /// <summary> Visual Basic compiler instance. </summary>
-        public static ICompiler VB = new VBCompiler();
-        
-        public static List<ICompiler> Compilers = new List<ICompiler>() { CS, VB };
+        public static List<ICompiler> Compilers = new List<ICompiler>() { 
+            new CSCompiler(), new VBCompiler() 
+        };
 
 
         static string FormatSource(string source, params string[] args) {

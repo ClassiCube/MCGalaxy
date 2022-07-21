@@ -25,8 +25,11 @@
         	this.lblCommands = new System.Windows.Forms.Label();
         	this.lstCommands = new System.Windows.Forms.ListBox();
         	this.grpCreate = new System.Windows.Forms.GroupBox();
-        	this.btnCreateCS = new System.Windows.Forms.Button();
-        	this.btnCreateVB = new System.Windows.Forms.Button();
+        	this.btnCreate1 = new System.Windows.Forms.Button();
+        	this.btnCreate2 = new System.Windows.Forms.Button();
+        	this.btnCreate3 = new System.Windows.Forms.Button();
+        	this.btnCreate4 = new System.Windows.Forms.Button();
+        	this.btnCreate5 = new System.Windows.Forms.Button();
         	this.txtCmdName = new System.Windows.Forms.TextBox();
         	this.lblTxtName = new System.Windows.Forms.Label();
         	this.btnLoad = new System.Windows.Forms.Button();
@@ -57,8 +60,11 @@
         	// 
         	// grpCreate
         	// 
-        	this.grpCreate.Controls.Add(this.btnCreateCS);
-        	this.grpCreate.Controls.Add(this.btnCreateVB);
+        	this.grpCreate.Controls.Add(this.btnCreate1);
+        	this.grpCreate.Controls.Add(this.btnCreate2);
+        	this.grpCreate.Controls.Add(this.btnCreate3);
+        	this.grpCreate.Controls.Add(this.btnCreate4);
+        	this.grpCreate.Controls.Add(this.btnCreate5);
         	this.grpCreate.Controls.Add(this.txtCmdName);
         	this.grpCreate.Controls.Add(this.lblTxtName);
         	this.grpCreate.Location = new System.Drawing.Point(12, 12);
@@ -68,27 +74,50 @@
         	this.grpCreate.TabStop = false;
         	this.grpCreate.Text = "Create custom command";
         	// 
-        	// btnCreateCS
+        	// btnCreate1
         	// 
-        	this.btnCreateCS.Location = new System.Drawing.Point(11, 48);
-        	this.btnCreateCS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-        	this.btnCreateCS.Name = "btnCreateCS";
-        	this.btnCreateCS.Size = new System.Drawing.Size(80, 23);
-        	this.btnCreateCS.TabIndex = 29;
-        	this.btnCreateCS.Text = "Create C#";
-        	this.btnCreateCS.UseVisualStyleBackColor = true;
-        	this.btnCreateCS.Click += new System.EventHandler(this.btnCreateCS_Click);
+        	this.btnCreate1.Location = new System.Drawing.Point(11, 48);
+        	this.btnCreate1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreate1.Name = "btnCreate1";
+        	this.btnCreate1.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreate1.TabIndex = 29;
+        	this.btnCreate1.UseVisualStyleBackColor = true;
         	// 
-        	// btnCreateVB
+        	// btnCreate2
         	// 
-        	this.btnCreateVB.Location = new System.Drawing.Point(96, 48);
-        	this.btnCreateVB.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-        	this.btnCreateVB.Name = "btnCreateVB";
-        	this.btnCreateVB.Size = new System.Drawing.Size(80, 23);
-        	this.btnCreateVB.TabIndex = 29;
-        	this.btnCreateVB.Text = "Create VB";
-        	this.btnCreateVB.UseVisualStyleBackColor = true;
-        	this.btnCreateVB.Click += new System.EventHandler(this.btnCreateVB_Click);
+        	this.btnCreate2.Location = new System.Drawing.Point(96, 48);
+        	this.btnCreate2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreate2.Name = "btnCreate2";
+        	this.btnCreate2.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreate2.TabIndex = 30;
+        	this.btnCreate2.UseVisualStyleBackColor = true;
+        	// 
+        	// btnCreate3
+        	// 
+        	this.btnCreate3.Location = new System.Drawing.Point(181, 48);
+        	this.btnCreate3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreate3.Name = "btnCreate3";
+        	this.btnCreate3.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreate3.TabIndex = 31;
+        	this.btnCreate3.UseVisualStyleBackColor = true;
+        	// 
+        	// btnCreate4
+        	// 
+        	this.btnCreate4.Location = new System.Drawing.Point(266, 48);
+        	this.btnCreate4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreate4.Name = "btnCreate4";
+        	this.btnCreate4.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreate4.TabIndex = 32;
+        	this.btnCreate4.UseVisualStyleBackColor = true;
+        	// 
+        	// btnCreate5
+        	// 
+        	this.btnCreate5.Location = new System.Drawing.Point(351, 48);
+        	this.btnCreate5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+        	this.btnCreate5.Name = "btnCreate5";
+        	this.btnCreate5.Size = new System.Drawing.Size(80, 23);
+        	this.btnCreate5.TabIndex = 33;
+        	this.btnCreate5.UseVisualStyleBackColor = true;
         	// 
         	// txtCmdName
         	// 
@@ -159,8 +188,11 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Label lblTxtName;
         private System.Windows.Forms.TextBox txtCmdName;
-        private System.Windows.Forms.Button btnCreateCS;
-        private System.Windows.Forms.Button btnCreateVB;
+        private System.Windows.Forms.Button btnCreate1;
+        private System.Windows.Forms.Button btnCreate2;
+        private System.Windows.Forms.Button btnCreate3;
+        private System.Windows.Forms.Button btnCreate4;
+        private System.Windows.Forms.Button btnCreate5;
         private System.Windows.Forms.GroupBox grpCreate;
         private System.Windows.Forms.ListBox lstCommands;
         private System.Windows.Forms.Label lblCommands;

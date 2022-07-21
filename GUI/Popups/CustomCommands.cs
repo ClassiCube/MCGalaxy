@@ -27,6 +27,7 @@ namespace MCGalaxy.Gui.Popups {
         
         public CustomCommands() {
             InitializeComponent();
+            LoadCompilers();
 
             //Sigh. I wish there were SOME event to help me.
             foreach (Command cmd in Command.allCmds) {
@@ -38,30 +39,46 @@ namespace MCGalaxy.Gui.Popups {
             GuiUtils.SetIcon(this);
         }
         
-        void CreateCommand(ICompiler engine) {
+        void LoadCompilers() {
+            Button[] buttons = { btnCreate1, btnCreate2, btnCreate3, btnCreate4, btnCreate5 };
+            List<ICompiler> compilers = ICompiler.Compilers;
+            int i;
+            
+            for (i = 0; i < Math.Min(compilers.Count, buttons.Length); i++)
+            {
+                // must be copied to local variable because of the way C# for loop closures work,
+                //  as otherwise the delegate { ... compilers[i] ... } uses compiler 
+                //   from LAST iteration instead of the current iteration
+                ICompiler compiler = compilers[i];
+                buttons[i].Visible = true;
+                buttons[i].Text    = "Create " + compiler.ShortName;
+                buttons[i].Click  += delegate { CreateCommand(compiler); };
+            }
+            
+            for (; i < buttons.Length; i++) buttons[i].Visible = false;
+        }
+        
+        void CreateCommand(ICompiler compiler) {
             string cmdName = txtCmdName.Text.Trim();
             if (cmdName.Length == 0) {
                 Popup.Warning("Command must have a name"); return;
             }
             
-            string path = engine.CommandPath(cmdName);
+            string path = compiler.CommandPath(cmdName);
             if (File.Exists(path)) {
                 Popup.Warning("Command already exists"); return;
             }
             
             try {
-                string source = engine.GenExampleCommand(cmdName);
+                string source = compiler.GenExampleCommand(cmdName);
                 File.WriteAllText(path, source);
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Popup.Error("Failed to generate command. Check error logs for more details.");
                 return;
             }
-            Popup.Message("Command Cmd" + cmdName + engine.FileExtension + " created.");
+            Popup.Message("Command Cmd" + cmdName + compiler.FileExtension + " created.");
         }
-        
-        void btnCreateCS_Click(object sender, EventArgs e) { CreateCommand(ICompiler.CS); }
-        void btnCreateVB_Click(object sender, EventArgs e) { CreateCommand(ICompiler.VB); }
         
         void btnLoad_Click(object sender, EventArgs e) {
             Assembly lib;

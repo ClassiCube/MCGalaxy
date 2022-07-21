@@ -26,7 +26,7 @@ namespace MCGalaxy.Modules.Compiling
     public sealed class CSCompiler : ICodeDomCompiler 
     {
         public override string FileExtension { get { return ".cs"; } }
-        public override string ShortName     { get { return "CS"; } }  
+        public override string ShortName     { get { return "C#"; } }  
         public override string FullName      { get { return "CSharp"; } }        
 
         protected override CodeDomProvider CreateProvider() {
