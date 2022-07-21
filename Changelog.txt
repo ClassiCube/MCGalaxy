@@ -1,4 +1,21 @@
-﻿v 1.9.4.1
+﻿v 1.9.4.2
+Added: When verify-names is off, mppass can be used for /pass at login
+Added: Allow setting custom round/infection start countdown time in ZS
+Improved: Stop using cmdautoload.txt and just autoload all commands in extra/commands/dll folder
+Improved: Allow /punload ing plugins with spaces in their names
+Improved: Make /compload work with plugins too
+Improved: When verify-names is off, you can still reconnect through the server list now
+Improved: Truncate long errors returned by Discord
+Improved: Custom Commands GUI no longer hardcodes compilers list for creating commands
+Improved: Enable /baninfo and /rankinfo to be used in MBs
+Fixed: Make /restart work with .NET core on Linux
+Fixed: Make /sinfo 'all processes CPU usage' work on macOS
+Fixed: Make /sinfo 'all processes CPU usage' work with .NET core on Linux 
+Fixed: Fix /whitelist disable enabling whitelist instead
+Fixed: Very rare case where server would drop out of server list
+Fixed: Trrain gradual movement bias towards 0,0
+
+v 1.9.4.1
 Added: Custom network protocol support
 Added: /Whitelist enable/disable to turn on/off whitelisted only mode
 Added: Shortcut /br for /Brush
