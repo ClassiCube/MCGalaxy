@@ -82,7 +82,7 @@ namespace MCGalaxy {
         public static Scheduler MainScheduler = new Scheduler("MCG_MainScheduler");
         public static Scheduler Background = new Scheduler("MCG_BackgroundScheduler");
         public static Scheduler Critical = new Scheduler("MCG_CriticalScheduler");
-        public static Scheduler Hearbeats = new Scheduler("MCG_HeartbeatsScheduler");
+        public static Scheduler Heartbeats = new Scheduler("MCG_HeartbeatsScheduler");
         public static Server s = new Server();
 
         public const byte VERSION_0016 = 3; // classic 0.0.16

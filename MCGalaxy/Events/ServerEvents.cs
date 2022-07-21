@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Events.ServerEvents {
-
+namespace MCGalaxy.Events.ServerEvents 
+{
     public delegate void OnSendingHeartbeat(Heartbeat service, ref string name);
     /// <summary> Called when a heartbeat is being sent out. </summary>
-    public sealed class OnSendingHeartbeatEvent : IEvent<OnSendingHeartbeat> {
-        
+    public sealed class OnSendingHeartbeatEvent : IEvent<OnSendingHeartbeat> 
+    { 
         public static void Call(Heartbeat service, ref string name) {
             IEvent<OnSendingHeartbeat>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
@@ -38,8 +38,8 @@ namespace MCGalaxy.Events.ServerEvents {
     
     public delegate void OnShuttingDown(bool restarting, string reason);
     /// <summary> Called when the server is shutting down or restarting. </summary>
-    public sealed class OnShuttingDownEvent : IEvent<OnShuttingDown> {
-        
+    public sealed class OnShuttingDownEvent : IEvent<OnShuttingDown> 
+    {        
         public static void Call(bool restarting, string reason) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(restarting, reason));
@@ -48,8 +48,8 @@ namespace MCGalaxy.Events.ServerEvents {
     
     public delegate void OnConfigUpdated();
     /// <summary> Called when the server configuration has been updated. </summary>
-    public sealed class OnConfigUpdatedEvent : IEvent<OnConfigUpdated> {
-        
+    public sealed class OnConfigUpdatedEvent : IEvent<OnConfigUpdated> 
+    {      
         public static void Call() {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl());
@@ -58,8 +58,8 @@ namespace MCGalaxy.Events.ServerEvents {
     
     public delegate void OnConnectionReceived(Socket s, ref bool cancel);
     /// <summary> Called when a new connection has been received. </summary>
-    public sealed class OnConnectionReceivedEvent : IEvent<OnConnectionReceived> {
-        
+    public sealed class OnConnectionReceivedEvent : IEvent<OnConnectionReceived> 
+    {        
         public static void Call(Socket s, ref bool cancel) {
             IEvent<OnConnectionReceived>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
@@ -72,8 +72,8 @@ namespace MCGalaxy.Events.ServerEvents {
     
     public delegate void OnChatSys(ChatScope scope, string msg, object arg,
                                    ref ChatMessageFilter filter, bool relay);
-    public sealed class OnChatSysEvent : IEvent<OnChatSys> {
-        
+    public sealed class OnChatSysEvent : IEvent<OnChatSys> 
+    {      
         public static void Call(ChatScope scope, string msg, object arg, 
                                 ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChatSys>[] items = handlers.Items;
@@ -86,8 +86,8 @@ namespace MCGalaxy.Events.ServerEvents {
     
     public delegate void OnChatFrom(ChatScope scope, Player source, string msg, 
                                     object arg, ref ChatMessageFilter filter, bool relay);
-    public sealed class OnChatFromEvent : IEvent<OnChatFrom> {
-        
+    public sealed class OnChatFromEvent : IEvent<OnChatFrom> 
+    {        
         public static void Call(ChatScope scope,Player source, string msg, 
                                 object arg, ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChatFrom>[] items = handlers.Items;
@@ -100,8 +100,8 @@ namespace MCGalaxy.Events.ServerEvents {
     
     public delegate void OnChat(ChatScope scope, Player source, string msg, 
                                 object arg, ref ChatMessageFilter filter, bool relay);
-    public sealed class OnChatEvent : IEvent<OnChat> {
-        
+    public sealed class OnChatEvent : IEvent<OnChat> 
+    {       
         public static void Call(ChatScope scope, Player source, string msg, 
                                 object arg, ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChat>[] items = handlers.Items;
@@ -114,8 +114,8 @@ namespace MCGalaxy.Events.ServerEvents {
 
     public delegate void OnPluginMessageReceived(Player p, byte channel, byte[] data);
     /// <summary> Called when a player sends a PluginMessage CPE packet to the server. </summary>
-    public sealed class OnPluginMessageReceivedEvent : IEvent<OnPluginMessageReceived> {
-        
+    public sealed class OnPluginMessageReceivedEvent : IEvent<OnPluginMessageReceived> 
+    {        
         public static void Call(Player p, byte channel, byte[] data) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p, channel, data));

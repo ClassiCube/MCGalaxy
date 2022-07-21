@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.DB;
+using MCGalaxy.Events;
 
 namespace MCGalaxy.Commands.Moderation {
     public sealed class CmdReport : Command2 {
@@ -151,6 +152,10 @@ namespace MCGalaxy.Commands.Moderation {
             File.WriteAllLines(ReportPath(target), reports.ToArray());
             p.Message("&aReport sent! It should be viewed when a {0} &ais online", 
                       checkPerms.Describe());
+            
+            ModAction action = new ModAction(target, p, ModActionType.Reported, reason);
+            OnModActionEvent.Call(action);
+            if (!action.Announce) return;
             
             string opsMsg = "λNICK &Sreported " + nick + "&S. Reason: " + reason;
             Chat.MessageFrom(ChatScope.Perms, p, opsMsg, checkPerms, null, true);

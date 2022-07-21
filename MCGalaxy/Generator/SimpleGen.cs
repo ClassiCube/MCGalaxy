@@ -75,7 +75,7 @@ namespace MCGalaxy.Generator
             {
                 if (grassY > 0)
                     MapSet(lvl.Width, lvl.Length, ptr, 0, grassY - 1,  Block.Dirt);
-                if (grassY < lvl.Height)
+                if (grassY >= 0 && grassY < lvl.Height)
                     MapSet(lvl.Width, lvl.Length, ptr, grassY, grassY, Block.Grass);
             }
             return true;

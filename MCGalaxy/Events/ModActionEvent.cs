@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy.Events {
-    
+namespace MCGalaxy.Events 
+{ 
     /// <summary> Represents a moderation action. </summary>
-    public sealed class ModAction {
-        
+    public sealed class ModAction 
+    {     
         /// <summary> Target player name or IP. </summary>
         public string Target;
         
@@ -86,8 +86,8 @@ namespace MCGalaxy.Events {
     public delegate void OnModAction(ModAction action);
     
     /// <summary> Types of moderation actions that can occur. </summary>
-    public enum ModActionType {
-        
+    public enum ModActionType 
+    {
         /// <summary> Player was banned. </summary>
         Ban,
         /// <summary> Player was unbanned. </summary>
@@ -117,10 +117,13 @@ namespace MCGalaxy.Events {
         Rank,
         /// <summary> Player was kicked from the server. </summary>
         Kicked,
+        /// <summary> Player was reported </summary>
+        Reported,
     }
     
     /// <summary> Raised when a moderation action occurs. </summary>
-    public sealed class OnModActionEvent : IEvent<OnModAction> {
+    public sealed class OnModActionEvent : IEvent<OnModAction> 
+    {
         public static void Call(ModAction e) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(e));
