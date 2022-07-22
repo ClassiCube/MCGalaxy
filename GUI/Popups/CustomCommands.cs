@@ -81,7 +81,6 @@ namespace MCGalaxy.Gui.Popups {
         }
         
         void btnLoad_Click(object sender, EventArgs e) {
-            Assembly lib;
             string path;
             
             using (FileDialog dialog = new OpenFileDialog()) {
@@ -94,13 +93,14 @@ namespace MCGalaxy.Gui.Popups {
             if (!File.Exists(path)) return;
             
             if (path.CaselessEnds(".dll")) {
-                lib = IScripting.LoadAssembly(path);
-            } else {
-                lib = CompileCommands(path);
+                LoadCommands(path); return;
             }
-            
-            if (lib == null) return;
-            LoadCommands(lib);
+                          
+            // compile to temp .dll and load that
+            string tmp = CompileCommands(path);
+            if (tmp == null) return; 
+            LoadCommands(tmp);
+            DeleteAssembly(tmp);
         }
 
         void btnUnload_Click(object sender, EventArgs e) {
@@ -120,31 +120,13 @@ namespace MCGalaxy.Gui.Popups {
         }
         
         
-        static ICompiler GetCompiler(string path) {
-            foreach (ICompiler c in ICompiler.Compilers) {
-                if (path.CaselessEnds(c.FileExtension)) return c;
-            }
-            return null;
-        }
-        
-        Assembly CompileCommands(string path) {
-            ICompiler compiler = GetCompiler(path);
-            if (compiler == null) {
-                Popup.Warning("Unsupported file '" + path + "'");
-                return null;
-            }
+        void LoadCommands(string path) {
+            Assembly lib = IScripting.LoadAssembly(path);
+            if (lib == null) return;
+            List<Command> commands = IScripting.LoadTypes<Command>(lib);
             
-            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
-            CompilerResults result = CompilerOperations.Compile(p, compiler, "Command", new[] { path }, null);
-            if (result != null) return result.CompiledAssembly;
-            
-            Popup.Error(Colors.StripUsed(p.Messages));
-            return null;
-        }
-        
-        void LoadCommands(Assembly assembly) {
-            List<Command> commands = IScripting.LoadTypes<Command>(assembly);
-            for (int i = 0; i < commands.Count; i++) {
+            for (int i = 0; i < commands.Count; i++) 
+            {
                 Command cmd = commands[i];
 
                 if (lstCommands.Items.Contains(cmd.name)) {
@@ -154,8 +136,39 @@ namespace MCGalaxy.Gui.Popups {
 
                 lstCommands.Items.Add(cmd.name);
                 Command.Register(cmd);
-                Logger.Log(LogType.SystemActivity, "Added " + cmd.name + " to commands");
+                Logger.Log(LogType.SystemActivity, "Added /" + cmd.name + " to commands");
             }
+        }
+        
+        string CompileCommands(string path) {
+            ICompiler compiler = GetCompiler(path);
+            if (compiler == null) {
+                Popup.Warning("Unsupported file '" + path + "'");
+                return null;
+            }         
+            string tmp = "extra/commands/" + Path.GetRandomFileName() + ".dll";
+
+            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
+            CompilerResults result = CompilerOperations.Compile(p, compiler, "Command", new[] { path }, tmp);
+            if (result != null && !result.Errors.HasErrors) return tmp;
+            
+            Popup.Error(Colors.StripUsed(p.Messages));
+            DeleteAssembly(tmp);
+            return null;
+        }
+        
+        static ICompiler GetCompiler(string path) {
+            foreach (ICompiler c in ICompiler.Compilers)
+            {
+                if (path.CaselessEnds(c.FileExtension)) return c;
+            }
+            return null;
+        }
+        
+        static void DeleteAssembly(string path) {
+            try { File.Delete(path); } catch { }
+            try { File.Delete(path.Replace(".dll", ".pdb")); } catch { }
+            try { File.Delete(path + ".mdb"); } catch { }
         }
         
         

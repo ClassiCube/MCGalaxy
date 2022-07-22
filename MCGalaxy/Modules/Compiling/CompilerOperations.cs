@@ -79,7 +79,6 @@ namespace MCGalaxy.Modules.Compiling
         /// <param name="srcs"> Path of the source code files </param>
         /// <param name="dst"> Path to the destination .dll </param>
         /// <returns> The compiler results, or null if compilation failed </returns>
-        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
         public static CompilerResults Compile(Player p, ICompiler compiler, string type, string[] srcs, string dst) {
             foreach (string path in srcs) 
             {

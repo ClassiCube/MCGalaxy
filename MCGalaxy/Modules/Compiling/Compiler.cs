@@ -37,7 +37,7 @@ namespace MCGalaxy.Modules.Compiling
         /// <example> .cs, .vb </example>
         public abstract string FileExtension { get; }
         /// <summary> The short name of this programming language </summary>
-        /// <example> CS, VB </example>
+        /// <example> C#, VB </example>
         public abstract string ShortName { get; }
         /// <summary> The full name of this programming language </summary>
         /// <example> CSharp, Visual Basic </example>
@@ -46,6 +46,9 @@ namespace MCGalaxy.Modules.Compiling
         public abstract string CommandSkeleton { get; }
         /// <summary> Returns source code for an example Plugin </summary>
         public abstract string PluginSkeleton { get; }
+        /// <summary> Returns the starting characters for a comment </summary>
+        /// <example> For C# this is "//" </example>
+        protected virtual string CommentPrefix { get { return "//"; } }
         
         public string CommandPath(string name) { return COMMANDS_SOURCE_DIR + "Cmd" + name + FileExtension; }
         public string PluginPath(string name)  { return PLUGINS_SOURCE_DIR  + name + FileExtension; }
@@ -76,16 +79,13 @@ namespace MCGalaxy.Modules.Compiling
         }
         
         
-        const int maxLog = 2;
         /// <summary> Attempts to compile the given source code file to a .dll file. </summary>
-        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
         /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
         public CompilerResults Compile(string srcPath, string dstPath) {
             return Compile(new [] { srcPath }, dstPath);
         }
         
         /// <summary> Attempts to compile the given source code files to a .dll file. </summary>
-        /// <remarks> If dstPath is null, compiles to an in-memory .dll instead. </remarks>
         /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
         public CompilerResults Compile(string[] srcPaths, string dstPath) {
             CompilerResults results = DoCompile(srcPaths, dstPath);
@@ -142,9 +142,6 @@ namespace MCGalaxy.Modules.Compiling
         protected abstract CodeDomProvider CreateProvider();
         /// <summary> Adds language-specific default arguments to list of arguments. </summary>
         protected abstract void PrepareArgs(CompilerParameters args);
-        /// <summary> Returns the starting characters for a comment </summary>
-        /// <example> For C# this is "//" </example>
-        protected virtual string CommentPrefix { get { return "//"; } }
         
         // Lazy init compiler when it's actually needed
         void InitCompiler() {
@@ -182,9 +179,7 @@ namespace MCGalaxy.Modules.Compiling
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable      = false;
             args.IncludeDebugInformation = true;
-            
-            if (dstPath != null) args.OutputAssembly   = dstPath;
-            if (dstPath == null) args.GenerateInMemory = true;
+            args.OutputAssembly          = dstPath;
             
             for (int i = 0; i < srcPaths.Length; i++) 
             {
