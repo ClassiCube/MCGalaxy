@@ -79,7 +79,7 @@ namespace MCGalaxy.Modules.Relay
         
         protected readonly Player fakeGuest = new Player("RelayBot");
         protected readonly Player fakeStaff = new Player("RelayBot");
-        DateTime lastWho, lastOpWho;
+        DateTime lastWho, lastOpWho, lastWarn;
 
         protected bool canReconnect;
         protected byte retries;
@@ -483,8 +483,16 @@ namespace MCGalaxy.Modules.Relay
         /// <summary> Returns whether the given relay user is allowed to execute the given command </summary>
         protected bool CanUseCommand(RelayUser user, string cmd, out string error) {
             error = null;
-            // Intentionally show no message to non-controller users to avoid spam
-            if (!Controllers.Contains(user.ID)) return false;
+
+            if (!Controllers.Contains(user.ID)) {
+                // Intentionally show no message to non-controller users to avoid spam
+                if ((DateTime.UtcNow - lastWarn).TotalSeconds <= 60) return false;
+                
+                lastWarn = DateTime.UtcNow;
+                error    = "Only " + RelayName + " Controllers are allowed to use in-game commands from " + RelayName;
+                return false;
+            }
+            
             // Make sure controller is actually allowed to execute commands right now
             if (!CheckController(user.ID, ref error)) return false;
 
