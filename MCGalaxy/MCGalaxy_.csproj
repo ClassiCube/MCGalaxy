@@ -582,13 +582,13 @@
     <Compile Include="Modules\Awards\CmdAwardMod.cs" />
     <Compile Include="Modules\Awards\CmdAwards.cs" />
     <Compile Include="Modules\Awards\AwardsList.cs" />
-    <Compile Include="Modules\Compiling\Backends.cs" />
+    <Compile Include="Modules\Compiling\CompilerFrontends.cs" />
     <Compile Include="Modules\Compiling\CmdCmdCreate.cs" />
     <Compile Include="Modules\Compiling\CmdCompile.cs" />
     <Compile Include="Modules\Compiling\CmdCompload.cs" />
     <Compile Include="Modules\Compiling\Compiler.cs" />
     <Compile Include="Modules\Compiling\CompilerOperations.cs" />
-    <Compile Include="Modules\Compiling\Roslyn.cs" />
+    <Compile Include="Modules\Compiling\CompilerBackends.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
