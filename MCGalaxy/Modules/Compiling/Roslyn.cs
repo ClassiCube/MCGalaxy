@@ -12,7 +12,6 @@
 #if !DISABLE_COMPILING
 #if NETSTANDARD
 using System;
-using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,36 +23,20 @@ using System.Text.RegularExpressions;
 
 namespace MCGalaxy.Modules.Compiling
 {
-    public class RoslynCSharpCodeProvider : Microsoft.CSharp.CSharpCodeProvider
-    {
-        [Obsolete("Callers should not use the ICodeCompiler interface and should instead use the methods directly on the CodeDomProvider class.")]
-        public override ICodeCompiler CreateCompiler() { return new CSharpCompiler(); }
-    }
-
-    class CSharpCompiler : ICodeCompiler 
+    public static class RoslynCSharpCompiler 
     {
         static Regex outputRegWithFileAndLine;
         static Regex outputRegSimple;
 
-        public CompilerResults CompileAssemblyFromDom(CompilerParameters options, CodeCompileUnit compilationUnit) { return null; }
-        public CompilerResults CompileAssemblyFromDomBatch(CompilerParameters options, CodeCompileUnit[] compilationUnits) { return null; }
-        public CompilerResults CompileAssemblyFromSource(CompilerParameters options, string source) { return null; }
-        public CompilerResults CompileAssemblyFromSourceBatch(CompilerParameters options, string[] sources) { return null; }
-
-
-        public CompilerResults CompileAssemblyFromFile(CompilerParameters options, string fileName) {
-            return CompileAssemblyFromFileBatch(options, new string[] { fileName });
-        }
-
-        public CompilerResults CompileAssemblyFromFileBatch(CompilerParameters options, string[] fileNames) {
+        public static CompilerResults Compile(CompilerParameters options, string[] fileNames) {
             try {
-                return FromFileBatch(options, fileNames);
+                return DoCompile(options, fileNames);
             } finally {
                 options.TempFiles.Delete();
             }
         }
 
-        static CompilerResults FromFileBatch(CompilerParameters options, string[] fileNames) {
+        static CompilerResults DoCompile(CompilerParameters options, string[] fileNames) {
             CompilerResults results = new CompilerResults(options.TempFiles);
             List<string> output     = new List<string>();
 

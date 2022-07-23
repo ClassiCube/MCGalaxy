@@ -48,7 +48,7 @@ namespace MCGalaxy.Modules.Compiling
         public abstract string PluginSkeleton { get; }
         /// <summary> Returns the starting characters for a comment </summary>
         /// <example> For C# this is "//" </example>
-        protected virtual string CommentPrefix { get { return "//"; } }
+        public virtual string CommentPrefix { get { return "//"; } }
         
         public string CommandPath(string name) { return COMMANDS_SOURCE_DIR + "Cmd" + name + FileExtension; }
         public string PluginPath(string name)  { return PLUGINS_SOURCE_DIR  + name + FileExtension; }
@@ -136,42 +136,19 @@ namespace MCGalaxy.Modules.Compiling
     public abstract class ICodeDomCompiler : ICompiler 
     {
         readonly object compilerLock = new object();
-        CodeDomProvider compiler;
-        
-        /// <summary> Creates a CodeDomProvider instance for this programming language </summary>
-        protected abstract CodeDomProvider CreateProvider();
-        /// <summary> Adds language-specific default arguments to list of arguments. </summary>
-        protected abstract void PrepareArgs(CompilerParameters args);
+        protected CodeDomProvider compiler;
         
         // Lazy init compiler when it's actually needed
-        void InitCompiler() {
+        protected void InitCompiler(string language) {
             lock (compilerLock) {
                 if (compiler != null) return;
-                compiler = CreateProvider();
+                compiler = CodeDomProvider.CreateProvider(language);
                 if (compiler != null) return;
                 
                 Logger.Log(LogType.Warning,
                            "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
                            FullName, FileExtension);
                 // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
-            }
-        }
-        
-        void AddReferences(string path, CompilerParameters args) {
-            // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
-            using (StreamReader r = new StreamReader(path)) {               
-                string refPrefix = CommentPrefix + "reference ";
-                string line;
-                
-                while ((line = r.ReadLine()) != null) {
-                    if (!line.CaselessStarts(refPrefix)) break;
-                    
-                    int index = line.IndexOf(' ') + 1;
-                    // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
-                    string assem = line.Substring(index).Replace(";", "");
-                    
-                    args.ReferencedAssemblies.Add(assem);
-                }
             }
         }
         
@@ -193,10 +170,27 @@ namespace MCGalaxy.Modules.Compiling
             // TODO use absolute path?
             string serverDLL = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
             args.ReferencedAssemblies.Add(serverDLL);
-            
-            PrepareArgs(args);
-            InitCompiler();
-            return compiler.CompileAssemblyFromFile(args, srcPaths);
+            return DoCompile(srcPaths, args);
+        }
+        
+        protected abstract CompilerResults DoCompile(string[] srcPaths, CompilerParameters args);
+        
+        void AddReferences(string path, CompilerParameters args) {
+            // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
+            using (StreamReader r = new StreamReader(path)) {               
+                string refPrefix = CommentPrefix + "reference ";
+                string line;
+                
+                while ((line = r.ReadLine()) != null) {
+                    if (!line.CaselessStarts(refPrefix)) break;
+                    
+                    int index = line.IndexOf(' ') + 1;
+                    // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
+                    string assem = line.Substring(index).Replace(";", "");
+                    
+                    args.ReferencedAssemblies.Add(assem);
+                }
+            }
         }
     }
     

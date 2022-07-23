@@ -27,18 +27,17 @@ namespace MCGalaxy.Modules.Compiling
     {
         public override string FileExtension { get { return ".cs"; } }
         public override string ShortName     { get { return "C#"; } }  
-        public override string FullName      { get { return "CSharp"; } }        
-
-        protected override CodeDomProvider CreateProvider() {
-#if NETSTANDARD
-            return new RoslynCSharpCodeProvider();
-#else
-            return CodeDomProvider.CreateProvider("CSharp");
-#endif
-        }
+        public override string FullName      { get { return "CSharp"; } }
         
-        protected override void PrepareArgs(CompilerParameters args) {
-            args.CompilerOptions += " /unsafe";
+        protected override CompilerResults DoCompile(string[] srcPaths, CompilerParameters args) {
+            args.CompilerOptions += " /unsafe"; 
+            
+#if NETSTANDARD
+            return RoslynCSharpCompiler.Compile(args, srcPaths);
+#else
+            InitCompiler("CSharp");
+            return compiler.CompileAssemblyFromFile(args, srcPaths);
+#endif
         }
         
         public override string CommandSkeleton {
@@ -128,18 +127,17 @@ namespace MCGalaxy
     {
         public override string FileExtension { get { return ".vb"; } }
         public override string ShortName     { get { return "VB"; } }
-        public override string FullName      { get { return "Visual Basic"; } }
+        public override string FullName      { get { return "Visual Basic"; } }        
+        public override string CommentPrefix { get { return "'"; } }
         
-        protected override CodeDomProvider CreateProvider() {
+        protected override CompilerResults DoCompile(string[] srcPaths, CompilerParameters args) {
 #if NETSTANDARD
-            throw new NotSupportedException("Compiling Visual Basic is not supported in .NET standard build");
+            throw new NotSupportedException("Compiling Visual Basic is not supported in .NET Standard build");
 #else
-            return CodeDomProvider.CreateProvider("VisualBasic");
+            InitCompiler("VisualBasic");
+            return compiler.CompileAssemblyFromFile(args, srcPaths);
 #endif
         }
-        
-        protected override void PrepareArgs(CompilerParameters args) { }
-        protected override string CommentPrefix { get { return "'"; } }
         
         public override string CommandSkeleton {
             get {
