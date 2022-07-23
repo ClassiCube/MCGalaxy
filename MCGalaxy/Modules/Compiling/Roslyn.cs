@@ -28,7 +28,7 @@ namespace MCGalaxy.Modules.Compiling
         static Regex outputRegWithFileAndLine;
         static Regex outputRegSimple;
 
-        public static CompilerResults Compile(CompilerParameters options, string[] fileNames) {
+        public static CompilerErrorCollection Compile(CompilerParameters options, string[] fileNames) {
             try {
                 return DoCompile(options, fileNames);
             } finally {
@@ -36,29 +36,23 @@ namespace MCGalaxy.Modules.Compiling
             }
         }
 
-        static CompilerResults DoCompile(CompilerParameters options, string[] fileNames) {
-            CompilerResults results = new CompilerResults(options.TempFiles);
-            List<string> output     = new List<string>();
-
-            results.TempFiles.AddExtension("pdb"); // for .pdb debug files
-            string args = GetCommandLineArguments(options, fileNames);
-
+        static CompilerErrorCollection DoCompile(CompilerParameters options, string[] fileNames) {         
+            string args    = GetCommandLineArguments(options, fileNames);
             string netPath = GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
             string cscPath = GetBinaryFile("MCG_COMPILER_PATH", "'csc.dll' file - e.g. /home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll");
 
+            CompilerErrorCollection errors = new CompilerErrorCollection();
+            List<string> output = new List<string>();
             int retValue = Compile(netPath, cscPath, args, output);
-            results.NativeCompilerReturnValue = retValue;
 
             // only look for errors/warnings if the compile failed or the caller set the warning level
             if (retValue != 0 || options.WarningLevel > 0) {
                 foreach (string line in output) 
                 {
-                    ProcessCompilerOutputLine(results, line);
+                    ProcessCompilerOutputLine(errors, line);
                 }
             }
-
-            results.PathToAssembly = options.OutputAssembly;
-            return results;
+            return errors;
         }
 
         static string Quote(string value) { return "\"" + value + "\""; }

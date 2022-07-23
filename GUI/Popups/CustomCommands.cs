@@ -145,12 +145,12 @@ namespace MCGalaxy.Gui.Popups {
             if (compiler == null) {
                 Popup.Warning("Unsupported file '" + path + "'");
                 return null;
-            }         
+            }
+            
             string tmp = "extra/commands/" + Path.GetRandomFileName() + ".dll";
-
-            ConsoleHelpPlayer p    = new ConsoleHelpPlayer();
-            CompilerResults result = CompilerOperations.Compile(p, compiler, "Command", new[] { path }, tmp);
-            if (result != null && !result.Errors.HasErrors) return tmp;
+            ConsoleHelpPlayer p = new ConsoleHelpPlayer();
+            if (CompilerOperations.Compile(p, compiler, "Command", new[] { path }, tmp))
+                return tmp;
             
             Popup.Error(Colors.StripUsed(p.Messages));
             DeleteAssembly(tmp);

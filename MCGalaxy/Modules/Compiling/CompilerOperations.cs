@@ -78,30 +78,30 @@ namespace MCGalaxy.Modules.Compiling
         /// <param name="type"> Type of files being compiled (e.g. Plugin, Command) </param>
         /// <param name="srcs"> Path of the source code files </param>
         /// <param name="dst"> Path to the destination .dll </param>
-        /// <returns> The compiler results, or null if compilation failed </returns>
-        public static CompilerResults Compile(Player p, ICompiler compiler, string type, string[] srcs, string dst) {
+        /// <returns> Whether compilation succeeded </returns>
+        public static bool Compile(Player p, ICompiler compiler, string type, string[] srcs, string dst) {
             foreach (string path in srcs) 
             {
                 if (File.Exists(path)) continue;
                 
                 p.Message("File &9{0} &Snot found.", path);
-                return null;
+                return false;
             }
             
-            CompilerResults results = compiler.Compile(srcs, dst);
-            if (!results.Errors.HasErrors) {
+            CompilerErrorCollection errors = compiler.Compile(srcs, dst);
+            if (!errors.HasErrors) {
                 p.Message("{0} compiled successfully from {1}", 
                         type, srcs.Join(file => Path.GetFileName(file)));
-                return results;
+                return true;
             }
             
-            SummariseErrors(results, srcs, p);
-            return null;
+            SummariseErrors(errors, srcs, p);
+            return false;
         }
         
-        static void SummariseErrors(CompilerResults results, string[] srcs, Player p) {
+        static void SummariseErrors(CompilerErrorCollection errors, string[] srcs, Player p) {
             int logged = 0;
-            foreach (CompilerError err in results.Errors) 
+            foreach (CompilerError err in errors) 
             {
                 p.Message("&W{1} - {0}", err.ErrorText,
                           ICompiler.DescribeError(err, srcs, " #" + err.ErrorNumber));
@@ -109,8 +109,8 @@ namespace MCGalaxy.Modules.Compiling
                 if (logged >= MAX_LOG) break;
             }
             
-            if (results.Errors.Count > MAX_LOG) {
-                p.Message(" &W.. and {0} more", results.Errors.Count - MAX_LOG);
+            if (errors.Count > MAX_LOG) {
+                p.Message(" &W.. and {0} more", errors.Count - MAX_LOG);
             }
             p.Message("&WCompilation error. See " + ICompiler.ERROR_LOG_PATH + " for more information.");
         }

@@ -29,22 +29,22 @@ namespace MCGalaxy.Modules.Compiling
         public override string ShortName     { get { return "C#"; } }  
         public override string FullName      { get { return "CSharp"; } }
         
-        protected override CompilerResults DoCompile(string[] srcPaths, CompilerParameters args) {
+        protected override CompilerErrorCollection DoCompile(string[] srcPaths, CompilerParameters args) {
             args.CompilerOptions += " /unsafe"; 
             
 #if NETSTANDARD
             return RoslynCSharpCompiler.Compile(args, srcPaths);
 #else
             InitCompiler("CSharp");
-            return compiler.CompileAssemblyFromFile(args, srcPaths);
+            return compiler.CompileAssemblyFromFile(args, srcPaths).Errors;
 #endif
         }
         
         public override string CommandSkeleton {
             get {
-                return @"//\tAuto-generated command skeleton class.
-//\tUse this as a basis for custom MCGalaxy commands.
-//\tNaming should be kept consistent. (e.g. /update command should have a class name of 'CmdUpdate' and a filename of 'CmdUpdate.cs')
+                return @"//\tAuto-generated command skeleton class
+//\tUse this as a basis for custom MCGalaxy commands
+//\tNaming should be kept consistent (e.g. /update command should have a class name of 'CmdUpdate' and a filename of 'CmdUpdate.cs')
 // As a note, MCGalaxy is designed for .NET 4.0
 
 // To reference other assemblies, put a ""//reference [assembly filename]"" at the top of the file
@@ -92,30 +92,47 @@ public class Cmd{0} : Command
         
         public override string PluginSkeleton {
             get {
-                return @"//This is an example plugin source!
+                return @"//\tAuto-generated plugin skeleton class
+//\tUse this as a basis for custom MCGalaxy plugins
+
+// To reference other assemblies, put a ""//reference [assembly filename]"" at the top of the file
+//   e.g. to reference the System.Data assembly, put ""//reference System.Data.dll""
+
+// Add any other using statements you need after this
 using System;
+
 namespace MCGalaxy
 {{
 \tpublic class {0} : Plugin
 \t{{
+\t\t// The plugin's name (i.e what shows in /Plugins)
 \t\tpublic override string name {{ get {{ return ""{0}""; }} }}
+
+\t\t// The oldest version of MCGalaxy this plugin is compatible with
 \t\tpublic override string MCGalaxy_Version {{ get {{ return ""{2}""; }} }}
+
+\t\t// Message displayed in server logs when this plugin is loaded
 \t\tpublic override string welcome {{ get {{ return ""Loaded Message!""; }} }}
+
+\t\t// Who created/authored this plugin
 \t\tpublic override string creator {{ get {{ return ""{1}""; }} }}
 
+\t\t// Called when this plugin is being loaded (e.g. on server startup)
 \t\tpublic override void Load(bool startup)
 \t\t{{
-\t\t\t//LOAD YOUR PLUGIN WITH EVENTS OR OTHER THINGS!
+\t\t\t//code to hook into events, load state/resources etc goes here
 \t\t}}
-                        
+
+\t\t// Called when this plugin is being unloaded (e.g. on server shutdown)
 \t\tpublic override void Unload(bool shutdown)
 \t\t{{
-\t\t\t//UNLOAD YOUR PLUGIN BY SAVING FILES OR DISPOSING OBJECTS!
+\t\t\t//code to unhook from events, dispose of state/resources etc goes here
 \t\t}}
-                        
+
+\t\t// Displays help for or information about this plugin
 \t\tpublic override void Help(Player p)
 \t\t{{
-\t\t\t//HELP INFO!
+\t\t\tp.Message(""No help is available for this plugin."");
 \t\t}}
 \t}}
 }}";
@@ -130,12 +147,12 @@ namespace MCGalaxy
         public override string FullName      { get { return "Visual Basic"; } }        
         public override string CommentPrefix { get { return "'"; } }
         
-        protected override CompilerResults DoCompile(string[] srcPaths, CompilerParameters args) {
+        protected override CompilerErrorCollection DoCompile(string[] srcPaths, CompilerParameters args) {
 #if NETSTANDARD
             throw new NotSupportedException("Compiling Visual Basic is not supported in .NET Standard build");
 #else
             InitCompiler("VisualBasic");
-            return compiler.CompileAssemblyFromFile(args, srcPaths);
+            return compiler.CompileAssemblyFromFile(args, srcPaths).Errors;
 #endif
         }
         

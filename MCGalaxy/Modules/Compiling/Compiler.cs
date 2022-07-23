@@ -79,17 +79,11 @@ namespace MCGalaxy.Modules.Compiling
         }
         
         
-        /// <summary> Attempts to compile the given source code file to a .dll file. </summary>
-        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
-        public CompilerResults Compile(string srcPath, string dstPath) {
-            return Compile(new [] { srcPath }, dstPath);
-        }
-        
         /// <summary> Attempts to compile the given source code files to a .dll file. </summary>
         /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
-        public CompilerResults Compile(string[] srcPaths, string dstPath) {
-            CompilerResults results = DoCompile(srcPaths, dstPath);
-            if (!results.Errors.HasErrors) return results;
+        public CompilerErrorCollection Compile(string[] srcPaths, string dstPath) {
+            CompilerErrorCollection errors = DoCompile(srcPaths, dstPath);
+            if (!errors.HasErrors) return errors;
             
             SourceMap sources = new SourceMap(srcPaths);
             StringBuilder sb  = new StringBuilder();
@@ -98,7 +92,7 @@ namespace MCGalaxy.Modules.Compiling
             sb.AppendLine("############################################################");
             sb.AppendLine();
             
-            foreach (CompilerError err in results.Errors) 
+            foreach (CompilerError err in errors) 
             {
                 string type = err.IsWarning ? "Warning" : "Error";
                 sb.AppendLine(DescribeError(err, srcPaths, "") + ":");
@@ -115,11 +109,11 @@ namespace MCGalaxy.Modules.Compiling
             using (StreamWriter w = new StreamWriter(ERROR_LOG_PATH, true)) {
                 w.Write(sb.ToString());
             }
-            return results;
+            return errors;
         }
         
         /// <summary> Compiles the given source code. </summary>
-        protected abstract CompilerResults DoCompile(string[] srcPaths, string dstPath);
+        protected abstract CompilerErrorCollection DoCompile(string[] srcPaths, string dstPath);
         
         public static string DescribeError(CompilerError err, string[] srcs, string text) {
             string type = err.IsWarning ? "Warning" : "Error";
@@ -152,7 +146,7 @@ namespace MCGalaxy.Modules.Compiling
             }
         }
         
-        protected override CompilerResults DoCompile(string[] srcPaths, string dstPath) {
+        protected override CompilerErrorCollection DoCompile(string[] srcPaths, string dstPath) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable      = false;
             args.IncludeDebugInformation = true;
@@ -173,7 +167,7 @@ namespace MCGalaxy.Modules.Compiling
             return DoCompile(srcPaths, args);
         }
         
-        protected abstract CompilerResults DoCompile(string[] srcPaths, CompilerParameters args);
+        protected abstract CompilerErrorCollection DoCompile(string[] srcPaths, CompilerParameters args);
         
         void AddReferences(string path, CompilerParameters args) {
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
