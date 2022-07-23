@@ -19,27 +19,35 @@
  */
 #if !DISABLE_COMPILING
 using System;
+using System.Collections.Generic;
 using System.CodeDom.Compiler;
 
 namespace MCGalaxy.Modules.Compiling
 {
-    public sealed class CSCompiler : ICodeDomCompiler 
+    public sealed class CSCompiler : ICompiler 
     {
         public override string FileExtension { get { return ".cs"; } }
         public override string ShortName     { get { return "C#"; } }  
         public override string FullName      { get { return "CSharp"; } }
-        
-        protected override CompilerErrorCollection DoCompile(string[] srcPaths, CompilerParameters args) {
-            args.CompilerOptions += " /unsafe"; 
-            
-#if NETSTANDARD
-            return RoslynCSharpCompiler.Compile(args, srcPaths);
-#else
-            InitCompiler("CSharp");
-            return compiler.CompileAssemblyFromFile(args, srcPaths).Errors;
-#endif
+
+#if !NETSTANDARD
+        CodeDomProvider compiler;
+
+        protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
+            CompilerParameters args = ICodeDomCompiler.PrepareInput(srcPaths, dstPath, "//");
+            args.CompilerOptions   += " /unsafe";
+            // NOTE: Make sure to keep CompilerOptions in sync with RoslynCSharpCompiler
+
+            ICodeDomCompiler.InitCompiler(this, "CSharp", ref compiler);
+            return ICodeDomCompiler.Compile(args, srcPaths, compiler);
         }
-        
+#else
+        protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
+            List<string> referenced = ProcessInput(srcPaths, "//");
+            return RoslynCSharpCompiler.Compile(srcPaths, dstPath, referenced);
+        }
+#endif
+
         public override string CommandSkeleton {
             get {
                 return @"//\tAuto-generated command skeleton class
@@ -140,21 +148,26 @@ namespace MCGalaxy
         }
     }
     
-    public sealed class VBCompiler : ICodeDomCompiler 
+    public sealed class VBCompiler : ICompiler 
     {
         public override string FileExtension { get { return ".vb"; } }
         public override string ShortName     { get { return "VB"; } }
-        public override string FullName      { get { return "Visual Basic"; } }        
-        public override string CommentPrefix { get { return "'"; } }
+        public override string FullName      { get { return "Visual Basic"; } }
         
-        protected override CompilerErrorCollection DoCompile(string[] srcPaths, CompilerParameters args) {
-#if NETSTANDARD
-            throw new NotSupportedException("Compiling Visual Basic is not supported in .NET Standard build");
-#else
-            InitCompiler("VisualBasic");
-            return compiler.CompileAssemblyFromFile(args, srcPaths).Errors;
-#endif
+#if !NETSTANDARD
+        CodeDomProvider compiler;
+
+        protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
+            CompilerParameters args = ICodeDomCompiler.PrepareInput(srcPaths, dstPath, "'");
+
+            ICodeDomCompiler.InitCompiler(this, "VisualBasic", ref compiler);
+            return ICodeDomCompiler.Compile(args, srcPaths, compiler);
         }
+#else
+        protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
+            throw new NotSupportedException("Compiling Visual Basic is not supported in .NET Standard build");
+        }
+#endif
         
         public override string CommandSkeleton {
             get {

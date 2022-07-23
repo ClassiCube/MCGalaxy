@@ -18,7 +18,6 @@
     permissions and limitations under the Licenses.
  */
 #if !DISABLE_COMPILING
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -46,9 +45,6 @@ namespace MCGalaxy.Modules.Compiling
         public abstract string CommandSkeleton { get; }
         /// <summary> Returns source code for an example Plugin </summary>
         public abstract string PluginSkeleton { get; }
-        /// <summary> Returns the starting characters for a comment </summary>
-        /// <example> For C# this is "//" </example>
-        public virtual string CommentPrefix { get { return "//"; } }
         
         public string CommandPath(string name) { return COMMANDS_SOURCE_DIR + "Cmd" + name + FileExtension; }
         public string PluginPath(string name)  { return PLUGINS_SOURCE_DIR  + name + FileExtension; }
@@ -77,13 +73,13 @@ namespace MCGalaxy.Modules.Compiling
         public string GenExamplePlugin(string plugin, string creator) {
             return FormatSource(PluginSkeleton, plugin, creator, Server.Version);
         }
-        
-        
+
+
         /// <summary> Attempts to compile the given source code files to a .dll file. </summary>
-        /// <remarks> Logs errors to IScripting.ErrorPath. </remarks>
-        public CompilerErrorCollection Compile(string[] srcPaths, string dstPath) {
-            CompilerErrorCollection errors = DoCompile(srcPaths, dstPath);
-            if (!errors.HasErrors) return errors;
+        /// <param name="logErrors"> Whether to log compile errors to ERROR_LOG_PATH </param>
+        public ICompilerErrors Compile(string[] srcPaths, string dstPath, bool logErrors) {
+            ICompilerErrors errors = DoCompile(srcPaths, dstPath);
+            if (!errors.HasErrors || !logErrors) return errors;
             
             SourceMap sources = new SourceMap(srcPaths);
             StringBuilder sb  = new StringBuilder();
@@ -92,7 +88,7 @@ namespace MCGalaxy.Modules.Compiling
             sb.AppendLine("############################################################");
             sb.AppendLine();
             
-            foreach (CompilerError err in errors) 
+            foreach (ICompilerError err in errors) 
             {
                 string type = err.IsWarning ? "Warning" : "Error";
                 sb.AppendLine(DescribeError(err, srcPaths, "") + ":");
@@ -111,11 +107,8 @@ namespace MCGalaxy.Modules.Compiling
             }
             return errors;
         }
-        
-        /// <summary> Compiles the given source code. </summary>
-        protected abstract CompilerErrorCollection DoCompile(string[] srcPaths, string dstPath);
-        
-        public static string DescribeError(CompilerError err, string[] srcs, string text) {
+
+        public static string DescribeError(ICompilerError err, string[] srcs, string text) {
             string type = err.IsWarning ? "Warning" : "Error";
             string file = Path.GetFileName(err.FileName);
             // TODO line 0 shouldn't appear
@@ -124,69 +117,67 @@ namespace MCGalaxy.Modules.Compiling
             return string.Format("{0}{1} on line {2}{3}", type, text, err.Line,
                                  srcs.Length > 1 ? " in " + file : "");
         }
-    }
-    
-    /// <summary> Compiles source code files from a particular language into a .dll file, using a CodeDomProvider for the compiler. </summary>
-    public abstract class ICodeDomCompiler : ICompiler 
-    {
-        readonly object compilerLock = new object();
-        protected CodeDomProvider compiler;
+
         
-        // Lazy init compiler when it's actually needed
-        protected void InitCompiler(string language) {
-            lock (compilerLock) {
-                if (compiler != null) return;
-                compiler = CodeDomProvider.CreateProvider(language);
-                if (compiler != null) return;
-                
-                Logger.Log(LogType.Warning,
-                           "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
-                           FullName, FileExtension);
-                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
-            }
-        }
-        
-        protected override CompilerErrorCollection DoCompile(string[] srcPaths, string dstPath) {
-            CompilerParameters args = new CompilerParameters();
-            args.GenerateExecutable      = false;
-            args.IncludeDebugInformation = true;
-            args.OutputAssembly          = dstPath;
+        /// <summary> Compiles the given source code. </summary>
+        protected abstract ICompilerErrors DoCompile(string[] srcPaths, string dstPath);
+
+
+        /// <summary> Converts source file paths to full paths, 
+        /// then returns list of parsed referenced assemblies </summary>
+        public static List<string> ProcessInput(string[] srcPaths, string commentPrefix) {
+            List<string> referenced = new List<string>();
             
             for (int i = 0; i < srcPaths.Length; i++) 
             {
                 // CodeDomProvider doesn't work properly with relative paths
                 string path = Path.GetFullPath(srcPaths[i]);
                 
-                AddReferences(path, args);
+                AddReferences(path, commentPrefix, referenced);
                 srcPaths[i] = path;
             }
 
             // TODO use absolute path?
             string serverDLL = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
-            args.ReferencedAssemblies.Add(serverDLL);
-            return DoCompile(srcPaths, args);
+            referenced.Add(serverDLL);
+            return referenced;
         }
-        
-        protected abstract CompilerErrorCollection DoCompile(string[] srcPaths, CompilerParameters args);
-        
-        void AddReferences(string path, CompilerParameters args) {
+
+        static void AddReferences(string path, string commentPrefix, List<string> referenced) {
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
             using (StreamReader r = new StreamReader(path)) {               
-                string refPrefix = CommentPrefix + "reference ";
+                string refPrefix = commentPrefix + "reference ";
                 string line;
                 
-                while ((line = r.ReadLine()) != null) {
+                while ((line = r.ReadLine()) != null) 
+                {
                     if (!line.CaselessStarts(refPrefix)) break;
                     
                     int index = line.IndexOf(' ') + 1;
                     // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
                     string assem = line.Substring(index).Replace(";", "");
                     
-                    args.ReferencedAssemblies.Add(assem);
+                    referenced.Add(assem);
                 }
             }
         }
     }
+
+    public class ICompilerErrors : List<ICompilerError>
+    {
+        public bool HasErrors {
+            get { return FindIndex(ce => !ce.IsWarning) >= 0; }
+        }
+    }
+
+    public class ICompilerError
+    {
+        public int Line, Column;
+        public string ErrorNumber, ErrorText;
+        public bool IsWarning;
+        public string FileName;
+    }
+
     
     class SourceMap 
     {
@@ -199,7 +190,8 @@ namespace MCGalaxy.Modules.Compiling
         }
         
         int FindFile(string file) {
-            for (int i = 0; i < files.Length; i++) {
+            for (int i = 0; i < files.Length; i++) 
+            {
                 if (file.CaselessEq(files[i])) return i;
             }
             return -1;

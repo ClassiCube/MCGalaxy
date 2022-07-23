@@ -88,7 +88,7 @@ namespace MCGalaxy.Modules.Compiling
                 return false;
             }
             
-            CompilerErrorCollection errors = compiler.Compile(srcs, dst);
+            ICompilerErrors errors = compiler.Compile(srcs, dst, true);
             if (!errors.HasErrors) {
                 p.Message("{0} compiled successfully from {1}", 
                         type, srcs.Join(file => Path.GetFileName(file)));
@@ -99,9 +99,9 @@ namespace MCGalaxy.Modules.Compiling
             return false;
         }
         
-        static void SummariseErrors(CompilerErrorCollection errors, string[] srcs, Player p) {
+        static void SummariseErrors(ICompilerErrors errors, string[] srcs, Player p) {
             int logged = 0;
-            foreach (CompilerError err in errors) 
+            foreach (ICompilerError err in errors) 
             {
                 p.Message("&W{1} - {0}", err.ErrorText,
                           ICompiler.DescribeError(err, srcs, " #" + err.ErrorNumber));

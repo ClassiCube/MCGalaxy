@@ -1,4 +1,24 @@
-﻿// Based on https://github.com/aspnet/RoslynCodeDomProvider
+﻿/*
+    Copyright 2010 MCLawl Team - Written by Valek (Modified by MCGalaxy)
+
+    Edited for use with MCGalaxy
+ 
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    http://www.opensource.org/licenses/ecl2.php
+    http://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
+
+// Based on https://github.com/aspnet/RoslynCodeDomProvider
 // Copyright(c) Microsoft Corporation All rights reserved.
 // 
 // MIT License
@@ -10,7 +30,6 @@
 // THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if !DISABLE_COMPILING
-#if NETSTANDARD
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -23,30 +42,74 @@ using System.Text.RegularExpressions;
 
 namespace MCGalaxy.Modules.Compiling
 {
+#if !NETSTANDARD
+    /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
+    public static class ICodeDomCompiler
+    {
+        // Lazy init compiler when it's actually needed
+        public static void InitCompiler(ICompiler c, string language, ref CodeDomProvider compiler) {
+            if (compiler != null) return;
+            compiler = CodeDomProvider.CreateProvider(language);
+            if (compiler != null) return;
+                
+            Logger.Log(LogType.Warning,
+                       "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
+                       c.FullName, c.FileExtension);
+                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
+        }
+        
+        public static CompilerParameters PrepareInput(string[] srcPaths, string dstPath, string commentPrefix) {
+            CompilerParameters args = new CompilerParameters();
+            args.GenerateExecutable      = false;
+            args.IncludeDebugInformation = true;
+            args.OutputAssembly          = dstPath;
+
+            List<string> referenced = ICompiler.ProcessInput(srcPaths, commentPrefix);
+            foreach (string assembly in referenced)
+            {
+                args.ReferencedAssemblies.Add(assembly);
+            }
+            return args;
+        }
+
+        public static ICompilerErrors Compile(CompilerParameters args, string[] srcPaths, CodeDomProvider compiler) {
+            CompilerResults results = compiler.CompileAssemblyFromFile(args, srcPaths);
+            ICompilerErrors errors  = new ICompilerErrors();
+
+            foreach (CompilerError error in results.Errors)
+            {
+                ICompilerError ce = new ICompilerError();
+                ce.Line        = error.Line;
+                ce.Column      = error.Column;
+                ce.ErrorNumber = error.ErrorNumber;
+                ce.ErrorText   = error.ErrorText;
+                ce.IsWarning   = error.IsWarning;
+                ce.FileName    = error.FileName;
+
+                errors.Add(ce);
+            }
+            return errors;
+        }
+    }
+#else
+    /// <summary> Compiles C# source code files, using Roslyn for the compiler </summary>
     public static class RoslynCSharpCompiler 
     {
         static Regex outputRegWithFileAndLine;
         static Regex outputRegSimple;
 
-        public static CompilerErrorCollection Compile(CompilerParameters options, string[] fileNames) {
-            try {
-                return DoCompile(options, fileNames);
-            } finally {
-                options.TempFiles.Delete();
-            }
-        }
-
-        static CompilerErrorCollection DoCompile(CompilerParameters options, string[] fileNames) {         
-            string args    = GetCommandLineArguments(options, fileNames);
+        public static ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {         
+            string args    = GetCommandLineArguments(srcPaths, dstPath, referenced);
             string netPath = GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
             string cscPath = GetBinaryFile("MCG_COMPILER_PATH", "'csc.dll' file - e.g. /home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll");
 
-            CompilerErrorCollection errors = new CompilerErrorCollection();
-            List<string> output = new List<string>();
+            ICompilerErrors errors = new ICompilerErrors();
+            List<string> output    = new List<string>();
             int retValue = Compile(netPath, cscPath, args, output);
 
-            // only look for errors/warnings if the compile failed or the caller set the warning level
-            if (retValue != 0 || options.WarningLevel > 0) {
+            // Only look for errors/warnings if the compile failed
+            // TODO still log warnings anyways error when success?
+            if (retValue != 0) {
                 foreach (string line in output) 
                 {
                     ProcessCompilerOutputLine(errors, line);
@@ -97,7 +160,7 @@ namespace MCGalaxy.Modules.Compiling
             }
         }
 
-        static void ProcessCompilerOutputLine(CompilerResults results, string line) {
+        static void ProcessCompilerOutputLine(ICompilerErrors errors, string line) {
             if (outputRegSimple == null) {
                 outputRegWithFileAndLine =
                     new Regex(@"(^(.*)(\(([0-9]+),([0-9]+)\)): )(error|warning) ([A-Z]+[0-9]+) ?: (.*)");
@@ -116,7 +179,7 @@ namespace MCGalaxy.Modules.Compiling
             }
 
             if (!m.Success) return;
-            CompilerError ce = new CompilerError();
+            ICompilerError ce = new ICompilerError();
 
             if (full) {
                 ce.FileName = m.Groups[2].Value;
@@ -124,16 +187,13 @@ namespace MCGalaxy.Modules.Compiling
                 ce.Column   = int.Parse(m.Groups[5].Value, CultureInfo.InvariantCulture);
             }
 
-            if (string.Compare(m.Groups[full ? 6 : 1].Value, "warning", StringComparison.OrdinalIgnoreCase) == 0) {
-                ce.IsWarning = true;
-            }
-
+            ce.IsWarning   = m.Groups[full ? 6 : 1].Value.CaselessEq("warning");
             ce.ErrorNumber = m.Groups[full ? 7 : 2].Value;
             ce.ErrorText   = m.Groups[full ? 8 : 3].Value;
-            results.Errors.Add(ce);
+            errors.Add(ce);
         }
 
-        static string GetCommandLineArguments(CompilerParameters parameters, string[] fileNames) {
+        static string GetCommandLineArguments(string[] srcPaths, string dstPath, List<string> referencedAssemblies) {
             StringBuilder sb = new StringBuilder();
             sb.Append("/t:library ");
 
@@ -159,11 +219,11 @@ namespace MCGalaxy.Modules.Compiling
             AddReferencedAssembly(sb, sysAssemblyPaths, "System.Runtime.dll");
             AddReferencedAssembly(sb, sysAssemblyPaths, "netstandard.dll");
 
-            foreach (string path in parameters.ReferencedAssemblies) 
+            foreach (string path in referencedAssemblies) 
             {
                 AddReferencedAssembly(sb, sysAssemblyPaths, path);
             }
-            sb.AppendFormat("/out:{0} ", Quote(parameters.OutputAssembly));
+            sb.AppendFormat("/out:{0} ", Quote(dstPath));
 
             // debug information
             sb.Append("/D:DEBUG ");
@@ -171,12 +231,9 @@ namespace MCGalaxy.Modules.Compiling
             sb.Append("/optimize- ");
 
             sb.Append("/warnaserror- ");
+            sb.Append("/unsafe ");
 
-            if (parameters.CompilerOptions != null) {
-                sb.Append(parameters.CompilerOptions + " ");
-            }
-
-            foreach (string path in fileNames) 
+            foreach (string path in srcPaths) 
             {
                 sb.AppendFormat("{0} ", Quote(path));
             }
@@ -205,6 +262,6 @@ namespace MCGalaxy.Modules.Compiling
         }
         
     }
-}
 #endif
+}
 #endif
