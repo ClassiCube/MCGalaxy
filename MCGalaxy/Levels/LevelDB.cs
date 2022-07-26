@@ -40,7 +40,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }
 
-        static object ListZones(IDataRecord record, object arg) {
+        static Zone ParseZone(IDataRecord record) {
             Zone z = new Zone();
             z.MinX = (ushort)record.GetInt("SmallX");
             z.MinY = (ushort)record.GetInt("SmallY");
@@ -50,16 +50,15 @@ namespace MCGalaxy {
             z.MaxY = (ushort)record.GetInt("BigY");
             z.MaxX = (ushort)record.GetInt("BigZ");
             z.Config.Name = record.GetText("Owner");
-            
-            ((List<Zone>)arg).Add(z);
-            return arg;
+            return z;
         }
         
         internal static void LoadZones(Level level, string map) {
             if (!Database.TableExists("Zone" + map)) return;
             
             List<Zone> zones = new List<Zone>();
-            Database.ReadRows("Zone" + map, "*", zones, ListZones);
+            Database.ReadRows("Zone" + map, "*",
+                                record => zones.Add(ParseZone(record)));
             
             bool changedPerbuild = false;
             for (int i = 0; i < zones.Count; i++) {

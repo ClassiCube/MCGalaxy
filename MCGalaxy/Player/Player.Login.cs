@@ -211,14 +211,16 @@ namespace MCGalaxy
         }
         
         void GetPlayerStats() {
-            object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
-                                           "WHERE Name=@0", name);
-            if (raw == null) {
+            PlayerData data = null;
+            Database.ReadRows("Players", "*",
+                                record => data = PlayerData.Parse(record),
+                                "WHERE Name=@0", name);
+            if (data == null) {
                 PlayerData.Create(this);
                 Chat.MessageFrom(this, "λNICK &Shas connected for the first time!");
                 Message("Welcome " + ColoredName + "&S! This is your first visit.");
             } else {
-                ((PlayerData)raw).ApplyTo(this);
+                data.ApplyTo(this);
                 Message("Welcome back " + FullName + "&S! You've been here " + TimesVisited + " times!");
             }
             gotSQLData = true;

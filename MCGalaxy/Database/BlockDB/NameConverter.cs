@@ -38,11 +38,6 @@ namespace MCGalaxy.DB {
             return name != null ? name : "ID#" + id;
         }
         
-        static object ListIds(IDataRecord record, object arg) {
-            ((List<int>)arg).Add(record.GetInt32(0));
-            return arg;
-        }
-        
         /// <summary> Finds all the IDs associated with the given name. </summary>
         public static int[] FindIds(string name) {
             List<int> ids = new List<int>();
@@ -50,7 +45,9 @@ namespace MCGalaxy.DB {
             int i = Server.invalidIds.IndexOf(name);
             if (i >= 0) ids.Add(MaxPlayerID - i);
             
-            Database.ReadRows("Players", "ID", ids, ListIds, "WHERE Name=@0", name);
+            Database.ReadRows("Players", "ID", 
+                                record => ids.Add(record.GetInt32(0)), 
+                                "WHERE Name=@0", name);
             return ids.ToArray();
         }
         

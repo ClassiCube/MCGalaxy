@@ -83,14 +83,16 @@ namespace MCGalaxy.SQL {
         }
         
 
-        static object IterateExists(IDataRecord record, object arg) { return ""; }
         public override bool TableExists(string table) {
             // "SHOW TABLES LIKE '[table]'" SQL statement is insufficient
             //  because "table" might include characters such as _, %, etc
             string column = "Tables_in_" + Server.Config.MySQLDatabaseName;
+            bool found    = false;
 
-            return Database.Iterate("SHOW TABLES WHERE " + column + " = @0",
-                                    null, IterateExists, table) != null;
+            Database.Iterate("SHOW TABLES WHERE " + column + " = @0",
+                            record => found = true, 
+                            table);
+            return found;
         }
         
         public override List<string> AllTables() {
@@ -128,7 +130,8 @@ namespace MCGalaxy.SQL {
         public override void PrintSchema(string table, TextWriter w) {
             w.WriteLine("CREATE TABLE IF NOT EXISTS `{0}` (", table);
             List<string[]> fields = new List<string[]>();
-            Database.Iterate("DESCRIBE `" + table + "`", fields, Database.ReadFields);
+            Database.Iterate("DESCRIBE `" + table + "`", 
+                            record => fields.Add(Database.ParseFields(record)));
             
             const int i_name = 0, i_type = 1, i_null = 2, i_key = 3, i_def = 4, i_extra = 5;
             string pri = "";

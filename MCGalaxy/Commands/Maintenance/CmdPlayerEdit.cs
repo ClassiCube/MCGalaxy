@@ -177,10 +177,12 @@ namespace MCGalaxy.Commands.Maintenance {
             MessageDataChanged(p, args[0], args[1], span.Shorten(true));
         }
         
-        static object ReadLong(IDataRecord record, object arg) { return record.GetInt64(0); }
         static long GetLong(string name, string column) {
-            return (long)Database.ReadRows("Players", column, null, ReadLong,
-                                           "WHERE Name=@0", name);
+            long value = 0;
+            Database.ReadRows("Players", column, 
+                                record => value = record.GetInt64(0), 
+                                "WHERE Name=@0", name);
+            return value;
         }
         
         static void SetInteger(Player p, string[] args, string column, int max, Player who,

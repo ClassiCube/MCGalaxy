@@ -23,7 +23,7 @@ using System.IO;
 namespace MCGalaxy.SQL 
 {
     /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
-    public delegate object ReaderCallback(IDataRecord record, object arg);
+    public delegate void ReaderCallback(IDataRecord record);
     
     /// <summary> Abstracts a SQL database management engine. </summary>
     public static class Database 
@@ -31,31 +31,31 @@ namespace MCGalaxy.SQL
         public static IDatabaseBackend Backend;
         public const string DateFormat = "yyyy-MM-dd HH:mm:ss";        
 
-        static object ReadInt(IDataRecord record, object arg) { return record.GetInt32(0); }
         /// <summary> Counts rows in the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are counted. </param>
         public static int CountRows(string table, string modifier = "", params object[] args) {
-            object raw = ReadRows(table, "COUNT(*)", null, ReadInt, modifier, args);
-            return raw == null ? 0 : (int)raw;
+            int value = 0;
+            ReadRows(table, "COUNT(*)", 
+                    record => value = record.GetInt32(0), 
+                    modifier, args);
+            return value;
         }
         
-        static object ReadString(IDataRecord record, object arg) { return record.GetText(0); }
         /// <summary> Returns value of first column in last row read from the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are read. </param>
         public static string ReadString(string table, string column,
                                         string modifier = "", params object[] args) {
-            return (string)ReadRows(table, column, null, ReadString, modifier, args);
+            string value = null;
+            ReadRows(table, column, 
+                    record => value = record.GetText(0), 
+                    modifier, args);
+            return value;
         }
         
-        internal static object ReadList(IDataRecord record, object arg) {
-            ((List<string>)arg).Add(record.GetText(0)); return arg;
-        }
-        
-        internal static object ReadFields(IDataRecord record, object arg) {
+        internal static string[] ParseFields(IDataRecord record) {
             string[] field = new string[record.FieldCount];
             for (int i = 0; i < field.Length; i++) { field[i] = record.GetStringValue(i); }
-            ((List<string[]>)arg).Add(field);
-            return arg;
+            return field;
         }
         
         /// <summary> Returns all columns of all rows read from the given table. </summary>
@@ -63,7 +63,9 @@ namespace MCGalaxy.SQL
         public static List<string[]> GetRows(string table, string columns,
                                              string modifier = "", params object[] args) {
             List<string[]> fields = new List<string[]>();
-            ReadRows(table, columns, fields, ReadFields, modifier, args);
+            ReadRows(table, columns, 
+                    record => fields.Add(ParseFields(record)),
+                    modifier, args);
             return fields;
         }
         
@@ -124,11 +126,11 @@ namespace MCGalaxy.SQL
         /// <summary> Iterates over read rows for the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are read,
         /// return rows in a certain order, etc.</param>
-        public static object ReadRows(string table, string columns, object arg,
-                                      ReaderCallback callback, string modifier = "", params object[] args) {
+        public static void ReadRows(string table, string columns,
+                                    ReaderCallback callback, string modifier = "", params object[] args) {
             ValidateName(table);
             string sql = Backend.ReadRowsSql(table, columns, modifier);
-            return Iterate(sql, arg, callback, args);
+            Iterate(sql, callback, args);
         }
         
         /// <summary> Updates rows for the given table. </summary>
@@ -173,31 +175,27 @@ namespace MCGalaxy.SQL
         }
 
         /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
-        public static object Iterate(string sql, object arg, ReaderCallback callback, params object[] args) {
-            return Do(sql, false, arg, callback, args);
+        public static void Iterate(string sql, ReaderCallback callback, params object[] args) {
+            Do(sql, false, callback, args);
         }
 
-        internal static object Do(string sql, bool createDB, object arg,
-                                  ReaderCallback callback, params object[] args) {
+        internal static void Do(string sql, bool createDB, ReaderCallback callback, params object[] args) {
             IDatabaseBackend db = Backend;
             Exception e = null;
             
             for (int i = 0; i < 10; i++) {
                 try {
                     if (callback != null) {
-                        arg = db.Iterate(sql, args, arg, callback);
+                        db.Iterate(sql, args, callback);
                     } else {
                         db.Execute(sql, args, createDB);
                     }
-                    
-                    return arg;
                 } catch (Exception ex) {
                     e = ex; // try yet again
                 }
             }
 
             Logger.LogError("Error executing SQL statement: " + sql, e);
-            return arg;
         }
         #endregion
         

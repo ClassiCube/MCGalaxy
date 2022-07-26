@@ -62,16 +62,11 @@ namespace MCGalaxy.SQL {
             List<string> tables = GetStrings(sql);
             
             // exclude sqlite built-in database tables
-            for (int i = tables.Count - 1; i >= 0; i--) {
+            for (int i = tables.Count - 1; i >= 0; i--) 
+            {
                 if (tables[i].StartsWith("sqlite_")) tables.RemoveAt(i);
             }
             return tables;
-        }
-        
-        static object IterateColumnNames(IDataRecord record, object arg) {
-            List<string> columns = (List<string>)arg;
-            columns.Add(record.GetText("name"));
-            return arg;
         }
         
         public override List<string> ColumnNames(string table) {
@@ -79,7 +74,7 @@ namespace MCGalaxy.SQL {
             List<string> columns = new List<string>();
             
             Database.Iterate("PRAGMA table_info(`" + table + "`)",
-                             columns, IterateColumnNames, null);
+                             record => columns.Add(record.GetText("name")), null);
             return columns;
         }
         

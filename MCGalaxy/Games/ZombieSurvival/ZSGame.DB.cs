@@ -103,7 +103,7 @@ namespace MCGalaxy.Games {
             new ColumnDesc("Additional1", ColumnType.Int32),
         };
         
-        static object ReadStats(IDataRecord record, object arg) {
+        static ZombieStats ParseStats(IDataRecord record) {
             ZombieStats stats;
             stats.TotalRounds   = record.GetInt("TotalRounds");
             stats.MaxRounds     = record.GetInt("MaxRounds");
@@ -114,8 +114,10 @@ namespace MCGalaxy.Games {
         
         static ZombieStats LoadStats(string name) {
             ZombieStats stats = default(ZombieStats);
-            return (ZombieStats)Database.ReadRows("ZombieStats", "*", stats,
-                                                  ReadStats, "WHERE Name=@0", name);
+            Database.ReadRows("ZombieStats", "*", 
+                                record => stats = ParseStats(record), 
+                                "WHERE Name=@0", name);
+            return stats;
         }
         
         protected override void SaveStats(Player p) {
