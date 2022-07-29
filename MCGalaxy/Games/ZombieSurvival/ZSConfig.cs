@@ -101,6 +101,7 @@ namespace MCGalaxy.Games
                 ConfigElement.Parse(cfg, this, key, value);
             }
         }
+
         
         static string[] defMessages = new string[] { "{0} WIKIWOO'D {1}", "{0} stuck their teeth into {1}",
             "{0} licked {1}'s brain ", "{0} danubed {1}", "{0} made {1} meet their maker", "{0} tripped {1}",
@@ -120,14 +121,16 @@ namespace MCGalaxy.Games
             }
             
             if (msgs.Count == 0) msgs = new List<string>(defMessages);
-            return msgs;
+            return ConvertInfectMessages(msgs);
         }
         
         static string InfectPath(string name) { return "text/infect/" + name.ToLower() + ".txt"; }
         public static List<string> LoadPlayerInfectMessages(string name) {
             string path = InfectPath(name);
             if (!File.Exists(path)) return null;
-            return Utils.ReadAllLinesList(path);
+
+            List<string> msgs = Utils.ReadAllLinesList(path);
+            return ConvertInfectMessages(msgs);
         }
         
         public static void AppendPlayerInfectMessage(string name, string msg) {
@@ -136,6 +139,16 @@ namespace MCGalaxy.Games
             
             string path = InfectPath(name);
             File.AppendAllText(path, msg + Environment.NewLine);
+        }
+
+        static List<string> ConvertInfectMessages(List<string> messages) {
+            for (int i = 0; i < messages.Count; i++)
+            {
+                messages[i] = messages[i]
+                                .Replace("{0}", "<zombie>")
+                                .Replace("{1}", "<human>");
+            }
+            return messages;
         }
     }
 }

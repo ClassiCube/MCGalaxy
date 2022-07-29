@@ -91,16 +91,10 @@ namespace MCGalaxy.Eco {
         
         protected internal override void OnPurchase(Player p, string msg) {
             if (msg.Length == 0) { OnStoreCommand(p); return; }
-            bool hasAToken = false;
             
-            for (int i = 0; i < msg.Length; i++) {
-                if (!CheckEscape(msg, i, ref hasAToken)) {
-                    p.Message("You can only use {0} and {1} for tokens in infect messages."); return;
-                }
-            }
-            if (!hasAToken) {
-                p.Message("You need to include a \"{0}\" (placeholder for zombie player) " +
-                               "and/or a \"{1}\" (placeholder for human player) in the infect message."); return;
+            if (!msg.Contains("<human>") && !msg.Contains("<zombie>")) {
+                p.Message("You need to include a \"<zombie>\" (placeholder for zombie player) " +
+                               "and/or a \"<human>\" (placeholder for human player) in the infect message."); return;
             }
             
             if (!CheckPrice(p)) return;
@@ -112,13 +106,10 @@ namespace MCGalaxy.Eco {
             p.Message("&aAdded infect message: &f" + msg);
             Economy.MakePurchase(p, Price, "%3InfectMessage: " + msg);
         }
-        
-        static bool CheckEscape(string text, int i, ref bool hasAToken) {
-            // Only {0} and {1} are allowed in infect messages for the Format() call
-            if (text[i] != '{') return true;
-            hasAToken = true;
-            if ((i + 2) >= text.Length) return false;
-            return (text[i + 1] == '0' || text[i + 1] == '1') && text[i + 2] == '}';
+
+        protected internal override void OnStoreCommand(Player p) {
+            base.OnStoreCommand(p);
+            p.Message("&HInfect messages must include either \"<zombie>\" or \"<human>\" (placeholders for zombie and/or human player) in them");
         }
     }
     

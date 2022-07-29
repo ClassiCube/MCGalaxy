@@ -208,10 +208,9 @@ namespace MCGalaxy.Games
             } else {
                 text = infectMessages[random.Next(infectMessages.Count)];
             }
-            
-            Map.Message(string.Format(text,
-                                        "&c" + pKiller.DisplayName + "&S",
-                                        pAlive.ColoredName + "&S"));
+
+            Map.Message(text.Replace("<zombie>", "&c" + pKiller.DisplayName + "&S")
+                            .Replace("<human>",          pAlive.ColoredName + "&S"));
         }
 
         internal static void RespawnPlayer(Player p) {
