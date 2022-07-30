@@ -56,6 +56,9 @@ namespace MCGalaxy.Network
             bool hasIPv6 = false;
             IPAddress firstIPv4 = null;
             
+            // proxying doesn't work properly with https:// URLs
+            if (URL.CaselessStarts("https://")) return;
+            
             foreach (IPAddress ip in addresses) {
                 AddressFamily family = ip.AddressFamily;
                 if (family == AddressFamily.InterNetworkV6)
