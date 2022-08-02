@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Info {
         
         static void PrintHelpMenu(Player p) {
             p.Message("&HCommand Categories:");
-            p.Message("  &TBuilding Chat Economy Games Info Moderation Other World");
+            p.Message("  &T{0}", CmdCommands.GetCategories());
             p.Message("&HOther Categories:");
             p.Message("  &TRanks Colors Emotes Shortcuts Commands");
             p.Message("&HTo view help for a category, type &T/Help CategoryName");

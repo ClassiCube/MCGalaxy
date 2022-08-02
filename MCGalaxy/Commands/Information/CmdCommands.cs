@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Info {
                 bool any = PrintCategoryCommands(p, sort, modifier, type);
                 if (any) return true;
                 
-                // list commands a rank can use                
+                // list commands a rank can use 
                 Group grp = Group.Find(type);
                 if (grp == null) return false;
                 PrintRankCommands(p, sort, modifier, grp, false);
@@ -112,26 +112,19 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
         
-        // common shortcuts people tend to use 
-        static string GetCategory(string type) {
-            if (type.CaselessEq("building"))   return CommandTypes.Building;
-            if (type.CaselessEq("eco"))        return CommandTypes.Economy;
-            if (type.CaselessEq("games"))      return CommandTypes.Games;
-            if (type.CaselessEq("info"))       return CommandTypes.Information;
-            if (type.CaselessEq("moderation")) return CommandTypes.Moderation;
-            if (type.CaselessEq("others"))     return CommandTypes.Other;
-            if (type.CaselessEq("maps"))       return CommandTypes.World;
-            return type;
-        }
-        
         static bool PrintCategoryCommands(Player p, string sort, string modifier, string type) {
             List<Command> cmds = new List<Command>();
-            string category = GetCategory(type);
             bool foundAny = false;
+            
+            // common shortcuts people tend to use
+            type = MapCategory(type);
+            if (type.CaselessEq("eco")) type = CommandTypes.Economy;
 
-            foreach (Command c in Command.allCmds) {
+            foreach (Command c in Command.allCmds) 
+            {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (!c.type.CaselessEq(category)) continue;
+                string category = MapCategory(c.type);
+                if (!type.CaselessEq(category)) continue;
                 
                 if (disabled == null && p.CanUse(c)) cmds.Add(c);
                 foundAny = true;
@@ -139,10 +132,10 @@ namespace MCGalaxy.Commands.Info {
             if (!foundAny) return false;
             
             if (cmds.Count == 0) {
-                p.Message("You cannot use any of the " + category + " commands."); return true;
+                p.Message("You cannot use any of the {0} commands.", type.Capitalize()); return true;
             }            
             SortCommands(cmds, sort);
-            p.Message(category.Capitalize() + " commands you may use:");
+            p.Message(type.Capitalize() + " commands you may use:");
 
             type = "Commands " + type;
             if (sort.Length > 0) type += " " + sort;
@@ -164,16 +157,42 @@ namespace MCGalaxy.Commands.Info {
                           .CompareTo(CommandPerms.MinPerm(b)));
             }
         }
+        
+        static string MapCategory(string type) {
+            // convert old category/type names
+            if (type == "build")   return CommandTypes.Building;
+            if (type == "chat")    return CommandTypes.Chat;
+            if (type == "economy") return CommandTypes.Economy;
+            if (type == "game")    return CommandTypes.Games;
+            if (type == "mod")     return CommandTypes.Moderation;
+            if (type == "other")   return CommandTypes.Other;
+            if (type == "world")   return CommandTypes.World;
+
+            if (type == "information") return CommandTypes.Information;
+            return type;
+        }
+        
+        internal static string GetCategories() {
+            Dictionary<string, bool> categories = new Dictionary<string, bool>();
+            foreach (Command cmd in Command.allCmds)
+            {
+            	categories[MapCategory(cmd.type)] = true;
+            }
+            
+            List<string> list = new List<string>(categories.Keys);
+            list.Sort();
+            return list.Join(" ");
+        }
 
         public override void Help(Player p) {
-            p.Message("&T/Commands [category] <sort>");
-            p.Message("&HIf no category is given, outputs all commands you can use.");
-            p.Message("  &H\"shortcuts\" category outputs all command shortcuts.");
-            p.Message("  &H\"all\" category outputs all commands.");
-            p.Message("  &HIf category is a rank name, outputs all commands that rank can use.");
+            p.Message("&T/Commands [category] <sort by>");
+            p.Message("  &HIf no category is given, outputs all commands you can use.");
+            p.Message("  &HIf category is \"shortcuts\", outputs all command shortcuts.");
+            p.Message("  &HIf category is \"all\", outputs all commands.");
+            p.Message("  &HIf category is a rank name, outputs what that rank can use.");
             p.Message("&HOther command categories:");
-            p.Message("  &HBuilding Chat Economy Games Info Moderation Other World");
-            p.Message("&HSort is optional, and can be either \"name\" or \"rank\"");
+            p.Message("  &H{0}", GetCategories());
+            p.Message("&HSort By is optional, and can be either \"name\" or \"rank\"");
         }
     }
 }
