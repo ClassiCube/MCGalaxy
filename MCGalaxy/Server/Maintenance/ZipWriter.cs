@@ -21,29 +21,32 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace MCGalaxy {
-    
-    struct ZipEntry {
+namespace MCGalaxy 
+{    
+    struct ZipEntry 
+    {
         public byte[] Filename;
         public long CompressedSize, UncompressedSize, LocalHeaderOffset;
         public uint Crc32;
         public ushort BitFlags, CompressionMethod;
+        public DateTime ModifiedDate;
         
         public void Reset() {
             // signify to use zip64 version of these fields instead
-            CompressedSize = uint.MaxValue;
-            UncompressedSize = uint.MaxValue;
+            CompressedSize    = uint.MaxValue;
+            UncompressedSize  = uint.MaxValue;
             LocalHeaderOffset = uint.MaxValue;
         }
         
-        public const uint SigLocal    = 0x04034b50;
-        public const uint SigCentral  = 0x02014b50;
-        public const uint SigEnd      = 0x06054b50;
-        public const uint SigZip64End = 0x06064b50;
-        public const uint SigZip64Loc = 0x07064b50;
+        public const uint SIG_LOCAL     = 0x04034b50;
+        public const uint SIG_CENTRAL   = 0x02014b50;
+        public const uint SIG_END       = 0x06054b50;
+        public const uint SIG_ZIP64_END = 0x06064b50;
+        public const uint SIG_ZIP64_LOC = 0x07064b50;
     }
     
-    sealed class ZipWriterStream : Stream {
+    sealed class ZipWriterStream : Stream 
+    {
         public uint Crc32 = uint.MaxValue;
         public long CompressedLen;
         public Stream stream;
@@ -88,7 +91,8 @@ namespace MCGalaxy {
                 dst.Write(buffer, 0, count);
                 totalLen += count;
                 
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < count; i++) 
+                {
                     Crc32 = crc32Table[(Crc32 ^ buffer[i]) & 0xFF] ^ (Crc32 >> 8);
                 }
             }
@@ -98,7 +102,8 @@ namespace MCGalaxy {
         static uint[] crc32Table;
         static ZipWriterStream() {
             crc32Table = new uint[256];
-            for (int i = 0; i < crc32Table.Length; i++) {
+            for (int i = 0; i < crc32Table.Length; i++) 
+            {
                 uint c = (uint)i;
                 
                 for (int j = 0; j < 8; j++ ) {
@@ -112,12 +117,12 @@ namespace MCGalaxy {
     }
 
     /// <summary> Writes entries into a ZIP archive. </summary>
-    public sealed class ZipWriter {
+    public sealed class ZipWriter 
+    {
         BinaryWriter writer;
         Stream stream;
         byte[] buffer = new byte[81920];
-        
-        DateTime now = DateTime.Now;
+
         bool zip64;
         List<ZipEntry> entries = new List<ZipEntry>();
         
@@ -136,12 +141,19 @@ namespace MCGalaxy {
             entry.Filename = Encoding.UTF8.GetBytes(file);
             entry.LocalHeaderOffset = stream.Position;
             
+            try {
+                entry.ModifiedDate = File.GetLastWriteTime(file);
+            } catch {
+                entry.ModifiedDate = DateTime.Now;
+            }
+            
             // leave some room to fill in header later
             int headerSize = 30 + entry.Filename.Length + zip64LocalExtra;
             stream.Write(buffer, 0, headerSize);
             
             // set bit flag for non-ascii filename
-            foreach (char c in file) {
+            foreach (char c in file) 
+            {
                 if (c < ' ' || c > '~') entry.BitFlags |= (1 << 11);
             }
             
@@ -154,7 +166,8 @@ namespace MCGalaxy {
             
             entry.CompressedSize = dst.CompressedLen;
             entry.Crc32 = dst.Crc32 ^ uint.MaxValue;
-            entries.Add(entry); numEntries++;
+            entries.Add(entry); 
+            numEntries++;
         }
         
         public void FinishEntries() {
@@ -163,7 +176,8 @@ namespace MCGalaxy {
             zip64 = numEntries >= ushort.MaxValue || stream.Length >= maxLen;
             long pos = stream.Position;
 
-            for (int i = 0; i < numEntries; i++) {
+            for (int i = 0; i < numEntries; i++) 
+            {
                 // turns out we didn't actually need zip64 extra field
                 ZipEntry entry = entries[i];
                 if (!zip64) entry.LocalHeaderOffset += zip64LocalExtra;
@@ -178,7 +192,8 @@ namespace MCGalaxy {
         
         public void WriteFooter() {
             centralDirOffset = stream.Position;
-            for (int i = 0; i < numEntries; i++) {
+            for (int i = 0; i < numEntries; i++) 
+            {
                 WriteCentralDirectoryRecord(entries[i]);
             }
             centralDirSize = stream.Position - centralDirOffset;
@@ -193,9 +208,9 @@ namespace MCGalaxy {
             WriteZip64EndOfCentralDirectoryLocator();
             
             // signify to use zip64 record to find data
-            numEntries = ushort.MaxValue;
+            numEntries       = ushort.MaxValue;
             centralDirOffset = uint.MaxValue;
-            centralDirSize = uint.MaxValue;
+            centralDirSize   = uint.MaxValue;
         }
         
         
@@ -206,11 +221,11 @@ namespace MCGalaxy {
             ZipEntry copy = entry;
             if (zip64) entry.Reset();
             
-            w.Write(ZipEntry.SigLocal);
+            w.Write(ZipEntry.SIG_LOCAL);
             w.Write(version);
             w.Write(entry.BitFlags);
             w.Write(entry.CompressionMethod);
-            WriteLastModified();
+            WriteLastModified(entry.ModifiedDate);
             w.Write(entry.Crc32);
             w.Write((uint)entry.CompressedSize);
             w.Write((uint)entry.UncompressedSize);
@@ -233,12 +248,12 @@ namespace MCGalaxy {
             ZipEntry copy = entry;
             if (zip64) entry.Reset();
             
-            w.Write(ZipEntry.SigCentral);
+            w.Write(ZipEntry.SIG_CENTRAL);
             w.Write(version);
             w.Write(version);
             w.Write(entry.BitFlags);
             w.Write(entry.CompressionMethod);
-            WriteLastModified();
+            WriteLastModified(entry.ModifiedDate);
             w.Write(entry.Crc32);
             w.Write((uint)entry.CompressedSize);
             w.Write((uint)entry.UncompressedSize);
@@ -260,9 +275,9 @@ namespace MCGalaxy {
             w.Write(copy.LocalHeaderOffset);
         }
         
-        void WriteLastModified() {
-            int modTime = (now.Second / 2) | (now.Minute << 5) | (now.Hour << 11);
-            int modDate = (now.Day) | (now.Month << 5) | ((now.Year - 1980) << 9);
+        void WriteLastModified(DateTime date) {
+            int modTime = (date.Second / 2) | (date.Minute << 5) | (date.Hour << 11);
+            int modDate = (date.Day) | (date.Month << 5) | ((date.Year - 1980) << 9);
             writer.Write((ushort)modTime);
             writer.Write((ushort)modDate);
         }
@@ -271,7 +286,7 @@ namespace MCGalaxy {
             BinaryWriter w = writer;
             const long zip64EndDataSize = (2 * 2) + (2 * 4) + (4 * 8);
             
-            w.Write(ZipEntry.SigZip64End);
+            w.Write(ZipEntry.SIG_ZIP64_END);
             w.Write(zip64EndDataSize);
             w.Write(ver_zip64);
             w.Write(ver_zip64);
@@ -285,7 +300,7 @@ namespace MCGalaxy {
         
         void WriteZip64EndOfCentralDirectoryLocator() {
             BinaryWriter w = writer;
-            w.Write(ZipEntry.SigZip64Loc);
+            w.Write(ZipEntry.SIG_ZIP64_LOC);
             w.Write(0); // disc number of zip64 end of central directory
             w.Write(zip64EndOffset);
             w.Write(1); // total number of discs
@@ -293,7 +308,7 @@ namespace MCGalaxy {
         
         void WriteEndOfCentralDirectoryRecord() {
             BinaryWriter w = writer;
-            w.Write(ZipEntry.SigEnd);
+            w.Write(ZipEntry.SIG_END);
             w.Write((ushort)0); // disc number
             w.Write((ushort)0); // disc number of start
             w.Write((ushort)numEntries);

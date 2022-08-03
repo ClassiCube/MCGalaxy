@@ -83,6 +83,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.SystemActivity, "Compressing {0} files...", paths.Count);
             for (int i = 0; i < paths.Count; i++) {
                 string path = paths[i];
+                // .lvl contents are already compressed, no point in compressing again
                 bool compressThis = compress && !path.CaselessContains(".lvl");
                 
                 try {
