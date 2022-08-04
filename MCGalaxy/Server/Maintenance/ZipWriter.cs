@@ -31,7 +31,7 @@ namespace MCGalaxy
         public ushort BitFlags, CompressionMethod;
         public DateTime ModifiedDate;
         
-        public void Reset() {
+        public void MakeZip64Placeholder() {
             // signify to use zip64 version of these fields instead
             CompressedSize    = uint.MaxValue;
             UncompressedSize  = uint.MaxValue;
@@ -124,12 +124,15 @@ namespace MCGalaxy
         byte[] buffer = new byte[81920];
 
         bool zip64;
-        List<ZipEntry> entries = new List<ZipEntry>();
-        
+        List<ZipEntry> entries = new List<ZipEntry>();      
         int numEntries;
-        long centralDirOffset, centralDirSize, zip64EndOffset;
-        const ushort ver_norm = 20, ver_zip64 = 45;
-        const ushort zip64CentralExtra = 28, zip64LocalExtra = 20;
+        long centralDirOffset, centralDirSize, zip64EndOffset;    
+        const ushort ver_norm = 20, ver_zip64 = 45;   
+
+        const ushort EXTRA_TAG_ZIP64 = 0x0001;
+        const ushort ZIP64_CENTRAL_EXTRA_SIZE = 28;
+        const ushort ZIP64_LOCAL_EXTRA_SIZE   = 20;
+        static byte[] emptyZip64Local = new byte[ZIP64_LOCAL_EXTRA_SIZE];
         
         public ZipWriter(Stream stream) {
             this.stream = stream;
@@ -148,7 +151,7 @@ namespace MCGalaxy
             }
             
             // leave some room to fill in header later
-            int headerSize = 30 + entry.Filename.Length + zip64LocalExtra;
+            int headerSize = 30 + entry.Filename.Length + ZIP64_LOCAL_EXTRA_SIZE;
             stream.Write(buffer, 0, headerSize);
             
             // set bit flag for non-ascii filename
@@ -178,10 +181,7 @@ namespace MCGalaxy
 
             for (int i = 0; i < numEntries; i++) 
             {
-                // turns out we didn't actually need zip64 extra field
-                ZipEntry entry = entries[i];
-                if (!zip64) entry.LocalHeaderOffset += zip64LocalExtra;
-                
+                ZipEntry entry = entries[i];             
                 stream.Seek(entry.LocalHeaderOffset, SeekOrigin.Begin);
                 WriteLocalFileRecord(entry);
                 entries[i] = entry;
@@ -215,11 +215,10 @@ namespace MCGalaxy
         
         
         void WriteLocalFileRecord(ZipEntry entry) {
-            ushort extraLen = (ushort)(zip64 ? zip64LocalExtra : 0);
             ushort version = zip64 ? ver_zip64 : ver_norm;
             BinaryWriter w = writer;
-            ZipEntry copy = entry;
-            if (zip64) entry.Reset();
+            ZipEntry copy  = entry;
+            if (zip64) entry.MakeZip64Placeholder();
             
             w.Write(ZipEntry.SIG_LOCAL);
             w.Write(version);
@@ -230,23 +229,25 @@ namespace MCGalaxy
             w.Write((uint)entry.CompressedSize);
             w.Write((uint)entry.UncompressedSize);
             w.Write((ushort)entry.Filename.Length);
-            w.Write(extraLen);
+            w.Write(ZIP64_LOCAL_EXTRA_SIZE);
             
             w.Write(entry.Filename);
-            if (!zip64) return;
-            w.Write((ushort)1);
+            // not using zip64, fill in with empty data
+            if (!zip64) { w.Write(emptyZip64Local); return; }
             
-            w.Write((ushort)(zip64LocalExtra - 4));
+            // zip64 extra data entry
+            w.Write((ushort)EXTRA_TAG_ZIP64);          
+            w.Write((ushort)(ZIP64_LOCAL_EXTRA_SIZE - 4));
             w.Write(copy.UncompressedSize);
             w.Write(copy.CompressedSize);
         }
         
         void WriteCentralDirectoryRecord(ZipEntry entry) {
-            ushort extraLen = (ushort)(zip64 ? zip64CentralExtra : 0);
+            ushort extraLen = (ushort)(zip64 ? ZIP64_CENTRAL_EXTRA_SIZE : 0);
             ushort version = zip64 ? ver_zip64 : ver_norm;
             BinaryWriter w = writer;
             ZipEntry copy = entry;
-            if (zip64) entry.Reset();
+            if (zip64) entry.MakeZip64Placeholder();
             
             w.Write(ZipEntry.SIG_CENTRAL);
             w.Write(version);
@@ -269,7 +270,7 @@ namespace MCGalaxy
             if (!zip64) return;
             w.Write((ushort)1);
             
-            w.Write((ushort)(zip64CentralExtra - 4));
+            w.Write((ushort)(ZIP64_CENTRAL_EXTRA_SIZE - 4));
             w.Write(copy.UncompressedSize);
             w.Write(copy.CompressedSize);
             w.Write(copy.LocalHeaderOffset);
