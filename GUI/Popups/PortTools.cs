@@ -17,17 +17,13 @@
 */
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Net.Sockets;
 using System.Windows.Forms;
-using MCGalaxy.Core;
 
 namespace MCGalaxy.Gui.Popups 
 {
     public partial class PortTools : Form 
     {
-
         readonly BackgroundWorker worker;
         int port;
         
@@ -74,10 +70,10 @@ namespace MCGalaxy.Gui.Popups
                 if (!UPnP.Discover()) {
                     e.Result = 0;
                 } else if (adding) {                   
-                    UPnP.ForwardPort(port, ProtocolType.Tcp, Server.SoftwareName + "Server");
+                    UPnP.ForwardPort(port, UPnP.TCP_PROTOCOL, Server.SoftwareName + "Server");
                     e.Result = 1;
                 } else {
-                    UPnP.DeleteForwardingRule(port, ProtocolType.Tcp);
+                    UPnP.DeleteForwardingRule(port, UPnP.TCP_PROTOCOL);
                     e.Result = 3;
                 }
             } catch (Exception ex) {

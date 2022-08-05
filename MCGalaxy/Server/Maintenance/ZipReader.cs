@@ -69,8 +69,6 @@ namespace MCGalaxy
         List<ZipEntry> entries = new List<ZipEntry>();
         int numEntries;
         long centralDirOffset, zip64EndOffset;
-        const ushort ver_norm = 20, ver_zip64 = 45;
-        const ushort zip64CentralExtra = 28, zip64LocalExtra = 20;
         
         public ZipReader(Stream stream) {
             this.stream = stream;

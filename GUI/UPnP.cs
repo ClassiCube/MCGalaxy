@@ -29,7 +29,8 @@ namespace MCGalaxy
 {
     public static class UPnP 
     {
-        public static TimeSpan Timeout = TimeSpan.FromSeconds(3);
+        public static TimeSpan Timeout   = TimeSpan.FromSeconds(3);
+        public const string TCP_PROTOCOL = "TCP";
         
         const string req = 
             "M-SEARCH * HTTP/1.1\r\n" +
@@ -52,7 +53,7 @@ namespace MCGalaxy
             byte[] buffer = new byte[0x1000];
 
             s.ReceiveTimeout = 3000;
-            visitedLocations.Clear();           
+            visitedLocations.Clear();
             Logger.Log(LogType.BackgroundActivity, "Searching for UPnP devices..");
             DateTime end  = DateTime.UtcNow.Add(Timeout);
             
@@ -88,7 +89,7 @@ namespace MCGalaxy
             return false;
         }
 
-        public static void ForwardPort(int port, ProtocolType protocol, string description) {
+        public static void ForwardPort(int port, string protocol, string description) {
             if (String.IsNullOrEmpty(_serviceUrl) )
                 throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             
@@ -96,7 +97,7 @@ namespace MCGalaxy
                 "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
                 "<NewRemoteHost></NewRemoteHost>" +
                 "<NewExternalPort>" + port + "</NewExternalPort>" +
-                "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
+                "<NewProtocol>" + protocol + "</NewProtocol>" +
                 "<NewInternalPort>" + port + "</NewInternalPort>" +
                 "<NewInternalClient>" + GetLocalIP() + "</NewInternalClient>" +
                 "<NewEnabled>1</NewEnabled>" +
@@ -105,7 +106,7 @@ namespace MCGalaxy
                 "</u:AddPortMapping>");
         }
 
-        public static void DeleteForwardingRule(int port, ProtocolType protocol) {
+        public static void DeleteForwardingRule(int port, string protocol) {
             if (String.IsNullOrEmpty(_serviceUrl) )
                 throw new InvalidOperationException("No UPnP service available or Discover() has not been called");
             
@@ -113,7 +114,7 @@ namespace MCGalaxy
                 "<u:DeletePortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
                 "<NewRemoteHost></NewRemoteHost>" +
                 "<NewExternalPort>" + port + "</NewExternalPort>" +
-                "<NewProtocol>" + protocol.ToString().ToUpper() + "</NewProtocol>" +
+                "<NewProtocol>" + protocol + "</NewProtocol>" +
                 "</u:DeletePortMapping>");
         }
         
@@ -121,7 +122,7 @@ namespace MCGalaxy
         static string GetServiceUrl(string location) {
             try {
                 XmlDocument doc = new XmlDocument();
-                WebRequest request = WebRequest.CreateDefault(new Uri(location));
+                WebRequest request = WebRequest.Create(location);
                 doc.Load(request.GetResponse().GetResponseStream());
                 
                 XmlNamespaceManager nsMgr = new XmlNamespaceManager(doc.NameTable);
@@ -171,7 +172,7 @@ namespace MCGalaxy
                 "<s:Body>" + soap + "</s:Body>" +
                 "</s:Envelope>";
             
-            WebRequest r = HttpWebRequest.Create(url);
+            WebRequest r = WebRequest.Create(url);
             r.Method = "POST";            
             r.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:WANIPConnection:1#" + function + "\"");
             r.ContentType = "text/xml; charset=\"utf-8\"";
