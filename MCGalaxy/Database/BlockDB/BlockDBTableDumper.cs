@@ -169,7 +169,8 @@ namespace MCGalaxy.DB {
             int sec =   (date[17] - '0') * 10  + (date[18] - '0');
             
             DateTime time = new DateTime(year, month, day, hour, min, sec);
-            entry.TimeDelta = (int)time.Subtract(BlockDB.Epoch).TotalSeconds;
+            DateTime utc  = time.ToUniversalTime();
+            entry.TimeDelta = (int)utc.Subtract(BlockDB.Epoch).TotalSeconds;
         }
     }
 }

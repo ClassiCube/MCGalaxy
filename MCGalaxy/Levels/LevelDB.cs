@@ -44,11 +44,11 @@ namespace MCGalaxy {
             Zone z = new Zone();
             z.MinX = (ushort)record.GetInt("SmallX");
             z.MinY = (ushort)record.GetInt("SmallY");
-            z.MinX = (ushort)record.GetInt("SmallZ");
+            z.MinZ = (ushort)record.GetInt("SmallZ");
             
             z.MaxX = (ushort)record.GetInt("BigX");
             z.MaxY = (ushort)record.GetInt("BigY");
-            z.MaxX = (ushort)record.GetInt("BigZ");
+            z.MaxZ = (ushort)record.GetInt("BigZ");
             z.Config.Name = record.GetText("Owner");
             return z;
         }
