@@ -171,7 +171,7 @@ namespace MCGalaxy.SQL
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public static void Execute(string sql, params object[] args) {
-            Do(sql, false, null, null, args);
+            Do(sql, false, null, args);
         }
 
         /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
@@ -179,7 +179,7 @@ namespace MCGalaxy.SQL
             Do(sql, false, callback, args);
         }
 
-        internal static void Do(string sql, bool createDB, ReaderCallback callback, params object[] args) {
+        internal static void Do(string sql, bool createDB, ReaderCallback callback, object[] args) {
             IDatabaseBackend db = Backend;
             Exception e = null;
             
@@ -190,6 +190,7 @@ namespace MCGalaxy.SQL
                     } else {
                         db.Execute(sql, args, createDB);
                     }
+                    return;
                 } catch (Exception ex) {
                     e = ex; // try yet again
                 }
