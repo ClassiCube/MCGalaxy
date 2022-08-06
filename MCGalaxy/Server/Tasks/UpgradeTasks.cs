@@ -88,10 +88,10 @@ namespace MCGalaxy.Tasks {
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
             playerSeconds = new List<long>();
-            Database.ReadRows("Players", "ID,TimeSpent", null, ReadTimeSpent);
+            Database.ReadRows("Players", "ID,TimeSpent", ReadTimeSpent);
         }
         
-        static object ReadTimeSpent(IDataRecord record, object arg) {
+        static void ReadTimeSpent(IDataRecord record) {
             playerCount++;
             try {
                 int id = record.GetInt32(0);
@@ -102,7 +102,6 @@ namespace MCGalaxy.Tasks {
             } catch {
                 playerFailed++;
             }
-            return arg;
         }
         
         static void UpgradePlayerTimeSpents() {

@@ -50,7 +50,9 @@ namespace MCGalaxy.SQL
         
         protected static List<string> GetStrings(string sql, params object[] args) {
             List<string> values = new List<string>();
-            Database.Iterate(sql, values, Database.ReadList, args);
+            Database.Iterate(sql, 
+                            record => values.Add(record.GetText(0)), 
+                            args);
             return values;
         }
         
@@ -165,7 +167,7 @@ namespace MCGalaxy.SQL
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public object Iterate(string sql, object[] parameters, object arg, ReaderCallback callback) {
+        public void Iterate(string sql, object[] parameters, ReaderCallback callback) {
             using (IDbConnection conn = CreateConnection()) {
                 conn.Open();
                 if (MultipleSchema)
@@ -174,12 +176,11 @@ namespace MCGalaxy.SQL
                 using (IDbCommand cmd = CreateCommand(sql, conn)) {
                     FillParams(cmd, parameters);
                     using (IDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) { arg = callback(reader, arg); }
+                        while (reader.Read()) { callback(reader); }
                     }
                 }
                 conn.Close();
             }
-            return arg;
         }
         
         

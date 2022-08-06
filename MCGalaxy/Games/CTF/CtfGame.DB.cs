@@ -35,7 +35,7 @@ namespace MCGalaxy.Games {
             new ColumnDesc("tags", ColumnType.UInt24),
         };
         
-        static object ReadStats(IDataRecord record, object arg) {
+        static CtfStats ParseStats(IDataRecord record) {
             CtfStats stats;
             stats.Points   = record.GetInt("Points");
             stats.Captures = record.GetInt("Captures");
@@ -45,8 +45,10 @@ namespace MCGalaxy.Games {
         
         static CtfStats LoadStats(string name) {
             CtfStats stats = default(CtfStats);
-            return (CtfStats)Database.ReadRows("CTF", "*", stats,
-                                               ReadStats, "WHERE Name=@0", name);
+            Database.ReadRows("CTF", "*",
+                                record => stats = ParseStats(record),
+                                "WHERE Name=@0", name);
+            return stats;
         }
         
         protected override void SaveStats(Player p) {

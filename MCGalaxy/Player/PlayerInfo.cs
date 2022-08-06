@@ -97,19 +97,18 @@ namespace MCGalaxy
         }
 
         
-        static object ReadAccounts(IDataRecord record, object arg) {
-            List<string> names = (List<string>)arg;
-            string name = record.GetText(0);
-            
+        static void ReadAccounts(IDataRecord record, List<string> names) {
+            string name = record.GetText(0);         
             if (!names.CaselessContains(name)) names.Add(name);
-            return arg;
         }
         
         /// <summary> Retrieves names of all players whose IP address matches the given IP address. </summary>
         /// <remarks> This is current IP for online players, last IP for offline players from the database. </remarks>
         public static List<string> FindAccounts(string ip) {
             List<string> names = new List<string>();
-            Database.ReadRows("Players", "Name", names, ReadAccounts, "WHERE IP=@0", ip);
+            Database.ReadRows("Players", "Name", 
+                                record => ReadAccounts(record, names), 
+                                "WHERE IP=@0", ip);
             
             // TODO: should we instead do save() when the player logs in
             // by checking online players we avoid a DB write though

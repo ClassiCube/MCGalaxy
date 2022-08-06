@@ -51,7 +51,6 @@ namespace MCGalaxy.DB {
         public long TotalModified, TotalDrawn, TotalPlaced, TotalDeleted;
         public TimeSpan TotalTime;
         
-        static object ReadID(IDataRecord record, object arg) { return record.GetInt32(0); }
         internal static void Create(Player p) {
             p.prefix = "";
             p.SetColor(p.group.Color);
@@ -62,10 +61,14 @@ namespace MCGalaxy.DB {
             Database.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                             "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
                             p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
-            
-            object id = Database.ReadRows("Players", "ID", null, ReadID, "WHERE Name=@0", p.name);
-            if (id != null) {
-                p.DatabaseID = (int)id;
+
+            int id = -100000;
+            Database.ReadRows("Players", "ID", 
+                                record => id = record.GetInt32(0),
+                                "WHERE Name=@0", p.name);
+
+            if (id >= 0) {
+                p.DatabaseID = id;
             } else {
                 p.DatabaseID = NameConverter.InvalidNameID(p.name);
             }

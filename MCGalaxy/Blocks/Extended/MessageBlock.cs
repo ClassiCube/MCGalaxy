@@ -114,7 +114,8 @@ namespace MCGalaxy.Blocks.Extended {
             List<Vec3U16> coords = new List<Vec3U16>();
             if (!ExistsInDB(map)) return coords;
                         
-            Database.ReadRows("Messages" + map, "X,Y,Z", coords, Portal.ReadCoords);
+            Database.ReadRows("Messages" + map, "X,Y,Z",
+                                record => coords.Add(Portal.ParseCoords(record)));
             return coords;
         }
         

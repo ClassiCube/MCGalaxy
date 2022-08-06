@@ -55,17 +55,14 @@ namespace MCGalaxy.Blocks.Extended {
         }
         
         
-        internal static object ReadCoords(IDataRecord record, object arg) {
+        internal static Vec3U16 ParseCoords(IDataRecord record) {
             Vec3U16 pos;
             pos.X = (ushort)record.GetInt32(0);
             pos.Y = (ushort)record.GetInt32(1);
             pos.Z = (ushort)record.GetInt32(2);
-            
-            ((List<Vec3U16>)arg).Add(pos);
-            return arg;
+            return pos;
         }
         
-        static object ReadExit(IDataRecord record, object arg) { return ParseExit(record); }
         static PortalExit ParseExit(IDataRecord record) {
             PortalExit data = new PortalExit();
             data.Map = record.GetText(0);
@@ -74,11 +71,6 @@ namespace MCGalaxy.Blocks.Extended {
             data.Y = (ushort)record.GetInt32(2);
             data.Z = (ushort)record.GetInt32(3);
             return data;
-        }
-        
-        static object ReadAllExits(IDataRecord record, object arg) {
-            ((List<PortalExit>)arg).Add(ParseExit(record));
-            return arg;
         }
         
         
@@ -90,7 +82,8 @@ namespace MCGalaxy.Blocks.Extended {
             List<Vec3U16> coords = new List<Vec3U16>();
             if (!ExistsInDB(map)) return coords;
             
-            Database.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ", coords, ReadCoords);
+            Database.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ",
+                                record => coords.Add(ParseCoords(record)));
             return coords;
         }
 
@@ -98,8 +91,9 @@ namespace MCGalaxy.Blocks.Extended {
         public static List<PortalExit> GetAllExits(string map) {
             List<PortalExit> exits = new List<PortalExit>();
             if (!ExistsInDB(map)) return exits;
-            
-            Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", exits, ReadAllExits);
+
+            Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", 
+                                record => exits.Add(ParseExit(record)));
             return exits;
         }
         
@@ -127,9 +121,11 @@ namespace MCGalaxy.Blocks.Extended {
         /// <summary> Returns the exit details for the given portal in the given map. </summary>
         /// <remarks> Returns null if the given portal does not actually exist. </remarks>
         public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
-            object raw = Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", null, ReadExit,
-                                           "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
-            return (PortalExit)raw;
+            PortalExit exit = null;
+            Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
+                                record => exit = ParseExit(record),
+                                "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            return exit;
         }
         
         /// <summary> Deletes the given portal from the given map. </summary>

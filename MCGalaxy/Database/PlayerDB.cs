@@ -92,10 +92,13 @@ namespace MCGalaxy.DB {
         
         /// <summary> Returns the fields of the row whose Name field caselessly equals the given name </summary>
         public static PlayerData FindData(string name) {
-            string suffix = Database.Backend.CaselessWhereSuffix;
-            object raw = Database.ReadRows("Players", "*", null, PlayerData.Read,
-                                           "WHERE Name=@0" + suffix, name);
-            return (PlayerData)raw;
+            string suffix   = Database.Backend.CaselessWhereSuffix;
+            PlayerData data = null;
+
+            Database.ReadRows("Players", "*",
+                                record => data = PlayerData.Parse(record),
+                                "WHERE Name=@0" + suffix, name);
+            return data;
         }
 
         /// <summary> Returns the Name field of the row whose Name field caselessly equals the given name </summary>
@@ -130,7 +133,8 @@ namespace MCGalaxy.DB {
         
         public static string MatchNames(Player p, string name) {
             List<string> names = new List<string>();
-            MatchMulti(name, "Name", names, Database.ReadList);
+            MatchMulti(name, "Name",
+                       record => names.Add(record.GetText(0)));
             
             int matches;
             return Matcher.Find(p, name, out matches, names,
@@ -139,30 +143,26 @@ namespace MCGalaxy.DB {
         
         public static string[] MatchValues(Player p, string name, string columns) {
             List<string[]> name_values = new List<string[]>();
-            MatchMulti(name, columns, name_values, Database.ReadFields);
-            
+            MatchMulti(name, columns,
+                       record => name_values.Add(Database.ParseFields(record)));
+
             int matches;
             return Matcher.Find(p, name, out matches, name_values,
                                 null, n => n[0], "players", 20);
-        }       
-                
-        static object ReadStats(IDataRecord record, object arg) {
-            PlayerData stats = PlayerData.Parse(record);
-            ((List<PlayerData>)arg).Add(stats); return arg;
-        }
+        }  
         
         public static PlayerData Match(Player p, string name) {
             List<PlayerData> stats = new List<PlayerData>();
-            MatchMulti(name, "*", stats, ReadStats);
+            MatchMulti(name, "*", record => stats.Add(PlayerData.Parse(record)));
             
             int matches;
             return Matcher.Find(p, name, out matches, stats,
                                 null, stat => stat.Name, "players", 20);
         }
         
-        static void MatchMulti(string name, string columns, object arg, ReaderCallback callback) {
+        static void MatchMulti(string name, string columns, ReaderCallback callback) {
             string suffix = Database.Backend.CaselessLikeSuffix;
-            Database.ReadRows("Players", columns, arg, callback,
+            Database.ReadRows("Players", columns, callback,
                               "WHERE Name LIKE @0 ESCAPE '#' LIMIT 101" + suffix,
                               "%" + name.Replace("_", "#_") + "%");
         }

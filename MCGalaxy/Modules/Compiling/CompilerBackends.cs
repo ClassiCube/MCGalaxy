@@ -45,19 +45,7 @@ namespace MCGalaxy.Modules.Compiling
 #if !NETSTANDARD
     /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
     public static class ICodeDomCompiler
-    {
-        // Lazy init compiler when it's actually needed
-        public static void InitCompiler(ICompiler c, string language, ref CodeDomProvider compiler) {
-            if (compiler != null) return;
-            compiler = CodeDomProvider.CreateProvider(language);
-            if (compiler != null) return;
-                
-            Logger.Log(LogType.Warning,
-                       "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
-                       c.FullName, c.FileExtension);
-                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
-        }
-        
+    {   
         public static CompilerParameters PrepareInput(string[] srcPaths, string dstPath, string commentPrefix) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable      = false;
@@ -70,6 +58,18 @@ namespace MCGalaxy.Modules.Compiling
                 args.ReferencedAssemblies.Add(assembly);
             }
             return args;
+        }
+
+        // Lazy init compiler when it's actually needed
+        public static void InitCompiler(ICompiler c, string language, ref CodeDomProvider compiler) {
+            if (compiler != null) return;
+            compiler = CodeDomProvider.CreateProvider(language);
+            if (compiler != null) return;
+                
+            Logger.Log(LogType.Warning,
+                       "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
+                       c.FullName, c.FileExtension);
+                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
         }
 
         public static ICompilerErrors Compile(CompilerParameters args, string[] srcPaths, CodeDomProvider compiler) {
