@@ -105,13 +105,15 @@ namespace MCGalaxy
         }
 
         static CPUTime ParseCpuLine(string line) {
-            // cpu  [USER TIME] [NICE TIME] [SYSTEM TIME] [IDLE TIME] [I/O WAIT TIME] [IRQ TIME] [SW IRQ TIME]
+            // Linux : cpu  [USER TIME] [NICE TIME] [SYSTEM TIME] [IDLE TIME] [I/O WAIT TIME] [IRQ TIME] [SW IRQ TIME]
+            // NetBSD: cpu [USER TIME] [NICE TIME] [SYSTEM TIME] [IDLE TIME]
+            line = line.Replace("  ", " ");
             string[] bits = line.SplitSpaces();
 
-            ulong user = ulong.Parse(bits[2]);
-            ulong nice = ulong.Parse(bits[3]);
-            ulong kern = ulong.Parse(bits[4]);
-            ulong idle = ulong.Parse(bits[5]);
+            ulong user = ulong.Parse(bits[1]);
+            ulong nice = ulong.Parse(bits[2]);
+            ulong kern = ulong.Parse(bits[3]);
+            ulong idle = ulong.Parse(bits[4]);
             // TODO interrupt time too?
 
             CPUTime all;
