@@ -110,21 +110,15 @@ namespace MCGalaxy.Commands.Info
             public ulong IdleTime, KernelTime, UserTime;
         }
 
-        unsafe static CPUTime MeasureAllCPUTime()
-        {
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                return MeasureAllWindows();
-
-            sbyte* ascii  = stackalloc sbyte[8192];
-            uname(ascii);
-            string kernel = new String(ascii);
-            if (kernel == "Darwin") return MeasureAllMac();
-
-            return MeasureAllLinux();
+        unsafe static CPUTime MeasureAllCPUTime() {
+            switch (Server.DetectOS())
+            {
+                case DetectedOS.Windows: return MeasureAllWindows();
+                case DetectedOS.OSX:     return MeasureAllMac();
+                case DetectedOS.Linux:   return MeasureAllLinux();
+            }
+            return default(CPUTime);
         }
-
-        [DllImport("libc")]
-        unsafe static extern void uname(sbyte* uname_struct);
 
 
         static CPUTime MeasureAllWindows() {
