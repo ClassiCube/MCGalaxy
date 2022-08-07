@@ -39,8 +39,6 @@ using MCGalaxy.Modules.Awards;
 
 namespace MCGalaxy 
 {
-    public enum DetectedOS { Unknown, Windows, OSX, Linux }
-
     public sealed partial class Server 
     {
         
@@ -460,24 +458,5 @@ namespace MCGalaxy
             if (!name.EndsWith("+")) name += "+";
             return name;
         }
-
-
-        public unsafe static DetectedOS DetectOS() {
-            PlatformID platform = Environment.OSVersion.Platform;
-            if (platform == PlatformID.Win32NT || platform == PlatformID.Win32Windows)
-                return DetectedOS.Windows;
-
-            sbyte* ascii  = stackalloc sbyte[8192];
-            uname(ascii);
-            string kernel = new String(ascii);
-
-            if (kernel == "Darwin") return DetectedOS.OSX;
-            if (kernel == "Linux")  return DetectedOS.Linux;
-
-            return DetectedOS.Unknown;
-        }
-
-        [DllImport("libc")]
-        unsafe static extern void uname(sbyte* uname_struct);
     }
 }

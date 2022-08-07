@@ -66,19 +66,20 @@ namespace MCGalaxy.Commands.Info
         static void OutputResourceUsage(Player p) {
             Process proc = Process.GetCurrentProcess();
             p.Message("Measuring resource usage...one second");
+            IOperatingSystem os = IOperatingSystem.DetectOS();
 
             if (startTime == default(DateTime)) {
                 startTime = DateTime.UtcNow;
                 startCPU  = proc.TotalProcessorTime;
             }
 
-            CPUTime beg     = MeasureAllCPUTime();
+            CPUTime beg     = os.MeasureAllCPUTime();
             TimeSpan begCPU = proc.TotalProcessorTime;
 
             // measure CPU usage over one second
             Thread.Sleep(1000);
             TimeSpan endCPU = proc.TotalProcessorTime;
-            CPUTime end     = MeasureAllCPUTime();
+            CPUTime end     = os.MeasureAllCPUTime();
 
             p.Message("&a{0}% &SCPU usage now, &a{1}% &Soverall",
                 MeasureCPU(begCPU,   endCPU, TimeSpan.FromSeconds(1)),
@@ -103,87 +104,6 @@ namespace MCGalaxy.Commands.Info
             TimeSpan used  = end - beg;
             double elapsed = 100.0 * (used.TotalSeconds / interval.TotalSeconds);
             return (elapsed / cores).ToString("F2");
-        }
-
-        struct CPUTime
-        {
-            public ulong IdleTime, KernelTime, UserTime;
-        }
-
-        unsafe static CPUTime MeasureAllCPUTime() {
-            switch (Server.DetectOS())
-            {
-                case DetectedOS.Windows: return MeasureAllWindows();
-                case DetectedOS.OSX:     return MeasureAllMac();
-                case DetectedOS.Linux:   return MeasureAllLinux();
-            }
-            return default(CPUTime);
-        }
-
-
-        static CPUTime MeasureAllWindows() {
-            CPUTime all = default(CPUTime);
-            GetSystemTimes(out all.IdleTime, out all.KernelTime, out all.UserTime);
-
-            // https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes
-            // lpKernelTime - "... This time value also includes the amount of time the system has been idle."
-            all.KernelTime -= all.IdleTime;
-            return all;
-        }
-
-        [DllImport("kernel32.dll")]
-        static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
-
-
-        // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
-        // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
-        static CPUTime MeasureAllMac() {
-            uint[] info = new uint[4]; // CPU_STATE_MAX
-            uint count  = 4; // HOST_CPU_LOAD_INFO_COUNT 
-            int flavor  = 3; // HOST_CPU_LOAD_INFO
-            host_statistics(mach_host_self(), flavor, info, ref count);
-
-            CPUTime all;
-            all.IdleTime   = info[2]; // CPU_STATE_IDLE
-            all.UserTime   = info[0] + info[3]; // CPU_STATE_USER + CPU_STATE_NICE
-            all.KernelTime = info[1]; // CPU_STATE_SYSTEM
-            return all;
-        }
-
-        [DllImport("libc")]
-        static extern IntPtr mach_host_self();
-        [DllImport("libc")]
-        static extern int host_statistics(IntPtr port, int flavor, uint[] info, ref uint count);
-
-
-        static CPUTime MeasureAllLinux() {
-            // https://stackoverflow.com/questions/15145241/is-there-an-equivalent-to-the-windows-getsystemtimes-function-in-linux
-            try {
-                using (StreamReader r = new StreamReader("/proc/stat"))
-                {
-                    string line = r.ReadLine();
-                    if (line.StartsWith("cpu ")) return ParseCpuLine(line);
-                }
-            } catch (FileNotFoundException) { }
-
-            return default(CPUTime);
-        }
-
-        static CPUTime ParseCpuLine(string line)
-        {
-            string[] bits = line.SplitSpaces();
-
-            ulong user = ulong.Parse(bits[2]);
-            ulong nice = ulong.Parse(bits[3]);
-            ulong kern = ulong.Parse(bits[4]);
-            ulong idle = ulong.Parse(bits[5]);
-            // TODO interrupt time too?
-
-            CPUTime all;
-            all.UserTime   = user + nice;
-            all.KernelTime = kern;
-            all.IdleTime   = idle;
-            return all;
         }
 
         public override void Help(Player p) {

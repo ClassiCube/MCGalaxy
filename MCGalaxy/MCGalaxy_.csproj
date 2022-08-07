@@ -653,6 +653,7 @@
     <Compile Include="Server\Maintenance\Updater.cs" />
     <Compile Include="Server\Maintenance\ZipReader.cs" />
     <Compile Include="Server\Maintenance\ZipWriter.cs" />
+    <Compile Include="Server\OperatingSystem.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Server.DB.cs" />
     <Compile Include="Server\Server.Fields.cs" />
