@@ -187,6 +187,7 @@ namespace MCGalaxy
             byte** args = stackalloc byte*[2];
             args[0] = path;
             args[1] = (byte*)IntPtr.Zero;
+            // TODO add null argument at end, see if that works
 
             byte[] tmp = Encoding.UTF8.GetBytes(Server.GetRestartPath());
             Marshal.Copy(tmp, 0, (IntPtr)path, tmp.Length);

@@ -209,20 +209,27 @@ namespace MCGalaxy.Cli {
             char col = 'S';
             message = UIHelpers.Format(message);
             
-            while (index < message.Length) {
+            while (index < message.Length) 
+            {
                 char curCol = col;
                 string part = UIHelpers.OutputPart(ref col, ref index, message);
-                if (part.Length > 0) {
-                    Console.ForegroundColor = GetConsoleCol(curCol);
-                    Console.Write(part);
+
+                if (part.Length == 0) continue;
+                ConsoleColor color = GetConsoleColor(curCol);
+
+                if (color == ConsoleColor.White) { 
+                    Console.ResetColor(); 
+                } else { 
+                    Console.ForegroundColor = color; 
                 }
+                Console.Write(part);
             }
-            
-            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.ResetColor();
             Console.WriteLine();
         }
 
-        static ConsoleColor GetConsoleCol(char c) {
+        static ConsoleColor GetConsoleColor(char c) {
             if (c == 'S') return ConsoleColor.White;
             Colors.Map(ref c);
             
@@ -246,7 +253,7 @@ namespace MCGalaxy.Cli {
                     
                 default:
                     if (!Colors.IsDefined(c)) return ConsoleColor.White;
-                    return GetConsoleCol(Colors.Get(c).Fallback);
+                    return GetConsoleColor(Colors.Get(c).Fallback);
             }
         }
     }
