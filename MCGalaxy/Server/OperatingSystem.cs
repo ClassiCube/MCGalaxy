@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -160,10 +161,15 @@ namespace MCGalaxy
             //
             // Note this issue does NOT happen with GUI mode for some reason - and also
             // don't want to use excevp in GUI mode, otherwise the X socket FDs pile up
-            try {
-                execvp("mono", new string[] { "mono", Server.GetRestartPath() });
-            } catch {
-            }
+
+            // try to exec using actual runtime path first, e.g. /usr/bin/mono-sgen
+            string exe = Process.GetCurrentProcess().MainModule.FileName;
+            execvp(exe, new string[] { exe, Server.GetRestartPath() });
+            Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
+
+            // .. and fallback to mono if that doesn't work for some reason
+            execvp("mono", new string[] { "mono", Server.GetRestartPath() });
+            Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
         }
 #else
         [DllImport("libc", SetLastError = true)]
@@ -185,7 +191,8 @@ namespace MCGalaxy
             byte[] tmp = Encoding.UTF8.GetBytes(Server.GetRestartPath());
             Marshal.Copy(tmp, 0, (IntPtr)path, tmp.Length);
 
-            try { execvp(path, args); } catch { }
+            execvp(path, args);
+            Console.WriteLine("execvp failed: {0}", Marshal.GetLastWin32Error());
         }
 #endif
     }
