@@ -30,6 +30,10 @@ namespace MCGalaxy
     {
         /// <summary> Measures CPU use by all processes in the system </summary>
         public abstract CPUTime MeasureAllCPUTime();
+        /// <summary> Attempts to restart the server process in-place </summary>
+        /// <remarks> Does not return when restart is successful 
+        /// (since current process image is replaced) </remarks>
+        public abstract void RestartProcess();
 
 
         public unsafe static IOperatingSystem DetectOS() {
@@ -64,9 +68,11 @@ namespace MCGalaxy
 
         [DllImport("kernel32.dll")]
         static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
+
+        public override void RestartProcess() { }
     }
 
-    class macOS : IOperatingSystem
+    class macOS : UnixOS
     {
         // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
         // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
@@ -122,5 +128,65 @@ namespace MCGalaxy
             all.IdleTime   = idle;
             return all;
         }
+
+
+        public override void RestartProcess() {
+            if (Server.CLIMode) HACK_Execvp();
+        }
+
+#if !NETSTANDARD
+        [DllImport("libc", SetLastError = true)]
+        static extern int execvp(string path, string[] argv);
+        
+        static void HACK_Execvp() {
+            // With using normal Process.Start with mono, after Environment.Exit
+            //  is called, all FDs (including standard input) are also closed.
+            // Unfortunately, this causes the new server process to constantly error with
+            //   Type: IOException
+            //   Message: Invalid handle to path "server_folder_path/[Unknown]"
+            //   Trace:   at System.IO.FileStream.ReadData (System.Runtime.InteropServices.SafeHandle safeHandle, System.Byte[] buf, System.Int32 offset, System.Int32 count) [0x0002d]
+            //     at System.IO.FileStream.ReadInternal (System.Byte[] dest, System.Int32 offset, System.Int32 count) [0x00026]
+            //     at System.IO.FileStream.Read (System.Byte[] array, System.Int32 offset, System.Int32 count) [0x000a1] 
+            //     at System.IO.StreamReader.ReadBuffer () [0x000b3]
+            //     at System.IO.StreamReader.Read () [0x00028]
+            //     at System.TermInfoDriver.GetCursorPosition () [0x0000d]
+            //     at System.TermInfoDriver.ReadUntilConditionInternal (System.Boolean haltOnNewLine) [0x0000e]
+            //     at System.TermInfoDriver.ReadLine () [0x00000]
+            //     at System.ConsoleDriver.ReadLine () [0x00000]
+            //     at System.Console.ReadLine () [0x00013]
+            //     at MCGalaxy.Cli.CLI.ConsoleLoop () [0x00002]
+            // (this errors multiple times a second and can quickly fill up tons of disk space)
+            // And also causes console to be spammed with '1R3;1R3;1R3;' or '363;1R;363;1R;'
+            //
+            // Note this issue does NOT happen with GUI mode for some reason - and also
+            // don't want to use excevp in GUI mode, otherwise the X socket FDs pile up
+            try {
+                execvp("mono", new string[] { "mono", Server.GetRestartPath() });
+            } catch {
+            }
+        }
+#else
+        [DllImport("libc", SetLastError = true)]
+        unsafe static extern int execvp(byte* path, byte** argv);
+        
+        unsafe static void HACK_Execvp() {
+            // similar issue as with Mono, but happens with this instead
+            //  "IOException with 'I/O error' message
+            //     ...
+            //     at System.IO.StdInReader.ReadKey()
+            //
+            // Trying to use heap allocated string sometimes causes EFAULT error,
+            //  therefore manually allocate arguments on the stack instead
+            byte* path  = stackalloc byte[8192];
+            byte** args = stackalloc byte*[2];
+            args[0] = path;
+            args[1] = (byte*)IntPtr.Zero;
+
+            byte[] tmp = Encoding.UTF8.GetBytes(Server.GetRestartPath());
+            Marshal.Copy(tmp, 0, (IntPtr)path, tmp.Length);
+
+            try { execvp(path, args); } catch { }
+        }
+#endif
     }
 }
