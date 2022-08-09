@@ -35,8 +35,8 @@ namespace MCGalaxy {
             LSGame.Config.Load();
             CTFGame.Config.Load();
             TWGame.Config.Load();
-            
-            Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+
+            Database.UpdateActiveBackend();
             
             if (!Directory.Exists(Server.Config.BackupDirectory))
                 Server.Config.BackupDirectory = "levels/backups";

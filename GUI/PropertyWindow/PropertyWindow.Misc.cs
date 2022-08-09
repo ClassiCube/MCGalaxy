@@ -85,8 +85,8 @@ namespace MCGalaxy.Gui {
             Server.Config.MySQLDatabaseName = sql_txtDBName.Text;
             Server.Config.MySQLHost = sql_txtHost.Text;
             Server.Config.MySQLPort = sql_txtPort.Text;
-            
-            Database.Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+
+            Database.UpdateActiveBackend();
             //Server.Config.MySQLPooling = ; // No setting for this?            
         }
 

@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 
 namespace MCGalaxy.SQL 
 {
@@ -215,6 +214,14 @@ namespace MCGalaxy.SQL
                 if (ValidNameChar(c)) continue;
                 throw new ArgumentException("Invalid character '" + c + "' in table name '" + table + "'");
             }
+        }
+
+        public static void UpdateActiveBackend() {
+#if MCG_STANDALONE
+            Backend = SQLiteBackend.Instance;
+#else
+            Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
+#endif
         }
     }
     

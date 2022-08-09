@@ -17,13 +17,9 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-#if !DISABLE_COMPILING
+#if !MCG_STANDALONE
 using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text;
 
 namespace MCGalaxy.Modules.Compiling 
 {    

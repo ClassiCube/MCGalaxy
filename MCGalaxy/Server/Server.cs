@@ -94,7 +94,9 @@ namespace MCGalaxy
             ForceEnableTLS();
 
             SQLiteBackend.Instance.LoadDependencies();
-            CheckFile("MySql.Data.dll"); // TODO move to MySQL backend ?
+#if !MCG_STANDALONE
+            MySQLBackend.Instance.LoadDependencies();
+#endif
 
             EnsureFilesExist();
             MoveOutdatedFiles();
@@ -142,7 +144,9 @@ namespace MCGalaxy
             EnsureDirectoryExists(Paths.ImportsDir);
             EnsureDirectoryExists("blockdefs");
             EnsureDirectoryExists(IScripting.COMMANDS_DLL_DIR);
+#if !MCG_STANDALONE
             EnsureDirectoryExists(MCGalaxy.Modules.Compiling.ICompiler.COMMANDS_SOURCE_DIR); // TODO move to compiling module
+#endif
             EnsureDirectoryExists("text/discord"); // TODO move to discord plugin
         }
         

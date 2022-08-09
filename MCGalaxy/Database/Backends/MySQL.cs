@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+#if !MCG_STANDALONE
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -54,6 +55,7 @@ namespace MCGalaxy.SQL
 
         
         public override void LoadDependencies() {
+            Server.CheckFile("MySql.Data.dll");
         }
 
         public override void CreateDatabase() {
@@ -168,3 +170,4 @@ namespace MCGalaxy.SQL
         }
     }
 }
+#endif
