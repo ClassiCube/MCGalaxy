@@ -532,23 +532,15 @@ namespace MCGalaxy.SQL
         DateTime = 10,
     }
 
-    struct SQLiteType 
-    {
-        public SqlType Type;
-        public TypeAffinity Affinity;
-    }
-
     public sealed class SQLiteDataReader : ISqlReader 
     {
         SQLiteCommand _command;
         SQLiteStatement stmt;
         int readState, rowsAffected, columns;
         string[] fieldNames;
-        SQLiteType[] fieldTypes;
 
         internal SQLiteDataReader(SQLiteCommand cmd) {
             _command = cmd;
-            NextResult();
         }
         
         public override void Dispose() { Close(); }
@@ -556,7 +548,6 @@ namespace MCGalaxy.SQL
             _command = null;
             stmt = null;
             fieldNames = null;
-            fieldTypes = null;
         }
         
         void CheckClosed() {
@@ -566,56 +557,76 @@ namespace MCGalaxy.SQL
             SQLiteConnection.Check(_command.conn);
         }
 
-        public override int FieldCount { get { return columns; } }
-
         void VerifyForGet() {
             CheckClosed();
             if (readState != 0) throw new InvalidOperationException("No current row");
         }
 
+        TypeAffinity GetAffinity(int i) {
+            VerifyForGet();
+            return stmt.ColumnAffinity(i);
+        }
+
         public override bool GetBoolean(int i) { return GetInt32(i) != 0; }
 
         public override byte[] GetBytes(int i) {
-            if (CheckAffinity(i) == TypeAffinity.Blob)
+            if (GetAffinity(i) == TypeAffinity.Blob)
                 return stmt.GetBytes(i);
             throw new InvalidCastException();
         }
 
         public override DateTime GetDateTime(int i) {
-            TypeAffinity aff = CheckAffinity(i);
+            TypeAffinity aff = GetAffinity(i);
             if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double || aff == TypeAffinity.Text)
                 return stmt.GetDateTime(i);
             throw new NotSupportedException();
         }
         
         public override double GetDouble(int i) {
-            TypeAffinity aff = CheckAffinity(i);
+            TypeAffinity aff = GetAffinity(i);
             if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double)
                 return stmt.GetDouble(i);
             throw new NotSupportedException();
         }
 
-        public override Type GetFieldType(int i) {
-            SQLiteType t = GetSQLiteType(i);
-            if (t.Type == SqlType.Object)
-                return SQLiteConvert.affinity_to_type[(int)t.Affinity];
-            else
-                return SQLiteConvert.sqltype_to_type[(int)t.Type];
-        }
-
-        public override string GetName(int i) { return stmt.ColumnName(i); }
-
         public override int GetInt32(int i) {
-            if (CheckAffinity(i) == TypeAffinity.Int64)
+            if (GetAffinity(i) == TypeAffinity.Int64)
                 return stmt.GetInt32(i);
             throw new InvalidCastException();
         }
 
         public override long GetInt64(int i) {
-            if (CheckAffinity(i) == TypeAffinity.Int64)
+            if (GetAffinity(i) == TypeAffinity.Int64)
                 return stmt.GetInt64(i);
             throw new InvalidCastException();
         }
+
+        public override string GetString(int i) { return stmt.GetText(i); }
+
+        public override object GetValue(int i) {
+            TypeAffinity affinity = GetAffinity(i);
+            return stmt.GetValue(i, affinity);
+        }
+
+        public override bool IsDBNull(int i) {
+            return GetAffinity(i) == TypeAffinity.Null;
+        }
+
+
+        public override Type GetFieldType(int i) {
+            TypeAffinity affinity = stmt.ColumnAffinity(i);
+
+            // Fetch the declared column datatype and attempt to convert it to a known DbType.
+            string typeName = stmt.ColumnType(i);
+            SqlType type    = SQLiteConvert.TypeNameToDbType(typeName);
+
+            if (type == SqlType.Object)
+                return SQLiteConvert.affinity_to_type[(int)affinity];
+            else
+                return SQLiteConvert.sqltype_to_type[(int)type];
+        }
+
+        public override string GetName(int i) { return stmt.ColumnName(i); }
 
         public override int GetOrdinal(string name) {
             VerifyForGet();
@@ -632,18 +643,10 @@ namespace MCGalaxy.SQL
             return -1;
         }
 
-        public override string GetString(int i) { return stmt.GetText(i); }
 
-        public override object GetValue(int i) {
-            VerifyForGet();
-            SQLiteType t = GetSQLiteType(i);
-            return stmt.GetValue(i, t);
-        }
+        public override int FieldCount { get { return columns; } }
 
-        public override bool IsDBNull(int i) {
-            VerifyForGet();
-            return stmt.ColumnAffinity(i) == TypeAffinity.Null;
-        }
+        public override int RowsAffected { get { return rowsAffected; } }
 
         public bool NextResult() {
             CheckClosed();
@@ -667,30 +670,9 @@ namespace MCGalaxy.SQL
                 }
 
                 // Found a row-returning resultset eligible to be returned!
-                fieldTypes = new SQLiteType[columns];
                 fieldNames = null;
                 return true;
             }
-        }
-
-        TypeAffinity CheckAffinity(int i) {
-            VerifyForGet();
-            return GetSQLiteType(i).Affinity;
-        }
-        
-        SQLiteType GetSQLiteType(int i) {
-            SQLiteType typ = fieldTypes[i];
-            TypeAffinity affinity = stmt.ColumnAffinity(i);
-            // NOTE: affinity of a column can change (e.g. NULL when null string, STRING for when has value)
-            if (affinity == typ.Affinity) return typ;
-
-            // Fetch the declared column datatype and attempt to convert it to a known DbType.
-            typ.Affinity = affinity;
-            string typeName = stmt.ColumnType(i);
-            typ.Type = SQLiteConvert.TypeNameToDbType(typeName);
-            
-            fieldTypes[i] = typ;
-            return typ;
         }
 
         public override bool Read() {
@@ -705,8 +687,6 @@ namespace MCGalaxy.SQL
             }
             return false;
         }
-
-        public override int RowsAffected { get { return rowsAffected; } }
     }
 
     sealed class SQLiteException : ExternalException 
@@ -926,10 +906,8 @@ namespace MCGalaxy.SQL
             return Bind_Text(index, SQLiteConvert.ToString(dt));
         }
         
-        internal object GetValue(int index, SQLiteType typ) {
-            if (typ.Type == SqlType.DateTime) return GetDateTime(index);
-
-            switch (typ.Affinity) {
+        internal object GetValue(int index, TypeAffinity affinity) {
+            switch (affinity) {
                 case TypeAffinity.Blob:
                     return GetBytes(index);
                 case TypeAffinity.Double:
