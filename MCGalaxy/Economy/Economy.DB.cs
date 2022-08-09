@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
@@ -34,7 +33,7 @@ namespace MCGalaxy.Eco {
             new ColumnDesc("fine", ColumnType.VarChar, 255),
         };
         
-        static EcoStats ParseOld(IDataRecord record) {
+        static EcoStats ParseOld(ISqlRecord record) {
             EcoStats stats = ParseStats(record);
             stats.__unused = record.GetInt("money");
             return stats;
@@ -79,7 +78,7 @@ namespace MCGalaxy.Eco {
                                      stats.Payment, stats.Salary, stats.Fine);
         }
         
-        static EcoStats ParseStats(IDataRecord record) {
+        static EcoStats ParseStats(ISqlRecord record) {
             EcoStats stats;
             stats.Player = record.GetText("player");
             stats.Payment  = Parse(record.GetText("payment"));

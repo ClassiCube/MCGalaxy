@@ -17,12 +17,11 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace MCGalaxy.SQL 
 {
     /// <summary> Callback function invoked on a row returned from an SQL query. </summary>
-    public delegate void ReaderCallback(IDataRecord record);
+    public delegate void ReaderCallback(ISqlRecord record);
     
     /// <summary> Abstracts a SQL database management engine. </summary>
     public static class Database 
@@ -51,7 +50,7 @@ namespace MCGalaxy.SQL
             return value;
         }
         
-        internal static string[] ParseFields(IDataRecord record) {
+        internal static string[] ParseFields(ISqlRecord record) {
             string[] field = new string[record.FieldCount];
             for (int i = 0; i < field.Length; i++) { field[i] = record.GetStringValue(i); }
             return field;
@@ -223,38 +222,5 @@ namespace MCGalaxy.SQL
             Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
 #endif
         }
-    }
-    
-    public static class DatabaseExts 
-    {
-        public static string GetText(this IDataRecord record, int col) {
-            return record.IsDBNull(col) ? "" : record.GetString(col);
-        }
-
-        public static string GetText(this IDataRecord record, string name) {
-            int col = record.GetOrdinal(name);
-            return record.IsDBNull(col) ? "" : record.GetString(col);
-        }
-
-        public static int GetInt(this IDataRecord record, string name) {
-            int col = record.GetOrdinal(name);
-            return record.IsDBNull(col) ? 0 : record.GetInt32(col);
-        }
-
-        public static long GetLong(this IDataRecord record, string name) {
-            int col = record.GetOrdinal(name);
-            return record.IsDBNull(col) ? 0 : record.GetInt64(col);
-        }
-
-        public static string GetStringValue(this IDataRecord record, int col) {
-            if (record.IsDBNull(col)) return "";
-            Type type = record.GetFieldType(col);
-            
-            if (type == typeof(string)) return record.GetString(col);
-            if (type == typeof(DateTime)) {
-                return Database.Backend.RawGetDateTime(record, col);
-            }
-            return record.GetValue(col).ToString();
-        }        
     }
 }

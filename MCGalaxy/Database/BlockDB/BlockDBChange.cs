@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;

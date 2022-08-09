@@ -16,14 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 
 namespace MCGalaxy.SQL 
 {    
     public sealed class SqlTransaction : IDisposable 
     {
-        internal IDbConnection conn;
-        internal IDbTransaction transaction;
+        internal ISqlConnection conn;
+        internal ISqlTransaction transaction;
         
         public SqlTransaction() {
             IDatabaseBackend db = Database.Backend;
@@ -65,8 +64,7 @@ namespace MCGalaxy.SQL
         public bool Execute(string sql, params object[] args) {
             IDatabaseBackend db = Database.Backend;
             try {
-                using (IDbCommand cmd = db.CreateCommand(sql, conn)) {
-                    cmd.Transaction = transaction;
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     db.FillParams(cmd, args);
                     cmd.ExecuteNonQuery();
                     return true;

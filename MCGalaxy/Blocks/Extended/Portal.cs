@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 
@@ -55,7 +54,7 @@ namespace MCGalaxy.Blocks.Extended {
         }
         
         
-        internal static Vec3U16 ParseCoords(IDataRecord record) {
+        internal static Vec3U16 ParseCoords(ISqlRecord record) {
             Vec3U16 pos;
             pos.X = (ushort)record.GetInt32(0);
             pos.Y = (ushort)record.GetInt32(1);
@@ -63,7 +62,7 @@ namespace MCGalaxy.Blocks.Extended {
             return pos;
         }
         
-        static PortalExit ParseExit(IDataRecord record) {
+        static PortalExit ParseExit(ISqlRecord record) {
             PortalExit data = new PortalExit();
             data.Map = record.GetText(0);
             

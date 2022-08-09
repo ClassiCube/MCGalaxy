@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB {
@@ -99,7 +98,7 @@ namespace MCGalaxy.DB {
             p.TimesBeenKicked = Kicks;
         }
         
-        internal static PlayerData Parse(IDataRecord record) {
+        internal static PlayerData Parse(ISqlRecord record) {
             PlayerData data = new PlayerData();
             data.Name = record.GetText(ColumnName);
             data.IP   = record.GetText(ColumnIP);
@@ -154,7 +153,7 @@ namespace MCGalaxy.DB {
             return Colors.Name(raw).Length == 0 ? "" : raw;
         }
         
-        static DateTime ParseDateTime(IDataRecord record, string name) {
+        static DateTime ParseDateTime(ISqlRecord record, string name) {
             int i = record.GetOrdinal(name);
             // dates are a major pain
             try {
