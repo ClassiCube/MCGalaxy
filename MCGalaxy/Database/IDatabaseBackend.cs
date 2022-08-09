@@ -30,6 +30,7 @@ namespace MCGalaxy.SQL
         public abstract bool EnforcesTextLength { get; }        
         /// <summary> Whether this backend supports multiple database schemas. </summary>
         public abstract bool MultipleSchema { get; }
+        public abstract string EngineName { get; }
         
         internal abstract IDbConnection CreateConnection();
         internal abstract IDbCommand CreateCommand(string sql, IDbConnection conn);
@@ -41,6 +42,8 @@ namespace MCGalaxy.SQL
         public string CaselessLikeSuffix { get; protected set; }
 
         
+        /// <summary> Downloads and/or moves required DLLs </summary>
+        public abstract void LoadDependencies();
         /// <summary> Creates the schema for this database (if required). </summary>
         public abstract void CreateDatabase();
         

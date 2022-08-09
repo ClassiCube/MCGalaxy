@@ -35,9 +35,16 @@ namespace MCGalaxy
         /// <remarks> Does not return when restart is successful 
         /// (since current process image is replaced) </remarks>
         public abstract void RestartProcess();
+        public abstract bool IsWindows { get; }
 
 
+        static IOperatingSystem detectedOS;
         public unsafe static IOperatingSystem DetectOS() {
+            detectedOS = detectedOS ?? DoDetectOS();
+            return detectedOS;
+        }
+
+        unsafe static IOperatingSystem DoDetectOS() {
             PlatformID platform = Environment.OSVersion.Platform;
             if (platform == PlatformID.Win32NT || platform == PlatformID.Win32Windows)
                 return new WindowsOS();
@@ -71,6 +78,7 @@ namespace MCGalaxy
         static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
 
         public override void RestartProcess() { }
+        public override bool IsWindows { get { return true; } }
     }
 
     class macOS : UnixOS
@@ -134,6 +142,7 @@ namespace MCGalaxy
         public override void RestartProcess() {
             if (Server.CLIMode) HACK_Execvp();
         }
+        public override bool IsWindows { get { return false; } }
 
 #if !NETSTANDARD
         [DllImport("libc", SetLastError = true)]

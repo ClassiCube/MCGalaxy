@@ -22,9 +22,10 @@ using System.IO;
 using System.Text;
 using MySql.Data.MySqlClient;
 
-namespace MCGalaxy.SQL {
-
-    public sealed class MySQLBackend : IDatabaseBackend {
+namespace MCGalaxy.SQL 
+{
+    public sealed class MySQLBackend : IDatabaseBackend 
+    {
         public static IDatabaseBackend Instance = new MySQLBackend();
         public MySQLBackend() {
             // MySQL uses case insensitive collation by default
@@ -33,7 +34,8 @@ namespace MCGalaxy.SQL {
         }
         
         public override bool EnforcesTextLength { get { return true; } }
-        public override bool MultipleSchema { get { return true; } }     
+        public override bool MultipleSchema { get { return true; } }
+        public override string EngineName { get { return "MySQL"; } }
         
         internal override IDbConnection CreateConnection() {
             const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
@@ -51,6 +53,9 @@ namespace MCGalaxy.SQL {
         }
 
         
+        public override void LoadDependencies() {
+        }
+
         public override void CreateDatabase() {
             string sql = "CREATE DATABASE if not exists `" + Server.Config.MySQLDatabaseName + "`";
             Database.Do(sql, true, null, null);

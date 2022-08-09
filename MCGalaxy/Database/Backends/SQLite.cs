@@ -21,17 +21,19 @@ using System.Data;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy.SQL {
-
-    public sealed class SQLiteBackend : IDatabaseBackend {
+namespace MCGalaxy.SQL 
+{
+    public sealed class SQLiteBackend : IDatabaseBackend 
+    {
         public static IDatabaseBackend Instance = new SQLiteBackend();
         public SQLiteBackend() {
             CaselessWhereSuffix = " COLLATE NOCASE";
-            CaselessLikeSuffix = " COLLATE NOCASE";
+            CaselessLikeSuffix  = " COLLATE NOCASE";
         }
         
         public override bool EnforcesTextLength { get { return false; } }
         public override bool MultipleSchema { get { return false; } }
+        public override string EngineName { get { return "SQLite"; } }
         
         internal override IDbConnection CreateConnection() {
             return new MCGSQLiteConnection();
@@ -44,8 +46,25 @@ namespace MCGalaxy.SQL {
         internal override IDbDataParameter CreateParameter() {
             return new SQLiteParameter();
         }
-        
-        
+
+
+        public override void LoadDependencies() {
+            // on macOS/Linux, use the system provided sqlite3 native library
+            if (!IOperatingSystem.DetectOS().IsWindows) return;
+
+            Server.CheckFile("sqlite3_x32.dll");
+            Server.CheckFile("sqlite3_x64.dll");
+
+            // sqlite3.dll is the .DLL that MCGalaxy will actually load on Windows
+            try {
+                string dll = IntPtr.Size == 8 ? "sqlite3_x64.dll" : "sqlite3_x32.dll";
+                if (File.Exists(dll)) File.Copy(dll, "sqlite3.dll", true);
+            } catch (Exception ex) {
+                // e.g. can happen when multiple server instances running
+                Logger.LogError("Error moving SQLite dll", ex);
+            }
+        }
+
         public override void CreateDatabase() { }
         
         public override string RawGetDateTime(IDataRecord record, int col) {

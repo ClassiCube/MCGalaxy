@@ -62,12 +62,12 @@ namespace MCGalaxy.DB {
                             "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
                             p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
 
-            int id = -100000;
+            int id = -200;
             Database.ReadRows("Players", "ID", 
                                 record => id = record.GetInt32(0),
                                 "WHERE Name=@0", p.name);
 
-            if (id >= 0) {
+            if (id != -200) {
                 p.DatabaseID = id;
             } else {
                 p.DatabaseID = NameConverter.InvalidNameID(p.name);
@@ -136,7 +136,6 @@ namespace MCGalaxy.DB {
             data.TotalDeleted  = UnpackHi(drawn);
             return data;
         }
-        internal static object Read(IDataRecord record, object arg) { return Parse(record); }
         
         internal static long ParseLong(string value) {
             return (value.Length == 0 || value.CaselessEq("null")) ? 0 : long.Parse(value);

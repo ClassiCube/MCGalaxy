@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -33,6 +32,7 @@ using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
 using MCGalaxy.Scripting;
+using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 using MCGalaxy.Modules.Awards;
@@ -60,7 +60,7 @@ namespace MCGalaxy
             Logger.Log(type, message);
         }
         
-        static void CheckFile(string file) {
+        public static void CheckFile(string file) {
             if (File.Exists(file)) return;
             
             Logger.Log(LogType.SystemActivity, file + " doesn't exist, Downloading..");
@@ -92,13 +92,11 @@ namespace MCGalaxy
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;
             ForceEnableTLS();
-            
-            CheckFile("MySql.Data.dll");
-            CheckFile("sqlite3_x32.dll");
-            CheckFile("sqlite3_x64.dll");
+
+            SQLiteBackend.Instance.LoadDependencies();
+            CheckFile("MySql.Data.dll"); // TODO move to MySQL backend ?
 
             EnsureFilesExist();
-            MoveSqliteDll();
             MoveOutdatedFiles();
 
             LoadAllSettings();
@@ -126,15 +124,6 @@ namespace MCGalaxy
             // Force enable TLS 1.1/1.2, otherwise checking for updates on Github doesn't work
             try { ServicePointManager.SecurityProtocol |= (SecurityProtocolType)0x300; } catch { }
             try { ServicePointManager.SecurityProtocol |= (SecurityProtocolType)0xC00; } catch { }
-        }
-        
-        static void MoveSqliteDll() {
-            try {
-                string dll = IntPtr.Size == 8 ? "sqlite3_x64.dll" : "sqlite3_x32.dll";
-                if (File.Exists(dll)) File.Copy(dll, "sqlite3.dll", true);
-            } catch (Exception ex) {
-                Logger.LogError("Error moving SQLite dll", ex);
-            }
         }
         
         static void EnsureFilesExist() {

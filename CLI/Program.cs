@@ -217,7 +217,8 @@ namespace MCGalaxy.Cli {
                 if (part.Length == 0) continue;
                 ConsoleColor color = GetConsoleColor(curCol);
 
-                if (color == ConsoleColor.White) { 
+                if (color == ConsoleColor.White) {
+                    // show in user's preferred console text color
                     Console.ResetColor(); 
                 } else { 
                     Console.ForegroundColor = color; 
