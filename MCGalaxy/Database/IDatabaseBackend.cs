@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Text;
 
@@ -31,11 +30,9 @@ namespace MCGalaxy.SQL
         /// <summary> Whether this backend supports multiple database schemas. </summary>
         public abstract bool MultipleSchema { get; }
         public abstract string EngineName { get; }
-        
-        internal abstract IDbConnection CreateConnection();
-        internal abstract IDbCommand CreateCommand(string sql, IDbConnection conn);
-        internal abstract IDbDataParameter CreateParameter();
-        
+
+        public abstract ISqlConnection CreateConnection();
+
         /// <summary> Suffix required after a WHERE clause for caseless string comparison. </summary>
         public string CaselessWhereSuffix { get; protected set; }
         /// <summary> Suffix required after a LIKE clause for caseless string comparison. </summary>        
@@ -47,7 +44,7 @@ namespace MCGalaxy.SQL
         /// <summary> Creates the schema for this database (if required). </summary>
         public abstract void CreateDatabase();
         
-        public abstract string RawGetDateTime(IDataRecord record, int col);
+        public abstract string RawGetDateTime(ISqlRecord record, int col);
         
         protected internal virtual void ParseCreate(ref string cmd) { }
         
@@ -156,12 +153,12 @@ namespace MCGalaxy.SQL
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
         public void Execute(string sql, object[] parameters, bool createDB) {
-            using (IDbConnection conn = CreateConnection()) {
+            using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (!createDB && MultipleSchema)
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = CreateCommand(sql, conn)) {
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
                     cmd.ExecuteNonQuery();
                 }
@@ -171,14 +168,14 @@ namespace MCGalaxy.SQL
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public void Iterate(string sql, object[] parameters, ReaderCallback callback) {
-            using (IDbConnection conn = CreateConnection()) {
+            using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (MultipleSchema)
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
-                using (IDbCommand cmd = CreateCommand(sql, conn)) {
+                using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
-                    using (IDataReader reader = cmd.ExecuteReader()) {
+                    using (ISqlReader reader = cmd.ExecuteReader()) {
                         while (reader.Read()) { callback(reader); }
                     }
                 }
@@ -188,16 +185,13 @@ namespace MCGalaxy.SQL
         
         
         /// <summary> Adds IDbDataParameter for each argument to the given command. </summary>
-        public void FillParams(IDbCommand cmd, object[] parameters) {
+        public void FillParams(ISqlCommand cmd, object[] parameters) {
             if (parameters == null || parameters.Length == 0) return;
             
             string[] names = GetNames(parameters.Length);
             for (int i = 0; i < parameters.Length; i++) 
             {
-                IDbDataParameter arg = CreateParameter();
-                arg.ParameterName = names[i];
-                arg.Value         = parameters[i];
-                cmd.Parameters.Add(arg);
+                cmd.AddParameter(names[i], parameters[i]);
             }
         }
         

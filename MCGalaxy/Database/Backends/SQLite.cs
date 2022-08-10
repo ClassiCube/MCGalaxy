@@ -35,16 +35,8 @@ namespace MCGalaxy.SQL
         public override bool MultipleSchema { get { return false; } }
         public override string EngineName { get { return "SQLite"; } }
         
-        internal override IDbConnection CreateConnection() {
+        public override ISqlConnection CreateConnection() {
             return new MCGSQLiteConnection();
-        }
-        
-        internal override IDbCommand CreateCommand(string sql, IDbConnection conn) {
-            return new SQLiteCommand(sql, (SQLiteConnection)conn);
-        }
-        
-        internal override IDbDataParameter CreateParameter() {
-            return new SQLiteParameter();
         }
 
 
@@ -67,7 +59,7 @@ namespace MCGalaxy.SQL
 
         public override void CreateDatabase() { }
         
-        public override string RawGetDateTime(IDataRecord record, int col) {
+        public override string RawGetDateTime(ISqlRecord record, int col) {
             return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
         }
         
@@ -146,7 +138,8 @@ namespace MCGalaxy.SQL
         }
     }
     
-    public sealed class MCGSQLiteConnection : SQLiteConnection {
+    sealed class MCGSQLiteConnection : SQLiteConnection 
+    {
         protected override bool ConnectionPooling { get { return Server.Config.DatabasePooling; } }
         protected override string DBPath { get { return "MCGalaxy.db"; } }
     }

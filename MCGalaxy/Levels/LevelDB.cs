@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
@@ -40,7 +39,7 @@ namespace MCGalaxy {
             Logger.Log(LogType.BackgroundActivity, "Saved BlockDB changes for: {0}", lvl.name);
         }
 
-        static Zone ParseZone(IDataRecord record) {
+        static Zone ParseZone(ISqlRecord record) {
             Zone z = new Zone();
             z.MinX = (ushort)record.GetInt("SmallX");
             z.MinY = (ushort)record.GetInt("SmallY");

@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using System.Net;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;

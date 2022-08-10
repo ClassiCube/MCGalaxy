@@ -17,7 +17,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Data;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
@@ -103,7 +102,7 @@ namespace MCGalaxy.Games {
             new ColumnDesc("Additional1", ColumnType.Int32),
         };
         
-        static ZombieStats ParseStats(IDataRecord record) {
+        static ZombieStats ParseStats(ISqlRecord record) {
             ZombieStats stats;
             stats.TotalRounds   = record.GetInt("TotalRounds");
             stats.MaxRounds     = record.GetInt("MaxRounds");
