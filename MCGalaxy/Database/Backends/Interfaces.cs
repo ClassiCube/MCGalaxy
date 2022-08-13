@@ -77,7 +77,6 @@ namespace MCGalaxy.SQL
         public abstract bool IsDBNull(int i);
 
         public abstract object GetValue(int i);
-        public abstract string RawGetDateTime(int col);
         public abstract string GetStringValue(int col);
         public abstract string DumpValue(int col);
 

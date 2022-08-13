@@ -238,7 +238,7 @@ namespace MCGalaxy.SQL
         public override object GetValue(int i) { return rdr.GetValue(i); }
 
 
-        public override string RawGetDateTime(int col) {
+        string RawGetDateTime(int col) {
             DateTime date = GetDateTime(col);
             return date.ToString(Database.DateFormat);
         }

@@ -356,17 +356,11 @@ namespace MCGalaxy.SQL
     static class SQLiteConvert 
     {
         static string[] _datetimeFormats = new string[] {
-            "yyyy-MM-dd HH:mm:ss.FFFFFFFK", /* NOTE: UTC default (0). */
-            "yyyy-MM-dd HH:mm:ssK",
-            "yyyy-MM-dd HH:mmK",
-            
-            "yyyy-MM-dd HH:mm:ss.FFFFFFF", /* NOTE: Non-UTC default (3). */
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd HH:mm",
+            DATEFORMAT_UTC, DATEFORMAT_LOCAL
         };
 
-        static readonly string _datetimeFormatUtc = _datetimeFormats[0];
-        static readonly string _datetimeFormatLocal = _datetimeFormats[3];
+        const string DATEFORMAT_UTC   = "yyyy-MM-dd HH:mm:ssK";
+        const string DATEFORMAT_LOCAL = "yyyy-MM-dd HH:mm:ss";
         static Encoding utf8 = new UTF8Encoding();
 
         public static byte[] ToUTF8(string text) {
@@ -400,7 +394,7 @@ namespace MCGalaxy.SQL
         }
 
         public static string ToString(DateTime value) {
-            string format = (value.Kind == DateTimeKind.Utc) ? _datetimeFormatUtc : _datetimeFormatLocal;
+            string format = (value.Kind == DateTimeKind.Utc) ? DATEFORMAT_UTC : DATEFORMAT_LOCAL;
             return value.ToString(format, CultureInfo.InvariantCulture);
         }
         
@@ -538,10 +532,6 @@ namespace MCGalaxy.SQL
         public override object GetValue(int i) {
             TypeAffinity affinity = GetAffinity(i);
             return stmt.GetValue(i, affinity);
-        }
-
-        public override string RawGetDateTime(int col) {
-            return GetString(col); // GetDateTime is extremely slow so avoid it
         }
 
         public override string GetStringValue(int col) {

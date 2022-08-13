@@ -158,18 +158,8 @@ namespace MCGalaxy.DB {
         }
         
         void UpdateTimestamp(ISqlRecord record) {
-            // date is in format yyyy-MM-dd hh:mm:ss
-            string date = record.RawGetDateTime(1);
-            int year =  (date[0] - '0') * 1000 + (date[1] - '0') * 100 + (date[2] - '0') * 10 + (date[3] - '0');
-            int month = (date[5] - '0') * 10   + (date[6] - '0');
-            int day =   (date[8] - '0') * 10   + (date[9] - '0');
-            int hour =  (date[11] - '0') * 10  + (date[12] - '0');
-            int min =   (date[14] - '0') * 10  + (date[15] - '0');
-            int sec =   (date[17] - '0') * 10  + (date[18] - '0');
-            
-            DateTime time = new DateTime(year, month, day, hour, min, sec);
-            DateTime utc  = time.ToUniversalTime();
-            entry.TimeDelta = (int)utc.Subtract(BlockDB.Epoch).TotalSeconds;
+            DateTime time   = record.GetDateTime(1).ToUniversalTime();
+            entry.TimeDelta = (int)time.Subtract(BlockDB.Epoch).TotalSeconds;
         }
     }
 }
