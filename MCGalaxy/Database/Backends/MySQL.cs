@@ -225,21 +225,19 @@ namespace MCGalaxy.SQL
 
         public override int FieldCount { get  { return rdr.FieldCount; } }
         public override string GetName(int i) { return rdr.GetName(i); }
-        public override Type GetFieldType(int i) { return rdr.GetFieldType(i); }
         public override int GetOrdinal(string name) { return rdr.GetOrdinal(name); }
 
-        public override object GetValue(int i)   { return rdr.GetValue(i); }
-
         public override bool GetBoolean(int i)  { return rdr.GetBoolean(i); }
-        public override byte[] GetBytes(int i)  { return (byte[])rdr.GetValue(i); }
+        public override byte[] GetBytes(int i)  { return (byte[])GetValue(i); }
         public override int GetInt32(int i)     { return rdr.GetInt32(i); }
         public override long GetInt64(int i)    { return rdr.GetInt64(i); }
         public override double GetDouble(int i) { return rdr.GetDouble(i); }
         public override string GetString(int i) { return rdr.GetString(i); }
         public override DateTime GetDateTime(int i) { return rdr.GetDateTime(i); }
         public override bool IsDBNull(int i)    { return rdr.IsDBNull(i); }
+        public override object GetValue(int i) { return rdr.GetValue(i); }
 
-        
+
         public override string RawGetDateTime(int col) {
             DateTime date = GetDateTime(col);
             return date.ToString(Database.DateFormat);
@@ -247,13 +245,26 @@ namespace MCGalaxy.SQL
 
         public override string GetStringValue(int col) {
             if (IsDBNull(col)) return "";
-            Type type = GetFieldType(col);
-            
+            Type type = rdr.GetFieldType(col);
+
             if (type == typeof(string))   return GetString(col);
             if (type == typeof(DateTime)) return RawGetDateTime(col);
 
             return GetValue(col).ToString();
         } 
+
+        public override string DumpValue(int col) {
+            if (IsDBNull(col)) return "NULL";
+            Type colType = rdr.GetFieldType(col);
+
+            // TODO doubles not exact? probably doesn't matter
+            if (colType == typeof(string)) {
+                return Quote(GetString(col));
+            } else if (colType == typeof(DateTime)) {
+                return Quote(RawGetDateTime(col));
+            }
+            return GetString(col);
+        }
     }
 }
 #endif

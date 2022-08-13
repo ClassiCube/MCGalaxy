@@ -65,11 +65,9 @@ namespace MCGalaxy.SQL
     {
         public abstract int FieldCount { get; }
         public abstract string GetName(int i);
-        public abstract Type GetFieldType(int i);
         public abstract int GetOrdinal(string name);
 
         public abstract byte[] GetBytes(int i);
-        public abstract object GetValue(int i);
         public abstract bool GetBoolean(int i);
         public abstract int GetInt32(int i);
         public abstract long GetInt64(int i);
@@ -78,8 +76,10 @@ namespace MCGalaxy.SQL
         public abstract DateTime GetDateTime(int i);
         public abstract bool IsDBNull(int i);
 
+        public abstract object GetValue(int i);
         public abstract string RawGetDateTime(int col);
         public abstract string GetStringValue(int col);
+        public abstract string DumpValue(int col);
 
 
         public string GetText(int col) {
@@ -99,6 +99,12 @@ namespace MCGalaxy.SQL
         public long GetLong(string name) {
             int col = GetOrdinal(name);
             return IsDBNull(col) ? 0 : GetInt64(col);
+        }
+
+        protected static string Quote(string value) {
+            if (value.IndexOf('\'') >= 0) // escape '
+                value = value.Replace("'", "''");
+            return "'" + value + "'";
         }
     }
 }

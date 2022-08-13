@@ -85,8 +85,6 @@ namespace MCGalaxy.SQL
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
         internal static extern TypeAffinity sqlite3_column_type(IntPtr stmt, int index);
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern IntPtr sqlite3_column_decltype(IntPtr stmt, int index);
-        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr sqlite3_column_name(IntPtr stmt, int index);
         
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
@@ -420,15 +418,6 @@ namespace MCGalaxy.SQL
         }
         
 
-        internal static Type[] affinity_to_type = {
-            typeof(object),   // Uninitialized (0)
-            typeof(Int64),    // Int64 (1)
-            typeof(Double),   // Double (2)
-            typeof(string),   // Text (3)
-            typeof(byte[]),   // Blob (4)
-            typeof(object),   // Null (5)
-        };
-
         internal static SqlType TypeToDbType(Type typ) {
             TypeCode tc = Type.GetTypeCode(typ);
             if (tc == TypeCode.Object) {
@@ -459,66 +448,6 @@ namespace MCGalaxy.SQL
             SqlType.Object,   // ?? (17)
             SqlType.String    // String (18)
         };
-
-        internal static Type[] sqltype_to_type = {
-            typeof(float),  typeof(double), typeof(decimal),
-            typeof(sbyte),  typeof(Int16),  typeof(Int32),  typeof(Int64),
-            typeof(byte),   typeof(UInt16), typeof(UInt32), typeof(UInt64),
-            typeof(bool),   typeof(DateTime),
-            typeof(byte[]), typeof(string), typeof(object)
-        };
-        
-        static bool TryParseDbType(string typeName, out SqlType type) {
-            string[] names = all_names;
-            for (int i = 0; i < names.Length; i++) 
-            {
-                if (!typeName.Equals(names[i], StringComparison.OrdinalIgnoreCase)) continue;
-                type = all_types[i]; return true;
-            }
-            type = 0; return false;
-        }
-        
-        internal static SqlType TypeNameToDbType(string typeName) {
-            if (typeName == null) return SqlType.Object;
-
-            SqlType value;
-            if (TryParseDbType(typeName, out value)) return value;
-            
-            int i = typeName.IndexOf('(');
-            if (i > 0 && TryParseDbType(typeName.Substring(0, i).TrimEnd(), out value)) return value;
-            
-            return SqlType.Object;
-        }
-        
-        static string[] all_names = new string[] {
-            "BIGINT", "BIGUINT", "BINARY", "BLOB",
-            "BOOL", "BOOLEAN", "CHAR", "DATE",
-            "DATETIME", "DOUBLE", "FLOAT", "IDENTITY",
-            "INT", "INT8", "INT16", "INT32",
-            "INT64", "INTEGER", "INTEGER8", "INTEGER16",
-            "INTEGER32", "INTEGER64", "LONG", "MEDIUMINT",
-            "REAL", "SINGLE", "SMALLINT", "SMALLUINT",
-            "STRING", "TEXT", "TIME", "TINYINT",
-            "TINYSINT", "UINT", "UINT8", "UINT16",
-            "UINT32", "UINT64", "ULONG", "UNSIGNEDINTEGER",
-            "UNSIGNEDINTEGER8", "UNSIGNEDINTEGER16", "UNSIGNEDINTEGER32", "UNSIGNEDINTEGER64",
-            "VARCHAR",
-        };
-        
-        static SqlType[] all_types = new SqlType[] {
-            SqlType.Int64,    SqlType.UInt64,  SqlType.Binary,   SqlType.Binary,
-            SqlType.Boolean,  SqlType.Boolean, SqlType.String,   SqlType.DateTime,
-            SqlType.DateTime, SqlType.Double,  SqlType.Double,   SqlType.Int64,
-            SqlType.Int32,    SqlType.SByte,   SqlType.Int16,    SqlType.Int32,
-            SqlType.Int64,    SqlType.Int64,   SqlType.SByte,    SqlType.Int16,
-            SqlType.Int32,    SqlType.Int64,   SqlType.Int64,    SqlType.Int32,
-            SqlType.Double,   SqlType.Single,  SqlType.Int16,    SqlType.UInt16,
-            SqlType.String,   SqlType.String,  SqlType.DateTime, SqlType.Byte,
-            SqlType.SByte,    SqlType.UInt32,  SqlType.Byte,     SqlType.UInt16,
-            SqlType.UInt32,   SqlType.UInt64,  SqlType.UInt64,   SqlType.UInt64,
-            SqlType.Byte,     SqlType.UInt16,  SqlType.UInt32,   SqlType.UInt64,
-            SqlType.String,
-        };
     }
 
     enum TypeAffinity 
@@ -529,7 +458,6 @@ namespace MCGalaxy.SQL
         Text = 3,
         Blob = 4,
         Null = 5,
-        DateTime = 10,
     }
 
     public sealed class SQLiteDataReader : ISqlReader 
@@ -602,15 +530,15 @@ namespace MCGalaxy.SQL
 
         public override string GetString(int i) { return stmt.GetText(i); }
 
-        public override object GetValue(int i) {
-            TypeAffinity affinity = GetAffinity(i);
-            return stmt.GetValue(i, affinity);
-        }
-
         public override bool IsDBNull(int i) {
             return GetAffinity(i) == TypeAffinity.Null;
         }
 
+
+        public override object GetValue(int i) {
+            TypeAffinity affinity = GetAffinity(i);
+            return stmt.GetValue(i, affinity);
+        }
 
         public override string RawGetDateTime(int col) {
             return GetString(col); // GetDateTime is extremely slow so avoid it
@@ -618,21 +546,19 @@ namespace MCGalaxy.SQL
 
         public override string GetStringValue(int col) {
             return GetString(col);
-        } 
-
-
-        public override Type GetFieldType(int i) {
-            TypeAffinity affinity = stmt.ColumnAffinity(i);
-
-            // Fetch the declared column datatype and attempt to convert it to a known DbType.
-            string typeName = stmt.ColumnType(i);
-            SqlType type    = SQLiteConvert.TypeNameToDbType(typeName);
-
-            if (type == SqlType.Object)
-                return SQLiteConvert.affinity_to_type[(int)affinity];
-            else
-                return SQLiteConvert.sqltype_to_type[(int)type];
         }
+
+        public override string DumpValue(int col) {
+            TypeAffinity affinity = GetAffinity(col);
+            if (affinity == TypeAffinity.Null) return "NULL";
+
+            string value = GetString(col);
+            if (affinity == TypeAffinity.Text) return Quote(value);
+
+            // TODO doubles not exact? probably doesn't matter
+            return value;
+        }
+
 
         public override string GetName(int i) { return stmt.ColumnName(i); }
 
@@ -830,11 +756,6 @@ namespace MCGalaxy.SQL
 
         internal TypeAffinity ColumnAffinity(int index) {
             return Interop.sqlite3_column_type(handle, index);
-        }
-
-        internal string ColumnType(int index) {
-            IntPtr p = Interop.sqlite3_column_decltype(handle, index);
-            return SQLiteConvert.FromUTF8(p, -1);
         }
 
         internal void BindAll(List<string> names, List<object> values) {

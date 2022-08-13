@@ -26,7 +26,6 @@ namespace MCGalaxy.SQL
         string table, insertCols;
         internal StreamWriter sql;
         string[] colNames;
-        Type[] colTypes;
         
         public void DumpTable(StreamWriter sql, string table) {
             gottenRows = false;
@@ -47,11 +46,9 @@ namespace MCGalaxy.SQL
             sql.WriteLine();
 
             colNames = new string[record.FieldCount];
-            colTypes = new Type[record.FieldCount];
             for (int i = 0; i < record.FieldCount; i++) 
             {
                 colNames[i] = record.GetName(i);
-                colTypes[i] = record.GetFieldType(i);
             }
             insertCols = FormatInsertColumns(table);
             gottenRows = true;
@@ -64,21 +61,8 @@ namespace MCGalaxy.SQL
             //The values themselves can be integers or strings, or null
             for (int col = 0; col < colNames.Length; col++) 
             {
-                if (record.IsDBNull(col)) {
-                    sql.Write("NULL");
-                } else if (colTypes[col] == typeof(string)) {
-                    string value = record.GetString(col);
-                    if (value.IndexOf('\'') >= 0) // escape '
-                        value = value.Replace("'", "''");
-                    sql.Write("'" + value + "'");
-                } else if (colTypes[col] == typeof(DateTime)) {
-                    string date = record.RawGetDateTime(col);
-                    sql.Write("'" + date + "'");
-                } else {
-                    long value = record.GetInt64(col); // TODO: try to use GetInt32 where possible
-                    sql.Write(value);
-                }
-                sql.Write((col < colTypes.Length - 1 ? ", " : ");"));
+                sql.Write(record.DumpValue(col));
+                sql.Write((col < colNames.Length - 1 ? ", " : ");"));
             }
             
             sql.WriteLine();
