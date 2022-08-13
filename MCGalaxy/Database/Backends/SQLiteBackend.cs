@@ -576,8 +576,7 @@ namespace MCGalaxy.SQL
         }
 
         public override DateTime GetDateTime(int i) {
-            TypeAffinity aff = GetAffinity(i);
-            if (aff == TypeAffinity.Int64 || aff == TypeAffinity.Double || aff == TypeAffinity.Text)
+            if (GetAffinity(i) == TypeAffinity.Text)
                 return stmt.GetDateTime(i);
             throw new NotSupportedException();
         }
@@ -612,9 +611,14 @@ namespace MCGalaxy.SQL
             return GetAffinity(i) == TypeAffinity.Null;
         }
 
+
         public override string RawGetDateTime(int col) {
             return GetString(col); // GetDateTime is extremely slow so avoid it
         }
+
+        public override string GetStringValue(int col) {
+            return GetString(col);
+        } 
 
 
         public override Type GetFieldType(int i) {

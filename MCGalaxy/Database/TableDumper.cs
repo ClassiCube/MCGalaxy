@@ -25,6 +25,7 @@ namespace MCGalaxy.SQL
         bool gottenRows;
         string table, insertCols;
         internal StreamWriter sql;
+        string[] colNames;
         Type[] colTypes;
         
         public void DumpTable(StreamWriter sql, string table) {
@@ -45,13 +46,14 @@ namespace MCGalaxy.SQL
             sql.WriteLine("--");
             sql.WriteLine();
 
-            string[] colNames = new string[record.FieldCount];
+            colNames = new string[record.FieldCount];
             colTypes = new Type[record.FieldCount];
-            for (int i = 0; i < record.FieldCount; i++) {
+            for (int i = 0; i < record.FieldCount; i++) 
+            {
                 colNames[i] = record.GetName(i);
                 colTypes[i] = record.GetFieldType(i);
             }
-            insertCols = FormatInsertColumns(colNames, table);
+            insertCols = FormatInsertColumns(table);
             gottenRows = true;
         }
         
@@ -60,7 +62,8 @@ namespace MCGalaxy.SQL
             sql.WriteLine(insertCols);
 
             //The values themselves can be integers or strings, or null
-            for (int col = 0; col < colTypes.Length; col++) {
+            for (int col = 0; col < colNames.Length; col++) 
+            {
                 if (record.IsDBNull(col)) {
                     sql.Write("NULL");
                 } else if (colTypes[col] == typeof(string)) {
@@ -81,9 +84,12 @@ namespace MCGalaxy.SQL
             sql.WriteLine();
         }
         
-        static string FormatInsertColumns(string[] cols, string name) {
-            string sql = "INSERT INTO `" + name + "` (`";
-            for (int i = 0; i < cols.Length; i++) {
+        string FormatInsertColumns(string name) {
+            string sql    = "INSERT INTO `" + name + "` (`";
+            string[] cols = colNames;
+
+            for (int i = 0; i < cols.Length; i++) 
+            {
                 sql += cols[i] + "`";
                 if (i < cols.Length - 1) sql += ", `";
                 else sql += ") VALUES (";

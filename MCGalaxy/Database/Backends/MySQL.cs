@@ -231,7 +231,7 @@ namespace MCGalaxy.SQL
         public override object GetValue(int i)   { return rdr.GetValue(i); }
 
         public override bool GetBoolean(int i)  { return rdr.GetBoolean(i); }
-        public override byte[] GetBytes(int i)  { return null; }
+        public override byte[] GetBytes(int i)  { return (byte[])rdr.GetValue(i); }
         public override int GetInt32(int i)     { return rdr.GetInt32(i); }
         public override long GetInt64(int i)    { return rdr.GetInt64(i); }
         public override double GetDouble(int i) { return rdr.GetDouble(i); }
@@ -244,6 +244,16 @@ namespace MCGalaxy.SQL
             DateTime date = GetDateTime(col);
             return date.ToString(Database.DateFormat);
         }
+
+        public override string GetStringValue(int col) {
+            if (IsDBNull(col)) return "";
+            Type type = GetFieldType(col);
+            
+            if (type == typeof(string))   return GetString(col);
+            if (type == typeof(DateTime)) return RawGetDateTime(col);
+
+            return GetValue(col).ToString();
+        } 
     }
 }
 #endif
