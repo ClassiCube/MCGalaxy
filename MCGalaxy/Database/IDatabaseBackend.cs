@@ -44,8 +44,6 @@ namespace MCGalaxy.SQL
         /// <summary> Creates the schema for this database (if required). </summary>
         public abstract void CreateDatabase();
         
-        public abstract string RawGetDateTime(ISqlRecord record, int col);
-        
         protected internal virtual void ParseCreate(ref string cmd) { }
         
         protected static List<string> GetStrings(string sql, params object[] args) {

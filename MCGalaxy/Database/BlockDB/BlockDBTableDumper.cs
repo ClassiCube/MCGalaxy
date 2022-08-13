@@ -159,7 +159,7 @@ namespace MCGalaxy.DB {
         
         void UpdateTimestamp(ISqlRecord record) {
             // date is in format yyyy-MM-dd hh:mm:ss
-            string date = Database.Backend.RawGetDateTime(record, 1);
+            string date = record.RawGetDateTime(1);
             int year =  (date[0] - '0') * 1000 + (date[1] - '0') * 100 + (date[2] - '0') * 10 + (date[3] - '0');
             int month = (date[5] - '0') * 10   + (date[6] - '0');
             int day =   (date[8] - '0') * 10   + (date[9] - '0');

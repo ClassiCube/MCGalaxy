@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Text;
 
@@ -58,10 +57,6 @@ namespace MCGalaxy.SQL
         }
 
         public override void CreateDatabase() { }
-        
-        public override string RawGetDateTime(ISqlRecord record, int col) {
-            return record.GetString(col); // reader.GetDateTime is extremely slow so avoid it
-        }
         
         public override bool TableExists(string table) {
             return Database.CountRows("sqlite_master",

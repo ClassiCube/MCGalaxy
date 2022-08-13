@@ -18,7 +18,6 @@
 #if !MCG_STANDALONE
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -55,11 +54,6 @@ namespace MCGalaxy.SQL
         public override void CreateDatabase() {
             string sql = "CREATE DATABASE if not exists `" + Server.Config.MySQLDatabaseName + "`";
             Database.Do(sql, true, null, null);
-        }
-        
-        public override string RawGetDateTime(ISqlRecord record, int col) {
-            DateTime date = record.GetDateTime(col);
-            return date.ToString(Database.DateFormat);
         }
         
         protected internal override void ParseCreate(ref string cmd) {
@@ -244,6 +238,12 @@ namespace MCGalaxy.SQL
         public override string GetString(int i) { return rdr.GetString(i); }
         public override DateTime GetDateTime(int i) { return rdr.GetDateTime(i); }
         public override bool IsDBNull(int i)    { return rdr.IsDBNull(i); }
+
+        
+        public override string RawGetDateTime(int col) {
+            DateTime date = GetDateTime(col);
+            return date.ToString(Database.DateFormat);
+        }
     }
 }
 #endif

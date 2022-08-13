@@ -612,6 +612,10 @@ namespace MCGalaxy.SQL
             return GetAffinity(i) == TypeAffinity.Null;
         }
 
+        public override string RawGetDateTime(int col) {
+            return GetString(col); // GetDateTime is extremely slow so avoid it
+        }
+
 
         public override Type GetFieldType(int i) {
             TypeAffinity affinity = stmt.ColumnAffinity(i);

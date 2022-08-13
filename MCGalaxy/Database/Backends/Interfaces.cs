@@ -77,6 +77,7 @@ namespace MCGalaxy.SQL
         public abstract string GetString(int i);
         public abstract DateTime GetDateTime(int i);
         public abstract bool IsDBNull(int i);
+        public abstract string RawGetDateTime(int col);
 
 
         public string GetText(int col) {
@@ -102,10 +103,9 @@ namespace MCGalaxy.SQL
             if (IsDBNull(col)) return "";
             Type type = GetFieldType(col);
             
-            if (type == typeof(string)) return GetString(col);
-            if (type == typeof(DateTime)) {
-                return Database.Backend.RawGetDateTime(this, col);
-            }
+            if (type == typeof(string))   return GetString(col);
+            if (type == typeof(DateTime)) return RawGetDateTime(col);
+
             return GetValue(col).ToString();
         } 
     }
