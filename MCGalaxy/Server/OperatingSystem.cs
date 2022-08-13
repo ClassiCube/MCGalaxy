@@ -144,7 +144,6 @@ namespace MCGalaxy
         }
         public override bool IsWindows { get { return false; } }
 
-#if !NETSTANDARD
         [DllImport("libc", SetLastError = true)]
         static extern int execvp(string path, string[] argv);
         
@@ -170,40 +169,24 @@ namespace MCGalaxy
             //
             // Note this issue does NOT happen with GUI mode for some reason - and also
             // don't want to use excevp in GUI mode, otherwise the X socket FDs pile up
-
-            // try to exec using actual runtime path first, e.g. /usr/bin/mono-sgen
-            string exe = Process.GetCurrentProcess().MainModule.FileName;
-            execvp(exe, new string[] { exe, Server.GetRestartPath() });
-            Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
-
-            // .. and fallback to mono if that doesn't work for some reason
-            execvp("mono", new string[] { "mono", Server.GetRestartPath() });
-            Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
-        }
-#else
-        [DllImport("libc", SetLastError = true)]
-        unsafe static extern int execvp(byte* path, byte** argv);
-        
-        unsafe static void HACK_Execvp() {
-            // similar issue as with Mono, but happens with this instead
+            //
+            //
+            // a similar issue occurs with dotnet, but errors with this instead
             //  "IOException with 'I/O error' message
             //     ...
             //     at System.IO.StdInReader.ReadKey()
-            //
-            // Trying to use heap allocated string sometimes causes EFAULT error,
-            //  therefore manually allocate arguments on the stack instead
-            byte* path  = stackalloc byte[8192];
-            byte** args = stackalloc byte*[2];
-            args[0] = path;
-            args[1] = (byte*)IntPtr.Zero;
-            // TODO add null argument at end, see if that works
 
-            byte[] tmp = Encoding.UTF8.GetBytes(Server.GetRestartPath());
-            Marshal.Copy(tmp, 0, (IntPtr)path, tmp.Length);
+            // try to exec using actual runtime path first
+            //   e.g. /usr/bin/mono-sgen, /home/test/.dotnet/dotnet
+            string exe = Process.GetCurrentProcess().MainModule.FileName;
+            execvp(exe, new string[] { exe, Server.RestartPath, null });
+            Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
 
-            execvp(path, args);
-            Console.WriteLine("execvp failed: {0}", Marshal.GetLastWin32Error());
-        }
+#if !NETSTANDARD
+            // .. and fallback to mono if that doesn't work for some reason
+            execvp("mono", new string[] { "mono", Server.RestartPath, null });
+            Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
 #endif
+        }
     }
 }

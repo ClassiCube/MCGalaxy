@@ -109,8 +109,7 @@ namespace MCGalaxy.Commands.Info {
         }
         
         static void OutputEntry(Player p, ref bool foundAny, Dictionary<int, string> names, BlockDBEntry entry) {
-            DateTime now = DateTime.UtcNow;
-            string name = null;
+            string name;
             if (!names.TryGetValue(entry.PlayerID, out name)) {
                 name = NameConverter.FindName(entry.PlayerID);
                 names[entry.PlayerID] = name;

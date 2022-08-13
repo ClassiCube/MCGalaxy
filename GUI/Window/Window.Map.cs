@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.UI;

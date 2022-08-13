@@ -543,7 +543,8 @@ namespace MCGalaxy.SQL
             if (affinity == TypeAffinity.Null) return "NULL";
 
             string value = GetString(col);
-            if (affinity == TypeAffinity.Text) return Quote(value);
+            if (affinity == TypeAffinity.Text || affinity == TypeAffinity.Blob) 
+                return Quote(value);
 
             // TODO doubles not exact? probably doesn't matter
             return value;

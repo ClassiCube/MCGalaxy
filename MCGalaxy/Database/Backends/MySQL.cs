@@ -258,7 +258,7 @@ namespace MCGalaxy.SQL
             Type colType = rdr.GetFieldType(col);
 
             // TODO doubles not exact? probably doesn't matter
-            if (colType == typeof(string)) {
+            if (colType == typeof(string) || colType == typeof(byte[])) {
                 return Quote(GetString(col));
             } else if (colType == typeof(DateTime)) {
                 return Quote(RawGetDateTime(col));

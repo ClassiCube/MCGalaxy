@@ -17,7 +17,6 @@
  */
 using System;
 using MCGalaxy.Blocks;
-using MCGalaxy.Commands.Fun;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Misc {
