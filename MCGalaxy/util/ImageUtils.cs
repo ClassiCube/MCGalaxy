@@ -46,14 +46,15 @@ namespace MCGalaxy.Util
 
     unsafe sealed class GDIPlusBitmap : IBitmap2D
     {
+        Image img;
         Bitmap bmp;
         BitmapData data;
         byte* scan0;
         int stride;
 
         public override void Decode(byte[] data) {
-            Bitmap img = new Bitmap(new MemoryStream(data));
-            SetBitmap(img);
+            Image tmp = Image.FromStream(new MemoryStream(data));
+            SetBitmap(tmp);
         }
 
         public override void Resize(int width, int height, bool hq) {
@@ -64,13 +65,16 @@ namespace MCGalaxy.Util
                 g.PixelOffsetMode   = hq ? PixelOffsetMode.HighQuality          : PixelOffsetMode.None;
                 g.DrawImage(bmp, 0, 0, width, height);
             }
-            
-            bmp.Dispose();
+
+            Dispose();
             SetBitmap(resized);
         }
 
-        void SetBitmap(Bitmap src) {
-            bmp = src;
+        void SetBitmap(Image src) {
+            img = src;
+            // although rare, possible src might actually be a Metafile instead
+            bmp = (Bitmap)src;
+
             // NOTE: sometimes Mono will return an invalid bitmap instance that
             //  throws ArgumentNullException when trying to access Width/Height
             Width  = src.Width;
@@ -79,7 +83,9 @@ namespace MCGalaxy.Util
 
         public override void Dispose() {
             UnlockBits();
-            if (bmp != null) bmp.Dispose();
+            if (img != null) img.Dispose();
+
+            img = null;
             bmp = null;
         }
 
