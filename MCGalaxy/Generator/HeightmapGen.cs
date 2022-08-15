@@ -16,30 +16,25 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
 using MCGalaxy.Network;
-using MCGalaxy.Drawing;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Generator 
 {
     public static class HeightmapGen 
     {       
-        static void OnDecodeError(Player p, Bitmap bmp) {
+        static void OnDecodeError(Player p, IBitmap2D bmp) {
             if (bmp != null) bmp.Dispose();
             // TODO failed to decode the image. make sure you are using the URL of the image directly, not just the webpage it is hosted on              
             p.Message("&WThere was an error reading the downloaded image.");
             p.Message("&WThe url may need to end with its extension (such as .jpg).");
         }
         
-        public static Bitmap DecodeImage(byte[] data, Player p) {
-            Bitmap bmp = null;
+        public static IBitmap2D DecodeImage(byte[] data, Player p) {
+            IBitmap2D bmp = null;
             try {
-                bmp = new Bitmap(new MemoryStream(data));
-                int width = bmp.Width;
-                // sometimes Mono will return an invalid bitmap instance that throws ArgumentNullException,
-                // so we make sure to check for that here rather than later.
+                bmp = IBitmap2D.Create();
+                bmp.Decode(data);
                 return bmp;
             } catch (ArgumentException ex) {
                 // GDI+ throws ArgumentException when data is not an image
@@ -61,65 +56,49 @@ namespace MCGalaxy.Generator
             
             byte[] data = HttpUtil.DownloadImage(url, p);
             if (data == null) return false;
-            Bitmap bmp = DecodeImage(data, p);
+            IBitmap2D bmp = DecodeImage(data, p);
             if (bmp == null) return false;
             
             int index = 0, oneY = lvl.Width * lvl.Length;
-            try {
+            using (bmp) {
                 if (lvl.Width != bmp.Width || lvl.Length != bmp.Height) {
                     p.Message("&cHeightmap size ({0}x{1}) does not match Width x Length ({2}x{3}) of the level",
                               bmp.Width, bmp.Height, lvl.Width, lvl.Length);
                     p.Message("&cAs such, the map may not look accurate.");
-                    bmp = Resize(bmp, lvl.Width, lvl.Length);
+                    bmp.Resize(lvl.Width, lvl.Height, false);
                 }
-                
-                using (PixelGetter pixels = new PixelGetter(bmp)) {
-                    pixels.Init();
-                    for (int z = 0; z < pixels.Height; z++)
-                        for (int x = 0; x < pixels.Width; x++)
+                bmp.LockBits();
+
+                for (int z = 0; z < bmp.Height; z++)
+                    for (int x = 0; x < bmp.Width; x++)
+                {
+                    int height = bmp.Get(x, z).R;
+                    byte layer = Block.Dirt, top = Block.Grass;
+                    
+                    if (
+                        IsCliff(height, bmp, x - 1, z) ||
+                        IsCliff(height, bmp, x + 1, z) ||
+                        IsCliff(height, bmp, x, z - 1) ||
+                        IsCliff(height, bmp, x, z + 1))
                     {
-                        int height = pixels.Get(x, z).R;
-                        byte layer = Block.Dirt, top = Block.Grass;
-                        
-                        if (
-                            IsCliff(height, pixels, x - 1, z) ||
-                            IsCliff(height, pixels, x + 1, z) ||
-                            IsCliff(height, pixels, x, z - 1) ||
-                            IsCliff(height, pixels, x, z + 1))
-                        {
-                            layer = Block.Stone; top = Block.Stone;
-                        }
-                        
-                        // remap from 0..255 to 0..lvl.Height
-                        height = height * lvl.Height / 255;
-                        for (int y = 0; y < height - 1; y++)
-                            lvl.blocks[index + oneY * y] = layer;
-                        if (height > 0)
-                            lvl.blocks[index + oneY * (height - 1)] = top;
-                        index++;
+                        layer = Block.Stone; top = Block.Stone;
                     }
+                    
+                    // remap from 0..255 to 0..lvl.Height
+                    height = height * lvl.Height / 255;
+                    for (int y = 0; y < height - 1; y++)
+                        lvl.blocks[index + oneY * y] = layer;
+                    if (height > 0)
+                        lvl.blocks[index + oneY * (height - 1)] = top;
+                    index++;
                 }
-                // Cannot use using { } here because bmp may be reassigned
-            } finally { bmp.Dispose(); }
+            }
             return true;
         }
         
-        static Bitmap Resize(Bitmap bmp, int width, int height) {
-            Bitmap resized = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(resized)) {
-                g.InterpolationMode = InterpolationMode.NearestNeighbor;
-                g.SmoothingMode     = SmoothingMode.None;
-                g.PixelOffsetMode   = PixelOffsetMode.None;
-                g.DrawImage(bmp, 0, 0, width, height);
-            }
-            
-            bmp.Dispose();
-            return resized;
-        }
-        
-        static bool IsCliff(int height, PixelGetter pixels, int x, int z) {
-            if (x >= pixels.Width || x < 0 || z >= pixels.Height || z < 0) return false;
-            int neighbourHeight = pixels.Get(x, z).R;
+        static bool IsCliff(int height, IBitmap2D bmp, int x, int z) {
+            if (x >= bmp.Width || x < 0 || z >= bmp.Height || z < 0) return false;
+            int neighbourHeight = bmp.Get(x, z).R;
             return height >= neighbourHeight + 2;
         }
     }

@@ -18,8 +18,8 @@
 using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
+using MCGalaxy.Util;
 using BlockID = System.UInt16;
-using Draw = System.Drawing;
 
 namespace MCGalaxy.Drawing.Ops 
 {
@@ -31,7 +31,7 @@ namespace MCGalaxy.Drawing.Ops
             return Source.Width * Source.Height;
         }
         
-        internal Draw.Bitmap Source;
+        internal IBitmap2D Source;
         internal bool DualLayer, LayerMode;
         public ImagePalette Palette;
         
@@ -42,9 +42,11 @@ namespace MCGalaxy.Drawing.Ops
             selector = new RgbPaletteMatcher();
             CalcLayerColors();
 
-            using (PixelGetter getter = new PixelGetter(Source)) {
-                getter.Init();
-                OutputPixels(getter, output);
+            try {
+                Source.LockBits();
+                OutputPixels(output);
+            } finally {
+                Source.UnlockBits();
             }
             selector = null;
             
@@ -101,14 +103,14 @@ namespace MCGalaxy.Drawing.Ops
             return entry;
         }
         
-        void OutputPixels(PixelGetter pixels, DrawOpOutput output) {
-            int width = pixels.Width, height = pixels.Height;
+        void OutputPixels(DrawOpOutput output) {
+            int width = Source.Width, height = Source.Height;
             int srcY = height - 1; // need to flip coords in bitmap vertically
             
             for (int yy = 0; yy < height; yy++, srcY--)
                 for (int xx = 0; xx < width; xx++) 
             {
-                Pixel P = pixels.Get(xx, srcY);
+                Pixel P = Source.Get(xx, srcY);
                 ushort x = (ushort)(Origin.X + dx.X * xx + dy.X * yy);
                 ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
                 ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);

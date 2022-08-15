@@ -16,8 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Threading;
 using MCGalaxy.Drawing;
@@ -25,6 +23,7 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
+using MCGalaxy.Util;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
@@ -106,7 +105,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoDrawImageCore(Player p, Vec3S32[] marks, DrawArgs dArgs) {
-            Bitmap bmp = HeightmapGen.DecodeImage(dArgs.Data, p);
+            IBitmap2D bmp = HeightmapGen.DecodeImage(dArgs.Data, p);
             if (bmp == null) return;
 
             ImagePrintDrawOp op = new ImagePrintDrawOp();
@@ -118,7 +117,7 @@ namespace MCGalaxy.Commands.Building {
             Clamp(p, marks, op, ref width, ref height);
             
             if (width < bmp.Width || height < bmp.Height) {
-                bmp = Resize(bmp, width, height);
+                bmp.Resize(width, height, true);
             }
             
             op.Source = bmp; op.Palette = dArgs.Pal;
@@ -142,19 +141,6 @@ namespace MCGalaxy.Commands.Building {
             p.Message("&WImage is too large ({0}x{1}), resizing to ({2}x{3})",
                       width, height, resizedWidth, resizedHeight);
             width = resizedWidth; height = resizedHeight;
-        }
-        
-        static Bitmap Resize(Bitmap bmp, int width, int height) {
-            Bitmap resized = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(resized)) {
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode     = SmoothingMode.HighQuality;
-                g.PixelOffsetMode   = PixelOffsetMode.HighQuality;
-                g.DrawImage(bmp, 0, 0, width, height);
-            }
-            
-            bmp.Dispose();
-            return resized;
         }
         
         static int LargestDelta(Level lvl, Vec3S32 point) {
