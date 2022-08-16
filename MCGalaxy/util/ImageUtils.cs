@@ -16,9 +16,16 @@
     permissions and limitations under the Licenses.
  */
 using System;
+#if !NETSTANDARD
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+#else
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Processors.Transforms;
+#endif
 using System.IO;
 
 namespace MCGalaxy.Util 
@@ -41,9 +48,14 @@ namespace MCGalaxy.Util
 
         public abstract void Dispose();
 
+#if !NETSTANDARD
         public static IBitmap2D Create() { return new GDIPlusBitmap(); }
+#else
+        public static IBitmap2D Create() { return new ImageSharpBitmap(); }
+#endif
     }
 
+#if !NETSTANDARD
     unsafe sealed class GDIPlusBitmap : IBitmap2D
     {
         Image img;
@@ -138,4 +150,46 @@ namespace MCGalaxy.Util
             data = null;
         }
     }
+#else
+	unsafe sealed class ImageSharpBitmap : IBitmap2D
+    {
+        Image<Rgba32> img;
+
+        public override void Decode(byte[] data) {
+            img = Image.Load<Rgba32>(data);
+            UpdateDimensions();
+            Get = GetPixel;
+        }
+
+        public override void Resize(int width, int height, bool hq) {
+            IResampler resampler = hq ? KnownResamplers.Bicubic : KnownResamplers.NearestNeighbor;
+            img.Mutate(x => x.Resize(width, height, resampler));
+            UpdateDimensions();
+        }
+
+        void UpdateDimensions() {
+            Width  = img.Width;
+            Height = img.Height;
+        }
+
+        Pixel GetPixel(int x, int y) {
+            Pixel pixel;
+            Rgba32 src = img[x, y];
+            pixel.A = src.A;
+            pixel.R = src.R;
+            pixel.G = src.G;
+            pixel.B = src.B; // TODO avoid overhead by direct blit??
+            return pixel;
+        }
+
+        public override void Dispose() {
+            if (img != null) img.Dispose();
+            img = null;
+        }
+
+
+        public override void LockBits() { }
+        public override void UnlockBits() { }
+	}
+#endif
 }

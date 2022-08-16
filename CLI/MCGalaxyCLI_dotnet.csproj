@@ -5,6 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MCGalaxy\MCGalaxy_core.csproj" />
+    <ProjectReference Include="..\MCGalaxy\MCGalaxy_dotnet.csproj" />
   </ItemGroup>
 </Project>
