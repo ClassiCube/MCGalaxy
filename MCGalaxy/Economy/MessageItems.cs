@@ -36,7 +36,7 @@ namespace MCGalaxy.Eco {
             }
             
             if (!CheckPrice(p)) return;
-            if (msg == PlayerDB.GetLoginMessage(p)) {
+            if (msg == PlayerDB.GetLoginMessage(p.name)) {
                 p.Message("&WYou already have that login message."); return;
             }
             if (msg.Length > NetUtils.StringSize) {
@@ -64,7 +64,7 @@ namespace MCGalaxy.Eco {
             }
             
             if (!CheckPrice(p)) return;
-            if (msg == PlayerDB.GetLogoutMessage(p)) {
+            if (msg == PlayerDB.GetLogoutMessage(p.name)) {
                 p.Message("&WYou already have that logout message."); return;
             }
             if (msg.Length > NetUtils.StringSize) {

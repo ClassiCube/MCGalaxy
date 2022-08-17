@@ -41,6 +41,8 @@ namespace MCGalaxy.Gui {
             chat_txtBan.Text = Server.Config.DefaultBanMessage;
             chat_txtPromote.Text = Server.Config.DefaultPromoteMessage;
             chat_txtDemote.Text = Server.Config.DefaultDemoteMessage;
+            chat_txtLogin.Text = Server.Config.DefaultLoginMessage;
+            chat_txtLogout.Text = Server.Config.DefaultLogoutMessage;
         }
         
         void ApplyChatProps() {
@@ -62,6 +64,8 @@ namespace MCGalaxy.Gui {
             Server.Config.DefaultBanMessage = chat_txtBan.Text;
             Server.Config.DefaultPromoteMessage = chat_txtPromote.Text;
             Server.Config.DefaultDemoteMessage = chat_txtDemote.Text;
+            Server.Config.DefaultLoginMessage = chat_txtLogin.Text;
+            Server.Config.DefaultLogoutMessage = chat_txtLogout.Text;
         }
         
 

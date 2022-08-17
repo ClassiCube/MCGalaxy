@@ -52,23 +52,21 @@ namespace MCGalaxy.DB {
         }
         
         
-        public static string GetLoginMessage(Player p) {
-            string path = LoginPath(p.name);
+        public static string GetLoginMessage(string name) {
+            string path = LoginPath(name);
             if (File.Exists(path)) return File.ReadAllText(path);
             
             // Filesystem is case sensitive (older files used correct casing of name)
-            path = "text/login/" + p.name + ".txt";
-            return File.Exists(path) ? File.ReadAllText(path) : "connected";
+            path = "text/login/" + name + ".txt";
+            return File.Exists(path) ? File.ReadAllText(path) : "";
         }
 
-        public static string GetLogoutMessage(Player p) {
-            if (p.name == null) return "disconnected";
-
-            string path = LogoutPath(p.name);
+        public static string GetLogoutMessage(string name) {
+            string path = LogoutPath(name);
             if (File.Exists(path)) return File.ReadAllText(path);
             
-            path = "text/logout/" + p.name + ".txt";
-            return File.Exists(path) ? File.ReadAllText(path) : "disconnected";
+            path = "text/logout/" + name + ".txt";
+            return File.Exists(path) ? File.ReadAllText(path) : "";
         }
         
         static void SetMessage(string path, string msg) {

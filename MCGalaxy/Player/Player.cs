@@ -206,7 +206,7 @@ namespace MCGalaxy {
         
         /// <summary> Disconnects the player from the server, 
         /// with their default logout message shown in chat. </summary>
-        public void Disconnect() { LeaveServer(PlayerDB.GetLogoutMessage(this), "disconnected", false); }
+        public void Disconnect() { LeaveServer(PlayerInfo.GetLogoutMessage(this), "disconnected", false); }
         
         /// <summary> Kicks the player from the server,
         /// with the given messages shown in chat and in the disconnect packet. </summary>

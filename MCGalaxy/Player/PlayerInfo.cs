@@ -163,6 +163,19 @@ namespace MCGalaxy
             }
             return entry;
         }
+
+
+        public static string GetLoginMessage(Player p) {
+            string msg = PlayerDB.GetLoginMessage(p.name);
+            return string.IsNullOrEmpty(msg) ? Server.Config.DefaultLoginMessage  : msg;
+        }
+
+        public static string GetLogoutMessage(Player p) {
+            if (p.name == null) return "disconnected";
+
+            string msg = PlayerDB.GetLogoutMessage(p.name);
+            return string.IsNullOrEmpty(msg) ? Server.Config.DefaultLogoutMessage : msg;
+        }
     }
     
     public class OnlineListEntry 

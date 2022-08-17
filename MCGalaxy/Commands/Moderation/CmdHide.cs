@@ -58,7 +58,7 @@ namespace MCGalaxy.Commands.Moderation {
                 AnnounceOps(p, "To Ops -λNICK&S- is now &finvisible");               
                 
                 if (!silent) {
-                    string leaveMsg = "&c- λFULL &S" + PlayerDB.GetLogoutMessage(p);
+                    string leaveMsg = "&c- λFULL &S" + PlayerInfo.GetLogoutMessage(p);
                     Chat.MessageFrom(ChatScope.All, p, leaveMsg, null, null, true);
                 }
                 
@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.hideRank = LevelPermission.Banned;
                 
                 if (!silent) {
-                    string joinMsg = "&a+ λFULL &S" + PlayerDB.GetLoginMessage(p);
+                    string joinMsg = "&a+ λFULL &S" + PlayerInfo.GetLoginMessage(p);
                     Chat.MessageFrom(ChatScope.All, p, joinMsg, null, null, true);
                 }
                 

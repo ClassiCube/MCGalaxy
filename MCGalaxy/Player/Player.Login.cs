@@ -113,7 +113,7 @@ namespace MCGalaxy
 
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
 
-            string joinMsg = "&a+ λFULL &S" + PlayerDB.GetLoginMessage(this);
+            string joinMsg = "&a+ λFULL &S" + PlayerInfo.GetLoginMessage(this);
             if (hidden) joinMsg = "&8(hidden)" + joinMsg;
             
             if (Server.Config.GuestJoinsNotify || Rank > LevelPermission.Guest) {

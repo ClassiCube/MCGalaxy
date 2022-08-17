@@ -151,7 +151,7 @@ namespace MCGalaxy.Util
         }
     }
 #else
-	unsafe sealed class ImageSharpBitmap : IBitmap2D
+    unsafe sealed class ImageSharpBitmap : IBitmap2D
     {
         Image<Rgba32> img;
 
@@ -190,6 +190,6 @@ namespace MCGalaxy.Util
 
         public override void LockBits() { }
         public override void UnlockBits() { }
-	}
+    }
 #endif
 }

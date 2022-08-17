@@ -62,6 +62,10 @@ namespace MCGalaxy.Gui
             this.chat_txtPromote = new System.Windows.Forms.TextBox();
             this.chat_lblDemote = new System.Windows.Forms.Label();
             this.chat_txtDemote = new System.Windows.Forms.TextBox();
+            this.chat_lblLogin = new System.Windows.Forms.Label();
+            this.chat_txtLogin = new System.Windows.Forms.TextBox();
+            this.chat_lblLogout = new System.Windows.Forms.Label();
+            this.chat_txtLogout = new System.Windows.Forms.TextBox();
             this.chat_grpOther = new System.Windows.Forms.GroupBox();
             this.chat_chkFilter = new System.Windows.Forms.CheckBox();
             this.chat_lblConsole = new System.Windows.Forms.Label();
@@ -690,9 +694,13 @@ namespace MCGalaxy.Gui
             this.chat_grpMessages.Controls.Add(this.chat_txtPromote);
             this.chat_grpMessages.Controls.Add(this.chat_lblDemote);
             this.chat_grpMessages.Controls.Add(this.chat_txtDemote);
+            this.chat_grpMessages.Controls.Add(this.chat_lblLogin);
+            this.chat_grpMessages.Controls.Add(this.chat_txtLogin);
+            this.chat_grpMessages.Controls.Add(this.chat_lblLogout);
+            this.chat_grpMessages.Controls.Add(this.chat_txtLogout);
             this.chat_grpMessages.Location = new System.Drawing.Point(8, 186);
             this.chat_grpMessages.Name = "chat_grpMessages";
-            this.chat_grpMessages.Size = new System.Drawing.Size(483, 180);
+            this.chat_grpMessages.Size = new System.Drawing.Size(483, 235);
             this.chat_grpMessages.TabIndex = 2;
             this.chat_grpMessages.TabStop = false;
             this.chat_grpMessages.Text = "Messages";
@@ -773,7 +781,7 @@ namespace MCGalaxy.Gui
             // chat_lblDemote
             // 
             this.chat_lblDemote.AutoSize = true;
-            this.chat_lblDemote.Location = new System.Drawing.Point(6, 147);
+            this.chat_lblDemote.Location = new System.Drawing.Point(6, 143);
             this.chat_lblDemote.Name = "chat_lblDemote";
             this.chat_lblDemote.Size = new System.Drawing.Size(119, 13);
             this.chat_lblDemote.TabIndex = 41;
@@ -782,11 +790,47 @@ namespace MCGalaxy.Gui
             // chat_txtDemote
             // 
             this.chat_txtDemote.BackColor = System.Drawing.SystemColors.Window;
-            this.chat_txtDemote.Location = new System.Drawing.Point(134, 144);
+            this.chat_txtDemote.Location = new System.Drawing.Point(134, 140);
             this.chat_txtDemote.MaxLength = 64;
             this.chat_txtDemote.Name = "chat_txtDemote";
             this.chat_txtDemote.Size = new System.Drawing.Size(343, 21);
             this.chat_txtDemote.TabIndex = 38;
+            // 
+            // chat_lblLogin
+            // 
+            this.chat_lblLogin.AutoSize = true;
+            this.chat_lblLogin.Location = new System.Drawing.Point(6, 173);
+            this.chat_lblLogin.Name = "chat_lblLogin";
+            this.chat_lblLogin.Size = new System.Drawing.Size(119, 13);
+            this.chat_lblLogin.TabIndex = 43;
+            this.chat_lblLogin.Text = "Default login message:";
+            // 
+            // chat_txtLogin
+            // 
+            this.chat_txtLogin.BackColor = System.Drawing.SystemColors.Window;
+            this.chat_txtLogin.Location = new System.Drawing.Point(134, 170);
+            this.chat_txtLogin.MaxLength = 64;
+            this.chat_txtLogin.Name = "chat_txtLogin";
+            this.chat_txtLogin.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtLogin.TabIndex = 42;
+            // 
+            // chat_lblLogout
+            // 
+            this.chat_lblLogout.AutoSize = true;
+            this.chat_lblLogout.Location = new System.Drawing.Point(6, 203);
+            this.chat_lblLogout.Name = "chat_lblLogout";
+            this.chat_lblLogout.Size = new System.Drawing.Size(119, 13);
+            this.chat_lblLogout.TabIndex = 45;
+            this.chat_lblLogout.Text = "Default logout message:";
+            // 
+            // chat_txtLogout
+            // 
+            this.chat_txtLogout.BackColor = System.Drawing.SystemColors.Window;
+            this.chat_txtLogout.Location = new System.Drawing.Point(134, 200);
+            this.chat_txtLogout.MaxLength = 64;
+            this.chat_txtLogout.Name = "chat_txtLogout";
+            this.chat_txtLogout.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtLogout.TabIndex = 44;
             // 
             // chat_grpOther
             // 
@@ -6020,7 +6064,11 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.TextBox chat_txtPromote;
         private System.Windows.Forms.Label chat_lblDemote;
         private System.Windows.Forms.TextBox chat_txtDemote;
-        
+        private System.Windows.Forms.Label chat_lblLogin;
+        private System.Windows.Forms.TextBox chat_txtLogin;
+        private System.Windows.Forms.Label chat_lblLogout;
+        private System.Windows.Forms.TextBox chat_txtLogout;
+
         private System.Windows.Forms.GroupBox chat_grpColors;
         private System.Windows.Forms.Label chat_lblDefault;
         private System.Windows.Forms.Button chat_btnDefault;

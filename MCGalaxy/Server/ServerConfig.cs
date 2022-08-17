@@ -236,12 +236,16 @@ namespace MCGalaxy {
         [ConfigString("custom-promote-message", "Messages", "&6Congratulations for working hard and getting &2PROMOTED!")]
         public string DefaultPromoteMessage = "&6Congratulations for working hard and getting &2PROMOTED!";
         [ConfigString("custom-demote-message", "Messages", "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(")]
-        public string DefaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";       
+        public string DefaultDemoteMessage = "&4DEMOTED! &6We're sorry for your loss. Good luck on your future endeavors! &1:'(";
         [ConfigString("custom-restart-message", "Messages", "Server restarted. Sign in again and rejoin.")]
         public string DefaultRestartMessage = "Server restarted. Sign in again and rejoin.";
         [ConfigString("custom-whitelist-message", "Messages", "This is a private server!")]
         public string DefaultWhitelistMessage = "This is a private server!";
-        
+        [ConfigString("default-login-message", "Messages", "connected")]
+        public string DefaultLoginMessage = "connected";
+        [ConfigString("default-logout-message", "Messages", "disconnected")]
+        public string DefaultLogoutMessage = "disconnected";
+
         static readonly bool[] defLogLevels = new bool[] { 
             true,true,true,true,true,true, true,true,true, 
             true,true,true,true,true,true, true,true };
