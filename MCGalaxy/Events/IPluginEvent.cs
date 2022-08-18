@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 
 // kept in this namespace for backwards compatbility
 namespace MCGalaxy 
