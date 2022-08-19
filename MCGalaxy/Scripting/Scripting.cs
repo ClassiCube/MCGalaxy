@@ -146,6 +146,10 @@ namespace MCGalaxy.Scripting
         
         public static void AutoloadPlugins() {
             string[] files = AtomicIO.TryGetFiles(PLUGINS_DLL_DIR, "*.dll");
+
+            // Ensure that plugin files are loaded in a consistent order,
+            //  in case plugins have a dependency on other plugins
+            Array.Sort<string>(files);
             
             if (files != null) {
                 foreach (string path in files) { LoadPlugin(path, true); }
