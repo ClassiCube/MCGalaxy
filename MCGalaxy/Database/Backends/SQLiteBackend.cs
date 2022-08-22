@@ -616,13 +616,10 @@ namespace MCGalaxy.SQL
 
     sealed class SQLiteException : ExternalException 
     {
-        SQLiteErrorCode _code;
-
         public SQLiteException(SQLiteErrorCode code, string message)
-            : base(FormatError(code, message)) { _code = code; }
+            : base(FormatError(code, message)) { }
 
         public SQLiteException(string message) : this(SQLiteErrorCodes.Unknown, message) { }
-        public override int ErrorCode { get { return (int)_code; } }
         
         static string FormatError(SQLiteErrorCode code, string message) {
             string msg = GetErrorString(code) + Environment.NewLine + message;
