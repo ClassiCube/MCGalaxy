@@ -122,25 +122,25 @@ namespace MCGalaxy.SQL
         }
 
         /// <summary> Returns SQL for adding a row to the given table. </summary>
-        public virtual string AddRowSql(string table, string columns, object[] args) {
-            return InsertSql("INSERT INTO", table, columns, args);
+        public virtual string AddRowSql(string table, string columns, int numArgs) {
+            return InsertSql("INSERT INTO", table, columns, numArgs);
         }
         
         /// <summary> Returns SQL for adding or replacing a row (same primary key) in the given table. </summary>
-        public abstract string AddOrReplaceRowSql(string table, string columns, object[] args);
+        public abstract string AddOrReplaceRowSql(string table, string columns, int numArgs);
       
         
-        protected string InsertSql(string cmd, string table, string columns, object[] args) {
+        protected string InsertSql(string cmd, string table, string columns, int numArgs) {
             StringBuilder sql = new StringBuilder(cmd);
             sql.Append(" `").Append(table).Append("` ");
             sql.Append('(').Append(columns).Append(')');
             
-            string[] names = GetNames(args.Length);
+            string[] names = GetNames(numArgs);
             sql.Append(" VALUES (");
-            for (int i = 0; i < args.Length; i++) 
+            for (int i = 0; i < numArgs; i++) 
             {
                 sql.Append(names[i]);
-                if (i < args.Length - 1) sql.Append(", ");
+                if (i < numArgs - 1) sql.Append(", ");
                 else sql.Append(")");
             }
             return sql.ToString();

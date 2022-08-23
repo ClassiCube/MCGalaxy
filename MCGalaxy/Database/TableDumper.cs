@@ -25,7 +25,7 @@ namespace MCGalaxy.SQL
         bool gottenRows;
         string table, insertCols;
         internal StreamWriter sql;
-        string[] colNames;
+        int numColumns;
         
         public void DumpTable(StreamWriter sql, string table) {
             gottenRows = false;
@@ -45,13 +45,16 @@ namespace MCGalaxy.SQL
             sql.WriteLine("--");
             sql.WriteLine();
 
-            colNames = new string[record.FieldCount];
+            string[] colNames = new string[record.FieldCount];
             for (int i = 0; i < record.FieldCount; i++) 
             {
                 colNames[i] = record.GetName(i);
             }
-            insertCols = FormatInsertColumns(table);
+            string columns = colNames.Join(col => "`" + col + "`", ",");
+            
+            insertCols = Database.Backend.AddRowSql(table, columns, 0);
             gottenRows = true;
+            numColumns = record.FieldCount;
         }
         
         void DumpRow(ISqlRecord record) {
@@ -59,26 +62,13 @@ namespace MCGalaxy.SQL
             sql.WriteLine(insertCols);
 
             //The values themselves can be integers or strings, or null
-            for (int col = 0; col < colNames.Length; col++) 
+            for (int col = 0; col < numColumns; col++) 
             {
                 sql.Write(record.DumpValue(col));
-                sql.Write((col < colNames.Length - 1 ? ", " : ");"));
+                sql.Write((col < numColumns - 1 ? ", " : ");"));
             }
             
             sql.WriteLine();
-        }
-        
-        string FormatInsertColumns(string name) {
-            string sql    = "INSERT INTO `" + name + "` (`";
-            string[] cols = colNames;
-
-            for (int i = 0; i < cols.Length; i++) 
-            {
-                sql += cols[i] + "`";
-                if (i < cols.Length - 1) sql += ", `";
-                else sql += ") VALUES (";
-            }
-            return sql;
         }
     }
 }

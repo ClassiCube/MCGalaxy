@@ -151,14 +151,14 @@ namespace MCGalaxy.SQL
         /// <summary> Adds a row to the given table. </summary>
         public static void AddRow(string table, string columns, params object[] args) {
             ValidateName(table);
-            string sql = Backend.AddRowSql(table, columns, args);
+            string sql = Backend.AddRowSql(table, columns, args.Length);
             Execute(sql, args);
         }
         
         /// <summary> Adds or replaces a row (same primary key) in the given table. </summary>
         public static void AddOrReplaceRow(string table, string columns, params object[] args) {
             ValidateName(table);
-            string sql = Backend.AddOrReplaceRowSql(table, columns, args);
+            string sql = Backend.AddOrReplaceRowSql(table, columns, args.Length);
             Execute(sql, args);
         }
         

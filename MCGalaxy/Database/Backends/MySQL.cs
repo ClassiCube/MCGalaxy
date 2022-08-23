@@ -153,8 +153,8 @@ namespace MCGalaxy.SQL
             return sql;
         }
         
-        public override string AddOrReplaceRowSql(string table, string columns, object[] args) {
-            return InsertSql("REPLACE INTO", table, columns, args);
+        public override string AddOrReplaceRowSql(string table, string columns, int numArgs) {
+            return InsertSql("REPLACE INTO", table, columns, numArgs);
         }
     }
 

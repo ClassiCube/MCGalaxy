@@ -128,8 +128,8 @@ namespace MCGalaxy.SQL
             return "ALTER TABLE `" + table + "` ADD COLUMN " + col.Column + " " + col.FormatType();
         }
         
-        public override string AddOrReplaceRowSql(string table, string columns, object[] args) {
-            return InsertSql("INSERT OR REPLACE INTO", table, columns, args);
+        public override string AddOrReplaceRowSql(string table, string columns, int numArgs) {
+            return InsertSql("INSERT OR REPLACE INTO", table, columns, numArgs);
         }
     }
     
