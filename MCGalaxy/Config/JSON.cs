@@ -138,7 +138,9 @@ namespace MCGalaxy.Config {
                 if (offset >= Value.Length) break;
                 c = Cur; offset++;
                 if (c == '/' || c == '\\' || c == '"') { s.Append(c); continue; }
-                
+                if (c == 'n') { s.Append('\n'); continue; }
+                // TODO any other escape codes to add support for
+
                 if (c != 'u') break;
                 if (offset + 4 > Value.Length) break;
                 
