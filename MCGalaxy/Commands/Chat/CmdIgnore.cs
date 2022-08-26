@@ -25,6 +25,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Ignore"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
+        public override bool MessageBlockRestricted { get { return true; } }
         public override CommandAlias[] Aliases {
             get { return new [] { new CommandAlias("Deafen", "all") }; }
         }

@@ -21,7 +21,8 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
-        
+        public override bool MessageBlockRestricted { get { return true; } }
+
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
                 p.whisper = !p.whisper; p.whisperTo = "";
