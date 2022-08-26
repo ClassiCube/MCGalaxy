@@ -55,6 +55,11 @@ namespace MCGalaxy.Commands.Info {
             } else {
                 info.FromMap(map);
             }
+
+            // shouldn't be able to see env of levels can't vsit
+            if (env && map.Length > 0 && !info.Visit.CheckDetailed(p, data.Rank)) {
+                p.Message("Hence, you cannot see its environment settings"); return;
+            }
             
             if (env) ShowEnv(p, info, info.Config);
             else ShowNormal(p, info, info.Config);
