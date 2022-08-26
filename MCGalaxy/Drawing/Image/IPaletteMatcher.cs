@@ -27,7 +27,6 @@ namespace MCGalaxy.Drawing
         BlockID BestMatch(byte R, byte G, byte B);
         BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel);
         BlockID BestMatch(byte R, byte G, byte B, out bool backLayer);
-        BlockID BestMatch(byte R, byte G, byte B, out bool backLayer, out Pixel pixel);
     }
     
     public sealed class RgbPaletteMatcher : IPaletteMatcher 
@@ -57,18 +56,6 @@ namespace MCGalaxy.Drawing
             
             backLayer = backDist < frontDist;
             return backLayer ? back[backPos].Block : front[frontPos].Block;
-        }
-        public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer, out Pixel pixel) {
-            int pos, frontPos, backPos;
-            int frontDist = MinDist(R, G, B, front, out frontPos);
-            int backDist = MinDist(R, G, B, back, out backPos);
-
-            backLayer = backDist < frontDist;
-            PaletteEntry[] palette = backLayer ? back : front;
-            pos = backLayer ? backPos : frontPos;
-
-            pixel = new Pixel(); pixel.A = byte.MaxValue; pixel.R = palette[pos].R; pixel.G = palette[pos].G; pixel.B = palette[pos].B;
-            return palette[pos].Block;
         }
 
         static int MinDist(byte R, byte G, byte B, PaletteEntry[] entries, out int pos) {
@@ -118,9 +105,6 @@ namespace MCGalaxy.Drawing
         public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             backLayer = false;
             return BestMatch(R, G, B);
-        }
-        public ushort BestMatch(byte R, byte G, byte B, out bool backLayer, out Pixel pixel) {
-            throw new NotImplementedException();
         }
 
         struct LabColor {
