@@ -138,8 +138,7 @@ namespace MCGalaxy.Modules.Compiling
                 srcPaths[i] = path;
             }
 
-            string serverDLL = Assembly.GetExecutingAssembly().Location;
-            referenced.Add(serverDLL);
+            referenced.Add(Server.GetServerDLL());
             return referenced;
         }
 

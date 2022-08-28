@@ -181,7 +181,7 @@ namespace MCGalaxy.SQL
             IDatabaseBackend db = Backend;
             Exception e = null;
             
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 5; i++) {
                 try {
                     if (callback != null) {
                         db.Iterate(sql, args, callback);

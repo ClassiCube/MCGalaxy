@@ -90,15 +90,16 @@ namespace MCGalaxy {
 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.SaveStats();
+                string serverDLL = Server.GetServerDLL();
                 
                 // Move current files to previous files (by moving instead of copying, 
                 //  can overwrite original the files without breaking the server)
-                AtomicIO.TryMove("MCGalaxy_.dll",   "prev_MCGalaxy_.dll");
+                AtomicIO.TryMove(serverDLL,         "prev_MCGalaxy_.dll");
                 AtomicIO.TryMove("MCGalaxy.exe",    "prev_MCGalaxy.exe");
                 AtomicIO.TryMove("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
                 
                 // Move update files to current files
-                File.Move("MCGalaxy_.update",   "MCGalaxy_.dll");
+                File.Move("MCGalaxy_.update",   serverDLL);
                 File.Move("MCGalaxy.update",    "MCGalaxy.exe");
                 File.Move("MCGalaxyCLI.update", "MCGalaxyCLI.exe");                             
 

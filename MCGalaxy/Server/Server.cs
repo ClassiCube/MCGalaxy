@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -275,10 +276,15 @@ namespace MCGalaxy
             Environment.Exit(0);
         }
 
-#if !NETSTANDARD
-        public static string GetRestartPath() { return RestartPath; }
-#else
+
+        public static string GetServerDLL() {
+            return Assembly.GetExecutingAssembly().Location;
+        }
+
         public static string GetRestartPath() {
+#if !NETSTANDARD
+            return RestartPath;
+#else
             // NET core/5/6 executables tend to use the following structure:
             //   MCGalaxyCLI_core --> MCGalaxyCLI_core.dll
             // in this case, 'RestartPath' will include '.dll' since this file
@@ -287,8 +293,8 @@ namespace MCGalaxy
             string path = RestartPath;
             if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
             return path;
-        }
 #endif
+        }
 
         static bool checkedOnMono, runningOnMono;
         public static bool RunningOnMono() {
@@ -298,6 +304,7 @@ namespace MCGalaxy
             }
             return runningOnMono;
         }
+
 
         public static void UpdateUrl(string url) {
             if (OnURLChange != null) OnURLChange(url);
