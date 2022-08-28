@@ -277,7 +277,7 @@ namespace MCGalaxy
         }
 
 
-        public static string GetServerDLL() {
+        public static string GetServerDLLPath() {
             return Assembly.GetExecutingAssembly().Location;
         }
 

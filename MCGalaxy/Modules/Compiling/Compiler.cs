@@ -138,7 +138,7 @@ namespace MCGalaxy.Modules.Compiling
                 srcPaths[i] = path;
             }
 
-            referenced.Add(Server.GetServerDLL());
+            referenced.Add(Server.GetServerDLLPath());
             return referenced;
         }
 
