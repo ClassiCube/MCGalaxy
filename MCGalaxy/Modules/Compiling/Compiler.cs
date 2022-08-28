@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Modules.Compiling 
 {
@@ -137,8 +138,7 @@ namespace MCGalaxy.Modules.Compiling
                 srcPaths[i] = path;
             }
 
-            // TODO use absolute path?
-            string serverDLL = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
+            string serverDLL = Assembly.GetExecutingAssembly().Location;
             referenced.Add(serverDLL);
             return referenced;
         }
@@ -147,19 +147,27 @@ namespace MCGalaxy.Modules.Compiling
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
             using (StreamReader r = new StreamReader(path)) {               
                 string refPrefix = commentPrefix + "reference ";
+                string plgPrefix = commentPrefix + "pluginref ";
                 string line;
                 
                 while ((line = r.ReadLine()) != null) 
                 {
-                    if (!line.CaselessStarts(refPrefix)) break;
-                    
-                    int index = line.IndexOf(' ') + 1;
-                    // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
-                    string assem = line.Substring(index).Replace(";", "");
-                    
-                    referenced.Add(assem);
+                    if (line.CaselessStarts(refPrefix)) {
+                        referenced.Add(GetDLL(line));
+                    } else if (line.CaselessStarts(plgPrefix)) {
+                        path = Path.Combine(IScripting.PLUGINS_DLL_DIR, GetDLL(line));
+                        referenced.Add(Path.GetFullPath(path));
+                    } else {
+                        continue;
+                    }
                 }
             }
+        }
+
+        static string GetDLL(string line) {
+            int index = line.IndexOf(' ') + 1;
+            // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
+            return line.Substring(index).Replace(";", "");
         }
     }
 
