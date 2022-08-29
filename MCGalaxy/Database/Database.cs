@@ -222,5 +222,19 @@ namespace MCGalaxy.SQL
             Backend = Server.Config.UseMySQL ? MySQLBackend.Instance : SQLiteBackend.Instance;
 #endif
         }
+        
+        
+        internal static TimeSpan ParseOldDBTimeSpent(string value) {
+            string[] parts = value.SplitSpaces();
+            return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
+                                int.Parse(parts[2]), int.Parse(parts[3]));
+        }
+        
+        public static DateTime ParseDBDate(string value) {
+            DateTime date;
+            // prefer the exact format
+            if (DateTime.TryParseExact(value, DateFormat, null, 0, out date)) return date;
+            return DateTime.Parse(value);
+        }
     }
 }

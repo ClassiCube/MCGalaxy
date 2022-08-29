@@ -33,6 +33,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         public string ID, LastSeq;
         public int Intents = DiscordWebsocket.DEFAULT_INTENTS;
     }
+    public delegate string DiscordGetStatus();
     
     /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
@@ -51,7 +52,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         /// <summary> Presence activity (e.g. Playing) </summary>
         public PresenceActivity Activity;
         /// <summary> Callback function to retrieve the activity status message </summary>
-        public Func<string> GetStatus;
+        public DiscordGetStatus GetStatus;
         
         /// <summary> Callback invoked when a ready event has been received </summary>
         public Action<JsonObject> OnReady;

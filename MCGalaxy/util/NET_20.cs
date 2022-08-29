@@ -25,11 +25,6 @@ namespace System.Runtime.CompilerServices {
     public sealed class ExtensionAttribute : Attribute {}
 }
 
-namespace System { 
-    public delegate void Action();
-    public delegate T Func<T>(); 
-}
-
 namespace MCGalaxy.Util {
 
     public sealed class IReaderWriterLock {

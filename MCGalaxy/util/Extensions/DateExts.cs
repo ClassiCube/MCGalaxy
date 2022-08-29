@@ -23,20 +23,7 @@ namespace MCGalaxy
 {
     /// <summary> Extension methods relating to dates. </summary>
     public static class DateExts 
-    {        
-        public static TimeSpan ParseOldDBTimeSpent(this string value) {
-            string[] parts = value.SplitSpaces();
-            return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
-                                int.Parse(parts[2]), int.Parse(parts[3]));
-        }
-        
-        public static DateTime ParseDBDate(this string value) {
-            DateTime date;
-            // prefer the exact format
-            if (DateTime.TryParseExact(value, Database.DateFormat, null, 0, out date)) return date;
-            return DateTime.Parse(value);
-        }
-        
+    {
         /// <summary> Origin point in time for Unix time (Midnight January 1, 1970) </summary>
         public static DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         

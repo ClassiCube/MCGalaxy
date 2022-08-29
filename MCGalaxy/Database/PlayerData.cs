@@ -110,7 +110,7 @@ namespace MCGalaxy.DB {
                 long secs = long.Parse(rawTime);
                 data.TotalTime = TimeSpan.FromSeconds(secs);
             } catch {
-                data.TotalTime = rawTime.ParseOldDBTimeSpent();
+                data.TotalTime = Database.ParseOldDBTimeSpent(rawTime);
             }
             
             data.FirstLogin = ParseDateTime(record, ColumnFirstLogin);

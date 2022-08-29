@@ -94,7 +94,7 @@ namespace MCGalaxy.Tasks {
             playerCount++;
             try {
                 int id = record.GetInt32(0);
-                TimeSpan span = record.GetString(1).ParseOldDBTimeSpent();
+                TimeSpan span = Database.ParseOldDBTimeSpent(record.GetString(1));
                 
                 playerIds.Add(id);
                 playerSeconds.Add((long)span.TotalSeconds);
