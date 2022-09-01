@@ -18,6 +18,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace MCGalaxy 
@@ -36,6 +37,7 @@ namespace MCGalaxy
         /// (since current process image is replaced) </remarks>
         public abstract void RestartProcess();
         public abstract bool IsWindows { get; }
+        public virtual void Init() { }
 
 
         static IOperatingSystem detectedOS;
@@ -54,6 +56,7 @@ namespace MCGalaxy
             string kernel = new String(ascii);
 
             if (kernel == "Darwin") return new macOS();
+            if (kernel == "Linux")  return new LinuxOS();
 
             return new UnixOS();
         }
@@ -102,6 +105,31 @@ namespace MCGalaxy
         static extern IntPtr mach_host_self();
         [DllImport("libc")]
         static extern int host_statistics(IntPtr port, int flavor, uint[] info, ref uint count);
+    }
+
+    class LinuxOS : UnixOS
+    {
+        public override void Init() {
+#if MCG_STANDALONE
+            if (!Directory.Exists("certs")) return;
+
+            // by default mono looks in /usr/share/.mono/new-certs/Trust, which won't work when
+            //  distributed in a standalone build - so in this case, have to modify internal
+            //  runtime state to make it look elsewhere for certifcates on Linux
+            try
+            {
+                Type settingsType  = Type.GetType("Mono.Security.Interface.MonoTlsSettings, Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
+                PropertyInfo defSettingsProp = settingsType.GetProperty("DefaultSettings", BindingFlags.Static | BindingFlags.Public);
+                object defSettings = defSettingsProp.GetValue(null, null);
+
+                Type settingsObjType   = defSettings.GetType();
+                PropertyInfo pathsProp = settingsObjType.GetProperty("CertificateSearchPaths", BindingFlags.Instance | BindingFlags.NonPublic);
+                pathsProp.SetValue(defSettings, new string[] { "@pem:certs", "@trusted" }, null);
+            } catch (Exception ex) {
+                Logger.LogError("Changing SSL/TLS certificates folder", ex);
+            }
+#endif
+        }
     }
 
     class UnixOS : IOperatingSystem

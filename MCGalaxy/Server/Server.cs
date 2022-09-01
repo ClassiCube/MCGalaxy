@@ -82,7 +82,8 @@ namespace MCGalaxy
             serverConfig = ConfigElement.GetAll(typeof(ServerConfig));
             levelConfig  = ConfigElement.GetAll(typeof(LevelConfig));
             zoneConfig   = ConfigElement.GetAll(typeof(ZoneConfig));
-            
+
+            IOperatingSystem.DetectOS().Init();
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
             Server.levels = LevelInfo.Loaded.list;

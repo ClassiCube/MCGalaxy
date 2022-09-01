@@ -47,7 +47,7 @@ namespace MCGalaxy.Gui {
         
         public TimeSpan Value {
             get { return TimeSpan.FromSeconds(Seconds); }
-            set { Seconds = value.SecondsLong(); }
+            set { Seconds = (long)value.TotalSeconds; }
         }
         
         public TimespanUpDown() { Text = "0s"; }

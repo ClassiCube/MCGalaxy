@@ -113,7 +113,7 @@ namespace MCGalaxy.Games {
         
         void GracePeriod() {
             if (!cfg.GracePeriod) return;
-            int duration = (int)cfg.GracePeriodTime.SecondsLong();
+            int duration = (int)cfg.GracePeriodTime.TotalSeconds;
             
             Map.Message("Grace period of &a" + duration + " &Sseconds");
             Map.Message("Building is disabled during this time!");
