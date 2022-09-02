@@ -57,7 +57,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         [ConfigBool("can-mention-everyone", null, false)]
         public bool CanMentionHere;
         
-        const string PROPS_PATH = "properties/discordbot.properties";
+        public const string PROPS_PATH = "properties/discordbot.properties";
         static ConfigElement[] cfg;
         
         public void Load() {

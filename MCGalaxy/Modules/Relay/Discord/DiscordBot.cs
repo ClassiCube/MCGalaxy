@@ -116,6 +116,11 @@ namespace MCGalaxy.Modules.Relay.Discord
             Config.Load();
             base.ReloadConfig();
             LoadReplacements();
+            
+            if (!Config.CanMentionHere) return;
+            Logger.Log(LogType.Warning, "can-mention-everyone option is enabled in {0}, " +
+                       "which allows pinging all users on Discord from in-game. " +
+                       "It is recommended that this option be disabled.", DiscordConfig.PROPS_PATH);
         }
         
         protected override void UpdateConfig() {
