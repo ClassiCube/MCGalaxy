@@ -113,9 +113,11 @@ namespace MCGalaxy
 #if MCG_STANDALONE
             if (!Directory.Exists("certs")) return;
 
-            // by default mono looks in /usr/share/.mono/new-certs/Trust, which won't work when
-            //  distributed in a standalone build - so in this case, have to modify internal
-            //  runtime state to make it look elsewhere for certifcates on Linux
+            // by default mono looks in these directories for SSL/TLS certificates:
+            //  - ~/.config/.mono/new-certs/Trust
+            //  - /usr/share/.mono/new-certs/Trust
+            // but that won't work when distributed in a standalone build - so in this case, have to
+            //  modify internal runtime state to make it look elsewhere for certifcates on Linux
             try
             {
                 Type settingsType  = Type.GetType("Mono.Security.Interface.MonoTlsSettings, Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");

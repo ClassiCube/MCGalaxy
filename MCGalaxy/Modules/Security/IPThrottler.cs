@@ -49,7 +49,7 @@ namespace MCGalaxy.Modules.Security
             Server.Background.Cancel(clearTask);
         }
         
-        void HandleConnectionReceived(Socket s, ref bool cancel) {
+        void HandleConnectionReceived(Socket s, ref bool cancel, ref bool announce) {
             IPAddress ip = SocketUtil.GetIP(s);
             if (!Server.Config.IPSpamCheck || IPAddress.IsLoopback(ip)) return;
             

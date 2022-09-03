@@ -31,8 +31,7 @@ namespace MCGalaxy.Tasks {
         
         internal static void TickPlayers(SchedulerTask task) {
             Player[] players = PlayerInfo.Online.Items;
-            players = PlayerInfo.Online.Items;
-            int delay = players.Length == 0 ? 100 : 20;
+            int delay  = players.Length == 0 ? 100 : 20;
             task.Delay = TimeSpan.FromMilliseconds(delay);
             
             for (int i = 0; i < players.Length; i++) {
@@ -84,7 +83,7 @@ namespace MCGalaxy.Tasks {
         
         internal static void CheckState(SchedulerTask task) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) 
+            foreach (Player p in players)
             {
                 p.Session.SendPing();
                 if (Server.Config.AutoAfkTime.Ticks <= 0) return;

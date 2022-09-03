@@ -111,16 +111,16 @@ namespace MCGalaxy.Network
             TcpSocket s = null;
             
             try {
-                Socket raw = listen.socket.EndAccept(result);  
-                bool cancel = false;
+                Socket raw  = listen.socket.EndAccept(result);
+                bool cancel = false, announce = true;
                 
-                OnConnectionReceivedEvent.Call(raw, ref cancel);
+                OnConnectionReceivedEvent.Call(raw, ref cancel, ref announce);
                 if (cancel) {
                     // intentionally non-clean connection close
                     try { raw.Close(); } catch { }
                 } else {
                     s = new TcpSocket(raw);
-                    Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
+                    if (announce) Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
                     s.Init();
                 }
             } catch (Exception ex) {

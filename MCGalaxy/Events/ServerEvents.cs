@@ -56,15 +56,15 @@ namespace MCGalaxy.Events.ServerEvents
         }
     }
     
-    public delegate void OnConnectionReceived(Socket s, ref bool cancel);
+    public delegate void OnConnectionReceived(Socket s, ref bool cancel, ref bool announce);
     /// <summary> Called when a new connection has been received. </summary>
     public sealed class OnConnectionReceivedEvent : IEvent<OnConnectionReceived> 
     {        
-        public static void Call(Socket s, ref bool cancel) {
+        public static void Call(Socket s, ref bool cancel, ref bool announce) {
             IEvent<OnConnectionReceived>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(s, ref cancel); } 
+                try { items[i].method(s, ref cancel, ref announce); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
