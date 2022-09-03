@@ -37,7 +37,28 @@ namespace MCGalaxy
         /// (since current process image is replaced) </remarks>
         public abstract void RestartProcess();
         public abstract bool IsWindows { get; }
-        public virtual void Init() { }
+
+
+        public virtual void Init() {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolvePluginAssembly;
+        }
+
+        // only used for resolving plugin DLLs depending on other plugin DLLs
+        static Assembly ResolvePluginAssembly(object sender, ResolveEventArgs args) {
+            if (args.RequestingAssembly == null)       return null;
+            if (!IsPluginDLL(args.RequestingAssembly)) return null;
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly assem in assemblies)
+            {
+                if (!IsPluginDLL(assem)) continue;
+
+                if (args.Name == assem.FullName) return assem;
+            }
+            return null;
+        }
+
+        static bool IsPluginDLL(Assembly a) { return String.IsNullOrEmpty(a.Location); }
 
 
         static IOperatingSystem detectedOS;
@@ -110,6 +131,7 @@ namespace MCGalaxy
     class LinuxOS : UnixOS
     {
         public override void Init() {
+            base.Init();
 #if MCG_STANDALONE
             if (!Directory.Exists("certs")) return;
 
