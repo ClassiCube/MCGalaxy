@@ -39,6 +39,7 @@ namespace MCGalaxy.Drawing.Brushes
             new ReplaceBrushFactory(), new ReplaceNotBrushFactory(),
             new RainbowBrushFactory(), new BWRainbowBrushFactory(),
             new RandomBrushFactory(), new CloudyBrushFactory(),
+            new GradientBrushFactory(),
         };
         
         public static BrushFactory Find(string name) {

@@ -70,6 +70,11 @@ namespace MCGalaxy.Drawing.Ops
         
         /// <summary> Whether this draw operation can be used on maps that have drawing disabled. </summary>
         public bool AlwaysUsable;
+
+
+        public int SizeX { get { return (Max.X - Min.X + 1); } }
+        public int SizeY { get { return (Max.Y - Min.Y + 1); } }
+        public int SizeZ { get { return (Max.Z - Min.Z + 1); } }
         
         
         /// <summary> Human friendly name of the draw operation. </summary>

@@ -114,4 +114,45 @@ namespace MCGalaxy.Drawing.Brushes
             return new RandomBrush(blocks);
         }
     }
+
+    public sealed class GradientBrushFactory : BrushFactory 
+    {
+        public override string Name { get { return "Gradient"; } }
+        public override string[] Help { get { return HelpString; } }
+        
+        static string[] HelpString = new string[] {
+            "&TArguments: <axis> [block1/frequency] [block2]..",
+            "&HDraws by linesrly selecting blocks from the given [blocks].",
+            "&Hfrequency is optional (defaults to 1), and specifies the number of times " +
+            "the block should appear (as a fraction of the total of all the frequencies).",
+        };
+        
+        public override Brush Construct(BrushArgs args) {
+            CustomModelAnimAxis axis = GetAxis(ref args);
+            int[] count;
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);
+            
+            if (toAffect == null) return null;
+            BlockID[] blocks = FrequencyBrush.Combine(toAffect, count);
+            return new GradientBrush(blocks, axis);
+        }
+
+        // TODO: Need to unify axis parsing code across MCGalaxy
+        static CustomModelAnimAxis GetAxis(ref BrushArgs args) {
+            CustomModelAnimAxis axis = (CustomModelAnimAxis)200;
+            string msg = args.Message;
+
+            if (msg.CaselessStarts("X ")) {
+                axis = CustomModelAnimAxis.X;
+            } else if (msg.CaselessStarts("Y ")) {
+                axis = CustomModelAnimAxis.Y;
+            } else if (msg.CaselessStarts("Z ")) {
+                axis = CustomModelAnimAxis.Z;
+            }
+
+            if (axis <= CustomModelAnimAxis.Z) 
+                args.Message = msg.Substring(2);
+            return axis;
+        }
+    }
 }
