@@ -109,15 +109,22 @@ namespace MCGalaxy.Gui {
             main_txtInput.SelectionLength = 0;
             main_txtInput.SelectionStart = main_txtInput.Text.Length;
         }
+
+        void AddInputLog(string text) {
+            // Simplify navigating through input history by not logging duplicate entries
+            if (inputLog.Count > 0 && text == inputLog[0]) return;
+
+            inputLog.Insert(0, text);
+            if (inputLog.Count > 20)
+                inputLog.RemoveAt(20);
+        }
         
         void InputText() {
             string text = main_txtInput.Text;
             if (text.Length == 0) return;
-            
-            inputLog.Insert(0, text);
-            if (inputLog.Count > 20) 
-                inputLog.RemoveAt(20);
-            
+            AddInputLog(text);
+
+
             if (text == "/") {
                 UIHelpers.RepeatCommand();
             } else if (text[0] == '/' && text.Length > 1 && text[1] == '/') {
