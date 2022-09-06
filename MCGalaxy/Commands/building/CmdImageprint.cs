@@ -64,8 +64,14 @@ namespace MCGalaxy.Commands.Building {
             
             if (parts.Length > 2) {
                 string mode = parts[2];
-                if (mode.CaselessEq("horizontal"))     dArgs.Layer = true;
-                if (mode.CaselessEq("vertical2layer")) dArgs.Dual  = true;
+                // Dithered and 2 layer mode are mutually exclusive because dithering is not visually effective when the (dark) sides of blocks are visible all over the image.
+
+                if      (mode.CaselessEq("wall"))          {                                                 }
+                else if (mode.CaselessEq("walldither"))    { dArgs.Dithered  = true;                         }
+                else if (mode.CaselessEq("wall2layer"))    { dArgs.TwoLayer  = true;                         }
+                else if (mode.CaselessEq("floor"))         { dArgs.Floor     = true;                         }
+                else if (mode.CaselessEq("floordither"))   { dArgs.Floor     = true; dArgs.Dithered  = true; }
+                else { p.Message("&WUnknown print mode \"{0}\".", mode); return; }
             }
             
             if (parts.Length > 4) {
@@ -108,8 +114,8 @@ namespace MCGalaxy.Commands.Building {
             IBitmap2D bmp = HeightmapGen.DecodeImage(dArgs.Data, p);
             if (bmp == null) return;
 
-            ImagePrintDrawOp op = new ImagePrintDrawOp();
-            op.LayerMode = dArgs.Layer; op.DualLayer = dArgs.Dual;
+            ImagePrintDrawOp op = dArgs.Dithered ? new ImagePrintDitheredDrawOp() : new ImagePrintDrawOp();
+            op.LayerMode = dArgs.Floor; op.DualLayer = dArgs.TwoLayer;
             op.CalcState(marks);
             
             int width  = dArgs.Width  == 0 ? bmp.Width  : dArgs.Width;
@@ -155,11 +161,15 @@ namespace MCGalaxy.Commands.Building {
             p.Message("&T/ImagePrint [file/url] [palette] <mode> <width height>");
             p.Message("&HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
             p.Message("&HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
-            p.Message("&HModes: &fVertical, Vertical2Layer, Horizontal");
+            p.Message("&HModes: &fWall, WallDither, Wall2Layer, Floor, FloorDither");
             p.Message("&H  <width height> optionally resize the printed image");
         }
 
-        class DrawArgs { public bool Layer, Dual; public ImagePalette Pal; public byte[] Data; public int Width, Height; }
+        class DrawArgs {
+            public bool Floor, TwoLayer, Dithered;
+            public ImagePalette Pal;
+            public byte[] Data;
+            public int Width, Height; }
     }
 }
 

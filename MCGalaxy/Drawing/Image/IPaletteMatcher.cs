@@ -17,6 +17,7 @@
  */
 using System;
 using BlockID = System.UInt16;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Drawing 
 {
@@ -24,6 +25,7 @@ namespace MCGalaxy.Drawing
     {
         void SetPalette(PaletteEntry[] front, PaletteEntry[] back);
         BlockID BestMatch(byte R, byte G, byte B);
+        BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel);
         BlockID BestMatch(byte R, byte G, byte B, out bool backLayer);
     }
     
@@ -39,7 +41,14 @@ namespace MCGalaxy.Drawing
             MinDist(R, G, B, front, out pos);
             return front[pos].Block;
         }
-        
+        public BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel) {
+            int pos;
+            MinDist(R, G, B, front, out pos);
+            pixel = new Pixel(); pixel.A = byte.MaxValue; pixel.R = front[pos].R; pixel.G = front[pos].G; pixel.B = front[pos].B;
+            return front[pos].Block;
+        }
+
+
         public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             int frontPos, backPos;
             int frontDist = MinDist(R, G, B, front, out frontPos);
@@ -48,8 +57,7 @@ namespace MCGalaxy.Drawing
             backLayer = backDist < frontDist;
             return backLayer ? back[backPos].Block : front[frontPos].Block;
         }
-        
-        
+
         static int MinDist(byte R, byte G, byte B, PaletteEntry[] entries, out int pos) {
             int minDist = int.MaxValue; pos = 0;
             for (int i = 0; i < entries.Length; i++) {
@@ -89,13 +97,16 @@ namespace MCGalaxy.Drawing
             }
             return palette[pos].Block;
         }
+
+        public BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel) {
+            throw new NotImplementedException();
+        }
         
         public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             backLayer = false;
             return BestMatch(R, G, B);
         }
-        
-        
+
         struct LabColor {
             public double L, A, B;
             public BlockID Block;
