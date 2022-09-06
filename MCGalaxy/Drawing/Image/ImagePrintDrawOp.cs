@@ -163,14 +163,15 @@ namespace MCGalaxy.Drawing.Ops
             }
         }
     }
+    
     public class ImagePrintDitheredDrawOp : ImagePrintDrawOp
     {
-        Vec3F32[,] pixels;
         protected override void OutputPixels(DrawOpOutput output) {
             int width = Source.Width, height = Source.Height;
             int srcY = height - 1; // need to flip coords in bitmap vertically
 
-            pixels = new Vec3F32[width, height];
+             Vec3F32[,] pixels = new Vec3F32[width, height];
+            // Floyd steinberg dithering
 
             //setup image
             for (int y = 0; y < height; y++) {
@@ -181,58 +182,37 @@ namespace MCGalaxy.Drawing.Ops
             }
 
             //dither image
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    Vec3F32 oldPixel = pixels[x, y];
+            for (int yy = 0; yy < height; yy++) {
+                for (int xx = 0; xx < width; xx++) {
+                    Vec3F32 oldPixel = pixels[xx, yy];
                     // No Clamp for float?
                     if (oldPixel.X > 255) { oldPixel.X = 255; } if (oldPixel.X < 0) { oldPixel.X = 0; }
                     if (oldPixel.Y > 255) { oldPixel.Y = 255; } if (oldPixel.Y < 0) { oldPixel.Y = 0; }
                     if (oldPixel.Z > 255) { oldPixel.Z = 255; } if (oldPixel.Z < 0) { oldPixel.Z = 0; }
 
-                    Vec3F32 newPixel;
-                    {
-                        Pixel temp = default(Pixel);
-                        temp.R = (byte)oldPixel.X;
-                        temp.G = (byte)oldPixel.Y;
-                        temp.B = (byte)oldPixel.Z;
-                        
-                        selector.BestMatch(ref temp);
-                        newPixel = new Vec3F32(temp.R, temp.G, temp.B);
-                    }
-
-
-                    pixels[x, y] = newPixel;
-                    Vec3F32 quantError = oldPixel - newPixel;
-                    if (x + 1 < width                  ) pixels[x + 1, y    ] += (7.0f / 16.0f) * quantError;
-                    if (x - 1 > 0     && y + 1 < height) pixels[x - 1, y + 1] += (3.0f / 16.0f) * quantError;
-                    if (y + 1 < height                 ) pixels[x,     y + 1] += (5.0f / 16.0f) * quantError;
-                    if (x + 1 < width && y + 1 < height) pixels[x + 1, y + 1] += (1.0f / 16.0f) * quantError;
-                }
-            }
-
-
-            for (int yy = 0; yy < height; yy++, srcY--)
-                for (int xx = 0; xx < width; xx++) {
-                    Pixel P = GetPixel(xx, srcY);
+                    Pixel P = Source.Get(xx, yy);
+                    P.R = (byte)oldPixel.X;
+                    P.G = (byte)oldPixel.Y;
+                    P.B = (byte)oldPixel.Z;
+                    
                     ushort x = (ushort)(Origin.X + dx.X * xx + dy.X * yy);
                     ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
                     ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
                     if (P.A < 20) { output(Place(x, y, z, Block.Air)); continue; }
-
+                    
                     BlockID block = selector.BestMatch(ref P);
                     output(Place(x, y, z, block));
+                        
+                    Vec3F32 newPixel = new Vec3F32(P.R, P.G, P.B);
+                    pixels[xx, yy]   = newPixel;
+                    
+                    Vec3F32 quantError = oldPixel - newPixel;
+                    if (xx + 1 < width                  )  pixels[xx + 1, yy    ] += (7.0f / 16.0f) * quantError;
+                    if (xx - 1 > 0     && yy + 1 < height) pixels[xx - 1, yy + 1] += (3.0f / 16.0f) * quantError;
+                    if (yy + 1 < height                 )  pixels[xx,     yy + 1] += (5.0f / 16.0f) * quantError;
+                    if (xx + 1 < width && yy + 1 < height) pixels[xx + 1, yy + 1] += (1.0f / 16.0f) * quantError;
                 }
+            }
         }
-
-
-        Pixel GetPixel(int x, int y) {
-            Pixel P = Source.Get(x, y);
-            Vec3F32 floatPixel = pixels[x, y];
-            P.R = (byte)Utils.Clamp((int)floatPixel.X, byte.MinValue, byte.MaxValue);
-            P.G = (byte)Utils.Clamp((int)floatPixel.Y, byte.MinValue, byte.MaxValue);
-            P.B = (byte)Utils.Clamp((int)floatPixel.Z, byte.MinValue, byte.MaxValue);
-            return P;
-        }
-
     }
 }
