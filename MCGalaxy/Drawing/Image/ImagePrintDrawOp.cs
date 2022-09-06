@@ -118,7 +118,7 @@ namespace MCGalaxy.Drawing.Ops
                 
                 BlockID block;
                 if (!DualLayer) {
-                    block = selector.BestMatch(P.R, P.G, P.B);
+                    block = selector.BestMatch(ref P);
                 } else {
                     bool backLayer;
                     block = selector.BestMatch(P.R, P.G, P.B, out backLayer);                    
@@ -191,12 +191,12 @@ namespace MCGalaxy.Drawing.Ops
 
                     Vec3F32 newPixel;
                     {
-                        byte oldClampedR, oldClampedG, oldClampedB;
-                        oldClampedR = (byte)Utils.Clamp((int)oldPixel.X, byte.MinValue, byte.MaxValue);
-                        oldClampedG = (byte)Utils.Clamp((int)oldPixel.Y, byte.MinValue, byte.MaxValue);
-                        oldClampedB = (byte)Utils.Clamp((int)oldPixel.Z, byte.MinValue, byte.MaxValue);
-                        Pixel temp;
-                        selector.BestMatch(oldClampedR, oldClampedG, oldClampedB, out temp);
+                        Pixel temp = default(Pixel);
+                        temp.R = (byte)oldPixel.X;
+                        temp.G = (byte)oldPixel.Y;
+                        temp.B = (byte)oldPixel.Z;
+                        
+                        selector.BestMatch(ref temp);
                         newPixel = new Vec3F32(temp.R, temp.G, temp.B);
                     }
 
@@ -219,8 +219,7 @@ namespace MCGalaxy.Drawing.Ops
                     ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
                     if (P.A < 20) { output(Place(x, y, z, Block.Air)); continue; }
 
-                    BlockID block;
-                    block = selector.BestMatch(P.R, P.G, P.B);
+                    BlockID block = selector.BestMatch(ref P);
                     output(Place(x, y, z, block));
                 }
         }

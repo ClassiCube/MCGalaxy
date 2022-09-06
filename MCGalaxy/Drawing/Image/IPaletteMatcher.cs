@@ -24,48 +24,47 @@ namespace MCGalaxy.Drawing
     public interface IPaletteMatcher 
     {
         void SetPalette(PaletteEntry[] front, PaletteEntry[] back);
-        BlockID BestMatch(byte R, byte G, byte B);
-        BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel);
+        BlockID BestMatch(ref Pixel P);
         BlockID BestMatch(byte R, byte G, byte B, out bool backLayer);
     }
     
     public sealed class RgbPaletteMatcher : IPaletteMatcher 
     {   
         PaletteEntry[] front, back;
+        
         public void SetPalette(PaletteEntry[] front, PaletteEntry[] back) {
             this.front = front; this.back = back;
         }
         
-        public BlockID BestMatch(byte R, byte G, byte B) {
+        public BlockID BestMatch(ref Pixel P) {
             int pos;
-            MinDist(R, G, B, front, out pos);
+            MinDist(P.R, P.G, P.B, front, out pos);
+            
+            // TODO avoid code.. just return index/position, and move this into imageprint
+            P.R = front[pos].R; P.G = front[pos].G; P.B = front[pos].B;
             return front[pos].Block;
         }
-        public BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel) {
-            int pos;
-            MinDist(R, G, B, front, out pos);
-            pixel = new Pixel(); pixel.A = byte.MaxValue; pixel.R = front[pos].R; pixel.G = front[pos].G; pixel.B = front[pos].B;
-            return front[pos].Block;
-        }
-
 
         public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             int frontPos, backPos;
             int frontDist = MinDist(R, G, B, front, out frontPos);
-            int backDist  = MinDist(R, G, B, back, out backPos);
+            int backDist  = MinDist(R, G, B, back,  out backPos);
             
+            // TODO too much duplication
             backLayer = backDist < frontDist;
             return backLayer ? back[backPos].Block : front[frontPos].Block;
         }
 
         static int MinDist(byte R, byte G, byte B, PaletteEntry[] entries, out int pos) {
             int minDist = int.MaxValue; pos = 0;
-            for (int i = 0; i < entries.Length; i++) {
+            for (int i = 0; i < entries.Length; i++) 
+            {
                 PaletteEntry entry = entries[i];
                 
-                int dist = (R - entry.R) * (R - entry.R)
-                    + (G - entry.G) * (G - entry.G)
-                    + (B - entry.B) * (B - entry.B);
+                int dist = 
+                    (R - entry.R) * (R - entry.R) +
+                    (G - entry.G) * (G - entry.G) +
+                    (B - entry.B) * (B - entry.B);
                 
                 if (dist < minDist) { minDist = dist; pos = i; }
             }
@@ -76,56 +75,64 @@ namespace MCGalaxy.Drawing
     public sealed class LabPaletteMatcher : IPaletteMatcher 
     {      
         LabColor[] palette;
+        PaletteEntry[] front, back;
+        
         public void SetPalette(PaletteEntry[] front, PaletteEntry[] back) {
-            this.palette = new LabColor[front.Length];
-            for (int i = 0; i < front.Length; i++)
-                this.palette[i] = RgbToLab(front[i]);
+            this.front = front; this.back = back;
+            
+            palette = new LabColor[front.Length];
+            for (int i = 0; i < front.Length; i++) {
+                palette[i] = RgbToLab(front[i].R, front[i].G, front[i].B);
+            }
         }
         
-        public BlockID BestMatch(byte R, byte G, byte B) {
-            double minDist = int.MaxValue; int pos = 0;
-            LabColor col = RgbToLab(R, G, B);
+        public BlockID BestMatch(ref Pixel P) {
+            int pos;
+            MinDist(P.R, P.G, P.B, palette, out pos);
             
-            for (int i = 0; i < palette.Length; i++) {
-                LabColor pixel = palette[i];
-                // Apply CIE76 color delta formula
-                double dist = (col.L - pixel.L) * (col.L - pixel.L)
-                    + (col.A - pixel.A) * (col.A - pixel.A)
-                    + (col.B - pixel.B) * (col.B - pixel.B);
-                
-                if (dist < minDist) { minDist = dist; pos = i; }
-            }
-            return palette[pos].Block;
-        }
-
-        public BlockID BestMatch(byte R, byte G, byte B, out Pixel pixel) {
-            throw new NotImplementedException();
+            // TODO avoid duplication with RGB palette matcher
+            P.R = front[pos].R; P.G = front[pos].G; P.B = front[pos].B;
+            return front[pos].Block;
         }
         
         public BlockID BestMatch(byte R, byte G, byte B, out bool backLayer) {
             backLayer = false;
-            return BestMatch(R, G, B);
-        }
-
-        struct LabColor {
-            public double L, A, B;
-            public BlockID Block;
-        }
-        
-        LabColor RgbToLab(PaletteEntry cur) {
-            LabColor lab = RgbToLab(cur.R, cur.G, cur.B);
-            lab.Block = cur.Block;
-            return lab;
+            int pos;
+            MinDist(R, G, B, palette, out pos);
+            
+            // TODO avoid duplication with BestMatch
+            return front[pos].Block;
         }
         
-        LabColor RgbToLab(byte r, byte g, byte b) {
+        static double MinDist(byte R, byte G, byte B, LabColor[] entries, out int pos) {
+            double minDist = int.MaxValue; pos = 0;
+            LabColor col = RgbToLab(R, G, B);
+            
+            for (int i = 0; i < entries.Length; i++) 
+            {
+                LabColor pixel = entries[i];
+                // Apply CIE76 color delta formula
+                double dist = 
+                    (col.L - pixel.L) * (col.L - pixel.L) +
+                    (col.A - pixel.A) * (col.A - pixel.A) +
+                    (col.B - pixel.B) * (col.B - pixel.B);
+                
+                if (dist < minDist) { minDist = dist; pos = i; }
+            }
+            return minDist;
+        }
+        
+        
+        struct LabColor { public double L, A, B; }
+        
+        static LabColor RgbToLab(byte r, byte g, byte b) {
             // First convert RGB to CIE-XYZ
             double R = r / 255.0, G = g / 255.0, B = b / 255.0;
             if (R > 0.04045) R = Math.Pow((R + 0.055) / 1.055, 2.4);
             else R = R / 12.92;
             if (G > 0.04045) G = Math.Pow((G + 0.055) / 1.055, 2.4);
             else G = G / 12.92;
-            if (R > 0.04045) R = Math.Pow((B + 0.055) / 1.055, 2.4);
+            if (B > 0.04045) B = Math.Pow((B + 0.055) / 1.055, 2.4);
             else B = B / 12.92;
 
             double X = R * 0.4124 + G * 0.3576 + B * 0.1805;
