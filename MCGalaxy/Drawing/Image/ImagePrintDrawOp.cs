@@ -170,47 +170,46 @@ namespace MCGalaxy.Drawing.Ops
             int width = Source.Width, height = Source.Height;
             int srcY = height - 1; // need to flip coords in bitmap vertically
 
-             Vec3F32[,] pixels = new Vec3F32[width, height];
+             Vec3F32[,] errors = new Vec3F32[width, height];
             // Floyd steinberg dithering
-
-            //setup image
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    Pixel p = Source.Get(x, y);
-                    pixels[x, y] = new Vec3F32(p.R, p.G, p.B);
-                }
-            }
-
-            //dither image
-            for (int yy = 0; yy < height; yy++) {
-                for (int xx = 0; xx < width; xx++) {
-                    Vec3F32 oldPixel = pixels[xx, yy];
-                    // No Clamp for float?
-                    if (oldPixel.X > 255) { oldPixel.X = 255; } if (oldPixel.X < 0) { oldPixel.X = 0; }
-                    if (oldPixel.Y > 255) { oldPixel.Y = 255; } if (oldPixel.Y < 0) { oldPixel.Y = 0; }
-                    if (oldPixel.Z > 255) { oldPixel.Z = 255; } if (oldPixel.Z < 0) { oldPixel.Z = 0; }
-
-                    Pixel P = Source.Get(xx, yy);
-                    P.R = (byte)oldPixel.X;
-                    P.G = (byte)oldPixel.Y;
-                    P.B = (byte)oldPixel.Z;
-                    
+            
+            // TODO: just use two 'error rows' in memory, instead of entire image
+            // error_cur, error_next
+            // then after processing current row
+            // i) swap error_cur and error_next
+            // ii) clear error_next to 0
+            
+            for (int yy = 0; yy < height; yy++, srcY--)
+            {
+                for (int xx = 0; xx < width; xx++) 
+                {
+                    Pixel P  = Source.Get(xx, srcY);
                     ushort x = (ushort)(Origin.X + dx.X * xx + dy.X * yy);
                     ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
                     ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
                     if (P.A < 20) { output(Place(x, y, z, Block.Air)); continue; }
+                	
+                    Vec3F32 oldPixel = new Vec3F32(P.R, P.G, P.B) + errors[xx, yy];
+                    // No Clamp for float?
+                    if (oldPixel.X > 255) { oldPixel.X = 255; } if (oldPixel.X < 0) { oldPixel.X = 0; }
+                    if (oldPixel.Y > 255) { oldPixel.Y = 255; } if (oldPixel.Y < 0) { oldPixel.Y = 0; }
+                    if (oldPixel.Z > 255) { oldPixel.Z = 255; } if (oldPixel.Z < 0) { oldPixel.Z = 0; }      
+
+                    P.R = (byte)oldPixel.X;
+                    P.G = (byte)oldPixel.Y;
+                    P.B = (byte)oldPixel.Z;
                     
                     BlockID block = selector.BestMatch(ref P);
                     output(Place(x, y, z, block));
                         
                     Vec3F32 newPixel = new Vec3F32(P.R, P.G, P.B);
-                    pixels[xx, yy]   = newPixel;
+                    errors[xx, yy]   = newPixel;
                     
                     Vec3F32 quantError = oldPixel - newPixel;
-                    if (xx + 1 < width                  )  pixels[xx + 1, yy    ] += (7.0f / 16.0f) * quantError;
-                    if (xx - 1 > 0     && yy + 1 < height) pixels[xx - 1, yy + 1] += (3.0f / 16.0f) * quantError;
-                    if (yy + 1 < height                 )  pixels[xx,     yy + 1] += (5.0f / 16.0f) * quantError;
-                    if (xx + 1 < width && yy + 1 < height) pixels[xx + 1, yy + 1] += (1.0f / 16.0f) * quantError;
+                    if (xx + 1 < width                  )  errors[xx + 1, yy    ] += (7.0f / 16.0f) * quantError;
+                    if (xx - 1 > 0     && yy + 1 < height) errors[xx - 1, yy + 1] += (3.0f / 16.0f) * quantError;
+                    if (yy + 1 < height                 )  errors[xx,     yy + 1] += (5.0f / 16.0f) * quantError;
+                    if (xx + 1 < width && yy + 1 < height) errors[xx + 1, yy + 1] += (1.0f / 16.0f) * quantError;
                 }
             }
         }
