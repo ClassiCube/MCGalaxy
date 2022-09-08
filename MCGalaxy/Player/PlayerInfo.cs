@@ -167,7 +167,7 @@ namespace MCGalaxy
 
         public static string GetLoginMessage(Player p) {
             string msg = PlayerDB.GetLoginMessage(p.name);
-            return string.IsNullOrEmpty(msg) ? Server.Config.DefaultLoginMessage  : msg;
+            return string.IsNullOrEmpty(msg) ? Server.Config.DefaultLoginMessage : msg;
         }
 
         public static string GetLogoutMessage(Player p) {

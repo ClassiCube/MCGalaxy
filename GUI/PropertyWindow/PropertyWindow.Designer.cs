@@ -52,6 +52,7 @@ namespace MCGalaxy.Gui
             this.chat_cbTabLevel = new System.Windows.Forms.CheckBox();
             this.chat_cbTabBots = new System.Windows.Forms.CheckBox();
             this.chat_grpMessages = new System.Windows.Forms.GroupBox();
+            this.chat_grpModeration = new System.Windows.Forms.GroupBox();
             this.chat_lblShutdown = new System.Windows.Forms.Label();
             this.chat_txtShutdown = new System.Windows.Forms.TextBox();
             this.chat_chkCheap = new System.Windows.Forms.CheckBox();
@@ -497,6 +498,7 @@ namespace MCGalaxy.Gui
             this.pageChat.SuspendLayout();
             this.chat_grpTab.SuspendLayout();
             this.chat_grpMessages.SuspendLayout();
+            this.chat_grpModeration.SuspendLayout();
             this.chat_grpOther.SuspendLayout();
             this.chat_grpColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srv_numPort)).BeginInit();
@@ -631,6 +633,7 @@ namespace MCGalaxy.Gui
             this.pageChat.BackColor = System.Drawing.SystemColors.Control;
             this.pageChat.Controls.Add(this.chat_grpTab);
             this.pageChat.Controls.Add(this.chat_grpMessages);
+            this.pageChat.Controls.Add(this.chat_grpModeration);
             this.pageChat.Controls.Add(this.chat_grpOther);
             this.pageChat.Controls.Add(this.chat_grpColors);
             this.pageChat.Location = new System.Drawing.Point(4, 22);
@@ -688,19 +691,13 @@ namespace MCGalaxy.Gui
             this.chat_grpMessages.Controls.Add(this.chat_txtShutdown);
             this.chat_grpMessages.Controls.Add(this.chat_chkCheap);
             this.chat_grpMessages.Controls.Add(this.chat_txtCheap);
-            this.chat_grpMessages.Controls.Add(this.chat_lblBan);
-            this.chat_grpMessages.Controls.Add(this.chat_txtBan);
-            this.chat_grpMessages.Controls.Add(this.chat_lblPromote);
-            this.chat_grpMessages.Controls.Add(this.chat_txtPromote);
-            this.chat_grpMessages.Controls.Add(this.chat_lblDemote);
-            this.chat_grpMessages.Controls.Add(this.chat_txtDemote);
             this.chat_grpMessages.Controls.Add(this.chat_lblLogin);
             this.chat_grpMessages.Controls.Add(this.chat_txtLogin);
             this.chat_grpMessages.Controls.Add(this.chat_lblLogout);
             this.chat_grpMessages.Controls.Add(this.chat_txtLogout);
             this.chat_grpMessages.Location = new System.Drawing.Point(8, 186);
             this.chat_grpMessages.Name = "chat_grpMessages";
-            this.chat_grpMessages.Size = new System.Drawing.Size(483, 235);
+            this.chat_grpMessages.Size = new System.Drawing.Size(483, 145);
             this.chat_grpMessages.TabIndex = 2;
             this.chat_grpMessages.TabStop = false;
             this.chat_grpMessages.Text = "Messages";
@@ -742,64 +739,10 @@ namespace MCGalaxy.Gui
             this.chat_txtCheap.Size = new System.Drawing.Size(343, 21);
             this.chat_txtCheap.TabIndex = 31;
             // 
-            // chat_lblBan
-            // 
-            this.chat_lblBan.AutoSize = true;
-            this.chat_lblBan.Location = new System.Drawing.Point(6, 83);
-            this.chat_lblBan.Name = "chat_lblBan";
-            this.chat_lblBan.Size = new System.Drawing.Size(100, 13);
-            this.chat_lblBan.TabIndex = 39;
-            this.chat_lblBan.Text = "Default ban reason:";
-            // 
-            // chat_txtBan
-            // 
-            this.chat_txtBan.BackColor = System.Drawing.SystemColors.Window;
-            this.chat_txtBan.Location = new System.Drawing.Point(134, 80);
-            this.chat_txtBan.MaxLength = 64;
-            this.chat_txtBan.Name = "chat_txtBan";
-            this.chat_txtBan.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtBan.TabIndex = 33;
-            // 
-            // chat_lblPromote
-            // 
-            this.chat_lblPromote.AutoSize = true;
-            this.chat_lblPromote.Location = new System.Drawing.Point(6, 113);
-            this.chat_lblPromote.Name = "chat_lblPromote";
-            this.chat_lblPromote.Size = new System.Drawing.Size(123, 13);
-            this.chat_lblPromote.TabIndex = 40;
-            this.chat_lblPromote.Text = "Default promote reason:";
-            // 
-            // chat_txtPromote
-            // 
-            this.chat_txtPromote.BackColor = System.Drawing.SystemColors.Window;
-            this.chat_txtPromote.Location = new System.Drawing.Point(134, 110);
-            this.chat_txtPromote.MaxLength = 64;
-            this.chat_txtPromote.Name = "chat_txtPromote";
-            this.chat_txtPromote.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtPromote.TabIndex = 36;
-            // 
-            // chat_lblDemote
-            // 
-            this.chat_lblDemote.AutoSize = true;
-            this.chat_lblDemote.Location = new System.Drawing.Point(6, 143);
-            this.chat_lblDemote.Name = "chat_lblDemote";
-            this.chat_lblDemote.Size = new System.Drawing.Size(119, 13);
-            this.chat_lblDemote.TabIndex = 41;
-            this.chat_lblDemote.Text = "Default demote reason:";
-            // 
-            // chat_txtDemote
-            // 
-            this.chat_txtDemote.BackColor = System.Drawing.SystemColors.Window;
-            this.chat_txtDemote.Location = new System.Drawing.Point(134, 140);
-            this.chat_txtDemote.MaxLength = 64;
-            this.chat_txtDemote.Name = "chat_txtDemote";
-            this.chat_txtDemote.Size = new System.Drawing.Size(343, 21);
-            this.chat_txtDemote.TabIndex = 38;
-            // 
             // chat_lblLogin
             // 
             this.chat_lblLogin.AutoSize = true;
-            this.chat_lblLogin.Location = new System.Drawing.Point(6, 173);
+            this.chat_lblLogin.Location = new System.Drawing.Point(6, 83);
             this.chat_lblLogin.Name = "chat_lblLogin";
             this.chat_lblLogin.Size = new System.Drawing.Size(119, 13);
             this.chat_lblLogin.TabIndex = 43;
@@ -808,7 +751,7 @@ namespace MCGalaxy.Gui
             // chat_txtLogin
             // 
             this.chat_txtLogin.BackColor = System.Drawing.SystemColors.Window;
-            this.chat_txtLogin.Location = new System.Drawing.Point(134, 170);
+            this.chat_txtLogin.Location = new System.Drawing.Point(134, 80);
             this.chat_txtLogin.MaxLength = 64;
             this.chat_txtLogin.Name = "chat_txtLogin";
             this.chat_txtLogin.Size = new System.Drawing.Size(343, 21);
@@ -817,7 +760,7 @@ namespace MCGalaxy.Gui
             // chat_lblLogout
             // 
             this.chat_lblLogout.AutoSize = true;
-            this.chat_lblLogout.Location = new System.Drawing.Point(6, 203);
+            this.chat_lblLogout.Location = new System.Drawing.Point(6, 113);
             this.chat_lblLogout.Name = "chat_lblLogout";
             this.chat_lblLogout.Size = new System.Drawing.Size(119, 13);
             this.chat_lblLogout.TabIndex = 45;
@@ -826,11 +769,80 @@ namespace MCGalaxy.Gui
             // chat_txtLogout
             // 
             this.chat_txtLogout.BackColor = System.Drawing.SystemColors.Window;
-            this.chat_txtLogout.Location = new System.Drawing.Point(134, 200);
+            this.chat_txtLogout.Location = new System.Drawing.Point(134, 110);
             this.chat_txtLogout.MaxLength = 64;
             this.chat_txtLogout.Name = "chat_txtLogout";
             this.chat_txtLogout.Size = new System.Drawing.Size(343, 21);
             this.chat_txtLogout.TabIndex = 44;
+            // 
+            // chat_grpModeration
+            // 
+            this.chat_grpModeration.Controls.Add(this.chat_lblBan);
+            this.chat_grpModeration.Controls.Add(this.chat_txtBan);
+            this.chat_grpModeration.Controls.Add(this.chat_lblPromote);
+            this.chat_grpModeration.Controls.Add(this.chat_txtPromote);
+            this.chat_grpModeration.Controls.Add(this.chat_lblDemote);
+            this.chat_grpModeration.Controls.Add(this.chat_txtDemote);
+            this.chat_grpModeration.Location = new System.Drawing.Point(8, 337);
+            this.chat_grpModeration.Name = "chat_grpModeration";
+            this.chat_grpModeration.Size = new System.Drawing.Size(483, 115);
+            this.chat_grpModeration.TabIndex = 3;
+            this.chat_grpModeration.TabStop = false;
+            this.chat_grpModeration.Text = "Moderation messages";
+            // 
+            // chat_lblBan
+            // 
+            this.chat_lblBan.AutoSize = true;
+            this.chat_lblBan.Location = new System.Drawing.Point(6, 23);
+            this.chat_lblBan.Name = "chat_lblBan";
+            this.chat_lblBan.Size = new System.Drawing.Size(100, 13);
+            this.chat_lblBan.TabIndex = 39;
+            this.chat_lblBan.Text = "Default ban reason:";
+            // 
+            // chat_txtBan
+            // 
+            this.chat_txtBan.BackColor = System.Drawing.SystemColors.Window;
+            this.chat_txtBan.Location = new System.Drawing.Point(134, 20);
+            this.chat_txtBan.MaxLength = 64;
+            this.chat_txtBan.Name = "chat_txtBan";
+            this.chat_txtBan.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtBan.TabIndex = 33;
+            // 
+            // chat_lblPromote
+            // 
+            this.chat_lblPromote.AutoSize = true;
+            this.chat_lblPromote.Location = new System.Drawing.Point(6, 53);
+            this.chat_lblPromote.Name = "chat_lblPromote";
+            this.chat_lblPromote.Size = new System.Drawing.Size(123, 13);
+            this.chat_lblPromote.TabIndex = 40;
+            this.chat_lblPromote.Text = "Default promote reason:";
+            // 
+            // chat_txtPromote
+            // 
+            this.chat_txtPromote.BackColor = System.Drawing.SystemColors.Window;
+            this.chat_txtPromote.Location = new System.Drawing.Point(134, 50);
+            this.chat_txtPromote.MaxLength = 64;
+            this.chat_txtPromote.Name = "chat_txtPromote";
+            this.chat_txtPromote.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtPromote.TabIndex = 36;
+            // 
+            // chat_lblDemote
+            // 
+            this.chat_lblDemote.AutoSize = true;
+            this.chat_lblDemote.Location = new System.Drawing.Point(6, 83);
+            this.chat_lblDemote.Name = "chat_lblDemote";
+            this.chat_lblDemote.Size = new System.Drawing.Size(119, 13);
+            this.chat_lblDemote.TabIndex = 41;
+            this.chat_lblDemote.Text = "Default demote reason:";
+            // 
+            // chat_txtDemote
+            // 
+            this.chat_txtDemote.BackColor = System.Drawing.SystemColors.Window;
+            this.chat_txtDemote.Location = new System.Drawing.Point(134, 80);
+            this.chat_txtDemote.MaxLength = 64;
+            this.chat_txtDemote.Name = "chat_txtDemote";
+            this.chat_txtDemote.Size = new System.Drawing.Size(343, 21);
+            this.chat_txtDemote.TabIndex = 38;
             // 
             // chat_grpOther
             // 
@@ -6053,7 +6065,8 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.CheckBox chat_cbTabLevel;
         private System.Windows.Forms.CheckBox chat_cbTabBots;
         
-        private System.Windows.Forms.GroupBox chat_grpMessages;
+        private System.Windows.Forms.GroupBox chat_grpMessages;        
+        private System.Windows.Forms.GroupBox chat_grpModeration;
         private System.Windows.Forms.Label chat_lblShutdown;
         private System.Windows.Forms.TextBox chat_txtShutdown;
         private System.Windows.Forms.CheckBox chat_chkCheap;
