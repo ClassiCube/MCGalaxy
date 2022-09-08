@@ -90,6 +90,7 @@ namespace MCGalaxy {
 
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.SaveStats();
+                
                 string serverDLL = Server.GetServerDLLPath();
                 
                 // Move current files to previous files (by moving instead of copying, 

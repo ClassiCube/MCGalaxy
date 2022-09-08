@@ -102,6 +102,7 @@ namespace MCGalaxy
 
             EnsureFilesExist();
             MoveOutdatedFiles();
+            IScripting.Init();
 
             LoadAllSettings();
             InitDatabase();
@@ -145,7 +146,6 @@ namespace MCGalaxy
             EnsureDirectoryExists("extra/bots");
             EnsureDirectoryExists(Paths.ImportsDir);
             EnsureDirectoryExists("blockdefs");
-            EnsureDirectoryExists(IScripting.COMMANDS_DLL_DIR);
 #if !MCG_STANDALONE
             EnsureDirectoryExists(MCGalaxy.Modules.Compiling.ICompiler.COMMANDS_SOURCE_DIR); // TODO move to compiling module
 #endif

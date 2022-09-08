@@ -38,31 +38,10 @@ namespace MCGalaxy
         public abstract void RestartProcess();
         public abstract bool IsWindows { get; }
 
-
-        public virtual void Init() {
-            AppDomain.CurrentDomain.AssemblyResolve += ResolvePluginAssembly;
-        }
-
-        // only used for resolving plugin DLLs depending on other plugin DLLs
-        static Assembly ResolvePluginAssembly(object sender, ResolveEventArgs args) {
-            if (args.RequestingAssembly == null)       return null;
-            if (!IsPluginDLL(args.RequestingAssembly)) return null;
-
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly assem in assemblies)
-            {
-                if (!IsPluginDLL(assem)) continue;
-
-                if (args.Name == assem.FullName) return assem;
-            }
-            return null;
-        }
-
-        static bool IsPluginDLL(Assembly a) { return String.IsNullOrEmpty(a.Location); }
-
+        public virtual void Init() { }
 
         static IOperatingSystem detectedOS;
-        public unsafe static IOperatingSystem DetectOS() {
+        public static IOperatingSystem DetectOS() {
             detectedOS = detectedOS ?? DoDetectOS();
             return detectedOS;
         }

@@ -35,6 +35,31 @@ namespace MCGalaxy.Scripting
         /// <summary> Returns the default .dll path for the plugin with the given name </summary>
         public static string PluginPath(string name)  { return PLUGINS_DLL_DIR + name + ".dll"; }
         
+        
+        public static void Init() {
+            Directory.CreateDirectory(COMMANDS_DLL_DIR);
+            Directory.CreateDirectory(PLUGINS_DLL_DIR);
+            AppDomain.CurrentDomain.AssemblyResolve += ResolvePluginAssembly;
+        }
+
+        // only used for resolving plugin DLLs depending on other plugin DLLs
+        static Assembly ResolvePluginAssembly(object sender, ResolveEventArgs args) {
+            if (args.RequestingAssembly == null)       return null;
+            if (!IsPluginDLL(args.RequestingAssembly)) return null;
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly assem in assemblies)
+            {
+                if (!IsPluginDLL(assem)) continue;
+
+                if (args.Name == assem.FullName) return assem;
+            }
+            return null;
+        }
+
+        static bool IsPluginDLL(Assembly a) { return String.IsNullOrEmpty(a.Location); }
+        
+        
         /// <summary> Constructs instances of all types which derive from T in the given assembly. </summary>
         /// <returns> The list of constructed instances. </returns>
         public static List<T> LoadTypes<T>(Assembly lib) {
@@ -52,6 +77,13 @@ namespace MCGalaxy.Scripting
                 instances.Add((T)instance);
             }
             return instances;
+        }
+        
+        /// <summary> Loads the given assembly from disc (and associated .pdb debug data) </summary>
+        public static Assembly LoadAssembly(string path) {
+            byte[] data  = File.ReadAllBytes(path);
+            byte[] debug = GetDebugData(path);
+            return Assembly.Load(data, debug);
         }
         
         static byte[] GetDebugData(string path) {
@@ -72,33 +104,23 @@ namespace MCGalaxy.Scripting
             }
         }
         
-        /// <summary> Loads the given assembly from disc (and associated .pdb debug data) </summary>
-        public static Assembly LoadAssembly(string path) {
-            byte[] data  = File.ReadAllBytes(path);
-            byte[] debug = GetDebugData(path);
-            return Assembly.Load(data, debug);
-        }
-        
         
         public static void AutoloadCommands() {
             string[] files = AtomicIO.TryGetFiles(COMMANDS_DLL_DIR, "*.dll");
+            if (files == null) return;
             
-            if (files != null) {
-                foreach (string path in files) { AutoloadCommands(path); }
-            } else {
-                Directory.CreateDirectory(COMMANDS_DLL_DIR);
-            }
+            foreach (string path in files) { AutoloadCommands(path); }
         }
         
         static void AutoloadCommands(string path) {
-        	string error;
+            string error;
             List<Command> cmds = LoadCommands(path, out error);
             
             if (error != null) { 
                 Logger.Log(LogType.Warning, error);
             } else {
                 Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from {1}", 
-            	           cmds.Join(c => "/" + c.name), Path.GetFileName(path));
+                           cmds.Join(c => "/" + c.name), Path.GetFileName(path));
             }
         }
         
@@ -146,11 +168,8 @@ namespace MCGalaxy.Scripting
         
         public static void AutoloadPlugins() {
             string[] files = AtomicIO.TryGetFiles(PLUGINS_DLL_DIR, "*.dll");
-
-            if (files == null) {
-                Directory.CreateDirectory(PLUGINS_DLL_DIR); return;
-            }
-
+            if (files == null) return;
+            
             // Ensure that plugin files are loaded in a consistent order,
             //  in case plugins have a dependency on other plugins
             Array.Sort<string>(files);
