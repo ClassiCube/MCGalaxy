@@ -16,30 +16,30 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Reflection;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy {
+namespace MCGalaxy 
+{
     /// <summary> Checks for and applies software updates. </summary>
-    public static class Updater {
-        
+    public static class Updater 
+    {    
         public static string SourceURL = "https://github.com/UnknownShadow200/MCGalaxy";
         public const string BaseURL    = "https://raw.githubusercontent.com/UnknownShadow200/MCGalaxy/master/";
         public const string UploadsURL = "https://github.com/UnknownShadow200/MCGalaxy/tree/master/Uploads";
         
         const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
-        #if TEN_BIT_BLOCKS
-        const string dllURL = BaseURL + "Uploads/MCGalaxy_infid.dll?raw=true";
-        #else
-        const string dllURL = BaseURL + "Uploads/MCGalaxy_.dll?raw=true";
-        #endif
+#if MCG_STANDALONE
+        static string dllURL = "https://cs.classicube.net/mcgalaxy/" + IOperatingSystem.DetectOS().StandaloneName;
+#elif TEN_BIT_BLOCKS
+        const string dllURL = BaseURL + "Uploads/MCGalaxy_infid.dll";
+#else
+        const string dllURL = BaseURL + "Uploads/MCGalaxy_.dll";
+#endif
         const string changelogURL = BaseURL + "Changelog.txt";
-        const string guiURL = BaseURL + "Uploads/MCGalaxy.exe?raw=true";
-        const string cliURL = BaseURL + "Uploads/MCGalaxyCLI.exe?raw=true";
+        const string guiURL = BaseURL + "Uploads/MCGalaxy.exe";
+        const string cliURL = BaseURL + "Uploads/MCGalaxyCLI.exe";
 
         public static event EventHandler NewerVersionDetected;
         
@@ -77,17 +77,13 @@ namespace MCGalaxy {
                 
                 WebClient client = HttpUtil.CreateWebClient();
                 client.DownloadFile(dllURL, "MCGalaxy_.update");
+#if !MCG_STANDALONE
                 client.DownloadFile(guiURL, "MCGalaxy.update");
                 client.DownloadFile(cliURL, "MCGalaxyCLI.update");
+#endif
                 client.DownloadFile(changelogURL, "Changelog.txt");
 
-                Level[] levels = LevelInfo.Loaded.Items;
-                foreach (Level lvl in levels) {
-                    if (!lvl.SaveChanges) continue;
-                    lvl.Save();
-                    lvl.SaveBlockDBChanges();
-                }
-
+                Server.SaveAllLevels();
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player pl in players) pl.SaveStats();
                 
@@ -98,11 +94,11 @@ namespace MCGalaxy {
                 AtomicIO.TryMove(serverDLL,         "prev_MCGalaxy_.dll");
                 AtomicIO.TryMove("MCGalaxy.exe",    "prev_MCGalaxy.exe");
                 AtomicIO.TryMove("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
-                
+
                 // Move update files to current files
-                File.Move("MCGalaxy_.update",   serverDLL);
-                File.Move("MCGalaxy.update",    "MCGalaxy.exe");
-                File.Move("MCGalaxyCLI.update", "MCGalaxyCLI.exe");                             
+                AtomicIO.TryMove("MCGalaxy_.update",   serverDLL);
+                AtomicIO.TryMove("MCGalaxy.update",    "MCGalaxy.exe");
+                AtomicIO.TryMove("MCGalaxyCLI.update", "MCGalaxyCLI.exe");                             
 
                 Server.Stop(true, "Updating server.");
             } catch (Exception ex) {

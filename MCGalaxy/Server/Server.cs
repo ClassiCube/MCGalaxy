@@ -246,16 +246,7 @@ namespace MCGalaxy
             Plugin.UnloadAll();
 
             try {
-                string autoload = null;
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded) {
-                    if (!lvl.SaveChanges) continue;
-                    
-                    autoload = autoload + lvl.name + "=" + lvl.physics + Environment.NewLine;
-                    lvl.Save();
-                    lvl.SaveBlockDBChanges();
-                }
-                
+                string autoload = SaveAllLevels();
                 if (Server.SetupFinished && !Server.Config.AutoLoadMaps) {
                     File.WriteAllText("text/autoload.txt", autoload);
                 }
@@ -275,6 +266,21 @@ namespace MCGalaxy
                 Process.Start(GetRestartPath());
             }
             Environment.Exit(0);
+        }
+
+        public static string SaveAllLevels() {
+            string autoload = null;
+            Level[] loaded  = LevelInfo.Loaded.Items;
+
+            foreach (Level lvl in loaded)
+            {
+                if (!lvl.SaveChanges) continue;
+
+                autoload = autoload + lvl.name + "=" + lvl.physics + Environment.NewLine;
+                lvl.Save();
+                lvl.SaveBlockDBChanges();
+            }
+            return autoload;
         }
 
 

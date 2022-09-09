@@ -37,6 +37,7 @@ namespace MCGalaxy
         /// (since current process image is replaced) </remarks>
         public abstract void RestartProcess();
         public abstract bool IsWindows { get; }
+        public virtual string StandaloneName { get { throw new NotImplementedException(); } }
 
         public virtual void Init() { }
 
@@ -86,6 +87,10 @@ namespace MCGalaxy
 
     class macOS : UnixOS
     {
+        public override string StandaloneName { 
+            get { return IntPtr.Size == 8 ? "mac64" : "mac32"; } 
+        }
+
         // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
         // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
         public override CPUTime MeasureAllCPUTime() {
@@ -109,6 +114,10 @@ namespace MCGalaxy
 
     class LinuxOS : UnixOS
     {
+        public override string StandaloneName {
+            get { return IntPtr.Size == 8 ? "nix64" : "nix32"; }
+        }
+
         public override void Init() {
             base.Init();
 #if MCG_STANDALONE

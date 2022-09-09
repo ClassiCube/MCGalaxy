@@ -20,10 +20,12 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
+namespace MCGalaxy 
+{
     /// <summary> Utility methods for backing up and restoring a server. </summary>
-    public static class Backup {
-        const string zipPath = "MCGalaxy.zip", sqlPath = "SQL.sql", dbPath = "MCGalaxy.db";
+    public static class Backup 
+    {
+        const string zipPath = "MCGalaxy.zip", sqlPath = "SQL.sql";
         
         public static void Perform(Player p, bool files, bool db, bool lite, bool compress) {
             if (db) {
