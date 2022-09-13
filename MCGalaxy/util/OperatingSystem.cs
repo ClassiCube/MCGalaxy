@@ -37,7 +37,7 @@ namespace MCGalaxy
         /// (since current process image is replaced) </remarks>
         public abstract void RestartProcess();
         public abstract bool IsWindows { get; }
-        public virtual string StandaloneName { get { throw new NotImplementedException(); } }
+        public virtual string StandaloneName { get { return "UNSUPPORTED"; } }
 
         public virtual void Init() { }
 

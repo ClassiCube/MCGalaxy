@@ -82,8 +82,7 @@ namespace MCGalaxy.Drawing.Brushes
             }
             
             // Map noise distribution to block coverage
-            int volume = (op.Max.X - op.Min.X + 1)
-                * (op.Max.Y - op.Min.Y + 1) * (op.Max.Z - op.Min.Z + 1);
+            int volume = op.SizeX * op.SizeY * op.SizeZ;
             float sum = 0;
             for (int i = 0; i < accuracy; i++) {
                 // Update the thresholds

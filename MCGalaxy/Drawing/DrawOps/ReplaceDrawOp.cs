@@ -36,7 +36,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Replace"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
+            return SizeX * SizeY * SizeZ;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -64,7 +64,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "ReplaceNot"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
+            return SizeX * SizeY * SizeZ;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {

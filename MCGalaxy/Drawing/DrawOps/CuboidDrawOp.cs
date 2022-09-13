@@ -26,7 +26,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cuboid"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            return (Max.X - Min.X + 1) * (Max.Y - Min.Y + 1) * (Max.Z - Min.Z + 1);
+            return SizeX * SizeY * SizeZ;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -45,11 +45,11 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cuboid Hollow"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            int lenX = (Max.X - Min.X + 1), lenY = (Max.Y - Min.Y + 1), lenZ = (Max.Z - Min.Z + 1);
+            int lenX = SizeX, lenY = SizeY, lenZ = SizeZ;
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int yQuadsVol = Math.Max(0, Math.Min(lenY, 2) * ((lenX - 2) * lenZ)); // we need to avoid double counting overlaps
-            int zQuadzVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * (lenY - 2)));
-            return xQuadsVol + yQuadsVol + zQuadzVol;
+            int zQuadsVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * (lenY - 2)));
+            return xQuadsVol + yQuadsVol + zQuadsVol;
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
@@ -103,7 +103,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cuboid Walls"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            int lenX = (Max.X - Min.X + 1), lenY = (Max.Y - Min.Y + 1), lenZ = (Max.Z - Min.Z + 1);
+            int lenX = SizeX, lenY = SizeY, lenZ = SizeZ;
             int xQuadsVol = Math.Min(lenX, 2) * (lenY * lenZ);
             int zQuadsVol = Math.Max(0, Math.Min(lenZ, 2) * ((lenX - 2) * lenY)); // we need to avoid double counting overlaps
             return xQuadsVol + zQuadsVol;
@@ -126,7 +126,7 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Cuboid Wireframe"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            int lenX = (Max.X - Min.X + 1), lenY = (Max.Y - Min.Y + 1), lenZ = (Max.Z - Min.Z + 1);
+            int lenX = SizeX, lenY = SizeY, lenZ = SizeZ;
             int horSidesvol = 2 * (lenX * 2 + lenZ * 2); // TODO: slightly overestimated by at most four blocks.
             int verSidesVol = Math.Max(0, lenY - 2) * 4;
             return horSidesvol + verSidesVol;

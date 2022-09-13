@@ -67,7 +67,7 @@ namespace MCGalaxy
             Logger.Log(LogType.SystemActivity, file + " doesn't exist, Downloading..");
             try {
                 using (WebClient client = HttpUtil.CreateWebClient()) {
-                    client.DownloadFile(Updater.BaseURL + file + "?raw=true", file);
+                    client.DownloadFile(Updater.BaseURL + file, file);
                 }
                 if (File.Exists(file)) {
                     Logger.Log(LogType.SystemActivity, file + " download succesful!");
