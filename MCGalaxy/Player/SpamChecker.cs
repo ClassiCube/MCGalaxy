@@ -23,8 +23,8 @@ namespace MCGalaxy {
         public SpamChecker(Player p) {
             this.p = p;
             blockLog = new List<DateTime>(Server.Config.BlockSpamCount);
-            chatLog = new List<DateTime>(Server.Config.ChatSpamCount);
-            cmdLog = new List<DateTime>(Server.Config.CmdSpamCount);
+            chatLog  = new List<DateTime>(Server.Config.ChatSpamCount);
+            cmdLog   = new List<DateTime>(Server.Config.CmdSpamCount);
         }
         
         Player p;

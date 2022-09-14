@@ -20,7 +20,6 @@ using System.IO;
 using System.Threading;
 using MCGalaxy.Drawing;
 using MCGalaxy.Drawing.Ops;
-using MCGalaxy.Generator;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.Util;
@@ -111,7 +110,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoDrawImageCore(Player p, Vec3S32[] marks, DrawArgs dArgs) {
-            IBitmap2D bmp = HeightmapGen.DecodeImage(dArgs.Data, p);
+            IBitmap2D bmp = ImageUtils.DecodeImage(dArgs.Data, p);
             if (bmp == null) return;
 
             ImagePrintDrawOp op = dArgs.Dithered ? new ImagePrintDitheredDrawOp() : new ImagePrintDrawOp();

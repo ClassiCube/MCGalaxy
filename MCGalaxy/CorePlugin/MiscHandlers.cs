@@ -17,12 +17,8 @@
  */
 using System;
 using MCGalaxy.Blocks.Extended;
-using MCGalaxy.DB;
-using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
-using MCGalaxy.Network;
-using MCGalaxy.Util;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Core {
