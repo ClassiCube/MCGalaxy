@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy 
 {

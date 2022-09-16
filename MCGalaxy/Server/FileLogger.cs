@@ -116,19 +116,25 @@ namespace MCGalaxy
         public void FlushCache() {
             if (stream == null) {
                 stream = new FileStream(Path, FileMode.Append, FileAccess.Write, 
-                                        FileShare.ReadWrite | FileShare.Delete, 4096, FileOptions.SequentialScan);
+                                        FileShare.ReadWrite, 4096, FileOptions.SequentialScan);
                 writer = new StreamWriter(stream);
             }
 
-            // Failsafe in case something has gone catastrophically wrong
-            if (stream.Length > MAX_LOG_SIZE) { Cache.Clear(); return; }
-                
-            while (Cache.Count > 0) {
-                string item = Cache.Dequeue();
-                item = Colors.Strip(item);
-                writer.WriteLine(item);
+            try {
+                // Failsafe in case something has gone catastrophically wrong
+                if (stream.Length > MAX_LOG_SIZE) { Cache.Clear(); return; }
+
+                while (Cache.Count > 0)
+                {
+                    string item = Cache.Dequeue();
+                    item = Colors.Strip(item);
+                    writer.WriteLine(item);
+                }
+                writer.Flush();
+            } catch {
+                Close();
+                throw;
             }
-            writer.Flush();
         }
 
         public void Close() {
