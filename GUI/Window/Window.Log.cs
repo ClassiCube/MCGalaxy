@@ -49,12 +49,9 @@ namespace MCGalaxy.Gui {
         }
 
         static Stream OpenFile(string path) {
-            try
-            {
+            try {
                 return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read,      4096, FileOptions.SequentialScan);
-            }
-            catch (IOException)
-            {
+            } catch (IOException) {
                 return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, FileOptions.SequentialScan);
             }
         }

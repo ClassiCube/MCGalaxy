@@ -165,14 +165,14 @@ namespace MCGalaxy.Drawing.Brushes
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "&TArguments: <random>",
+            "&TArguments: none or 'random'",
             "&HIf no arguments are given, draws a diagonally repeating rainbow",
-            "&HIf \'random\' is given, draws by randomly selecting blocks from the rainbow pattern.",
+            "&HIf 'random' is given, draws by randomly selecting blocks from the rainbow pattern.",
         };
         
         public override Brush Construct(BrushArgs args) {
-            if (args.Message.CaselessEq("random")) return new RandomRainbowBrush();
-            if (args.Message.CaselessEq("bw")) return new BWRainbowBrush();
+            if (args.Message.CaselessEq("random")) 
+                return new RandomRainbowBrush(RainbowBrush.blocks);
             return new RainbowBrush();
         }
     }
@@ -183,10 +183,15 @@ namespace MCGalaxy.Drawing.Brushes
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "&TArguments: none",
-            "&HDraws a diagonally repeating black-white rainbow",
+            "&TArguments: none or 'random'",
+            "&HIf no arguments are given, draws a diagonally repeating black-white rainbow",
+            "&HIf 'random' is given, draws by randomly selecting blocks from the rainbow pattern.",
         };
         
-        public override Brush Construct(BrushArgs args) { return new BWRainbowBrush(); }
+        public override Brush Construct(BrushArgs args) { 
+            if (args.Message.CaselessEq("random")) 
+                return new RandomRainbowBrush(BWRainbowBrush.blocks);
+            return new BWRainbowBrush();
+        }
     }
 }

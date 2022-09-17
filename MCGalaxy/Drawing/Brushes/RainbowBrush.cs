@@ -39,23 +39,23 @@ namespace MCGalaxy.Drawing.Brushes
         public override string Name { get { return "BWRainbow"; } }
         public BWRainbowBrush() : base(blocks) {}
         
-        static BlockID[] blocks = new BlockID[] { 
+        internal static BlockID[] blocks = new BlockID[] { 
             Block.Iron,  Block.White,    Block.Gray,
             Block.Black, Block.Obsidian, Block.Black, 
             Block.Gray,  Block.White };
     }
     
-    internal sealed class RandomRainbowBrush : Brush 
+    public sealed class RandomRainbowBrush : Brush 
     {
-        readonly Random rnd;
-        
+        readonly Random rnd = new Random();
+        readonly BlockID[] blocks;
+
         public override string Name { get { return "RandomRainbow"; } }
         
-        public RandomRainbowBrush() { rnd = new Random(); }        
-        public RandomRainbowBrush(int seed) { rnd = new Random(seed); }
+        public RandomRainbowBrush(BlockID[] list) { blocks = list; }      
         
         public override BlockID NextBlock(DrawOp op) {
-            return RainbowBrush.blocks[rnd.Next(RainbowBrush.blocks.Length)];
+            return blocks[rnd.Next(blocks.Length)];
         }
     }
 }
