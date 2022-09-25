@@ -58,6 +58,7 @@ namespace MCGalaxy.Gui
             Server.RestartPath = Application.ExecutablePath;
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             Application.ThreadException += ThreadExHandler;
+            DetectBuggyCursors();
 
             try {
                 Application.EnableVisualStyles();
@@ -85,6 +86,42 @@ namespace MCGalaxy.Gui
 
         static void ThreadExHandler(object sender, ThreadExceptionEventArgs e) {
             LogAndRestart(e.Exception);
+        }
+
+        static void DetectBuggyCursors() {
+            // In very rare cases, trying to create SizeNWSE cursor on Mono on Linux will throw an ArgumentException
+            // Message: A null reference or invalid value was found[GDI + status: InvalidParameter]
+            //   ..
+            //   at System.Drawing.Bitmap..ctor(System.Drawing.Image, System.Drawing.Size)
+            //   at System.Windows.Forms.XplatUIX11.DefineCursor(System.Drawing.Bitmap bitmap, System.Drawing.Bitmap mask, System.Drawing.Color cursor_pixel, System.Drawing.Color mask_pixel, System.Int32 xHotSpot, System.Int32 yHotSpot)[0x00045] in < 28e46de2d20c496895000ef0abfc2106 >:0
+            //   at System.Windows.Forms.XplatUI.DefineCursor(System.Drawing.Bitmap bitmap, System.Drawing.Bitmap mask, System.Drawing.Color cursor_pixel, System.Drawing.Color mask_pixel, System.Int32 xHotSpot, System.Int32 yHotSpot)[0x00000] in < 28e46de2d20c496895000ef0abfc2106 >:0
+            //   at System.Windows.Forms.Cursor.CreateCursor(System.IO.Stream stream)[0x00058] in < 28e46de2d20c496895000ef0abfc2106 >:0
+            //   at System.Windows.Forms.Cursor..ctor(System.Type type, System.String resource)[0x0001e] in < 28e46de2d20c496895000ef0abfc2106 >:0
+            //   at System.Windows.Forms.Cursors.get_SizeNWSE()[0x00014] in < 28e46de2d20c496895000ef0abfc2106 >:0
+            //   ..
+            // However, some X11 video drivers will cause XQueryBestCursor to return width/height 0,
+            //  which will then cause the subsequent 'new Bitmap(width, height)' in XplatUIX11.DefineCursor to fail
+            // See https://github.com/UnknownShadow200/MCGalaxy/issues/658 for more details
+            try {
+                Cursor c = Cursors.SizeNWSE;
+            } catch (ArgumentException ex) {
+                Logger.LogError("checking Cursors", ex);
+                Popup.Warning("Video driver appears to be returning buggy cursor sizes\n\nAttempting to workaround this issue (might not work)");
+                try { BypassCursorsHACK(); } catch { }
+            }
+        }
+
+        static void BypassCursorsHACK() {
+            if (!Server.RunningOnMono()) return;
+            Type stdCursorType = typeof(Cursor).Assembly.GetType("System.Windows.Forms.StdCursor");
+
+            // cursor = new Cursor(StdCursor type) { .. }
+            ConstructorInfo cursor_cons = typeof(Cursor).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { stdCursorType }, null);
+            object cursor = cursor_cons.Invoke(new object[] { 23 }); // StdCursor.SizeNWSE
+
+            // Cursors.NWSE = cursor;
+            FieldInfo nwse_field = typeof(Cursors).GetField("size_nwse", BindingFlags.NonPublic | BindingFlags.Static);
+            nwse_field.SetValue(null, cursor);
         }
     }
 }
