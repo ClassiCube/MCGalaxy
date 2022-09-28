@@ -39,7 +39,6 @@
     <DefineConstants>TRACE;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\Source\General.ruleset</CodeAnalysisRuleSet>
     <DebugSymbols>True</DebugSymbols>
     <BaseAddress>4194304</BaseAddress>
     <RegisterForComInterop>False</RegisterForComInterop>

@@ -93,11 +93,12 @@ namespace MCGalaxy
             ShowWelcome();
             CheckState();
             
-            PlayerDB.LoadNick(this);
-            Game.Team = Team.TeamIn(this);
+            string nick = PlayerDB.LoadNick(name);
+            if (nick != null) DisplayName = nick;
+            Game.Team   = Team.TeamIn(this);
             SetPrefix();
+
             LoadCpeData();
-            
             if (Server.noEmotes.Contains(name)) { parseEmotes = !Server.Config.ParseEmotes; }
 
             hideRank = Rank;

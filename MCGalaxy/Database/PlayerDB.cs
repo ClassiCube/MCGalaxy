@@ -27,28 +27,25 @@ namespace MCGalaxy.DB {
         
         static string LoginPath(string name)  { return "text/login/"  + name.ToLower() + ".txt"; }
         static string LogoutPath(string name) { return "text/logout/" + name.ToLower() + ".txt"; }
-        
-        static char[] trimChars = new char[] {'='};
-        public static void LoadNick(Player p) {
-            if (!File.Exists("players/" + p.name + "DB.txt")) return;
-            
-            string[] lines = File.ReadAllLines("players/" + p.name + "DB.txt");
-            foreach (string line in lines) {
-                if (line.IsCommentLine()) continue;
-                string[] parts = line.Split(trimChars, 2);
-                if (parts.Length < 2) continue;
-                string key = parts[0].Trim(), value = parts[1].Trim();
 
-                if (key.CaselessEq("nick"))
-                    p.DisplayName = value;
+        const string NICK_PREFIX = "Nick = ";
+        public static string LoadNick(string name) {
+            string path = "players/" + name + "DB.txt";
+            if (!File.Exists(path)) return null;
+
+            foreach (string line in File.ReadAllLines(path)) 
+            {
+                if (!line.CaselessStarts(NICK_PREFIX)) continue;
+
+                return line.Substring(NICK_PREFIX.Length).Trim();
             }
-            p.SetPrefix();
+            return null;
         }
 
         public static void SetNick(string name, string nick) {
             EnsureDirectoriesExist();
             using (StreamWriter sw = new StreamWriter("players/" + name + "DB.txt", false))
-                sw.WriteLine("Nick = " + nick);
+                sw.WriteLine(NICK_PREFIX + nick);
         }
         
         
