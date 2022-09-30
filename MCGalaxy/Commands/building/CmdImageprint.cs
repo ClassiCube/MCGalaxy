@@ -63,14 +63,7 @@ namespace MCGalaxy.Commands.Building {
             
             if (parts.Length > 2) {
                 string mode = parts[2];
-                // Dithered and 2 layer mode are mutually exclusive because dithering is not visually effective when the (dark) sides of blocks are visible all over the image.
-
-                if      (mode.CaselessEq("wall"))          {                                                 }
-                else if (mode.CaselessEq("walldither"))    { dArgs.Dithered  = true;                         }
-                else if (mode.CaselessEq("wall2layer"))    { dArgs.TwoLayer  = true;                         }
-                else if (mode.CaselessEq("floor"))         { dArgs.Floor     = true;                         }
-                else if (mode.CaselessEq("floordither"))   { dArgs.Floor     = true; dArgs.Dithered  = true; }
-                else { p.Message("&WUnknown print mode \"{0}\".", mode); return; }
+                if (!ParseMode(mode, dArgs)) { p.Message("&WUnknown print mode \"{0}\".", mode); return; }
             }
             
             if (parts.Length > 4) {
@@ -89,6 +82,23 @@ namespace MCGalaxy.Commands.Building {
 
             p.Message("Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for &SImagePrint", dArgs, DoImage);
+        }
+
+        bool ParseMode(string mode, DrawArgs args) {
+            // Dithered and 2 layer mode are mutually exclusive because dithering is not visually effective when the (dark) sides of blocks are visible all over the image.
+            if (mode.CaselessEq("wall")) {
+                // default arguments are fine
+            } else if (mode.CaselessEq("walldither")) {
+                args.Dithered = true;
+            } else if (mode.CaselessEq("wall2layer") || mode.CaselessEq("vertical2layer")) {
+                args.TwoLayer = true; 
+            } else if (mode.CaselessEq("floor") || mode.CaselessEq("horizontal")) { 
+                args.Floor = true; 
+            } else if (mode.CaselessEq("floordither")) { 
+                args.Floor = true; args.Dithered = true; 
+            } else { return false; }
+
+            return true;
         }
         
         bool DoImage(Player p, Vec3S32[] m, object state, BlockID block) {
