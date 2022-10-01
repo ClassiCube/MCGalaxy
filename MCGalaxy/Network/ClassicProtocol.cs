@@ -498,6 +498,7 @@ namespace MCGalaxy.Network
 
 #region Higher level sending
         public override void SendMotd(string motd) {
+            motd = CleanupColors(motd);
             byte[] packet = Packet.Motd(player, motd);
             Send(packet);
             
