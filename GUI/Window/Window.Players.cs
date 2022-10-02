@@ -19,8 +19,10 @@ using System;
 using System.Windows.Forms;
 using MCGalaxy.UI;
 
-namespace MCGalaxy.Gui {
-    public partial class Window : Form {
+namespace MCGalaxy.Gui 
+{
+    public partial class Window : Form 
+    {
         PlayerProperties playerProps;
         
         void NoPlayerSelected() { Popup.Warning("No player selected"); }
@@ -68,8 +70,22 @@ namespace MCGalaxy.Gui {
             pl_txtSendCommand.Text = "";
         }
 
-        void pl_BtnMute_Click(object sender, EventArgs e)  { DoCmd("mute", "Muted @p"); }
-        void pl_BtnFreeze_Click(object sender, EventArgs e){ DoCmd("freeze", "Froze @p"); }
+        void pl_BtnMute_Click(object sender, EventArgs e)  {
+            if (curPlayer != null && !curPlayer.muted) {
+                DoCmd("mute", "Muted @p"); 
+            } else {
+                DoCmd("unmute", "Unmuted @p");
+            }
+        }
+        
+        void pl_BtnFreeze_Click(object sender, EventArgs e) {
+            if (curPlayer != null && !curPlayer.frozen) {
+                DoCmd("freeze", "Froze @p", "10m"); 
+            } else {
+                DoCmd("freeze", "Unfroze @p");
+            }
+        }
+        
         void pl_BtnWarn_Click(object sender, EventArgs e)  { DoCmd("warn", "Warned @p"); }
         void pl_BtnKick_Click(object sender, EventArgs e)  { DoCmd("kick", "Kicked @p"); }
         void pl_BtnBan_Click(object sender, EventArgs e)   { DoCmd("ban", "Banned @p"); }
@@ -77,9 +93,11 @@ namespace MCGalaxy.Gui {
         void pl_BtnKill_Click(object sender, EventArgs e)  { DoCmd("kill", "Killed @p"); }
         void pl_BtnRules_Click(object sender, EventArgs e) { DoCmd("Rules", "Sent rules to @p"); }
         
-        void DoCmd(string cmdName, string action) {
+        void DoCmd(string cmdName, string action, string suffix = null) {
             if (curPlayer == null) { NoPlayerSelected(); return; }
-            UIHelpers.HandleCommand(cmdName + " " + curPlayer.name);
+            
+            string cmd = (cmdName + " " + curPlayer.name + " " + suffix).Trim();
+            UIHelpers.HandleCommand(cmd);
             
             Players_AppendStatus(action.Replace("@p", curPlayer.truename));
             Players_UpdateButtons();
