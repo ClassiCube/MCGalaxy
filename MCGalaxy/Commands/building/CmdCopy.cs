@@ -100,7 +100,9 @@ namespace MCGalaxy.Commands.Building {
         void CompleteCopy(Player p, Vec3S32[] m, CopyArgs cArgs) {
             if (!cArgs.cut) return;
             DrawOp op = new CuboidDrawOp();
+
             op.Flags = BlockDBFlags.Cut;
+            op.AffectedByTransform = false;
             Brush brush = new SolidBrush(Block.Air);
             DrawOpPerformer.Do(op, brush, p, new Vec3S32[] { m[0], m[1] }, false);
         }
