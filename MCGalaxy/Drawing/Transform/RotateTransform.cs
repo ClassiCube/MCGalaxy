@@ -26,17 +26,31 @@ namespace MCGalaxy.Drawing.Transforms
     {        
         public override string Name { get { return "Rotate"; } }
         public bool CentreOrigin;
-        double cosX, cosY, cosZ, sinX, sinY, sinZ;
+        double alphaX, betaX, alphaY, betaY, alphaZ, betaZ;
         Vec3S32 P;
         
+        // https://silmon.github.io/arbitrary-image-rotation-using-shearing.html
+        // http://delta.cs.cinvestav.mx/~mcintosh/newweb/camex/node37.html
+        // https://www.ocf.berkeley.edu/~fricke/projects/israel/paeth/rotation_by_shearing.html
+        
         public void SetAngles(double xDeg, double yDeg, double zDeg) {
-            cosX = Math.Cos(xDeg * Math.PI / 180.0);
-            cosY = Math.Cos(yDeg * Math.PI / 180.0);
-            cosZ = Math.Cos(zDeg * Math.PI / 180.0);
+            CalcShear2D(xDeg, out alphaX, out betaX);
+            CalcShear2D(yDeg, out alphaY, out betaY);
+            CalcShear2D(zDeg, out alphaZ, out betaZ);         
+        }
+        
+        void CalcShear2D(double angle, out double alpha, out double beta) {
+            angle *= -Math.PI / 180.0; // degrees -> radians, and - so same direction as old RotateTransform
+            alpha = -Math.Tan(angle / 2);
+            beta  = Math.Sin(angle);
+        }
+        
+        void Shear2D(ref int x, ref int y, double alpha, double beta) {
+            int x_ = (int)(x  + alpha * (y  + 0.5)); // shear #1
+            int y_ = (int)(y  + beta  * (x_ + 0.5)); // shear #2
+            int X_ = (int)(x_ + alpha * (y_ + 0.5)); // shear #3
             
-            sinX = Math.Sin(xDeg * Math.PI / 180.0);
-            sinY = Math.Sin(yDeg * Math.PI / 180.0);
-            sinZ = Math.Sin(zDeg * Math.PI / 180.0);            
+            x = X_; y = y_;
         }
         
         public override void Perform(Vec3S32[] marks, DrawOp op, Brush brush, DrawOpOutput output) {
@@ -46,27 +60,15 @@ namespace MCGalaxy.Drawing.Transforms
         }
         
         void OutputBlock(DrawOpBlock b, DrawOpOutput output) {
-            double dx = b.X - P.X, dy = b.Y - P.Y, dz = b.Z - P.Z;
-            double rotX = 0, rotY = 0, rotZ = 0;
+            int dx = b.X - P.X, dy = b.Y - P.Y, dz = b.Z - P.Z;
             
-            // Rotate X
-            rotY = cosX * dy - sinX * dz;
-            rotZ = sinX * dy + cosX * dz;
-            dy = rotY; dz = rotZ;
+            Shear2D(ref dy, ref dz, alphaX, betaX);
+            Shear2D(ref dx, ref dz, alphaY, betaY);
+            Shear2D(ref dx, ref dy, alphaZ, betaZ);
             
-            // Rotate Y
-            rotX = cosY * dx + sinY * dz;
-            rotZ = -sinY * dx + cosY * dz;
-            dx = rotX; dz = rotZ;
-            
-            // Rotate Z
-            rotX = cosZ * dx - sinZ * dy;
-            rotY = sinZ * dx + cosZ * dy;
-            dx = rotX; dy = rotY;
-            
-            b.X = (ushort)(dx + P.X + ((dx % 1) >= 0.5 ? 1 : 0));
-            b.Y = (ushort)(dy + P.Y + ((dy % 1) >= 0.5 ? 1 : 0));
-            b.Z = (ushort)(dz + P.Z + ((dz % 1) >= 0.5 ? 1 : 0));
+            b.X = (ushort)(P.X + dx);
+            b.Y = (ushort)(P.Y + dy);
+            b.Z = (ushort)(P.Z + dz);
             output(b);
         }
     }
