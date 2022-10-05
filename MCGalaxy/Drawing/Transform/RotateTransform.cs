@@ -68,6 +68,7 @@ namespace MCGalaxy.Drawing.Transforms
                 shear.yMulX =  1;
             }
 
+            // TODO angle %= 90; instead?? and integer angles instead???
             angle = -angle; // same output as old Rotate Transform
 
             angle *= Math.PI / 180.0; // degrees -> radians;

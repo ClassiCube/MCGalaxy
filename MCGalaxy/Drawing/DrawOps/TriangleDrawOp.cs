@@ -26,7 +26,8 @@ namespace MCGalaxy.Drawing.Ops
         public override string Name { get { return "Triangle"; } }
         
         public override long BlocksAffected(Level lvl, Vec3S32[] marks) {
-            // Applying Heron's Formula
+            // calculate area of triangle using Heron's Formula
+            //  https://en.wikipedia.org/wiki/Heron%27s_formula
             float a = (marks[0] - marks[2]).Length;
             float b = (marks[1] - marks[2]).Length;
             float c = (marks[0] - marks[1]).Length;
@@ -35,8 +36,9 @@ namespace MCGalaxy.Drawing.Ops
         }
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
-            Vec3F32 V1 = marks[0], V2 = marks[1], V3 = marks[2];
-            Vec3F32 N = Vec3F32.Cross(V2 - V1, V3 - V1);
+            // construct the plane that contains the given triangle
+            Vec3F32 A = marks[0], B = marks[1], C = marks[2];
+            Vec3F32 N = Vec3F32.Cross(B - A, C - A);
             N = Vec3F32.Normalise(N);
             Vec3U16 min = Clamp(Min), max = Clamp(Max);
             
@@ -44,29 +46,33 @@ namespace MCGalaxy.Drawing.Ops
                 for (ushort zz = min.Z; zz <= max.Z; zz++)
                     for (ushort xx = min.X; xx <= max.X; xx++)
             {
-                // Project point onto the plane
+                // project point onto the plane
                 Vec3F32 P = new Vec3F32(xx, yy, zz);
-                float t = Vec3F32.Dot(N, V1) - Vec3F32.Dot(N, P);
+                float t = Vec3F32.Dot(N, A) - Vec3F32.Dot(N, P);
+                // t = signed distance to plane
+
+                // quickly reject points not close to the plane
+                if (Math.Abs(t) > 0.5) continue;
+
+                // calculate closest point on the plane
                 Vec3F32 P0 = P + t * N;
-                float dist = (P - P0).Length;
-                if (dist > 0.5) continue;
                 
-                // Check if inside the triangle
-                Vec3F32 v0 = V3 - V1, v1 = V2 - V1, v2 = P0 - V1;
+                // check if inside the triangle
+                Vec3F32 v0 = C - A, v1 = B - A, v2 = P0 - A;
                 float dot00 = Vec3F32.Dot(v0, v0);
                 float dot01 = Vec3F32.Dot(v0, v1);
                 float dot02 = Vec3F32.Dot(v0, v2);
                 float dot11 = Vec3F32.Dot(v1, v1);
                 float dot12 = Vec3F32.Dot(v1, v2);
 
-                // Compute barycentric coordinates
+                // compute barycentric coordinates
                 float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
                 float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
                 float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
                 if (u >= 0 && v >= 0 && u + v <= 1) {
                     output(Place(xx, yy, zz, brush));
-                } else if (Axis(P, V1, V2) || Axis(P, V1, V3) || Axis(P, V2, V3)) {
+                } else if (Axis(P, A, B) || Axis(P, A, C) || Axis(P, B, C)) {
                     output(Place(xx, yy, zz, brush));
                 }
             }
