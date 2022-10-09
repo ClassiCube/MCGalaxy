@@ -1,4 +1,49 @@
-﻿v 1.9.4.2
+﻿v 1.9.4.3
+Added: Gradient brush for /Brush
+Added: Dithered mode for /ImagePrint (thanks Goodlyay)
+Improved: CLI: Reset color instead of explicitly setting foreground color to white
+Improved: Grayscale Rainbow brush now supports random mode
+Improved: Allow changing perbuild/pervisit of multiple levels at once
+Improved: ZS: Change infect messages to use <zombie>/<human> instead of {0}/{1}
+Improved: GUI: Avoid duplicate entries in input log, to simplify navigation through input history
+Improved: Allow changing default login/logout message
+Improved: Prevent using /ignore,/afk,/whisper in MBs
+Improved: Prevent using /mi env on levels you can't visit
+Improved: Zones should default to perbuild of level (and perbuildmax)
+Improved: GUI: Split up Messages panel in Settings into Messages and Moderation messages
+Improved: Message non-controller users when they try to run in-game commands from IRC/Discord that they don't have the permission to run them
+Improved: Now can run on bare minimum of mono-runtime (no longer depends on System.Data)
+Improved: Plugins that depend on other plugin DLLs are now better supported
+Improved: Warn when can-mention-everyone is enabled in discordbot.properties
+Improved: Try to preserve original file modification date in /server backup ZIPs
+Improved: Keep log file open instead of constantly closing and reopening
+Improved: Don't show useless 'on line 0' in compiler error messages
+Improved: Make /Server backup table work with double/blob columns
+Improved: Don't try to download sqlite DLLs on non-windows
+Improved: /pcreate C# example
+Improved: /Commands help
+Fixed: /Cut being affected by the current transform
+Fixed: /Transform rotate output having holes
+Fixed: /Info of offline players not showing nick
+Fixed: Some https:// heartbeat URLs not working with ProtocolError
+Fixed: GUI: Unmute and freeze actions in Players tab not working
+Fixed: Discord messages with newlines not appearing in-game at all
+Fixed: /Server backup .zips can't be added to/edited using Windows Explorer zip support
+Fixed: Some obscure MOTDs crashing original classic client
+Fixed: On NetBSD, doing /sinfo throws IndexOutOfRangeException
+Fixed: In the rare case when running on mono with System.Drawing package but not libgdiplus package, /ImagePrint crashes the server
+Fixed: Attempt to workaround very rare issue where GUI would crash on Linux
+Fixed: Old BlockDB upgrader produced /b entries with modification time being a couple of hours off
+Fixed: Old zone migrator sometimes produced 0 block wide zones
+Removed: Dropped support for old password format (obsolete 20 months)
+Fixed: In dotnet build, /Restart not working sometimes
+Improved: Dotnet build now use ImageSharp library instead for image decoding/resizing
+Improved: Dotnet build no longer depends on CodeDom library
+Fixed: In standalone build, /Restart didn't work
+Fixed: In standalone build, not loading SSL/TLS certificates on Linux
+Improved: For standalone build, WIP on updating support
+
+v 1.9.4.2
 Added: When verify-names is off, mppass can be used for /pass at login
 Added: Allow setting custom round/infection start countdown time in ZS
 Improved: Stop using cmdautoload.txt and just autoload all commands in extra/commands/dll folder
