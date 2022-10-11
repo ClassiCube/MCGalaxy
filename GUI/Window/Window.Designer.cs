@@ -149,7 +149,7 @@ namespace MCGalaxy.Gui
             this.pl_btnMessage = new System.Windows.Forms.Button();
             this.pl_gbActions = new System.Windows.Forms.GroupBox();
             this.pl_btnKill = new System.Windows.Forms.Button();
-            this.pl_txtUndo = new System.Windows.Forms.TextBox();
+            this.pl_numUndo = new MCGalaxy.Gui.TimespanUpDown();
             this.pl_btnWarn = new System.Windows.Forms.Button();
             this.pl_btnRules = new System.Windows.Forms.Button();
             this.pl_btnKick = new System.Windows.Forms.Button();
@@ -1166,7 +1166,7 @@ namespace MCGalaxy.Gui
             // pl_gbActions
             // 
             this.pl_gbActions.Controls.Add(this.pl_btnKill);
-            this.pl_gbActions.Controls.Add(this.pl_txtUndo);
+            this.pl_gbActions.Controls.Add(this.pl_numUndo);
             this.pl_gbActions.Controls.Add(this.pl_btnWarn);
             this.pl_gbActions.Controls.Add(this.pl_btnRules);
             this.pl_gbActions.Controls.Add(this.pl_btnKick);
@@ -1192,14 +1192,17 @@ namespace MCGalaxy.Gui
             this.pl_btnKill.UseVisualStyleBackColor = true;
             this.pl_btnKill.Click += new System.EventHandler(this.pl_BtnKill_Click);
             // 
-            // pl_txtUndo
+            // pl_numUndo
             // 
-            this.pl_txtUndo.BackColor = System.Drawing.SystemColors.Window;
-            this.pl_txtUndo.Location = new System.Drawing.Point(122, 150);
-            this.pl_txtUndo.Name = "pl_txtUndo";
-            this.pl_txtUndo.Size = new System.Drawing.Size(98, 21);
-            this.pl_txtUndo.TabIndex = 42;
-            this.pl_txtUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_txtUndo_KeyDown);
+            this.pl_numUndo.BackColor = System.Drawing.SystemColors.Window;
+            this.pl_numUndo.Location = new System.Drawing.Point(122, 149);
+            this.pl_numUndo.Name = "pl_numUndo";
+            this.pl_numUndo.Size = new System.Drawing.Size(98, 21);
+            this.pl_numUndo.TabIndex = 42;
+            this.pl_numUndo.Seconds = ((long)(1800));
+            this.pl_numUndo.Text = "30m";
+            this.pl_numUndo.Value = System.TimeSpan.Parse("00:30:00");
+            this.pl_numUndo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pl_numUndo_KeyDown);
             // 
             // pl_btnWarn
             // 
@@ -1429,7 +1432,7 @@ namespace MCGalaxy.Gui
         private ToolStripMenuItem tsPlayer_promote;
         private ToolStripMenuItem tsPlayer_demote;
         private TabPage tp_Players;
-        internal RichTextBox logs_txtGeneral;
+        private RichTextBox logs_txtGeneral;
         private DateTimePicker logs_dateGeneral;
         private Button pl_btnBanIP;
         private Button pl_btnBan;
@@ -1441,7 +1444,7 @@ namespace MCGalaxy.Gui
         private TextBox pl_txtSendCommand;
         private Button pl_btnSendCommand;
         private Button pl_btnKill;
-        private TextBox pl_txtUndo;
+        private MCGalaxy.Gui.TimespanUpDown pl_numUndo;
         private Button pl_btnUndo;
         private Button pl_btnMute;
         private Button pl_btnRules;

@@ -29,11 +29,13 @@ namespace MCGalaxy.Gui
 
         void pl_BtnUndo_Click(object sender, EventArgs e) {
             if (curPlayer == null) { NoPlayerSelected(); return; }
-            string time = pl_txtUndo.Text.Trim();
-            if (time.Length == 0) { Players_AppendStatus("Amount of time to undo required"); return; }
+            TimeSpan interval = pl_numUndo.Value;
+            if (interval.TotalSeconds == 0) { Players_AppendStatus("Amount of time to undo required"); return; }
 
-            UIHelpers.HandleCommand("UndoPlayer " + curPlayer.name + " " + time);
-            Players_AppendStatus("Undid " + curPlayer.truename + " for " + time + " seconds");
+            // TODO ModerationActions instead of HandleCommand
+            string duration = pl_numUndo.Value.Shorten(true, false);
+            UIHelpers.HandleCommand("UndoPlayer " + curPlayer.name + " " + duration);
+            Players_AppendStatus("Undid " + curPlayer.truename + " for " + duration);
         }
 
         void pl_BtnMessage_Click(object sender, EventArgs e) {
@@ -118,7 +120,7 @@ namespace MCGalaxy.Gui
         void pl_txtSendCommand_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) pl_BtnSendCommand_Click(sender, e);
         }
-        void pl_txtUndo_KeyDown(object sender, KeyEventArgs e) {
+        void pl_numUndo_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter) pl_BtnUndo_Click(sender, e);
         }
         void pl_txtMessage_KeyDown(object sender, KeyEventArgs e) {
