@@ -54,7 +54,14 @@ namespace MCGalaxy {
         [ConfigString("default-texture-url", "Level", "", true)]
         public string DefaultTerrain = "";
         [ConfigString("default-texture-pack-url", "Level", "", true)]
-        public string DefaultTexture = "";
+        public string DefaultTexture = "";          
+
+        [ConfigBool("use-whitelist", "Security", false)]
+        public bool WhitelistedOnly = false;        
+        [ConfigBool("admin-verification", "Security", true)]
+        public bool verifyadmins = true;
+        [ConfigPerm("verify-admin-perm", "Security", LevelPermission.Operator)]
+        public LevelPermission VerifyAdminsRank = LevelPermission.Operator;
 
         [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.,")]
         public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";        
@@ -67,8 +74,6 @@ namespace MCGalaxy {
         
         [ConfigInt("position-interval", "Other", 100, 20, 2000)]
         public int PositionUpdateInterval = 100;
-        [ConfigBool("classicube-account-plus", "Server", false)]
-        public bool ClassicubeAccountPlus = false;
         [ConfigBool("agree-to-rules-on-entry", "Other", false)]
         public bool AgreeToRulesOnEntry = false;
         [ConfigBool("admins-join-silent", "Other", false)]
@@ -104,8 +109,6 @@ namespace MCGalaxy {
         public int MaxBotsPerLevel = 192;
         [ConfigBool("deathcount", "Other", true)]
         public bool AnnounceDeathCount = true;
-        [ConfigBool("use-whitelist", "Other", false)]
-        public bool WhitelistedOnly = false;
         [ConfigBool("repeat-messages", "Other", false)]
         public bool RepeatMBs = false;
         [ConfigTimespan("announcement-interval", "Other", 5, true)]
@@ -138,6 +141,8 @@ namespace MCGalaxy {
         public LevelPermission OSPerbuildDefault = LevelPermission.Owner; 
         [ConfigBool("protect-staff-ips", "Other", true)]
         public bool ProtectStaffIPs = true;
+        [ConfigBool("classicube-account-plus", "Other", false)]
+        public bool ClassicubeAccountPlus = false;
         // technically a Server option, but it's a common mistake to think
         //  this option needs changing to server's IP (0.0.0.0 = listen on all network interfaces)
         [ConfigString("listen-ip", "Other", "0.0.0.0")]
@@ -255,11 +260,6 @@ namespace MCGalaxy {
         public bool[] FileLogging = defLogLevels;
         [ConfigBoolArray("console-logging", "Logging", true, 17)]
         public bool[] ConsoleLogging = defLogLevels;
-        
-        [ConfigBool("admin-verification", "Admin", true)]
-        public bool verifyadmins = true;
-        [ConfigPerm("verify-admin-perm", "Admin", LevelPermission.Operator)]
-        public LevelPermission VerifyAdminsRank = LevelPermission.Operator;
         
         [ConfigBool("mute-on-spam", "Spam control", false)]
         public bool ChatSpamCheck = false;
