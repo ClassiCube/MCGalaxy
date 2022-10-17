@@ -27,7 +27,7 @@ namespace MCGalaxy {
         
         /// <summary> Time in milliseconds between ticks. </summary>
         public static int Interval = 100;
-        /// <summary>  Maximum number of block updates broadcasted in one tick. </summary>
+        /// <summary> Maximum number of block updates broadcasted in one tick. </summary>
         public static int UpdatesPerTick = 750;
         static BufferedBlockSender bulkSender = new BufferedBlockSender();
         

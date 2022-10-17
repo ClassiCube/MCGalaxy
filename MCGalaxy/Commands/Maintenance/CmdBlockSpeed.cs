@@ -24,67 +24,46 @@ namespace MCGalaxy.Commands.Maintenance {
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
         public override void Use(Player p, string text, CommandData data) {
-            if (text.Length == 0) { SendEstimation(p); return; }            
+            if (text.Length == 0) { SendEstimation(p, data.Rank); return; }            
             string[] args = text.SplitSpaces();
-            string cmd = args[0].ToLower();
-            if (cmd == "clear") {
-                Level[] loaded = LevelInfo.Loaded.Items;
-                foreach (Level lvl in loaded) {
-                    lvl.blockqueue.ClearAll();
-                }
-                return;
-            }
+            string cmd    = args[0].ToLower();
+
             if (args.Length == 1) { Help(p); return; }
             int value = 0;
             
-            if (cmd == "bs") {
+            if (cmd == "updates" || cmd == "bs") { // "bs" was old option name
                 if (!CommandParser.GetInt(p, args[1], "Blocks per interval", ref value, 0)) return;
                 
                 BlockQueue.UpdatesPerTick = value;
-                p.Message("Blocks per interval is now {0}.", BlockQueue.UpdatesPerTick);
-            } else if (cmd == "ts") {
+                p.Message("Blocks per interval is now {0}", BlockQueue.UpdatesPerTick);
+            } else if (cmd == "interval" || cmd == "ts") { // "ts" was old option name
                 if (!CommandParser.GetInt(p, args[1], "Block interval", ref value, 50)) return;
                 
                 BlockQueue.Interval = value;
-                p.Message("Block interval is now {0}.", BlockQueue.Interval);
-            } else if (cmd == "net") {
-                if (!CommandParser.GetInt(p, args[1], "value", ref value, 2, 1000)) return;
-                
-                switch (value) {
-                    case 2: Set(25, 100); break;
-                    case 4: Set(50, 100); break;
-                    case 8: Set(100, 100); break;
-                    case 12: Set(200, 100); break;
-                    case 16: Set(200, 100); break;
-                    case 161: Set(100, 50); break;
-                    case 20: Set(125, 50); break;
-                    case 24: Set(150, 50); break;
-                    default: Set(200, 100); break;
-                }
-                SendEstimation(p);
+                p.Message("Block interval is now {0}", BlockQueue.Interval);
+            } else {
+                Help(p); return;
             }
+            SendEstimation(p, data.Rank);
         }
         
-        static void Set(int updates, int time) {
-            BlockQueue.UpdatesPerTick = updates;
-            BlockQueue.Interval = time;
-        }
-        
-        static void SendEstimation(Player p) {
-            int updates = BlockQueue.UpdatesPerTick, time = BlockQueue.Interval, count = PlayerInfo.Online.Count;
-            int blocksPerSec = updates * (1000 / time);
+        static void SendEstimation(Player p, LevelPermission plRank) {
+            int updates = BlockQueue.UpdatesPerTick, interval = BlockQueue.Interval;
+            int count   = PlayerInfo.GetOnlineCanSee(p, plRank).Count;
+            int blocksPerSec = updates * (1000 / interval);
             
-            p.Message("{0} blocks every {1} milliseconds = {2} blocks per second.", 
-                           updates, time, blocksPerSec);
-            p.Message("Using ~{0}KB/s times {1} players = ~{2}KB/s", 
-                           (blocksPerSec * 8) / 1000, count, (count * blocksPerSec * 8) / 1000);
+            p.Message("{0} blocks every {1} milliseconds = {2} blocks per second", 
+                     updates, interval, blocksPerSec);
+            p.Message("  Using ~{0}KB/s times {1} players = ~{2}KB/s", 
+                     (blocksPerSec * 8) / 1000, count, (count * blocksPerSec * 8) / 1000);
         }
         
         public override void Help(Player p) {
-            p.Message("&T/BlockSpeed [option] [value].");
-            p.Message("&HOptions: &Sbs (blocks per interval), ts (interval in milliseconds), clear");
-            p.Message("&T/BlockSpeed net [2,4,8,12,16,20,24]");
-            p.Message("&HPresets, divide by 8 and times by 1000 to get blocks per second.");
+            p.Message("&T/BlockSpeed updates [value]");
+            p.Message("&HSets max number of blocks that can be sent in one block update");
+            p.Message("&T/BlockSpeed interval [value]");
+            p.Message("&HSets the interval (in milliseconds) between block updates");
+            p.Message("  &HMax blocks sent per second = updates * (1000 / interval)");
         }
     }
 }
