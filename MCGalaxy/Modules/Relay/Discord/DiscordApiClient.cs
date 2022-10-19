@@ -108,13 +108,16 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         public override JsonObject ToJson() {
-            JsonObject obj = new JsonObject()
+            return new JsonObject()
             {
-                { "embed", new JsonObject()
+                { "embeds", new JsonArray()
                     {
-                        { "title", Title },
-                        { "color", Color },
-                        { "fields", GetFields() }
+                        new JsonObject()
+                        {
+                            { "title", Title },
+                            { "color", Color },
+                            { "fields", GetFields() }
+                        }
                     }
                 },
                 // no pinging anything
@@ -124,7 +127,6 @@ namespace MCGalaxy.Modules.Relay.Discord
                     }
                 }
             };
-            return obj;
         }
     }
     
@@ -134,7 +136,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     public sealed class DiscordApiClient : RelayBotSender<DiscordApiMessage>
     {
         public string Token;
-        const string host = "https://discord.com/api/v8";
+        const string host = "https://discord.com/api/v10";
         
         DiscordApiMessage GetNextRequest() {
             if (requests.Count == 0) return null;
