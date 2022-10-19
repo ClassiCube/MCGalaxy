@@ -121,21 +121,20 @@ namespace MCGalaxy.Modules.Relay.Discord
         const int REASON_DENIED_INTENT = 4014;
         
         protected override void OnDisconnected(int reason) {
-            if (reason == REASON_INVALID_TOKEN) {
-                Logger.Log(LogType.Warning, "Discord relay: Invalid bot token provided - unable to connect");
-                CanReconnect = false;
-            }
-            if (reason == REASON_DENIED_INTENT) {
-                // privileged intent since 2022 https://support-dev.discord.com/hc/en-us/articles/4404772028055
-                Logger.Log(LogType.Warning, "Discord relay: Message Content Intent is not enabled in Bot Account settings, retrying without it..");
-                Logger.Log(LogType.Warning, "It is recommended to enable this - otherwise Discord may prevent the bot from seeing the contents of Discord messages"
-                                            + " (See " + Updater.SourceURL + "/wiki/Discord-relay-bot#read-permissions)");
-                Session.Intents &= ~INTENT_MESSAGE_CONTENT;
-            }
-
             SentIdentify = false;
             Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
             Close();
+
+            if (reason == REASON_INVALID_TOKEN) {
+                CanReconnect = false;
+                throw new InvalidOperationException("Discord relay: Invalid bot token provided - unable to connect");
+            } else if (reason == REASON_DENIED_INTENT) {
+                // privileged intent since August 2022 https://support-dev.discord.com/hc/en-us/articles/4404772028055
+                CanReconnect = false;
+                throw new InvalidOperationException("Discord relay: Message Content Intent is not enabled in Bot Account settings, " +
+                    "therefore Discord will prevent the bot from being able to see the contents of Discord messages\n" +
+                    "(See " + Updater.SourceURL + "/wiki/Discord-relay-bot#read-permissions)");
+            }
         }
         
         
