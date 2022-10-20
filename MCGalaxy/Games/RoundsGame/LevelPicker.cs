@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Games {
-    public class LevelPicker {
+namespace MCGalaxy.Games 
+{
+    public class LevelPicker 
+    {
         public string QueuedMap;
         public List<string> RecentMaps = new List<string>();
         public int VoteTime = 20;
@@ -28,8 +30,8 @@ namespace MCGalaxy.Games {
 
         internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
         internal int Votes1, Votes2, Votes3;
-        const int minMaps = 3;
-        
+        const int MIN_MAPS = 3;
+
         public void AddRecentMap(string map) {
             if (RecentMaps.Count >= 20)
                 RecentMaps.RemoveAt(0);
@@ -40,12 +42,16 @@ namespace MCGalaxy.Games {
             QueuedMap = null;
             RecentMaps.Clear();
         }
-        
+
         public string ChooseNextLevel(RoundsGame game) {
             if (QueuedMap != null) return QueuedMap;
             
             try {
                 List<string> maps = GetCandidateMaps(game);
+                if (maps.Count < MIN_MAPS) {
+                    Logger.Log(LogType.Warning, "You must have 3 or more maps configured to change levels in " + game.GameName);
+                    return null;
+                }
                 if (maps == null) return null;
                 
                 RemoveRecentLevels(maps);
@@ -70,14 +76,15 @@ namespace MCGalaxy.Games {
         void RemoveRecentLevels(List<string> maps) {
             // Try to avoid recently played levels, avoiding most recent
             List<string> recent = RecentMaps;
-            for (int i = recent.Count - 1; i >= 0; i--) {
-                if (maps.Count > minMaps) maps.CaselessRemove(recent[i]);
+            for (int i = recent.Count - 1; i >= 0; i--) 
+            {
+                if (maps.Count > MIN_MAPS) maps.CaselessRemove(recent[i]);
             }
             
             // Try to avoid maps voted last round if possible
-            if (maps.Count > minMaps) maps.CaselessRemove(Candidate1);
-            if (maps.Count > minMaps) maps.CaselessRemove(Candidate2);
-            if (maps.Count > minMaps) maps.CaselessRemove(Candidate3);
+            if (maps.Count > MIN_MAPS) maps.CaselessRemove(Candidate1);
+            if (maps.Count > MIN_MAPS) maps.CaselessRemove(Candidate2);
+            if (maps.Count > MIN_MAPS) maps.CaselessRemove(Candidate3);
         }
         
         void DoLevelVote(IGame game) {
@@ -140,12 +147,7 @@ namespace MCGalaxy.Games {
         }
         
         public virtual List<string> GetCandidateMaps(RoundsGame game) {
-            List<string> maps = new List<string>(game.GetConfig().Maps);
-            if (maps.Count < minMaps) {
-                Logger.Log(LogType.Warning, "You must have 3 or more maps configured to change levels in " + game.GameName);
-                return null;
-            }
-            return maps;
+            return new List<string>(game.GetConfig().Maps);
         }
         
        public void SendVoteMessage(Player p) {
