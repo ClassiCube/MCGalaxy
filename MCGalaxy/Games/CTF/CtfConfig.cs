@@ -75,12 +75,16 @@ namespace MCGalaxy.Games {
             ZDivider = lvl.Length / 2;
             RedFlagBlock  = Block.Red;
             BlueFlagBlock = Block.Blue;
-            ushort midX = (ushort)(lvl.Width / 2), maxZ = (ushort)(lvl.Length - 1);
+
+            ushort midX = (ushort)(lvl.Width / 2);
+            ushort midY = (ushort)(lvl.Height / 2);
+            ushort topY = (ushort)(midY + 2);
+            ushort maxZ = (ushort)(lvl.Length - 1);
             
-            RedFlagPos  = new Vec3U16(midX, 6, 0);
-            RedSpawn    = new Vec3U16(midX, 4, 0);
-            BlueFlagPos = new Vec3U16(midX, 6, maxZ);
-            BlueSpawn   = new Vec3U16(midX, 4, maxZ);
+            RedFlagPos  = new Vec3U16(midX, topY,    0);
+            RedSpawn    = new Vec3U16(midX, midY,    0);
+            BlueFlagPos = new Vec3U16(midX, topY, maxZ);
+            BlueSpawn   = new Vec3U16(midX, midY, maxZ);
         }
     }
 }

@@ -50,7 +50,6 @@ namespace MCGalaxy.Games
         }
 
 
-
         /// <summary> Whether this game intercepts the given chat message </summary>
         /// <example> RoundsGame uses this when voting for next level at end of rounds </example>
         public virtual bool HandlesChatMessage(Player p, string message) { return false; }

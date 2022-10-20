@@ -19,9 +19,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using MCGalaxy.Commands.World;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
