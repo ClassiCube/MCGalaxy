@@ -15,6 +15,8 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using MCGalaxy.Games;
+
 namespace MCGalaxy.Commands.World {
     public sealed class CmdMain : Command2 {      
         public override string name { get { return "Main"; } }
@@ -32,6 +34,7 @@ namespace MCGalaxy.Commands.World {
                 if (p.IsSuper) {
                     p.Message("Main level is {0}", Server.mainLevel.ColoredName);
                 } else if (p.level == Server.mainLevel) {
+                    if (!IGame.CheckAllowed(p, "use &T/Main")) return;
                     PlayerActions.Respawn(p);
                 } else {
                     PlayerActions.ChangeMap(p, Server.mainLevel);

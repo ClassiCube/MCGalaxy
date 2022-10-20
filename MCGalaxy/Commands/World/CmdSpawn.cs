@@ -29,12 +29,7 @@ namespace MCGalaxy.Commands.World {
                 p.Message("You cannot use &T/Spawn &Son this map.");
                 p.isFlying = false; return;
             }
-
-            IGame game = IGame.GameOn(p.level);
-            if (!p.Game.Referee && game != null) {
-                p.Message("&WYou cannot use &T/Spawn &Wwhile a game is running");
-                return;
-            }
+            if (!IGame.CheckAllowed(p, "use &T/Spawn")) return;
             
             if (message.Length > 0) { Help(p); return; }
             PlayerActions.Respawn(p);

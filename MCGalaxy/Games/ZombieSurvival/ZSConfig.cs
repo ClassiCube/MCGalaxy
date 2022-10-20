@@ -34,7 +34,9 @@ namespace MCGalaxy.Games
         public float MaxMoveDist = 1.5625f;
         
         [ConfigString("human-tablist-group", "Human", "&fHumans")]
-        public string HumanTabListGroup = "&fHumans"; 
+        public string HumanTabListGroup = "&fHumans";
+        [ConfigBool("infect-upon-death", "Human", true)]
+        public bool InfectUponDeath = true;
 
         [ConfigBool("no-pillaring-during-zombie", "Zombie", true)]
         public bool NoPillaring = true;

@@ -33,11 +33,10 @@ namespace MCGalaxy.Commands.World {
 
         public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "level name")) return;
-            IGame game = IGame.GameOn(p.level);
             
             if (message.Length == 0) {
-                if (game != null) {
-                    p.Message("&WYou cannot use &T/Reload &Wwhile a game is running");
+                if (!IGame.CheckAllowed(p, "use &T/Reload")) {
+                    // messaging handled in CheckAllowed
                 } else if (!Hacks.CanUseNoclip(p)) {
                     p.Message("You cannot use &T/Reload &Son this level");
                 } else {

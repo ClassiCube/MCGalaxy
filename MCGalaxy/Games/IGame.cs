@@ -41,6 +41,16 @@ namespace MCGalaxy.Games
             return null;
         }
 
+        public static bool CheckAllowed(Player p, string action) {
+            if (p.Game.Referee || GameOn(p.level) == null)
+                return true;
+
+            p.Message("&WYou cannot {0} &Wwhile a game is running", action);
+            return false;
+        }
+
+
+
         /// <summary> Whether this game intercepts the given chat message </summary>
         /// <example> RoundsGame uses this when voting for next level at end of rounds </example>
         public virtual bool HandlesChatMessage(Player p, string message) { return false; }

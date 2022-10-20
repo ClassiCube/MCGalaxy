@@ -24,7 +24,6 @@ using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {
@@ -39,7 +38,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
-            OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);
+            OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnGettingCanSeeEntityEvent.Register(HandleCanSeeEntity, Priority.High);
@@ -56,7 +55,7 @@ namespace MCGalaxy.Games {
             
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
-            OnPlayerSpawningEvent.Unregister(HandlePlayerSpawning);
+            OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnGettingCanSeeEntityEvent.Unregister(HandleCanSeeEntity);
@@ -129,9 +128,10 @@ namespace MCGalaxy.Games {
             bool reverted = p.Game.Noclip.Detect(next) || p.Game.Speed.Detect(next, Config.MaxMoveDist);
             if (reverted) cancel = true;
         }
-        
-        void HandlePlayerSpawning(Player p, ref Position pos, ref byte yaw, ref byte pitch, bool respawning) {
-            if (p.level != Map) return;
+
+        void HandlePlayerDeath(Player p, BlockID cause) {
+            if (p.level != Map || p.cancelDeath || !Config.InfectUponDeath) return;
+
             if (!p.Game.Referee && RoundInProgress && !IsInfected(p)) {
                 InfectPlayer(p, null);
             }
