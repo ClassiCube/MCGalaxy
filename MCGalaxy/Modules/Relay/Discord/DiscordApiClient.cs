@@ -61,12 +61,12 @@ namespace MCGalaxy.Modules.Relay.Discord
             {
                 { "parse", Allowed ?? default_allowed }
             };
-            JsonObject obj = new JsonObject()
+
+            return new JsonObject()
             {
                 { "content", content.ToString() },
                 { "allowed_mentions", allowed }
             };
-            return obj;
         }
         
         public override bool CombineWith(DiscordApiMessage prior) {

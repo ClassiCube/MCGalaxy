@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.World {
             
             if (message.Length == 0) {
                 if (game != null) {
-                    p.Message("You cannot use &T/Reload &Swhile a game is running");
+                    p.Message("&WYou cannot use &T/Reload &Wwhile a game is running");
                 } else if (!Hacks.CanUseNoclip(p)) {
                     p.Message("You cannot use &T/Reload &Son this level");
                 } else {
