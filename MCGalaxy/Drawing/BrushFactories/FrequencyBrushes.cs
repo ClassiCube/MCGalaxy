@@ -122,7 +122,7 @@ namespace MCGalaxy.Drawing.Brushes
         
         static string[] HelpString = new string[] {
             "&TArguments: <axis> [block1/frequency] [block2]..",
-            "&HDraws by linesrly selecting blocks from the given [blocks].",
+            "&HDraws by linearly selecting blocks from the given [blocks].",
             "&Hfrequency is optional (defaults to 1), and specifies the number of times " +
             "the block should appear (as a fraction of the total of all the frequencies).",
         };

@@ -22,7 +22,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes 
 {
-    public sealed class SimplePasteBrush : Brush 
+    public class SimplePasteBrush : Brush 
     {
         readonly CopyState state;
         
@@ -48,65 +48,37 @@ namespace MCGalaxy.Drawing.Brushes
         }
     }
     
-    // TODO merge with SimplePasteBrush
-    public sealed class PasteBrush : Brush 
+    public sealed class PasteBrush : SimplePasteBrush 
     {
-        readonly CopyState state;
         public BlockID[] Include;
         
-        public PasteBrush(CopyState state) { this.state = state; }
-        
-        public override string Name { get { return "Paste"; } }
-
-        public override void Configure(DrawOp op, Player p) {
-            op.Flags = BlockDBFlags.Pasted;
-        }
+        public PasteBrush(CopyState state) : base(state) { }
         
         public override BlockID NextBlock(DrawOp op) {
-            // Figure out local coords for this block
-            int x = (op.Coords.X - op.Min.X) % state.Width;
-            if (x < 0) x += state.Width;
-            int y = (op.Coords.Y - op.Min.Y) % state.Height;
-            if (y < 0) y += state.Height;
-            int z = (op.Coords.Z - op.Min.Z) % state.Length;
-            if (z < 0) z += state.Length;
+            BlockID block = base.NextBlock(op);
+            BlockID[] include = Include; // local var to avoid JIT bounds check
             
-            int index = (y * state.Length + z) * state.Width + x;
-            BlockID block = state.Get(index);
-            for (int i = 0; i < Include.Length; i++) {
-                if (block == Include[i]) return block;
+            for (int i = 0; i < include.Length; i++) 
+            {
+                if (block == include[i]) return block;
             }
             return Block.Invalid;
         }
-    }
+    }  
     
-    
-    public sealed class PasteNotBrush : Brush 
+    public sealed class PasteNotBrush : SimplePasteBrush 
     {
-        readonly CopyState state;
         public BlockID[] Exclude;
         
-        public PasteNotBrush(CopyState state) { this.state = state; }
-        
-        public override string Name { get { return "Paste"; } }
+        public PasteNotBrush(CopyState state) : base(state) { }
 
-        public override void Configure(DrawOp op, Player p) {
-            op.Flags = BlockDBFlags.Pasted;
-        }
-        
         public override BlockID NextBlock(DrawOp op) {
-            // Figure out local coords for this block
-            int x = (op.Coords.X - op.Min.X) % state.Width;
-            if (x < 0) x += state.Width;
-            int y = (op.Coords.Y - op.Min.Y) % state.Height;
-            if (y < 0) y += state.Height;
-            int z = (op.Coords.Z - op.Min.Z) % state.Length;
-            if (z < 0) z += state.Length;
+            BlockID block = base.NextBlock(op);
+            BlockID[] exclude = Exclude; // local var to avoid JIT bounds check
             
-            int index = (y * state.Length + z) * state.Width + x;
-            BlockID block = state.Get(index);
-            for (int i = 0; i < Exclude.Length; i++) {
-                if (block == Exclude[i]) return Block.Invalid;
+            for (int i = 0; i < exclude.Length; i++) 
+            {
+                if (block == exclude[i]) return Block.Invalid;
             }
             return block;
         }

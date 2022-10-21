@@ -22,50 +22,43 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Brushes 
 {
-    public sealed class ReplaceBrushBrush : Brush 
+    public class ReplaceBrushBrush : Brush 
     {
-        readonly BlockID include;
-        readonly Brush replacement;
+        protected readonly BlockID target;
+        protected readonly Brush replacement;
         
         public ReplaceBrushBrush(BlockID include, Brush replacement) {
-            this.include = include; this.replacement = replacement;
+            this.target = include; this.replacement = replacement;
         }
         
         public override string Name { get { return "ReplaceBrush"; } }
         
         public override void Configure(DrawOp op, Player p) {
             op.Flags = BlockDBFlags.Replaced;
+            replacement.Configure(op, p);
         }
         
         public override BlockID NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
             BlockID block = op.Level.GetBlock(x, y, z); // TODO FastGetBlock
             
-            if (block != include) return Block.Invalid;
+            if (block != target) return Block.Invalid;
             return replacement.NextBlock(op);
         }
     }
     
-    public sealed class ReplaceNotBrushBrush : Brush 
+    public class ReplaceNotBrushBrush : ReplaceBrushBrush 
     {
-        readonly BlockID exclude;
-        readonly Brush replacement;
-        
-        public ReplaceNotBrushBrush(BlockID exclude, Brush replacement) {
-            this.exclude = exclude; this.replacement = replacement;
-        }
+        public ReplaceNotBrushBrush(BlockID exclude, Brush replacement) 
+            : base(exclude, replacement) { }
         
         public override string Name { get { return "ReplaceNotBrush"; } }
-
-        public override void Configure(DrawOp op, Player p) {
-            op.Flags = BlockDBFlags.Replaced;
-        }
         
         public override BlockID NextBlock(DrawOp op) {
             ushort x = op.Coords.X, y = op.Coords.Y, z = op.Coords.Z;
             BlockID block = op.Level.GetBlock(x, y, z); // TODO FastGetBlock
             
-            if (block == exclude) return Block.Invalid;
+            if (block == target) return Block.Invalid;
             return replacement.NextBlock(op);
         }
     }

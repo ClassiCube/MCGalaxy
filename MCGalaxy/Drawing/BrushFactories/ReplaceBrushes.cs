@@ -53,9 +53,6 @@ namespace MCGalaxy.Drawing.Brushes
         
         internal static BlockID[] GetBlocks(Player p, int start, int max, string[] parts) {
             BlockID[] blocks = new BlockID[max - start];
-            for (int i = 0; i < blocks.Length; i++)
-                blocks[i] = Block.Invalid;
-            
             for (int i = 0; start < max; start++, i++) 
             {
                 BlockID block;
