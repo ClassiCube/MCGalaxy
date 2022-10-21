@@ -390,11 +390,13 @@
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\RainbowBrush.cs" />
     <Compile Include="Drawing\Brushes\RandomBrush.cs" />
+    <Compile Include="Drawing\Brushes\ReplaceBrushBrushes.cs" />
     <Compile Include="Drawing\Brushes\ReplaceBrushes.cs" />
     <Compile Include="Drawing\Brushes\SimpleBrushes.cs" />
     <Compile Include="Drawing\BrushFactories\BrushFactory.cs" />
     <Compile Include="Drawing\BrushFactories\CloudyBrush.cs" />
     <Compile Include="Drawing\BrushFactories\FrequencyBrushes.cs" />
+    <Compile Include="Drawing\BrushFactories\ReplaceBrushBrushes.cs" />
     <Compile Include="Drawing\BrushFactories\ReplaceBrushes.cs" />
     <Compile Include="Drawing\BrushFactories\SimpleBrushes.cs" />
     <Compile Include="Drawing\CopyState.cs" />
@@ -413,7 +415,6 @@
     <Compile Include="Drawing\DrawOps\MazeDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\PasteDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\RedoDrawOp.cs" />
-    <Compile Include="Drawing\DrawOps\ReplaceDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\RestoreSelectionDrawOp.cs" />
     <Compile Include="Drawing\DrawOps\SpheroidDrawOps.cs" />
     <Compile Include="Drawing\DrawOps\PyramidDrawOp.cs" />

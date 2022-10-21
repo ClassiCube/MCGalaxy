@@ -34,12 +34,13 @@ namespace MCGalaxy.Drawing.Brushes
         public virtual bool Validate(BrushArgs args) { return Construct(args) != null; }
         
         public static List<BrushFactory> Brushes = new List<BrushFactory>() {
-            new SolidBrushFactory(), new CheckeredBrushFactory(),
-            new StripedBrushFactory(), new PasteBrushFactory(),
-            new ReplaceBrushFactory(), new ReplaceNotBrushFactory(),
-            new RainbowBrushFactory(), new BWRainbowBrushFactory(),
-            new RandomBrushFactory(), new CloudyBrushFactory(),
-            new GradientBrushFactory(),
+            new SolidBrushFactory(),    new CheckeredBrushFactory(),
+            new StripedBrushFactory(),  new PasteBrushFactory(),
+            new ReplaceBrushFactory(),  new ReplaceNotBrushFactory(),
+            new RainbowBrushFactory(),  new BWRainbowBrushFactory(),
+            new RandomBrushFactory(),   new CloudyBrushFactory(),
+            new GradientBrushFactory(), new ReplaceBrushBrushFactory(),
+            new ReplaceNotBrushBrushFactory(),
         };
         
         public static BrushFactory Find(string name) {

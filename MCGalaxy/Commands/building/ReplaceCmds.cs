@@ -48,6 +48,7 @@ namespace MCGalaxy.Commands.Building {
     public sealed class CmdReplaceNot : CmdReplace {
         public override string name { get { return "ReplaceNot"; } }
         public override string shortcut { get { return "rn"; } }
+        
         protected override void GetBrush(DrawArgs dArgs) {
             dArgs.BrushName = "ReplaceNot";
             dArgs.BrushArgs = dArgs.Message;
