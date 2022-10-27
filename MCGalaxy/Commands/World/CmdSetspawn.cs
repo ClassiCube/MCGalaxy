@@ -32,8 +32,9 @@ namespace MCGalaxy.Commands.World {
                 p.level.spawny = (ushort)p.Pos.BlockY;
                 p.level.spawnz = (ushort)p.Pos.BlockZ;
                 p.level.rotx = p.Rot.RotY; p.level.roty = p.Rot.HeadX;
+                
                 p.level.Changed = true;
-                Entities.Spawn(p, p);
+                p.Session.SendSetSpawnpoint(p.Pos, p.Rot);
                 return;
             }
             
@@ -43,8 +44,8 @@ namespace MCGalaxy.Commands.World {
             if (!CheckRank(p, data, target, "set spawn of", false)) return;
             
             p.Message("Set spawn location of {0} &Sto your current location.", p.FormatNick(target));
-            target.Pos = p.Pos; target.Rot = p.Rot;
-            Entities.Spawn(target, target);
+            target.Session.SendSetSpawnpoint(p.Pos, p.Rot);
+            target.Message("Your spawnpoint was updated.");
         }
         
         public override void Help(Player p) {
