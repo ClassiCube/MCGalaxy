@@ -361,7 +361,7 @@ namespace MCGalaxy.Network
         }
         public override bool SendTeleport(byte id, Position pos, Orientation rot,
                                           Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) {
-            if (!Supports(CpeExt.ExtEntityTeleport)) { player.Message("You dont SUPPORT"); return false; }
+            if (!Supports(CpeExt.ExtEntityTeleport)) { return false; }
 
             // NOTE: Classic clients require offseting own entity by 22 units vertically when using absolute location updates
             if ((moveMode == Packet.TeleportMoveMode.AbsoluteInstant || moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID)
