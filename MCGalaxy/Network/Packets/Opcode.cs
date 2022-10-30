@@ -77,5 +77,6 @@ namespace MCGalaxy.Network {
         public const byte CpeDefineModelPart = 51;
         public const byte CpeUndefineModel = 52;
         public const byte CpePluginMessage = 53;
+        public const byte CpeEntityTeleportExt = 54;
     }
 }

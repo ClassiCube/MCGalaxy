@@ -82,6 +82,9 @@ namespace MCGalaxy.Network
         
         /// <summary> Sends an entity teleport (absolute location update) packet to the client </summary>
         public abstract void SendTeleport(byte id, Position pos, Orientation rot);
+        /// <summary> Sends an ext entity teleport with more control over behavior </summary>
+        public virtual bool SendTeleport(byte id, Position pos, Orientation rot,
+                                         Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) { return false; }
         /// <summary> Sends a spawn/add entity packet to the client </summary>
         public abstract void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot);
         /// <summary> Sends a despawn/remove entity to the client </summary>

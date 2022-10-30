@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Misc {
             Position pos    = bot != null ? bot.Pos : target.Pos;
             Orientation rot = bot != null ? bot.Rot : target.Rot;
             p.BlockUntilLoad(10);  //Wait for player to spawn in new map
-            p.SendPos(Entities.SelfID, pos, rot);
+            p.SendPosition(pos, rot);
         }
         
         internal static bool GetTeleportCoords(Player p, Entity ori, string[] args, bool precise, 
@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Misc {
             if (!GetTeleportCoords(p, p, args, precise, out pos, out yaw, out pitch)) return;
 
             SavePreTeleportState(p);
-            p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
+            p.SendPosition(pos, new Orientation(yaw, pitch));
         }
         
         static void SavePreTeleportState(Player p) {

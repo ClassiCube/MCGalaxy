@@ -651,11 +651,30 @@ namespace MCGalaxy.Network
             return buffer;
         }
 
+        public enum TeleportMoveMode { AbsoluteInstant, AbsoluteSmooth, RelativeSmooth, RelativeShift }
+        public static byte[] TeleportExt(byte entityID, bool usePos, TeleportMoveMode moveMode, bool useOri, bool interpolateOri,
+                                         Position pos, Orientation rot, bool extPos) {
+            byte flags = 0;
+            if (usePos) { flags |= 1; }
+            flags |= (byte)((byte)moveMode << 1);
+            if (useOri) { flags |= 16; }
+            if (interpolateOri) { flags |= 32; }
+
+            byte[] buffer = new byte[11 + (extPos ? 6 : 0)];
+            buffer[0] = Opcode.CpeEntityTeleportExt;
+            buffer[1] = entityID;
+            buffer[2] = flags;
+
+            int offset = NetUtils.WritePos(pos, buffer, 3, extPos);
+            buffer[3 + offset] = rot.RotY;
+            buffer[4 + offset] = rot.HeadX;
+            return buffer;
+        }
         #endregion
-        
-        
+
+
         #region Block definitions
-        
+
         public static byte[] DefineBlock(BlockDefinition def, bool hasCP437, 
                                          bool extBlocks, bool extTexs) {
             byte[] buffer = new byte[(extBlocks ? 81 : 80) + (extTexs ? 3 : 0)];

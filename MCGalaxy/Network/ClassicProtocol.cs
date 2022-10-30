@@ -359,6 +359,17 @@ namespace MCGalaxy.Network
 
             Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
         }
+        public override bool SendTeleport(byte id, Position pos, Orientation rot,
+                                          Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) {
+            if (!Supports(CpeExt.ExtEntityTeleport)) { player.Message("You dont SUPPORT"); return false; }
+
+            // NOTE: Classic clients require offseting own entity by 22 units vertically when using absolute location updates
+            if ((moveMode == Packet.TeleportMoveMode.AbsoluteInstant || moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID)
+                { pos.Y -= 22; }
+
+            Send(Packet.TeleportExt(id, usePos, moveMode, useOri, interpolateOri, pos, rot, player.hasExtPositions));
+            return true;
+        }
 
         public override void SendRemoveEntity(byte id) {
             Send(Packet.RemoveEntity(id));
