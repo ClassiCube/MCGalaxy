@@ -107,7 +107,7 @@ namespace MCGalaxy.Drawing.Brushes
         public override Brush Construct(BrushArgs args) {
             CopyState cState = args.Player.CurrentCopy;
             if (cState == null) {
-                args.Player.Message("You haven't copied anything yet.");
+                args.Player.Message("You haven't copied anything yet");
                 return null;
             }
             
