@@ -58,7 +58,7 @@ namespace MCGalaxy.Games
         
         /// <summary> Adjusts the given player's prefix that appears in all chat messages </summary>
         /// <example> Zombie Survival uses this to show winstreaks </example>
-        public virtual void AdjustPrefix(Player p, ref string prefix) { }
+        public virtual string GetPrefix(Player p) { return ""; }
         /// <summary> Immediately force stops/ends this game </summary>
         public abstract void End();
         public abstract void EndRound();

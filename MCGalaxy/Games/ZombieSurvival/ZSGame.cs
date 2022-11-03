@@ -239,14 +239,15 @@ namespace MCGalaxy.Games
             }
         }
 
-        public override void AdjustPrefix(Player p, ref string prefix) {
-            if (!Running) return;
+        public override string GetPrefix(Player p) {
+            if (!Running) return "";
             int winStreak = Get(p).CurrentRoundsSurvived;
             
-            if      (winStreak == 1) prefix += "&4*" + p.color;
-            else if (winStreak == 2) prefix += "&7*" + p.color;
-            else if (winStreak == 3) prefix += "&6*" + p.color;
-            else if (winStreak > 0)  prefix += "&6"  + winStreak + p.color;
+            if      (winStreak == 1) return "&4*" + p.color;
+            else if (winStreak == 2) return "&7*" + p.color;
+            else if (winStreak == 3) return "&6*" + p.color;
+            else if (winStreak > 0)  return "&6"  + winStreak + p.color;
+            return "";
         }
         
         public void GoInvisible(Player p, int duration) {

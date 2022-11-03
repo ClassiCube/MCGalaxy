@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents
@@ -237,6 +238,16 @@ namespace MCGalaxy.Events.PlayerEvents
                                 string message = null, bool stealth = false) {
             if (handlers.Count == 0) return;
             CallCommon(pl => pl(p, action, message, stealth));
+        }
+    }
+
+    public delegate void OnSettingPrefix(Player p, List<string> prefixes);
+    /// <summary> Called when prefix is being updated for a player </summary>
+    public sealed class OnSettingPrefixEvent : IEvent<OnSettingPrefix> 
+    {        
+        public static void Call(Player p, List<string> prefixes) {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl(p, prefixes));
         }
     }
 

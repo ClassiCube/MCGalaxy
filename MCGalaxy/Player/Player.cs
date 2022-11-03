@@ -118,20 +118,28 @@ namespace MCGalaxy {
         }
         
         public void SetPrefix() {
-            prefix = Game.Referee ? "&2[Ref] " : "";
-            if (GroupPrefix.Length > 0) { prefix += GroupPrefix + color; }
+            List<string> prefixes = new List<string>(6);
+            prefixes.Add(Game.Referee           ? "&2[Ref] " : "");
+            prefixes.Add(GroupPrefix.Length > 0 ? GroupPrefix + color : "");
             
             Team team = Game.Team;
-            prefix += team != null ? "<" + team.Color + team.Name + color + "> " : "";
+            prefixes.Add(team == null ? "" : "<" + team.Color + team.Name + color + "> ");
             
             IGame game = IGame.GameOn(level);
-            if (game != null) game.AdjustPrefix(this, ref prefix);
+            prefixes.Add(game == null ? "" : game.GetPrefix(this));
             
-            bool isDev = Server.Devs.CaselessContains(truename);
-            bool devPrefix = Server.Config.SoftwareStaffPrefixes;
-            
-            if (devPrefix && isDev) prefix += MakeTitle("Dev", "&9");
-            if (title.Length > 0)   prefix += MakeTitle(title, titlecolor);
+            bool devPrefix = Server.Config.SoftwareStaffPrefixes &&
+                             Server.Devs.CaselessContains(truename);
+
+            prefixes.Add(devPrefix        ? MakeTitle("Dev", "&9") : "");
+            prefixes.Add(title.Length > 0 ? MakeTitle(title, titlecolor) : "");
+
+            OnSettingPrefixEvent.Call(this, prefixes);
+            prefix = prefixes.Join("");
+        }
+
+        internal string MakeTitle(string title, string titleCol) {
+             return color + "[" + titleCol + title + color + "] ";
         }
         
         /// <summary> Raises OnSettingColorEvent then sets color. </summary>
@@ -149,10 +157,6 @@ namespace MCGalaxy {
             if (prevCol == color) return;
             Entities.GlobalRespawn(this);
             SetPrefix();
-        }
-        
-        internal string MakeTitle(string title, string titleCol) {
-             return color + "[" + titleCol + title + color + "] ";
         }
         
         public bool IsLikelyInsideBlock() {
