@@ -110,8 +110,8 @@ namespace MCGalaxy.Commands.Bots{
         
         void HandleList(Player p, string modifier) {
             string[] files = Directory.GetFiles("bots");
-            MultiPageOutput.Output(p, files, f => Path.GetFileName(f),
-                                   "BotAI list", "bot AIs", modifier, false);
+            Paginator.Output(p, files, f => Path.GetFileName(f),
+                             "BotAI list", "bot AIs", modifier);
         }
         
         void HandleInfo(Player p, string ai) {

@@ -143,12 +143,12 @@ namespace MCGalaxy.Commands.Building {
             }
             
             string modifer = args.Length > 2 ? args[2] : "";
-            MultiPageOutput.Output(p, palette.Entries, (e) => FormatEntry(e, p), 
-                                   "Palette entries", "entries", modifer, true);
+            Paginator.Output(p, palette.Entries, PrintEntry, 
+                             "Palette entries", "entries", modifer);
         }
         
-        static string FormatEntry(PaletteEntry e, Player p) {
-            return Block.GetName(p, e.Block) + " - " + Utils.Hex(e.R, e.G, e.B);
+        static void PrintEntry(Player p, PaletteEntry e) {
+            p.Message("{0} - {1}", Block.GetName(p, e.Block), Utils.Hex(e.R, e.G, e.B));
         }
 
         public override void Help(Player p) {

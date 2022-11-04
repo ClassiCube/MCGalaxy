@@ -71,18 +71,19 @@ namespace MCGalaxy.Commands.Info {
             p.Message("Colors Available:");
             
             p.Message("0 - &0{0} &S| 1 - &1{1} &S| 2 - &2{2} &S| 3 - &3{3}",
-                           Colors.Name('0'), Colors.Name('1'), Colors.Name('2'), Colors.Name('3'));
+                      Colors.Name('0'), Colors.Name('1'), Colors.Name('2'), Colors.Name('3'));
             p.Message("4 - &4{0} &S| 5 - &5{1} &S| 6 - &6{2} &S| 7 - &7{3}",
-                           Colors.Name('4'), Colors.Name('5'), Colors.Name('6'), Colors.Name('7'));
+                      Colors.Name('4'), Colors.Name('5'), Colors.Name('6'), Colors.Name('7'));
             
             p.Message("8 - &8{0} &S| 9 - &9{1} &S| a - &a{2} &S| b - &b{3}",
-                           Colors.Name('8'), Colors.Name('9'), Colors.Name('a'), Colors.Name('b'));
+                      Colors.Name('8'), Colors.Name('9'), Colors.Name('a'), Colors.Name('b'));
             p.Message("c - &c{0} &S| d - &d{1} &S| e - &e{2} &S| f - &f{3}",
-                           Colors.Name('c'), Colors.Name('d'), Colors.Name('e'), Colors.Name('f'));
+                      Colors.Name('c'), Colors.Name('d'), Colors.Name('e'), Colors.Name('f'));
             
-            foreach (ColorDesc col in Colors.List) {
-                if (col.Undefined || Colors.IsStandard(col.Code)) continue;
-                p.Message(CmdCustomColors.FormatColor(col));
+            foreach (ColorDesc color in Colors.List) 
+            {
+                if (color.Undefined || Colors.IsStandard(color.Code)) continue;
+                CmdCustomColors.PrintColor(p, color);
             }
         }
         
@@ -92,16 +93,17 @@ namespace MCGalaxy.Commands.Info {
             
             string[] args = message.SplitSpaces(2);
             string modifier = args.Length > 1 ? args[1] : "";
-            MultiPageOutput.Output(p, emotes, FormatEmote,
-                                   "Help emotes", "emotes", modifier, true);
+            Paginator.Output(p, emotes, PrintEmote,
+                             "Help emotes", "emotes", modifier);
         }
         
-        static string FormatEmote(char emote) {
+        static void PrintEmote(Player p, char emote) {
             List<string> keywords = new List<string>();
-            foreach (var kvp in EmotesHandler.Keywords) {
+            foreach (var kvp in EmotesHandler.Keywords) 
+            {
                 if (kvp.Value == emote) keywords.Add("(&S" + kvp.Key + ")");
             }
-            return "&f" + emote + " &S- " + keywords.Join();
+            p.Message("&f{0} &S- {1}", emote, keywords.Join());
         }
         
         bool ParseCommand(Player p, string message) {

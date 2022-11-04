@@ -42,19 +42,20 @@ namespace MCGalaxy.Modules.Awards
             if (awards.Count == 0) { p.Message("This server has no awards yet."); return; }
             
             List<string> playerAwards = PlayerAwards.Get(name);
-            StringFormatter<Award> formatter = (award) => FormaAward(award, playerAwards);
+            ItemPrinter<Award> printer = (p_, award) => PrintAward(p_, award, playerAwards);
             
             string cmd = name.Length == 0 ? "awards" : "awards " + name;
             string modifier = args.Length > offset ? args[offset] : "";
             
             p.Message("Awards {0} &Shas:", p.FormatNick(name));
-            MultiPageOutput.Output(p, awards, formatter,
-                                   cmd, "Awards", modifier, true);
+            Paginator.Output(p, awards, printer,
+                             cmd, "Awards", modifier);
         }
         
-        static string FormaAward(Award award, List<string> awards) {
+        static void PrintAward(Player p, Award award, List<string> awards) {
             bool has = awards != null && awards.CaselessContains(award.Name);
-            return (has ? "  &a" : "  &c") + award.Name + ": &7" + award.Description;
+            p.Message("  {0}{1}: &7{2}",  
+                      has ? "&a" : "&c", award.Name, award.Description);
         }
         
         public override void Help(Player p) {

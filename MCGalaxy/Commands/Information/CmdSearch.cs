@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Info {
             if (items.Count == 0) {
                 p.Message("No {0} found containing \"{1}\"", type, keyword);
             } else {
-                MultiPageOutput.Output(p, items, item => item, cmd + " " + keyword, type, modifier, false);
+                Paginator.Output(p, items, item => item, cmd + " " + keyword, type, modifier);
             }
         }
         

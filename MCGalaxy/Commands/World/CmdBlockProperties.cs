@@ -132,8 +132,8 @@ namespace MCGalaxy.Commands.World {
             string cmd      = "BlockProps " + args[0] + " list";
             string modifier = args.Length > 2 ? args[2] : "";
             
-            MultiPageOutput.Output(p, filtered, b => BlockProps.ScopedName(scope, p, b),
-                                   cmd, "modified blocks", modifier, false);
+            Paginator.Output(p, filtered, b => BlockProps.ScopedName(scope, p, b),
+                             cmd, "modified blocks", modifier);
         }
         
         void CopyProps(Player p, BlockProps[] scope, BlockID block, string[] args) {

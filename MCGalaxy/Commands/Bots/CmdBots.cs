@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Bots {
             string modifier = args.Length > offset ? args[offset] : "";
 
             p.Message("Bots in " + lvl.ColoredName + ":");
-            MultiPageOutput.Output(p, bots, FormatBot, cmd, "Bots", modifier, false);
+            Paginator.Output(p, bots, FormatBot, cmd, "Bots", modifier);
         }
         
         static string FormatBot(PlayerBot bot) {

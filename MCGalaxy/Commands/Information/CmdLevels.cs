@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Info {
             Array.Sort(files);
             
             p.Message("Levels (&c[no] &Sif not visitable):");
-            MultiPageOutput.Output(p, files, (file) => FormatMap(p, file),
-                                   "Levels", "levels", message, false);
+            Paginator.Output(p, files, (file) => FormatMap(p, file),
+                             "Levels", "levels", message);
         }
         
         static string FormatMap(Player p, string file) {

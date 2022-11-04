@@ -70,9 +70,9 @@ namespace MCGalaxy.Commands.Info {
                 shortcuts.Add(cmd);
             }
             
-            MultiPageOutput.Output(p, shortcuts,
-                                   (cmd) => "&b" + cmd.shortcut + " &S[" + cmd.name + "]",
-                                   "Commands shortcuts", "shortcuts", modifier, false);
+            Paginator.Output(p, shortcuts,
+                             (cmd) => "&b" + cmd.shortcut + " &S[" + cmd.name + "]",
+                             "Commands shortcuts", "shortcuts", modifier);
         }
         
         static void PrintRankCommands(Player p, string sort, string modifier, Group group, bool own) {
@@ -93,9 +93,8 @@ namespace MCGalaxy.Commands.Info {
             
             string type = "Cmds " + group.Name;
             if (sort.Length > 0) type += " " + sort;
-            MultiPageOutput.Output(p, cmds,
-                                   (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
-                                   type, "commands", modifier, false);
+            Paginator.Output(p, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
+                             type, "commands", modifier);
             p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
         
@@ -106,9 +105,8 @@ namespace MCGalaxy.Commands.Info {
             
             string type = "Commands all";
             if (sort.Length > 0) type += " " + sort;
-            MultiPageOutput.Output(p, cmds,
-                                   (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
-                                   type, "commands", modifier, false);            
+            Paginator.Output(p, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
+                             type, "commands", modifier);            
             p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
         
@@ -139,9 +137,8 @@ namespace MCGalaxy.Commands.Info {
 
             type = "Commands " + type;
             if (sort.Length > 0) type += " " + sort;
-            MultiPageOutput.Output(p, cmds,
-                                   (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
-                                   type, "commands", modifier, false);
+            Paginator.Output(p, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
+                             type, "commands", modifier);
             
             p.Message("Type &T/Help <command> &Sfor more help on a command.");
             return true;

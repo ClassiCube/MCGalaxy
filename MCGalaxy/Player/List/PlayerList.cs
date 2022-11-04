@@ -98,9 +98,8 @@ namespace MCGalaxy {
                 p.Message("There are no {0}.", group);
             } else {
                 p.Message("{0}:", group.Capitalize());
-                MultiPageOutput.Output(p, list,
-                                       (name) => p.FormatNick(name),
-                                       listCmd, "players", modifier, false);
+                Paginator.Output(p, list, (name) => p.FormatNick(name),
+                                 listCmd, "players", modifier);
             }
         }
         
@@ -112,8 +111,8 @@ namespace MCGalaxy {
                 p.Message("There are no {0}.", group);
             } else {
                 p.Message("{0}:", group.Capitalize());
-                MultiPageOutput.Output(p, list, (name) => name,
-                                       listCmd, "players", modifier, false);
+                Paginator.Output(p, list, (name) => name,
+                                 listCmd, "players", modifier);
             }
         }
         

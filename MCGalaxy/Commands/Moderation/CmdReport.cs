@@ -61,8 +61,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (users.Length > 0) {
                 p.Message("The following players have been reported:");
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, users, pl => p.FormatNick(pl),
-                                       "Review list", "players", modifier, false);
+                Paginator.Output(p, users, pl => p.FormatNick(pl),
+                                 "Review list", "players", modifier);
                 
                 p.Message("Use &T/Report check [player] &Sto view report details.");
                 p.Message("Use &T/Report delete [player] &Sto delete a report");

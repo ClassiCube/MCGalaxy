@@ -271,12 +271,12 @@ namespace MCGalaxy.Commands.CPE {
                 if (!ExistsInScope(def, block, global)) continue;
                 defsInScope.Add(def);
             }
-            MultiPageOutput.Output(p, defsInScope, FormatBlock, cmd.Substring(1) + " list",
-                                   "custom blocks", modifier, true);
+            Paginator.Output(p, defsInScope, PrintBlock,
+                             cmd.Substring(1) + " list", "custom blocks", modifier);
         }
         
-        static string FormatBlock(BlockDefinition def) {
-            return "Custom block &T" + def.RawID + " &Shas name &T" + def.Name;
+        static void PrintBlock(Player p, BlockDefinition def) {
+		    p.Message("Custom block &T{0} &Shas name &T{1}", def.RawID, def.Name);
         }
         
         static bool DoRemove(Player p, Level lvl, BlockID block, 

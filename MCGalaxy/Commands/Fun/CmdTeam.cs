@@ -203,8 +203,8 @@ namespace MCGalaxy.Commands.Fun {
         
         void HandleList(Player p, string[] args) {
             string modifier = args.Length > 1 ? args[1] : "";
-            MultiPageOutput.Output(p, Team.Teams, team => team.Color + team.Name,
-                                   "team list", "teams", modifier, false);
+            Paginator.Output(p, Team.Teams, team => team.Color + team.Name,
+                             "team list", "teams", modifier);
         }
         
         public override void Help(Player p) {

@@ -656,7 +656,7 @@
     <Compile Include="util\FastList.cs" />
     <Compile Include="util\Formatting\Formatter.cs" />
     <Compile Include="util\Formatting\Matcher.cs" />
-    <Compile Include="util\Formatting\MultiPageOutput.cs" />
+    <Compile Include="util\Formatting\Paginator.cs" />
     <Compile Include="util\IO\FileIO.cs" />
     <Compile Include="Server\Paths.cs" />
     <Compile Include="util\IO\TextFile.cs" />

@@ -64,8 +64,8 @@ namespace MCGalaxy.Commands.Info {
                 if (Block.ExistsFor(p, b) && selector(b)) blocks.Add(b);
             }
 
-            MultiPageOutput.Output(p, blocks, b => FormatBlockName(p, b),
-                                   "Blocks " + type, "blocks", modifier, false);
+            Paginator.Output(p, blocks, b => FormatBlockName(p, b),
+                             "Blocks " + type, "blocks", modifier);
         }
         
         internal static string FormatBlockName(Player p, BlockID block) {

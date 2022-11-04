@@ -229,13 +229,15 @@ namespace MCGalaxy.Commands.Moderation {
         
         public override void Use(Player p, string message, CommandData data) {
             Zone[] zones = p.level.Zones.Items;
-            MultiPageOutput.Output(p, zones, FormatZone, "ZoneList", "zones", message, true);
+            Paginator.Output(p, zones, PrintZone, 
+                             "ZoneList", "zones", message);
         }
         
-        static string FormatZone(Zone zone) {
-            return zone.ColoredName
-                + " &b- (" + zone.MinX + ", " + zone.MinY + ", " + zone.MinZ
-                + ") to (" + zone.MaxX + ", " + zone.MaxY + ", " + zone.MaxZ + ")";
+        static void PrintZone(Player p, Zone zone) {
+            p.Message("{0} &b- ({1}, {2}, {3}) to ({4}, {5}, {6})",
+                      zone.ColoredName, 
+                      zone.MinX, zone.MinY, zone.MinZ,
+                      zone.MaxX, zone.MaxY, zone.MaxZ);
         }
         
         public override void Help(Player p) {

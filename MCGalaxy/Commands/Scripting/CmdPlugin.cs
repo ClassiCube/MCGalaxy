@@ -38,8 +38,8 @@ namespace MCGalaxy.Commands.Scripting
                 string modifier = args.Length > 1 ? args[1] : "";
                 
                 p.Message("Loaded plugins:");
-                MultiPageOutput.Output(p, Plugin.all, pl => pl.name,
-                                      "Plugins", "plugins", modifier, false);
+                Paginator.Output(p, Plugin.all, pl => pl.name,
+                                 "Plugins", "plugins", modifier);
                 return;
             }
             if (args.Length == 1) { Help(p); return; }

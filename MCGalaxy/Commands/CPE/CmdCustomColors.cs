@@ -79,19 +79,22 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void ListHandler(Player p, string cmd, string modifier) {
-            List<ColorDesc> validCols = new List<ColorDesc>(Colors.List.Length);
-            foreach (ColorDesc col in Colors.List) {
-                if (col.IsModified()) validCols.Add(col);
+            List<ColorDesc> validColors = new List<ColorDesc>(Colors.List.Length);
+            foreach (ColorDesc color in Colors.List) 
+            {
+                if (color.IsModified()) validColors.Add(color);
             }
-            MultiPageOutput.Output(p, validCols, FormatColor, cmd, "Colors", modifier, true);
+            
+            Paginator.Output(p, validColors, PrintColor, 
+                             cmd, "Colors", modifier);
         }
         
         // Not very elegant, because we don't want the % to be escaped like everywhere else
-        internal static string FormatColor(ColorDesc col) {
+        internal static void PrintColor(Player p, ColorDesc col) {
             string format = "{0} &{1}({2})&S - %&S{1}, falls back to &{3}%&{3}{3}";
             if (col.Code == col.Fallback) format = "{0} &{1}({2})&S - %&S{1}";
 
-            return string.Format(format, col.Name, col.Code, Utils.Hex(col.R, col.G, col.B), col.Fallback);
+            p.Message(format, col.Name, col.Code, Utils.Hex(col.R, col.G, col.B), col.Fallback);
         }
         
         void EditHandler(Player p, string[] args) {

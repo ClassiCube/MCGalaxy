@@ -33,9 +33,10 @@ namespace MCGalaxy.Commands.Misc {
             UseCore(p, message, data, WarpList.Global, "Warp");
         }
         
-        static string FormatWarp(Warp warp) {
+        static void PrintWarp(Player p, Warp warp) {
             Vec3S32 pos = warp.Pos.BlockCoords;
-            return warp.Name + " - (" + pos.X + ", " + pos.Y + ", " + pos.Z + ") on " + warp.Level;
+            p.Message("{0} - ({1}, {2}, {3}) on {4}",
+                      warp.Name, pos.X, pos.Y, pos.Z, warp.Level);
         }
         
         protected void UseCore(Player p, string message, CommandData data,
@@ -47,7 +48,8 @@ namespace MCGalaxy.Commands.Misc {
             
             if (IsListCommand(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
-                MultiPageOutput.Output(p, warps.Items, FormatWarp, group + " list", group + "s", modifier, true);
+                Paginator.Output(p, warps.Items, PrintWarp, 
+                                 group + " list", group + "s", modifier);
                 return;
             } else if (args.Length == 1) {
                 Warp warp = Matcher.FindWarps(p, warps, cmd);
