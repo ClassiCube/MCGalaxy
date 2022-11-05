@@ -20,20 +20,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy {
-
+namespace MCGalaxy 
+{
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use an item. </summary>
-    public class ItemPerms {
+    public class ItemPerms 
+    {
         public virtual string ItemName { get { return ""; } }
         public LevelPermission MinRank;
         public List<LevelPermission> Allowed, Disallowed;
         
-        public ItemPerms(LevelPermission min) { Init(min, null, null); }
-        
-        public ItemPerms(LevelPermission min, List<LevelPermission> allowed,
-                         List<LevelPermission> disallowed) {
-            Init(min, allowed, disallowed);
-        }
+        public ItemPerms(LevelPermission min) { MinRank = min; }
         
         protected void Init(LevelPermission min, List<LevelPermission> allowed,
                             List<LevelPermission> disallowed) {
@@ -111,7 +107,8 @@ namespace MCGalaxy {
             if (input == null || input.Length == 0) return null;
             
             List<LevelPermission> perms = new List<LevelPermission>();
-            foreach (string perm in input.SplitComma()) {
+            foreach (string perm in input.SplitComma()) 
+            {
                 perms.Add((LevelPermission)int.Parse(perm));
             }
             return perms;

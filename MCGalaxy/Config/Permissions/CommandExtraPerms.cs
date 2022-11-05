@@ -19,31 +19,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands 
+{    
     /// <summary> Represents additional permissions required to perform a special action in a command. </summary>
     /// <remarks> For example, /color command has an extra permission for changing the color of other players. </remarks>
-    public class CommandExtraPerms : ItemPerms {
-
+    public class CommandExtraPerms : ItemPerms 
+    {
         public string CmdName, Desc = "";
         public int Num;
         public override string ItemName { get { return CmdName + ":" + Num; } }
         
-        public CommandExtraPerms(string cmd, int num, string desc,
-                                 LevelPermission min, List<LevelPermission> allowed,
-                                 List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
+        static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
+        
+        
+        public CommandExtraPerms(string cmd, int num, string desc, LevelPermission min) : base(min) {
             CmdName = cmd; Num = num; Desc = desc;
         }
         
         
         public CommandExtraPerms Copy() {
-            CommandExtraPerms copy = new CommandExtraPerms(CmdName, Num, Desc, 0, null, null);
+            CommandExtraPerms copy = new CommandExtraPerms(CmdName, Num, Desc, 0);
             CopyTo(copy); return copy;
         }
         
-        static List<CommandExtraPerms> list = new List<CommandExtraPerms>();
+        
         public static CommandExtraPerms Find(string cmd, int num) {
-            foreach (CommandExtraPerms perms in list) {
+            foreach (CommandExtraPerms perms in list) 
+            {
                 if (perms.CmdName.CaselessEq(cmd) && perms.Num == num) return perms;
             }
             return null;
@@ -51,16 +53,16 @@ namespace MCGalaxy.Commands {
         
         public static List<CommandExtraPerms> FindAll(string cmd) {
             List<CommandExtraPerms> all = new List<CommandExtraPerms>();
-            foreach (CommandExtraPerms perms in list) {
+            foreach (CommandExtraPerms perms in list) 
+            {
                 if (perms.CmdName.CaselessEq(cmd) && perms.Desc.Length > 0) all.Add(perms);
             }
             return all;
         }
         
 
-        static CommandExtraPerms Add(string cmd, int num, string desc, LevelPermission min, 
-                                     List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            CommandExtraPerms perms = new CommandExtraPerms(cmd, num, desc, min, allowed, disallowed);
+        static CommandExtraPerms Add(string cmd, int num, string desc, LevelPermission min) {
+            CommandExtraPerms perms = new CommandExtraPerms(cmd, num, desc, min);
             list.Add(perms);
             return perms;
         }
@@ -70,17 +72,17 @@ namespace MCGalaxy.Commands {
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             CommandExtraPerms perms = Find(cmd, num);
             if (perms == null) {
-                Add(cmd, num, desc, min, allowed, disallowed);
+                perms = Add(cmd, num, desc, min);
             } else {
                 perms.CmdName = cmd; perms.Num = num;
                 if (!String.IsNullOrEmpty(desc)) perms.Desc = desc;
-                perms.Init(min, allowed, disallowed);
             }
+            perms.Init(min, allowed, disallowed);
         }
         
         /// <summary> Gets or adds the nth extra permission for the given command. </summary>
         public static CommandExtraPerms GetOrAdd(string cmd, int num, LevelPermission min) {
-            return Find(cmd, num) ?? Add(cmd, num, "", min, null, null);
+            return Find(cmd, num) ?? Add(cmd, num, "", min);
         }
         
         public void MessageCannotUse(Player p) {

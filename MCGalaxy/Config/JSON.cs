@@ -296,15 +296,7 @@ namespace MCGalaxy.Config {
     }
     
     public static class Json {
-        
-        [Obsolete("Use JsonReader instead")]
-        public static object Parse(string s, out bool success) {
-            JsonReader reader = new JsonReader(s);
-            object obj = reader.Parse();
-            success    = !reader.Failed;
-            return obj;
-        }
-        
+
         [Obsolete("Use JsonWriter instead")]
         public static void Serialise(TextWriter dst, ConfigElement[] elems, object instance) {
             JsonConfigWriter w = new JsonConfigWriter(dst, elems);

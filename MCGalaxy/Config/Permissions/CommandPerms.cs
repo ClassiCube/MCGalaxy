@@ -30,13 +30,12 @@ namespace MCGalaxy.Commands
         static List<CommandPerms> List = new List<CommandPerms>();
         
         
-        public CommandPerms(string cmd, LevelPermission min, List<LevelPermission> allowed,
-                            List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
+        public CommandPerms(string cmd, LevelPermission min) : base(min) {
             CmdName = cmd;
         }
         
         public CommandPerms Copy() {
-            CommandPerms copy = new CommandPerms(CmdName, 0, null, null);
+            CommandPerms copy = new CommandPerms(CmdName, 0);
             CopyTo(copy); return copy;
         }
         
@@ -59,9 +58,8 @@ namespace MCGalaxy.Commands
         }
 
 
-        static CommandPerms Add(string cmd, LevelPermission min, 
-                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            CommandPerms perms = new CommandPerms(cmd, min, allowed, disallowed);
+        static CommandPerms Add(string cmd, LevelPermission min) {
+            CommandPerms perms = new CommandPerms(cmd, min);
             List.Add(perms);
             return perms;
         }
@@ -71,16 +69,16 @@ namespace MCGalaxy.Commands
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             CommandPerms perms = Find(cmd);
             if (perms == null) {
-                Add(cmd, min, allowed, disallowed);
+                perms = Add(cmd, min);
             } else {
                 perms.CmdName = cmd;
-                perms.Init(min, allowed, disallowed);
             }
+            perms.Init(min, allowed, disallowed);
         }
         
         /// <summary> Gets or adds permissions for the given command. </summary>
         public static CommandPerms GetOrAdd(string cmd, LevelPermission min) {
-            return Find(cmd) ?? Add(cmd, min, null, null);
+            return Find(cmd) ?? Add(cmd, min);
         }
         
         

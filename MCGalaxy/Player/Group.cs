@@ -23,10 +23,11 @@ using MCGalaxy.Commands;
 using MCGalaxy.Config;
 using MCGalaxy.Events.GroupEvents;
 
-namespace MCGalaxy {
+namespace MCGalaxy 
+{
     /// <summary> This is the group object, where ranks and their data are stored </summary>
-    public sealed partial class Group {
-
+    public sealed class Group
+    {
         public static Group BannedRank { get { return Find(LevelPermission.Banned); } }
         public static Group GuestRank  { get { return Find(LevelPermission.Guest); } }
         public static Group DefaultRank;

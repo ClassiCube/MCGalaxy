@@ -20,23 +20,23 @@ using System.Collections.Generic;
 using System.IO;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Blocks {
-
+namespace MCGalaxy.Blocks 
+{
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a block. </summary>
-    public sealed class BlockPerms : ItemPerms {
+    public sealed class BlockPerms : ItemPerms 
+    {
         public BlockID ID;
         public override string ItemName { get { return ID.ToString(); } }
         
         static BlockPerms[] List = new BlockPerms[Block.SUPPORTED_COUNT];
         
         
-        public BlockPerms(BlockID id, LevelPermission min, List<LevelPermission> allowed,
-                          List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
+        public BlockPerms(BlockID id, LevelPermission min) : base(min) {
             ID = id;
         }
         
         public BlockPerms Copy() {
-            BlockPerms copy = new BlockPerms(ID, 0, null, null);
+            BlockPerms copy = new BlockPerms(ID, 0);
             CopyTo(copy); return copy;
         }        
        
@@ -49,10 +49,10 @@ namespace MCGalaxy.Blocks {
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             BlockPerms perms = List[b];
             if (perms == null) {
-                List[b] = new BlockPerms(b, min, allowed, disallowed);
-            } else {
-                perms.Init(min, allowed, disallowed);
+                perms   = new BlockPerms(b, min);
+                List[b] = perms;
             }
+            perms.Init(min, allowed, disallowed);
         }
 
         
