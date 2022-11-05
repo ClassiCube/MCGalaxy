@@ -80,6 +80,7 @@ namespace MCGalaxy.Commands {
             return Find(cmd) ?? Add(cmd, min, null, null);
         }
         
+        
         public void MessageCannotUse(Player p) {
             p.Message("Only {0} can use &T/{1}", Describe(), CmdName);
         }

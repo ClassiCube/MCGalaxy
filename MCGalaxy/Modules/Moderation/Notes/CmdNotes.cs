@@ -19,24 +19,32 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
 
-namespace MCGalaxy.Modules.Moderation.Notes 
+namespace MCGalaxy.Modules.Moderation.Notes
 {
-    public class CmdNotes : Command2 
+    public class CmdNotes : Command2
     {
         public override string name { get { return "Notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
 
-        public override void Use(Player p, string name, CommandData data) {
-            if (!Server.Config.LogNotes) {
-                p.Message("The server does not have notes logging enabled."); return;
-            }
+        public override void Use(Player p, string message, CommandData data) {
+            string[] args = message.SplitSpaces();
+            string name   = args[0];
             
             if (CheckSuper(p, name, "player name")) return;
             if (name.Length == 0) name = p.name;
             
             name = PlayerInfo.FindMatchesPreferOnline(p, name);
             if (name == null) return;
+            
+            string modifier = args.Length > 1 ? args[1] : "";
+            PrintNotes(p, "Notes " + name, name, modifier);
+        }
+        
+        protected static void PrintNotes(Player p, string cmd, string name, string modifier) {
+            if (!Server.Config.LogNotes) {
+                p.Message("The server does not have notes logging enabled."); return;
+            }
             
             List<string> notes = Server.Notes.FindAllExact(name);
             string nick = p.FormatNick(name);
@@ -47,19 +55,30 @@ namespace MCGalaxy.Modules.Moderation.Notes
                 p.Message("  Notes for {0}:", nick);
             }
             
-            foreach (string line in notes) {
-                string[] args = line.SplitSpaces();
-                if (args.Length <= 3) continue;
-                
-                string reason = args.Length > 4 ? args[4] : "";
-                long duration = 0;
-                if (args.Length > 5) long.TryParse(args[5], out duration);
-                
-                p.Message("{0} by {1} &Son {2}{3}{4}",
-                          Action(args[1]), p.FormatNick(args[2]), args[3],
-                          duration      == 0 ? "" : " for " + TimeSpan.FromTicks(duration).Shorten(true),
-                          reason.Length == 0 ? "" : " - "   + reason.Replace("%20", " "));
+            // special case "/Notes" to show latest notes by default
+            if (modifier.Length == 0) {
+            	Paginator.Output(p, notes, PrintNote, cmd, "Notes", 
+            	                 (1 + (notes.Count - 8)).ToString());
+            	p.Message("To see all Notes, use &T/{0} all", cmd);
+            	return;
             }
+            
+            Paginator.Output(p, notes, PrintNote,
+                             cmd, "Notes", modifier);
+        }
+        
+        static void PrintNote(Player p, string line) {
+            string[] args = line.SplitSpaces();
+            if (args.Length <= 3) return;
+            
+            string reason = args.Length > 4 ? args[4] : "";
+            long duration = 0;
+            if (args.Length > 5) long.TryParse(args[5], out duration);
+            
+            p.Message("{0} by {1} &Son {2}{3}{4}",
+                      Action(args[1]), p.FormatNick(args[2]), args[3],
+                      duration      == 0 ? "" : " for " + TimeSpan.FromTicks(duration).Shorten(true),
+                      reason.Length == 0 ? "" : " - "   + reason.Replace("%20", " "));
         }
         
         static string Action(string arg) {
@@ -79,15 +98,15 @@ namespace MCGalaxy.Modules.Moderation.Notes
         }
     }
     
-    public sealed class CmdMyNotes : CmdNotes 
+    public sealed class CmdMyNotes : CmdNotes
     {
         public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool SuperUseable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Guest; } }
         
-        public override void Use(Player p, string message, CommandData data) { 
-            base.Use(p, p.name, data); 
+        public override void Use(Player p, string message, CommandData data) {
+            PrintNotes(p, "MyNotes", p.name, message);
         }
 
         public override void Help(Player p) {

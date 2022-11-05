@@ -156,9 +156,9 @@ namespace MCGalaxy {
         }
         
         /// <summary> Removes redundant colour codes and fixes some colour codes to behave correctly for older clients </summary>
-        /// <param name="fullAmpersands"> if false, ampersands not followed by valid colour code are removed </param>
-        /// <param name="customCols"> if false, converts custom colour codes into fallback colour code </param>
-        public static string CleanupColors(string value, bool fullAmpersands, bool customCols) {
+        /// <param name="fullAmpersands"> if false, ampersands not followed by valid colour code are converted to percents </param>
+        /// <param name="customColors"> if false, converts custom colour codes into fallback colour codes </param>
+        public static string CleanupColors(string value, bool fullAmpersands, bool customColors) {
             if (value.IndexOf('&') == -1) return value;
             char[] chars = new char[value.Length];
             int lastIdx  = -1, len = 0;
@@ -182,7 +182,7 @@ namespace MCGalaxy {
                     chars[len++] = fullAmpersands ? '&' : '%';
                     continue;
                 }
-                if (!customCols) col = Colors.Get(col).Fallback;
+                if (!customColors) col = Colors.Get(col).Fallback;
                 
                 // Don't append duplicate colour codes
                 if (lastColor != col) {
