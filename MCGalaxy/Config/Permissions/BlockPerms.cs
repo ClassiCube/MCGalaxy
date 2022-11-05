@@ -27,6 +27,9 @@ namespace MCGalaxy.Blocks {
         public BlockID ID;
         public override string ItemName { get { return ID.ToString(); } }
         
+        static BlockPerms[] List = new BlockPerms[Block.SUPPORTED_COUNT];
+        
+        
         public BlockPerms(BlockID id, LevelPermission min, List<LevelPermission> allowed,
                           List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
             ID = id;
@@ -35,9 +38,8 @@ namespace MCGalaxy.Blocks {
         public BlockPerms Copy() {
             BlockPerms copy = new BlockPerms(ID, 0, null, null);
             CopyTo(copy); return copy;
-        }
-        
-        public static BlockPerms[] List = new BlockPerms[Block.SUPPORTED_COUNT];
+        }        
+       
 
         /// <summary> Find the permissions for the given block. </summary>
         public static BlockPerms Find(BlockID b) { return List[b]; }
@@ -85,20 +87,28 @@ namespace MCGalaxy.Blocks {
                 }
             }
         }
+
+        
+        /// <summary> Applies new block permissions to server state. </summary>
+        public static void ApplyChanges() {
+            foreach (Group grp in Group.AllRanks) 
+            {
+                SetUsable(grp);
+            }
+        }
+        
+        public static void SetUsable(Group grp) {
+            foreach (BlockPerms perms in List) 
+            {
+                grp.Blocks[perms.ID] = perms.UsableBy(grp.Permission);
+            }
+        }
         
 
         /// <summary> Loads list of block permissions from disc. </summary>
         public static void Load() {
             lock (ioLock) LoadCore();
             ApplyChanges();
-        }
-        
-        /// <summary> Applies new block permissions to server state. </summary>
-        public static void ApplyChanges() {
-            foreach (Group grp in Group.AllRanks) 
-            {
-                grp.SetUsableBlocks();
-            }
         }
 
         static void LoadCore() {

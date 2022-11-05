@@ -41,14 +41,12 @@ namespace MCGalaxy {
         
         protected bool CheckSuper(Player p, string message, string type) {
             if (message.Length > 0 || !p.IsSuper) return false;
-            SuperRequiresArgs(name, p, type);
+            SuperRequiresArgs(p, type);
             return true;
         }
         
-        protected void SuperRequiresArgs(Player p, string type) { SuperRequiresArgs(name, p, type); }
-        
-        protected internal static void SuperRequiresArgs(string cmd, Player p, string type) {
-            p.Message("When using /{0} from {2}, you must provide a {1}.", cmd, type, p.SuperName);
+        protected void SuperRequiresArgs(Player p, string type) {
+            p.Message("When using /{0} from {2}, you must provide a {1}.", name, type, p.SuperName);
         }
         
         protected bool HasExtraPerm(Player p, string cmd, LevelPermission plRank, int num) {

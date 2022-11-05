@@ -96,25 +96,6 @@ namespace MCGalaxy {
             copy.Prefix = Prefix; copy.CopySlots = CopySlots; copy.filename = filename;
             return copy;
         }
-
-        public void SetUsableCommands() {
-            List<Command> commands = new List<Command>();
-            foreach (CommandPerms perms in CommandPerms.List) 
-            {
-                if (!perms.UsableBy(Permission)) continue;
-                
-                Command cmd = Command.Find(perms.CmdName);
-                if (cmd != null) commands.Add(cmd);
-            }
-            Commands = commands;
-        }
-        
-        public void SetUsableBlocks() {
-            foreach (BlockPerms perms in BlockPerms.List) 
-            {
-                Blocks[perms.ID] = perms.UsableBy(Permission);
-            }
-        }
         
         
         public static Group Find(string name) {
@@ -194,8 +175,8 @@ namespace MCGalaxy {
             grp.LoadPlayers();
             
             if (reloading) {
-                grp.SetUsableBlocks();
-                grp.SetUsableCommands();
+                BlockPerms.SetUsable(grp);
+                CommandPerms.SetUsable(grp);
             }
             OnGroupLoadedEvent.Call(grp);
         }

@@ -19,12 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Commands {
-
+namespace MCGalaxy.Commands 
+{
     /// <summary> Represents which ranks are allowed (and which are disallowed) to use a command. </summary>
-    public sealed class CommandPerms : ItemPerms {
+    public sealed class CommandPerms : ItemPerms 
+    {
         public string CmdName;
         public override string ItemName { get { return CmdName; } }
+        
+        static List<CommandPerms> List = new List<CommandPerms>();
+        
         
         public CommandPerms(string cmd, LevelPermission min, List<LevelPermission> allowed,
                             List<LevelPermission> disallowed) : base(min, allowed, disallowed) {
@@ -36,12 +40,11 @@ namespace MCGalaxy.Commands {
             CopyTo(copy); return copy;
         }
         
-        public static List<CommandPerms> List = new List<CommandPerms>();
-        
         
         /// <summary> Find the permissions for the given command. (case insensitive) </summary>
         public static CommandPerms Find(string cmd) {
-            foreach (CommandPerms perms in List) {
+            foreach (CommandPerms perms in List) 
+            {
                 if (perms.CmdName.CaselessEq(cmd)) return perms;
             }
             return null;
@@ -100,10 +103,32 @@ namespace MCGalaxy.Commands {
             using (StreamWriter w = new StreamWriter(Paths.CmdPermsFile)) {
                 WriteHeader(w, "each command", "CommandName", "gun");
 
-                foreach (CommandPerms perms in List) {
+                foreach (CommandPerms perms in List) 
+                {
                     w.WriteLine(perms.Serialise());
                 }
             }
+        }
+        
+
+        /// <summary> Applies new command permissions to server state. </summary>
+        public static void ApplyChanges() {
+            foreach (Group grp in Group.AllRanks) 
+            {
+                SetUsable(grp);
+            }
+        }
+        
+        public static void SetUsable(Group grp) {
+            List<Command> commands = new List<Command>();
+            foreach (CommandPerms perms in List) 
+            {
+                if (!perms.UsableBy(grp.Permission)) continue;
+                
+                Command cmd = Command.Find(perms.CmdName);
+                if (cmd != null) commands.Add(cmd);
+            }
+            grp.Commands = commands;
         }
         
 
@@ -112,17 +137,10 @@ namespace MCGalaxy.Commands {
             lock (ioLock) LoadCore();
             ApplyChanges();
         }
-
-        /// <summary> Applies new command permissions to server state. </summary>
-        public static void ApplyChanges() {
-            foreach (Group grp in Group.AllRanks) 
-            {
-                grp.SetUsableCommands();
-            }
-        }
         
         static void LoadCore() {
-            foreach (Command cmd in Command.CopyAll()) {
+            foreach (Command cmd in Command.CopyAll()) 
+            {
                 Set(cmd.name, cmd.defaultRank, null, null);
             }
             if (!File.Exists(Paths.CmdPermsFile)) { Save(); return; }

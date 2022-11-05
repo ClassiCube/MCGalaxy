@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands.World
             if (args.Length == 1) {
                 // special case /perbuild [permission] to current level
                 if (p.IsSuper) {
-                    Command.SuperRequiresArgs(name, p, "level");
+                    SuperRequiresArgs(p, "level name");
                 } else {
                     UpdatePerms(p, p.level.name, data, args, max);
                 }
