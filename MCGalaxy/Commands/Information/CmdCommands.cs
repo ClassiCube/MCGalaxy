@@ -93,7 +93,7 @@ namespace MCGalaxy.Commands.Info {
             
             string type = "Cmds " + group.Name;
             if (sort.Length > 0) type += " " + sort;
-            Paginator.Output(p, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
+            Paginator.Output(p, cmds, Command.GetColoredName,
                              type, "commands", modifier);
             p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
@@ -105,7 +105,7 @@ namespace MCGalaxy.Commands.Info {
             
             string type = "Commands all";
             if (sort.Length > 0) type += " " + sort;
-            Paginator.Output(p, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
+            Paginator.Output(p, cmds, Command.GetColoredName,
                              type, "commands", modifier);            
             p.Message("Type &T/Help <command> &Sfor more help on a command.");
         }
@@ -137,7 +137,7 @@ namespace MCGalaxy.Commands.Info {
 
             type = "Commands " + type;
             if (sort.Length > 0) type += " " + sort;
-            Paginator.Output(p, cmds, (cmd) => CmdHelp.GetColor(cmd) + cmd.name,
+            Paginator.Output(p, cmds, Command.GetColoredName,
                              type, "commands", modifier);
             
             p.Message("Type &T/Help <command> &Sfor more help on a command.");

@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info {
@@ -56,16 +57,16 @@ namespace MCGalaxy.Commands.Info {
 
             List<string> blockNames = Matcher.Filter(blocks, keyword, 
                                                      b => Block.GetName(p, b), null,
-                                                     b => CmdBlocks.FormatBlockName(p, b));
+                                                     b => Block.GetColoredName(p, b));
             OutputList(p, keyword, "search blocks", "blocks", modifier, blockNames);
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
             List<string> commands = Matcher.Filter(Command.allCmds, keyword, cmd => cmd.name,
-                                                   null, cmd => CmdHelp.GetColor(cmd) + cmd.name);
+                                                   null, Command.GetColoredName);
             List<string> shortcuts = Matcher.Filter(Command.allCmds, keyword, cmd => cmd.shortcut,
                                                     cmd => !String.IsNullOrEmpty(cmd.shortcut), 
-                                                    cmd => CmdHelp.GetColor(cmd) + cmd.name);
+                                                    Command.GetColoredName);
             
             // Match both names and shortcuts
             foreach (string shortcutCmd in shortcuts) {

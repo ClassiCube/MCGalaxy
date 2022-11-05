@@ -61,28 +61,27 @@ namespace MCGalaxy.Commands
         }
         
 
-        static CommandExtraPerms Add(string cmd, int num, string desc, LevelPermission min) {
-            CommandExtraPerms perms = new CommandExtraPerms(cmd, num, desc, min);
+        static CommandExtraPerms Add(string cmd, int num, LevelPermission min) {
+            CommandExtraPerms perms = new CommandExtraPerms(cmd, num, "", min);
             list.Add(perms);
             return perms;
         }
         
         /// <summary> Sets the nth extra permission for the given command. </summary>
-        public static void Set(string cmd, int num, string desc, LevelPermission min,
+        public static void Set(string cmd, int num, LevelPermission min,
                                List<LevelPermission> allowed, List<LevelPermission> disallowed) {
             CommandExtraPerms perms = Find(cmd, num);
             if (perms == null) {
-                perms = Add(cmd, num, desc, min);
+                perms = Add(cmd, num, min);
             } else {
-                perms.CmdName = cmd; perms.Num = num;
-                if (!String.IsNullOrEmpty(desc)) perms.Desc = desc;
+                perms.CmdName = cmd;
             }
             perms.Init(min, allowed, disallowed);
         }
         
         /// <summary> Gets or adds the nth extra permission for the given command. </summary>
         public static CommandExtraPerms GetOrAdd(string cmd, int num, LevelPermission min) {
-            return Find(cmd, num) ?? Add(cmd, num, "", min);
+            return Find(cmd, num) ?? Add(cmd, num, min);
         }
         
         public void MessageCannotUse(Player p) {
@@ -144,7 +143,7 @@ namespace MCGalaxy.Commands
                         Deserialise(args, 2, out min, out allowed, out disallowed);
                     }
                     
-                    Set(args[0], int.Parse(args[1]), "", min, allowed, disallowed);
+                    Set(args[0], int.Parse(args[1]), min, allowed, disallowed);
                 } catch (Exception ex) {
                     Logger.Log(LogType.Warning, "Hit an error on the extra command perms " + line);
                     Logger.LogError(ex);
@@ -157,12 +156,6 @@ namespace MCGalaxy.Commands
                 if (c >= 'a' && c <= 'z') return true;
             }
             return false;
-        }
-        
-        static void LoadExtraPerm(string[] args) {
-            string cmdName = args[0];
-            int num = int.Parse(args[1]), minPerm = int.Parse(args[2]);
-            Set(cmdName, num, "", (LevelPermission)minPerm, null, null);
         }
     }
 }

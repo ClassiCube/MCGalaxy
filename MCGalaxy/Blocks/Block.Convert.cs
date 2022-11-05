@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using MCGalaxy.Blocks;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
@@ -76,6 +77,11 @@ namespace MCGalaxy
                 if (def.Name.Replace(" ", "").CaselessEq(msg)) return def.GetBlock();
             }
             return Block.Invalid;
+        }
+        
+        public static string GetColoredName(Player p, BlockID block) {
+            BlockPerms perms = BlockPerms.Find(block);
+            return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         
         

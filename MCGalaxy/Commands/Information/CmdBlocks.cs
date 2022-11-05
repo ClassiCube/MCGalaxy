@@ -64,13 +64,8 @@ namespace MCGalaxy.Commands.Info {
                 if (Block.ExistsFor(p, b) && selector(b)) blocks.Add(b);
             }
 
-            Paginator.Output(p, blocks, b => FormatBlockName(p, b),
+            Paginator.Output(p, blocks, b => Block.GetColoredName(p, b),
                              "Blocks " + type, "blocks", modifier);
-        }
-        
-        internal static string FormatBlockName(Player p, BlockID block) {
-            BlockPerms perms = BlockPerms.Find(block);
-            return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         
         static void OutputBlockInfo(Player p, BlockID block) {
@@ -87,7 +82,7 @@ namespace MCGalaxy.Commands.Info {
             for (BlockID b = Block.CPE_COUNT; b < Block.CORE_COUNT; b++) 
             {
                 if (Block.Convert(b) != block) continue;
-                msg += FormatBlockName(p, b) + ", ";
+                msg += Block.GetColoredName(p, b) + ", ";
             }
 
             if (msg.Length > 0) {

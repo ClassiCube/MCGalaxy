@@ -67,6 +67,7 @@ namespace MCGalaxy
         public static bool IsCore(Command cmd) { return coreCmds.Contains(cmd); }
         public static List<Command> CopyAll() { return new List<Command>(allCmds); }
         
+        
         public static void InitAll() {
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
             allCmds.Clear();
@@ -105,14 +106,6 @@ namespace MCGalaxy
             Alias.RegisterDefaults(cmd);
         }
         
-        public static Command Find(string name) {
-            foreach (Command cmd in allCmds) 
-            {
-                if (cmd.name.CaselessEq(name)) return cmd;
-            }
-            return null;
-        }
-        
         public static bool Unregister(Command cmd) {
             bool removed = allCmds.Remove(cmd);
             foreach (Group grp in Group.AllRanks) 
@@ -124,6 +117,20 @@ namespace MCGalaxy
             // So don't throw exception if Command.Find returned null
             if (cmd != null) Alias.UnregisterDefaults(cmd);
             return removed;
+        }
+        
+        
+        public static string GetColoredName(Command cmd) {
+            LevelPermission perm = CommandPerms.MinPerm(cmd);
+            return Group.GetColor(perm) + cmd.name;
+        }
+        
+        public static Command Find(string name) {
+            foreach (Command cmd in allCmds) 
+            {
+                if (cmd.name.CaselessEq(name)) return cmd;
+            }
+            return null;
         }
         
         public static void Search(ref string cmdName, ref string cmdArgs) {

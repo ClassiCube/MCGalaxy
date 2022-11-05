@@ -218,11 +218,6 @@ namespace MCGalaxy.Commands.Info {
             return false;
         }
 
-        internal static string GetColor(Command cmd) {
-            LevelPermission perm = CommandPerms.MinPerm(cmd);
-            return Group.GetColor(perm);
-        }
-
         public override void Help(Player p) {
             p.Message("...really? Wow. Just...wow.");
         }
