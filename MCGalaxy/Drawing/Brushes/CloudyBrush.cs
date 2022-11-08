@@ -90,10 +90,11 @@ namespace MCGalaxy.Drawing.Brushes
                 //   then the threshold for all blocks is set to this.
                 // If sum was say 0.8 instead, then only the threshold for the
                 //   very last block would be increased.
+                // TODO rewrite to be single pass (only need to update current instead of all counts)
                 for (int j = 0; j < counts.Length; j++) {
                     if (sum <= coverage[j])
                         thresholds[j] = i / (float)accuracy;
-                }
+                }              
                 sum += values[i] / (float)volume;
             }
             thresholds[blocks.Length - 1] = 1;

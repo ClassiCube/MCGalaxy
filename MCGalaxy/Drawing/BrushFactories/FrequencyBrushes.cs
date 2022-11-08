@@ -107,9 +107,9 @@ namespace MCGalaxy.Drawing.Brushes
         
         public override Brush Construct(BrushArgs args) {
             int[] count;
-            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);
-            
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);          
             if (toAffect == null) return null;
+
             BlockID[] blocks = FrequencyBrush.Combine(toAffect, count);
             return new RandomBrush(blocks);
         }
@@ -130,9 +130,9 @@ namespace MCGalaxy.Drawing.Brushes
         public override Brush Construct(BrushArgs args) {
             CustomModelAnimAxis axis = GetAxis(ref args);
             int[] count;
-            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);
-            
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);            
             if (toAffect == null) return null;
+
             BlockID[] blocks = FrequencyBrush.Combine(toAffect, count);
             return new GradientBrush(blocks, axis);
         }

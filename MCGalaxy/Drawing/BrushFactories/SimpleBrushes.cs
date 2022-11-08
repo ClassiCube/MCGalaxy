@@ -65,27 +65,19 @@ namespace MCGalaxy.Drawing.Brushes
         
         public override Brush Construct(BrushArgs args) {
             Player p = args.Player;
+            // avoid allocating the arrays for the most common case
             if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return null;
                 return new CheckeredBrush(args.Block, Block.Invalid);
             }
-            string[] parts = args.Message.SplitSpaces();
-            
-            BlockID block1;
-            if (!CommandParser.GetBlockIfAllowed(p, parts[0], "draw with", out block1, true)) return null;
-            if (parts.Length == 1)
-                return new CheckeredBrush(block1, Block.Invalid);
-            
-            if (parts.Length == 2) {
-                BlockID block2;
-                if (!CommandParser.GetBlockIfAllowed(p, parts[1], "draw with", out block2, true)) return null;
-                return new CheckeredBrush(block1, block2);
-            }
-            
-            BlockID[] blocks = new BlockID[parts.Length];
-            for (int i = 0; i < blocks.Length; i++) {
-                if (!CommandParser.GetBlockIfAllowed(p, parts[i], "draw with", out blocks[i], true)) return null;
-            }            
+
+            int[] count;
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);            
+            if (toAffect == null) return null;
+
+            BlockID[] blocks = FrequencyBrush.Combine(toAffect, count);
+            if (blocks.Length == 2)
+                return new CheckeredBrush(blocks[0], blocks[1]);
             return new CheckeredPaletteBrush(blocks);
         }
     }
