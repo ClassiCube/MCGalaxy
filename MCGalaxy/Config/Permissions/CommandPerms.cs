@@ -137,10 +137,6 @@ namespace MCGalaxy.Commands
         }
         
         static void LoadCore() {
-            foreach (Command cmd in Command.CopyAll()) 
-            {
-                Set(cmd.name, cmd.defaultRank, null, null);
-            }
             if (!File.Exists(Paths.CmdPermsFile)) { Save(); return; }
             
             using (StreamReader r = new StreamReader(Paths.CmdPermsFile)) {

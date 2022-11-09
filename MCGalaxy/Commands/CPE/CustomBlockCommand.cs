@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
-using MCGalaxy.Commands.Building;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;

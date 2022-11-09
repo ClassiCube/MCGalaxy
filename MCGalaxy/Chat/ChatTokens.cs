@@ -14,9 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using MCGalaxy.Network;
 using MCGalaxy.Util;
 
 namespace MCGalaxy {

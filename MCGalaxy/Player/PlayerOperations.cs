@@ -16,10 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Threading;
-using MCGalaxy.Events.PlayerEvents;
-using MCGalaxy.Games;
-using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
 
 namespace MCGalaxy 

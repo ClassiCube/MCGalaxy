@@ -61,7 +61,6 @@ namespace MCGalaxy
         /// <remarks> return false to prevent this command showing in /last (e.g. /pass, /hide) </remarks>
         public virtual bool UpdatesLastCmd { get { return true; } }
         
-        public static CommandList all = new CommandList();
         public static List<Command> allCmds  = new List<Command>();
         public static List<Command> coreCmds = new List<Command>();
         public static bool IsCore(Command cmd) { return coreCmds.Contains(cmd); }
@@ -79,6 +78,7 @@ namespace MCGalaxy
                 if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;
                 
                 Command cmd = (Command)Activator.CreateInstance(type);
+                if (Server.Config.DisabledCommands.CaselessContains(cmd.name)) continue;
                 Register(cmd);
             }
             
@@ -178,18 +178,6 @@ namespace MCGalaxy
         public override void Use(Player p, string message) {
             if (p == null) p = Player.Console;
             Use(p, message, p.DefaultCmdData);
-        }
-    }
-    
-    // Kept around for backwards compatibility
-    public sealed class CommandList 
-    {
-        [Obsolete("Use Command.Find() instead", true)]
-        public Command Find(string name) {
-            foreach (Command cmd in Command.allCmds) {
-                if (cmd.name.CaselessEq(name) || cmd.shortcut.CaselessEq(name)) return cmd;
-            }
-            return null;
         }
     }
     

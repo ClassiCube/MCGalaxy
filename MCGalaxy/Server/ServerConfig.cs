@@ -147,6 +147,8 @@ namespace MCGalaxy {
         //  this option needs changing to server's IP (0.0.0.0 = listen on all network interfaces)
         [ConfigString("listen-ip", "Other", "0.0.0.0")]
         public string ListenIP = "0.0.0.0";
+        [ConfigStringList("disabled-commands", "Other")]
+        public List<string> DisabledCommands = new List<string>();
 
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;
@@ -211,7 +213,7 @@ namespace MCGalaxy {
         [ConfigBool("dollar-before-dollar", "Chat", true)]
         public bool DollarNames = true;
         [ConfigStringList("disabledstandardtokens", "Chat")]
-        internal List<string> DisabledChatTokens = new List<string>();
+        public List<string> DisabledChatTokens = new List<string>();
         [ConfigBool("profanity-filter", "Chat", false)]
         public bool ProfanityFiltering = false;
         [ConfigString("profanity-replacement", "Chat", "*")]
