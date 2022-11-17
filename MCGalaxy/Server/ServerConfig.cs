@@ -37,8 +37,6 @@ namespace MCGalaxy {
         public bool Public = false;
         [ConfigBool("verify-names", "Server", true)]
         public bool VerifyNames = true;
-        [ConfigBool("support-web-client", "Server", true)]
-        public bool WebClient = true;
         [ConfigString("default-rank", "Server", "guest")]
         public string DefaultRankName = "guest";
         [ConfigString("server-owner", "Server", "the owner")]
@@ -62,6 +60,9 @@ namespace MCGalaxy {
         public bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Security", LevelPermission.Operator)]
         public LevelPermission VerifyAdminsRank = LevelPermission.Operator;
+        
+        [ConfigBool("support-web-client", "Webclient", true)]
+        public bool WebClient = true;
 
         [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.,")]
         public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";        

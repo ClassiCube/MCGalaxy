@@ -279,12 +279,14 @@ namespace MCGalaxy.Network
     public sealed class WebSocket : ServerWebSocket 
     {
         readonly INetSocket s;
+        // websocket connection may be a proxied connection
+        IPAddress clientIP;      
         
         public WebSocket(INetSocket socket) { s  = socket; }
         
         // Init taken care by underlying socket
         public override void Init() { }
-        public override IPAddress IP { get { return s.IP; } }
+        public override IPAddress IP { get { return clientIP ?? s.IP; } }
         public override bool LowLatency { set { s.LowLatency = value; } }
 
         protected override void SendRaw(byte[] data, SendFlags flags) {
@@ -304,5 +306,19 @@ namespace MCGalaxy.Network
         }
         
         public override void Close() { s.Close(); }
+
+
+        // Websocket proxying support
+        protected override void OnGotHeader(string key, string val) {
+            base.OnGotHeader(key, val);
+
+            if (key == "X-Real-IP" && IsProxyTrustedIP()) {
+                IPAddress.TryParse(val, out clientIP);
+            }
+        }
+
+        bool IsProxyTrustedIP() {
+            return IPAddress.IsLoopback(IP);
+        }
     }
 }
