@@ -67,9 +67,9 @@ namespace MCGalaxy.Drawing.Brushes
             
             // For 0 or 1 blocks given, treat second block as 'unchanged'.
             blocks = new BlockID[Math.Max(2, bCount)];
-            count = new int[blocks.Length];
+            count  = new int[blocks.Length];
             for (int i = 0; i < count.Length; i++) {
-                count[i] = 1;
+                count[i]  = 1;
                 blocks[i] = Block.Invalid;
             }
             

@@ -387,6 +387,7 @@
     <Compile Include="Drawing\Brushes\Brush.cs" />
     <Compile Include="Drawing\Brushes\CloudyBrush.cs" />
     <Compile Include="Drawing\Brushes\GradientBrush.cs" />
+    <Compile Include="Drawing\Brushes\GridBrush.cs" />
     <Compile Include="Drawing\Brushes\PasteBrush.cs" />
     <Compile Include="Drawing\Brushes\RainbowBrush.cs" />
     <Compile Include="Drawing\Brushes\RandomBrush.cs" />

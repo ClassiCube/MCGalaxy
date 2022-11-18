@@ -40,7 +40,7 @@ namespace MCGalaxy.Drawing.Brushes
             new RainbowBrushFactory(),  new BWRainbowBrushFactory(),
             new RandomBrushFactory(),   new CloudyBrushFactory(),
             new GradientBrushFactory(), new ReplaceBrushBrushFactory(),
-            new ReplaceNotBrushBrushFactory(),
+            new ReplaceNotBrushBrushFactory(), new GridBrushFactory(),
         };
         
         public static BrushFactory Find(string name) {

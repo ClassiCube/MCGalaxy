@@ -66,6 +66,7 @@ namespace MCGalaxy.Drawing.Brushes
         public override Brush Construct(BrushArgs args) {
             Player p = args.Player;
             // avoid allocating the arrays for the most common case
+            // TODO remove?
             if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return null;
                 return new CheckeredBrush(args.Block, Block.Invalid);
@@ -79,6 +80,27 @@ namespace MCGalaxy.Drawing.Brushes
             if (blocks.Length == 2)
                 return new CheckeredBrush(blocks[0], blocks[1]);
             return new CheckeredPaletteBrush(blocks);
+        }
+    }
+
+    public sealed class GridBrushFactory : BrushFactory 
+    {
+        public override string Name { get { return "Grid"; } }
+        public override string[] Help { get { return HelpString; } }
+        
+        static string[] HelpString = new string[] {
+            "&TArguments: [grid block]/<size> [cell block]/<size> <border>",
+            "&HDraws an gridline pattern of blocks.",
+            "&H  If a <size> is not given, a size of 1 is assumed.",
+            "&H  If <border> block is not given, skip block is used.",
+        };
+        
+        public override Brush Construct(BrushArgs args) {
+            int[] count;
+            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);            
+            if (toAffect == null) return null;
+
+            return new GridBrush(toAffect, count);
         }
     }
     
