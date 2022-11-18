@@ -63,6 +63,8 @@ namespace MCGalaxy {
         
         [ConfigBool("support-web-client", "Webclient", true)]
         public bool WebClient = true;
+        [ConfigBool("allow-ip-forwarding", "Webclient", true)]
+        public bool AllowIPForwarding = true;
 
         [ConfigString("HeartbeatURL", "Other", "http://www.classicube.net/heartbeat.jsp", false, ":/.,")]
         public string HeartbeatURL = "http://www.classicube.net/heartbeat.jsp";        

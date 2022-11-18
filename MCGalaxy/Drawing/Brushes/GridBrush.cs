@@ -43,7 +43,7 @@ namespace MCGalaxy.Drawing.Brushes
             int dz = (op.Coords.Z - op.Min.Z) % blocksCount; if (dz < 0) dz += blocksCount;
 
             // On the grid boundary planes
-            if (dx < gridSize || dy < gridSize || dz < gridSize)
+            if (dx < gridSize || dy < gridSize || dz < gridSize) 
             {
                 if (dx < gridSize && dz < gridSize) return gridBlock;
                 if (dx < gridSize && dy < gridSize) return gridBlock;

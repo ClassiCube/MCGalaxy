@@ -309,16 +309,22 @@ namespace MCGalaxy.Network
 
 
         // Websocket proxying support
-        protected override void OnGotHeader(string key, string val) {
-            base.OnGotHeader(key, val);
+        protected override void OnGotHeader(string name, string value) {
+            base.OnGotHeader(name, value);
 
-            if (key == "X-Real-IP" && IsProxyTrustedIP()) {
-                IPAddress.TryParse(val, out clientIP);
+            if (name == "X-Real-IP" && Server.Config.AllowIPForwarding && IsTrustedForwarderIP()) {
+                Logger.Log(LogType.SystemActivity, "{0} is forwarding a connection from {1}", IP, value);
+                IPAddress.TryParse(value, out clientIP);
             }
         }
 
-        bool IsProxyTrustedIP() {
-            return IPAddress.IsLoopback(IP);
+        // by default the following IPs are trusted for proxying/forwarding connections
+        //  1) loopback (assumed to be a reverse proxy running on the same machine as the server)
+        //  2) classicube.net's websocket proxy IP (used as a fallback for https only connections)
+        static IPAddress ccnetIP = new IPAddress(0xFA05DF22); // 34.223.5.250
+        bool IsTrustedForwarderIP() {
+            IPAddress ip = IP;
+            return IPAddress.IsLoopback(ip) || ip.Equals(ccnetIP);
         }
     }
 }

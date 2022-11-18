@@ -36,7 +36,7 @@ namespace MCGalaxy.Network
         }
         
         protected abstract void OnGotAllHeaders();
-        protected abstract void OnGotHeader(string key, string val);
+        protected abstract void OnGotHeader(string name, string value);
 
         void ProcessHeader(string raw) {
             // end of all headers
@@ -46,15 +46,15 @@ namespace MCGalaxy.Network
             int sep = raw.IndexOf(':');
             if (sep == -1) return;
             
-            string key = raw.Substring(0, sep);
-            string val = raw.Substring(sep + 1).Trim();
+            string name  = raw.Substring(0, sep);
+            string value = raw.Substring(sep + 1).Trim();
             
-            if (key.CaselessEq("Connection")) {
-                conn    = val.CaselessContains("Upgrade");
-            } else if (key.CaselessEq("Upgrade")) {
-                upgrade = val.CaselessEq("websocket");
+            if (name.CaselessEq("Connection")) {
+                conn    = value.CaselessContains("Upgrade");
+            } else if (name.CaselessEq("Upgrade")) {
+                upgrade = value.CaselessEq("websocket");
             } else {
-                OnGotHeader(key, val);
+                OnGotHeader(name, value);
             }
         }
         
@@ -268,11 +268,11 @@ namespace MCGalaxy.Network
             }
         }
         
-        protected override void OnGotHeader(string key, string val) {
-            if (key.CaselessEq("Sec-WebSocket-Version")) {
-                version = val.CaselessEq("13");
-            } else if (key.CaselessEq("Sec-WebSocket-Key")) {
-                verKey  = val;
+        protected override void OnGotHeader(string name, string value) {
+            if (name.CaselessEq("Sec-WebSocket-Version")) {
+                version = value.CaselessEq("13");
+            } else if (name.CaselessEq("Sec-WebSocket-Key")) {
+                verKey  = value;
             }
         }
         
@@ -315,9 +315,9 @@ namespace MCGalaxy.Network
             }
         }
         
-        protected override void OnGotHeader(string key, string val) {
-            if (key.CaselessEq("Sec-WebSocket-Accept")) {
-                verKey = val;
+        protected override void OnGotHeader(string name, string value) {
+            if (name.CaselessEq("Sec-WebSocket-Accept")) {
+                verKey = value;
             }
         }
         
