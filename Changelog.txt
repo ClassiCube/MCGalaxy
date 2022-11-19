@@ -1,4 +1,22 @@
-﻿v 1.9.4.3
+﻿v 1.9.4.4
+Added: ExtEntityTeleport CPE (Thanks Goodly)
+Added: Allow using ReplaceBrush as a /brush 
+Added: Grid brush (gridlines)
+Added: disabled-commands option to server.properties to allow completely removing built-in commands
+Improved: Support for forwarding user's IP when connecting through a websocket reverse proxy
+Improved: `/setspawn` now tries to avoid changing your current position
+Improved: Make /Notes use paginated output 
+Improved: Checkered brush also supports providing frequencies/weights for blocks
+Improved: Majorly increase default realms limit for admin/owner ranks
+Improved: CTF: Set default Y of spawn and flags to middle of level
+Improved: ZS: Allow turning off a player dying always resulting them in being infected
+Improved: GUI: Change Undo input feld in Players tab to timespan input
+Improved: Simplify /BlockSpeed command 
+Improved: Discord relay bot now refuses to start instead of just logging a warning when lacking required permissions
+Fixed: Prevent using /Spawn while a game is running
+Fixed: Games couldn't autostart when less than 3 levels were configured/setup
+
+v 1.9.4.3
 Added: Gradient brush for /Brush
 Added: Dithered mode for /ImagePrint (thanks Goodlyay)
 Improved: CLI: Reset color instead of explicitly setting foreground color to white
