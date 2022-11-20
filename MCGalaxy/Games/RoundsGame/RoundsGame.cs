@@ -104,7 +104,8 @@ namespace MCGalaxy.Games {
                 while (Running && RoundsLeft > 0) {
                     RoundInProgress = false;
                     if (RoundsLeft != int.MaxValue) RoundsLeft--;
-                    
+
+                    if (Map != null) Logger.Log(LogType.GameActivity, "[{0}] Round started on {1}", GameName, Map.ColoredName);
                     DoRound();
                     if (Running) EndRound();
                     if (Running) VoteAndMoveToNextMap();

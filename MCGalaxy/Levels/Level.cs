@@ -158,7 +158,7 @@ namespace MCGalaxy
             bool cancel = false;
             OnLevelUnloadEvent.Call(this, ref cancel);
             if (cancel) {
-                Logger.Log(LogType.SystemActivity, "Unload canceled by Plugin! (Map: {0})", name);
+                Logger.Log(LogType.SystemActivity, "Unloading of {0} canceled by a plugin", name);
                 return false;
             }
             MovePlayersToMain();

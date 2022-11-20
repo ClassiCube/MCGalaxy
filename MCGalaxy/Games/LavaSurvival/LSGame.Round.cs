@@ -28,7 +28,6 @@ namespace MCGalaxy.Games {
             ResetPlayerDeaths();
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;
-            Logger.Log(LogType.GameActivity, "[Lava Survival] Round started. Map: " + Map.ColoredName);
             
             Map.SetPhysics(destroyMode ? 2 : 1);           
             int secs = 0, layerSecs = 0;

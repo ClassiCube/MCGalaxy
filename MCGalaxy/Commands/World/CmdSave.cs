@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.World {
             if (!force && !lvl.Changed) return false;
             
             if (!lvl.SaveChanges) {
-                p.Message("Level {0} &Sis running a game, skipping save", lvl.ColoredName);
+                p.Message("Saving {0} &Sis currently disabled (most likely because a game is or was running on the level)", lvl.ColoredName);
                 return false;
             }
             
