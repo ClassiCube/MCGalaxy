@@ -67,6 +67,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         SchedulerTask heartbeat;
         TcpClient client;
         SslStream stream;
+        bool readable = true;
 
         public const int DEFAULT_INTENTS = INTENT_GUILD_MESSAGES | INTENT_DIRECT_MESSAGES | INTENT_MESSAGE_CONTENT;
         const int INTENT_GUILD_MESSAGES  = 1 << 9;
@@ -109,6 +110,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         public override void Close() {
+            readable = false;
             Server.Heartbeats.Cancel(heartbeat);
             try {
                 client.Close();
@@ -122,7 +124,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         protected override void OnDisconnected(int reason) {
             SentIdentify = false;
-            Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
+            if (readable) Logger.Log(LogType.SystemActivity, "Discord relay bot closing: " + reason);
             Close();
 
             if (reason == REASON_INVALID_TOKEN) {
@@ -140,7 +142,10 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         public void ReadLoop() {
             byte[] data = new byte[4096];
-            for (;;) {
+            readable = true;
+
+            while (readable) 
+            {
                 int len = stream.Read(data, 0, 4096);
                 if (len == 0) throw new IOException("stream.Read returned 0");
                 
