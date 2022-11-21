@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string type { get { return CommandTypes.Information; } }
         public override bool SuperUseable { get { return false; } }
         public override bool MessageBlockRestricted { get { return true; } }
+        public override bool UseableWhenFrozen { get { return true; } }
 
         public override void Use(Player p, string message, CommandData data) { ToggleAfk(p, message); }
         internal static void ToggleAfk(Player p, string message) {

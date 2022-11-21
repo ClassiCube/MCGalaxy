@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string shortcut { get { return ""; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
+        public override bool UseableWhenFrozen { get { return true; } }
 
         static DateTime nextUse;
         static TimeSpan delay = TimeSpan.FromSeconds(2);

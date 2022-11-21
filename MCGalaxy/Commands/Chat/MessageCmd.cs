@@ -18,6 +18,7 @@
 namespace MCGalaxy.Commands.Chatting {  
     public abstract class MessageCmd : Command2 {
         public override string type { get { return CommandTypes.Chat; } }
+        public override bool UseableWhenFrozen { get { return true; } }
         
         protected bool TryMessageAction(Player p, string name, string msg, bool messageWho) {
             if (name.Length == 0) { Help(p); return false; }

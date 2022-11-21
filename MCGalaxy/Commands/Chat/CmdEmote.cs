@@ -21,6 +21,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string shortcut { get { return "<3"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
+        public override bool UseableWhenFrozen { get { return true; } }
 
         public override void Use(Player p, string message, CommandData data) {
             p.parseEmotes = !p.parseEmotes;

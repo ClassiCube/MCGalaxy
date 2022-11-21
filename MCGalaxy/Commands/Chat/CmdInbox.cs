@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Chatting {
         public override string name { get { return "Inbox"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
+        public override bool UseableWhenFrozen { get { return true; } }
         const int i_text = 0, i_sent = 1, i_from = 2;
         
         public override void Use(Player p, string message, CommandData data) {
