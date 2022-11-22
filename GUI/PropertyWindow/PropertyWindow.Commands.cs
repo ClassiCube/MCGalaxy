@@ -50,13 +50,15 @@ namespace MCGalaxy.Gui {
         void SaveCommands() {
             if (!CommandsChanged()) { LoadCommands(); return; }
             
-            foreach (CommandPerms changed in commandPermsChanged) {
-                CommandPerms.Set(changed.CmdName, changed.MinRank,
-                                 changed.Allowed, changed.Disallowed);
+            foreach (CommandPerms changed in commandPermsChanged) 
+            {
+                CommandPerms orig = CommandPerms.Find(changed.CmdName);
+                changed.CopyPermissionsTo(orig);
             }            
-            foreach (CommandExtraPerms changed in commandExtraPermsChanged) {
+            foreach (CommandExtraPerms changed in commandExtraPermsChanged) 
+            {
                 CommandExtraPerms orig = CommandExtraPerms.Find(changed.CmdName, changed.Num);
-                orig.MinRank = changed.MinRank;
+                changed.CopyPermissionsTo(orig);
             }
             
             CommandExtraPerms.Save();
@@ -77,11 +79,6 @@ namespace MCGalaxy.Gui {
             
             commandPermsOrig = CommandPerms.Find(cmdName);
             commandPermsCopy = commandPermsChanged.Find(p => p.CmdName.CaselessEq(cmdName));
-            
-            // fix for when command is added to server but doesn't have permissions defined
-            if (commandPermsOrig == null) {
-                commandPermsOrig = new CommandPerms(cmdName, cmd.defaultRank);
-            }
             
             commandItems.SupressEvents = true;
             CommandInitExtraPerms();

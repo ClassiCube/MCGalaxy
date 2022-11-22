@@ -194,7 +194,7 @@ namespace MCGalaxy.Modules.Relay.IRC
             }
             
             if (!foundAtAll) {
-                error = "You are not on the bot's list of users for some reason, please leave and rejoin.";
+                error = "You are not on the bot's list of known users for some reason, please leave and rejoin.";
             }
             return false;
         }

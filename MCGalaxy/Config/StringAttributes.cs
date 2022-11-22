@@ -72,7 +72,8 @@ namespace MCGalaxy.Config
         }
         
         string Constrain(string value) {
-            foreach (char c in value) {
+            foreach (char c in value) 
+            {
                 if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue;                
                 if (allowedChars.IndexOf(c) >= 0) continue;
                 

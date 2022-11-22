@@ -36,10 +36,9 @@ namespace MCGalaxy.Commands
             CmdName = cmd; Num = num; Desc = desc;
         }
         
-        
         public CommandExtraPerms Copy() {
             CommandExtraPerms copy = new CommandExtraPerms(CmdName, Num, Desc, 0);
-            CopyTo(copy); return copy;
+            CopyPermissionsTo(copy); return copy;
         }
         
         
@@ -60,30 +59,17 @@ namespace MCGalaxy.Commands
             return all;
         }
         
-
-        static CommandExtraPerms Add(string cmd, int num, LevelPermission min) {
-            CommandExtraPerms perms = new CommandExtraPerms(cmd, num, "", min);
-            list.Add(perms);
-            return perms;
-        }
-        
-        /// <summary> Sets the nth extra permission for the given command. </summary>
-        public static void Set(string cmd, int num, LevelPermission min,
-                               List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            CommandExtraPerms perms = Find(cmd, num);
-            if (perms == null) {
-                perms = Add(cmd, num, min);
-            } else {
-                perms.CmdName = cmd;
-            }
-            perms.Init(min, allowed, disallowed);
-        }
         
         /// <summary> Gets or adds the nth extra permission for the given command. </summary>
         public static CommandExtraPerms GetOrAdd(string cmd, int num, LevelPermission min) {
-            return Find(cmd, num) ?? Add(cmd, num, min);
+            CommandExtraPerms perms = Find(cmd, num);
+            if (perms != null) return perms;
+            
+            perms = new CommandExtraPerms(cmd, num, "", min);
+            list.Add(perms);
+            return perms;
         }
-        
+              
         public void MessageCannotUse(Player p) {
             p.Message("Only {0} {1}", Describe(), Desc);
         }
@@ -124,6 +110,7 @@ namespace MCGalaxy.Commands
         
         static void ProcessLines(StreamReader r) {
             string[] args = new string[5];
+            CommandExtraPerms perms;
             string line;
             
             while ((line = r.ReadLine()) != null) {
@@ -143,7 +130,8 @@ namespace MCGalaxy.Commands
                         Deserialise(args, 2, out min, out allowed, out disallowed);
                     }
                     
-                    Set(args[0], int.Parse(args[1]), min, allowed, disallowed);
+                    perms = GetOrAdd(args[0], int.Parse(args[1]), min);
+                    perms.Init(min, allowed, disallowed);
                 } catch (Exception ex) {
                     Logger.Log(LogType.Warning, "Hit an error on the extra command perms " + line);
                     Logger.LogError(ex);
@@ -152,7 +140,8 @@ namespace MCGalaxy.Commands
         }
         
         static bool IsDescription(string arg) {
-            foreach (char c in arg) {
+            foreach (char c in arg) 
+            {
                 if (c >= 'a' && c <= 'z') return true;
             }
             return false;

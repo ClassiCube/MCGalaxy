@@ -37,23 +37,12 @@ namespace MCGalaxy.Blocks
         
         public BlockPerms Copy() {
             BlockPerms copy = new BlockPerms(ID, 0);
-            CopyTo(copy); return copy;
+            CopyPermissionsTo(copy); return copy;
         }        
        
 
         /// <summary> Find the permissions for the given block. </summary>
         public static BlockPerms Find(BlockID b) { return List[b]; }
-        
-        /// <summary> Sets the permissions for the given block. </summary>
-        public static void Set(BlockID b, LevelPermission min,
-                               List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            BlockPerms perms = List[b];
-            if (perms == null) {
-                perms   = new BlockPerms(b, min);
-                List[b] = perms;
-            }
-            perms.Init(min, allowed, disallowed);
-        }
 
         
         public static void ResendAllBlockPermissions() {
@@ -148,6 +137,17 @@ namespace MCGalaxy.Blocks
                 }
             }
         }
+        
+        static void Set(BlockID b, LevelPermission min,
+                        List<LevelPermission> allowed, List<LevelPermission> disallowed) {
+            BlockPerms perms = List[b];
+            if (perms == null) {
+                perms   = new BlockPerms(b, min);
+                List[b] = perms;
+            }
+            perms.Init(min, allowed, disallowed);
+        }
+        
         
         static void SetDefaultPerms() {
             for (BlockID block = 0; block < Block.SUPPORTED_COUNT; block++) {

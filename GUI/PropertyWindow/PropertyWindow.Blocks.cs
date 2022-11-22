@@ -65,9 +65,10 @@ namespace MCGalaxy.Gui {
                 Block.Props[b] = blockPropsChanged[b];
             }
             
-            foreach (BlockPerms changed in blockPermsChanged) {
-                BlockPerms.Set(changed.ID, changed.MinRank, 
-            	               changed.Allowed, changed.Disallowed);
+            foreach (BlockPerms changed in blockPermsChanged) 
+            {
+                BlockPerms orig = BlockPerms.Find(changed.ID);
+                changed.CopyPermissionsTo(orig);
             }
             BlockPerms.ResendAllBlockPermissions();
             

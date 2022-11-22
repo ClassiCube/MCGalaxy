@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands
         
         public CommandPerms Copy() {
             CommandPerms copy = new CommandPerms(CmdName, 0);
-            CopyTo(copy); return copy;
+            CopyPermissionsTo(copy); return copy;
         }
         
         
@@ -57,30 +57,16 @@ namespace MCGalaxy.Commands
             return perms == null ? cmd.defaultRank : perms.MinRank;
         }
 
-
-        static CommandPerms Add(string cmd, LevelPermission min) {
-            CommandPerms perms = new CommandPerms(cmd, min);
-            List.Add(perms);
-            return perms;
-        }
-        
-        /// <summary> Sets the permissions for the given command. </summary>
-        public static void Set(string cmd, LevelPermission min, 
-                               List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            CommandPerms perms = Find(cmd);
-            if (perms == null) {
-                perms = Add(cmd, min);
-            } else {
-                perms.CmdName = cmd;
-            }
-            perms.Init(min, allowed, disallowed);
-        }
         
         /// <summary> Gets or adds permissions for the given command. </summary>
         public static CommandPerms GetOrAdd(string cmd, LevelPermission min) {
-            return Find(cmd) ?? Add(cmd, min);
-        }
-        
+            CommandPerms perms = Find(cmd);
+            if (perms != null) return perms;
+            
+            perms = new CommandPerms(cmd, min);
+            List.Add(perms);
+            return perms;
+        }       
         
         public void MessageCannotUse(Player p) {
             p.Message("Only {0} can use &T/{1}", Describe(), CmdName);
@@ -146,6 +132,7 @@ namespace MCGalaxy.Commands
         
         static void ProcessLines(StreamReader r) {
             string[] args = new string[4];
+            CommandPerms perms;
             string line;
             
             while ((line = r.ReadLine()) != null) {
@@ -158,7 +145,8 @@ namespace MCGalaxy.Commands
                     List<LevelPermission> allowed, disallowed;
                     
                     Deserialise(args, 1, out min, out allowed, out disallowed);
-                    Set(args[0], min, allowed, disallowed);
+                    perms = GetOrAdd(args[0], min);
+                    perms.Init(min, allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the command " + line); continue;
                 }

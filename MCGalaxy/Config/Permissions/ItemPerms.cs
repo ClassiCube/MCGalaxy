@@ -36,10 +36,10 @@ namespace MCGalaxy
             MinRank = min; Allowed = allowed; Disallowed = disallowed;
         }
         
-        protected void CopyTo(ItemPerms perms) {
-            perms.MinRank    = MinRank;
-            perms.Allowed    = Allowed    == null ? null : new List<LevelPermission>(Allowed);
-            perms.Disallowed = Disallowed == null ? null : new List<LevelPermission>(Disallowed);
+        public void CopyPermissionsTo(ItemPerms dst) {
+            dst.MinRank    = MinRank;
+            dst.Allowed    = Allowed    == null ? null : new List<LevelPermission>(Allowed);
+            dst.Disallowed = Disallowed == null ? null : new List<LevelPermission>(Disallowed);
         }
         
         public bool UsableBy(LevelPermission perm) {
