@@ -128,7 +128,7 @@ namespace MCGalaxy.Commands.Info {
             if (block == Block.Invalid) return false;
             
             p.Message("Block \"{0}\" appears as &b{1}",
-                           message, Block.GetName(p, Block.Convert(block)));
+                      message, Block.GetName(p, Block.Convert(block)));
             BlockPerms.Find(block).MessageCannotUse(p, "use");
             
             DescribePhysics(p, message, block);

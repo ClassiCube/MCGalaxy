@@ -28,6 +28,7 @@ namespace MCGalaxy.Commands.CPE {
         public static void Execute(Player p, string message, CommandData data, bool global, string cmd) {
             string[] parts = message.SplitSpaces(4);
             Level lvl = p.IsSuper ? null : p.level;
+            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
             
             for (int i = 0; i < Math.Min(parts.Length, 3); i++)
                 parts[i] = parts[i].ToLower();
@@ -44,28 +45,28 @@ namespace MCGalaxy.Commands.CPE {
             switch (parts[0]) {
                 case "add":
                 case "create":
-                    AddHandler(p, lvl, parts, global, cmd); break;
+                    AddHandler(p, lvl, parts, defs, global, cmd); break;
                 case "copyall":
                 case "copyfrom":
                     CopyAllHandler(p, lvl, parts, data, global, cmd); break;
                 case "copy":
                 case "clone":
                 case "duplicate":
-                    CopyHandler(p, lvl, parts, data, global, cmd); break;
+                    CopyHandler(p, lvl, parts, data, defs, global, cmd); break;
                 case "delete":
                 case "remove":
-                    RemoveHandler(p, lvl, parts, global, cmd); break;
+                    RemoveHandler(p, lvl, parts, defs, global, cmd); break;
                 case "info":
                 case "about":
-                    InfoHandler(p, lvl, parts, global, cmd); break;
+                    InfoHandler(p, lvl, parts, defs, global, cmd); break;
                 case "list":
                 case "ids":
-                    ListHandler(p, lvl, parts, global, cmd); break;
+                    ListHandler(p, lvl, parts, defs, global, cmd); break;
                 case "abort":
                     p.Message("Aborted the custom block creation process.");
                     SetBD(p, global, null); break;
                 case "edit":
-                    EditHandler(p, lvl, parts, global, cmd); break;
+                    EditHandler(p, lvl, parts, defs, global, cmd); break;
                 default:
                     if (GetBD(p, global) != null)
                         DefineBlockStep(p, lvl, message, global, cmd);
@@ -76,12 +77,11 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void AddHandler(Player p, Level lvl, string[] parts, 
-                               bool global, string cmd) {
+		                       BlockDefinition[] defs, bool global, string cmd) {
             BlockID target;
-            if (parts.Length >= 2 ) {
-                string id = parts[1];
-                if (!CheckBlock(p, id, out target)) return;
-                BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
+            if (parts.Length >= 2) {
+                string id = parts[1];                
+                if (!CheckBlock(p, id, defs, out target)) return;
                 BlockDefinition old = defs[target];
                 
                 if (ExistsInScope(old, target, global)) {
@@ -144,7 +144,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void CopyAllHandler(Player p, Level lvl, string[] parts, CommandData data, 
-                                   bool global, string cmd) {
+		                           bool global, string cmd) {
             if (parts.Length < 2) { Help(p, cmd); return; }
             string coloredMap = null;
             int copied = 0;
@@ -169,15 +169,15 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void CopyHandler(Player p, Level lvl, string[] parts, CommandData data, 
-                                bool global, string cmd) {
+                                BlockDefinition[] defs, bool global, string cmd) {
             if (parts.Length < 2) { Help(p, cmd); return; }
-            int min, max;           
-            if (!CheckRawBlocks(p, parts[1], out min, out max, true)) return;
             
             BlockID dst;
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;          
+            int min, max;           
+            if (!CheckRawBlocks(p, parts[1], defs, out min, out max, true)) return;
+            
             if (parts.Length > 2) {
-                if (!CheckBlock(p, parts[2], out dst)) return;
+                if (!CheckBlock(p, parts[2], defs, out dst)) return;
                 
                 if (parts.Length > 3) {
                     string coloredMap = null;
@@ -203,8 +203,7 @@ namespace MCGalaxy.Commands.CPE {
         }        
         
         static void DoInfo(Player p, Level lvl, BlockID block, 
-                           bool global, string cmd) {
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
+		                   BlockDefinition[] defs, bool global, string cmd) {
             BlockDefinition def = defs[block];
             if (def == null) { MessageNoBlock(p, block, global, cmd); return; }
             
@@ -246,23 +245,24 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void InfoHandler(Player p, Level lvl, string[] parts, 
-                                bool global, string cmd) {
+                                BlockDefinition[] defs, bool global, string cmd) {
             if (parts.Length == 1) { Help(p, cmd); return; }
             int min, max;
-            if (!CheckRawBlocks(p, parts[1], out min, out max)) return;
+            if (!CheckRawBlocks(p, parts[1], defs, out min, out max)) return;
             
-            for (int i = min; i <= max; i++) {
-                DoInfo(p, lvl, Block.FromRaw((BlockID)i), global, cmd);
+            for (int i = min; i <= max; i++) 
+            {
+                DoInfo(p, lvl, Block.FromRaw((BlockID)i), defs, global, cmd);
             }
         }
         
         static void ListHandler(Player p, Level lvl, string[] parts, 
-                                bool global, string cmd) {
+		                        BlockDefinition[] defs, bool global, string cmd) {
             string modifier = parts.Length > 1 ? parts[1] : "";
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
             List<BlockDefinition> defsInScope = new List<BlockDefinition>();
             
-            for (int i = 0; i < defs.Length; i++) {
+            for (int i = 0; i < defs.Length; i++) 
+            {
                 BlockDefinition def = defs[i];
                 if (def == null) continue;
                 BlockID block = def.GetBlock();
@@ -279,8 +279,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static bool DoRemove(Player p, Level lvl, BlockID block, 
-                             bool global, string cmd) {
-            BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
+                             BlockDefinition[] defs, bool global, string cmd) {
             BlockDefinition def = defs[block];
             if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return false; }
             
@@ -297,14 +296,15 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void RemoveHandler(Player p, Level lvl, string[] parts, 
-                                  bool global, string cmd) {
+                                  BlockDefinition[] defs, bool global, string cmd) {
             if (parts.Length <= 1) { Help(p, cmd); return; }
+            
             int min, max;
-            if (!CheckRawBlocks(p, parts[1], out min, out max)) return;
+            if (!CheckRawBlocks(p, parts[1], defs, out min, out max)) return;
             bool changed = false;
             
             for (int i = min; i <= max; i++) {
-                changed |= DoRemove(p, lvl, Block.FromRaw((BlockID)i), global, cmd);
+                changed |= DoRemove(p, lvl, Block.FromRaw((BlockID)i), defs, global, cmd);
             }
             if (changed) BlockDefinition.Save(global, lvl);
         }
@@ -540,7 +540,7 @@ namespace MCGalaxy.Commands.CPE {
         }
         
         static void EditHandler(Player p, Level lvl, string[] parts, 
-                                bool global, string cmd) {
+		                        BlockDefinition[] defs, bool global, string cmd) {
             if (parts.Length <= 3) {
                 if (parts.Length == 1) {
                     p.Message("Valid properties: " + helpSections.Keys.Join());
@@ -553,7 +553,7 @@ namespace MCGalaxy.Commands.CPE {
             }
             
             int min, max;
-            if (!CheckRawBlocks(p, parts[1], out min, out max)) return;
+            if (!CheckRawBlocks(p, parts[1], defs, out min, out max)) return;
             bool changed = false;
             
             for (int i = min; i <= max; i++) {
@@ -674,29 +674,46 @@ namespace MCGalaxy.Commands.CPE {
             return true;
         }
         
-        static bool CheckRaw(Player p, string arg, out int raw, bool air = false) {
+		static bool CheckRaw(Player p, string arg, BlockDefinition[] defs,
+		                     out int raw, bool air = false) {
             raw = -1;
             int min = (air ? 0 : 1);
             int max = Block.MaxRaw;
+            
+            // Check for block names (can't use standard parsing behaviour)
+            if (!int.TryParse(arg, out raw)) {
+            	BlockDefinition def = BlockDefinition.ParseName(arg, defs);
+            	
+            	if (def == null) {
+            		p.Message("&W{0} is not a valid block {1} custom block name", 
+            		          arg, defs == BlockDefinition.GlobalDefs ? "global" : "level");
+            		return false;
+            	}
+            	raw = def.RawID;
+            	return true;
+            }
+            
             return CommandParser.GetInt(p, arg, "Block ID", ref raw, min, max);
         }
         
-        static bool CheckRawBlocks(Player p, string arg, out int min, out int max, bool air = false) {
+		static bool CheckRawBlocks(Player p, string arg, BlockDefinition[] defs,
+		                           out int min, out int max, bool air = false) {
             bool success;
             // Either "[id]" or "[min]-[max]"
             if (arg.IndexOf('-') == -1) {
-                success = CheckRaw(p, arg, out min, air);
+                success = CheckRaw(p, arg, defs, out min, air);
                 max     = min;
             } else {
                 string[] bits = arg.Split(new char[] { '-' }, 2);
-                success = CheckRaw(p, bits[0], out min, air) & CheckRaw(p, bits[1], out max, air);
+                success = CheckRaw(p, bits[0], defs, out min, air) & CheckRaw(p, bits[1], defs, out max, air);
             }
             return success;
         }
         
-        static bool CheckBlock(Player p, string arg, out BlockID block, bool air = false) {
+		static bool CheckBlock(Player p, string arg, BlockDefinition[] defs,
+		                       out BlockID block, bool air = false) {
             int raw = 0;
-            bool success = CheckRaw(p, arg, out raw, air);
+            bool success = CheckRaw(p, arg, defs, out raw, air);
             
             block = Block.FromRaw((BlockID)raw);
             return success;

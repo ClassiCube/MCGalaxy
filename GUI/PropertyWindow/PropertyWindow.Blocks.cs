@@ -59,16 +59,16 @@ namespace MCGalaxy.Gui {
         }
 
         void SaveBlocks() {
-        	if (blockPermsChanged.Count > 0)
-        		SaveBlockPermissions();        	
+            if (blockPermsChanged.Count > 0)
+                SaveBlockPermissions();            
             if (AnyBlockPropsChanged())
-            	SaveBlockProps();
+                SaveBlockProps();
             
             LoadBlocks();
         }
         
         void SaveBlockPermissions() {
-        	foreach (BlockPerms changed in blockPermsChanged) 
+            foreach (BlockPerms changed in blockPermsChanged) 
             {
                 BlockPerms orig = BlockPerms.Find(changed.ID);
                 changed.CopyPermissionsTo(orig);
@@ -88,8 +88,8 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveBlockProps() {
-        	for (int b = 0; b < blockPropsChanged.Length; b++) 
-        	{
+            for (int b = 0; b < blockPropsChanged.Length; b++) 
+            {
                 if (blockPropsChanged[b].ChangedScope == 0) continue;
                 Block.Props[b] = blockPropsChanged[b];
             }

@@ -24,7 +24,7 @@ namespace MCGalaxy
 {
     public static partial class Block 
     {
-        internal static string[] coreNames = new string[Block.CORE_COUNT];
+        static string[] coreNames = new string[Block.CORE_COUNT];
         public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
         
         public static bool ExistsGlobal(BlockID b) { return ExistsFor(Player.Console, b); }
@@ -49,9 +49,9 @@ namespace MCGalaxy
             }
             if (def != null) return def.Name.Replace(" ", "");
             
-            return block < Block.Extended ? coreNames[block] : ToRaw(block).ToString();
+            return block < CPE_COUNT ? coreNames[block] : ToRaw(block).ToString();
         }
-        
+
         public static BlockID Parse(Player p, string input) {
             BlockDefinition[] defs = p.IsSuper ? BlockDefinition.GlobalDefs : p.level.CustomBlockDefs;
             BlockID block;
@@ -62,21 +62,12 @@ namespace MCGalaxy
                 }
             }
             
-            block = GetBlockByName(input, defs);
-            if (block != Block.Invalid) return block;
+            BlockDefinition def = BlockDefinition.ParseName(input, defs);
+            if (def != null) return def.GetBlock();
             
             byte coreID;
             bool success = Aliases.TryGetValue(input.ToLower(), out coreID);
             return success ? coreID : Invalid;
-        }
-        
-        static BlockID GetBlockByName(string msg, BlockDefinition[] defs) {
-            for (int i = 1; i < defs.Length; i++) {
-                BlockDefinition def = defs[i];
-                if (def == null) continue;
-                if (def.Name.Replace(" ", "").CaselessEq(msg)) return def.GetBlock();
-            }
-            return Block.Invalid;
         }
         
         public static string GetColoredName(Player p, BlockID block) {
@@ -154,6 +145,10 @@ namespace MCGalaxy
                Sand,    Sand,     Leaves, Stone,      Cobblestone, Stone, Wood, Stone
         };
         
+        
+        /// <summary> Converts physics block IDs to their visual block IDs </summary>
+        /// <remarks> If block ID is not converted, returns input block ID </remarks>
+        /// <example> Op_Glass becomes Glass, Door_Log becomes Log </example>
         public static BlockID Convert(BlockID block) {
             switch (block) {
                 case FlagBase: return Mushroom;
