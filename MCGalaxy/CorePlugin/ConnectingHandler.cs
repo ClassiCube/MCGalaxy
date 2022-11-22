@@ -89,8 +89,10 @@ namespace MCGalaxy.Core {
         }
         
         static bool CheckBanned(Player p) {
-            if (Server.bannedIP.Contains(p.ip)) {
-                p.Kick(null, Server.Config.DefaultBanMessage, true);
+            string ipban = Server.bannedIP.Get(p.ip);
+            if (ipban != null) {
+                ipban = ipban.Length > 0 ? ipban : Server.Config.DefaultBanMessage;
+                p.Kick(null, ipban, true);
                 return false;
             }
             if (p.Rank != LevelPermission.Banned) return true;

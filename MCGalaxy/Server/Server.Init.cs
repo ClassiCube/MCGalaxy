@@ -67,7 +67,6 @@ namespace MCGalaxy {
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             Player.Console.DatabaseID = NameConverter.InvalidNameID("(console)");
             
-            bannedIP = PlayerList.Load("ranks/banned-ip.txt");
             hidden   = PlayerList.Load("ranks/hidden.txt");
             vip      = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
@@ -79,8 +78,9 @@ namespace MCGalaxy {
             rotations   = PlayerExtList.Load("extra/rotations.txt");
             modelScales = PlayerExtList.Load("extra/modelscales.txt");
 
-            muted  = PlayerExtList.Load("ranks/muted.txt");
-            frozen = PlayerExtList.Load("ranks/frozen.txt");
+            bannedIP  = PlayerExtList.Load("ranks/banned-ip.txt");
+            muted     = PlayerExtList.Load("ranks/muted.txt");
+            frozen    = PlayerExtList.Load("ranks/frozen.txt");
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans  = PlayerExtList.Load(Paths.TempBansFile);
             whiteList = PlayerList.Load("ranks/whitelist.txt");
