@@ -22,9 +22,9 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using MCGalaxy.Authentication;
+using MCGalaxy.Blocks;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
@@ -183,6 +183,7 @@ namespace MCGalaxy
             CommandPerms.Load();
             Command.InitAll();
             Block.SetBlocks();
+            BlockPerms.Load();
             AwardsList.Load();
             PlayerAwards.Load();
             Economy.Load();

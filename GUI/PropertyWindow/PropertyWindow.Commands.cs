@@ -48,28 +48,35 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveCommands() {
-            if (!CommandsChanged()) { LoadCommands(); return; }
+        	if (commandPermsChanged.Count > 0)
+        		SaveCommandPermissions();
+        	if (commandExtraPermsChanged.Count > 0) 
+        		SaveExtraCommandPermissions();
             
-            foreach (CommandPerms changed in commandPermsChanged) 
+            LoadCommands();
+        }
+        
+        void SaveCommandPermissions() {
+        	foreach (CommandPerms changed in commandPermsChanged) 
             {
                 CommandPerms orig = CommandPerms.Find(changed.CmdName);
                 changed.CopyPermissionsTo(orig);
             }            
-            foreach (CommandExtraPerms changed in commandExtraPermsChanged) 
+            
+            CommandPerms.Save();
+            CommandPerms.ApplyChanges();
+        }
+        
+        void SaveExtraCommandPermissions() {
+        	foreach (CommandExtraPerms changed in commandExtraPermsChanged) 
             {
                 CommandExtraPerms orig = CommandExtraPerms.Find(changed.CmdName, changed.Num);
                 changed.CopyPermissionsTo(orig);
             }
             
             CommandExtraPerms.Save();
-            CommandPerms.Save();
-            CommandPerms.Load();
-            LoadCommands();
         }
         
-        bool CommandsChanged() {
-            return commandExtraPermsChanged.Count > 0 || commandPermsChanged.Count > 0;
-        }        
         
         void cmd_list_SelectedIndexChanged(object sender, EventArgs e) {
             string cmdName = cmd_list.SelectedItem.ToString();        

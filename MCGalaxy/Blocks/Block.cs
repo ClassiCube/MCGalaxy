@@ -21,9 +21,10 @@ using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public static partial class Block {
-
+namespace MCGalaxy 
+{
+    public static partial class Block 
+    {
         public static bool Walkthrough(BlockID block) {
             return block == Air || block == Sapling || block == Block.Snow
                 || block == Fire || block == Rope
@@ -159,7 +160,8 @@ namespace MCGalaxy {
         
         public static void SetBlocks() {
             BlockProps[] props = Props;
-            for (int b = 0; b < props.Length; b++) {
+            for (int b = 0; b < props.Length; b++) 
+            {
                 props[b] = MakeDefaultProps((BlockID)b);
             }
             
@@ -174,13 +176,13 @@ namespace MCGalaxy {
                 BlockProps.Load("default", Props, 1, false);
             }
             
-            BlockPerms.Load();
             UpdateLoadedLevels();
         }
         
         public static void UpdateLoadedLevels() {
             Level[] loaded = LevelInfo.Loaded.Items;
-            foreach (Level lvl in loaded) {
+            foreach (Level lvl in loaded) 
+            {
                 lvl.UpdateBlockProps();
                 lvl.UpdateAllBlockHandlers();
             }

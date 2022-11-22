@@ -113,7 +113,6 @@ namespace MCGalaxy.Gui
             catch { Logger.Log(LogType.Warning, "Error saving Zombie Survival settings!"); }
 
             SrvProperties.Load(); // loads when saving?
-            CommandPerms.Load();
         }
 
         void btnDiscard_Click(object sender, EventArgs e) { Dispose(); }

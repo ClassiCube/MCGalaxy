@@ -39,7 +39,8 @@ namespace MCGalaxy.Gui {
             blockPermsChanged.Clear();
             blockIDMap = new List<BlockID>();
             
-            for (int b = 0; b < blockPropsChanged.Length; b++) {
+            for (int b = 0; b < blockPropsChanged.Length; b++) 
+            {
                 blockPropsChanged[b] = Block.Props[b];
                 blockPropsChanged[b].ChangedScope = 0;
                 
@@ -58,31 +59,43 @@ namespace MCGalaxy.Gui {
         }
 
         void SaveBlocks() {
-            if (!BlocksChanged()) { LoadBlocks(); return; }
+        	if (blockPermsChanged.Count > 0)
+        		SaveBlockPermissions();        	
+            if (AnyBlockPropsChanged())
+            	SaveBlockProps();
             
-            for (int b = 0; b < blockPropsChanged.Length; b++) {
-                if (blockPropsChanged[b].ChangedScope == 0) continue;
-                Block.Props[b] = blockPropsChanged[b];
-            }
-            
-            foreach (BlockPerms changed in blockPermsChanged) 
+            LoadBlocks();
+        }
+        
+        void SaveBlockPermissions() {
+        	foreach (BlockPerms changed in blockPermsChanged) 
             {
                 BlockPerms orig = BlockPerms.Find(changed.ID);
                 changed.CopyPermissionsTo(orig);
             }
-            BlockPerms.ResendAllBlockPermissions();
             
-            BlockProps.Save("default", Block.Props, 1);
             BlockPerms.Save();
-            Block.SetBlocks();
-            LoadBlocks();
+            BlockPerms.ApplyChanges();
+            BlockPerms.ResendAllBlockPermissions();
         }
         
-        bool BlocksChanged() {
-            for (int b = 0; b < blockPropsChanged.Length; b++) {
+        bool AnyBlockPropsChanged() {
+            for (int b = 0; b < blockPropsChanged.Length; b++) 
+            {
                 if (blockPropsChanged[b].ChangedScope != 0) return true;
             }
-            return blockPermsChanged.Count > 0;
+            return false;
+        }
+        
+        void SaveBlockProps() {
+        	for (int b = 0; b < blockPropsChanged.Length; b++) 
+        	{
+                if (blockPropsChanged[b].ChangedScope == 0) continue;
+                Block.Props[b] = blockPropsChanged[b];
+            }
+            
+            BlockProps.Save("default", Block.Props, 1); 
+            Block.SetBlocks();
         }
         
         
