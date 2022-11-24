@@ -99,13 +99,6 @@ namespace MCGalaxy {
                 return idx == -1 ? "" : line.Substring(idx + 1);
             }
         }
-
-        
-        [Obsolete("Use Update instead")]
-        public void Add(string name, string data) { Update(name, data); }
-
-        [Obsolete("Use Update instead")]        
-        public void AddOrReplace(string name, string data) { Update(name, data); }
         
         
         public void Save() { Save(true); }

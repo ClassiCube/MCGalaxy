@@ -55,7 +55,7 @@ namespace MCGalaxy {
         public static Level FindLevels(Player p, string name) {
             int matches;
             return Find(p, name, out matches, LevelInfo.Loaded.Items,
-                        null, l => l.name, "loaded levels");
+                        null, l => l.name, l => l.ColoredName, "loaded levels");
         }
 
         /// <summary> Find partial matches of 'name' against the list of all map files. </summary>
@@ -71,7 +71,7 @@ namespace MCGalaxy {
             Group.MapName(ref name);
             int matches;
             return Find(p, name, out matches, Group.GroupList,
-                        null, g => Colors.Strip(g.Name), "ranks");
+                        null, g => Colors.Strip(g.Name), g => g.ColoredName, "ranks");
         }
         
         /// <summary> Find partial matches of 'name' against a list of warps. </summary>
@@ -94,8 +94,17 @@ namespace MCGalaxy {
         /// <returns> If exactly one match, the matching item. </returns>
         public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
                                 Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
+            return Find<T>(p, name, out matches, items, filter, nameGetter, nameGetter, group, limit);
+        }
+        
+        
+        /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
+        /// <returns> If exactly one match, the matching item. </returns>
+        public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
+                                Predicate<T> filter, StringFormatter<T> nameGetter, 
+                                StringFormatter<T> itemFormatter, string group, int limit = 5)  {
             T match = default(T); matches = 0;
-            StringBuilder nameMatches = new StringBuilder();
+            StringBuilder output = new StringBuilder();
             const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
             foreach (T item in items)
@@ -107,9 +116,9 @@ namespace MCGalaxy {
                 
                 match = item; matches++;
                 if (matches <= limit) {
-                    nameMatches.Append(itemName).Append(", ");
+                    output.Append(itemFormatter(item)).Append("&S, ");
                 } else if (matches == limit + 1) {
-                    nameMatches.Append("(and more)").Append(", ");
+                    output.Append("(and more), ");
                 }
             }
             
@@ -119,7 +128,7 @@ namespace MCGalaxy {
             }
             
             string count = matches > limit ? limit + "+ " : matches + " ";
-            string names = nameMatches.ToString(0, nameMatches.Length - 2);
+            string names = output.ToString(0, output.Length - 2);
             
             p.Message("{0}{1} match \"{2}\":", count, group, name);
             p.Message(names);

@@ -69,7 +69,7 @@ namespace MCGalaxy
             if (exact != null && pl.CanSee(exact)) { matches = 1; return exact; }
             
             return Matcher.Find(pl, name, out matches, Online.Items,
-                                p => pl.CanSee(p), p => p.name, "online players");
+                                p => pl.CanSee(p), p => p.name, p => p.color + p.name, "online players");
         }
         
         public static string FindMatchesPreferOnline(Player p, string name) {
