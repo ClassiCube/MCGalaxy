@@ -1,0 +1,222 @@
+[1mdiff --git a/MCGalaxy/Bots/PlayerBot.cs b/MCGalaxy/Bots/PlayerBot.cs[m
+[1mindex 907acff3..9b6bfafe 100644[m
+[1m--- a/MCGalaxy/Bots/PlayerBot.cs[m
+[1m+++ b/MCGalaxy/Bots/PlayerBot.cs[m
+[36m@@ -73,8 +73,7 @@[m [mnamespace MCGalaxy {[m
+         public static bool CanEditAny(Player p) {[m
+             if (LevelInfo.IsRealmOwner(p.level, p.name)) { return true; }[m
+             ItemPerms perms = CommandExtraPerms.Find("Bot", 1) ?? new ItemPerms(LevelPermission.Operator);[m
+[31m-            if (perms.UsableBy(p.Rank)) { return true; }[m
+[31m-            return false;[m
+[32m+[m[32m            return perms.UsableBy(p);[m
+         }[m
+         [m
+         public static void Add(PlayerBot bot, bool save = true) {[m
+[36m@@ -310,7 +309,7 @@[m [mnamespace MCGalaxy {[m
+             [m
+             if (String.IsNullOrEmpty(ClickedOnText)) return;[m
+             ItemPerms perms = CommandExtraPerms.Find("About", 1) ?? new ItemPerms(LevelPermission.AdvBuilder);[m
+[31m-            if (!perms.UsableBy(p.Rank)) return; //don't show bot's ClickedOnText if player isn't allowed to see message block contents[m
+[32m+[m[32m            if (!perms.UsableBy(p)) return; //don't show bot's ClickedOnText if player isn't allowed to see message block contents[m
+             p.Message("  Clicked-on text: {0}", ClickedOnText);[m
+         }[m
+         [m
+[1mdiff --git a/MCGalaxy/Bots/ScriptFile.cs b/MCGalaxy/Bots/ScriptFile.cs[m
+[1mindex 36f8a2c4..b291bd2e 100644[m
+[1m--- a/MCGalaxy/Bots/ScriptFile.cs[m
+[1m+++ b/MCGalaxy/Bots/ScriptFile.cs[m
+[36m@@ -66,7 +66,7 @@[m [mnamespace MCGalaxy.Bots {[m
+                 }[m
+                 [m
+                 CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);[m
+[31m-                if (ins.Name.CaselessEq("kill") && !killPerms.UsableBy(p.Rank)) {[m
+[32m+[m[32m                if (ins.Name.CaselessEq("kill") && !killPerms.UsableBy(p)) {[m
+                     killPerms.MessageCannotUse(p); [m
+                     return null;[m
+                 }[m
+[1mdiff --git a/MCGalaxy/Chat/Chat.cs b/MCGalaxy/Chat/Chat.cs[m
+[1mindex 85a0cf27..351baf55 100644[m
+[1m--- a/MCGalaxy/Chat/Chat.cs[m
+[1m+++ b/MCGalaxy/Chat/Chat.cs[m
+[36m@@ -90,7 +90,7 @@[m [mnamespace MCGalaxy {[m
+         [m
+         static bool DeprecatedFilter(Player pl, object arg)   { return false; }    [m
+         public static bool FilterRank(Player pl, object arg)  { return pl.Rank == (LevelPermission)arg; }[m
+[31m-        public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl.Rank); }[m
+[32m+[m[32m        public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl); }[m[41m[m
+         public static bool FilterPM(Player pl, object arg)    { return pl == arg; }[m
+         [m
+         public static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {[m
+[1mdiff --git a/MCGalaxy/Commands/Moderation/CmdPatrol.cs b/MCGalaxy/Commands/Moderation/CmdPatrol.cs[m
+[1mindex ce15cc2a..813be3ac 100644[m
+[1m--- a/MCGalaxy/Commands/Moderation/CmdPatrol.cs[m
+[1m+++ b/MCGalaxy/Commands/Moderation/CmdPatrol.cs[m
+[36m@@ -51,8 +51,9 @@[m [mnamespace MCGalaxy.Commands.Moderation {[m
+             Player[] players = PlayerInfo.Online.Items;[m
+             DateTime cutoff  = DateTime.UtcNow.AddSeconds(-15);[m
+             [m
+[31m-            foreach (Player target in players) {[m
+[31m-                if (except.UsableBy(target.Rank) || !p.CanSee(target, data.Rank)) continue;[m
+[32m+[m[32m            foreach (Player target in players)[m[41m [m
+[32m+[m[32m            {[m[41m[m
+[32m+[m[32m                if (except.UsableBy(target) || !p.CanSee(target, data.Rank)) continue;[m[41m[m
+                 if (target == p || target.LastPatrol > cutoff) continue;[m
+                 candidates.Add(target);[m
+             }[m
+[1mdiff --git a/MCGalaxy/Commands/Moderation/CmdReview.cs b/MCGalaxy/Commands/Moderation/CmdReview.cs[m
+[1mindex 52f0c007..1b3e0fad 100644[m
+[1m--- a/MCGalaxy/Commands/Moderation/CmdReview.cs[m
+[1m+++ b/MCGalaxy/Commands/Moderation/CmdReview.cs[m
+[36m@@ -70,7 +70,7 @@[m [mnamespace MCGalaxy.Commands.Moderation {[m
+             [m
+             foreach (Player pl in PlayerInfo.GetOnlineCanSee(p, data.Rank)) [m
+             {[m
+[31m-                if (nextPerms.UsableBy(pl.Rank)) {[m
+[32m+[m[32m                if (nextPerms.UsableBy(pl)) {[m[41m[m
+                     anyStaff = true; break;[m
+                 }[m
+             }[m
+[1mdiff --git a/MCGalaxy/Commands/building/CmdBrush.cs b/MCGalaxy/Commands/building/CmdBrush.cs[m
+[1mindex ebe5ad38..35c3d57c 100644[m
+[1m--- a/MCGalaxy/Commands/building/CmdBrush.cs[m
+[1m+++ b/MCGalaxy/Commands/building/CmdBrush.cs[m
+[36m@@ -38,10 +38,10 @@[m [mnamespace MCGalaxy.Commands.Building {[m
+             BrushFactory brush = BrushFactory.Find(args[0]);[m
+             [m
+             if (IsListCommand(args[0])) {[m
+[31m-                List(p);[m
+[32m+[m[32m                BrushFactory.OutputList(p);[m
+             } else if (brush == null) {[m
+                 p.Message("No brush found with name \"{0}\".", args[0]);[m
+[31m-                List(p);[m
+[32m+[m[32m                BrushFactory.OutputList(p);[m
+             } else {[m
+                 p.Message("Set your brush to: " + brush.Name);[m
+                 p.BrushName = brush.Name;[m
+[36m@@ -49,16 +49,12 @@[m [mnamespace MCGalaxy.Commands.Building {[m
+             }[m
+         }[m
+         [m
+[31m-        internal static void List(Player p) {[m
+[31m-            p.Message("&HAvailable brushes: &f" + BrushFactory.Brushes.Join(b => b.Name));[m
+[31m-        }[m
+[31m-        [m
+         public override void Help(Player p) {[m
+             p.Message("&T/Brush [name] <default brush args>");[m
+             p.Message("&HSets your current brush to the brush with that name.");[m
+             p.Message("&T/Help Brush [name]");[m
+             p.Message("&HOutputs the help for the brush with that name.");[m
+[31m-            List(p);[m
+[32m+[m[32m            BrushFactory.OutputList(p);[m
+             p.Message("&H- If \"skip\" is used for a block name, " +[m
+                       "existing blocks in the map will not be replaced by this block.");[m
+         }[m
+[36m@@ -67,7 +63,7 @@[m [mnamespace MCGalaxy.Commands.Building {[m
+             BrushFactory brush = BrushFactory.Find(message);[m
+             if (brush == null) {[m
+                 p.Message("No brush found with name \"{0}\".", message);[m
+[31m-                List(p);[m
+[32m+[m[32m                BrushFactory.OutputList(p);[m
+             } else {[m
+                 p.MessageLines(brush.Help);[m
+             }[m
+[1mdiff --git a/MCGalaxy/Config/Permissions/ItemPerms.cs b/MCGalaxy/Config/Permissions/ItemPerms.cs[m
+[1mindex 297324ef..a1f0e18a 100644[m
+[1m--- a/MCGalaxy/Config/Permissions/ItemPerms.cs[m
+[1m+++ b/MCGalaxy/Config/Permissions/ItemPerms.cs[m
+[36m@@ -47,6 +47,10 @@[m [mnamespace MCGalaxy[m
+                 && (Disallowed == null || !Disallowed.Contains(perm));[m
+         }[m
+         [m
+[32m+[m[32m        public bool UsableBy(Player p) {[m[41m[m
+[32m+[m[32m            return UsableBy(p.group.Permission);[m[41m[m
+[32m+[m[32m        }[m[41m[m
+[32m+[m[41m        [m
+         public void Describe(StringBuilder builder) {[m
+             builder.Append(Group.GetColoredName(MinRank) + "&S+");[m
+             [m
+[1mdiff --git a/MCGalaxy/CorePlugin/ConnectHandler.cs b/MCGalaxy/CorePlugin/ConnectHandler.cs[m
+[1mindex 96313173..ccfee0e9 100644[m
+[1m--- a/MCGalaxy/CorePlugin/ConnectHandler.cs[m
+[1m+++ b/MCGalaxy/CorePlugin/ConnectHandler.cs[m
+[36m@@ -32,7 +32,7 @@[m [mnamespace MCGalaxy.Core {[m
+         static void CheckReviewList(Player p) {[m
+             if (!p.CanUse("Review")) return;[m
+             ItemPerms checkPerms = CommandExtraPerms.Find("Review", 1);[m
+[31m-            if (!checkPerms.UsableBy(p.Rank)) return;[m
+[32m+[m[32m            if (!checkPerms.UsableBy(p)) return;[m
+             [m
+             int count = Server.reviewlist.Count;[m
+             if (count == 0) return;[m
+[1mdiff --git a/MCGalaxy/Database/Stats/OnlineStat.cs b/MCGalaxy/Database/Stats/OnlineStat.cs[m
+[1mindex 532406f9..a466598e 100644[m
+[1m--- a/MCGalaxy/Database/Stats/OnlineStat.cs[m
+[1m+++ b/MCGalaxy/Database/Stats/OnlineStat.cs[m
+[36m@@ -115,7 +115,7 @@[m [mnamespace MCGalaxy.DB {[m
+         [m
+         public static void IPLine(Player p, string name, string ip) {[m
+             ItemPerms seeIpPerms = CommandExtraPerms.Find("WhoIs", 1);[m
+[31m-            if (!seeIpPerms.UsableBy(p.Rank)) return;[m
+[32m+[m[32m            if (!seeIpPerms.UsableBy(p)) return;[m[41m[m
+             [m
+             string ipMsg = ip;[m
+             if (Server.bannedIP.Contains(ip)) ipMsg = "&8" + ip + ", which is banned";[m
+[1mdiff --git a/MCGalaxy/Drawing/BrushFactories/BrushFactory.cs b/MCGalaxy/Drawing/BrushFactories/BrushFactory.cs[m
+[1mindex b748f2f2..f3a63c9c 100644[m
+[1m--- a/MCGalaxy/Drawing/BrushFactories/BrushFactory.cs[m
+[1m+++ b/MCGalaxy/Drawing/BrushFactories/BrushFactory.cs[m
+[36m@@ -43,12 +43,18 @@[m [mnamespace MCGalaxy.Drawing.Brushes[m
+             new ReplaceNotBrushBrushFactory(),[m
+         };[m
+         [m
+[32m+[m[41m        [m
+         public static BrushFactory Find(string name) {[m
+[31m-            foreach (BrushFactory entry in Brushes) {[m
+[32m+[m[32m            foreach (BrushFactory entry in Brushes)[m[41m [m
+[32m+[m[32m            {[m
+                 if (entry.Name.CaselessEq(name)) return entry;[m
+             }[m
+             return null;[m
+         }[m
+[32m+[m[41m        [m
+[32m+[m[32m        public static void OutputList(Player p) {[m
+[32m+[m[32m            p.Message("&HAvailable brushes: &f" + Brushes.Join(b => b.Name));[m
+[32m+[m[32m        }[m
+     }[m
+     [m
+     public struct BrushArgs [m
+[1mdiff --git a/MCGalaxy/Drawing/BrushFactories/ReplaceBrushBrushes.cs b/MCGalaxy/Drawing/BrushFactories/ReplaceBrushBrushes.cs[m
+[1mindex 9facc855..d34fc815 100644[m
+[1m--- a/MCGalaxy/Drawing/BrushFactories/ReplaceBrushBrushes.cs[m
+[1m+++ b/MCGalaxy/Drawing/BrushFactories/ReplaceBrushBrushes.cs[m
+[36m@@ -51,7 +51,7 @@[m [mnamespace MCGalaxy.Drawing.Brushes[m
+             BrushFactory factory = BrushFactory.Find(parts[1]);[m
+             if (factory == null) {[m
+                 p.Message("No brush found with name \"{0}\".", parts[1]);[m
+[31m-                CmdBrush.List(p); return null;[m
+[32m+[m[32m                BrushFactory.OutputList(p); return null;[m[41m[m
+             }[m
+             [m
+             args.Message = parts.Length > 2 ? parts[2] : "";[m
+[1mdiff --git a/MCGalaxy/Player/Player.Login.cs b/MCGalaxy/Player/Player.Login.cs[m
+[1mindex cb5f1895..7a9ebb23 100644[m
+[1m--- a/MCGalaxy/Player/Player.Login.cs[m
+[1m+++ b/MCGalaxy/Player/Player.Login.cs[m
+[36m@@ -105,7 +105,7 @@[m [mnamespace MCGalaxy[m
+             hidden   = CanUse("Hide") && Server.hidden.Contains(name);[m
+             if (hidden) Message("&8Reminder: You are still hidden.");[m
+             [m
+[31m-            if (Chat.AdminchatPerms.UsableBy(Rank) && Server.Config.AdminsJoinSilently) {[m
+[32m+[m[32m            if (Chat.AdminchatPerms.UsableBy(this) && Server.Config.AdminsJoinSilently) {[m[41m[m
+                 hidden = true; adminchat = true;                [m
+             }[m
+ [m
+[36m@@ -256,7 +256,7 @@[m [mnamespace MCGalaxy[m
+             string altsMsg = "λNICK &Sis lately known as: " + alts.Join();[m
+ [m
+             Chat.MessageFrom(p, altsMsg,[m
+[31m-                             (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl.Rank));[m
+[32m+[m[32m                             (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl));[m[41m[m
+                          [m
+             //IRCBot.Say(temp, true); //Tells people in op channel on IRC[m
+             altsMsg = altsMsg.Replace("λNICK", name);[m
