@@ -26,6 +26,8 @@ namespace MCGalaxy.Network
         public IPAddress IP;
         /// <summary> The port this network socket is listening on </summary>
         public int Port;
+        /// <summary> Whether connections are currently being accepted </summary>
+        public bool Listening;
 
         /// <summary> Begins listening for connections on the given IP and port </summary>
         /// <remarks> Client connections are asynchronously accepted </remarks>
@@ -88,8 +90,13 @@ namespace MCGalaxy.Network
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "Failed to start listening on port {0} ({1})", port, ex.Message);
+                
+                string msg = String.Format("Failed to start listening. Is another server or instance of {0} already running on port {1}?",
+                                           Server.SoftwareName, port);
+                Server.UpdateUrl(msg);
                 socket = null; return;
             }
+            Listening = true;
             Logger.Log(LogType.SystemActivity, "Started listening on port {0}... ", port);
         }
         
@@ -131,7 +138,12 @@ namespace MCGalaxy.Network
         }
 
         public override void Close() {
-            if (socket != null) socket.Close();
+            try {
+        	    Listening = false;
+                if (socket != null) socket.Close();
+            } catch (Exception ex) { 
+                Logger.LogError(ex); 
+            }
         }
     }
 }

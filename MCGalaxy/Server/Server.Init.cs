@@ -96,8 +96,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void SetupSocket(SchedulerTask task) {
-            Listener = new TcpListen();            
+        static void SetupSocket(SchedulerTask task) {        
             IPAddress ip;
             
             if (!IPAddress.TryParse(Server.Config.ListenIP, out ip)) {

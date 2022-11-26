@@ -29,7 +29,7 @@ namespace MCGalaxy.Network
     public sealed class ClassiCubeBeat : Heartbeat 
     {
         string proxyUrl;
-        public string ServerHash;
+        public string ServerHash, ServerUrl;
         bool checkedAddr;
         
         void CheckAddress() {
@@ -103,18 +103,17 @@ namespace MCGalaxy.Network
             // only need to do this when contents have changed
             if (hash == ServerHash) return;
             ServerHash = hash;
-            Server.URL = text;
+            ServerUrl  = text;
             
             if (!text.Contains("\"errors\":")) {
-                Server.UpdateUrl(Server.URL);
-                File.WriteAllText("text/externalurl.txt", Server.URL);
-                Logger.Log(LogType.SystemActivity, "Server URL found: " + Server.URL);
+                Server.UpdateUrl(text);
+                File.WriteAllText("text/externalurl.txt", text);
+                Logger.Log(LogType.SystemActivity, "Server URL found: " + text);
             } else {
                 string error = GetError(text);
                 if (error == null) error = "Error while finding URL. Is the port open?";
                 
-                Server.URL = error;
-                Server.UpdateUrl(Server.URL);
+                Server.UpdateUrl(error);
                 Logger.Log(LogType.Warning, text);
             }
         }

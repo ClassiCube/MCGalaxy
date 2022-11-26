@@ -76,7 +76,7 @@ namespace MCGalaxy.Network {
         
         static IPEndPoint BindIPEndPointCallback(ServicePoint servicePoint, IPEndPoint remoteEP, int retryCount) {
             IPAddress localIP = null;
-            if (Server.Listener != null) {
+            if (Server.Listener.IP != null) {
                 localIP = Server.Listener.IP;
             } else if (!IPAddress.TryParse(Server.Config.ListenIP, out localIP)) {
                 return null;

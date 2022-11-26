@@ -90,6 +90,9 @@ namespace MCGalaxy.Network
         }
         
         static void OnBeat(SchedulerTask task) {
+            // no point if can't accept connections anyways
+            if (!Server.Listener.Listening) return;
+            
             foreach (Heartbeat beat in Heartbeats) { beat.Pump(); }
         }
     }

@@ -67,9 +67,6 @@ namespace MCGalaxy {
         }
         
 
-        [Obsolete("Use Add instead")]
-        public bool AddUnique(string name) { return Add(name); }
-        
         internal int IndexOf(string name) {
             lock (locker) return names.CaselessIndexOf(name);
         }

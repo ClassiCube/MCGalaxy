@@ -228,10 +228,7 @@ namespace MCGalaxy
             } catch { }
             
             // Stop accepting new connections and disconnect existing sessions
-            try {
-                if (Listener != null) Listener.Close();
-            } catch (Exception ex) { Logger.LogError(ex); }
-            
+            Listener.Close();            
             try {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) { p.Leave(msg); }

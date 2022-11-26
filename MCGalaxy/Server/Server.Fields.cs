@@ -49,9 +49,7 @@ namespace MCGalaxy {
             set { fullName = value; }
         }
 
-        // URL for connecting to the server
-        public static string URL = String.Empty;
-        public static INetListen Listener;
+        public static INetListen Listener = new TcpListen();
 
         //Other
         public static bool SetupFinished, CLIMode;
