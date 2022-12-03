@@ -31,6 +31,7 @@ namespace MCGalaxy.SQL
         }
         
         public override bool EnforcesTextLength { get { return false; } }
+        public override bool EnforcesIntegerLimits { get { return false; } }
         public override bool MultipleSchema { get { return false; } }
         public override string EngineName { get { return "SQLite"; } }
         

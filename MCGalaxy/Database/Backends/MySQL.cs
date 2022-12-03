@@ -34,6 +34,7 @@ namespace MCGalaxy.SQL
         }
         
         public override bool EnforcesTextLength { get { return true; } }
+        public override bool EnforcesIntegerLimits { get { return true; } }
         public override bool MultipleSchema { get { return true; } }
         public override string EngineName { get { return "MySQL"; } }
         

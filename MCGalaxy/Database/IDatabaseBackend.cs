@@ -25,9 +25,11 @@ namespace MCGalaxy.SQL
     /// <summary> Abstracts a SQL based database management system </summary>
     public abstract class IDatabaseBackend 
     {        
-        /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
-        public abstract bool EnforcesTextLength { get; }        
-        /// <summary> Whether this backend supports multiple database schemas. </summary>
+        /// <summary> Whether this backend enforces the character length in VARCHAR columns </summary>
+        public abstract bool EnforcesTextLength { get; }
+        /// <summary> Whether this backend enforces integer limits based on column types </summary>
+        public abstract bool EnforcesIntegerLimits { get; } 
+        /// <summary> Whether this backend supports multiple database schemas </summary>
         public abstract bool MultipleSchema { get; }
         public abstract string EngineName { get; }
 
