@@ -22,9 +22,10 @@ namespace MCGalaxy.Blocks.Physics {
     public unsafe static class LeafPhysics {
         
         public static void DoLeaf(Level lvl, ref PhysInfo C) {
-            // Decaying disabled? Then just remove from the physics list
             if (!lvl.Config.LeafDecay) {
-                C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
+                if (lvl.physics > 1) ActivateablePhysics.CheckNeighbours(lvl, C.X, C.Y, C.Z);
+                C.Data.Data = PhysicsArgs.RemoveFromChecks; 
+                return;
             }
             
             // Delay checking for leaf decay for a random amount of time
