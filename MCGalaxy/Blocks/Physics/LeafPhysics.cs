@@ -76,6 +76,7 @@ namespace MCGalaxy.Blocks.Physics {
                     dists[idx] = -1;
             }
 
+            // TODO optimisable?
             for (int dist = 1; dist <= range; dist++) {
                 idx = 0;
                 

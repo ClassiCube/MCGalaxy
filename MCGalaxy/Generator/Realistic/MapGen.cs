@@ -48,7 +48,9 @@ namespace MCGalaxy.Generator.Realistic
                 terrain = new float[lvl.Width * lvl.Length];
                 overlay = new float[lvl.Width * lvl.Length];
                 if (args.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
+                
                 LiquidLevel = args.GetLiquidLevel(lvl.Height);
+                LiquidLevel = (ushort)Math.Min(LiquidLevel, lvl.MaxY);
 
                 GenerateFault(terrain, lvl);
                 FilterAverage(lvl);
@@ -71,9 +73,10 @@ namespace MCGalaxy.Generator.Realistic
                     ushort x = (ushort)(index % lvl.Width);
                     ushort z = (ushort)(index / lvl.Width);
                     ushort y;
+                    
                     if (args.FalloffEdges) {
                         float offset = NegateEdge(x, z, lvl);
-                        y = Evaluate(lvl, Range(terrain[index], rangeLo - offset, rangeHi - offset));
+                        y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi) - offset);
                     } else {
                         y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi));
                     }
@@ -251,10 +254,10 @@ namespace MCGalaxy.Generator.Realistic
         }
 
         //converts the float into a ushort for map height
-        ushort Evaluate(Level lvl, float height) {
+        static ushort Evaluate(Level lvl, float height) {
             ushort y = (ushort)(height * lvl.Height);
             if (y < 0) return 0;
-            if (y > lvl.Height - 1) return (ushort)(lvl.Height - 1);
+            if (y > lvl.Height - 1) return (ushort)(lvl.Height - 1); // TODO >= lvl.Height
             return y;
         }
 
@@ -263,10 +266,10 @@ namespace MCGalaxy.Generator.Realistic
             Logger.Log(LogType.SystemActivity, "Applying average filtering");
             float[] filtered = new float[terrain.Length];
 
-            for (int index = 0; index < terrain.Length; index++) {
+            for (int index = 0; index < filtered.Length; index++) {
                 ushort x = (ushort)(index % Lvl.Width);
-                ushort y = (ushort)(index / Lvl.Width);
-                filtered[index] = GetAverage9(x, y, Lvl);
+                ushort z = (ushort)(index / Lvl.Width);
+                filtered[index] = GetAverage9(x, z, Lvl);
             }
 
             for (int bb = 0; bb < terrain.Length; bb++)
@@ -274,32 +277,32 @@ namespace MCGalaxy.Generator.Realistic
         }
 
         //Averages over 9 points
-        float GetAverage9(ushort x, ushort y, Level Lvl) {
+        float GetAverage9(ushort x, ushort z, Level Lvl) {
             int points = 0;
-            float sum = GetPixel(ref points, x, y, Lvl);
-            sum += GetPixel(ref points, (ushort)(x + 1), y, Lvl);
-            sum += GetPixel(ref points, (ushort)(x - 1), y, Lvl);
-            sum += GetPixel(ref points, x, (ushort)(y + 1), Lvl);
-            sum += GetPixel(ref points, x, (ushort)(y - 1), Lvl);
+            float sum = GetPixel(ref points, x, z, Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), z, Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), z, Lvl);
+            sum += GetPixel(ref points, x, (ushort)(z + 1), Lvl);
+            sum += GetPixel(ref points, x, (ushort)(z - 1), Lvl);
 
-            sum += GetPixel(ref points, (ushort)(x + 1), (ushort)(y + 1), Lvl);
-            sum += GetPixel(ref points, (ushort)(x - 1), (ushort)(y + 1), Lvl);
-            sum += GetPixel(ref points, (ushort)(x + 1), (ushort)(y - 1), Lvl);
-            sum += GetPixel(ref points, (ushort)(x - 1), (ushort)(y - 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), (ushort)(z + 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), (ushort)(z + 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x + 1), (ushort)(z - 1), Lvl);
+            sum += GetPixel(ref points, (ushort)(x - 1), (ushort)(z - 1), Lvl);
 
             return sum / points;
         }
 
         //returns the value of a x,y terrain coordinate
-        float GetPixel(ref int points, ushort x, ushort y, Level Lvl) {
-            if (x < 0 || x >= Lvl.Width || y < 0 || y >= Lvl.Length)
+        float GetPixel(ref int points, ushort x, ushort z, Level Lvl) {
+            if (x < 0 || x >= Lvl.Width || z < 0 || z >= Lvl.Length)
                 return 0;
             points++;
-            return terrain[x + y * Lvl.Width];
+            return terrain[x + z * Lvl.Width];
         }
 
         //converts the height into a range
-        float Range(float input, float low, float high) {
+        static float Range(float input, float low, float high) {
             if (high <= low) return low;
             return low + (input * (high - low));
         }
