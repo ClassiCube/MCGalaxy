@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -22,8 +22,10 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdAbout : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdAbout : Command2 
+    {
         public override string name { get { return "About"; } }
         public override string shortcut { get { return "b"; } }
         public override string type { get { return CommandTypes.Information; } }

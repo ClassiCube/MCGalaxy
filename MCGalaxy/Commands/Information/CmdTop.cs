@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdTop : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdTop : Command2 
+    {
         public override string name { get { return "Top"; } }
         public override string shortcut { get { return "Most"; } }
         public override string type { get { return CommandTypes.Information; } }

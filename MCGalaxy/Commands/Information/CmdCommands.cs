@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -15,8 +15,10 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdCommands : Command2 {       
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdCommands : Command2 
+    {
         public override string name { get { return "Commands"; } }
         public override string shortcut { get { return "Cmds"; } }
         public override string type { get { return CommandTypes.Information; } }

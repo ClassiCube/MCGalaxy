@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -31,9 +31,9 @@ using MCGalaxy.SQL;
 using MCGalaxy.Util;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy 
+namespace MCGalaxy
 {
-    public partial class Player : IDisposable 
+    public partial class Player : IDisposable
     {
         const string mustAgreeMsg = "You must read /rules then agree to them with /agree!";
         
@@ -44,7 +44,7 @@ namespace MCGalaxy
             lock (blockchangeLock) {
                 lastClick.X = x; lastClick.Y = y; lastClick.Z = z;
                 if (Blockchange == null) return false;
-            
+                
                 Blockchange(this, x, y, z, block);
                 return true;
             }
@@ -171,7 +171,7 @@ namespace MCGalaxy
                 flags = BlockDBFlags.Painted;
             }
             
-            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block); 
+            level.BlockDB.Cache.Add(this, x, y, z, flags, old, block);
             y--; // check for growth at block below
             
             bool grow = level.Config.GrassGrow && (level.physics == 0 || level.physics == 5);
@@ -277,7 +277,7 @@ namespace MCGalaxy
             if (zone != null && zone.Config.GetEnvProp(i) != default_) {
                 value = zone.Config.GetEnvProp(i);
             }
-                
+            
             if (value == default_) value = level.Config.DefaultEnvProp(i, level.Height);
             if (block)             value = Session.ConvertBlock((BlockID)value);
             return value;
@@ -313,7 +313,7 @@ namespace MCGalaxy
                 Vec3U16 P = (Vec3U16)prev.BlockCoords;
                 AABB bb = ModelBB.OffsetPosition(next);
                 int index = level.PosToInt(P.X, P.Y, P.Z);
-                    
+                
                 if (level.Config.SurvivalDeath) {
                     bool movingDown = next.Y < prev.Y;
                     PlayerPhysics.Drown(this, bb);
@@ -369,7 +369,7 @@ namespace MCGalaxy
             PlayerActions.Respawn(this);
             TimesDied++;
             // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
-            if (TimesDied > short.MaxValue && Database.Backend.EnforcesIntegerLimits) 
+            if (TimesDied > short.MaxValue && Database.Backend.EnforcesIntegerLimits)
                 TimesDied = short.MaxValue;
 
             if (Server.Config.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
@@ -477,7 +477,7 @@ namespace MCGalaxy
                 Message("Repeating &T/" + text);
             }
             
-            string cmd, args;            
+            string cmd, args;
             text.Separate(out cmd, out args);
             HandleCommand(cmd, args, DefaultCmdData);
         }
@@ -503,12 +503,23 @@ namespace MCGalaxy
                 Command command = GetCommand(ref cmd, ref args, data);
                 if (command == null) return;
                 
-                Thread thread = new Thread(() => UseCommand(command, args, data));
+                bool parallel = command.Parallelism == CommandParallelism.Yes
+                                    || data.Context == CommandContext.MessageBlock;
+                if (!parallel && !EnqueueSerialCommand(command, args, data)) return;
+                
+                ThreadStart callback;
+                if (parallel) {
+                    callback = () => UseCommand(command, args, data);
+                } else {
+                    callback = ExecuteSerialCommands;
+                }
+                
+                Thread thread = new Thread(callback);
                 try { thread.Name = "CMD_" + cmd; } catch { }
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Logger.LogError(e); 
+                Logger.LogError(e);
                 Message("&WCommand failed");
             }
         }
@@ -535,7 +546,7 @@ namespace MCGalaxy
                 thread.IsBackground = true;
                 thread.Start();
             } catch (Exception e) {
-                Logger.LogError(e); 
+                Logger.LogError(e);
                 Message("&WCommand failed.");
             }
         }
@@ -549,8 +560,8 @@ namespace MCGalaxy
                     Message("&WInfinite message block loop detected, aborting");
                     return false;
                 }
-            } else if (data.Context == CommandContext.Normal) { 
-                mbRecursion = 0; 
+            } else if (data.Context == CommandContext.Normal) {
+                mbRecursion = 0;
             }
             return true;
         }
@@ -586,7 +597,7 @@ namespace MCGalaxy
                 bound.Separate(out cmdName, out cmdArgs);
             } else if (byte.TryParse(cmdName, out bindIndex) && bindIndex < 10) {
                 // backwards compatibility for old /cmdbind behaviour
-                Message("No command is bound to: &T/" + cmdName); 
+                Message("No command is bound to: &T/" + cmdName);
                 return null;
             }
             
@@ -607,7 +618,7 @@ namespace MCGalaxy
 
             if (!CanUse(command)) {
                 CommandPerms.Find(command.name).MessageCannotUse(this);
-                return null; 
+                return null;
             }
             
             string reason = Command.GetDisabledReason(command.Enabled);
@@ -658,6 +669,56 @@ namespace MCGalaxy
                 if (leftServer) return false;
             }
             return true;
+        }
+        
+        
+        bool EnqueueSerialCommand(Command cmd, string args, CommandData data) {
+            SerialCommand head = default(SerialCommand);
+            SerialCommand scmd;
+            
+            scmd.cmd  = cmd;
+            scmd.args = args;
+            scmd.data = data;
+            
+            lock (serialCmdsLock) {
+                if (serialCmds.Count > 0)
+                    head = serialCmds.Peek();
+                
+                serialCmds.Enqueue(scmd);
+            }
+            if (head.cmd == null) return true;
+            
+            if (cmd.Parallelism == CommandParallelism.NoAndWarn) {
+                Message("Waiting for &T/{0} {1} &Sto finish first before running &T/{2} {3}",
+                        head.cmd.name, head.args, cmd.name, args);
+            }
+            
+            // Overly punish triggering forced serial execution of commands
+            spamChecker.CheckCommandSpam();
+            return false;
+        }
+        
+        void ExecuteSerialCommands() {
+            for (;;) 
+            {
+                SerialCommand scmd;
+                
+                lock (serialCmdsLock) {
+                    if (serialCmds.Count == 0) return;
+                    scmd = serialCmds.Peek();
+                }
+                UseCommand(scmd.cmd, scmd.args, scmd.data);
+                
+                // only dequeue AFTER finished (for long running commands)
+                lock (serialCmdsLock) {
+                    if (serialCmds.Count == 0) return;
+                    serialCmds.Dequeue();
+                }
+            }
+        }
+        
+        void ClearSerialCommands() {
+            lock (serialCmdsLock) { serialCmds.Clear(); }
         }
     }
 }

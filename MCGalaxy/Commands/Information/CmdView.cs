@@ -18,8 +18,10 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdView : Command2 {        
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdView : Command2 
+    {
         public override string name { get { return "View"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }

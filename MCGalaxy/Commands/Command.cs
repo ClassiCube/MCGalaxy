@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -60,6 +60,10 @@ namespace MCGalaxy
         /// <summary> Whether this commands updates the 'most recent command used' by players </summary>
         /// <remarks> return false to prevent this command showing in /last (e.g. /pass, /hide) </remarks>
         public virtual bool UpdatesLastCmd { get { return true; } }
+        
+        public virtual CommandParallelism Parallelism { 
+            get { return type.CaselessEq(CommandTypes.Information) ? CommandParallelism.NoAndWarn : CommandParallelism.Yes; }
+        }
         
         public static List<Command> allCmds  = new List<Command>();
         public static List<Command> coreCmds = new List<Command>();
@@ -185,6 +189,11 @@ namespace MCGalaxy
     public enum CommandEnable 
     {
         Always = 0, Economy = 1, Zombie = 2, Lava = 4,
+    }
+    
+    public enum CommandParallelism
+    {
+        NoAndSilent, NoAndWarn, Yes
     }
 }
 

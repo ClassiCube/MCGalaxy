@@ -21,8 +21,10 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Info { 
-    public sealed class CmdOpStats : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdOpStats : Command2 
+    {
         public override string name { get { return "OpStats"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
