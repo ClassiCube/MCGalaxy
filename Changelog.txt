@@ -1,4 +1,15 @@
-﻿v 1.9.4.4
+﻿v 1.9.4.5
+Improved: Allow providing reasons for IP bans
+Improved: Allow over 32767 deaths when using SQLite as database backend
+Improved: /whonick output when multiple matching player/bot nicks
+Improved: Discord relay bot logs less messages when disconnected
+Improved: 'multiple matching players/ranks/loaded levels' messages now also include colours
+Improved: Allow using more chat/info/quit commands when frozen
+Fixed: Don't send heartbeats when server fails to start listening
+Fixed: Realistic map gen erroring when map height was 4 blocks or less
+Fixed: Leaves should still propagate physics checks even when leaf decay is disabled
+
+v 1.9.4.4
 Added: ExtEntityTeleport CPE (Thanks Goodly)
 Added: Allow using ReplaceBrush as a /brush 
 Added: Grid brush (gridlines)
