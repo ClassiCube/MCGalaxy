@@ -50,11 +50,16 @@ namespace MCGalaxy.Generator.Realistic
             }
 
             //Normalize
-            float adj = (max - min);
+            float range = (max - min);
             for (int i = 0; i < array.Length; ++i)
-                array[i] = (array[i] - min) / adj;
+                array[i] = (array[i] - min) / range;
         }
-
+        
+        static float Interpolate(float a, float b, float x) {
+            float ft = x * 3.1415927f;
+            float f = (float)(1 - Math.Cos(ft)) * 0.5f;
+            return a * (1 - f) + b * f;
+        }
         static float Noise(int x, int y, int seed) {
             int n = x + y * 57 + seed;
             n = (n << 13) ^ n;
@@ -62,31 +67,46 @@ namespace MCGalaxy.Generator.Realistic
             //return value is always in range [-1.0, 1.0]
         }
 
-        static float SmoothNoise(int x, int y, int seed) {
-            float corners = (Noise(x - 1, y - 1, seed) + Noise(x + 1, y - 1, seed) + Noise(x - 1, y + 1, seed) + Noise(x + 1, y + 1, seed)) / 16;
-            float sides = (Noise(x - 1, y, seed) + Noise(x + 1, y, seed) + Noise(x, y - 1, seed) + Noise(x, y + 1, seed) / 8);
-            float center = Noise(x, y, seed) / 4;
-            return corners + sides + center;
-        }
 
-        static float Interpolate(float a, float b, float x) {
-            float ft = x * 3.1415927f;
-            float f = (float)(1 - Math.Cos(ft)) * .5f;
-            return a * (1 - f) + b * f;
-        }
-
-        static float InterpolatedNoise(float x, float y, int seed) {
-            int wholeX = (int)x, wholeY = (int)y;
+        unsafe static float InterpolatedNoise(float x, float y, int seed) {
+            int wholeX = (int)x, wholeY = (int)y, i = 0;
             float fracX = x - wholeX, fracY = y - wholeY;
 
-            float v1 = SmoothNoise(wholeX, wholeY, seed);
-            float v2 = SmoothNoise(wholeX + 1, wholeY, seed);
-            float v3 = SmoothNoise(wholeX, wholeY + 1, seed);
-            float v4 = SmoothNoise(wholeX + 1, wholeY + 1, seed);
+            // Calculates the smoothed noise for the 4 cells around the given point,
+            //  then interpolates between the smoothed noise results of the 4 cells 
 
-            float i1 = Interpolate(v1, v2, fracX);
-            float i2 = Interpolate(v3, v4, fracX);
-            return Interpolate(i1, i2, fracY);
+            //   -1 0 1 2
+            // -1 * * * *
+            //  0 * X X *
+            //  1 * X X *
+            //  2 * * * *
+            float* noise = stackalloc float[RANGE * RANGE];
+            for (int yy = -1; yy <= 2; yy++)
+                for (int xx = -1; xx <= 2; xx++)
+                {
+                    noise[i++] = Noise(wholeX + xx, wholeY + yy, seed);
+                }
+
+            float n00 = SmoothNoise(noise, (0 + 1) * ONEX + (0 + 1) * ONEY); // x=0, y=0
+            float n10 = SmoothNoise(noise, (1 + 1) * ONEX + (0 + 1) * ONEY); // x=1, y=0
+            float n01 = SmoothNoise(noise, (0 + 1) * ONEX + (1 + 1) * ONEY); // x=0, y=1
+            float n11 = SmoothNoise(noise, (1 + 1) * ONEX + (1 + 1) * ONEY); // x=1, y=1
+
+            float N0 = Interpolate(n00, n10, fracX);
+            float N1 = Interpolate(n01, n11, fracX);
+            return Interpolate(N0, N1, fracY);
+        }
+
+        const int RANGE  = 4;
+        const int ONEX   = 1;
+        const int ONEY   = RANGE;
+
+        /// <summary> Calculates smoothed noise across the given cell and its 8 neighbours </summary>
+        unsafe static float SmoothNoise(float* noise, int i) {
+            float corners = (noise[i - ONEX - ONEY] + noise[i + ONEX - ONEY] + noise[i - ONEX + ONEY] + noise[i + ONEX + ONEY]) / 16;
+            float sides   = (noise[i - ONEX] + noise[i + ONEX] + noise[i - ONEY] + noise[i + ONEY] / 8); // should be outside brackets, but kept for backwards compatibility
+            float center  = noise[i] / 4;
+            return corners + sides + center;
         }
     }
 }

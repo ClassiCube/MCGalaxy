@@ -71,7 +71,7 @@ namespace MCGalaxy.Generator.Realistic
                 //loops though evey X/Z coordinate
                 for (int index = 0; index < terrain.Length; index++) {
                     ushort x = (ushort)(index % lvl.Width);
-                    ushort z = (ushort)(index / lvl.Width);
+                    ushort z = (ushort)(index / lvl.Width); // TODO don't % /
                     ushort y;
                     
                     if (args.FalloffEdges) {
@@ -104,14 +104,14 @@ namespace MCGalaxy.Generator.Realistic
                     } else if (overlay[index] < 0.72f) {
                         if (args.IslandColumns) { //increase sand height for island
                             if (y > LiquidLevel + 2) {
-                                if (yy == 0) Lvl.blocks[pos] = Block.Grass;     //top layer
+                                if (yy == 0)     Lvl.blocks[pos] = Block.Grass; //top layer
                                 else if (yy < 3) Lvl.blocks[pos] = Block.Dirt;  //next few
                                 else Lvl.blocks[pos] = Block.Stone;              //ten rock it
                             } else {
                                 Lvl.blocks[pos] = Block.Sand;                   //SAAAND extra for islands
                             }
                         } else {
-                            if (yy == 0) Lvl.blocks[pos] = Block.Grass;
+                            if (yy == 0)     Lvl.blocks[pos] = Block.Grass;
                             else if (yy < 3) Lvl.blocks[pos] = Block.Dirt;
                             else Lvl.blocks[pos] = Block.Stone;
                         }
@@ -170,7 +170,7 @@ namespace MCGalaxy.Generator.Realistic
             if (y > LiquidLevel) {
                 for (ushort yy = 0; y - yy >= 0; yy++) {
                     if (y > (LiquidLevel - 1)) {
-                        if (yy == 0) Lvl.SetTile(x, (ushort)(y - yy), z, Block.Stone);      //top layer
+                        if (yy == 0)     Lvl.SetTile(x, (ushort)(y - yy), z, Block.Stone); //top layer
                         else if (yy < 3) Lvl.SetTile(x, (ushort)(y - yy), z, Block.Stone);
                         else if (yy < 2) Lvl.SetTile(x, (ushort)(y - yy), z, Block.Lava);//next few
                         else Lvl.SetTile(x, (ushort)(y - yy), z, Block.Obsidian);
@@ -209,8 +209,9 @@ namespace MCGalaxy.Generator.Realistic
                 }
             }
         }
-        
-        
+
+
+        // https://www.lighthouse3d.com/opengl/terrain/index.php?fault
         void GenerateFault(float[] array, Level Lvl) {
             float baseHeight = args.StartHeight;
             float dispMax = args.DisplacementMax;
