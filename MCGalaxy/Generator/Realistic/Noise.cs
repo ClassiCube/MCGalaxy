@@ -97,9 +97,9 @@ namespace MCGalaxy.Generator.Realistic
             return Interpolate(N0, N1, fracY);
         }
 
-        const int RANGE  = 4;
-        const int ONEX   = 1;
-        const int ONEY   = RANGE;
+        const int RANGE = 4;
+        const int ONEX  = 1;
+        const int ONEY  = RANGE;
 
         /// <summary> Calculates smoothed noise across the given cell and its 8 neighbours </summary>
         unsafe static float SmoothNoise(float* noise, int i) {

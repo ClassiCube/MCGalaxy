@@ -28,7 +28,7 @@ namespace MCGalaxy.Generator.fCraft {
         int _width, _length;
 
         // theme-dependent vars
-        internal byte bWaterSurface, bGroundSurface, bWater, bGround, bSeaFloor, bBedrock, bDeepWaterSurface, bCliff;
+        internal byte bGroundSurface, bWater, bGround, bSeaFloor, bBedrock, bCliff;
 
         internal int groundThickness = 5;
         const int SeaFloorThickness = 3;
@@ -190,14 +190,11 @@ namespace MCGalaxy.Generator.fCraft {
                     if( args.AddWater ) {
                         int index = (args.WaterLevel * length + z) * width + x;
                         if( args.WaterLevel >= 0 && args.WaterLevel < mapHeight ) {
-                            if( args.WaterLevel - level > 3 ) {
-                                map.blocks[index] = bDeepWaterSurface;
-                            } else {
-                                map.blocks[index] = bWaterSurface;
-                            }
+                            map.blocks[index] = bWater;
                         }
+
                         for( int yy = args.WaterLevel; yy > level && yy >= 0; yy-- ) {
-                            if( yy >= 0 && yy < mapHeight )
+                            if( yy < mapHeight )
                                 map.blocks[index] = bWater; // TODO: Might be a bug? Probably waterLevel - 1.
                             index -= width * length;
                         }
@@ -306,7 +303,7 @@ namespace MCGalaxy.Generator.fCraft {
                     if( xx < 0 || xx >= map.Width || yy < 0 || yy >= map.Height || zz < 0 || zz >= map.Length ) continue;
                     
                     BlockID block = map.GetBlock( (ushort)xx, (ushort)yy, (ushort)zz );
-                    if( block == bWater || block == bWaterSurface ) {
+                    if( block == bWater ) {
                         found = true;
                         break;
                     }

@@ -62,8 +62,6 @@ namespace MCGalaxy.Generator.fCraft
         public void ApplyTheme( fCraftMapGen gen ) {
             switch( Biome ) {
                 case MapGenBiome.Arctic:
-                    gen.bWaterSurface = Block.Glass;
-                    gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.White;
                     gen.bWater = Block.StillWater;
                     gen.bGround = Block.White;
@@ -74,8 +72,6 @@ namespace MCGalaxy.Generator.fCraft
                     break;
                     
                 case MapGenBiome.Desert:
-                    gen.bWaterSurface = Block.StillWater;
-                    gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.Sand;
                     gen.bWater = Block.StillWater;
                     gen.bGround = Block.Sand;
@@ -85,8 +81,6 @@ namespace MCGalaxy.Generator.fCraft
                     break;
                     
                 case MapGenBiome.Hell:
-                    gen.bWaterSurface = Block.StillLava;
-                    gen.bDeepWaterSurface = Block.StillLava;
                     gen.bGroundSurface = Block.Obsidian;
                     gen.bWater = Block.StillLava;
                     gen.bGround = Block.Stone;
@@ -96,8 +90,6 @@ namespace MCGalaxy.Generator.fCraft
                     break;
                     
                 case MapGenBiome.Forest:
-                    gen.bWaterSurface = Block.StillWater;
-                    gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.Grass;
                     gen.bWater = Block.StillWater;
                     gen.bGround = Block.Dirt;
@@ -107,8 +99,6 @@ namespace MCGalaxy.Generator.fCraft
                     break;
                     
                 case MapGenBiome.Swamp:
-                    gen.bWaterSurface = Block.StillWater;
-                    gen.bDeepWaterSurface = Block.StillWater;
                     gen.bGroundSurface = Block.Dirt;
                     gen.bWater = Block.StillWater;
                     gen.bGround = Block.Dirt;
