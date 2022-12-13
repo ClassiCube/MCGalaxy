@@ -29,6 +29,8 @@ namespace MCGalaxy.Games
         
         protected override void DoRound() {
             if (!Running) return;
+
+            ResetPledges();
             List<Player> players = DoRoundCountdown(Config.InfectionCountdown);
             if (players == null) return;
 
@@ -38,6 +40,13 @@ namespace MCGalaxy.Games
             
             if (!Running) return;
             DoCoreGame();
+        }
+
+        void ResetPledges() {
+            foreach (Player pl in GetPlayers())
+            {
+                Get(pl).PledgeSurvive = false;
+            }
         }
         
         void StartRound(List<Player> players) {
@@ -53,7 +62,7 @@ namespace MCGalaxy.Games
             Infected.Clear();
             
             Random rnd = new Random();
-            Player first = null;
+            Player first;
             do {
                 first = QueuedZombie != null ? PlayerInfo.FindExact(QueuedZombie) : players[rnd.Next(players.Count)];
                 QueuedZombie = null;
@@ -170,8 +179,9 @@ namespace MCGalaxy.Games
         }
         
         void CheckHumanPledge(Player p, Player killer) {
-            if (!p.Game.PledgeSurvive) return;
-            p.Game.PledgeSurvive = false;
+            ZSData data = Get(p);
+            if (!data.PledgeSurvive) return;
+            data.PledgeSurvive = false;
             Map.Message("&c" + p.DisplayName + " &Sbroke their pledge of not being infected.");
             
             if (killer == null) {
@@ -264,13 +274,14 @@ namespace MCGalaxy.Games
         }
 
         void IncreaseAliveStats(Player p) {
-            if (p.Game.PledgeSurvive) {
+            ZSData data = Get(p);
+
+            if (data.PledgeSurvive) {
                 p.Message("You received &a5 &3" + Server.Config.Currency +
                                " &Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }
             
-            ZSData data = Get(p);
             data.CurrentRoundsSurvived++;
             data.TotalRoundsSurvived++;
             data.MaxRoundsSurvived = Math.Max(data.CurrentRoundsSurvived, data.MaxRoundsSurvived);
@@ -296,7 +307,7 @@ namespace MCGalaxy.Games
                 
                 pl.SetMoney(pl.money + reward);
                 ResetRoundState(pl, data);
-                pl.Game.PledgeSurvive = false;
+                data.PledgeSurvive = false;
                 
                 if (pl.Game.Referee) {
                     pl.Message("You gained one " + Server.Config.Currency + " because you're a ref. Would you like a medal as well?");

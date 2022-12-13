@@ -26,8 +26,9 @@ namespace MCGalaxy.Commands.Fun {
         public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public override bool SuperUseable { get { return false; } }
         
-        public override void Use(Player p, string message, CommandData data) {
-            if (p.Game.PledgeSurvive) {
+        public override void Use(Player p, string message, CommandData data_) {
+            ZSData data = ZSGame.Get(p);
+            if (data.PledgeSurvive) {
                 p.Message("You cannot un-pledge that you will be infected."); return;
             }
             if (ZSGame.IsInfected(p)) {
@@ -46,8 +47,8 @@ namespace MCGalaxy.Commands.Fun {
             if (delta < TimeSpan.FromMinutes(3)) {
                 p.Message("Cannot use &T/human &Sin last three minutes of a round."); return;
             }
-            
-            p.Game.PledgeSurvive = true;
+
+            data.PledgeSurvive = true;
             ZSGame.Instance.Map
                 .Message(p.ColoredName + " &Spledges that they will not succumb to the infection!");
         }

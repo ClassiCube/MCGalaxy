@@ -18,12 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using MCGalaxy.Commands.World;
 using MCGalaxy.Events.GameEvents;
 
-namespace MCGalaxy.Games {
-    
-    public abstract partial class RoundsGame : IGame {
+namespace MCGalaxy.Games 
+{    
+    public abstract partial class RoundsGame : IGame 
+    {
         public int RoundsLeft;
         public bool RoundInProgress;
         public DateTime RoundStart;
@@ -217,7 +217,6 @@ namespace MCGalaxy.Games {
             
             foreach (Player pl in online) {
                 pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
                 if (pl.level != Map && pl.level == lastMap) transfers.Add(pl);
             }
             
@@ -254,7 +253,6 @@ namespace MCGalaxy.Games {
             foreach (Player pl in players) {
                 if (pl.level != Map) continue;
                 pl.Game.RatedMap = false;
-                pl.Game.PledgeSurvive = false;
                 PlayerLeftGame(pl);
                 
                 TabList.Update(pl, true);

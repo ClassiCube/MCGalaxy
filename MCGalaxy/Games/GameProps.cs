@@ -30,9 +30,6 @@ namespace MCGalaxy.Games {
         
         /// <summary> Whether the player has liked or disliked the map in this round. </summary>
         internal bool RatedMap = false, LikedMap = false;
-        
-        /// <summary> Whether the player has pledged that they will survive/win in this round. </summary>
-        internal bool PledgeSurvive = false;
 
         //Zombie
         public bool Referee = false;

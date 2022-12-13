@@ -141,8 +141,9 @@ namespace MCGalaxy.Games {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
             p.SetPrefix(); // TODO: Kinda hacky, not sure if needed 
             if (level != Map) return;
-            
+
             ZSData data = Get(p);
+            data.PledgeSurvive = false;
             p.SetPrefix();
             
             if (RoundInProgress) {

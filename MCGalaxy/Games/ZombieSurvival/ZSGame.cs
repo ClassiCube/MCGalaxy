@@ -47,6 +47,8 @@ namespace MCGalaxy.Games
         
         public DateTime LastPillarWarn;
         public bool PillarFined;
+        /// <summary> Whether the player has pledged that they will survive this round. </summary>
+        public bool PledgeSurvive;
         
         public void ResetInvisibility() {
             Invisible = false;
@@ -78,6 +80,7 @@ namespace MCGalaxy.Games
             data = new ZSData();
             
             // TODO: Is this even thread-safe
+            // TODO don't load here, add a LoadInfectMessages method
             data.InfectMessages = ZSConfig.LoadPlayerInfectMessages(p.name);
             ZombieStats s = LoadStats(p.name);
             data.MaxInfected = s.MaxInfected;     data.TotalInfected = s.TotalInfected;
