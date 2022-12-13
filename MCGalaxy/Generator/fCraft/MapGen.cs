@@ -257,7 +257,7 @@ namespace MCGalaxy.Generator.fCraft {
                     int index = (level * length + z) * width + x;
                     if( level >= 0 && level < mapHeight ) {
                         if( slope < args.CliffThreshold ) {
-                            map.blocks[index] = (snow ? Block.White : bGroundSurface);
+                            map.blocks[index] = snow ? Block.White : bGroundSurface;
                         } else {
                             map.blocks[index] = bCliff;
                         }
@@ -269,11 +269,7 @@ namespace MCGalaxy.Generator.fCraft {
                         
                         if( level - yy < groundThickness ) {
                             if( slope < args.CliffThreshold ) {
-                                if( snow ) {
-                                    map.blocks[index] = Block.White;
-                                } else {
-                                    map.blocks[index] = bGround;
-                                }
+                                map.blocks[index] = snow ? Block.White : bGround;
                             } else {
                                 map.blocks[index] = bCliff;
                             }

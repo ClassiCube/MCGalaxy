@@ -47,7 +47,6 @@ namespace MCGalaxy.Generator.fCraft
         public int   SnowAltitude = 70;
         public int   SnowTransition = 7;
 
-        public bool  AddCliffs = true;
         public bool  CliffSmoothing = true;
         public float CliffThreshold = 1;
 

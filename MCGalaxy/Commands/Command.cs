@@ -66,27 +66,27 @@ namespace MCGalaxy
         }
         
         public static List<Command> allCmds  = new List<Command>();
-        public static List<Command> coreCmds = new List<Command>();
-        public static bool IsCore(Command cmd) { return coreCmds.Contains(cmd); }
+        public static bool IsCore(Command cmd) { 
+            return cmd.GetType().Assembly == Assembly.GetExecutingAssembly(); // TODO common method
+        }
+
         public static List<Command> CopyAll() { return new List<Command>(allCmds); }
         
         
         public static void InitAll() {
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-            allCmds.Clear();
-            coreCmds.Clear();      
+            allCmds.Clear();    
             foreach (Group grp in Group.AllRanks) { grp.Commands.Clear(); }
             
             for (int i = 0; i < types.Length; i++) {
                 Type type = types[i];
-                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;
+                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract || !type.IsPublic) continue;
                 
                 Command cmd = (Command)Activator.CreateInstance(type);
                 if (Server.Config.DisabledCommands.CaselessContains(cmd.name)) continue;
                 Register(cmd);
             }
             
-            coreCmds = new List<Command>(allCmds);
             IScripting.AutoloadCommands();
         }
         
