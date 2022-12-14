@@ -16,19 +16,25 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-
-    public class CmdLike : Command2 {
+namespace MCGalaxy.Commands.Fun 
+{
+    public class CmdLike : Command2 
+    {
         public override string name { get { return "Like"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie | CommandEnable.Lava; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) { RateMap(p, true); }
         
         protected bool RateMap(Player p, bool like) {
             string prefix = like ? "" : "dis";
+            
+            IGame game = IGame.GameOn(p.level);
+            if (game == null) {
+                p.Message("Can only {0}like this map when a game is running on it.", prefix); return false; 
+            }
             
             if (p.Game.RatedMap) {
                 prefix = p.Game.LikedMap ? "" : "dis";
