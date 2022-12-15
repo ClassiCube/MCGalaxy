@@ -36,8 +36,7 @@ namespace MCGalaxy.Modules.Moderation.Notes
         
         public override void Unload(bool shutdown) {
             OnModActionEvent.Unregister(HandleModerationAction);
-            Command.Unregister(notesCmd);
-            Command.Unregister(myNotesCmd);
+            Command.Unregister(notesCmd, myNotesCmd);
         }
         
 

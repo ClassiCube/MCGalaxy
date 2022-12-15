@@ -123,6 +123,10 @@ namespace MCGalaxy
             return removed;
         }
         
+        public static void Unregister(params Command[] cmds) {
+            foreach (Command cmd in cmds) { Unregister(cmd); }
+        }
+        
         
         public static string GetColoredName(Command cmd) {
             LevelPermission perm = CommandPerms.MinPerm(cmd);

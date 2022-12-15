@@ -79,7 +79,8 @@ namespace MCGalaxy.Commands.Info
         
         static void PrintRankCommands(Player p, string sort, string modifier, Group group, bool own) {
             List<Command> cmds = new List<Command>();
-            foreach (Command c in Command.allCmds) {
+            foreach (Command c in Command.allCmds) 
+            {
                 string disabled = Command.GetDisabledReason(c.Enabled);
                 if (disabled == null && group.Commands.Contains(c)) cmds.Add(c);
             }   
