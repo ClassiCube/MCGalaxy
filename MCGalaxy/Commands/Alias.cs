@@ -66,7 +66,8 @@ namespace MCGalaxy.Commands
                 sw.WriteLine("# trigger : command <prefix> {args} <suffix>");
                 sw.WriteLine("#    e.g. \"mod : setrank {args} mod\" means /mod is treated as /setrank <args given by user> mod");
                 
-                foreach (Alias a in aliases) {
+                foreach (Alias a in aliases) 
+                {
                     if (a.Format == null) {
                         sw.WriteLine(a.Trigger + " : " + a.Target);
                     } else {
@@ -77,10 +78,12 @@ namespace MCGalaxy.Commands
         }
 
         public static Alias Find(string cmd) {
-            foreach (Alias alias in aliases) {
+            foreach (Alias alias in aliases) 
+            {
                 if (alias.Trigger.CaselessEq(cmd)) return alias;
             }
-            foreach (Alias alias in coreAliases) {
+            foreach (Alias alias in coreAliases) 
+            {
                 if (alias.Trigger.CaselessEq(cmd)) return alias;
             }
             return null;
@@ -91,7 +94,8 @@ namespace MCGalaxy.Commands
             CommandAlias[] aliases = cmd.Aliases;
             if (aliases == null) return;
             
-            foreach (CommandAlias a in aliases) {
+            foreach (CommandAlias a in aliases) 
+            {
                 Alias alias = new Alias(a.Trigger, cmd.name, a.Format);
                 coreAliases.Add(alias);
             }

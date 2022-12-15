@@ -28,8 +28,10 @@ namespace MCGalaxy.Commands.Moderation {
             Command cmd = Command.Find(cmdName);
             
             if (cmd == null) { p.Message("Could not find command entered"); return; }
+            
             if (!p.CanUse(cmd)) {
-                p.Message("Your rank cannot use this command."); return;
+                CommandPerms.Find(cmd.name).MessageCannotUse(p);
+                p.Message("Therefore you cannot change the permissions of &T/{0}", cmd.name); return;
             }
             
             if (args.Length == 2) {
