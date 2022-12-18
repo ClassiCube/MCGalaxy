@@ -24,7 +24,6 @@ namespace MCGalaxy {
     
     public abstract partial class Command {
 
-        const CommandEnable bothFlags = CommandEnable.Lava | CommandEnable.Zombie;
         public static string GetDisabledReason(CommandEnable enable) {
             if (enable == CommandEnable.Always) return null;
             if (enable == CommandEnable.Economy && !Economy.Enabled)
