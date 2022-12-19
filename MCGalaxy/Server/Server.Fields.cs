@@ -63,8 +63,6 @@ namespace MCGalaxy {
         public static readonly List<string> Opstats = new List<string>() { "ban", "tempban", "xban", "banip", "kick", "warn", "mute", "freeze", "setrank" };
 
         public static Level mainLevel;
-        [Obsolete("Use LevelInfo.Loaded.Items")]
-        public static List<Level> levels;
 
         public static PlayerList reviewlist = new PlayerList();
         static string[] announcements = new string[0];

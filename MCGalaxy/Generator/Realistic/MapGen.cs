@@ -40,57 +40,49 @@ namespace MCGalaxy.Generator.Realistic
         
         public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
             DateTime start = DateTime.UtcNow;
-            Logger.Log(LogType.SystemActivity, "Attempting map gen");
             rng = MapGen.MakeRng(seed);
             this.args = args;
             
-            try {
-                terrain = new float[lvl.Width * lvl.Length];
-                overlay = new float[lvl.Width * lvl.Length];
-                if (args.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
+            terrain = new float[lvl.Width * lvl.Length];
+            overlay = new float[lvl.Width * lvl.Length];
+            if (args.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
+            
+            LiquidLevel = args.GetLiquidLevel(lvl.Height);
+            LiquidLevel = (ushort)Math.Min(LiquidLevel, lvl.MaxY);
+
+            GenerateFault(terrain, lvl);
+            FilterAverage(lvl);
+            Logger.Log(LogType.SystemActivity, "Creating overlay");
+            GeneratePerlinNoise(overlay, lvl);
+
+            if (args.GenerateOverlay2) {
+                Logger.Log(LogType.SystemActivity, "Planning trees");
+                GeneratePerlinNoise(overlay2, lvl);
+            }
+
+            Logger.Log(LogType.SystemActivity, "Converting height map, and applying overlays");
+            float rangeLo = args.RangeLow;
+            float rangeHi = args.RangeHigh;
+            treeDens = args.TreeDensity;
+            treeDist = args.TreeDistance;
+
+            //loops though evey X/Z coordinate
+            for (int index = 0; index < terrain.Length; index++) {
+                ushort x = (ushort)(index % lvl.Width);
+                ushort z = (ushort)(index / lvl.Width); // TODO don't % /
+                ushort y;
                 
-                LiquidLevel = args.GetLiquidLevel(lvl.Height);
-                LiquidLevel = (ushort)Math.Min(LiquidLevel, lvl.MaxY);
-
-                GenerateFault(terrain, lvl);
-                FilterAverage(lvl);
-                Logger.Log(LogType.SystemActivity, "Creating overlay");
-                GeneratePerlinNoise(overlay, lvl);
-
-                if (args.GenerateOverlay2) {
-                    Logger.Log(LogType.SystemActivity, "Planning trees");
-                    GeneratePerlinNoise(overlay2, lvl);
+                if (args.FalloffEdges) {
+                    float offset = NegateEdge(x, z, lvl);
+                    y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi) - offset);
+                } else {
+                    y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi));
                 }
-
-                Logger.Log(LogType.SystemActivity, "Converting height map, and applying overlays");
-                float rangeLo = args.RangeLow;
-                float rangeHi = args.RangeHigh;
-                treeDens = args.TreeDensity;
-                treeDist = args.TreeDistance;
-
-                //loops though evey X/Z coordinate
-                for (int index = 0; index < terrain.Length; index++) {
-                    ushort x = (ushort)(index % lvl.Width);
-                    ushort z = (ushort)(index / lvl.Width); // TODO don't % /
-                    ushort y;
-                    
-                    if (args.FalloffEdges) {
-                        float offset = NegateEdge(x, z, lvl);
-                        y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi) - offset);
-                    } else {
-                        y = Evaluate(lvl, Range(terrain[index], rangeLo, rangeHi));
-                    }
-                    
-                    if (!args.UseLavaLiquid)
-                        GenNonLavaColumn(x, y, z, lvl, index);
-                    else
-                        GenLavaColumn(x, y, z, lvl, index);
-                }
-                Logger.Log(LogType.SystemActivity, "Total time was {0} seconds.", (DateTime.UtcNow - start).TotalSeconds);
-            } catch (Exception e) {
-                Logger.LogError(e);
-                p.Message("&WGeneration failed. See error logs.");
-                return false;
+                
+                if (!args.UseLavaLiquid)
+                    GenNonLavaColumn(x, y, z, lvl, index);
+                else
+                    GenLavaColumn(x, y, z, lvl, index);
             }
             return true;
         }

@@ -86,11 +86,9 @@ namespace MCGalaxy
             IOperatingSystem.DetectOS().Init();
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
-            Server.levels = LevelInfo.Loaded.list;
             #pragma warning restore 0618
             
             StartTime = DateTime.UtcNow;
-            shuttingDown = false;
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;
             ForceEnableTLS();

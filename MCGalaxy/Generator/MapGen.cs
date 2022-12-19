@@ -113,7 +113,11 @@ namespace MCGalaxy.Generator
             try {
                 p.Message("Generating map \"{0}\"..", name);
                 lvl = new Level(name, x, y, z);
+                
+                DateTime start = DateTime.UtcNow;
                 if (!gen.Generate(p, lvl, seed)) { lvl.Dispose(); return null; }
+                Logger.Log(LogType.SystemActivity, "Generation completed in {0:F3} seconds", 
+                           (DateTime.UtcNow - start).TotalSeconds);
 
                 string msg = seed.Length > 0 ? "λNICK&S created level {0}&S with seed \"{1}\"" : "λNICK&S created level {0}";
                 Chat.MessageFrom(p, string.Format(msg, lvl.ColoredName, seed));

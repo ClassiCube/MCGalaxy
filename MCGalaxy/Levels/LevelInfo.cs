@@ -28,11 +28,12 @@ namespace MCGalaxy {
         
         /// <summary> Array of all current loaded levels. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
-        public static VolatileArray<Level> Loaded = new VolatileArray<Level>(true);
+        public static VolatileArray<Level> Loaded = new VolatileArray<Level>();
 
         public static Level FindExact(string name) {
             Level[] loaded = Loaded.Items;
-            foreach (Level lvl in loaded) {
+            foreach (Level lvl in loaded) 
+            {
                 if (lvl.name.CaselessEq(name)) return lvl;
             }
             return null;
@@ -56,7 +57,8 @@ namespace MCGalaxy {
         
         public static string[] AllMapNames() {
             string[] files = AllMapFiles();
-            for (int i = 0; i < files.Length; i++) {
+            for (int i = 0; i < files.Length; i++) 
+            {
                 files[i] = Path.GetFileNameWithoutExtension(files[i]);
             }
             return files;
@@ -179,7 +181,8 @@ namespace MCGalaxy {
         public static bool IsRealmOwner(string map, LevelConfig cfg, string name) {
             string[] owners = cfg.RealmOwner.SplitComma();
             if (owners.Length > 0) {
-                foreach (string owner in owners) {
+                foreach (string owner in owners) 
+                {
                     if (owner.CaselessEq(name)) return true;
                 }
                 return false;

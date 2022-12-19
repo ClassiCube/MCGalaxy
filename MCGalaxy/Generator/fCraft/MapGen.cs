@@ -116,7 +116,7 @@ namespace MCGalaxy.Generator.fCraft {
 
         #region Map Processing
 
-        public void GenerateMap(Level map) {
+        void GenerateMap(Level map) {
             // Match water coverage
             float desiredWaterLevel = .5f;
             if( args.MatchWaterCoverage ) {
@@ -165,8 +165,6 @@ namespace MCGalaxy.Generator.fCraft {
                 ReportProgress( 5, "Processing: Planting trees" );
                 GenerateTrees( map );
             }
-
-            ReportProgress( 0, "Generation complete" );
         }
         
         void Fill( Level map, float desiredWaterLevel, float aboveWaterMultiplier, float[] altmap ) {
