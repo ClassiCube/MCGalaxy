@@ -43,6 +43,9 @@ namespace MCGalaxy.Generator.Realistic
             rng = MapGen.MakeRng(seed);
             this.args = args;
             
+            MapGenTheme theme = MapGenTheme.Get(args.Theme);
+            theme.ApplyEnv(lvl.Config);
+            
             terrain = new float[lvl.Width * lvl.Length];
             overlay = new float[lvl.Width * lvl.Length];
             if (args.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
@@ -55,7 +58,7 @@ namespace MCGalaxy.Generator.Realistic
             Logger.Log(LogType.SystemActivity, "Creating overlay");
             GeneratePerlinNoise(overlay, lvl);
 
-            if (args.GenerateOverlay2) {
+            if (args.GenOverlay2) {
                 Logger.Log(LogType.SystemActivity, "Planning trees");
                 GeneratePerlinNoise(overlay2, lvl);
             }

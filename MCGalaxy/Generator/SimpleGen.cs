@@ -41,29 +41,58 @@ namespace MCGalaxy.Generator
         }
         
         static bool GenIsland(Player p, Level lvl, string seed) {
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.island);
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Island);
         }
         
         static bool GenMountains(Player p, Level lvl, string seed) {
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.mountains);
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Mountains);
         }
         
         static bool GenForest(Player p, Level lvl, string seed) {
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.forest);
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Forest);
         }
         
         static bool GenOcean(Player p, Level lvl, string seed) {
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.ocean);
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Ocean);
         }
         
         static bool GenDesert(Player p, Level lvl, string seed) {
-            lvl.Config.HorizonBlock = Block.Sand;
-            lvl.Config.CloudColor   = "#FFEE88";
-            lvl.Config.SkyColor     = "#FFEE88";
-            lvl.Config.FogColor     = "#FFEE88";
-            
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.desert);
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Desert);
         }
+        
+        static bool GenHell(Player p, Level lvl, string seed) {
+            Random rng = MapGen.MakeRng(seed);
+            int width = lvl.Width, height = lvl.Height, length = lvl.Length;
+            int index = 0;
+            byte[] blocks = lvl.blocks;
+            
+            for (int y = 0; y < height; ++y)
+                for (int z = 0; z < length; ++z)
+                    for (int x = 0; x < width; ++x)
+            {
+                if (y == 0) {
+                    blocks[index] = Block.Bedrock;
+                } else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 0 || y == height - 1) {
+                    blocks[index] = Block.Obsidian;
+                } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
+                    if (rng.Next(1000) != 7) { index++; continue; }
+                    
+                    int colIndex = z * width + x;
+                    for (int i = 1; i < (height - y); ++i) {
+                        int yy = height - i;
+                        blocks[colIndex + yy * width * length] = Block.Lava;
+                    }
+                }
+                index++;
+            }
+
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Hell);
+        }
+        
+        static bool GenRealistic(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
+            return new RealisticMapGen().Gen(p, lvl, seed, args);
+        }
+        
         
         unsafe static bool GenFlat(Player p, Level lvl, string seed) {
             int grassHeight = lvl.Height / 2, v;
@@ -79,6 +108,13 @@ namespace MCGalaxy.Generator
                     MapSet(lvl.Width, lvl.Length, ptr, grassY, grassY, Block.Grass);
             }
             return true;
+        }
+        
+        unsafe static void MapSet(int width, int length, byte* ptr,
+                                  int yBeg, int yEnd, byte block) {
+            int beg = (yBeg * length) * width;
+            int end = (yEnd * length + (length - 1)) * width + (width - 1);
+            Utils.memset((IntPtr)ptr, block, beg, end - beg + 1);
         }
         
 
@@ -142,46 +178,6 @@ namespace MCGalaxy.Generator
             Cuboid(lvl, 0, 0, 0,    maxX, 0, maxZ,    nextBlock);
             Cuboid(lvl, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             return true;
-        }
-        
-        static bool GenHell(Player p, Level lvl, string seed) {
-            Random rng = MapGen.MakeRng(seed);
-            int width = lvl.Width, height = lvl.Height, length = lvl.Length;
-            int index = 0;
-            byte[] blocks = lvl.blocks;
-            
-            for (int y = 0; y < height; ++y)
-                for (int z = 0; z < length; ++z)
-                    for (int x = 0; x < width; ++x)
-            {
-                if (y == 0) {
-                    blocks[index] = Block.Bedrock;
-                } else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 0 || y == height - 1) {
-                    blocks[index] = Block.Obsidian;
-                } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
-                    if (rng.Next(1000) != 7) { index++; continue; }
-                    
-                    int colIndex = z * width + x;
-                    for (int i = 1; i < (height - y); ++i) {
-                        int yy = height - i;
-                        blocks[colIndex + yy * width * length] = Block.Lava;
-                    }
-                }
-                index++;
-            }
-            
-            lvl.Config.CloudColor   = "#000000";
-            lvl.Config.SkyColor     = "#FFCC00";
-            lvl.Config.FogColor     = "#FF6600";
-            lvl.Config.HorizonBlock = Block.StillLava;
-            return new RealisticMapGen().Gen(p, lvl, seed, RealisticMapGenArgs.hell);
-        }
-        
-        unsafe static void MapSet(int width, int length, byte* ptr,
-                                  int yBeg, int yEnd, byte block) {
-            int beg = (yBeg * length) * width;
-            int end = (yEnd * length + (length - 1)) * width + (width - 1);
-            Utils.memset((IntPtr)ptr, block, beg, end - beg + 1);
         }
         
         static void Cuboid(Level lvl, int minX, int minY, int minZ,

@@ -515,6 +515,7 @@
     <Compile Include="Generator\LibNoise\RidgedMultifractal.cs" />
     <Compile Include="Generator\LibNoise\Voronoi.cs" />
     <Compile Include="Generator\MapGen.cs" />
+    <Compile Include="Generator\MapGenTheme.cs" />
     <Compile Include="Generator\Realistic\MapGenArgs.cs" />
     <Compile Include="Generator\Realistic\Noise.cs" />
     <Compile Include="Generator\Realistic\MapGen.cs" />

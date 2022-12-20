@@ -5,14 +5,8 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Generator.fCraft {
 
-    /// <summary> Map generator themes. A theme defines what type of blocks are used to fill the map. </summary>
-    public enum MapGenBiome {
-        Forest, Arctic, Desert, Hell, Swamp
-    }
-
-
     /// <summary> Map generator template. Templates define landscape shapes and features. </summary>
-    public enum MapGenTheme {
+    public enum MapGenTemplate {
         Archipelago, Atoll, Bay, Dunes, Hills, Ice, Island2,
         Lake, Mountains2, Peninsula, Random, River, Streams,
         Count
@@ -20,7 +14,8 @@ namespace MCGalaxy.Generator.fCraft {
 
 
     /// <summary> Provides functionality for generating map files. </summary>
-    public sealed class fCraftMapGen {
+    public sealed class fCraftMapGen 
+    {
         readonly fCraftMapGenArgs args;
         readonly Random rand;
         readonly Noise noise;
@@ -28,28 +23,43 @@ namespace MCGalaxy.Generator.fCraft {
         int _width, _length;
 
         // theme-dependent vars
-        internal byte bGroundSurface, bWater, bGround, bSeaFloor, bBedrock, bCliff;
-
-        internal int groundThickness = 5;
+        byte bGroundSurface, bWater, bGround, bSeaFloor, bBedrock, bCliff;
+        int groundThickness = 5;
         const int SeaFloorThickness = 3;
 
         public fCraftMapGen( fCraftMapGenArgs generatorArgs ) {
             args  = generatorArgs;
             rand  = new Random( args.Seed );
             noise = new Noise( args.Seed, NoiseInterpolationMode.Bicubic );
-            args.ApplyTheme( this );
         }
 
 
         public void Generate(Level map) {
             _width  = map.Width;
             _length = map.Length;
+            
+            ApplyTheme(map);
             GenerateHeightmap(map);
             GenerateMap(map);
         }
 
         void ReportProgress(int relativeIncrease, string message) {
             Logger.Log(LogType.SystemActivity, message);
+        }
+        
+        void ApplyTheme(Level map) {
+            MapGenTheme data = MapGenTheme.Get(args.Theme);
+            bGroundSurface   = data.Surface;
+            bWater    = data.Water;
+            bGround   = data.Ground;
+            bSeaFloor = data.SeaFloor;
+            bBedrock  = data.Bedrock;
+            bCliff    = data.Cliff;
+            
+            // TODO: temp hack, need a better solution
+            if (args.Theme == MapGenThemeName.Arctic) groundThickness = 1;
+            
+            data.ApplyEnv(map.Config);
         }
         
 
@@ -397,40 +407,40 @@ namespace MCGalaxy.Generator.fCraft {
         
         
         public static void RegisterGenerators() {
-            string[] names = Enum.GetNames(typeof(MapGenBiome));
+            string[] names = Enum.GetNames(typeof(MapGenThemeName));
             string desc = "&HSeed specifies biome of the map. " +
                  "It must be one of the following: &f" + names.Join();
                                                                                    
-            for (MapGenTheme theme = 0; theme < MapGenTheme.Count; theme++) {
+            for (MapGenTemplate type = 0; type < MapGenTemplate.Count; type++) 
+            {
                 // Because of the way C# implements for loop closures, '=> Gen(p, lvl, seed, theme_)'
                 //  captures the variable from the LAST iteration, not the current one
                 // Hence this causes an error to get thrown later, because 'Gen' is always executed 
                 //  with 'MapGenTheme.Count' theme instead of the expected theme
                 // Using a local variable copy fixes this
-                MapGenTheme theme_ = theme;
+                MapGenTemplate type_ = type;
                 
-                MapGen.Register(theme_.ToString(), GenType.fCraft,
-                                (p, lvl, seed) => Gen(p, lvl, seed, theme_), desc);
+                MapGen.Register(type_.ToString(), GenType.fCraft,
+                                (p, lvl, seed) => Gen(p, lvl, seed, type_), desc);
             }
         }
         
-        static bool Gen(Player p, Level lvl, string seed, MapGenTheme theme) {
-            fCraftMapGenArgs args = fCraftMapGenArgs.MakeTemplate(theme);           
-            MapGenBiome biome     = args.Biome;
-            if (seed.Length > 0 && !CommandParser.GetEnum(p, seed, "Seed", ref biome)) return false;
+        static bool Gen(Player p, Level lvl, string seed, MapGenTemplate type) {
+            fCraftMapGenArgs args = fCraftMapGenArgs.MakeTemplate(type);           
+            MapGenThemeName theme = args.Theme;
+            if (seed.Length > 0 && !CommandParser.GetEnum(p, seed, "Seed", ref theme)) return false;
             
             float ratio = lvl.Height / 96.0f;
             args.MaxHeight    = (int)Math.Round(args.MaxHeight    * ratio);
             args.MaxDepth     = (int)Math.Round(args.MaxDepth     * ratio);
             args.SnowAltitude = (int)Math.Round(args.SnowAltitude * ratio);
             
-            args.Biome      = biome;
-            args.AddTrees   = biome == MapGenBiome.Forest;
-            args.AddWater   = biome != MapGenBiome.Desert;
+            args.Theme      = theme;
+            args.AddTrees   = theme == MapGenThemeName.Forest;
+            args.AddWater   = theme != MapGenThemeName.Desert;
             args.WaterLevel = (lvl.Height - 1) / 2;
 
             new fCraftMapGen(args).Generate(lvl);
-            args.ApplyEnv(lvl.Config);
             return true;
         }
     }
