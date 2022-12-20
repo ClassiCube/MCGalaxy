@@ -59,6 +59,16 @@ namespace MCGalaxy.Generator
             return Forest;
         }
         
+                
+        public static MapGenTheme Forest = new MapGenTheme()
+        {
+            Surface    = Block.Grass,
+            Ground     = Block.Dirt,
+            Cliff      = Block.Stone,
+            Water      = Block.StillWater,
+            SeaFloor   = Block.Sand,
+            Bedrock    = Block.Stone,
+        };
         
         public static MapGenTheme Arctic = new MapGenTheme()
         {
@@ -99,16 +109,6 @@ namespace MCGalaxy.Generator
             SkyColor   = "#FFCC00",
             FogColor   = "#FF6600",
             Horizon    = Block.StillLava,
-        };
-        
-        public static MapGenTheme Forest = new MapGenTheme()
-        {
-            Surface    = Block.Grass,
-            Ground     = Block.Dirt,
-            Cliff      = Block.Stone,
-            Water      = Block.StillWater,
-            SeaFloor   = Block.Sand,
-            Bedrock    = Block.Stone,
         };
         
         public static MapGenTheme Swamp = new MapGenTheme()

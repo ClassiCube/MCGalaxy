@@ -60,7 +60,7 @@ namespace MCGalaxy.Generator.Foliage {
                 if (block == Block.Log || block == Block.Green) return true;
             }
             return false;
-        }
+        } // TODO move to generic helper function
         
         
         public static Dictionary<string, TreeConstructor> TreeTypes = 
