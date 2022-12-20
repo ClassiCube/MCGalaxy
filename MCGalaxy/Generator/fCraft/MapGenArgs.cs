@@ -148,7 +148,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTheme.Atoll:
                     return new fCraftMapGenArgs {
-                        Biome = MapGenBiome.Desert,
+                        //Biome = MapGenBiome.Desert,
                         MaxHeight = 2,
                         MaxDepth = 39,
                         UseBias = true,
@@ -180,7 +180,6 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTheme.Dunes:
                     return new fCraftMapGenArgs {
-                        AddTrees = false,
                         AddWater = false,
                         Biome = MapGenBiome.Desert,
                         MaxHeight = 12,
@@ -204,7 +203,6 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTheme.Ice:
                     return new fCraftMapGenArgs {
-                        AddTrees = false,
                         Biome = MapGenBiome.Arctic,
                         MaxHeight = 2,
                         MaxDepth = 2032,

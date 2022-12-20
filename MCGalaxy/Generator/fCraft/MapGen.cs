@@ -415,9 +415,9 @@ namespace MCGalaxy.Generator.fCraft {
         }
         
         static bool Gen(Player p, Level lvl, string seed, MapGenTheme theme) {
-            MapGenBiome biome = MapGenBiome.Forest;
+            fCraftMapGenArgs args = fCraftMapGenArgs.MakeTemplate(theme);           
+            MapGenBiome biome     = args.Biome;
             if (seed.Length > 0 && !CommandParser.GetEnum(p, seed, "Seed", ref biome)) return false;
-            fCraftMapGenArgs args = fCraftMapGenArgs.MakeTemplate(theme);
             
             float ratio = lvl.Height / 96.0f;
             args.MaxHeight    = (int)Math.Round(args.MaxHeight    * ratio);
