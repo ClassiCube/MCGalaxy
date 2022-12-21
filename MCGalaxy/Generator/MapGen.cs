@@ -59,11 +59,22 @@ namespace MCGalaxy.Generator
             if (!int.TryParse(seed, out value)) value = seed.GetHashCode();
             return value;
         }
+        
+        public static bool ParseArgs(Player p, string input, 
+                                     out int seed, ref MapGenThemeName theme) {
+            if (int.TryParse(input, out seed)) return true;
+            
+            seed = new Random().Next();
+            if (input.Length == 0) return true;
+            
+            return CommandParser.GetEnum(p, input, "Seed", ref theme);
+        }
 
         
         public static List<MapGen> Generators = new List<MapGen>();
         public static MapGen Find(string theme) {
-            foreach (MapGen gen in Generators) {
+            foreach (MapGen gen in Generators) 
+            {
                 if (gen.Theme.CaselessEq(theme)) return gen;
             }
             return null;

@@ -176,12 +176,6 @@ namespace MCGalaxy {
             return chunk == null ? Block.Air : chunk[(y & 0x0F) << 8 | (z & 0x0F) << 4 | (x & 0x0F)];
         }
         
-        public void SetTile(int index, byte block) {
-            if (blocks == null || index < 0 || index >= blocks.Length) return;
-            blocks[index] = block;
-            Changed = true;
-        }
-        
         public void SetTile(ushort x, ushort y, ushort z, byte block) {
             int index = PosToInt(x, y, z);
             if (blocks == null || index < 0) return;

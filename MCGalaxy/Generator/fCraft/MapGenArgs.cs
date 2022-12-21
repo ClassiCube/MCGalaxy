@@ -53,10 +53,6 @@ namespace MCGalaxy.Generator.fCraft
         public bool  AddBeaches; // false
         public int   BeachExtent = 6;
         public int   BeachHeight = 2;
-
-        public fCraftMapGenArgs() {
-            Seed = (new Random()).Next();
-        }
         
 
         public static fCraftMapGenArgs MakeTemplate( MapGenTemplate template ) {

@@ -493,7 +493,6 @@
     <Compile Include="Games\ZombieSurvival\ZSGame.cs" />
     <Compile Include="Games\ZombieSurvival\ZSGame.Plugin.cs" />
     <Compile Include="Games\ZombieSurvival\ZSConfig.cs" />
-    <Compile Include="Generator\AdvNoiseGen.cs" />
     <Compile Include="Generator\Classic\ClassicGenerator.cs" />
     <Compile Include="Generator\Classic\ClassicGenerator.Utils.cs" />
     <Compile Include="Generator\Classic\Noise.cs" />
@@ -507,6 +506,7 @@
     <Compile Include="Generator\Foliage\Tree.cs" />
     <Compile Include="Generator\HeightmapGen.cs" />
     <Compile Include="Generator\ImprovedNoise.cs" />
+    <Compile Include="Generator\LibNoise\AdvNoiseGen.cs" />
     <Compile Include="Generator\LibNoise\Billow.cs" />
     <Compile Include="Generator\LibNoise\Checkerboard.cs" />
     <Compile Include="Generator\LibNoise\GradientNoiseBasis.cs" />

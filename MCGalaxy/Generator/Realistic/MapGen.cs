@@ -39,10 +39,11 @@ namespace MCGalaxy.Generator.Realistic
         RealisticMapGenArgs args;
         
         public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
-            DateTime start = DateTime.UtcNow;
-            rng = MapGen.MakeRng(seed);
             this.args = args;
+            int rng_seed;
+            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Theme)) return false;
             
+            rng = new Random(rng_seed);
             MapGenTheme theme = MapGenTheme.Get(args.Theme);
             theme.ApplyEnv(lvl.Config);
             

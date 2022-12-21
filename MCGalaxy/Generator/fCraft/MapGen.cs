@@ -428,7 +428,7 @@ namespace MCGalaxy.Generator.fCraft {
         static bool Gen(Player p, Level lvl, string seed, MapGenTemplate type) {
             fCraftMapGenArgs args = fCraftMapGenArgs.MakeTemplate(type);           
             MapGenThemeName theme = args.Theme;
-            if (seed.Length > 0 && !CommandParser.GetEnum(p, seed, "Seed", ref theme)) return false;
+            if (!MapGen.ParseArgs(p, seed, out args.Seed, ref theme)) return false;
             
             float ratio = lvl.Height / 96.0f;
             args.MaxHeight    = (int)Math.Round(args.MaxHeight    * ratio);

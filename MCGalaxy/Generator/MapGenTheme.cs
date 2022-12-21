@@ -40,12 +40,14 @@ namespace MCGalaxy.Generator
         public string SkyColor;
         public string FogColor;
         public byte Horizon;
+        public byte Border;
         
         public void ApplyEnv(EnvConfig env) {
             if (CloudColor != null) env.CloudColor = CloudColor;
             if (SkyColor != null)   env.SkyColor   = SkyColor;
             if (FogColor != null)   env.FogColor   = FogColor;
             if (Horizon != 0)       env.HorizonBlock = Horizon;
+            if (Border  != 0)       env.EdgeBlock    = Border;
         }
         
         public static MapGenTheme Get(MapGenThemeName theme) {
@@ -95,6 +97,7 @@ namespace MCGalaxy.Generator
             SkyColor   = "#FFEE88",
             FogColor   = "#FFEE88",
             Horizon    = Block.Sand,
+            Border     = Block.Sandstone,
         };
         
         public static MapGenTheme Hell = new MapGenTheme()
