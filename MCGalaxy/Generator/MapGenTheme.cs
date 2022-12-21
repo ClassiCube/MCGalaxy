@@ -21,7 +21,7 @@ namespace MCGalaxy.Generator
 {
     public enum MapGenThemeName
     {
-        Forest, Arctic, Desert, Hell, Swamp
+        Forest, Arctic, Desert, Hell, Swamp, Mine
     }
     
     /// <summary> Contains environment settings and the types of blocks that are used to generate a map </summary>
@@ -57,6 +57,7 @@ namespace MCGalaxy.Generator
                 case MapGenThemeName.Desert: return Desert;
                 case MapGenThemeName.Hell:   return Hell;
                 case MapGenThemeName.Swamp:  return Swamp;
+                case MapGenThemeName.Mine:   return Mine;
             }
             return Forest;
         }
@@ -122,6 +123,19 @@ namespace MCGalaxy.Generator
             Water      = Block.StillWater,
             SeaFloor   = Block.Leaves,
             Bedrock    = Block.Stone,
+        };
+        
+        public static MapGenTheme Mine = new MapGenTheme()
+        {
+            Surface    = Block.Gravel,
+            Ground     = Block.Cobblestone,
+            Cliff      = Block.Stone,
+            Water      = Block.StillWater,
+            SeaFloor   = Block.Stone,
+            Bedrock    = Block.Bedrock,
+            CloudColor = "#444444",
+            SkyColor   = "#444444",
+            FogColor   = "#777777",
         };
     }
 }

@@ -23,21 +23,20 @@ namespace MCGalaxy.Generator
     public static class SimpleGen 
     {
         delegate byte NextBlock();
-        const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
         
         public static void RegisterGenerators() {
             const GenType type = GenType.Simple;
-            MapGen.Register("Island",    type, GenIsland,    defHelp);
-            MapGen.Register("Mountains", type, GenMountains, defHelp);
-            MapGen.Register("Forest",    type, GenForest,    defHelp);
-            MapGen.Register("Ocean",     type, GenOcean,     defHelp);
+            MapGen.Register("Island",    type, GenIsland,    MapGen.DEFAULT_HELP);
+            MapGen.Register("Mountains", type, GenMountains, MapGen.DEFAULT_HELP);
+            MapGen.Register("Forest",    type, GenForest,    MapGen.DEFAULT_HELP);
+            MapGen.Register("Ocean",     type, GenOcean,     MapGen.DEFAULT_HELP);
             MapGen.Register("Flat",  type, GenFlat,  "&HSeed specifies grass height (default half of level height)");
             MapGen.Register("Pixel", type, GenPixel, "&HSeed does nothing");
             MapGen.Register("Empty", type, GenEmpty, "&HSeed does nothing");
-            MapGen.Register("Desert",  type, GenDesert,  defHelp);
-            MapGen.Register("Space",   type, GenSpace,   defHelp);
-            MapGen.Register("Rainbow", type, GenRainbow, defHelp);
-            MapGen.Register("Hell",    type, GenHell,    defHelp);
+            MapGen.Register("Desert",  type, GenDesert,  MapGen.DEFAULT_HELP);
+            MapGen.Register("Space",   type, GenSpace,   MapGen.DEFAULT_HELP);
+            MapGen.Register("Rainbow", type, GenRainbow, MapGen.DEFAULT_HELP);
+            MapGen.Register("Hell",    type, GenHell,    MapGen.DEFAULT_HELP);
         }
         
         static bool GenIsland(Player p, Level lvl, string seed) {

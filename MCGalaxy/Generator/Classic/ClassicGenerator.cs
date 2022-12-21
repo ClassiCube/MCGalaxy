@@ -3,21 +3,14 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy;
+using MCGalaxy.Generator;
 
-namespace ClassicalSharp.Generator {
-    
-    public sealed partial class ClassicGenerator {
-        
-        int waterLevel, oneY, Width, Length, Height;
-        byte[] blocks;
-        short[] heightmap;
-        JavaRandom rnd;
-        int minHeight;
-        string CurrentState;
-        
-        const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
-        public static void RegisterGenerators() {                                                
-            MCGalaxy.Generator.MapGen.Register("Classic", MCGalaxy.Generator.GenType.Simple, Gen, defHelp);
+namespace ClassicalSharp.Generator 
+{    
+    public sealed partial class ClassicGenerator 
+    {    
+        public static void RegisterGenerators() {
+            MapGen.Register("Classic", GenType.Simple, Gen, MapGen.DEFAULT_HELP);
         }
         
         static bool Gen(Player p, Level lvl, string seed) {      
@@ -25,6 +18,14 @@ namespace ClassicalSharp.Generator {
             new ClassicGenerator().Generate(lvl, seed_);
             return true;
         }
+    	
+    	
+        int waterLevel, oneY, Width, Length, Height;
+        byte[] blocks;
+        short[] heightmap;
+        JavaRandom rnd;
+        int minHeight;
+        string CurrentState;
         
         public byte[] Generate(Level lvl, int seed) {
             blocks = lvl.blocks;

@@ -89,6 +89,9 @@ namespace MCGalaxy.Generator
             p.Message("&HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
         
+        
+        public const string DEFAULT_HELP = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
+        	
         /// <summary> Adds a new map generator to the list of generators. </summary>
         public static void Register(string theme, GenType type, MapGenFunc func, string desc) {
             MapGen gen = new MapGen() { Theme = theme, GenFunc = func, Desc = desc, Type = type };

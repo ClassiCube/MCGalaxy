@@ -307,6 +307,7 @@ namespace MCGalaxy.Generator.Realistic
             float temp;
             if (x != 0) { tempx = ((float)x / (float)lvl.Width) * 0.5f; }
             if (z != 0) { tempy = ((float)z / (float)lvl.Length) * 0.5f; }
+            
             tempx = Math.Abs(tempx - 0.25f);
             tempy = Math.Abs(tempy - 0.25f);
             

@@ -20,6 +20,7 @@ namespace MCGalaxy.Generator.fCraft {
         readonly Random rand;
         readonly Noise noise;
         float[] heightmap, slopemap;
+        ushort[] surfaceMap; // height of tallest non-air block
         int _width, _length;
 
         // theme-dependent vars
@@ -67,7 +68,8 @@ namespace MCGalaxy.Generator.fCraft {
 
         void GenerateHeightmap(Level map) {
             ReportProgress( 10, "Heightmap: Priming" );
-            heightmap = new float[_width * _length];
+            heightmap  = new float[_width * _length];
+            surfaceMap = new ushort[_width * _length];
 
             noise.PerlinNoise( heightmap, _width, _length, 
                               args.FeatureScale, args.DetailScale, args.Roughness );
@@ -193,7 +195,8 @@ namespace MCGalaxy.Generator.fCraft {
                         depth += altmap[i] * args.MaxDepthVariation;
                     }
                     slope = slopemap[i] * depth;
-                    level = args.WaterLevel - (int)Math.Round( Math.Pow( 1 - heightmap[i] / desiredWaterLevel, args.BelowFuncExponent ) * depth );
+                    level = args.WaterLevel - (int)Math.Round( ( 1 - heightmap[i] / desiredWaterLevel ) * depth );
+                    surfaceMap[i] = (ushort)args.WaterLevel;
 
                     if( args.AddWater ) {
                         int index = (args.WaterLevel * length + z) * width + x;
@@ -253,10 +256,11 @@ namespace MCGalaxy.Generator.fCraft {
                     }
                     slope = slopemap[i] * height;
                     if( height != 0 ) {
-                        level = args.WaterLevel + (int)Math.Round( Math.Pow( heightmap[i] - desiredWaterLevel, args.AboveFuncExponent ) * aboveWaterMultiplier / args.MaxHeight * height );
+                        level = args.WaterLevel + (int)Math.Round( ( heightmap[i] - desiredWaterLevel ) * aboveWaterMultiplier / args.MaxHeight * height );
                     } else {
                         level = args.WaterLevel;
                     }
+                    surfaceMap[i] = (ushort)level;
 
                     bool snow = args.AddSnow &&
                         (level > snowThreshold ||
@@ -331,16 +335,16 @@ namespace MCGalaxy.Generator.fCraft {
             const int topLayers = 2;
             const double odds = 0.618;
 
-            Random rn = new Random();
-            short[,] shadows = ComputeHeightmap( map );
+            Random rn = new Random(200);
             int width = _width, length = _length;
 
             for( int x = 0; x < width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
                 for( int z = 0; z < length; z += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
                     int nx = x + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
                     int nz = z + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
+                    
                     if( nx < 0 || nx >= width || nz < 0 || nz >= length ) continue;
-                    int ny = shadows[nx, nz];
+                    int ny = surfaceMap[nx * length + nz];
 
                     if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx * length + nz] < .5 ) {
                         // Pick a random height for the tree between Min and Max,
@@ -375,35 +379,6 @@ namespace MCGalaxy.Generator.fCraft {
         }
 
         #endregion
-        
-        
-        static short[,] ComputeHeightmap(Level map) {
-            short[,] shadows = new short[map.Width, map.Length];
-            for( int x = 0; x < map.Width; x++ )
-                for( int z = 0; z < map.Length; z++ )
-            {
-                int index = (map.Height * map.Length + z) * map.Width + x;
-                for( int y = (map.Height - 1); y >= 0; y-- ) {
-                    index -= map.Length * map.Width;
-                    switch( map.blocks[index] ) {
-                        case Block.Air:
-                        case Block.Mushroom:
-                        case Block.Glass:
-                        case Block.Leaves:
-                        case Block.Rose:
-                        case Block.RedMushroom:
-                        case Block.Sapling:
-                        case Block.Dandelion:
-                            continue;
-                        default:
-                            shadows[x, z] = (short)y;
-                            break;
-                    }
-                    break;
-                }
-            }
-            return shadows;
-        }
         
         
         public static void RegisterGenerators() {
