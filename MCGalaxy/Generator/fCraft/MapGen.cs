@@ -335,7 +335,7 @@ namespace MCGalaxy.Generator.fCraft {
             const int topLayers = 2;
             const double odds = 0.618;
 
-            Random rn = new Random(200);
+            Random rn = new Random();
             int width = _width, length = _length;
 
             for( int x = 0; x < width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {

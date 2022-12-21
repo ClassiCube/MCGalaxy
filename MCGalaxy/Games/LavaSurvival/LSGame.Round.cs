@@ -19,29 +19,32 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Games {
-    public sealed partial class LSGame : RoundsGame {
-
+namespace MCGalaxy.Games 
+{
+    public sealed partial class LSGame : RoundsGame 
+    {
+        int roundSecs, layerSecs;
+    	
         protected override void DoRound() {
             if (!Running) return;
+            roundSecs = 0;
+            layerSecs = 0;
 
             ResetPlayerDeaths();
             RoundStart = DateTime.UtcNow;
-            RoundInProgress = true;
+            RoundInProgress = true;            
+            Map.SetPhysics(destroyMode ? 2 : 1);
             
-            Map.SetPhysics(destroyMode ? 2 : 1);           
-            int secs = 0, layerSecs = 0;
-            
-            while (RoundInProgress && secs < roundTotalSecs) {
+            while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
-                if ((secs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
+                if ((roundSecs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
                 
-                if (secs >= floodDelaySecs) {
+                if (roundSecs >= floodDelaySecs) {
                     if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
                         ushort y = (ushort)(cfg.LayerPos.Y + ((cfg.LayerHeight * curLayer) - 1));
                         Map.Blockchange(cfg.LayerPos.X, y, cfg.LayerPos.Z, floodBlock, true);
                         curLayer++;
-                    } else if (!layerMode && secs == floodDelaySecs) {
+                    } else if (!layerMode && roundSecs == floodDelaySecs) {
                         Map.Message("&4Look out, here comes the flood!");
                         Logger.Log(LogType.GameActivity, "[Lava Survival] Starting map flood.");
                         Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
@@ -51,7 +54,8 @@ namespace MCGalaxy.Games {
                     flooded = true;
                 }
                 
-                secs++; Thread.Sleep(1000);
+                roundSecs++; 
+                Thread.Sleep(1000);
             }
         }
 
@@ -64,13 +68,13 @@ namespace MCGalaxy.Games {
             Map.Message("The round has ended!");
         }
 
-        internal string FloodTimeLeftMessage() {
-            TimeSpan left = RoundStart.Add(cfg.FloodTime) - DateTime.UtcNow;
+        string FloodTimeLeftMessage() {
+            TimeSpan left = TimeSpan.FromSeconds(floodDelaySecs - roundSecs);
             return "&3" + left.Shorten(true) + " &Suntil the flood.";
         }
         
-        internal string RoundTimeLeftMessage() {
-            TimeSpan left = RoundStart.Add(cfg.RoundTime) - DateTime.UtcNow;
+        string RoundTimeLeftMessage() {
+            TimeSpan left = TimeSpan.FromSeconds(roundTotalSecs - roundSecs);
             return "&3" + left.Shorten(true) + " &Suntil the round ends.";
         }
 
