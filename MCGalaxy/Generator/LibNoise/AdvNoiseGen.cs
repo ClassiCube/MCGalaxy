@@ -40,31 +40,28 @@ namespace MCGalaxy.Generator
         #region Implementations
         
         static bool GenBillow2D(Player p, Level lvl, string seed) {
-            Billow billow2D = new Billow();
-            billow2D.Seed   = MapGen.MakeInt(seed);
-            return Gen2D(lvl, billow2D);
+            Billow module = new Billow();
+            return Gen2D(p, lvl, module, seed, out module.Seed);
         }
         
         static bool GenRidged2D(Player p, Level lvl, string seed) {
-            RidgedMultifractal ridged2D = new RidgedMultifractal();
-            ridged2D.Seed = MapGen.MakeInt(seed);
-            return Gen2D(lvl, ridged2D);
+            RidgedMultifractal module = new RidgedMultifractal();
+            return Gen2D(p, lvl, module, seed, out module.Seed);
         }
         
         static bool GenPerlin2D(Player p, Level lvl, string seed) {
-            Perlin perlin2D = new Perlin();
-            perlin2D.Seed   = MapGen.MakeInt(seed);
-            return Gen2D(lvl, perlin2D);
+            Perlin module = new Perlin();
+            return Gen2D(p, lvl, module, seed, out module.Seed);
         }
         
         static bool GenCheckerboard(Player p, Level lvl, string seed) {
-            return Gen2D(lvl, new Checkerboard());
+            int value;
+            return Gen2D(p, lvl, new Checkerboard(), seed, out value);
         }
         
         static bool GenVoronoi(Player p, Level lvl, string seed) {
-            Voronoi voronoi2D = new Voronoi();
-            voronoi2D.Seed    = MapGen.MakeInt(seed);
-            return Gen2D(lvl, voronoi2D);
+            Voronoi module = new Voronoi();
+            return Gen2D(p, lvl, module, seed, out module.Seed);
         }
         
         static bool GenPerlin3D(Player p, Level lvl, string seed) {
@@ -87,28 +84,42 @@ namespace MCGalaxy.Generator
         
         #endregion
         
-        static bool Gen2D(Level lvl, IModule module) {
+        static bool Gen2D(Player p, Level lvl, IModule module, 
+                          string seed, out int noiseSeed) {
             int width = lvl.Width, length = lvl.Length, half = lvl.Height / 2;
             int waterHeight = half - 1;
+            
+            MapGenThemeName theme = MapGenThemeName.Forest;
+            if (!MapGen.ParseArgs(p, seed, out noiseSeed, ref theme)) return false;
+            MapGenTheme biome = MapGenTheme.Get(theme);
             
             for (int z = 0; z < length; ++z)
                 for (int x = 0; x < width; ++x)
             {
-                double noise = module.GetValue(x / 100.0, 0.1, z / 100.0);
-                int dirtHeight = (int)Math.Floor((noise + 2) * 10) + (half - 20);
-                int sandHeight = (int)Math.Floor((noise + 2) * 15) + (half - 30);
-                byte topBlock = dirtHeight < sandHeight ? Block.Grass : Block.Sand;
-                lvl.SetTile((ushort)x, (ushort)dirtHeight, (ushort)z, topBlock);
+                double noise   = module.GetValue(x / 100.0, 0.1, z / 100.0);
+                int dirtHeight = (int)Math.Floor(noise * 10) + half;
                 
                 if (dirtHeight < waterHeight) {
+                    // column is underwater
                     for (int y = waterHeight; y >= dirtHeight; y--)
-                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.StillWater);
+                    {
+                        lvl.SetTile((ushort)x, (ushort)y, (ushort)z, biome.Water);
+                    }
+                } else {
+                    // top of column is above water
+                    int sandHeight = (int)Math.Floor(noise * 15) + half;
+                    byte topBlock  = dirtHeight < sandHeight ? biome.Surface : biome.SeaFloor;
+                    lvl.SetTile((ushort)x, (ushort)dirtHeight, (ushort)z, topBlock);
                 }
-                for (int y = dirtHeight - 1; y >= 0; y--) {
-                    byte block = (y > dirtHeight * 3 / 4) ? Block.Dirt : Block.Stone;
+                
+                for (int y = dirtHeight - 1; y >= 0; y--) 
+                {
+                    byte block = (y > dirtHeight * 3 / 4) ? biome.Ground : biome.Cliff;
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
                 }
             }
+            
+            biome.ApplyEnv(lvl.Config);
             return true;
         }
         
