@@ -28,7 +28,8 @@ namespace MCGalaxy.Games {
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
-            
+            OnBlockHandlersUpdatedEvent.Register(HandleBlockHandlersUpdated, Priority.High);
+
             base.HookEventHandlers();
         }
         
@@ -36,7 +37,8 @@ namespace MCGalaxy.Games {
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
-            
+            OnBlockHandlersUpdatedEvent.Unregister(HandleBlockHandlersUpdated);
+
             base.UnhookEventHandlers();
         }
         

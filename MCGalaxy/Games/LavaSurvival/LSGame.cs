@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Games {

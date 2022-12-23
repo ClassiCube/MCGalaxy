@@ -471,6 +471,7 @@
     <Compile Include="Games\CTF\CtfGame.Round.cs" />
     <Compile Include="Games\GameProps.cs" />
     <Compile Include="Games\IGame.cs" />
+    <Compile Include="Games\LavaSurvival\LSGame.Physics.cs" />
     <Compile Include="Games\LavaSurvival\LSGame.Plugin.cs" />
     <Compile Include="Games\LavaSurvival\LSGame.cs" />
     <Compile Include="Games\LavaSurvival\LSConfig.cs" />

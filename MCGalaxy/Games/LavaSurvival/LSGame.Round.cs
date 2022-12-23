@@ -34,7 +34,14 @@ namespace MCGalaxy.Games
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;            
             Map.SetPhysics(destroyMode ? 2 : 1);
-            
+
+            Map.UpdateBlockHandlers(Block.Water);
+            Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
+            Map.UpdateBlockHandlers(Block.Lava);
+            Map.UpdateBlockHandlers(Block.Deadly_ActiveLava);
+            Map.UpdateBlockHandlers(Block.FastLava);
+            Map.UpdateBlockHandlers(Block.Deadly_FastLava);
+
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
                 if ((roundSecs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
