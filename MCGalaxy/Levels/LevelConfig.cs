@@ -186,7 +186,7 @@ namespace MCGalaxy
         }
         
         /// <summary> Calculates the default value for the given env property </summary>
-        public int DefaultEnvProp(EnvProp i, int height) {
+        public static int DefaultEnvProp(EnvProp i, int height) {
             if (i == EnvProp.SidesBlock)     return Block.Bedrock;
             if (i == EnvProp.EdgeBlock)      return Block.Water;
             if (i == EnvProp.EdgeLevel)      return height / 2;

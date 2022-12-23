@@ -278,7 +278,7 @@ namespace MCGalaxy
                 value = zone.Config.GetEnvProp(i);
             }
             
-            if (value == default_) value = level.Config.DefaultEnvProp(i, level.Height);
+            if (value == default_) value = EnvConfig.DefaultEnvProp(i, level.Height);
             if (block)             value = Session.ConvertBlock((BlockID)value);
             return value;
         }
