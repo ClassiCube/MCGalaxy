@@ -19,12 +19,15 @@ using System;
 using System.Collections.Generic;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    internal sealed class LSData {
+namespace MCGalaxy.Games 
+{
+    internal sealed class LSData 
+    {
         public int TimesDied;
     }
     
-    public sealed partial class LSGame : RoundsGame {
+    public sealed partial class LSGame : RoundsGame 
+    {
         LSMapConfig cfg = new LSMapConfig();
         public static LSConfig Config = new LSConfig();
         public override string GameName { get { return "Lava survival"; } }
@@ -86,6 +89,7 @@ namespace MCGalaxy.Games {
         protected override void EndGame() {
             flooded = false;
             ResetPlayerDeaths();
+            if (Map != null) UpdateBlockHandlers();
         }
         
         public bool IsPlayerDead(Player p) {
@@ -94,7 +98,8 @@ namespace MCGalaxy.Games {
         
         void ResetPlayerDeaths() {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (p.level == Map) Get(p).TimesDied = 0;
             }
         }

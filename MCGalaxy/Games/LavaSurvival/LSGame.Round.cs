@@ -34,17 +34,11 @@ namespace MCGalaxy.Games
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;            
             Map.SetPhysics(destroyMode ? 2 : 1);
-
-            Map.UpdateBlockHandlers(Block.Water);
-            Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
-            Map.UpdateBlockHandlers(Block.Lava);
-            Map.UpdateBlockHandlers(Block.Deadly_ActiveLava);
-            Map.UpdateBlockHandlers(Block.FastLava);
-            Map.UpdateBlockHandlers(Block.Deadly_FastLava);
+            UpdateBlockHandlers();
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
-                if ((roundSecs % 60) == 0 && !flooded) { Map.Message(FloodTimeLeftMessage()); }
+                if (!flooded) AnnounceFloodTime();
                 
                 if (roundSecs >= floodDelaySecs) {
                     if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
@@ -75,14 +69,26 @@ namespace MCGalaxy.Games
             Map.Message("The round has ended!");
         }
 
+        void AnnounceFloodTime() {
+            int left = floodDelaySecs - roundSecs;
+
+            if (left == 0) {
+                MessageMap(CpeMessageType.Announcement, "");
+            } else if (left <= 10) {
+                MessageCountdown("&3{0} &Sseconds until the flood", left, 10);
+            } else if ((roundSecs % 60) == 0) { 
+                Map.Message(FloodTimeLeftMessage()); 
+            }
+        }
+
         string FloodTimeLeftMessage() {
             TimeSpan left = TimeSpan.FromSeconds(floodDelaySecs - roundSecs);
-            return "&3" + left.Shorten(true) + " &Suntil the flood.";
+            return "&3" + left.Shorten(true) + " &Suntil the flood starts";
         }
         
         string RoundTimeLeftMessage() {
             TimeSpan left = TimeSpan.FromSeconds(roundTotalSecs - roundSecs);
-            return "&3" + left.Shorten(true) + " &Suntil the round ends.";
+            return "&3" + left.Shorten(true) + " &Suntil the round ends";
         }
 
         public override void OutputStatus(Player p) {

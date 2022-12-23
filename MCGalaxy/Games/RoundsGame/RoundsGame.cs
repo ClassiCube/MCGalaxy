@@ -136,17 +136,23 @@ namespace MCGalaxy.Games
         }
         
         protected void DoCountdown(string format, int delay, int minThreshold) {
-            const CpeMessageType type = CpeMessageType.Announcement;
-            for (int i = delay; i > 0 && Running; i--) {
-                if (i == 1) {
-                    MessageMap(type, String.Format(format, i)
-                               .Replace("seconds", "second"));
-                } else if (i < minThreshold || (i % 10) == 0) {
-                    MessageMap(type, String.Format(format, i));
-                }
+            for (int i = delay; i > 0 && Running; i--) 
+            {
+                MessageCountdown(format, i, minThreshold);
                 Thread.Sleep(1000);
             }
-            MessageMap(type, "");
+            MessageMap(CpeMessageType.Announcement, "");
+        }
+
+        protected void MessageCountdown(string format, int i, int minThreshold) {
+            const CpeMessageType type = CpeMessageType.Announcement;
+            
+            if (i == 1) {
+                MessageMap(type, String.Format(format, i)
+                           .Replace("seconds", "second"));
+            } else if (i < minThreshold || (i % 10) == 0) {
+                MessageMap(type, String.Format(format, i));
+            }
         }
         
         protected List<Player> DoRoundCountdown(int delay) {

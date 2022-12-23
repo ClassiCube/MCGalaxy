@@ -23,9 +23,17 @@ namespace MCGalaxy.Games
 {
     public sealed partial class LSGame : RoundsGame 
     {
+        void UpdateBlockHandlers() {
+            Map.UpdateBlockHandlers(Block.Water);
+            Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
+            Map.UpdateBlockHandlers(Block.Lava);
+            Map.UpdateBlockHandlers(Block.Deadly_ActiveLava);
+            Map.UpdateBlockHandlers(Block.FastLava);
+            Map.UpdateBlockHandlers(Block.Deadly_FastLava);
+        }
 
         void HandleBlockHandlersUpdated(Level lvl, BlockID block) {
-            if (lvl != Map) return;
+            if (!Running || lvl != Map) return;
 
             switch (block)
             {
