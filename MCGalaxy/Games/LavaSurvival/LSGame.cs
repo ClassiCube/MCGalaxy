@@ -35,7 +35,8 @@ namespace MCGalaxy.Games
         
         bool flooded, fastMode, killerMode, destroyMode, waterMode, layerMode;
         BlockID floodBlock;
-        int curLayer, roundTotalSecs, floodDelaySecs, layerIntervalSecs;
+        int curLayer, spreadDelay;
+        int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
         
         public static LSGame Instance = new LSGame();
         public LSGame() { Picker = new LevelPicker(); }
@@ -64,11 +65,10 @@ namespace MCGalaxy.Games
             
             if (waterMode) {
                 floodBlock = killerMode ? Block.Deadly_ActiveWater : Block.Water;
-            } else if (fastMode) {
-                floodBlock = killerMode ? Block.Deadly_FastLava : Block.FastLava;
             } else {
-                floodBlock = killerMode ? Block.Deadly_ActiveLava : Block.Lava;
+                floodBlock = killerMode ? Block.Deadly_ActiveLava  : Block.Lava;
             }
+            spreadDelay = fastMode ? 0 : 4;
 
             curLayer = 1;
             roundTotalSecs = (int)cfg.RoundTime.TotalSeconds;

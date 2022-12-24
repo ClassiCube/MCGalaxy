@@ -28,8 +28,6 @@ namespace MCGalaxy.Games
             Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
             Map.UpdateBlockHandlers(Block.Lava);
             Map.UpdateBlockHandlers(Block.Deadly_ActiveLava);
-            Map.UpdateBlockHandlers(Block.FastLava);
-            Map.UpdateBlockHandlers(Block.Deadly_FastLava);
         }
 
         void HandleBlockHandlersUpdated(Level lvl, BlockID block) {
@@ -43,31 +41,10 @@ namespace MCGalaxy.Games
                 case Block.Lava:
                 case Block.Deadly_ActiveLava:
                     lvl.PhysicsHandlers[block] = DoLava; break;
-                case Block.FastLava:
-                case Block.Deadly_FastLava:
-                    lvl.PhysicsHandlers[block] = DoFastLava; break;
             }
         }
 
         void DoWater(Level lvl, ref PhysInfo C) {
-            DoWaterUniformFlow(lvl, ref C);
-        }
-        
-        void DoLava(Level lvl, ref PhysInfo C) {
-            // upper 3 bits are time delay
-            if (C.Data.Data < (4 << 5)) {
-                C.Data.Data += (1 << 5); return;
-            }
-            
-            DoLavaUniformFlow(lvl, ref C);
-        }
-        
-        void DoFastLava(Level lvl, ref PhysInfo C) {
-            DoLavaUniformFlow(lvl, ref C);
-        }
-        
-
-        void DoWaterUniformFlow(Level lvl, ref PhysInfo C) {
             ushort x = C.X, y = C.Y, z = C.Z;
             
             if (!lvl.CheckSpongeWater(x, y, z)) {
@@ -84,8 +61,12 @@ namespace MCGalaxy.Games
             C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
         
-        void DoLavaUniformFlow(Level lvl, ref PhysInfo C) {
+        void DoLava(Level lvl, ref PhysInfo C) {
             ushort x = C.X, y = C.Y, z = C.Z;
+
+            if (C.Data.Data < spreadDelay) {
+                C.Data.Data++; return;
+            }
             
             if (!lvl.CheckSpongeLava(x, y, z)) {
                 BlockID block = C.Block;
