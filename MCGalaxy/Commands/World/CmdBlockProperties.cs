@@ -154,7 +154,8 @@ namespace MCGalaxy.Commands.World {
             scope[block] = BlockProps.MakeDefault(scope, p.level, block);
             string name  = BlockProps.ScopedName(scope, p, block);
             
-            p.Message("Reset properties of {0} to default", name);
+            if (!p.Ignores.BlockdefChanges)
+                p.Message("Reset properties of {0} to default", name);
             BlockProps.ApplyChanges(scope, p.level, block, true);
         }
         

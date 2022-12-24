@@ -32,7 +32,8 @@ namespace MCGalaxy.Commands.Building {
             ushort dist = 20;
             if (message.Length > 0 && !CommandParser.GetUShort(p, message, "Distance", ref dist)) return;
             
-            p.Message("Destroy the block you wish to drill.");
+            if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                p.Message("Destroy the block you wish to drill.");
             p.MakeSelection(1, "Selecting location for &SDrill", dist, DoDrill);
         }
         

@@ -80,7 +80,8 @@ namespace MCGalaxy.Commands.Building {
                 dArgs.Data = File.ReadAllBytes(path);
             }
 
-            p.Message("Place or break two blocks to determine direction.");
+            if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                p.Message("Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for &SImagePrint", dArgs, DoImage);
         }
 

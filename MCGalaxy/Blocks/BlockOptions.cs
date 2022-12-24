@@ -114,8 +114,10 @@ namespace MCGalaxy.Blocks {
         
         static void Toggle(Player p, BlockProps[] scope, BlockID block, string type, ref bool on) {
             on = !on;
-            string name = BlockProps.ScopedName(scope, p, block);
-            p.Message("Block {0} is {1}: {2}", name, type, on ? "&aYes" : "&cNo");
+            if (!p.Ignores.BlockdefChanges) {
+                string name = BlockProps.ScopedName(scope, p, block);
+                p.Message("Block {0} is {1}: {2}", name, type, on ? "&aYes" : "&cNo");
+            }
         }
         
         static void SetAI(Player p, BlockProps[] scope, BlockID block, string msg) {
@@ -150,7 +152,7 @@ namespace MCGalaxy.Blocks {
             string name = BlockProps.ScopedName(scope, p, block);
             if (stackBlock == Block.Air) {
                 p.Message("Removed stack block for {0}", name);
-            } else {
+            } else if (!p.Ignores.BlockdefChanges) {
                 p.Message("Stack block for {0} set to: {1}",
                           name, BlockProps.ScopedName(scope, p, stackBlock));
             }
@@ -168,8 +170,9 @@ namespace MCGalaxy.Blocks {
                 if (other == block) { p.Message("ID of {0} must be different.", type); return; }
                 
                 target = other;
-                p.Message("{2} for {0} set to: {1}",
-                          name, BlockProps.ScopedName(scope, p, other), type);
+                if (!p.Ignores.BlockdefChanges)
+                    p.Message("{2} for {0} set to: {1}",
+                              name, BlockProps.ScopedName(scope, p, other), type);
             }
         }
     }

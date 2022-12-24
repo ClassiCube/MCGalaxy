@@ -54,7 +54,8 @@ namespace MCGalaxy.Commands.Moderation {
                 Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
                 UndoPlayer(p, delta, names, ids, marks);
             } else {
-                p.Message("Place or break two blocks to determine the edges.");
+                if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                    p.Message("Place or break two blocks to determine the edges.");
                 UndoAreaArgs args = new UndoAreaArgs();
                 args.ids = ids; args.names = names; args.delta = delta;
                 p.MakeSelection(2, "Selecting region for &SUndo player", args, DoUndoArea);

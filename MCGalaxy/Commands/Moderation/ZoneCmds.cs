@@ -80,7 +80,8 @@ namespace MCGalaxy.Commands.Moderation {
             if (!PermissionCmd.Do(p, args, offset + 1, false, z.Access, data, p.level)) return;
             
             p.Message("Creating zone " + z.ColoredName);
-            p.Message("Place or break two blocks to determine the edges.");
+            if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                p.Message("Place or break two blocks to determine the edges.");
             p.MakeSelection(2, "Selecting region for &SNew zone", z, AddZone);
         }
         

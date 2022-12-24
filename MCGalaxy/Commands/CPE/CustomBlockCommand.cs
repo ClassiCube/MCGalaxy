@@ -160,7 +160,8 @@ namespace MCGalaxy.Commands.CPE {
                 copied++;
                 
                 string scope = global ? "global" : "level";
-                p.Message("Copied the {0} custom block with id \"{1}\".", scope, Block.ToRaw(b));
+                if (!p.Ignores.BlockdefChanges)
+                    p.Message("Copied the {0} custom block with id \"{1}\".", scope, Block.ToRaw(b));
             }
             
             p.Message("{0} custom blocks were copied from level {1}", 
@@ -195,7 +196,8 @@ namespace MCGalaxy.Commands.CPE {
                 if (!DoCopy(p, lvl, global, cmd, false, defs[src], src, dst)) continue;
                 string scope = global ? "global" : "level";
                 
-                p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
+                if (!p.Ignores.BlockdefChanges)
+                    p.Message("Duplicated the {0} custom block with id \"{1}\" to \"{2}\".", 
                           scope, i, Block.ToRaw(dst));
                 changed = true;
             }
@@ -282,13 +284,18 @@ namespace MCGalaxy.Commands.CPE {
                              bool global, string cmd) {
             BlockDefinition[] defs = global ? BlockDefinition.GlobalDefs : lvl.CustomBlockDefs;
             BlockDefinition def = defs[block];
-            if (!ExistsInScope(def, block, global)) { MessageNoBlock(p, block, global, cmd); return false; }
+            if (!ExistsInScope(def, block, global)) {
+                if (!p.Ignores.BlockdefChanges)
+                    MessageNoBlock(p, block, global, cmd);
+                return false;
+            }
             
             BlockDefinition.Remove(def, defs, lvl);
             ResetProps(global, lvl, block, p);          
             
             string scope = global ? "global" : "level";
-            p.Message("Removed " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
+            if (!p.Ignores.BlockdefChanges)
+                p.Message("Removed " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
             
             BlockDefinition globalDef = BlockDefinition.GlobalDefs[block];
             if (!global && globalDef != null)
@@ -524,14 +531,16 @@ namespace MCGalaxy.Commands.CPE {
                     
                     def.InventoryOrder = order == def.RawID ? -1 : order;
                     BlockDefinition.UpdateOrder(def, global, lvl);
-                    p.Message("Set inventory order for {0} to {1}", blockName,
+                    if (!p.Ignores.BlockdefChanges)
+                        p.Message("Set inventory order for {0} to {1}", blockName,
                                    order == def.RawID ? "default" : order.ToString());
                     return true;
                 default:
                     p.Message("Unrecognised property: " + arg); return false;
             }
             
-            p.Message("Set {0} for {1} to {2}", arg, blockName, value);
+            if (!p.Ignores.BlockdefChanges)
+                p.Message("Set {0} for {1} to {2}", arg, blockName, value);
             BlockDefinition.Add(def, defs, lvl);
             if (changedFallback) {
                 BlockDefinition.UpdateFallback(global, def.GetBlock(), lvl);
@@ -568,7 +577,8 @@ namespace MCGalaxy.Commands.CPE {
             BlockID block = def.GetBlock();
 
             string scope  = global ? "global" : "level";
-            p.Message("Created a new " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
+            if (!p.Ignores.BlockdefChanges)
+                p.Message("Created a new " + scope + " custom block " + def.Name + "(" + def.RawID + ")");
             
             block = def.GetBlock();
             BlockDefinition.Add(def, defs, lvl);

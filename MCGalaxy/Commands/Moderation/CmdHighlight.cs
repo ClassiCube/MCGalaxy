@@ -55,7 +55,8 @@ namespace MCGalaxy.Commands.Moderation {
                 Vec3S32[] marks = new Vec3S32[] { Vec3U16.MinVal, Vec3U16.MaxVal };
                 HighlightPlayer(p, delta, parts[0], ids, marks);
             } else {
-                p.Message("Place or break two blocks to determine the edges.");
+                if (!p.Ignores.DrawOutput || !p.Supports(CpeExt.MessageTypes))
+                    p.Message("Place or break two blocks to determine the edges.");
                 HighlightAreaArgs args = new HighlightAreaArgs();
                 args.ids = ids; args.who = parts[0]; args.delta = delta;
                 p.MakeSelection(2,  "Selecting region for &SHighlight", args, DoHighlightArea);
