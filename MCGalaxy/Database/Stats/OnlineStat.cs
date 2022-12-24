@@ -21,13 +21,13 @@ using MCGalaxy.Commands;
 using MCGalaxy.Eco;
 using MCGalaxy.Modules.Awards;
 
-namespace MCGalaxy.DB {
-
+namespace MCGalaxy.DB 
+{
     public delegate void OnlineStatPrinter(Player p, Player who);
     
     /// <summary> Prints stats for an online player in /info. </summary>
-    public static class OnlineStat {
-
+    public static class OnlineStat 
+    {
         /// <summary> List of stats that can be output to /info. </summary>
         public static List<OnlineStatPrinter> Stats = new List<OnlineStatPrinter>() {
             CoreLine,

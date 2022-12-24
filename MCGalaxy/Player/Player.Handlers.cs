@@ -413,9 +413,9 @@ namespace MCGalaxy
         }
         
         void LimitPartialMessage() {
-            if (partialMessage.Length < 1024 * 64) return;
+            if (partialMessage.Length < 100 * 64) return;
             partialMessage = "";
-            Message("&WPartial message cleared due to exceeding 1024 lines");
+            Message("&WPartial message cleared due to exceeding 100 lines");
         }
         
         bool FilterChat(ref string text, bool continued) {

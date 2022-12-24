@@ -18,11 +18,11 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy 
+{   
     /// <summary> Provides utility methods for atomic File I/O operations. </summary>
-    public static class AtomicIO {
-        
+    public static class AtomicIO 
+    {        
         /// <summary> Attempts to delete a file from disc, if it exists </summary>
         /// <returns> true if file was successfully deleted, false if file did not exist to begin with </returns>
         /// <remarks> See File.Delete for exceptions that can be thrown </remarks>

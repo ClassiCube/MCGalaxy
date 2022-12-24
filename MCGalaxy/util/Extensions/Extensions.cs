@@ -23,13 +23,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy 
+{   
     /// <summary> Converts an object into a string. </summary>
     public delegate string StringFormatter<T>(T value);
     
-    public static class Extensions {
-        
+    public static class Extensions 
+    {       
         static char[] space = new char[] { ' ' };
         
         /// <summary> Same as value.Split(' '), but doesn't allocate ' ' each time. </summary>

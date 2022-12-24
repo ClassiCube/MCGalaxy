@@ -19,10 +19,10 @@ using System;
 using System.IO;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.DB {
-    
-    public unsafe sealed class BlockDBFile_V1 : BlockDBFile {
-        
+namespace MCGalaxy.DB 
+{ 
+    public unsafe sealed class BlockDBFile_V1 : BlockDBFile 
+    {        
         public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
             byte[] bulk = new byte[BulkEntries * EntrySize];
             for (int i = 0; i < entries.Count; i += BulkEntries) {

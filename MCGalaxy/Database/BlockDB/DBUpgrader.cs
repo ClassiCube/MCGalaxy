@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.DB {
-    
-    public static class DBUpgrader {
-        
+namespace MCGalaxy.DB 
+{
+    public static class DBUpgrader 
+    {     
         public static bool Upgrading = false;
         public static string[] CompactMessages = new string[] {
             " If you are using SQLite, It is recommended that you compact the database by either:",

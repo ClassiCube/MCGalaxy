@@ -18,13 +18,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{
     public delegate void OfflineStatPrinter(Player p, PlayerData who);
     
     /// <summary> Prints stats for an offline player in /info. </summary>
-    public static class OfflineStat {
-
+    public static class OfflineStat 
+    {
         /// <summary> List of stats that can be output to /info. </summary>
         public static List<OfflineStatPrinter> Stats = new List<OfflineStatPrinter>() {
             CoreLine,

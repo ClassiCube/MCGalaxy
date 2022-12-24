@@ -19,10 +19,10 @@ using System;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Maths {
-    
-    public struct AABB {
-        
+namespace MCGalaxy.Maths 
+{   
+    public struct AABB 
+    {      
         /// <summary> Fixed-point min coordinate of this bounding box. </summary>
         public Vec3S32 Min;
         

@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{ 
     /// <summary> Retrieves a title for a column. </summary>
     /// <remarks> Title is displayed on a line before the values of that column. </remarks>
     public delegate string TopStatTitle();
@@ -30,8 +30,8 @@ namespace MCGalaxy.DB {
     
     
     /// <summary> Outputs ordered stats from a column in a database table. </summary>
-    public sealed class TopStat {
-        
+    public sealed class TopStat 
+    {    
         public readonly string Identifier, Table, Column, OrderBy;
         public readonly TopStatTitle Title;
         public readonly TopStatFormatter Formatter;

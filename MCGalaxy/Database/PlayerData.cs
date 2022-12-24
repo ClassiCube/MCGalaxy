@@ -18,11 +18,11 @@
 using System;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{
     /// <summary> Retrieves or sets player stats in the database. </summary>
-    public class PlayerData {
-
+    public class PlayerData 
+    {
         public const string ColumnDeaths = "totalDeaths";
         public const string ColumnLogins = "totalLogin";
         public const string ColumnMoney  = "Money";
