@@ -37,7 +37,7 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("You do not have enough " + Server.Config.Currency + " to place such a large bountry."); return;
             }
             
-            BountyData old = ZSGame.Instance.FindBounty(target.name);
+            BountyData old = BountyData.Find(target.name);
             if (old != null && old.Amount >= amount) {
                 p.Message("There is already a larger active bounty for " + p.FormatNick(target)); return;
             }
@@ -49,11 +49,11 @@ namespace MCGalaxy.Commands.Fun {
             } else {
                 msg = string.Format("{0} &Sis popular! The bounty on them was increased from &a{3} &Sto &a{1} &S{2}.", 
                                     target.ColoredName, amount, Server.Config.Currency, old.Amount);
-                ZSGame.Instance.Bounties.Remove(old);
+                BountyData.Bounties.Remove(old);
             }
             ZSGame.Instance.Map.Message(msg);
             
-            ZSGame.Instance.Bounties.Add(new BountyData(p.name, target.name, amount));
+            BountyData.Bounties.Add(new BountyData(p.name, target.name, amount));
             p.SetMoney(p.money - amount);
         }
         

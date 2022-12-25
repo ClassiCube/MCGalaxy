@@ -192,9 +192,9 @@ namespace MCGalaxy.Games
         }
         
         void CheckBounty(Player p, Player pKiller) {
-            BountyData bounty = FindBounty(p.name);
+            BountyData bounty = BountyData.Find(p.name);
             if (bounty == null) return;
-            Bounties.Remove(bounty);
+            BountyData.Bounties.Remove(bounty);
             
             Player setter = PlayerInfo.FindExact(bounty.Origin);
             if (pKiller == null) {

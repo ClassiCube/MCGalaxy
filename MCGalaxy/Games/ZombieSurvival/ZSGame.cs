@@ -30,6 +30,18 @@ namespace MCGalaxy.Games
         public BountyData(string origin, string target, int amount) {
             Origin = origin; Target = target; Amount = amount;
         }
+            
+        
+        public static VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
+        
+        public static BountyData Find(string target) {
+            BountyData[] bounties = Bounties.Items;
+            foreach (BountyData bounty in bounties) 
+            {
+                if (bounty.Target.CaselessEq(target)) return bounty;
+            }
+            return null;
+        }
     }
     
     internal sealed class ZSData 
@@ -70,7 +82,6 @@ namespace MCGalaxy.Games
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
-        public VolatileArray<BountyData> Bounties = new VolatileArray<BountyData>();
         internal List<string> infectMessages = new List<string>();
         
         const string zsExtrasKey = "MCG_ZS_DATA";
@@ -186,7 +197,7 @@ namespace MCGalaxy.Games
             
             Alive.Clear();
             Infected.Clear();
-            Bounties.Clear();
+            BountyData.Bounties.Clear(); // TODO only do it when all games end
             
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player pl in players) {
@@ -196,14 +207,6 @@ namespace MCGalaxy.Games
                 ResetRoundState(pl, data);
                 ResetInvisibility(pl, data);
             }
-        }
-        
-        public BountyData FindBounty(string target) {
-            BountyData[] bounties = Bounties.Items;
-            foreach (BountyData bounty in bounties) {
-                if (bounty.Target.CaselessEq(target)) return bounty;
-            }
-            return null;
         }
         
         public override void PlayerJoinedGame(Player p) {
@@ -229,13 +232,14 @@ namespace MCGalaxy.Games
         }
         
         void RemoveAssociatedBounties(Player p) {
-            BountyData[] bounties = Bounties.Items;
-            foreach (BountyData b in bounties) {
+            BountyData[] bounties = BountyData.Bounties.Items;
+            foreach (BountyData b in bounties) 
+            {
                 if (!(b.Origin.CaselessEq(p.name) || b.Target.CaselessEq(p.name))) continue;
                 
                 string nick = p.FormatNick(b.Target);
                 Map.Message("Bounty on " + nick + " &Sis no longer active.");
-                Bounties.Remove(b);
+                BountyData.Bounties.Remove(b);
                 
                 Player setter = PlayerInfo.FindExact(b.Origin);
                 if (setter != null) setter.SetMoney(setter.money + b.Amount);
