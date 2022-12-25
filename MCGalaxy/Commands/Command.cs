@@ -109,6 +109,17 @@ namespace MCGalaxy
             }           
             Alias.RegisterDefaults(cmd);
         }
+
+        public static void TryRegister(bool announce, params Command[] commands)
+        {
+            foreach (Command cmd in commands)
+            {
+                if (Find(cmd.name) != null) continue;
+
+                Register(cmd);
+                if (announce) Logger.Log(LogType.SystemActivity, "Command /{0} loaded", cmd.name);
+            }
+        }
         
         public static bool Unregister(Command cmd) {
             bool removed = allCmds.Remove(cmd);
@@ -123,8 +134,8 @@ namespace MCGalaxy
             return removed;
         }
         
-        public static void Unregister(params Command[] cmds) {
-            foreach (Command cmd in cmds) { Unregister(cmd); }
+        public static void Unregister(params Command[] commands) {
+            foreach (Command cmd in commands) Unregister(cmd);
         }
         
         

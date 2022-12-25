@@ -17,6 +17,7 @@
 */
 using System;
 using MCGalaxy.Events;
+using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Moderation.Notes 
 {
@@ -30,15 +31,20 @@ namespace MCGalaxy.Modules.Moderation.Notes
 
         public override void Load(bool startup) {
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
-            Command.Register(notesCmd);
-            Command.Register(myNotesCmd);
+            OnConfigUpdatedEvent.Register(HandleConfigUpdated, Priority.Low);
+            HandleConfigUpdated();
         }
         
         public override void Unload(bool shutdown) {
             OnModActionEvent.Unregister(HandleModerationAction);
+            OnConfigUpdatedEvent.Unregister(HandleConfigUpdated);
             Command.Unregister(notesCmd, myNotesCmd);
         }
-        
+
+        void HandleConfigUpdated() {
+            Command.TryRegister(false, notesCmd, myNotesCmd);
+        }
+
 
         static void HandleModerationAction(ModAction action) {
             switch (action.Type) {
