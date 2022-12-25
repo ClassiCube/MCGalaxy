@@ -37,7 +37,7 @@ namespace MCGalaxy.Network
             checkedAddr    = true;
             
             try {
-                hostUrl = new Uri(URL).Host;
+                hostUrl = GetHost();
                 IPAddress[] addresses = Dns.GetHostAddresses(hostUrl);
                 EnsureIPv4Url(addresses);
             } catch (Exception ex) {

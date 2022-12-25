@@ -764,7 +764,7 @@ namespace MCGalaxy.Gui
             this.main_txtUrl.ReadOnly = true;
             this.main_txtUrl.Size = new System.Drawing.Size(498, 21);
             this.main_txtUrl.TabIndex = 25;
-            this.main_txtUrl.Text = "Finding classicube.net url..";
+            this.main_txtUrl.Text = "Starting server..";
             this.main_txtUrl.DoubleClick += new System.EventHandler(this.main_TxtUrl_DoubleClick);
             // 
             // main_colPlName

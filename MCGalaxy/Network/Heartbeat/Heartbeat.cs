@@ -38,6 +38,15 @@ namespace MCGalaxy.Network
         public string URL;
         /// <summary> Salt used for verifying player names </summary>
         public string Salt = "";
+
+        public string GetHost() {
+            try {
+                return new Uri(URL).Host;
+            } catch (Exception ex) {
+                Logger.LogError("Getting host of " + URL, ex);
+                return URL;
+            }
+        }
         
         /// <summary> Gets the data to be sent for the next heartbeat </summary>
         protected abstract string GetHeartbeatData();
@@ -72,8 +81,7 @@ namespace MCGalaxy.Network
                 }
             }
             
-            string hostUrl = new Uri(URL).Host;
-            Logger.Log(LogType.Warning, "Failed to send heartbeat to {0} ({1})", hostUrl, lastEx.Message);
+            Logger.Log(LogType.Warning, "Failed to send heartbeat to {0} ({1})", GetHost(), lastEx.Message);
         }
         
         
@@ -85,6 +93,9 @@ namespace MCGalaxy.Network
         
         /// <summary> Starts pumping heartbeats </summary>
         public static void Start() {
+            string hosts = Heartbeats.Join(hb => hb.GetHost().Replace("www.", ""));
+            Server.UpdateUrl("Finding " + hosts + " url..");
+
             OnBeat(null); // immedately call so URL is shown as soon as possible in console
             Server.Heartbeats.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
         }
