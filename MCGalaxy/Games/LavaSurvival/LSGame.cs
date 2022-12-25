@@ -33,7 +33,7 @@ namespace MCGalaxy.Games
         public override string GameName { get { return "Lava survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         
-        bool flooded, fastMode, killerMode, destroyMode, waterMode, layerMode;
+        bool flooded, fastMode, destroyMode, waterMode, layerMode, floodUp;
         BlockID floodBlock;
         int curLayer, spreadDelay;
         int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
@@ -57,22 +57,22 @@ namespace MCGalaxy.Games
             this.cfg = cfg;            
             Random rnd = new Random();
             
-            killerMode  = rnd.Next(1, 101) <= cfg.KillerChance;
             destroyMode = rnd.Next(1, 101) <= cfg.DestroyChance;
             waterMode   = rnd.Next(1, 101) <= cfg.WaterChance;
             layerMode   = rnd.Next(1, 101) <= cfg.LayerChance;
             fastMode    = rnd.Next(1, 101) <= cfg.FastChance && !waterMode;
+            floodUp     = rnd.Next(1, 101) <= cfg.FloodUpChance;
             
             if (waterMode) {
-                floodBlock = killerMode ? Block.Deadly_ActiveWater : Block.Water;
+                floodBlock = Block.Deadly_ActiveWater;
             } else {
-                floodBlock = killerMode ? Block.Deadly_ActiveLava  : Block.Lava;
+                floodBlock = Block.Deadly_ActiveLava;
             }
             spreadDelay = fastMode ? 0 : 4;
 
             curLayer = 1;
-            roundTotalSecs = (int)cfg.RoundTime.TotalSeconds;
-            floodDelaySecs = (int)cfg.FloodTime.TotalSeconds;
+            roundTotalSecs    = (int)cfg.RoundTime.TotalSeconds;
+            floodDelaySecs    = (int)cfg.FloodTime.TotalSeconds;
             layerIntervalSecs = (int)cfg.LayerInterval.TotalSeconds;
             
             if (RoundInProgress) Map.SetPhysics(destroyMode ? 2 : 1);

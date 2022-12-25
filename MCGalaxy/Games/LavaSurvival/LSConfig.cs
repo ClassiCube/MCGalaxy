@@ -19,9 +19,10 @@ using System;
 using MCGalaxy.Config;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Games {
-    
-    public sealed class LSConfig : RoundsGameConfig {
+namespace MCGalaxy.Games 
+{
+    public sealed class LSConfig : RoundsGameConfig 
+    {
         [ConfigInt("lives", null, 3, 0)]
         public int MaxLives = 3;
         
@@ -30,18 +31,19 @@ namespace MCGalaxy.Games {
         protected override string PropsPath { get { return "properties/lavasurvival.properties"; } }
     }
     
-    public sealed class LSMapConfig : RoundsGameMapConfig {
+    public sealed class LSMapConfig : RoundsGameMapConfig 
+    {
         [ConfigInt("fast-chance", null, 0, 0, 100)]
         public int FastChance;
-        [ConfigInt("killer-chance", null, 100, 0, 100)]
-        public int KillerChance = 100;
-        [ConfigInt("destroy-chance", null, 0, 0, 100)]
-        public int DestroyChance;
+        [ConfigInt("destroy-chance", null, 50, 0, 100)]
+        public int DestroyChance = 50;
         [ConfigInt("water-chance", null, 0, 0, 100)]
         public int WaterChance;
+        [ConfigInt("flood-upwards-chance", null, 0, 0, 100)]
+        public int FloodUpChance;
+
         [ConfigInt("layer-chance", null, 0, 0, 100)]
         public int LayerChance;
-        
         [ConfigInt("layer-height", null, 3, 0)]
         public int LayerHeight = 3;
         [ConfigInt("layer-count", null, 10, 0)]

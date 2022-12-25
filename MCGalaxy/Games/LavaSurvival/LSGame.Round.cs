@@ -104,9 +104,9 @@ namespace MCGalaxy.Games
             if (layerMode) p.Message("The " + block + " will &aflood in layers &Sthis round!");
             
             if (fastMode) p.Message("The lava will be &cfast &Sthis round!");
-            if (killerMode) p.Message("The " + block + " will &ckill you &Sthis round!");
             if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!");
-            
+            if (floodUp) p.Message("The " + block + " will &cflood upwards &Sthis round!");
+
             if (!flooded) p.Message(FloodTimeLeftMessage());
             p.Message(RoundTimeLeftMessage());
         }

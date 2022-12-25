@@ -55,6 +55,8 @@ namespace MCGalaxy.Games
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1), block);
                 LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysWater(lvl, x, (ushort)(y - 1), z, block);
+
+                if (floodUp) LiquidPhysics.PhysWater(lvl, x, (ushort)(y + 1), z, block);
             } else { //was placed near sponge
                 lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             }
@@ -75,6 +77,8 @@ namespace MCGalaxy.Games
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
                 LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
                 LiquidPhysics.PhysLava(lvl, x, (ushort)(y - 1), z, block);
+
+                if (floodUp) LiquidPhysics.PhysLava(lvl, x, (ushort)(y + 1), z, block);
             } else { //was placed near sponge
                 lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             }

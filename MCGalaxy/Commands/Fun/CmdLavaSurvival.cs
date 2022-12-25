@@ -119,9 +119,9 @@ namespace MCGalaxy.Commands.Fun {
         void HandleSetBlock(Player p, string[] args, LSMapConfig cfg) {
             if (args.Length < 3) {
                 p.Message("Fast lava chance: &b" + cfg.FastChance + "%");
-                p.Message("Killer lava/water chance: &b" + cfg.KillerChance + "%");
                 p.Message("Destroy blocks chance: &b" + cfg.DestroyChance + "%");
                 p.Message("Water flood chance: &b" + cfg.WaterChance + "%");
+                p.Message("Flood upwards chance: &b" + cfg.FloodUpChance + "%");
                 return;
             }
             
@@ -131,12 +131,12 @@ namespace MCGalaxy.Commands.Fun {
             
             if (prop.CaselessEq("fast")) {
                 ok = ParseChance(p, "fast lava", args, ref cfg.FastChance);
-            } else if (prop.CaselessEq("killer")) {
-                ok = ParseChance(p, "killer lava/water", args, ref cfg.KillerChance);
-            } else if (prop.CaselessEq("destroy")) {
+            }else if (prop.CaselessEq("destroy")) {
                 ok = ParseChance(p, "destroy blocks", args, ref cfg.DestroyChance);
             } else if (prop.CaselessEq("water")) {
                 ok = ParseChance(p, "water flood", args, ref cfg.WaterChance);
+            } else if (prop.CaselessEq("upwards")) {
+                ok = ParseChance(p, "flood upwards", args, ref cfg.FloodUpChance);
             } else {
                 Help(p, "block");
             }
@@ -204,8 +204,8 @@ namespace MCGalaxy.Commands.Fun {
                 p.Message("&T/LS set block fast [chance] &H- Sets chance of fast lava");
                 p.Message("&T/LS set block water [chance]");
                 p.Message("&HSets chance of water instead of lava flood");
-                p.Message("&T/LS set block killer [chance]");
-                p.Message("&HSets chance of killer lava/water");
+                p.Message("&T/LS set block upwards [chance]");
+                p.Message("&HSets chance of lava/water flooding upwards");
                 p.Message("&T/LS set block destroy [chance]");
                 p.Message("&HSets chance of the lava/water destroying blocks");
             } else if (message.CaselessEq("other")) {

@@ -136,10 +136,10 @@ namespace MCGalaxy.Gui
             this.rank_numUndo = new MCGalaxy.Gui.TimespanUpDown();
             this.chkPhysRestart = new System.Windows.Forms.CheckBox();
             this.ls_numMax = new System.Windows.Forms.NumericUpDown();
-            this.ls_numKiller = new System.Windows.Forms.NumericUpDown();
-            this.ls_numFast = new System.Windows.Forms.NumericUpDown();
             this.ls_numWater = new System.Windows.Forms.NumericUpDown();
+            this.ls_numFast = new System.Windows.Forms.NumericUpDown();
             this.ls_numDestroy = new System.Windows.Forms.NumericUpDown();
+            this.ls_numFloodUp = new System.Windows.Forms.NumericUpDown();
             this.ls_numLayer = new System.Windows.Forms.NumericUpDown();
             this.ls_numCount = new System.Windows.Forms.NumericUpDown();
             this.ls_numHeight = new System.Windows.Forms.NumericUpDown();
@@ -316,11 +316,11 @@ namespace MCGalaxy.Gui
             this.ls_lblBlocksTall = new System.Windows.Forms.Label();
             this.ls_lblLayersEach = new System.Windows.Forms.Label();
             this.ls_lblLayer = new System.Windows.Forms.Label();
-            this.ls_grpBlock = new System.Windows.Forms.GroupBox();
-            this.ls_lblDestroy = new System.Windows.Forms.Label();
+            this.ls_grpFlood = new System.Windows.Forms.GroupBox();
+            this.ls_lblFloodUp = new System.Windows.Forms.Label();
             this.ls_lblFast = new System.Windows.Forms.Label();
+            this.ls_lblDestroy = new System.Windows.Forms.Label();
             this.ls_lblWater = new System.Windows.Forms.Label();
-            this.ls_lblKill = new System.Windows.Forms.Label();
             this.ls_grpSettings = new System.Windows.Forms.GroupBox();
             this.ls_lblMax = new System.Windows.Forms.Label();
             this.ls_cbMap = new System.Windows.Forms.CheckBox();
@@ -509,10 +509,10 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ls_numKiller)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ls_numFast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numWater)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numFast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numDestroy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numFloodUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numHeight)).BeginInit();
@@ -566,7 +566,7 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.ls_numLayerTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numRound)).BeginInit();
             this.ls_grpLayer.SuspendLayout();
-            this.ls_grpBlock.SuspendLayout();
+            this.ls_grpFlood.SuspendLayout();
             this.ls_grpSettings.SuspendLayout();
             this.ls_grpMaps.SuspendLayout();
             this.tabZS.SuspendLayout();
@@ -1519,18 +1519,13 @@ namespace MCGalaxy.Gui
                                     0,
                                     0});
             // 
-            // ls_numKiller
+            // ls_numWater
             // 
-            this.ls_numKiller.BackColor = System.Drawing.SystemColors.Window;
-            this.ls_numKiller.Location = new System.Drawing.Point(79, 20);
-            this.ls_numKiller.Name = "ls_numKiller";
-            this.ls_numKiller.Size = new System.Drawing.Size(52, 21);
-            this.ls_numKiller.TabIndex = 27;
-            this.ls_numKiller.Value = new decimal(new int[] {
-                                    100,
-                                    0,
-                                    0,
-                                    0});
+            this.ls_numWater.BackColor = System.Drawing.SystemColors.Window;
+            this.ls_numWater.Location = new System.Drawing.Point(79, 20);
+            this.ls_numWater.Name = "ls_numWater";
+            this.ls_numWater.Size = new System.Drawing.Size(52, 21);
+            this.ls_numWater.TabIndex = 27;
             // 
             // ls_numFast
             // 
@@ -1540,21 +1535,26 @@ namespace MCGalaxy.Gui
             this.ls_numFast.Size = new System.Drawing.Size(52, 21);
             this.ls_numFast.TabIndex = 31;
             // 
-            // ls_numWater
-            // 
-            this.ls_numWater.BackColor = System.Drawing.SystemColors.Window;
-            this.ls_numWater.Location = new System.Drawing.Point(226, 20);
-            this.ls_numWater.Name = "ls_numWater";
-            this.ls_numWater.Size = new System.Drawing.Size(52, 21);
-            this.ls_numWater.TabIndex = 32;
-            // 
             // ls_numDestroy
             // 
             this.ls_numDestroy.BackColor = System.Drawing.SystemColors.Window;
-            this.ls_numDestroy.Location = new System.Drawing.Point(226, 45);
+            this.ls_numDestroy.Location = new System.Drawing.Point(226, 20);
             this.ls_numDestroy.Name = "ls_numDestroy";
             this.ls_numDestroy.Size = new System.Drawing.Size(52, 21);
-            this.ls_numDestroy.TabIndex = 33;
+            this.ls_numDestroy.TabIndex = 32;
+            this.ls_numDestroy.Value = new decimal(new int[] {
+                                    50,
+                                    0,
+                                    0,
+                                    0});
+            // 
+            // ls_numFloodUp
+            // 
+            this.ls_numFloodUp.BackColor = System.Drawing.SystemColors.Window;
+            this.ls_numFloodUp.Location = new System.Drawing.Point(226, 45);
+            this.ls_numFloodUp.Name = "ls_numFloodUp";
+            this.ls_numFloodUp.Size = new System.Drawing.Size(52, 21);
+            this.ls_numFloodUp.TabIndex = 33;
             // 
             // ls_numLayer
             // 
@@ -3514,7 +3514,7 @@ namespace MCGalaxy.Gui
             // 
             this.ls_grpMapSettings.Controls.Add(this.ls_grpTime);
             this.ls_grpMapSettings.Controls.Add(this.ls_grpLayer);
-            this.ls_grpMapSettings.Controls.Add(this.ls_grpBlock);
+            this.ls_grpMapSettings.Controls.Add(this.ls_grpFlood);
             this.ls_grpMapSettings.Enabled = false;
             this.ls_grpMapSettings.Location = new System.Drawing.Point(182, 184);
             this.ls_grpMapSettings.Name = "ls_grpMapSettings";
@@ -3574,7 +3574,7 @@ namespace MCGalaxy.Gui
             // ls_lblLayerTime
             // 
             this.ls_lblLayerTime.AutoSize = true;
-            this.ls_lblLayerTime.Location = new System.Drawing.Point(154, 20);
+            this.ls_lblLayerTime.Location = new System.Drawing.Point(155, 20);
             this.ls_lblLayerTime.Name = "ls_lblLayerTime";
             this.ls_lblLayerTime.Size = new System.Drawing.Size(59, 13);
             this.ls_lblLayerTime.TabIndex = 35;
@@ -3592,7 +3592,7 @@ namespace MCGalaxy.Gui
             // ls_lblRound
             // 
             this.ls_lblRound.AutoSize = true;
-            this.ls_lblRound.Location = new System.Drawing.Point(5, 20);
+            this.ls_lblRound.Location = new System.Drawing.Point(4, 20);
             this.ls_lblRound.Name = "ls_lblRound";
             this.ls_lblRound.Size = new System.Drawing.Size(63, 13);
             this.ls_lblRound.TabIndex = 34;
@@ -3640,31 +3640,31 @@ namespace MCGalaxy.Gui
             this.ls_lblLayer.TabIndex = 34;
             this.ls_lblLayer.Text = "Layer flood chance:";
             // 
-            // ls_grpBlock
+            // ls_grpFlood
             // 
-            this.ls_grpBlock.Controls.Add(this.ls_numDestroy);
-            this.ls_grpBlock.Controls.Add(this.ls_numWater);
-            this.ls_grpBlock.Controls.Add(this.ls_numFast);
-            this.ls_grpBlock.Controls.Add(this.ls_numKiller);
-            this.ls_grpBlock.Controls.Add(this.ls_lblDestroy);
-            this.ls_grpBlock.Controls.Add(this.ls_lblFast);
-            this.ls_grpBlock.Controls.Add(this.ls_lblWater);
-            this.ls_grpBlock.Controls.Add(this.ls_lblKill);
-            this.ls_grpBlock.Location = new System.Drawing.Point(6, 20);
-            this.ls_grpBlock.Name = "ls_grpBlock";
-            this.ls_grpBlock.Size = new System.Drawing.Size(284, 74);
-            this.ls_grpBlock.TabIndex = 0;
-            this.ls_grpBlock.TabStop = false;
-            this.ls_grpBlock.Text = "Flood block type";
+            this.ls_grpFlood.Controls.Add(this.ls_numFloodUp);
+            this.ls_grpFlood.Controls.Add(this.ls_numDestroy);
+            this.ls_grpFlood.Controls.Add(this.ls_numFast);
+            this.ls_grpFlood.Controls.Add(this.ls_numWater);
+            this.ls_grpFlood.Controls.Add(this.ls_lblFloodUp);
+            this.ls_grpFlood.Controls.Add(this.ls_lblFast);
+            this.ls_grpFlood.Controls.Add(this.ls_lblDestroy);
+            this.ls_grpFlood.Controls.Add(this.ls_lblWater);
+            this.ls_grpFlood.Location = new System.Drawing.Point(6, 20);
+            this.ls_grpFlood.Name = "ls_grpFlood";
+            this.ls_grpFlood.Size = new System.Drawing.Size(284, 74);
+            this.ls_grpFlood.TabIndex = 0;
+            this.ls_grpFlood.TabStop = false;
+            this.ls_grpFlood.Text = "Flood settings";
             // 
-            // ls_lblDestroy
+            // ls_lblFloodUp
             // 
-            this.ls_lblDestroy.AutoSize = true;
-            this.ls_lblDestroy.Location = new System.Drawing.Point(135, 48);
-            this.ls_lblDestroy.Name = "ls_lblDestroy";
-            this.ls_lblDestroy.Size = new System.Drawing.Size(88, 13);
-            this.ls_lblDestroy.TabIndex = 30;
-            this.ls_lblDestroy.Text = "Destroys chance:";
+            this.ls_lblFloodUp.AutoSize = true;
+            this.ls_lblFloodUp.Location = new System.Drawing.Point(133, 48);
+            this.ls_lblFloodUp.Name = "ls_lblFloodUp";
+            this.ls_lblFloodUp.Size = new System.Drawing.Size(88, 13);
+            this.ls_lblFloodUp.TabIndex = 30;
+            this.ls_lblFloodUp.Text = "Floods up chance:";
             // 
             // ls_lblFast
             // 
@@ -3675,23 +3675,23 @@ namespace MCGalaxy.Gui
             this.ls_lblFast.TabIndex = 29;
             this.ls_lblFast.Text = "Fast chance:";
             // 
+            // ls_lblDestroy
+            // 
+            this.ls_lblDestroy.AutoSize = true;
+            this.ls_lblDestroy.Location = new System.Drawing.Point(136, 23);
+            this.ls_lblDestroy.Name = "ls_lblDestroy";
+            this.ls_lblDestroy.Size = new System.Drawing.Size(76, 13);
+            this.ls_lblDestroy.TabIndex = 28;
+            this.ls_lblDestroy.Text = "Destroys chance:";
+            // 
             // ls_lblWater
             // 
             this.ls_lblWater.AutoSize = true;
-            this.ls_lblWater.Location = new System.Drawing.Point(147, 23);
+            this.ls_lblWater.Location = new System.Drawing.Point(1, 23);
             this.ls_lblWater.Name = "ls_lblWater";
-            this.ls_lblWater.Size = new System.Drawing.Size(76, 13);
-            this.ls_lblWater.TabIndex = 28;
+            this.ls_lblWater.Size = new System.Drawing.Size(71, 13);
+            this.ls_lblWater.TabIndex = 27;
             this.ls_lblWater.Text = "Water chance:";
-            // 
-            // ls_lblKill
-            // 
-            this.ls_lblKill.AutoSize = true;
-            this.ls_lblKill.Location = new System.Drawing.Point(6, 23);
-            this.ls_lblKill.Name = "ls_lblKill";
-            this.ls_lblKill.Size = new System.Drawing.Size(71, 13);
-            this.ls_lblKill.TabIndex = 27;
-            this.ls_lblKill.Text = "Killer chance:";
             // 
             // ls_grpSettings
             // 
@@ -3913,7 +3913,7 @@ namespace MCGalaxy.Gui
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(154, 20);
+            this.label1.Location = new System.Drawing.Point(155, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 13);
             this.label1.TabIndex = 35;
@@ -5652,10 +5652,10 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.rank_numCopy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rank_numUndo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ls_numKiller)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ls_numFast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numWater)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numFast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numDestroy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ls_numFloodUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ls_numHeight)).EndInit();
@@ -5734,8 +5734,8 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.ls_numRound)).EndInit();
             this.ls_grpLayer.ResumeLayout(false);
             this.ls_grpLayer.PerformLayout();
-            this.ls_grpBlock.ResumeLayout(false);
-            this.ls_grpBlock.PerformLayout();
+            this.ls_grpFlood.ResumeLayout(false);
+            this.ls_grpFlood.PerformLayout();
             this.ls_grpSettings.ResumeLayout(false);
             this.ls_grpSettings.PerformLayout();
             this.ls_grpMaps.ResumeLayout(false);
@@ -5923,15 +5923,15 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Label ls_lblLayersEach;
         private System.Windows.Forms.NumericUpDown ls_numHeight;
         private System.Windows.Forms.Label ls_lblBlocksTall;
-        private System.Windows.Forms.Label ls_lblKill;
         private System.Windows.Forms.Label ls_lblWater;
-        private System.Windows.Forms.Label ls_lblFast;
         private System.Windows.Forms.Label ls_lblDestroy;
-        private System.Windows.Forms.NumericUpDown ls_numKiller;
-        private System.Windows.Forms.NumericUpDown ls_numFast;
+        private System.Windows.Forms.Label ls_lblFast;
+        private System.Windows.Forms.Label ls_lblFloodUp;
         private System.Windows.Forms.NumericUpDown ls_numWater;
+        private System.Windows.Forms.NumericUpDown ls_numFast;
         private System.Windows.Forms.NumericUpDown ls_numDestroy;
-        private System.Windows.Forms.GroupBox ls_grpBlock;
+        private System.Windows.Forms.NumericUpDown ls_numFloodUp;
+        private System.Windows.Forms.GroupBox ls_grpFlood;
         private System.Windows.Forms.GroupBox ls_grpLayer;
         private System.Windows.Forms.CheckBox ls_cbMain;
         private System.Windows.Forms.NumericUpDown ls_numMax;
