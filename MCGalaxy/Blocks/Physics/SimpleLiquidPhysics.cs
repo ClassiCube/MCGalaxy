@@ -150,8 +150,6 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool WaterBlocked(Level lvl, ushort x, ushort y, ushort z) {
             BlockID block = lvl.GetBlock(x, y, z);
-            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
-                return true;
 
             switch (block) {
                 case Block.Air:
@@ -262,8 +260,6 @@ namespace MCGalaxy.Blocks.Physics {
         
         static bool LavaBlocked(Level lvl, ushort x, ushort y, ushort z) {
             BlockID block = lvl.GetBlock(x, y, z);
-            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
-                return true;
             
             switch (block) {
                 case Block.Air:

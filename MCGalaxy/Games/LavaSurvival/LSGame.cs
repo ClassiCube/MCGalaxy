@@ -23,7 +23,7 @@ namespace MCGalaxy.Games
 {
     internal sealed class LSData 
     {
-        public int TimesDied;
+        public int TimesDied, SpongesLeft;
     }
     
     public sealed partial class LSGame : RoundsGame 
@@ -41,7 +41,7 @@ namespace MCGalaxy.Games
         public static LSGame Instance = new LSGame();
         public LSGame() { Picker = new LevelPicker(); }
         
-        LSData Get(Player p) {
+        static LSData Get(Player p) {
             object data;
             if (!p.Extras.TryGet("MCG_LS_DATA", out data)) {
                 data = new LSData();
@@ -104,7 +104,7 @@ namespace MCGalaxy.Games
             }
         }
 
-        public bool InSafeZone(ushort x, ushort y, ushort z) {
+        bool InSafeZone(ushort x, ushort y, ushort z) {
             return x >= cfg.SafeZoneMin.X && x <= cfg.SafeZoneMax.X && y >= cfg.SafeZoneMin.Y
                 && y <= cfg.SafeZoneMax.Y && z >= cfg.SafeZoneMin.Z && z <= cfg.SafeZoneMax.Z;
         }
@@ -112,6 +112,10 @@ namespace MCGalaxy.Games
         public override void PlayerJoinedGame(Player p) {
             bool announce = false;
             HandleJoinedLevel(p, Map, Map, ref announce);
+        }
+
+        static void ResetRoundState(Player p, LSData data) {
+            data.SpongesLeft = 10;
         }
     }
 }

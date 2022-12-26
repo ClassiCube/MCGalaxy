@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.LevelEvents;
@@ -29,6 +30,7 @@ namespace MCGalaxy.Games {
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnBlockHandlersUpdatedEvent.Register(HandleBlockHandlersUpdated, Priority.High);
+            OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
 
             base.HookEventHandlers();
         }
@@ -38,6 +40,7 @@ namespace MCGalaxy.Games {
             OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnBlockHandlersUpdatedEvent.Unregister(HandleBlockHandlersUpdated);
+            OnBlockChangingEvent.Unregister(HandleBlockChanging);
 
             base.UnhookEventHandlers();
         }
@@ -45,7 +48,8 @@ namespace MCGalaxy.Games {
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
             HandleJoinedCommon(p, prevLevel, level, ref announce);
             
-            if (Map != level) return;            
+            if (Map != level) return;
+            ResetRoundState(p, Get(p)); // TODO: Check for /reload case?
             MessageMapInfo(p);
             if (RoundInProgress) OutputStatus(p);
         }
@@ -61,6 +65,34 @@ namespace MCGalaxy.Games {
                 p.cancelDeath = true;
             } else {
                 KillPlayer(p);
+            }
+        }
+        
+        void HandleBlockChanging(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {
+            if (p.level != Map || !(placing || p.painting)) return;
+
+            block = p.GetHeldBlock();
+            if (block != Block.Sponge) return;
+            LSData data = Get(p);
+
+            if (!p.Game.Referee && data.SpongesLeft <= 0) {
+                p.Message("You have no sponges left.");
+                p.RevertBlock(x, y, z);
+                cancel = true; return;
+            }
+
+            if (p.ChangeBlock(x, y, z, Block.Sponge) == ChangeResult.Unchanged) {
+                cancel = true; return;
+            }
+
+            PhysInfo C = default(PhysInfo);
+            C.X = x; C.Y = y; C.Z = z;
+            OtherPhysics.DoSponge(Map, ref C, !waterMode);
+
+            if (p.Game.Referee) return;
+            data.SpongesLeft--;
+            if ((data.SpongesLeft % 10) == 0 || data.SpongesLeft <= 10) {
+                p.Message("Sponges Left: &4" + data.SpongesLeft);
             }
         }
     }

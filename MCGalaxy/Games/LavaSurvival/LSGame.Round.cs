@@ -30,6 +30,12 @@ namespace MCGalaxy.Games
             roundSecs = 0;
             layerSecs = 0;
 
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) 
+            {
+                if (p.level == Map) ResetRoundState(p, Get(p));
+            }
+
             ResetPlayerDeaths();
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;            

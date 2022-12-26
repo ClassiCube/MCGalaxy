@@ -50,13 +50,13 @@ namespace MCGalaxy.Games
             if (!lvl.CheckSpongeWater(x, y, z)) {
                 BlockID block = C.Block;
                 
-                LiquidPhysics.PhysWater(lvl, (ushort)(x + 1), y, z, block);
-                LiquidPhysics.PhysWater(lvl, (ushort)(x - 1), y, z, block);
-                LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z + 1), block);
-                LiquidPhysics.PhysWater(lvl, x, y, (ushort)(z - 1), block);
-                LiquidPhysics.PhysWater(lvl, x, (ushort)(y - 1), z, block);
+                SpreadWater(lvl, (ushort)(x + 1), y, z, block);
+                SpreadWater(lvl, (ushort)(x - 1), y, z, block);
+                SpreadWater(lvl, x, y, (ushort)(z + 1), block);
+                SpreadWater(lvl, x, y, (ushort)(z - 1), block);
+                SpreadWater(lvl, x, (ushort)(y - 1), z, block);
 
-                if (floodUp) LiquidPhysics.PhysWater(lvl, x, (ushort)(y + 1), z, block);
+                if (floodUp) SpreadWater(lvl, x, (ushort)(y + 1), z, block);
             } else { //was placed near sponge
                 lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             }
@@ -72,17 +72,95 @@ namespace MCGalaxy.Games
             
             if (!lvl.CheckSpongeLava(x, y, z)) {
                 BlockID block = C.Block;
-                LiquidPhysics.PhysLava(lvl, (ushort)(x + 1), y, z, block);
-                LiquidPhysics.PhysLava(lvl, (ushort)(x - 1), y, z, block);
-                LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z + 1), block);
-                LiquidPhysics.PhysLava(lvl, x, y, (ushort)(z - 1), block);
-                LiquidPhysics.PhysLava(lvl, x, (ushort)(y - 1), z, block);
+                SpreadLava(lvl, (ushort)(x + 1), y, z, block);
+                SpreadLava(lvl, (ushort)(x - 1), y, z, block);
+                SpreadLava(lvl, x, y, (ushort)(z + 1), block);
+                SpreadLava(lvl, x, y, (ushort)(z - 1), block);
+                SpreadLava(lvl, x, (ushort)(y - 1), z, block);
 
-                if (floodUp) LiquidPhysics.PhysLava(lvl, x, (ushort)(y + 1), z, block);
+                if (floodUp) SpreadLava(lvl, x, (ushort)(y + 1), z, block);
             } else { //was placed near sponge
                 lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             }
             C.Data.Data = PhysicsArgs.RemoveFromChecks;
+        }
+
+                
+        void SpreadWater(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
+            int index;
+            BlockID block = lvl.GetBlock(x, y, z, out index);
+            if (InSafeZone(x, y, z)) return;
+
+            switch (block) {
+                case Block.Air:
+                    if (!lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, type);
+                    }
+                    break;
+
+                case Block.Lava:
+                case Block.FastLava:
+                case Block.Deadly_ActiveLava:
+                    if (!lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, Block.Stone, default(PhysicsArgs));
+                    }
+                    break;
+
+                case Block.Sand:
+                case Block.Gravel:
+                case Block.FloatWood:
+                    lvl.AddCheck(index); break;
+                    
+                default:
+                    // Adv physics kills flowers and mushrooms in water
+                    if (!lvl.Props[block].WaterKills) break;
+                    
+                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
+                    }
+                    break;
+            }
+        }
+        
+        void SpreadLava(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
+            int index;
+            BlockID block = lvl.GetBlock(x, y, z, out index);
+            if (InSafeZone(x, y, z)) return;
+
+            // in LS, sponge should stop lava too
+            switch (block) {
+                case Block.Air:
+                    if (!lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, type);
+                    }
+                    break;
+                    
+                case Block.Water:
+                case Block.Deadly_ActiveWater:
+                    if (!lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, Block.Stone, default(PhysicsArgs));
+                    }
+                    break;
+                    
+                case Block.Sand:
+                    if (lvl.physics > 1) { //Adv physics changes sand to glass next to lava
+                        lvl.AddUpdate(index, Block.Glass, default(PhysicsArgs));
+                    } else {
+                        lvl.AddCheck(index);
+                    } break;
+                    
+                case Block.Gravel:
+                    lvl.AddCheck(index); break;
+
+                default:
+                    //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
+                    if (!lvl.Props[block].LavaKills) break;
+                    
+                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) {
+                        lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
+                    }
+                    break;
+            }
         }
     }
 }

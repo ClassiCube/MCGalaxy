@@ -26,8 +26,6 @@ namespace MCGalaxy.Blocks.Physics {
         public static void PhysWater(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
-                return;
 
             switch (block) {
                 case Block.Air:
@@ -63,8 +61,6 @@ namespace MCGalaxy.Blocks.Physics {
         public static void PhysLava(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
-                return;
 
             switch (block) {
                 case Block.Air:
