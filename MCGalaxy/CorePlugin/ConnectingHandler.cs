@@ -62,7 +62,7 @@ namespace MCGalaxy.Core {
                     p.Kick(null, "Banned by " + banner + " for another " + delta + reason, true);
                     return false;
                 }
-            } catch { }
+            } catch { } // TODO log error
             return true;
         }
         

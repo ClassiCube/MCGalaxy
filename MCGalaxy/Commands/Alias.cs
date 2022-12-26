@@ -44,11 +44,10 @@ namespace MCGalaxy.Commands
             Trigger = trigger; Target = target; Format = format;
         }
 
-        public static void Load() {
+        public static void LoadCustom() {
             aliases.Clear();
-            coreAliases.Clear();
             
-            if (!File.Exists(Paths.AliasesFile)) { Save(); return; }
+            if (!File.Exists(Paths.AliasesFile)) { SaveCustom(); return; }
             PropertiesFile.Read(Paths.AliasesFile, LineProcessor, ':');
         }
         
@@ -56,7 +55,7 @@ namespace MCGalaxy.Commands
             aliases.Add(new Alias(key, value));
         }
 
-        public static void Save() {
+        public static void SaveCustom() {
             using (StreamWriter sw = new StreamWriter(Paths.AliasesFile)) {
                 sw.WriteLine("# Aliases can be in one of three formats:");
                 sw.WriteLine("# trigger : command");

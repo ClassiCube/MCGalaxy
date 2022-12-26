@@ -74,10 +74,12 @@ namespace MCGalaxy
         
         
         public static void InitAll() {
-            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-            allCmds.Clear();    
+            allCmds.Clear();
+            Alias.coreAliases.Clear();
+
             foreach (Group grp in Group.AllRanks) { grp.Commands.Clear(); }
-            
+            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+
             for (int i = 0; i < types.Length; i++) 
             {
                 Type type = types[i];
