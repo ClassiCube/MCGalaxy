@@ -78,7 +78,8 @@ namespace MCGalaxy
             allCmds.Clear();    
             foreach (Group grp in Group.AllRanks) { grp.Commands.Clear(); }
             
-            for (int i = 0; i < types.Length; i++) {
+            for (int i = 0; i < types.Length; i++) 
+            {
                 Type type = types[i];
                 if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract || !type.IsPublic) continue;
                 
@@ -195,7 +196,6 @@ namespace MCGalaxy
     public abstract class Command2 : Command 
     {
         public override void Use(Player p, string message) {
-            if (p == null) p = Player.Console;
             Use(p, message, p.DefaultCmdData);
         }
     }

@@ -31,18 +31,12 @@ namespace MCGalaxy.Modules.Moderation.Notes
 
         public override void Load(bool startup) {
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
-            OnConfigUpdatedEvent.Register(HandleConfigUpdated, Priority.Low);
-            HandleConfigUpdated();
+            Command.TryRegister(false, notesCmd, myNotesCmd);
         }
         
         public override void Unload(bool shutdown) {
             OnModActionEvent.Unregister(HandleModerationAction);
-            OnConfigUpdatedEvent.Unregister(HandleConfigUpdated);
             Command.Unregister(notesCmd, myNotesCmd);
-        }
-
-        void HandleConfigUpdated() {
-            Command.TryRegister(false, notesCmd, myNotesCmd);
         }
 
 

@@ -99,8 +99,8 @@ namespace MCGalaxy
 #endif
 
             EnsureFilesExist();
-            MoveOutdatedFiles();
             IScripting.Init();
+            Command.InitAll();
 
             LoadAllSettings();
             InitDatabase();
@@ -152,23 +152,9 @@ namespace MCGalaxy
         
         static void EnsureDirectoryExists(string dir) {
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-        }
-        
-        static void MoveOutdatedFiles() {
-            try {
-                if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
-            }
-            catch { }
-        }        
+        }     
         
         public static void LoadAllSettings() {
-            // Unload custom plugins
-            List<Plugin> plugins = new List<Plugin>(Plugin.all);
-            foreach (Plugin p in plugins) {
-                if (Plugin.core.Contains(p)) continue;
-                Plugin.Unload(p, false);
-            }
-            
             ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
             Colors.Load();
             Alias.Load();
@@ -179,7 +165,6 @@ namespace MCGalaxy
             AuthService.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();
-            Command.InitAll();
             Block.SetBlocks();
             BlockPerms.Load();
             AwardsList.Load();
@@ -197,12 +182,6 @@ namespace MCGalaxy
             TextFile announcementsFile = TextFile.Files["Announcements"];
             announcementsFile.EnsureExists();
             announcements = announcementsFile.GetText();
-            
-            // Reload custom plugins
-            foreach (Plugin p in plugins) {
-                if (Plugin.core.Contains(p)) continue;
-                Plugin.Load(p, false);
-            }
             
             OnConfigUpdatedEvent.Call();
         }
