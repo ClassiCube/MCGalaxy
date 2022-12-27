@@ -50,6 +50,15 @@ namespace MCGalaxy.DB
             OrderBy += (ascending ? "asc" : "desc");
         }
         
+        public static TopStat Find(string name) {
+            foreach (TopStat stat in Stats) 
+            {
+                if (stat.Identifier.CaselessEq(name)) return stat;
+            }
+            return null;
+        }
+        
+        
         /// <summary> List of stats that can be ordered. </summary>
         public static List<TopStat> Stats = new List<TopStat>() {
             new TopStat("Logins", "Players",

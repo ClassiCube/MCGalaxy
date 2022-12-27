@@ -39,9 +39,9 @@ namespace MCGalaxy.Commands.Info
             int maxResults = 0, offset = 0;
             if (!CommandParser.GetInt(p, args[0], "Max results", ref maxResults, 1, 15)) return;
 
-            TopStat stat = FindTopStat(args[1]);
+            TopStat stat = TopStat.Find(args[1]);
             if (stat == null) {
-                p.Message("&WUnrecognised type \"{0}\".", args[1]); return;
+                p.Message("&WNo stat found with name \"{0}\".", args[1]); return;
             }
             
             if (args.Length > 2) {
@@ -53,25 +53,12 @@ namespace MCGalaxy.Commands.Info
                                                     "ORDER BY" + stat.OrderBy + limit);
             
             p.Message("&a{0}:", stat.Title());
-            for (int i = 0; i < stats.Count; i++) {
+            for (int i = 0; i < stats.Count; i++) 
+            {
                 string nick  = p.FormatNick(stats[i][0]);
                 string value = stat.Formatter(stats[i][1]);
                 p.Message("{0}) {1} &S- {2}", offset + (i + 1), nick, value);
             }
-        }
-        
-        static TopStat FindTopStat(string input) {
-            foreach (TopStat stat in TopStat.Stats) {
-                if (stat.Identifier.CaselessEq(input)) return stat;
-            }
-            
-            int number;
-            if (int.TryParse(input, out number)) {
-                // Backwards compatibility where top used to take a number
-                if (number >= 1 && number <= TopStat.Stats.Count)
-                    return TopStat.Stats[number - 1];
-            }
-            return null;
         }
         
         public override void Help(Player p) {
