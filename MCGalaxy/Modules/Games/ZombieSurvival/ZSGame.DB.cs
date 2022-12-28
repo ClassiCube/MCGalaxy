@@ -18,12 +18,13 @@
  */
 using System;
 using MCGalaxy.DB;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Games {
-    
-    public sealed partial class ZSGame : RoundsGame {
-        
+namespace MCGalaxy.Modules.Games.ZS
+{    
+    public sealed partial class ZSGame : RoundsGame 
+    {       
         struct ZombieStats { public int TotalRounds, MaxRounds, TotalInfected, MaxInfected; }
         
         static TopStat statMostInfected, statMaxInfected, statMostSurvived, statMaxSurvived;
@@ -32,8 +33,6 @@ namespace MCGalaxy.Games {
         static ChatToken infectedToken, survivedToken;
         
         static void HookStats() {
-            if (TopStat.Stats.Contains(statMostInfected)) return; // don't duplicate
-            
             statMostInfected = new TopStat("Infected", "ZombieStats", "TotalInfected",
                                            () => "Most players infected", TopStat.FormatInteger);
             statMaxInfected = new TopStat("Survived", "ZombieStats", "TotalRounds",
@@ -134,5 +133,30 @@ namespace MCGalaxy.Games {
                                                      data.TotalInfected,       data.MaxInfected, p.name);
             }
         }
+        
+        
+        static void HookCommands() {
+            Command.TryRegister(true, cmdAka, cmdAlive, cmdBounties, cmdBounty,
+                                cmdDisinfect, cmdHuman, cmdInfect, cmdInfected,
+                                cmdLastLevels, cmdQueue, cmdShowQueue);
+        }
+        
+        static void UnhookCommands() {
+            Command.Unregister(cmdAka, cmdAlive, cmdBounties, cmdBounty,
+                               cmdDisinfect, cmdHuman, cmdInfect, cmdInfected,
+                               cmdLastLevels, cmdQueue, cmdShowQueue);
+        }
+        
+        static Command cmdAka        = new CmdAka();
+        static Command cmdAlive      = new CmdAlive();
+        static Command cmdBounties   = new CmdBounties();
+        static Command cmdBounty     = new CmdBounty();
+        static Command cmdDisinfect  = new CmdDisInfect();
+        static Command cmdHuman      = new CmdHuman();
+        static Command cmdInfect     = new CmdInfect();
+        static Command cmdInfected   = new CmdInfected();
+        static Command cmdLastLevels = new CmdLastLevels();
+        static Command cmdQueue      = new CmdQueue();
+        static Command cmdShowQueue  = new CmdShowQueue();
     }
 }

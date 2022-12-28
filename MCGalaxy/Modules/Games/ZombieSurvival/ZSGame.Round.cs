@@ -19,8 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Games;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.ZS
 {    
     public sealed partial class ZSGame : RoundsGame 
     {

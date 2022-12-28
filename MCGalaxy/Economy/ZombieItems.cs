@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.ZS;
 
 namespace MCGalaxy.Eco {
     

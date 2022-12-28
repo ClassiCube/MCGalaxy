@@ -24,11 +24,13 @@ using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    public sealed partial class ZSGame : RoundsGame {
-
+namespace MCGalaxy.Modules.Games.ZS
+{
+    public sealed partial class ZSGame : RoundsGame 
+    {
         protected override void HookEventHandlers() {
             OnEntitySpawnedEvent.Register(HandleEntitySpawned, Priority.High);
             OnTabListEntryAddedEvent.Register(HandleTabListEntryAdded, Priority.High);

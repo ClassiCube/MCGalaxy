@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
+using MCGalaxy.Modules.Games.ZS;
 using MCGalaxy.Modules.Moderation.Notes;
 using MCGalaxy.Modules.Relay.Discord;
 using MCGalaxy.Modules.Relay.IRC;
@@ -111,6 +112,7 @@ namespace MCGalaxy
             LoadCorePlugin(new DiscordPlugin());
             LoadCorePlugin(new IRCPlugin());
             LoadCorePlugin(new IPThrottler());
+            LoadCorePlugin(new ZSPlugin());
             IScripting.AutoloadPlugins();
         }
         

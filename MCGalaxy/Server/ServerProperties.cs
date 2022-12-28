@@ -31,7 +31,6 @@ namespace MCGalaxy {
                 Server.SettingsUpdate();
             
             CountdownGame.Config.Load();
-            ZSGame.Config.Load();
             LSGame.Config.Load();
             CTFGame.Config.Load();
             TWGame.Config.Load();

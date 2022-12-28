@@ -20,8 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Config;
+using MCGalaxy.Games;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.ZS
 {    
     public sealed class ZSConfig : RoundsGameConfig 
     {

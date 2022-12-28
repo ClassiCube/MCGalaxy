@@ -18,13 +18,14 @@
 using System.IO;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdQueue : Command2 {
+namespace MCGalaxy.Modules.Games.ZS
+{
+    sealed class CmdQueue : Command2 
+    {
         public override string name { get { return "Queue"; } }
         public override string shortcut { get { return "qz"; } }
         public override string type { get { return CommandTypes.Games; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();

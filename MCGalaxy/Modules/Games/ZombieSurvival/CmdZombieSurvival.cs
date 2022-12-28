@@ -17,10 +17,14 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
+using MCGalaxy.Commands.Fun;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdZombieSurvival : RoundsGameCmd {
+namespace MCGalaxy.Modules.Games.ZS
+{
+    sealed class CmdZombieSurvival : RoundsGameCmd 
+    {
         public override string name { get { return "ZombieSurvival"; } }
         public override string shortcut { get { return "ZS"; } }
         protected override RoundsGame Game { get { return ZSGame.Instance; } }

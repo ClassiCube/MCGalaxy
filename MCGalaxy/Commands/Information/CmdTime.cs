@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.ZS;
 
 namespace MCGalaxy.Commands.Info 
 {

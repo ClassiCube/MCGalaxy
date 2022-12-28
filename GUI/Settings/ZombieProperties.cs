@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.ZS;
 
 namespace MCGalaxy.Gui {
     public sealed class ZombieProperties {  

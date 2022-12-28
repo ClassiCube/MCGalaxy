@@ -108,9 +108,6 @@ namespace MCGalaxy.Gui
             SaveCommands();
             SaveBlocks();
             SaveGameProps();
-            
-            try { ZSGame.Config.Save(); }
-            catch { Logger.Log(LogType.Warning, "Error saving Zombie Survival settings!"); }
 
             SrvProperties.Load(); // loads when saving?
         }

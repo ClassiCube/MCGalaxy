@@ -19,11 +19,12 @@ using System;
 using MCGalaxy.Games;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdHuman : Command2 {
+namespace MCGalaxy.Modules.Games.ZS
+{
+    sealed class CmdHuman : Command2 
+    {
         public override string name { get { return "Human"; } }
         public override string type { get { return CommandTypes.Moderation; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data_) {

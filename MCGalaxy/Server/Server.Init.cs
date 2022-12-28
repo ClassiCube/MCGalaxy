@@ -119,7 +119,6 @@ namespace MCGalaxy {
         
         static void InitRest(SchedulerTask task) {
             CountdownGame.Instance.AutoStart();
-            ZSGame.Instance.AutoStart();
             LSGame.Instance.AutoStart();
             CTFGame.Instance.AutoStart();
             TWGame.Instance.AutoStart();

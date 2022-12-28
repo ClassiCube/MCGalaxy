@@ -25,17 +25,18 @@ namespace MCGalaxy.Modules.Moderation.Notes
     {
         public override string name { get { return "Core_NotesPlugin"; } }
 
-        Command notesCmd   = new CmdNotes();
-        Command myNotesCmd = new CmdMyNotes();
+        Command cmdNotes   = new CmdNotes();
+        Command cmdMyNotes = new CmdMyNotes();
 
         public override void Load(bool startup) {
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
-            Command.TryRegister(false, notesCmd, myNotesCmd);
+            Command.Register(cmdNotes);
+            Command.Register(cmdMyNotes);
         }
         
         public override void Unload(bool shutdown) {
             OnModActionEvent.Unregister(HandleModerationAction);
-            Command.Unregister(notesCmd, myNotesCmd);
+            Command.Unregister(cmdNotes, cmdMyNotes);
         }
 
 

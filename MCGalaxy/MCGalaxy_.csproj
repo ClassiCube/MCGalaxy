@@ -195,6 +195,7 @@
     <Compile Include="Commands\Economy\MoneyCmd.cs" />
     <Compile Include="Commands\EntityPropertyCmd.cs" />
     <Compile Include="Commands\Fun\CmdCountdown.cs" />
+    <Compile Include="Commands\Fun\CmdCtf.cs" />
     <Compile Include="Commands\Fun\CmdExplode.cs" />
     <Compile Include="Commands\Fun\CmdFliphead.cs" />
     <Compile Include="Commands\Fun\CmdFlipHeads.cs" />
@@ -206,10 +207,8 @@
     <Compile Include="Commands\Fun\CmdTeam.cs" />
     <Compile Include="Commands\Fun\CmdTntWars.cs" />
     <Compile Include="Commands\Fun\CmdZombieSpawn.cs" />
-    <Compile Include="Commands\Fun\CTF\CmdCtf.cs" />
     <Compile Include="Commands\Fun\RateMapCmds.cs" />
     <Compile Include="Commands\Fun\RoundsGameCmd.cs" />
-    <Compile Include="Commands\Fun\ZombieSurvival\CmdAka.cs" />
     <Compile Include="Commands\Information\CmdAbout.cs" />
     <Compile Include="Commands\Information\CmdBanInfo.cs" />
     <Compile Include="Commands\Information\CmdBlocks.cs" />
@@ -563,6 +562,7 @@
     <Compile Include="Modules\Games\TNTWars\TWGame.Plugin.cs" />
     <Compile Include="Modules\Games\TNTWars\TWGame.Round.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\CmdZombieSurvival.cs" />
+    <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdAka.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdAlive.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdBounties.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdBounty.cs" />
@@ -578,6 +578,7 @@
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.DB.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.Plugin.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.Round.cs" />
+    <Compile Include="Modules\Games\ZombieSurvival\ZSPlugin.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />

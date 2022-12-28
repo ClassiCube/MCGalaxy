@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.ZS;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy 

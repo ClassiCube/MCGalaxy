@@ -28,11 +28,7 @@ namespace MCGalaxy {
             if (enable == CommandEnable.Always) return null;
             if (enable == CommandEnable.Economy && !Economy.Enabled)
                 return "economy is disabled.";
-            
-            if (enable == CommandEnable.Zombie && !ZSGame.Instance.Running)
-                return "zombie survival is not running.";
-            if (enable == CommandEnable.Lava)
-                return "lava survival is not running.";
+
             return null;
         }
         

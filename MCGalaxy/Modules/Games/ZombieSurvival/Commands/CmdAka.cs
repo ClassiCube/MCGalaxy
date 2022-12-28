@@ -18,9 +18,10 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {
-    
-    public sealed class CmdAka : Command2 {
+namespace MCGalaxy.Modules.Games.ZS
+{
+    sealed class CmdAka : Command2 
+    {
         public override string name { get { return "AKA"; } }
         public override string type { get { return CommandTypes.Games; } }
         

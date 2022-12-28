@@ -18,11 +18,12 @@
 using System.Collections.Generic;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Fun {    
-    public sealed class CmdBounties : Command2 {       
+namespace MCGalaxy.Modules.Games.ZS
+{
+    sealed class CmdBounties : Command2 
+    {
         public override string name { get { return "Bounties"; } }
         public override string type { get { return CommandTypes.Games; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Zombie; } }
         
         public override void Use(Player p, string message, CommandData data) {
             BountyData[] bounties = BountyData.Bounties.Items;

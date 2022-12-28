@@ -205,7 +205,7 @@ namespace MCGalaxy
     [Flags]
     public enum CommandEnable 
     {
-        Always = 0, Economy = 1, Zombie = 2, Lava = 4,
+        Always = 0, Economy = 1
     }
     
     public enum CommandParallelism

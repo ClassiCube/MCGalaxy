@@ -18,9 +18,10 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.ZS 
 {    
     public class BountyData 
     {
@@ -83,6 +84,7 @@ namespace MCGalaxy.Games
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
         public string QueuedZombie;
         internal List<string> infectMessages = new List<string>();
+        static bool hooked;
         
         const string zsExtrasKey = "MCG_ZS_DATA";
         internal static ZSData Get(Player p) {
@@ -131,8 +133,12 @@ namespace MCGalaxy.Games
         }
         
         protected override void StartGame() {
-            Database.CreateTable("ZombieStats", zsTable);
-            HookStats(); 
+            Database.CreateTable("ZombieStats", zsTable); 
+            if (hooked) return;
+            
+            hooked = true;
+            HookStats();
+            HookCommands();
         }
         
         public static bool IsInfected(Player p) { return p.infected; }
@@ -193,7 +199,9 @@ namespace MCGalaxy.Games
 
         protected override void EndGame() {
             RoundEnd = DateTime.MinValue;
+            hooked   = false;
             UnhookStats();
+            UnhookCommands();
             
             Alive.Clear();
             Infected.Clear();
