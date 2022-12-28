@@ -332,5 +332,17 @@ namespace MCGalaxy.Modules.Games.ZS
             }
             return 0;
         }
+        
+        
+        public override void OutputTimeInfo(Player p) {
+            TimeSpan delta = RoundEnd - DateTime.UtcNow;
+            if (delta.TotalSeconds > 0) {
+                p.Message("&a{0} &Suntil the round ends.", delta.Shorten(true));
+            } else {
+                delta = RoundStart - DateTime.UtcNow;
+                if (delta.TotalSeconds > 0)
+                    p.Message("&a{0} &Suntil the round starts.", delta.Shorten(true));
+            }
+        }
     }
 }

@@ -30,22 +30,15 @@ namespace MCGalaxy.Commands.Info
         
         public override void Use(Player p, string message, CommandData data) {
             p.Message("Server time: {0:HH:mm:ss} on {0:yyyy-MM-dd}", DateTime.Now);
-            if (!ZSGame.Instance.Running) return;
-            
-            TimeSpan delta = ZSGame.Instance.RoundEnd - DateTime.UtcNow;
-            if (delta.TotalSeconds > 0) {
-                p.Message("&a{0} &Suntil the round ends.", delta.Shorten(true));
-            } else {
-                delta = ZSGame.Instance.RoundStart - DateTime.UtcNow;
-                if (delta.TotalSeconds > 0)
-                    p.Message("&a{0} &Suntil the round starts.", delta.Shorten(true));
-            }
+            IGame game = IGame.GameOn(p.level);
+            if (game != null) game.OutputTimeInfo(p);
         }
         
         public override void Help(Player p) {
             p.Message("&T/Time");
             p.Message("&HShows the server time.");
-            p.Message("&HIf zombie survival is running, shows time left until round end or start.");
+            p.Message("&HIf a time limit round-based game is running on the level you are currently on, " +
+                      "shows time left until round end or start.");
         }
     }
 }

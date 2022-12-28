@@ -113,6 +113,10 @@ namespace MCGalaxy.Games
             if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!");
             if (floodUp) p.Message("The " + block + " will &cflood upwards &Sthis round!");
 
+            OutputTimeInfo(p);
+        }
+
+        public override void OutputTimeInfo(Player p) {
             if (!flooded) p.Message(FloodTimeLeftMessage());
             p.Message(RoundTimeLeftMessage());
         }
