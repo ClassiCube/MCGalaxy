@@ -54,14 +54,18 @@ namespace MCGalaxy.Network
         protected abstract void OnRequest(HttpWebRequest request);
         /// <summary> Called when a response is received from the web server </summary>
         protected abstract void OnResponse(WebResponse response);
+        /// <summary> Called when a failure HTTP response is received from the web server </summary>
+        protected abstract void OnFailure(string response);
         
 
         /// <summary> Sends a heartbeat to the web server and then reads the response </summary>
         public void Pump() {
             byte[] data = Encoding.ASCII.GetBytes(GetHeartbeatData());
             Exception lastEx = null;
+            string lastResp  = null;
 
-            for (int i = 0; i < MAX_RETRIES; i++) {
+            for (int i = 0; i < MAX_RETRIES; i++) 
+            {
                 try {
                     HttpWebRequest req = HttpUtil.CreateRequest(URL);
                     req.Method      = "POST";
@@ -75,12 +79,14 @@ namespace MCGalaxy.Network
                     OnResponse(res);
                     return;
                 } catch (Exception ex) {
+                    lastResp = HttpUtil.GetErrorResponse(ex);
                     HttpUtil.DisposeErrorResponse(ex);
-                    lastEx = ex;
+                    lastEx   = ex;
                     continue;
                 }
             }
             
+            OnFailure(lastResp);
             Logger.Log(LogType.Warning, "Failed to send heartbeat to {0} ({1})", GetHost(), lastEx.Message);
         }
         

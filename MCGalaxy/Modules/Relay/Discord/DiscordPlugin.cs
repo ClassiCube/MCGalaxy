@@ -85,7 +85,6 @@ namespace MCGalaxy.Modules.Relay.Discord
     
     public sealed class DiscordPlugin : Plugin 
     {
-        public override string MCGalaxy_Version { get { return null; } }
         public override string name { get { return "DiscordRelay"; } }
         
         public static DiscordConfig Config = new DiscordConfig();

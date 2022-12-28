@@ -46,7 +46,7 @@ namespace MCGalaxy
         /// <summary> Name of the plugin. </summary>
         public abstract string name { get; }
         /// <summary> The oldest version of MCGalaxy this plugin is compatible with. </summary>
-        public abstract string MCGalaxy_Version { get; }
+        public virtual string MCGalaxy_Version { get { return null; } }
         /// <summary> Version of this plugin. </summary>
         public virtual int build { get { return 0; } }
         /// <summary> Message to display once this plugin is loaded. </summary>

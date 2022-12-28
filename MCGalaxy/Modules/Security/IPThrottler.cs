@@ -29,7 +29,6 @@ namespace MCGalaxy.Modules.Security
 {
     public sealed class IPThrottler : Plugin 
     {
-        public override string MCGalaxy_Version { get { return null; } }
         public override string name { get { return "IPThrottler"; } }
         
         SchedulerTask clearTask;        

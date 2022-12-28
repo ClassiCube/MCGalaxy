@@ -23,7 +23,6 @@ namespace MCGalaxy.Modules.Moderation.Notes
 {
     public sealed class NotesPlugin : Plugin 
     {
-        public override string MCGalaxy_Version { get { return null; } }
         public override string name { get { return "Core_NotesPlugin"; } }
 
         Command notesCmd   = new CmdNotes();

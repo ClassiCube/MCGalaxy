@@ -24,7 +24,6 @@ using MCGalaxy.Events.ServerEvents;
 namespace MCGalaxy.Core {
 
     public sealed class CorePlugin : Plugin {
-        public override string MCGalaxy_Version { get { return null; } }
         public override string name { get { return "CorePlugin"; } }
 
         public override void Load(bool startup) {

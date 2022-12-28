@@ -23,7 +23,6 @@ namespace MCGalaxy.Modules.Relay.IRC
 {   
     public sealed class IRCPlugin : Plugin 
     {
-        public override string MCGalaxy_Version { get { return null; } }
         public override string name { get { return "IRCRelay"; } }
 
         public static IRCBot Bot = new IRCBot();
