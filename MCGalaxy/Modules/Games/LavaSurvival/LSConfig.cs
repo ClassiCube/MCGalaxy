@@ -29,7 +29,6 @@ namespace MCGalaxy.Modules.Games.LS
         
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }
-        protected override string PropsPath { get { return "properties/lavasurvival.properties"; } }
     }
     
     public sealed class LSMapConfig : RoundsGameMapConfig 

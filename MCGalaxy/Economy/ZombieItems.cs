@@ -133,7 +133,7 @@ namespace MCGalaxy.Eco {
             
             ZSData data  = ZSGame.Get(p);
             if (data.Invisible) { p.Message("You are already invisible."); return; }
-            ZSConfig cfg = ZSGame.Config;
+            ZSConfig cfg = ZSGame.Instance.Config;
             
             int maxPotions = p.infected ? cfg.ZombieInvisibilityPotions : cfg.InvisibilityPotions;
             if (data.InvisibilityPotions >= maxPotions) {
@@ -155,12 +155,13 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
+            ZSConfig cfg = ZSGame.Instance.Config;
             p.Message("&T/Buy " + Name);
             OutputItemInfo(p);
             
-            p.Message("Humans: Makes you invisible to zombies for {0} seconds", ZSGame.Config.InvisibilityDuration);
+            p.Message("Humans: Makes you invisible to zombies for {0} seconds", cfg.InvisibilityDuration);
             p.Message("  &WYou can still get infected while invisible");
-            p.Message("Zombies: Makes you invisible to humans for {0} seconds", ZSGame.Config.ZombieInvisibilityDuration);
+            p.Message("Zombies: Makes you invisible to humans for {0} seconds", cfg.ZombieInvisibilityDuration);
             p.Message("  &WYou can still infect humans while invisible");
         }
     }
@@ -185,21 +186,22 @@ namespace MCGalaxy.Eco {
             if (!p.infected) {
                 p.Message("You are already a human."); return;
             }
+            ZSConfig cfg = ZSGame.Instance.Config;
             
             DateTime end = ZSGame.Instance.RoundEnd;
-            if (DateTime.UtcNow.AddSeconds(ZSGame.Config.ReviveNoTime) > end) {
-                p.Message(ZSGame.Config.ReviveNoTimeMessage); return;
+            if (DateTime.UtcNow.AddSeconds(cfg.ReviveNoTime) > end) {
+                p.Message(cfg.ReviveNoTimeMessage); return;
             }
             int count = ZSGame.Instance.Infected.Count;
-            if (count < ZSGame.Config.ReviveFewZombies) {
-                p.Message(ZSGame.Config.ReviveFewZombiesMessage); return;
+            if (count < cfg.ReviveFewZombies) {
+                p.Message(cfg.ReviveFewZombiesMessage); return;
             }
-            if (data.RevivesUsed >= ZSGame.Config.ReviveTimes) {
+            if (data.RevivesUsed >= cfg.ReviveTimes) {
                 p.Message("You cannot buy any more revive potions."); return;
             }
-            if (data.TimeInfected.AddSeconds(ZSGame.Config.ReviveTooSlow) < DateTime.UtcNow) {
+            if (data.TimeInfected.AddSeconds(cfg.ReviveTooSlow) < DateTime.UtcNow) {
                 p.Message("&WYou can only revive within the first {0} seconds after you were infected.",
-                               ZSGame.Config.ReviveTooSlow); return;
+                          cfg.ReviveTooSlow); return;
             }
             
             ZSGame.Instance.AttemptRevive(p);
@@ -208,15 +210,14 @@ namespace MCGalaxy.Eco {
         }
         
         protected internal override void OnStoreCommand(Player p) {
-            int time = ZSGame.Config.ReviveNoTime, expiry = ZSGame.Config.ReviveTooSlow;
-            int potions = ZSGame.Config.ReviveTimes;
+            ZSConfig cfg = ZSGame.Instance.Config;
             p.Message("&T/Buy " + Name);
             OutputItemInfo(p);
             
             p.Message("Lets you rejoin the humans - &Wnot guaranteed to always work");
-            p.Message("  Cannot be used in the last &a" + time + " &Sseconds of a round.");
-            p.Message("  Can only be used within &a" + expiry + " &Sseconds after being infected.");
-            p.Message("  Can only buy &a" + potions + " &Srevive potions per round.");
+            p.Message("  Cannot be used in the last &a{0} &Sseconds of a round.", cfg.ReviveNoTime);
+            p.Message("  Can only be used within &a{0} &Sseconds after being infected.", cfg.ReviveTooSlow);
+            p.Message("  Can only buy &a{0} &Srevive potions per round.", cfg.ReviveTimes);
         }
     }
 }

@@ -32,7 +32,6 @@ namespace MCGalaxy.Modules.Games.Countdown
     {
         public override bool AllowAutoload { get { return true; } }
         protected override string GameName { get { return "Countdown"; } }
-        protected override string PropsPath { get { return "properties/countdown.properties"; } }
         
         public override void Load() {
             base.Load();
@@ -45,7 +44,7 @@ namespace MCGalaxy.Modules.Games.Countdown
         public VolatileArray<Player> Players = new VolatileArray<Player>();
         public VolatileArray<Player> Remaining = new VolatileArray<Player>();
         
-        public static CountdownConfig Config = new CountdownConfig();
+        public CountdownConfig Config = new CountdownConfig();
         public override string GameName { get { return "Countdown"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         

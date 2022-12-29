@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Games.LS
             OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdLS);
             
+            LSGame.Instance.Config.Path = "properties/lavasurvival.properties";
             OnConfigUpdated();
             LSGame.Instance.AutoStart();
         }
@@ -41,7 +42,7 @@ namespace MCGalaxy.Modules.Games.LS
         }
         
         void OnConfigUpdated() { 
-            LSGame.Config.Load();
+            LSGame.Instance.Config.Load();
         }
     }
 }

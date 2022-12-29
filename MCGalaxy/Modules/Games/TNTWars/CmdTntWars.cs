@@ -60,7 +60,7 @@ namespace MCGalaxy.Modules.Games.TW
         protected override void HandleSet(Player p, RoundsGame game_, string[] args) {
             TWGame game = (TWGame)game_;
             TWMapConfig cfg  = new TWMapConfig();
-            TWConfig gameCfg = TWGame.Config;
+            TWConfig gameCfg = game.Config;
             
             LoadMapConfig(p, cfg);
             if (args.Length == 1) { Help(p, "set"); return; }

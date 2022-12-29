@@ -72,7 +72,7 @@ namespace MCGalaxy.Modules.Games.ZS
     
     public sealed partial class ZSGame : RoundsGame 
     {
-        public static ZSConfig Config = new ZSConfig();
+        public ZSConfig Config = new ZSConfig();
         public override string GameName { get { return "Zombie Survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         

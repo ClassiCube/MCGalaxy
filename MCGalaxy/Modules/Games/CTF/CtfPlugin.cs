@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Games.CTF
             OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdCTF);
             
+            CTFGame.Instance.Config.Path = "properties/ctf.properties";
             OnConfigUpdated();
             CTFGame.Instance.AutoStart();
         }
@@ -41,7 +42,7 @@ namespace MCGalaxy.Modules.Games.CTF
         }
         
         void OnConfigUpdated() { 
-            CTFGame.Config.Load();
+            CTFGame.Instance.Config.Load();
         }
     }
 }

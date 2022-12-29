@@ -42,7 +42,7 @@ namespace MCGalaxy.Gui {
         public float HitboxPrecision { get; set; }
         
         public void LoadFromServer() {
-            ZSConfig cfg = ZSGame.Config;
+            ZSConfig cfg = ZSGame.Instance.Config;
             
             Pillaring = !cfg.NoPillaring;          
             MaxMoveDistance = cfg.MaxMoveDist;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Gui {
         }
         
         public void ApplyToServer() {
-            ZSConfig cfg = ZSGame.Config;
+            ZSConfig cfg = ZSGame.Instance.Config;
 
             cfg.NoPillaring = !Pillaring;            
             cfg.MaxMoveDist = MaxMoveDistance;

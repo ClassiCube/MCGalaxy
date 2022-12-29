@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Games.LS
     public sealed partial class LSGame : RoundsGame 
     {
         LSMapConfig cfg = new LSMapConfig();
-        public static LSConfig Config = new LSConfig();
+        public LSConfig Config = new LSConfig();
         public override string GameName { get { return "Lava survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         

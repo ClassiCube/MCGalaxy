@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Games.TW
             OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdTW);
             
+            TWGame.Instance.Config.Path = "properties/tntwars.properties";
             OnConfigUpdated();
             TWGame.Instance.AutoStart();
         }
@@ -41,7 +42,7 @@ namespace MCGalaxy.Modules.Games.TW
         }
         
         void OnConfigUpdated() { 
-            TWGame.Config.Load();
+            TWGame.Instance.Config.Load();
         }
     }
 }

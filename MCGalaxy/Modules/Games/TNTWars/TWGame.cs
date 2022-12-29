@@ -67,7 +67,7 @@ namespace MCGalaxy.Modules.Games.TW
     public sealed partial class TWGame : RoundsGame 
     {
         TWMapConfig cfg = new TWMapConfig();
-        public static TWConfig Config = new TWConfig();
+        public TWConfig Config = new TWConfig();
         public override string GameName { get { return "TNT Wars"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         VolatileArray<Player> allPlayers = new VolatileArray<Player>(false);

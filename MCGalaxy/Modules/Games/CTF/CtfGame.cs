@@ -36,7 +36,7 @@ namespace MCGalaxy.Modules.Games.CTF
     public sealed partial class CTFGame : RoundsGame 
     {
         CTFMapConfig cfg = new CTFMapConfig();
-        public static CTFConfig Config = new CTFConfig();
+        public CTFConfig Config = new CTFConfig();
         public override string GameName { get { return "CTF"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         

@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Games.Countdown
             OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdCD);
             
+            CountdownGame.Instance.Config.Path = "properties/countdown.properties";
             OnConfigUpdated();
             CountdownGame.Instance.AutoStart();
         }
@@ -41,7 +42,7 @@ namespace MCGalaxy.Modules.Games.Countdown
         }
         
         void OnConfigUpdated() { 
-            CountdownGame.Config.Load();
+            CountdownGame.Instance.Config.Load();
         }
     }
 }

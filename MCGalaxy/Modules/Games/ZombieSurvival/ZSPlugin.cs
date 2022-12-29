@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Games.ZS
             OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdZS);
             
+            ZSGame.Instance.Config.Path = "properties/zombiesurvival.properties";
             OnConfigUpdated();
             ZSGame.Instance.AutoStart();
         }
@@ -41,7 +42,7 @@ namespace MCGalaxy.Modules.Games.ZS
         }
         
         void OnConfigUpdated() { 
-            ZSGame.Config.Load();
+            ZSGame.Instance.Config.Load();
             ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
         }
     }

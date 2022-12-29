@@ -35,9 +35,10 @@ namespace MCGalaxy.Modules.Games.ZS
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage zombie survival") }; }
         }
         
-        protected override void HandleSet(Player p, RoundsGame game, string[] args) {
-            ZSConfig cfg = ZSGame.Config;
-            string prop = args[1];
+        protected override void HandleSet(Player p, RoundsGame game_, string[] args) {
+            ZSGame game  = (ZSGame)game_;
+            ZSConfig cfg = game.Config;
+            string prop  = args[1];
             LevelConfig lCfg = p.level.Config;
             
             if (prop.CaselessEq("map")) {

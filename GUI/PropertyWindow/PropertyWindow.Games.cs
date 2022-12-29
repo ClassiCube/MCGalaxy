@@ -70,7 +70,7 @@ namespace MCGalaxy.Gui {
                 zs_btnAdd, zs_btnRemove, zs_lstUsed, zs_lstNotUsed);
             zsHelper.Load(allMaps);
             
-            ZSConfig cfg = ZSGame.Config;
+            ZSConfig cfg = ZSGame.Instance.Config;
             zs_numInvHumanDur.Value  = cfg.InvisibilityDuration;
             zs_numInvHumanMax.Value  = cfg.InvisibilityPotions;
             zs_numInvZombieDur.Value = cfg.ZombieInvisibilityDuration;
@@ -86,7 +86,7 @@ namespace MCGalaxy.Gui {
         
         void SaveZSSettings() {
             try {
-                ZSConfig cfg = ZSGame.Config;
+                ZSConfig cfg = ZSGame.Instance.Config;
                 cfg.InvisibilityDuration = (int)zs_numInvHumanDur.Value;
                 cfg.InvisibilityPotions  = (int)zs_numInvHumanMax.Value;
                 cfg.ZombieInvisibilityDuration = (int)zs_numInvZombieDur.Value;
@@ -131,13 +131,13 @@ namespace MCGalaxy.Gui {
                 ls_btnAdd, ls_btnRemove, ls_lstUsed, ls_lstNotUsed);            
             lsHelper.Load(allMaps);
             
-            LSConfig cfg = LSGame.Config;
+            LSConfig cfg = LSGame.Instance.Config;
             ls_numMax.Value = cfg.MaxLives;
         }
         
         void SaveLSSettings() {
             try {
-                LSConfig cfg = LSGame.Config;
+                LSConfig cfg = LSGame.Instance.Config;
                 cfg.MaxLives = (int)ls_numMax.Value;
                 
                 lsHelper.Save();
@@ -212,14 +212,14 @@ namespace MCGalaxy.Gui {
                 tw_btnAdd, tw_btnRemove, tw_lstUsed, tw_lstNotUsed);
             twHelper.Load(allMaps);
             
-            TWConfig cfg = TWGame.Config;
+            TWConfig cfg = TWGame.Instance.Config;
             tw_cmbDiff.SelectedIndex = (int)cfg.Difficulty;
             tw_cmbMode.SelectedIndex = (int)cfg.Mode;
         }
         
         void SaveTWSettings() {
             try {
-                TWConfig cfg = TWGame.Config;
+                TWConfig cfg = TWGame.Instance.Config;
                 if (tw_cmbDiff.SelectedIndex >= 0) 
                     cfg.Difficulty = (TWDifficulty)tw_cmbDiff.SelectedIndex;
                 if (tw_cmbMode.SelectedIndex >= 0)

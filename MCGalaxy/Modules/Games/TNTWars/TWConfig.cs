@@ -33,7 +33,6 @@ namespace MCGalaxy.Modules.Games.TW
     {
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "TNT Wars"; } }
-        protected override string PropsPath { get { return "properties/tntwars.properties"; } }
         
         [ConfigEnum("Mode", null, TWGameMode.TDM, typeof(TWGameMode))]
         public TWGameMode Mode = TWGameMode.TDM;
