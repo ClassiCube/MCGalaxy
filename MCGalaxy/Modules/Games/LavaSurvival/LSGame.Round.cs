@@ -25,7 +25,7 @@ namespace MCGalaxy.Modules.Games.LS
     public sealed partial class LSGame : RoundsGame 
     {
         int roundSecs, layerSecs;
-    	
+        
         protected override void DoRound() {
             if (!Running) return;
             roundSecs = 0;
@@ -34,7 +34,10 @@ namespace MCGalaxy.Modules.Games.LS
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) 
             {
-                if (p.level == Map) ResetRoundState(p, Get(p));
+                if (p.level != Map) continue;
+                
+                ResetRoundState(p, Get(p));
+                OutputRoundInfo(p);
             }
 
             ResetPlayerDeaths();
@@ -99,13 +102,18 @@ namespace MCGalaxy.Modules.Games.LS
         }
 
         public override void OutputStatus(Player p) {
-            string block = waterMode ? "water" : "lava";
-            
             // TODO: send these messages if player is op
             //if (data.layer) {
             //    Map.ChatLevelOps("There will be " + mapSettings.LayerCount + " layers, each " + mapSettings.LayerHeight + " blocks high.");
             //    Map.ChatLevelOps("There will be another layer every " + mapSettings.layerInterval + " minutes.");
             //}
+            
+            OutputRoundInfo(p);
+            OutputTimeInfo(p);
+        }
+        
+        void OutputRoundInfo(Player p) {
+            string block = waterMode ? "water" : "lava";
             
             if (waterMode) p.Message("The map will be flooded with &9water &Sthis round!");
             if (layerMode) p.Message("The " + block + " will &aflood in layers &Sthis round!");
@@ -113,14 +121,13 @@ namespace MCGalaxy.Modules.Games.LS
             if (fastMode) p.Message("The lava will be &cfast &Sthis round!");
             if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!");
             if (floodUp) p.Message("The " + block + " will &cflood upwards &Sthis round!");
-
-            OutputTimeInfo(p);
         }
 
         public override void OutputTimeInfo(Player p) {
             if (!flooded) p.Message(FloodTimeLeftMessage());
             p.Message(RoundTimeLeftMessage());
         }
+        
 
         protected override bool SetMap(string map) {
             if (!base.SetMap(map)) return false;
