@@ -17,12 +17,16 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
+using MCGalaxy.Commands.Fun;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdLavaSurvival : RoundsGameCmd {
+namespace MCGalaxy.Modules.Games.LS 
+{
+    sealed class CmdLavaSurvival : RoundsGameCmd 
+    {
         public override string name { get { return "LavaSurvival"; } }
         public override string shortcut { get { return "LS"; } }
         protected override RoundsGame Game { get { return LSGame.Instance; } }

@@ -18,8 +18,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Games;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.LS
 {
     public sealed partial class LSGame : RoundsGame 
     {

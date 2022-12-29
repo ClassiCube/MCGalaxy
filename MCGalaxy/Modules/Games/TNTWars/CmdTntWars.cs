@@ -17,12 +17,16 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands;
+using MCGalaxy.Commands.Fun;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdTntWars : RoundsGameCmd {
+namespace MCGalaxy.Modules.Games.TW
+{
+    public sealed class CmdTntWars : RoundsGameCmd 
+    {
         public override string name { get { return "TntWars"; } }
         public override string shortcut { get { return "tw"; } }
         protected override RoundsGame Game { get { return TWGame.Instance; } }

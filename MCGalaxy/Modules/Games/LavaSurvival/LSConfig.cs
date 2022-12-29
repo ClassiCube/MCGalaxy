@@ -17,9 +17,10 @@
  */
 using System;
 using MCGalaxy.Config;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.LS
 {
     public sealed class LSConfig : RoundsGameConfig 
     {

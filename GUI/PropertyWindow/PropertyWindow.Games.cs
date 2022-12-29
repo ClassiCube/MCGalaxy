@@ -17,7 +17,10 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.CTF;
+using MCGalaxy.Modules.Games.LS;
 using MCGalaxy.Modules.Games.ZS;
+using MCGalaxy.Modules.Games.TW;
 
 namespace MCGalaxy.Gui {
     public partial class PropertyWindow : Form {

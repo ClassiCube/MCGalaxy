@@ -18,6 +18,10 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
+using MCGalaxy.Modules.Games.Countdown;
+using MCGalaxy.Modules.Games.CTF;
+using MCGalaxy.Modules.Games.LS;
+using MCGalaxy.Modules.Games.TW;
 using MCGalaxy.Modules.Games.ZS;
 using MCGalaxy.Modules.Moderation.Notes;
 using MCGalaxy.Modules.Relay.Discord;
@@ -112,7 +116,13 @@ namespace MCGalaxy
             LoadCorePlugin(new DiscordPlugin());
             LoadCorePlugin(new IRCPlugin());
             LoadCorePlugin(new IPThrottler());
+            
+            LoadCorePlugin(new CountdownPlugin());
+            LoadCorePlugin(new CTFPlugin());
+            LoadCorePlugin(new LSPlugin());
+            LoadCorePlugin(new TWPlugin());
             LoadCorePlugin(new ZSPlugin());
+            
             IScripting.AutoloadPlugins();
         }
         

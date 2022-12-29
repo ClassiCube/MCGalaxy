@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.TW;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Blocks.Physics {

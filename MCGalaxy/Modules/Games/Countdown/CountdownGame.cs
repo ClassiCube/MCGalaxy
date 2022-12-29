@@ -22,10 +22,11 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.Events;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.Countdown
 {
     public sealed class CountdownConfig : RoundsGameConfig 
     {

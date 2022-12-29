@@ -16,12 +16,16 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands;
+using MCGalaxy.Commands.Fun;
 using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Fun {
-    public sealed class CmdCTF : RoundsGameCmd {
+namespace MCGalaxy.Modules.Games.CTF
+{
+    public sealed class CmdCTF : RoundsGameCmd 
+    {
         public override string name { get { return "CTF"; } }
         public override string shortcut { get { return "CTFSetup"; } }
         protected override RoundsGame Game { get { return CTFGame.Instance; } }

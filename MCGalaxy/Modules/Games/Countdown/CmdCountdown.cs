@@ -18,13 +18,15 @@
 //the whole of the game 'countdown' was made by edh649\\
 //======================================================\\
 using System;
-using MCGalaxy.Commands.World;
+using MCGalaxy.Commands;
+using MCGalaxy.Commands.Fun;
 using MCGalaxy.Games;
 using MCGalaxy.Generator;
 
-namespace MCGalaxy.Commands.Fun {
-    
-    public sealed class CmdCountdown : RoundsGameCmd {
+namespace MCGalaxy.Modules.Games.Countdown
+{    
+    public sealed class CmdCountdown : RoundsGameCmd 
+    {
         public override string name { get { return "CountDown"; } }
         public override string shortcut { get { return "CD"; } }
         protected override RoundsGame Game { get { return CountdownGame.Instance; } }

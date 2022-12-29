@@ -20,11 +20,13 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.LevelEvents;
+using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    public sealed partial class LSGame : RoundsGame {
-
+namespace MCGalaxy.Modules.Games.LS
+{
+    public sealed partial class LSGame : RoundsGame 
+    {
         protected override void HookEventHandlers() {
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);

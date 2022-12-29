@@ -29,6 +29,7 @@ using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
+using MCGalaxy.Modules.Games.LS;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy

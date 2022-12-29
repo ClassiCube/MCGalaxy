@@ -18,12 +18,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Games {
-
-    public sealed partial class CTFGame : RoundsGame {
-
+namespace MCGalaxy.Modules.Games.CTF
+{
+    public sealed partial class CTFGame : RoundsGame 
+    {
         struct CtfStats { public int Points, Captures, Tags; }
         
         static ColumnDesc[] ctfTable = new ColumnDesc[] {

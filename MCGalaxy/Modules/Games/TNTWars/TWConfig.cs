@@ -24,10 +24,13 @@
 using System;
 using System.IO;
 using MCGalaxy.Config;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Games {
-    public sealed class TWConfig : RoundsGameConfig {
+namespace MCGalaxy.Modules.Games.TW
+{
+    public sealed class TWConfig : RoundsGameConfig 
+    {
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "TNT Wars"; } }
         protected override string PropsPath { get { return "properties/tntwars.properties"; } }
@@ -38,8 +41,8 @@ namespace MCGalaxy.Games {
         public TWDifficulty Difficulty = TWDifficulty.Normal;
     }
     
-    public sealed class TWMapConfig : RoundsGameMapConfig {
-        
+    public sealed class TWMapConfig : RoundsGameMapConfig 
+    {    
         [ConfigBool("grace-period", null, true)]
         public bool GracePeriod = true;
         [ConfigTimespan("grace-time", null, 30, false)]

@@ -29,11 +29,6 @@ namespace MCGalaxy {
             old = new OldPerms();
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
                 Server.SettingsUpdate();
-            
-            CountdownGame.Config.Load();
-            LSGame.Config.Load();
-            CTFGame.Config.Load();
-            TWGame.Config.Load();
 
             Database.UpdateActiveBackend();
             

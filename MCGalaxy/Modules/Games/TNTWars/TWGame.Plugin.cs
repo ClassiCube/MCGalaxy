@@ -27,14 +27,15 @@ using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    
-    public sealed partial class TWGame : RoundsGame {
-        
+namespace MCGalaxy.Modules.Games.TW
+{    
+    public sealed partial class TWGame : RoundsGame 
+    {    
         protected override void HookEventHandlers() {
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerSpawningEvent.Register(HandlePlayerSpawning, Priority.High);

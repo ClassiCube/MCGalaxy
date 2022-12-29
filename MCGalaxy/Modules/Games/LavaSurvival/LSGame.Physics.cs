@@ -17,9 +17,10 @@
  */
 using System;
 using MCGalaxy.Blocks.Physics;
+using MCGalaxy.Games;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.LS 
 {
     public sealed partial class LSGame : RoundsGame 
     {

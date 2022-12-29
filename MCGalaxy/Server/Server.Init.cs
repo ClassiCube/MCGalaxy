@@ -118,11 +118,6 @@ namespace MCGalaxy {
         }
         
         static void InitRest(SchedulerTask task) {
-            CountdownGame.Instance.AutoStart();
-            LSGame.Instance.AutoStart();
-            CTFGame.Instance.AutoStart();
-            TWGame.Instance.AutoStart();
-            
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.Interval));
             Critical.QueueRepeat(ServerTasks.TickPlayers, null,

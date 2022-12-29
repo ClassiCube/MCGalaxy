@@ -21,12 +21,14 @@ using System;
 using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    public sealed partial class CTFGame : RoundsGame {
-
+namespace MCGalaxy.Modules.Games.CTF 
+{
+    public sealed partial class CTFGame : RoundsGame 
+    {
         protected override void HookEventHandlers() {
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);

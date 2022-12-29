@@ -20,12 +20,14 @@
 using System;
 using System.IO;
 using MCGalaxy.Config;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    
-    public sealed class CTFConfig : RoundsGameConfig {
+namespace MCGalaxy.Modules.Games.CTF
+{    
+    public sealed class CTFConfig : RoundsGameConfig 
+    {
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "CTF"; } }
         protected override string PropsPath { get { return "properties/ctf.properties"; } }
@@ -34,7 +36,8 @@ namespace MCGalaxy.Games {
         public float TagDistance = 1f;
     }
     
-    public sealed class CTFMapConfig : RoundsGameMapConfig {
+    public sealed class CTFMapConfig : RoundsGameMapConfig 
+    {
         [ConfigVec3("red-spawn", null)] public Vec3U16 RedSpawn;
         [ConfigVec3("red-pos", null)] public Vec3U16 RedFlagPos;
         [ConfigBlock("red-block", null, Block.Air)]

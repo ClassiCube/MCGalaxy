@@ -28,14 +28,16 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.Events;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    
+namespace MCGalaxy.Modules.Games.TW
+{    
     public enum TWGameMode { FFA, TDM };
-    public enum TWDifficulty {
+    public enum TWDifficulty 
+    {
         Easy,    // 2 Hits to die, Tnt has long delay
         Normal,  // 2 Hits to die, Tnt has normal delay
         Hard,    // 1 Hit to die, Tnt has short delay
@@ -43,7 +45,8 @@ namespace MCGalaxy.Games {
     }
     public sealed class PlayerAndScore { public Player p; public int Score; }
     
-    internal sealed class TWData {
+    internal sealed class TWData 
+    {
         public int Score, Health = 2, KillStreak, TNTCounter;
         public float ScoreMultiplier = 1f;
         public int LastKillStreakAnnounced;
@@ -61,7 +64,8 @@ namespace MCGalaxy.Games {
         }
     }
     
-    public sealed partial class TWGame : RoundsGame {
+    public sealed partial class TWGame : RoundsGame 
+    {
         TWMapConfig cfg = new TWMapConfig();
         public static TWConfig Config = new TWConfig();
         public override string GameName { get { return "TNT Wars"; } }

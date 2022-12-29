@@ -18,8 +18,9 @@
 using System;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 
-namespace MCGalaxy.Games 
+namespace MCGalaxy.Modules.Games.Countdown 
 {    
     public sealed partial class CountdownGame : RoundsGame 
     {       

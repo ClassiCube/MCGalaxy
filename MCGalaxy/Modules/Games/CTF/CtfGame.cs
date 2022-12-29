@@ -19,18 +19,22 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    internal sealed class CtfData {
+namespace MCGalaxy.Modules.Games.CTF
+{
+    internal sealed class CtfData 
+    {
         public int Captures, Tags, Points;
         public bool HasFlag, TagCooldown, TeamChatting;
         public Vec3S32 LastHeadPos;
     }
 
-    public sealed partial class CTFGame : RoundsGame {
+    public sealed partial class CTFGame : RoundsGame 
+    {
         CTFMapConfig cfg = new CTFMapConfig();
         public static CTFConfig Config = new CTFConfig();
         public override string GameName { get { return "CTF"; } }

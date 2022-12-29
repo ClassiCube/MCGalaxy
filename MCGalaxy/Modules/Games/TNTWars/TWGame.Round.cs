@@ -28,13 +28,14 @@ using MCGalaxy.Commands.World;
 using MCGalaxy.Events;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-    
-    public sealed partial class TWGame : RoundsGame {
-        
+namespace MCGalaxy.Modules.Games.TW
+{
+    public sealed partial class TWGame : RoundsGame 
+    {    
         protected override void DoRound() {
             Player[] all = allPlayers.Items;
             foreach (Player p in all) {
