@@ -433,6 +433,22 @@ namespace MCGalaxy.Gui
             this.tw_btnRemove = new System.Windows.Forms.Button();
             this.tw_lstNotUsed = new System.Windows.Forms.ListBox();
             this.tw_lstUsed = new System.Windows.Forms.ListBox();
+            this.tabCD = new System.Windows.Forms.TabPage();
+            this.cd_grpControls = new System.Windows.Forms.GroupBox();
+            this.cd_btnEnd = new System.Windows.Forms.Button();
+            this.cd_btnStop = new System.Windows.Forms.Button();
+            this.cd_btnStart = new System.Windows.Forms.Button();
+            this.cd_grpSettings = new System.Windows.Forms.GroupBox();
+            this.cd_cbMain = new System.Windows.Forms.CheckBox();
+            this.cd_cbMap = new System.Windows.Forms.CheckBox();
+            this.cd_cbStart = new System.Windows.Forms.CheckBox();
+            this.cd_grpMaps = new System.Windows.Forms.GroupBox();
+            this.cd_lblNotUsed = new System.Windows.Forms.Label();
+            this.cd_lblUsed = new System.Windows.Forms.Label();
+            this.cd_btnAdd = new System.Windows.Forms.Button();
+            this.cd_btnRemove = new System.Windows.Forms.Button();
+            this.cd_lstNotUsed = new System.Windows.Forms.ListBox();
+            this.cd_lstUsed = new System.Windows.Forms.ListBox();
             this.pageCommands = new System.Windows.Forms.TabPage();
             this.cmd_grpExtra = new System.Windows.Forms.GroupBox();
             this.cmd_cmbExtra7 = new System.Windows.Forms.ComboBox();
@@ -606,6 +622,10 @@ namespace MCGalaxy.Gui
             ((System.ComponentModel.ISupportInitialize)(this.tw_numScoreLimit)).BeginInit();
             this.tw_grpSettings.SuspendLayout();
             this.tw_gbMaps.SuspendLayout();
+            this.tabCD.SuspendLayout();
+            this.cd_grpControls.SuspendLayout();
+            this.cd_grpSettings.SuspendLayout();
+            this.cd_grpMaps.SuspendLayout();
             this.pageCommands.SuspendLayout();
             this.cmd_grpExtra.SuspendLayout();
             this.cmd_grpPermissions.SuspendLayout();
@@ -3451,6 +3471,7 @@ namespace MCGalaxy.Gui
             this.tabGames.Controls.Add(this.tabZS_old);
             this.tabGames.Controls.Add(this.tabCTF);
             this.tabGames.Controls.Add(this.tabTW);
+            this.tabGames.Controls.Add(this.tabCD);
             this.tabGames.Location = new System.Drawing.Point(3, 3);
             this.tabGames.Name = "tabGames";
             this.tabGames.SelectedIndex = 0;
@@ -4916,6 +4937,170 @@ namespace MCGalaxy.Gui
             this.tw_lstUsed.TabIndex = 0;
             this.tw_lstUsed.SelectedIndexChanged += new System.EventHandler(this.twMapUse_SelectedIndexChanged);
             // 
+            // tabCD
+            // 
+            this.tabCD.BackColor = System.Drawing.SystemColors.Control;
+            this.tabCD.Controls.Add(this.cd_grpControls);
+            this.tabCD.Controls.Add(this.cd_grpSettings);
+            this.tabCD.Controls.Add(this.cd_grpMaps);
+            this.tabCD.Location = new System.Drawing.Point(4, 22);
+            this.tabCD.Name = "tabCD";
+            this.tabCD.Size = new System.Drawing.Size(484, 489);
+            this.tabCD.TabIndex = 3;
+            this.tabCD.Text = "Countdown";
+            // 
+            // cd_grpControls
+            // 
+            this.cd_grpControls.Controls.Add(this.cd_btnEnd);
+            this.cd_grpControls.Controls.Add(this.cd_btnStop);
+            this.cd_grpControls.Controls.Add(this.cd_btnStart);
+            this.cd_grpControls.Location = new System.Drawing.Point(110, 5);
+            this.cd_grpControls.Name = "cd_grpControls";
+            this.cd_grpControls.Size = new System.Drawing.Size(279, 51);
+            this.cd_grpControls.TabIndex = 7;
+            this.cd_grpControls.TabStop = false;
+            this.cd_grpControls.Text = "Controls";
+            // 
+            // cd_btnEnd
+            // 
+            this.cd_btnEnd.Location = new System.Drawing.Point(190, 19);
+            this.cd_btnEnd.Name = "cd_btnEnd";
+            this.cd_btnEnd.Size = new System.Drawing.Size(80, 23);
+            this.cd_btnEnd.TabIndex = 2;
+            this.cd_btnEnd.Text = "End Round";
+            this.cd_btnEnd.UseVisualStyleBackColor = true;
+            // 
+            // cd_btnStop
+            // 
+            this.cd_btnStop.Location = new System.Drawing.Point(100, 19);
+            this.cd_btnStop.Name = "cd_btnStop";
+            this.cd_btnStop.Size = new System.Drawing.Size(80, 23);
+            this.cd_btnStop.TabIndex = 1;
+            this.cd_btnStop.Text = "Stop Game";
+            this.cd_btnStop.UseVisualStyleBackColor = true;
+            // 
+            // cd_btnStart
+            // 
+            this.cd_btnStart.Location = new System.Drawing.Point(10, 19);
+            this.cd_btnStart.Name = "cd_btnStart";
+            this.cd_btnStart.Size = new System.Drawing.Size(80, 23);
+            this.cd_btnStart.TabIndex = 0;
+            this.cd_btnStart.Text = "Start Game";
+            this.cd_btnStart.UseVisualStyleBackColor = true;
+            // 
+            // cd_grpSettings
+            // 
+            this.cd_grpSettings.Controls.Add(this.cd_cbMain);
+            this.cd_grpSettings.Controls.Add(this.cd_cbMap);
+            this.cd_grpSettings.Controls.Add(this.cd_cbStart);
+            this.cd_grpSettings.Location = new System.Drawing.Point(182, 59);
+            this.cd_grpSettings.Name = "cd_grpSettings";
+            this.cd_grpSettings.Size = new System.Drawing.Size(296, 89);
+            this.cd_grpSettings.TabIndex = 6;
+            this.cd_grpSettings.TabStop = false;
+            this.cd_grpSettings.Text = "Settings";
+            // 
+            // cd_cbMain
+            // 
+            this.cd_cbMain.AutoSize = true;
+            this.cd_cbMain.Location = new System.Drawing.Point(11, 66);
+            this.cd_cbMain.Name = "cd_cbMain";
+            this.cd_cbMain.Size = new System.Drawing.Size(112, 17);
+            this.cd_cbMain.TabIndex = 24;
+            this.cd_cbMain.Text = "Change main level";
+            this.cd_cbMain.UseVisualStyleBackColor = true;
+            // 
+            // cd_cbMap
+            // 
+            this.cd_cbMap.AutoSize = true;
+            this.cd_cbMap.Location = new System.Drawing.Point(11, 43);
+            this.cd_cbMap.Name = "cd_cbMap";
+            this.cd_cbMap.Size = new System.Drawing.Size(136, 17);
+            this.cd_cbMap.TabIndex = 23;
+            this.cd_cbMap.Text = "Map name in server list";
+            this.cd_cbMap.UseVisualStyleBackColor = true;
+            // 
+            // cd_cbStart
+            // 
+            this.cd_cbStart.AutoSize = true;
+            this.cd_cbStart.Location = new System.Drawing.Point(11, 20);
+            this.cd_cbStart.Name = "cd_cbStart";
+            this.cd_cbStart.Size = new System.Drawing.Size(139, 17);
+            this.cd_cbStart.TabIndex = 22;
+            this.cd_cbStart.Text = "Start when server starts";
+            this.cd_cbStart.UseVisualStyleBackColor = true;
+            // 
+            // cd_grpMaps
+            // 
+            this.cd_grpMaps.Controls.Add(this.cd_lblNotUsed);
+            this.cd_grpMaps.Controls.Add(this.cd_lblUsed);
+            this.cd_grpMaps.Controls.Add(this.cd_btnAdd);
+            this.cd_grpMaps.Controls.Add(this.cd_btnRemove);
+            this.cd_grpMaps.Controls.Add(this.cd_lstNotUsed);
+            this.cd_grpMaps.Controls.Add(this.cd_lstUsed);
+            this.cd_grpMaps.Location = new System.Drawing.Point(6, 59);
+            this.cd_grpMaps.Name = "cd_grpMaps";
+            this.cd_grpMaps.Size = new System.Drawing.Size(170, 412);
+            this.cd_grpMaps.TabIndex = 5;
+            this.cd_grpMaps.TabStop = false;
+            this.cd_grpMaps.Text = "Maps";
+            // 
+            // cd_lblNotUsed
+            // 
+            this.cd_lblNotUsed.AutoSize = true;
+            this.cd_lblNotUsed.Location = new System.Drawing.Point(187, 17);
+            this.cd_lblNotUsed.Name = "cd_lblNotUsed";
+            this.cd_lblNotUsed.Size = new System.Drawing.Size(83, 13);
+            this.cd_lblNotUsed.TabIndex = 6;
+            this.cd_lblNotUsed.Text = "Maps Not In Use";
+            // 
+            // cd_lblUsed
+            // 
+            this.cd_lblUsed.AutoSize = true;
+            this.cd_lblUsed.Location = new System.Drawing.Point(6, 17);
+            this.cd_lblUsed.Name = "cd_lblUsed";
+            this.cd_lblUsed.Size = new System.Drawing.Size(38, 13);
+            this.cd_lblUsed.TabIndex = 5;
+            this.cd_lblUsed.Text = "In use:";
+            // 
+            // cd_btnAdd
+            // 
+            this.cd_btnAdd.Location = new System.Drawing.Point(6, 188);
+            this.cd_btnAdd.Name = "cd_btnAdd";
+            this.cd_btnAdd.Size = new System.Drawing.Size(77, 23);
+            this.cd_btnAdd.TabIndex = 4;
+            this.cd_btnAdd.Text = "<< Add";
+            this.cd_btnAdd.UseVisualStyleBackColor = true;
+            // 
+            // cd_btnRemove
+            // 
+            this.cd_btnRemove.Location = new System.Drawing.Point(89, 188);
+            this.cd_btnRemove.Name = "cd_btnRemove";
+            this.cd_btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.cd_btnRemove.TabIndex = 3;
+            this.cd_btnRemove.Text = "Remove >>";
+            this.cd_btnRemove.UseVisualStyleBackColor = true;
+            // 
+            // cd_lstNotUsed
+            // 
+            this.cd_lstNotUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.cd_lstNotUsed.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.cd_lstNotUsed.FormattingEnabled = true;
+            this.cd_lstNotUsed.Location = new System.Drawing.Point(6, 219);
+            this.cd_lstNotUsed.Name = "cd_lstNotUsed";
+            this.cd_lstNotUsed.Size = new System.Drawing.Size(158, 186);
+            this.cd_lstNotUsed.TabIndex = 2;
+            // 
+            // cd_lstUsed
+            // 
+            this.cd_lstUsed.BackColor = System.Drawing.SystemColors.Window;
+            this.cd_lstUsed.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.cd_lstUsed.FormattingEnabled = true;
+            this.cd_lstUsed.Location = new System.Drawing.Point(6, 33);
+            this.cd_lstUsed.Name = "cd_lstUsed";
+            this.cd_lstUsed.Size = new System.Drawing.Size(158, 147);
+            this.cd_lstUsed.TabIndex = 0;
+            // 
             // pageCommands
             // 
             this.pageCommands.AutoScroll = true;
@@ -5790,6 +5975,12 @@ namespace MCGalaxy.Gui
             this.tw_grpSettings.PerformLayout();
             this.tw_gbMaps.ResumeLayout(false);
             this.tw_gbMaps.PerformLayout();
+            this.tabCD.ResumeLayout(false);
+            this.cd_grpControls.ResumeLayout(false);
+            this.cd_grpSettings.ResumeLayout(false);
+            this.cd_grpSettings.PerformLayout();
+            this.cd_grpMaps.ResumeLayout(false);
+            this.cd_grpMaps.PerformLayout();
             this.pageCommands.ResumeLayout(false);
             this.cmd_grpExtra.ResumeLayout(false);
             this.cmd_grpExtra.PerformLayout();
@@ -5916,6 +6107,22 @@ namespace MCGalaxy.Gui
         private System.Windows.Forms.Button ctf_btnEnd;
         private System.Windows.Forms.GroupBox ctf_grpControls;
         private System.Windows.Forms.TabPage tabCTF;
+        private System.Windows.Forms.ListBox cd_lstUsed;
+        private System.Windows.Forms.ListBox cd_lstNotUsed;
+        private System.Windows.Forms.Button cd_btnRemove;
+        private System.Windows.Forms.Button cd_btnAdd;
+        private System.Windows.Forms.Label cd_lblUsed;
+        private System.Windows.Forms.Label cd_lblNotUsed;
+        private System.Windows.Forms.GroupBox cd_grpMaps;
+        private System.Windows.Forms.CheckBox cd_cbStart;
+        private System.Windows.Forms.CheckBox cd_cbMap;
+        private System.Windows.Forms.CheckBox cd_cbMain;
+        private System.Windows.Forms.GroupBox cd_grpSettings;
+        private System.Windows.Forms.Button cd_btnStart;
+        private System.Windows.Forms.Button cd_btnStop;
+        private System.Windows.Forms.Button cd_btnEnd;
+        private System.Windows.Forms.GroupBox cd_grpControls;
+        private System.Windows.Forms.TabPage tabCD;
         private System.Windows.Forms.GroupBox ls_grpTime;
         private System.Windows.Forms.Label ls_lblLayer;
         private System.Windows.Forms.NumericUpDown ls_numLayer;

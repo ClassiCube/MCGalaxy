@@ -17,14 +17,17 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using MCGalaxy.Games;
+using MCGalaxy.Modules.Games.Countdown;
 using MCGalaxy.Modules.Games.CTF;
 using MCGalaxy.Modules.Games.LS;
 using MCGalaxy.Modules.Games.ZS;
 using MCGalaxy.Modules.Games.TW;
 
-namespace MCGalaxy.Gui {
-    public partial class PropertyWindow : Form {
-        GamesHelper lsHelper, zsHelper, ctfHelper, twHelper;
+namespace MCGalaxy.Gui 
+{
+    public partial class PropertyWindow : Form 
+    {
+        GamesHelper lsHelper, zsHelper, ctfHelper, twHelper, cdHelper;
         
         void LoadGameProps() {
             string[] allMaps = LevelInfo.AllMapNames();
@@ -32,6 +35,7 @@ namespace MCGalaxy.Gui {
             LoadCTFSettings(allMaps);
             LoadLSSettings(allMaps);
             LoadTWSettings(allMaps);
+            LoadCDSettings(allMaps);
         }
 
         void SaveGameProps() {
@@ -39,6 +43,7 @@ namespace MCGalaxy.Gui {
             SaveCTFSettings();
             SaveLSSettings();
             SaveTWSettings();
+            SaveCDSettings();
         }
         
         GamesHelper GetGameHelper(IGame game) {
@@ -282,6 +287,23 @@ namespace MCGalaxy.Gui {
             
             twCurCfg.Save(twCurMap);          
             twHelper.UpdateMapConfig(twCurMap);
+        } 
+        
+        
+        void LoadCDSettings(string[] allMaps) {
+            cdHelper = new GamesHelper(
+                CountdownGame.Instance, cd_cbStart, cd_cbMap, cd_cbMain,
+                cd_btnStart, cd_btnStop, cd_btnEnd,
+                cd_btnAdd, cd_btnRemove, cd_lstUsed, cd_lstNotUsed);
+            cdHelper.Load(allMaps);
+        }
+        
+        void SaveCDSettings() {
+            try {
+                cdHelper.Save();
+            } catch (Exception ex) {
+                Logger.LogError("Error saving Countdown settings", ex);
+            }
         }
     }
 }
