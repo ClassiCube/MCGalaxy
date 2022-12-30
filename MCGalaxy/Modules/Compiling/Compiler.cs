@@ -51,7 +51,7 @@ namespace MCGalaxy.Modules.Compiling
         public string PluginPath(string name)  { return PLUGINS_SOURCE_DIR  + name + FileExtension; }
         
         public static List<ICompiler> Compilers = new List<ICompiler>() { 
-            new CSCompiler(), new VBCompiler() 
+            new CSCompiler()
         };
 
 
