@@ -96,8 +96,9 @@ namespace MCGalaxy
             return str.Split(comma);
         }
         
-        public static void Separate(this string str, out string prefix, out string suffix) {
-            int index = str.IndexOf(' ');
+        public static void Separate(this string str, char splitter,
+                                    out string prefix, out string suffix) {
+            int index = str.IndexOf(splitter);
             prefix = index == -1 ? str : str.Substring(0, index);
             suffix = index == -1 ? ""  : str.Substring(index + 1);
         }

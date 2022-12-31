@@ -40,12 +40,31 @@ namespace MCGalaxy.Eco {
         /// <summary> Whether this item can currently be bought in the economy. </summary>
         public bool Enabled;
         
-        /// <summary> Reads the given property of this item from the economy.properties file. </summary>
-        /// <remarks> args is line split by the : character. </remarks>
-        public abstract void Parse(string line, string[] args);
         
-        /// <summary> Writes the properties of this item to the economy.properties file. </summary>
-        public abstract void Serialise(StreamWriter writer);
+        public void LoadConfig(string line) {
+            string prop, value;
+            line.Separate(':', out prop, out value);
+            
+            if (prop.CaselessEq("enabled")) {
+                Enabled = value.CaselessEq("true");
+            } else if (prop.CaselessEq("purchaserank")) {
+                PurchaseRank = (LevelPermission)int.Parse(value);
+            } else {
+                Parse(prop, value);
+            }
+        }
+        
+        /// <summary> Parses item-specific properties from the given configuration </remarks>
+        public abstract void Parse(string prop, string value);
+        
+        public void SaveConfig(List<string> cfg) {
+            cfg.Add("enabled:" + Enabled);
+            cfg.Add("purchaserank:" + (int)PurchaseRank);
+            Serialise(cfg);
+        }
+        
+        /// <summary> Saves item-specific properties to the given configuration </summary>
+        public abstract void Serialise(List<string> cfg);
         
         
         /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
@@ -99,18 +118,18 @@ namespace MCGalaxy.Eco {
     }
     
     /// <summary> Simple item, in that it only has one cost value. </summary>
-    public abstract class SimpleItem : Item {
-        
+    public abstract class SimpleItem : Item 
+    {        
         /// <summary> How much this item costs to purchase. </summary>
         public int Price = 100;
         
-        public override void Parse(string line, string[] args) {
-            if (args[1].CaselessEq("price"))
-                Price = int.Parse(args[2]);
+        public override void Parse(string prop, string value) {
+            if (prop.CaselessEq("price"))
+                Price = int.Parse(value);
         }
         
-        public override void Serialise(StreamWriter writer) {
-            writer.WriteLine(Name + ":price:" + Price);
+        public override void Serialise(List<string> cfg) {
+            cfg.Add("price:" + Price);
         }
         
         protected bool CheckPrice(Player p) { return CheckPrice(p, Price, "a " + Name); }

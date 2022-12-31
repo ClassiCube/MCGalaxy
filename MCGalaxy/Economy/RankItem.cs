@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Commands;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class RankItem : Item {
-        
+namespace MCGalaxy.Eco 
+{   
+    public sealed class RankItem : Item 
+    {    
         public RankItem() {
             Aliases = new string[] { "rank", "ranks", "rankup" };
         }
@@ -33,23 +33,27 @@ namespace MCGalaxy.Eco {
         public override string ShopName { get { return "Rankup"; } }
         
         public List<RankEntry> Ranks = new List<RankEntry>();        
-        public class RankEntry {
+        public class RankEntry 
+        {
             public LevelPermission Perm;
             public int Price = 1000;
         }
         
-        public override void Parse(string line, string[] args) {
-            if (!args[1].CaselessEq("price")) return;
-            LevelPermission perm = Group.ParsePermOrName(args[2], LevelPermission.Null);
+        public override void Parse(string prop, string value) {
+            if (!prop.CaselessEq("price")) return;
+            string[] args = value.Split(':');
+            
+            LevelPermission perm = Group.ParsePermOrName(args[0], LevelPermission.Null);
             if (perm == LevelPermission.Null) return;
             
             RankEntry rank = GetOrAdd(perm);
-            rank.Price = int.Parse(args[3]);
+            rank.Price = int.Parse(args[1]);
         }
         
-        public override void Serialise(StreamWriter writer) {
-            foreach (RankEntry rank in Ranks) {
-                writer.WriteLine("rank:price:" + (int)rank.Perm + ":" + rank.Price);
+        public override void Serialise(List<string> cfg) {
+            foreach (RankEntry rank in Ranks) 
+            {
+                cfg.Add("price:" + (int)rank.Perm + ":" + rank.Price);
             }
         }
         

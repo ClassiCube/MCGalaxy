@@ -479,7 +479,7 @@ namespace MCGalaxy
             }
             
             string cmd, args;
-            text.Separate(out cmd, out args);
+            text.Separate(' ', out cmd, out args);
             HandleCommand(cmd, args, DefaultCmdData);
         }
         
@@ -595,7 +595,7 @@ namespace MCGalaxy
             byte bindIndex;
             if (CmdBindings.TryGetValue(cmdName, out bound)) {
                 // user defined command shortcuts take priority
-                bound.Separate(out cmdName, out cmdArgs);
+                bound.Separate(' ', out cmdName, out cmdArgs);
             } else if (byte.TryParse(cmdName, out bindIndex) && bindIndex < 10) {
                 // backwards compatibility for old /cmdbind behaviour
                 Message("No command is bound to: &T/" + cmdName);

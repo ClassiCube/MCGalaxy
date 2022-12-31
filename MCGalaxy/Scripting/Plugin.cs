@@ -105,7 +105,8 @@ namespace MCGalaxy
         }
 
         public static void UnloadAll() {
-            for (int i = 0; i < all.Count; i++) {
+            for (int i = 0; i < all.Count; i++) 
+            {
                 Unload(all[i], true); i--;
             }
         }
