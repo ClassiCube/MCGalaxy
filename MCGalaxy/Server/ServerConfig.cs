@@ -152,6 +152,8 @@ namespace MCGalaxy {
         public string ListenIP = "0.0.0.0";
         [ConfigStringList("disabled-commands", "Other")]
         public List<string> DisabledCommands = new List<string>();
+        [ConfigStringList("disabled-modules", "Other")]
+        public List<string> DisabledModules = new List<string>();
 
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;
