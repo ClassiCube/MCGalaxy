@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Scripting
                 string modifier = args.Length > 1 ? args[1] : "";
                 
                 p.Message("Loaded plugins:");
-                Paginator.Output(p, Plugin.all, pl => pl.name,
+                Paginator.Output(p, Plugin.custom, pl => pl.name,
                                  "Plugins", "plugins", modifier);
                 return;
             }
@@ -63,16 +63,11 @@ namespace MCGalaxy.Commands.Scripting
         
         static void UnloadPlugin(Player p, string name) {
             int matches;
-            Plugin plugin = Matcher.Find(p, name, out matches, Plugin.all, 
+            Plugin plugin = Matcher.Find(p, name, out matches, Plugin.custom, 
                                          null, pln => pln.name, "plugins");
             if (plugin == null) return;
             
-            if (Plugin.core.Contains(plugin)) {
-                p.Message(plugin.name + " is a core plugin and cannot be unloaded.");
-                return;
-            }
-            
-            if (Plugin.Unload(plugin, false)) {
+            if (Plugin.Unload(plugin)) {
                 p.Message("Plugin unloaded successfully.");
             } else {
                 p.Message("&WError unloading plugin. See error logs for more information.");

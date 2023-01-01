@@ -62,8 +62,8 @@ namespace MCGalaxy
         public virtual bool LoadAtStartup { get { return true; } }
         
         
-        internal static List<Plugin> core = new List<Plugin>();
-        public static List<Plugin> all = new List<Plugin>();
+        public static List<Plugin> core   = new List<Plugin>();
+        public static List<Plugin> custom = new List<Plugin>();
         
         public static bool Load(Plugin p, bool auto) {
             try {
@@ -72,7 +72,7 @@ namespace MCGalaxy
                     Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", p.name, Server.SoftwareName);
                     return false;
                 }
-                all.Add(p);
+                custom.Add(p);
                 
                 if (p.LoadAtStartup || !auto) {
                     p.Load(auto);
@@ -90,24 +90,36 @@ namespace MCGalaxy
             }
         }
 
-        public static bool Unload(Plugin p, bool auto) {
-            bool success = true;
-            try {
-                p.Unload(auto);
-                Logger.Log(LogType.SystemActivity, "Plugin {0} was unloaded.", p.name);
-            } catch (Exception ex) {
-                Logger.LogError("Error unloading plugin " + p.name, ex);
-                success = false;
-            }
+        public static bool Unload(Plugin p) {
+            bool success = UnloadPlugin(p, false);
             
-            all.Remove(p);
+            // TODO only remove if successful?
+            custom.Remove(p);
+            core.Remove(p);
             return success;
         }
+        
+        static bool UnloadPlugin(Plugin p, bool auto) {
+            try {
+                p.Unload(auto);
+                return true;
+            } catch (Exception ex) {
+                Logger.LogError("Error unloading plugin " + p.name, ex);
+                return false;
+            }
+        }
 
+        
         public static void UnloadAll() {
-            for (int i = 0; i < all.Count; i++) 
+            for (int i = 0; i < custom.Count; i++) 
             {
-                Unload(all[i], true); i--;
+                UnloadPlugin(custom[i], true);
+            }
+            custom.Clear();
+            
+            for (int i = 0; i < core.Count; i++) 
+            {
+                UnloadPlugin(core[i], true);
             }
         }
 
@@ -129,7 +141,6 @@ namespace MCGalaxy
         
         static void LoadCorePlugin(Plugin plugin) {
             plugin.Load(true);
-            Plugin.all.Add(plugin);
             Plugin.core.Add(plugin);
         }
     }
