@@ -24,6 +24,7 @@ namespace MCGalaxy.Modules.Games.LS
     {    
         public LifeItem() {
             Aliases = new string[] { "life", "lifes", "live", "lives" };
+            Enabled = true;
             Price   = 20;
         }
         
@@ -34,6 +35,8 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("You can only buy a life " +
                           "when a round of lava survival is in progress."); return;
             }
+        	
+        	// TODO: Don't allow buying when Config.MaxLives == 0
         	
         	if (!CheckPrice(p)) return;
         	

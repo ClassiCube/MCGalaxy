@@ -26,7 +26,8 @@ namespace MCGalaxy.Modules.Games.ZS
     {    
         public BlocksItem() {
             Aliases = new string[] { "blocks", "bl", "b" };
-            Price = 1;
+            Enabled = true;
+            Price   = 1;
         }
         
         public override string Name { get { return "10Blocks"; } }
@@ -54,7 +55,8 @@ namespace MCGalaxy.Modules.Games.ZS
     {    
         public QueueLevelItem() {
             Aliases = new string[] { "queuelevel", "queuelvl", "queue" };
-            Price = 150;
+            Enabled = true;
+            Price   = 150;
         }
         
         public override string Name { get { return "QueueLevel"; } }
@@ -83,7 +85,8 @@ namespace MCGalaxy.Modules.Games.ZS
     {    
         public InfectMessageItem() {
             Aliases = new string[] { "infectmessage", "infectmsg" };
-            Price = 150;
+            Enabled = true;
+            Price   = 150;
         }
         
         public override string Name { get { return "InfectMessage"; } }
@@ -117,7 +120,8 @@ namespace MCGalaxy.Modules.Games.ZS
         public InvisibilityItem() {
             // old aliases for when invisibility and zombie invisibility were seperate
             Aliases = new string[] { "invisibility", "invisible", "invis", "zinvisibility", "zinvisible", "zinvis" };
-            Price = 3;
+            Enabled = true;
+            Price   = 3;
         }
         
         public override string Name { get { return "Invisibility"; } }
@@ -168,7 +172,8 @@ namespace MCGalaxy.Modules.Games.ZS
     {   
         public ReviveItem() {
             Aliases = new string[] { "revive", "rev" };
-            Price = 7;
+            Enabled = true;
+            Price   = 7;
         }
         
         public override string Name { get { return "Revive"; } }

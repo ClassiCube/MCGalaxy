@@ -169,12 +169,14 @@ namespace MCGalaxy.Eco {
         protected void OutputItemInfo(Player p) {
             p.Message("&HCosts &a{0} {1} &Heach time the item is bought.", Price, Server.Config.Currency);
             List<string> shortcuts = new List<string>();
-            foreach (Alias a in Alias.aliases) {
+            foreach (Alias a in Alias.aliases) 
+            {
                 if (!a.Target.CaselessEq("buy") || a.Format == null) continue;
                 
                 // Find if there are any custom aliases for this item
                 bool matchFound = false;
-                foreach (string alias in Aliases) {
+                foreach (string alias in Aliases) 
+                {
                     if (!a.Format.CaselessEq(alias)) continue;
                     matchFound = true; break;
                 }
