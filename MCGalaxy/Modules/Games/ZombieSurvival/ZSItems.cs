@@ -18,17 +18,16 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
-using MCGalaxy.DB;
-using MCGalaxy.Games;
-using MCGalaxy.Modules.Games.ZS;
+using MCGalaxy.Eco;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class BlocksItem : SimpleItem {
-        
+namespace MCGalaxy.Modules.Games.ZS 
+{    
+    sealed class BlocksItem : SimpleItem 
+    {    
         public BlocksItem() {
             Aliases = new string[] { "blocks", "bl", "b" };
-            Price = 1;
+            Enabled = true;
+            Price   = 1;
         }
         
         public override string Name { get { return "10Blocks"; } }
@@ -52,11 +51,12 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class QueueLevelItem : SimpleItem {
-        
+    sealed class QueueLevelItem : SimpleItem 
+    {    
         public QueueLevelItem() {
             Aliases = new string[] { "queuelevel", "queuelvl", "queue" };
-            Price = 150;
+            Enabled = true;
+            Price   = 150;
         }
         
         public override string Name { get { return "QueueLevel"; } }
@@ -81,11 +81,12 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class InfectMessageItem : SimpleItem {
-        
+    sealed class InfectMessageItem : SimpleItem 
+    {    
         public InfectMessageItem() {
             Aliases = new string[] { "infectmessage", "infectmsg" };
-            Price = 150;
+            Enabled = true;
+            Price   = 150;
         }
         
         public override string Name { get { return "InfectMessage"; } }
@@ -114,21 +115,22 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class InvisibilityItem : SimpleItem {
-        
+    sealed class InvisibilityItem : SimpleItem 
+    {    
         public InvisibilityItem() {
             // old aliases for when invisibility and zombie invisibility were seperate
             Aliases = new string[] { "invisibility", "invisible", "invis", "zinvisibility", "zinvisible", "zinvis" };
-            Price = 3;
+            Enabled = true;
+            Price   = 3;
         }
         
         public override string Name { get { return "Invisibility"; } }
 
         protected internal override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "an invisibility potion")) return;
-            if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
+            if (!ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +
-                               "when a round of zombie survival is in progress."); return;
+                          "when a round of zombie survival is in progress."); return;
             }
             
             ZSData data  = ZSGame.Get(p);
@@ -166,20 +168,21 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class ReviveItem : SimpleItem {
-        
+    sealed class ReviveItem : SimpleItem 
+    {   
         public ReviveItem() {
             Aliases = new string[] { "revive", "rev" };
-            Price = 7;
+            Enabled = true;
+            Price   = 7;
         }
         
         public override string Name { get { return "Revive"; } }
         
         protected internal override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "a revive potion")) return;
-            if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
+            if (!ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy a revive potion " +
-                                   "when a round of zombie survival is in progress."); return;
+                          "when a round of zombie survival is in progress."); return;
             }
             
             ZSData data = ZSGame.Get(p);

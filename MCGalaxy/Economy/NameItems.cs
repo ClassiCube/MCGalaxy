@@ -17,10 +17,10 @@
  */
 using System;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class TitleItem : SimpleItem {
-        
+namespace MCGalaxy.Eco 
+{    
+    public sealed class TitleItem : SimpleItem 
+    {    
         public TitleItem() {
             Aliases = new string[] { "titles", "title" };
         }
@@ -43,8 +43,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class NickItem : SimpleItem {
-        
+    public sealed class NickItem : SimpleItem 
+    {    
         public NickItem() {
             Aliases = new string[] { "nickname", "nick", "name" };
         }
@@ -70,8 +70,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class TitleColorItem : SimpleItem {
-        
+    public sealed class TitleColorItem : SimpleItem 
+    {    
         public TitleColorItem() {
             Aliases = new string[] { "tcolor", "tcolour", "titlecolor", "titlecolour" };
         }
@@ -95,8 +95,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class ColorItem : SimpleItem {
-        
+    public sealed class ColorItem : SimpleItem 
+    {    
         public ColorItem() {
             Aliases = new string[] { "color", "colour" };
         }

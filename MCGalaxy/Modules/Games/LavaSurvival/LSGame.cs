@@ -22,7 +22,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.LS
 {
-    internal sealed class LSData 
+    public sealed class LSData 
     {
         public int TimesDied, SpongesLeft;
     }
@@ -38,11 +38,12 @@ namespace MCGalaxy.Modules.Games.LS
         BlockID floodBlock;
         int curLayer, spreadDelay;
         int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
+        static bool hooked;
         
         public static LSGame Instance = new LSGame();
         public LSGame() { Picker = new LevelPicker(); }
         
-        static LSData Get(Player p) {
+        public static LSData Get(Player p) {
             object data;
             if (!p.Extras.TryGet("MCG_LS_DATA", out data)) {
                 data = new LSData();
@@ -85,12 +86,19 @@ namespace MCGalaxy.Modules.Games.LS
         
         protected override void StartGame() {
             ResetPlayerDeaths();
+            if (hooked) return;
+            
+            hooked = true;
+            HookItems();
         }
         
         protected override void EndGame() {
             flooded = false;
             ResetPlayerDeaths();
             if (Map != null) UpdateBlockHandlers();
+            
+            hooked = false;
+            UnhookItems();
         }
         
         public bool IsPlayerDead(Player p) {

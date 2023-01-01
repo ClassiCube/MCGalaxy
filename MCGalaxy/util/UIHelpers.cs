@@ -55,7 +55,7 @@ namespace MCGalaxy.UI
             
             lastCMD = text;
             string name, args;
-            text.Separate(out name, out args);
+            text.Separate(' ', out name, out args);
             
             Command.Search(ref name, ref args);
             if (Server.Check(name, args)) { Server.cancelcommand = false; return; }

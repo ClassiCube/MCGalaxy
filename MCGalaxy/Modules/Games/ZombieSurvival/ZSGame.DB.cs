@@ -18,6 +18,7 @@
  */
 using System;
 using MCGalaxy.DB;
+using MCGalaxy.Eco;
 using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
@@ -158,5 +159,28 @@ namespace MCGalaxy.Modules.Games.ZS
         static Command cmdLastLevels = new CmdLastLevels();
         static Command cmdQueue      = new CmdQueue();
         static Command cmdShowQueue  = new CmdShowQueue();
+        
+        
+        static void HookItems() {
+            Economy.RegisterItem(itemQueue);
+            Economy.RegisterItem(itemBlocks);
+            Economy.RegisterItem(itemRevive);
+            Economy.RegisterItem(itemInfectMsg);
+            Economy.RegisterItem(itemInv);
+        }
+        
+        static void UnhookItems() {
+            Economy.Items.Remove(itemQueue);
+            Economy.Items.Remove(itemBlocks);
+            Economy.Items.Remove(itemRevive);
+            Economy.Items.Remove(itemInfectMsg);
+            Economy.Items.Remove(itemInv);
+        }       
+        
+        static Item itemQueue     = new QueueLevelItem();
+        static Item itemBlocks    = new BlocksItem();
+        static Item itemRevive    = new ReviveItem();
+        static Item itemInfectMsg = new InfectMessageItem();
+        static Item itemInv       = new InvisibilityItem();
     }
 }

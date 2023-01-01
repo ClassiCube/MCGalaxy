@@ -139,6 +139,7 @@ namespace MCGalaxy.Modules.Games.ZS
             hooked = true;
             HookStats();
             HookCommands();
+            HookItems();
         }
         
         public static bool IsInfected(Player p) { return p.infected; }
@@ -202,6 +203,7 @@ namespace MCGalaxy.Modules.Games.ZS
             hooked   = false;
             UnhookStats();
             UnhookCommands();
+            UnhookItems();
             
             Alive.Clear();
             Infected.Clear();
