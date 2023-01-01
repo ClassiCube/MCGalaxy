@@ -58,14 +58,14 @@ namespace MCGalaxy.Eco
         }
         
         static void ParseLine(string line) {
-        	string name, value;
-        	line.Separate(':', out name, out value);
-        	if (value.Length == 0) return;
-        	
+            string name, value;
+            line.Separate(':', out name, out value);
+            if (value.Length == 0) return;
+            
             if (name.CaselessEq("enabled")) {
                 Enabled = value.CaselessEq("true"); return;
             } 
-        	
+            
             Item item = GetItem(name);
             name = item != null ? item.Name : name;
             
@@ -105,18 +105,30 @@ namespace MCGalaxy.Eco
         }
  
         
-        public static List<Item> Items = new List<Item>() { new ColorItem(), new TitleColorItem(),
-            new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(),
-            new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(),
-            new InfectMessageItem(), new NickItem(), new ReviveItem(),
-            new InvisibilityItem(), new SnackItem() };
+        public static List<Item> Items = new List<Item>() { 
+            new ColorItem(), new TitleColorItem(), new TitleItem(), 
+            new RankItem(), new LevelItem(), new LoginMessageItem(),
+            new LogoutMessageItem(), new NickItem(), new SnackItem() 
+        };
+        
+        public static void RegisterItem(Item item) {
+            List<string> cfg = GetConfig(item.Name);
+            
+            foreach (string line in cfg)
+            {
+                item.LoadConfig(line);
+            }
+            Items.Add(item);
+        }
         
         /// <summary> Finds the item whose name or one of its aliases caselessly matches the input. </summary>
         public static Item GetItem(string name) {
-            foreach (Item item in Items) {
+            foreach (Item item in Items) 
+            {
                 if (name.CaselessEq(item.Name)) return item;
                 
-                foreach (string alias in item.Aliases) {
+                foreach (string alias in item.Aliases) 
+                {
                     if (name.CaselessEq(alias)) return item;
                 }
             }
@@ -129,7 +141,7 @@ namespace MCGalaxy.Eco
             return items.Length == 0 ? "(no enabled items)" : items;
         }
         
-        public static RankItem Ranks { get { return (RankItem)Items[3]; } }
+        public static RankItem Ranks   { get { return (RankItem)Items[3]; } }
         public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
         
         public static void MakePurchase(Player p, int cost, string item) {

@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.DB;
+using MCGalaxy.Eco;
 using MCGalaxy.Games;
-using MCGalaxy.Modules.Games.ZS;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class BlocksItem : SimpleItem {
-        
+namespace MCGalaxy.Modules.Games.ZS 
+{    
+    sealed class BlocksItem : SimpleItem 
+    {    
         public BlocksItem() {
             Aliases = new string[] { "blocks", "bl", "b" };
             Price = 1;
@@ -52,8 +52,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class QueueLevelItem : SimpleItem {
-        
+    sealed class QueueLevelItem : SimpleItem 
+    {    
         public QueueLevelItem() {
             Aliases = new string[] { "queuelevel", "queuelvl", "queue" };
             Price = 150;
@@ -81,8 +81,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class InfectMessageItem : SimpleItem {
-        
+    sealed class InfectMessageItem : SimpleItem 
+    {    
         public InfectMessageItem() {
             Aliases = new string[] { "infectmessage", "infectmsg" };
             Price = 150;
@@ -114,8 +114,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class InvisibilityItem : SimpleItem {
-        
+    sealed class InvisibilityItem : SimpleItem 
+    {    
         public InvisibilityItem() {
             // old aliases for when invisibility and zombie invisibility were seperate
             Aliases = new string[] { "invisibility", "invisible", "invis", "zinvisibility", "zinvisible", "zinvis" };
@@ -166,8 +166,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class ReviveItem : SimpleItem {
-        
+    sealed class ReviveItem : SimpleItem 
+    {   
         public ReviveItem() {
             Aliases = new string[] { "revive", "rev" };
             Price = 7;
