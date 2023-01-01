@@ -554,9 +554,11 @@
     <Compile Include="Modules\Games\LavaSurvival\CmdLavaSurvival.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSConfig.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSGame.cs" />
+    <Compile Include="Modules\Games\LavaSurvival\LSGame.DB.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSGame.Physics.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSGame.Plugin.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSGame.Round.cs" />
+    <Compile Include="Modules\Games\LavaSurvival\LSItems.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSPlugin.cs" />
     <Compile Include="Modules\Games\TNTWars\CmdTntWars.cs" />
     <Compile Include="Modules\Games\TNTWars\TWConfig.cs" />
@@ -576,7 +578,7 @@
     <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdLastLevels.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdQueue.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\Commands\CmdShowQueue.cs" />
-    <Compile Include="Modules\Games\ZombieSurvival\ZombieItems.cs" />
+    <Compile Include="Modules\Games\ZombieSurvival\ZSItems.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSConfig.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.DB.cs" />

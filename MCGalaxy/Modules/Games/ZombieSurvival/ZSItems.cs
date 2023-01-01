@@ -18,9 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
-using MCGalaxy.DB;
 using MCGalaxy.Eco;
-using MCGalaxy.Games;
 
 namespace MCGalaxy.Modules.Games.ZS 
 {    
@@ -126,9 +124,9 @@ namespace MCGalaxy.Modules.Games.ZS
 
         protected internal override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "an invisibility potion")) return;
-            if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
+            if (!ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +
-                               "when a round of zombie survival is in progress."); return;
+                          "when a round of zombie survival is in progress."); return;
             }
             
             ZSData data  = ZSGame.Get(p);
@@ -177,9 +175,9 @@ namespace MCGalaxy.Modules.Games.ZS
         
         protected internal override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "a revive potion")) return;
-            if (!ZSGame.Instance.Running || !ZSGame.Instance.RoundInProgress) {
+            if (!ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy a revive potion " +
-                                   "when a round of zombie survival is in progress."); return;
+                          "when a round of zombie survival is in progress."); return;
             }
             
             ZSData data = ZSGame.Get(p);

@@ -142,6 +142,7 @@ namespace MCGalaxy.Modules.Games.LS
             
             Chat.MessageFromLevel(p, "λNICK &4ran out of lives, and is out of the round!");
             p.Message("&4You can still watch, but you cannot build.");
+            // TODO: Buy life message
         }
     }
 }
