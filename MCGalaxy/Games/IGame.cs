@@ -59,6 +59,22 @@ namespace MCGalaxy.Games
         public virtual string GetPrefix(Player p) { return ""; }
         public virtual void OutputTimeInfo(Player p) { }
         
+        /// <summary> Whether the given map has been setup/configured as a map 
+        /// that this game can be automatically played on </summary>
+        public virtual bool ClaimsMap(string map) { return false; }
+        
+        public static void OutputMapSummary(Player p, LevelConfig cfg) {
+            p.Message("This map has &a{0} likes &Sand &c{1} dislikes",
+                       cfg.Likes, cfg.Dislikes);
+            string[] authors = cfg.Authors.SplitComma();
+            if (authors.Length == 0) return;
+            
+            p.Message("It was created by {0}", authors.Join(n => p.FormatNick(n)));
+        }
+        
+        public virtual void OutputMapInfo(Player p, string map, LevelConfig cfg) { }
+        
+        
         /// <summary> Immediately force stops/ends this game </summary>
         public abstract void End();
         public abstract void EndRound();
@@ -69,7 +85,8 @@ namespace MCGalaxy.Games
             if (!Running) return;
             Player[] online = PlayerInfo.Online.Items;
             
-            foreach (Player p in online) {
+            foreach (Player p in online) 
+            {
                 if (p.level != Map) continue;
                 p.SendCpeMessage(type, message);
             }
@@ -91,7 +108,8 @@ namespace MCGalaxy.Games
         
         void UpdateAllStatus(CpeMessageType status) {
             Player[] online = PlayerInfo.Online.Items;
-            foreach (Player p in online) {
+            foreach (Player p in online) 
+            {
                 if (p.level != Map) continue;
                 
                 string msg = status == CpeMessageType.Status1 ? FormatStatus1(p) :

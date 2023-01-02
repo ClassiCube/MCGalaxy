@@ -52,7 +52,7 @@ namespace MCGalaxy.Modules.Games.LS
             
             if (Map != level) return;
             ResetRoundState(p, Get(p)); // TODO: Check for /reload case?
-            MessageMapInfo(p);
+            OutputMapSummary(p, Map.Config);
             if (RoundInProgress) OutputStatus(p);
         }
 

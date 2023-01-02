@@ -114,7 +114,7 @@ namespace MCGalaxy.Modules.Games.TW
         
         void HandleSentMap(Player p, Level prevLevel, Level level) {
             if (level != Map) return;
-            MessageMapInfo(p);
+            OutputMapSummary(p, Map.Config);
             if (TeamOf(p) == null) AutoAssignTeam(p);
         }
         

@@ -76,15 +76,6 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected void MessageMapInfo(Player p) {
-            p.Message("This map has &a{0} likes &Sand &c{1} dislikes",
-                           Map.Config.Likes, Map.Config.Dislikes);
-            string[] authors = Map.Config.Authors.SplitComma();
-            if (authors.Length == 0) return;
-            
-            p.Message("It was created by {0}", authors.Join(n => p.FormatNick(n)));
-        }
-        
         protected void HandleLevelUnload(Level lvl, ref bool cancel) {
             if (lvl != Map) return;
             Logger.Log(LogType.GameActivity, "Unload cancelled! A {0} game is currently going on!", GameName);

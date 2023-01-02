@@ -286,10 +286,12 @@ namespace MCGalaxy.Modules.Games.ZS
                 Map.Message(p.ColoredName + " &Stried using a revive potion. &cIt was not very effective..");
             }
         }
-        
 
-        public bool HasMap(string name) {
-            return Running && Config.Maps.CaselessContains(name);
+        
+        public override void OutputMapInfo(Player p, string map, LevelConfig cfg) {
+            int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;
+            p.Message("&a{0} &Srounds played total, &a{1}% &Swin chance for humans.",
+                      cfg.RoundsPlayed, winChance);
         }
         
         static string GetTimeLeft(int seconds) {

@@ -159,7 +159,7 @@ namespace MCGalaxy.Modules.Games.ZS
                 p.Message("&a{0} &Sseconds left until the round starts. &aRun!", (int)startLeft);
             }
             
-            MessageMapInfo(p);
+            OutputMapSummary(p, Map.Config);
             p.Message("This map's win chance is &a{0}&S%", Map.WinChance);
         }
         

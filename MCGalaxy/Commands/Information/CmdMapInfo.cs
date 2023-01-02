@@ -97,7 +97,7 @@ namespace MCGalaxy.Commands.Info
             
             ShowPermissions(p, data, cfg);
             p.Message("Use &T/mi env {0} &Sto see environment settings.", data.MapName);
-            ShowZombieSurvival(p, data, cfg);
+            ShowGameInfo(p, data, cfg);
         }
         
         void ShowPermissions(Player p, MapInfo data, LevelConfig cfg) {
@@ -120,16 +120,22 @@ namespace MCGalaxy.Commands.Info
             p.Message(perms.ToString());
         }
         
-        void ShowZombieSurvival(Player p, MapInfo data, LevelConfig cfg) {
-            if (!ZSGame.Instance.HasMap(data.MapName)) return;
+        void ShowGameInfo(Player p, MapInfo data, LevelConfig cfg) {
+            IGame game = GetAssociatedGame(data.MapName);
+            if (game == null) return;
             
-            string[] authors = cfg.Authors.SplitComma();
-            p.Message("Map authors: {0}", authors.Join(n => p.FormatNick(n)));
-            int winChance = cfg.RoundsPlayed == 0 ? 100 : (cfg.RoundsHumanWon * 100) / cfg.RoundsPlayed;
-            p.Message("&a{0} &Srounds played total, &a{1}% &Swin chance for humans.",
-                           cfg.RoundsPlayed, winChance);
-            p.Message("This map has &a{0} likes &Sand &c{1} dislikes",
-                           cfg.Likes, cfg.Dislikes);
+            IGame.OutputMapSummary(p, cfg); // TODO: Always show this info?
+            game.OutputMapInfo(p, data.MapName, cfg);
+        }
+        
+        static IGame GetAssociatedGame(string map)
+        {
+            IGame[] games = IGame.RunningGames.Items;
+            foreach (IGame game in games)
+            {
+                if (game.ClaimsMap(map)) return game;
+            }
+            return null;
         }
         
         void ShowEnv(Player p, MapInfo data, LevelConfig cfg) {
