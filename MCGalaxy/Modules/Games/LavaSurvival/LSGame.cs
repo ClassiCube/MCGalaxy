@@ -105,6 +105,14 @@ namespace MCGalaxy.Modules.Games.LS
             return Config.MaxLives > 0 && Get(p).TimesDied >= Config.MaxLives;
         }
         
+        public override bool HandlesBlockchange(Player p, ushort x, ushort y, ushort z) {
+            if (!IsPlayerDead(p)) return false;
+            
+            p.Message("You are out of the round, and cannot build.");
+            p.RevertBlock(x, y, z); 
+            return true;
+        }
+        
         void ResetPlayerDeaths() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) 

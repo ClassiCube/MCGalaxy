@@ -46,7 +46,7 @@ namespace MCGalaxy.Games
         protected virtual void SaveStats(Player pl) { }
         
         public override bool HandlesChatMessage(Player p, string message) {
-            return p.level == Map && Picker.HandlesMessage(p, message);
+            return Picker.HandlesMessage(p, message);
         }
         
         public override bool ClaimsMap(string map) {

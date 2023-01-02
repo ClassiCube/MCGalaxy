@@ -23,7 +23,6 @@ using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
-using MCGalaxy.Modules.Games.ZS;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info 

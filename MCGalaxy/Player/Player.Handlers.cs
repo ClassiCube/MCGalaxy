@@ -29,7 +29,6 @@ using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
-using MCGalaxy.Modules.Games.LS;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy
@@ -70,10 +69,8 @@ namespace MCGalaxy
                 RevertBlock(x, y, z); return;
             }
 
-            if ( LSGame.Instance.Running && LSGame.Instance.Map == level && LSGame.Instance.IsPlayerDead(this) ) {
-                Message("You are out of the round, and cannot build.");
-                RevertBlock(x, y, z); return;
-            }
+            IGame game = IGame.GameOn(level);
+            if (game != null && game.HandlesBlockchange(this, x, y, z)) return;
 
             if (ClickToMark && DoBlockchangeCallback(x, y, z, block)) return;
             

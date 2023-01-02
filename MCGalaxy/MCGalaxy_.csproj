@@ -448,8 +448,8 @@
     <Compile Include="Games\IGame.cs" />
     <Compile Include="Games\HacksDetection.cs" />
     <Compile Include="Games\RoundsGame\LevelPicker.cs" />
-    <Compile Include="Games\RoundsGame\RoundsGameConfig.cs" />
     <Compile Include="Games\RoundsGame\RoundsGame.cs" />
+    <Compile Include="Games\RoundsGame\RoundsGameConfig.cs" />
     <Compile Include="Games\RoundsGame\RoundsGame.Plugin.cs" />
     <Compile Include="Games\Team.cs" />
     <Compile Include="Games\Weapons\Missile.cs" />
