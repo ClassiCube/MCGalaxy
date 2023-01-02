@@ -210,7 +210,8 @@ namespace MCGalaxy.Modules.Games.ZS
             BountyData.Bounties.Clear(); // TODO only do it when all games end
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != Map) continue;
                 ZSData data = Get(pl);
                 

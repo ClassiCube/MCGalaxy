@@ -563,6 +563,7 @@
     <Compile Include="Modules\Games\TNTWars\CmdTntWars.cs" />
     <Compile Include="Modules\Games\TNTWars\TWConfig.cs" />
     <Compile Include="Modules\Games\TNTWars\TWGame.cs" />
+    <Compile Include="Modules\Games\TNTWars\TWGame.Physics.cs" />
     <Compile Include="Modules\Games\TNTWars\TWGame.Plugin.cs" />
     <Compile Include="Modules\Games\TNTWars\TWGame.Round.cs" />
     <Compile Include="Modules\Games\TNTWars\TWPlugin.cs" />

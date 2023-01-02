@@ -256,7 +256,8 @@ namespace MCGalaxy.Games
             RoundInProgress = false;
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != Map) continue;
                 pl.Game.RatedMap = false;
                 PlayerLeftGame(pl);

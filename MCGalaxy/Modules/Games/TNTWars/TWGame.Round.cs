@@ -38,7 +38,8 @@ namespace MCGalaxy.Modules.Games.TW
     {    
         protected override void DoRound() {
             Player[] all = allPlayers.Items;
-            foreach (Player p in all) {
+            foreach (Player p in all) 
+            {
                 Get(p).Reset(Config.Difficulty);
                 PlayerActions.Respawn(p);
             }
@@ -90,7 +91,9 @@ namespace MCGalaxy.Modules.Games.TW
             if (Config.Mode == TWGameMode.TDM) {
                 Map.Message("Start your message with ':' to send it to team only!");
             }
-
+            
+            UpdateBlockHandlers(); // TODO: Move to after GracePeriod?
+            
             GracePeriod();
             RoundInProgress = true;
             MessageMap(CpeMessageType.Announcement, "&4TNT Wars has started!");
@@ -134,14 +137,11 @@ namespace MCGalaxy.Modules.Games.TW
         protected override bool SetMap(string map) {
             if (!base.SetMap(map)) return false;
             
+            // TODO: Move to DoRound
+            Map.Props[Block.TNT_Explosion].KillerBlock = false;            
             buildable = Map.Config.Buildable;
             deletable = Map.Config.Deletable;
             Map.SetPhysics(3);
-            
-            // TODO: handle when these are externally changed (event)
-            Map.PlaceHandlers[Block.TNT]   = HandleTNTPlace;
-            Map.PhysicsHandlers[Block.TNT] = HandleTNTPhysics;
-            Map.Props[Block.TNT_Explosion].KillerBlock = false;
             return true;
         }
         

@@ -42,9 +42,9 @@ namespace MCGalaxy.Modules.Games.LS
 
             ResetPlayerDeaths();
             RoundStart = DateTime.UtcNow;
-            RoundInProgress = true;            
-            Map.SetPhysics(destroyMode ? 2 : 1);
+            RoundInProgress = true;
             UpdateBlockHandlers();
+            Map.SetPhysics(destroyMode ? 2 : 1);
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
@@ -131,6 +131,7 @@ namespace MCGalaxy.Modules.Games.LS
 
         protected override bool SetMap(string map) {
             if (!base.SetMap(map)) return false;
+            
             Map.Config.PhysicsOverload = 1000000;
             return true;
         }

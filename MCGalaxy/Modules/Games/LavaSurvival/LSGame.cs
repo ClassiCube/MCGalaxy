@@ -95,7 +95,7 @@ namespace MCGalaxy.Modules.Games.LS
         protected override void EndGame() {
             flooded = false;
             ResetPlayerDeaths();
-            if (Map != null) UpdateBlockHandlers();
+            UpdateBlockHandlers();
             
             hooked = false;
             UnhookItems();

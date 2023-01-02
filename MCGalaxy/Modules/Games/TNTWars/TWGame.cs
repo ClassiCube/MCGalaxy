@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Commands.World;
 using MCGalaxy.Events;
 using MCGalaxy.Events.LevelEvents;
@@ -72,7 +73,8 @@ namespace MCGalaxy.Modules.Games.TW
         public override RoundsGameConfig GetConfig() { return Config; }
         VolatileArray<Player> allPlayers = new VolatileArray<Player>(false);
         
-        sealed class TWTeam {
+        sealed class TWTeam 
+        {
             public string Name, Color;
             public string ColoredName { get { return Color + Name; } }
             public int Score;
@@ -86,6 +88,7 @@ namespace MCGalaxy.Modules.Games.TW
         TWTeam Blue = new TWTeam("Blue", Colors.blue);
         public List<TWZone> tntFreeZones = new List<TWZone>();
         public List<TWZone> tntImmuneZones = new List<TWZone>();
+        TNTImmuneFilter tntImmuneFilter;
         
         public static TWGame Instance = new TWGame();
         public TWGame() { Picker = new LevelPicker(); }
@@ -139,6 +142,7 @@ namespace MCGalaxy.Modules.Games.TW
 
         protected override void StartGame() {
             ResetTeams();
+            tntImmuneFilter = (x, y, z) => InZone(x, y, z, tntImmuneZones);
         }
         
         protected override void EndGame() {
@@ -146,7 +150,7 @@ namespace MCGalaxy.Modules.Games.TW
             ResetTeams();
             
             // Reset block handlers
-            Map.UpdateAllBlockHandlers();
+            UpdateBlockHandlers();
             Map.UpdateBlockProps();
         }
         
@@ -241,7 +245,8 @@ namespace MCGalaxy.Modules.Games.TW
             if (Map != null) cfg.Save(Map.name);
         }
         
-        public class TWZone {
+        public class TWZone 
+        {
             public ushort MinX, MinY, MinZ, MaxX, MaxY, MaxZ;
             
             public TWZone(Vec3U16 p1, Vec3U16 p2) {
@@ -262,7 +267,8 @@ namespace MCGalaxy.Modules.Games.TW
         }
         
         public bool InZone(ushort x, ushort y, ushort z, List<TWZone> zones) {
-            foreach (TWZone Zn in zones) {
+            foreach (TWZone Zn in zones) 
+            {
                 if (x >= Zn.MinX && y >= Zn.MinY && z >= Zn.MinZ
                     && x <= Zn.MaxX && y <= Zn.MaxY && z <= Zn.MaxZ) return true;
             }
@@ -288,7 +294,8 @@ namespace MCGalaxy.Modules.Games.TW
             Player[] all = allPlayers.Items;
             PlayerAndScore[] sorted = new PlayerAndScore[all.Length];
             
-            for (int i = 0; i < all.Length; i++) {
+            for (int i = 0; i < all.Length; i++) 
+            {
                 PlayerAndScore entry = new PlayerAndScore();
                 entry.p = all[i];
                 entry.Score = Get(entry.p).Score;
