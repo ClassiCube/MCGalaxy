@@ -32,6 +32,23 @@ namespace MCGalaxy.Modules.Games.CTF
         public bool HasFlag, TagCooldown, TeamChatting;
         public Vec3S32 LastHeadPos;
     }
+    
+    sealed class CtfTeam 
+    {
+        public string Name, Color;
+        public string ColoredName { get { return Color + Name; } }
+        public int Captures;
+        public Vec3U16 FlagPos, SpawnPos;
+        public BlockID FlagBlock;
+        public VolatileArray<Player> Members = new VolatileArray<Player>();
+        
+        public CtfTeam(string name, string color) { Name = name; Color = color; }
+        
+        public void RespawnFlag(Level lvl) {
+            Vec3U16 pos = FlagPos;
+            lvl.Blockchange(pos.X, pos.Y, pos.Z, FlagBlock);
+        }
+    }
 
     public sealed partial class CTFGame : RoundsGame 
     {
@@ -40,28 +57,16 @@ namespace MCGalaxy.Modules.Games.CTF
         public override string GameName { get { return "CTF"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         
-        sealed class CtfTeam {
-            public string Name, Color;
-            public string ColoredName { get { return Color + Name; } }
-            public int Captures;
-            public Vec3U16 FlagPos, SpawnPos;
-            public BlockID FlagBlock;
-            public VolatileArray<Player> Members = new VolatileArray<Player>();
-            
-            public CtfTeam(string name, string color) { Name = name; Color = color; }
-            
-            public void RespawnFlag(Level lvl) {
-                Vec3U16 pos = FlagPos;
-                lvl.Blockchange(pos.X, pos.Y, pos.Z, FlagBlock);
-            }
-        }
-        
         CtfTeam Red  = new CtfTeam("Red", Colors.red);
         CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
         
         public static CTFGame Instance = new CTFGame();
         public CTFGame() { Picker = new LevelPicker(); }
-
+        
+        protected override string WelcomeMessage {
+            get { return "&9Capture the Flag &Sis running! Type &T/CTF go &Sto join"; }
+		}
+        
         const string ctfExtrasKey = "MCG_CTF_DATA";
         static CtfData Get(Player p) {
             CtfData data = TryGet(p);

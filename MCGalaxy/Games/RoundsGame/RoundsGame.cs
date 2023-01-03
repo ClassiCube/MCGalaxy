@@ -30,6 +30,8 @@ namespace MCGalaxy.Games
         public string LastMap = "";
         public LevelPicker Picker;
         
+        protected abstract string WelcomeMessage { get; }
+        
         /// <summary> Messages general info about current round and players. </summary>
         /// <remarks> e.g. who is alive, points of each team, etc. </remarks>
         public abstract void OutputStatus(Player p);

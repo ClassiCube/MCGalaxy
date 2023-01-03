@@ -28,8 +28,7 @@ namespace MCGalaxy.Modules.Games.LS
     public sealed partial class LSGame : RoundsGame 
     {
         protected override void HookEventHandlers() {
-            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
-            OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
+            OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnBlockHandlersUpdatedEvent.Register(HandleBlockHandlersUpdated, Priority.High);
             OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
@@ -38,8 +37,7 @@ namespace MCGalaxy.Modules.Games.LS
         }
         
         protected override void UnhookEventHandlers() {
-            OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
-            OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
+            OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnBlockHandlersUpdatedEvent.Unregister(HandleBlockHandlersUpdated);
             OnBlockChangingEvent.Unregister(HandleBlockChanging);
@@ -54,10 +52,6 @@ namespace MCGalaxy.Modules.Games.LS
             ResetRoundState(p, Get(p)); // TODO: Check for /reload case?
             OutputMapSummary(p, Map.Config);
             if (RoundInProgress) OutputStatus(p);
-        }
-
-        void HandlePlayerConnect(Player p) {
-            p.Message("&cLava Survival &Sis running! Type &T/ls go &Sto join");
         }
         
         void HandlePlayerDeath(Player p, BlockID block) {

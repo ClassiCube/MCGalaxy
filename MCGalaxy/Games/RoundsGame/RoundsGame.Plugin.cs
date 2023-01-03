@@ -32,6 +32,7 @@ namespace MCGalaxy.Games {
             OnInfoSaveEvent.Register(HandleSaveStats, Priority.High);
             
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.High);
+            OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.High);
         }
         
@@ -40,7 +41,8 @@ namespace MCGalaxy.Games {
             OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
             OnInfoSaveEvent.Unregister(HandleSaveStats);
             
-            OnPlayerActionEvent.Unregister(HandlePlayerAction);            
+            OnPlayerActionEvent.Unregister(HandlePlayerAction);
+            OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerDisconnectEvent.Unregister(HandlePlayerDisconnect);
         }
         
@@ -49,6 +51,11 @@ namespace MCGalaxy.Games {
         protected virtual void HandleSendingHeartbeat(Heartbeat service, ref string name) {
             if (Map == null || !GetConfig().MapInHeartbeat) return;
             name += " (map: " + Map.MapName + ")";
+        }
+
+        protected virtual void HandlePlayerConnect(Player p) {
+            if (GetConfig().SetMainLevel) return;
+            p.Message(WelcomeMessage);
         }
         
         protected virtual void HandlePlayerDisconnect(Player p, string reason) {

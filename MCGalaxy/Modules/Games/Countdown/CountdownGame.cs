@@ -48,6 +48,10 @@ namespace MCGalaxy.Modules.Games.Countdown
         public override string GameName { get { return "Countdown"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         
+        protected override string WelcomeMessage {
+            get { return "&aCountdown &Sis running! Type &T/Countdown go &Sto join"; }
+		}
+                
         public bool FreezeMode;
         public int Interval;
         public string SpeedType;

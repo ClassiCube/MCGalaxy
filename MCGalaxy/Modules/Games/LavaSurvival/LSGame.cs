@@ -34,6 +34,10 @@ namespace MCGalaxy.Modules.Games.LS
         public override string GameName { get { return "Lava survival"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
         
+        protected override string WelcomeMessage {
+            get { return "&cLava Survival &Sis running! Type &T/LS go &Sto join"; }
+		}
+        
         bool flooded, fastMode, destroyMode, waterMode, layerMode, floodUp;
         BlockID floodBlock;
         int curLayer, spreadDelay;

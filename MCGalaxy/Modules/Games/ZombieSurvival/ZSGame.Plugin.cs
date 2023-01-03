@@ -38,7 +38,6 @@ namespace MCGalaxy.Modules.Games.ZS
             OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
             OnSendingModelEvent.Register(HandleSendingModel, Priority.High);
             
-            OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.High);
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
@@ -55,7 +54,6 @@ namespace MCGalaxy.Modules.Games.ZS
             OnBlockChangingEvent.Unregister(HandleBlockChanging);
             OnSendingModelEvent.Unregister(HandleSendingModel);
             
-            OnPlayerConnectEvent.Unregister(HandlePlayerConnect);
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
@@ -113,11 +111,6 @@ namespace MCGalaxy.Modules.Games.ZS
                 name = Config.ZombieName; skin = name;
             }
             name = Colors.red + name;
-        }
-        
-        void HandlePlayerConnect(Player p) {
-            if (GetConfig().SetMainLevel) return;
-            p.Message("&3Zombie Survival &Sis running! Type &T/ZS go &Sto join");
         }
         
         void HandlePlayerMove(Player p, Position next, byte rotX, byte rotY, ref bool cancel) {

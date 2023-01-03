@@ -63,6 +63,17 @@ namespace MCGalaxy.Modules.Games.TW
             ScoreMultiplier = 1f;
             HarmedBy = null;
         }
+    }   
+        
+    sealed class TWTeam 
+    {
+        public string Name, Color;
+        public string ColoredName { get { return Color + Name; } }
+        public int Score;
+        public Vec3U16 SpawnPos;
+        public VolatileArray<Player> Members = new VolatileArray<Player>();
+        
+        public TWTeam(string name, string color) { Name = name; Color = color; }
     }
     
     public sealed partial class TWGame : RoundsGame 
@@ -71,23 +82,16 @@ namespace MCGalaxy.Modules.Games.TW
         public TWConfig Config = new TWConfig();
         public override string GameName { get { return "TNT Wars"; } }
         public override RoundsGameConfig GetConfig() { return Config; }
-        VolatileArray<Player> allPlayers = new VolatileArray<Player>(false);
         
-        sealed class TWTeam 
-        {
-            public string Name, Color;
-            public string ColoredName { get { return Color + Name; } }
-            public int Score;
-            public Vec3U16 SpawnPos;
-            public VolatileArray<Player> Members = new VolatileArray<Player>();
-            
-            public TWTeam(string name, string color) { Name = name; Color = color; }
-        }
+        protected override string WelcomeMessage {
+            get { return "&4TNT Wars &Sis running! Type &T/TW go &Sto join"; }
+		}
         
         TWTeam Red  = new TWTeam("Red", Colors.red);
         TWTeam Blue = new TWTeam("Blue", Colors.blue);
         public List<TWZone> tntFreeZones = new List<TWZone>();
         public List<TWZone> tntImmuneZones = new List<TWZone>();
+        VolatileArray<Player> allPlayers = new VolatileArray<Player>();
         TNTImmuneFilter tntImmuneFilter;
         
         public static TWGame Instance = new TWGame();

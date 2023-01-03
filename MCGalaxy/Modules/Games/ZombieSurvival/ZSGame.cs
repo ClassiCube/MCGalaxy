@@ -79,6 +79,10 @@ namespace MCGalaxy.Modules.Games.ZS
         public static ZSGame Instance = new ZSGame();
         public ZSGame() { Picker = new LevelPicker(); }
         
+        protected override string WelcomeMessage {
+            get { return "&2Zombie Survival &Sis running! Type &T/ZS go &Sto join"; }
+		}
+        
         public DateTime RoundEnd;
         public VolatileArray<Player> Alive = new VolatileArray<Player>();
         public VolatileArray<Player> Infected = new VolatileArray<Player>();
