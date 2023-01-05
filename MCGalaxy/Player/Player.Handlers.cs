@@ -424,8 +424,9 @@ namespace MCGalaxy
             }
             
             if (continued) {
+                if (text.Length < NetUtils.StringSize) text += " ";
                 partialMessage += text;
-                if (text.Length < NetUtils.StringSize) partialMessage += " ";
+                
                 LimitPartialMessage();
                 return true;
             }
