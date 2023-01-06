@@ -1,4 +1,39 @@
-﻿v 1.9.4.5
+﻿v 1.9.4.6
+Added: LS: Configuration option for flood upwards chance
+Added: LS: Players can place sponges to stop lava flow (can place up to 10 per round by default)
+Added: LS: Added item to store for buying another life
+Added: /copyslot random to allow randomly selecting between used slots
+Added: GUI: Countdown now appears in Games settings
+Improved: 2D noise map generator themes now support biomes
+Improved: Desert map generator biome now has a Sandstone border
+Improved: Allow providing explicit seed for fCraft map generator
+Improved: Make fCraft map generator ~45% faster 
+Improved: Be more consistent in map generation messages
+Improved: LS: Always uses uniform water/lava flow now
+Improved: LS: Show CPE announcement message when 10 seconds or less left until flood starts
+Improved: LS: Flooding lava/water always kills players now
+Improved: LS: Default to 50% chance for flood to destroy blocks
+Improved: LS: /time now shows flood and round time (when LS is running)
+Improved: LS: All items are now enabled by default
+Improved: ZS: All items are now enabled by default
+Improved: Allow like/dislike to be used when any game is running (not just LS or ZS)
+Improved: All games now show an informational message to players upon joining server
+Improved: Allow disabling built-in plugins/modules
+Improved: Don't reload custom commands and plugins anymore when doing /server reload
+Improved: Don't show 'Plugin X was unloaded' at server shutdown
+Improved: Message when can't /cmdset a command due to lacking required permissions
+Improved: GUI: Initial status message is now 'Starting server' (instead of 'finding classicube.net URL')
+Fixed: fCraft dunes/ice map generator themes not using right default biome
+Fixed: LS: Fix flood messages being '4m 59s' instead of '5m'
+Fixed: LS: Fix block/flood type messages not showing when auto going to next level
+Fixed: ZS: Items only appear in store when ZS is running now
+Fixed: Don't show built-in modules in /plugins anymore
+Fixed: Non-200 heartbeat responses not being logged
+Fixed: Water flooding from map edges option not behaving correctly
+Removed: Obsolete /top stat by index number
+Removed: Visual Basic compiling support is now an external plugin
+
+v 1.9.4.5
 Improved: Allow providing reasons for IP bans
 Improved: Allow over 32767 deaths when using SQLite as database backend
 Improved: /whonick output when multiple matching player/bot nicks
