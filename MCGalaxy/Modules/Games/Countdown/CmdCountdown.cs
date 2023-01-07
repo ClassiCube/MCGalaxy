@@ -73,15 +73,17 @@ namespace MCGalaxy.Modules.Games.Countdown
         protected override void HandleStart(Player p, RoundsGame game_, string[] args) {
             if (game_.Running) { p.Message("{0} is already running", game_.GameName); return; }
             
-            CountdownGame game = (CountdownGame)game_;
-            string speed = args.Length > 1 ? args[1] : "";
-            string  mode = args.Length > 2 ? args[2] : "";
+            CountdownGame game   = (CountdownGame)game_;
+            CountdownSpeed speed = game.Config.DefaultSpeed;
             
-            if (!game.SetSpeed(speed)) {
-                p.Message("No speed specified, playing at 'normal' speed.");
-                game.SetSpeed("normal");
+            if (args.Length > 1) {
+                if (!CommandParser.GetEnum(p, args[1], "Speed", ref speed)) return;
+            } else {
+                p.Message("No speed specified, playing at '{0}' speed", speed);
             }
             
+            game.SetSpeed(speed);
+            string mode = args.Length > 2 ? args[2] : "";
             game.FreezeMode = mode == "freeze" || mode == "frozen";
             game.Start(p, "countdown", int.MaxValue);
         }       

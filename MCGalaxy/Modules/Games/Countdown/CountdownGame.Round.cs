@@ -71,7 +71,7 @@ namespace MCGalaxy.Modules.Games.Countdown
         }
         
         void BeginRound() {
-            if (Interval == 0) SetSpeed("normal");
+            if (Interval == 0) SetSpeed(Config.DefaultSpeed);
             string modeSuffix = FreezeMode ? " in freeze mode" : "";
             Map.Message("Starting " + SpeedType + " speed Countdown" + modeSuffix);
             

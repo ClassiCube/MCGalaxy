@@ -28,17 +28,6 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.Countdown
 {
-    public sealed class CountdownConfig : RoundsGameConfig 
-    {
-        public override bool AllowAutoload { get { return true; } }
-        protected override string GameName { get { return "Countdown"; } }
-        
-        public override void Load() {
-            base.Load();
-            if (Maps.Count == 0) Maps.Add("countdown");
-        }
-    }
-    
     public sealed partial class CountdownGame : RoundsGame 
     {
         public VolatileArray<Player> Players = new VolatileArray<Player>();
@@ -49,12 +38,12 @@ namespace MCGalaxy.Modules.Games.Countdown
         public override RoundsGameConfig GetConfig() { return Config; }
         
         protected override string WelcomeMessage {
-            get { return "&aCountdown &Sis running! Type &T/Countdown go &Sto join"; }
-		}
+            get { return "&aCountdown &Sis running! Type &T/CD join &Sto join"; }
+        }
                 
         public bool FreezeMode;
         public int Interval;
-        public string SpeedType;
+        public CountdownSpeed SpeedType;
         
         public static CountdownGame Instance = new CountdownGame();
         public CountdownGame() { Picker = new LevelPicker(); }
@@ -138,18 +127,15 @@ namespace MCGalaxy.Modules.Games.Countdown
             return RoundInProgress ? Remaining.Count + " players left" : "";
         }
         
-        public bool SetSpeed(string speed) {
+        public void SetSpeed(CountdownSpeed speed) {
             switch (speed) {
-                case "slow":     Interval = 800; break;
-                case "normal":   Interval = 650; break;
-                case "fast":     Interval = 500; break;
-                case "extreme":  Interval = 300; break;
-                case "ultimate": Interval = 150; break;
-                default: return false;
+                case CountdownSpeed.Slow:     Interval = 800; break;
+                case CountdownSpeed.Normal:   Interval = 650; break;
+                case CountdownSpeed.Fast:     Interval = 500; break;
+                case CountdownSpeed.Extreme:  Interval = 300; break;
+                case CountdownSpeed.Ultimate: Interval = 150; break;
             }
-            
             SpeedType = speed;
-            return true;
         }
     }
 }
