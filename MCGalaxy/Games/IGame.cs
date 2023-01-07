@@ -78,6 +78,7 @@ namespace MCGalaxy.Games
         
         /// <summary> Immediately force stops/ends this game </summary>
         public abstract void End();
+        /// <summary> Immediately stops/ends the current round </summary>
         public abstract void EndRound();
         
 
@@ -153,5 +154,18 @@ namespace MCGalaxy.Games
             int dz = Math.Abs(a.Pos.Z - b.Pos.Z);
             return dx <= dist && dy <= dist && dz <= dist;
         }
+        
+        protected static void AwardMoney(Player p, int min, int max, Random rnd, int baseAmount) {
+            int reward = baseAmount;
+            if (min >= max) {
+                reward += min;
+            } else {
+                reward += rnd.Next(min, max);
+            }
+            
+            if (reward == 0) return;
+            p.Message("&6You gained " + reward + " " + Server.Config.Currency);
+            p.SetMoney(p.money + reward);
+        }                                       
     }
 }

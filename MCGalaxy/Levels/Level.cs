@@ -405,7 +405,8 @@ namespace MCGalaxy
         }
         
         public void UpdateAllBlockHandlers() {
-            for (int i = 0; i < Props.Length; i++) {
+            for (int i = 0; i < Props.Length; i++) 
+            {
                 UpdateBlockHandlers((BlockID)i);
             }
         }
@@ -424,6 +425,12 @@ namespace MCGalaxy
             CustomBlockDefs[block] = def;
             UpdateBlockHandlers(block);
             blockAABBs[block] = Block.BlockAABB(block, this);
+        }
+        
+        public int GetEdgeLevel() {
+            int edgeLevel = Config.EdgeLevel;
+            if (edgeLevel == EnvConfig.ENV_USE_DEFAULT) edgeLevel = Height / 2;//EnvConfig.DefaultEnvProp(EnvProp.EdgeLevel, Height);
+            return edgeLevel;
         }
     }
 }

@@ -261,10 +261,12 @@ namespace MCGalaxy.Modules.Games.ZS
             }
             
             int maxKills = 0, count = 0;
-            for (int i = 0; i < dead.Length; i++) {
+            for (int i = 0; i < dead.Length; i++) 
+            {
                 maxKills = Math.Max(maxKills, Get(dead[i]).CurrentInfected);
             }
-            for (int i = 0; i < dead.Length; i++) {
+            for (int i = 0; i < dead.Length; i++) 
+            {
                 if (Get(dead[i]).CurrentInfected == maxKills) count++;
             }
             
@@ -279,7 +281,7 @@ namespace MCGalaxy.Modules.Games.ZS
 
             if (data.PledgeSurvive) {
                 p.Message("You received &a5 &3" + Server.Config.Currency +
-                               " &Sfor successfully pledging that you would survive.");
+                          " &Sfor successfully pledging that you would survive.");
                 p.SetMoney(p.money + 5);
             }
             
@@ -298,15 +300,8 @@ namespace MCGalaxy.Modules.Games.ZS
                 if (pl.level != Map) continue;
                 ZSData data = Get(pl);
                 data.ResetInvisibility();
-                int reward = GetMoneyReward(pl, data, alive, rand);
+                RewardMoney(pl, data, alive, rand);
                 
-                if (reward == -1) {
-                    pl.Message("You may not hide inside a block! No " + Server.Config.Currency + " for you."); reward = 0;
-                } else if (reward > 0) {
-                    pl.Message("&6You gained " + reward + " " + Server.Config.Currency);
-                }
-                
-                pl.SetMoney(pl.money + reward);
                 ResetRoundState(pl, data);
                 data.PledgeSurvive = false;
                 
@@ -320,17 +315,22 @@ namespace MCGalaxy.Modules.Games.ZS
             }
         }
 
-        static int GetMoneyReward(Player pl, ZSData data, Player[] alive, Random rand) {
-            if (pl.IsLikelyInsideBlock()) return -1;
+        static void RewardMoney(Player p, ZSData data, Player[] alive, Random rnd) {
+            if (p.IsLikelyInsideBlock()) {
+                p.Message("You may not hide inside a block! No " + Server.Config.Currency + " for you.");
+                return;
+            }
             
             if (alive.Length == 0) {
-                return rand.Next(1 + data.CurrentInfected, 5 + data.CurrentInfected);
-            } else if (alive.Length == 1 && !pl.infected) {
-                return rand.Next(5, 10);
-            } else if (alive.Length > 1 && !pl.infected) {
-                return rand.Next(2, 6);
+                AwardMoney(p, 1, 5,
+                           rnd, data.CurrentInfected);
+            } else if (alive.Length == 1 && !p.infected) {
+                AwardMoney(p, 5, 10,
+                           rnd, 0);
+            } else if (alive.Length > 1 && !p.infected) {
+                AwardMoney(p, 2, 6,
+                           rnd, 0);
             }
-            return 0;
         }
         
         

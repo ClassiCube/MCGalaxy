@@ -77,6 +77,25 @@ namespace MCGalaxy.Modules.Games.LS
             
             Map.SetPhysics(5);
             Map.Message("The round has ended!");
+            
+            Random rnd = new Random();
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) 
+            {
+                if (p.level == Map) RewardPlayer(p, rnd);
+            }
+        }
+        
+        void RewardPlayer(Player p, Random rnd) {
+            if (IsPlayerDead(p)) return;
+            
+            if (p.Pos.FeetBlockCoords.Y >= Map.GetEdgeLevel()) {
+                AwardMoney(p, 10, 15, 
+                           rnd, 0);
+            } else {
+                AwardMoney(p, 5, 10, 
+                           rnd, 0);                
+            }
         }
 
         void AnnounceFloodTime() {
