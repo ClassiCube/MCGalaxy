@@ -458,8 +458,8 @@
     <Compile Include="Generator\Classic\ClassicGenerator.cs" />
     <Compile Include="Generator\Classic\ClassicGenerator.Utils.cs" />
     <Compile Include="Generator\Classic\Noise.cs" />
-    <Compile Include="Generator\fCraft\MapGen.cs" />
-    <Compile Include="Generator\fCraft\MapGenArgs.cs" />
+    <Compile Include="Generator\fCraft\fCraftMapGen.cs" />
+    <Compile Include="Generator\fCraft\fCraftMapGenArgs.cs" />
     <Compile Include="Generator\fCraft\Noise.cs" />
     <Compile Include="Generator\Foliage\AshTree.cs" />
     <Compile Include="Generator\Foliage\OakTree.cs" />
@@ -477,10 +477,10 @@
     <Compile Include="Generator\LibNoise\RidgedMultifractal.cs" />
     <Compile Include="Generator\LibNoise\Voronoi.cs" />
     <Compile Include="Generator\MapGen.cs" />
-    <Compile Include="Generator\MapGenTheme.cs" />
-    <Compile Include="Generator\Realistic\MapGenArgs.cs" />
+    <Compile Include="Generator\MapGenBiome.cs" />
+    <Compile Include="Generator\Realistic\RealisticMapGenArgs.cs" />
     <Compile Include="Generator\Realistic\Noise.cs" />
-    <Compile Include="Generator\Realistic\MapGen.cs" />
+    <Compile Include="Generator\Realistic\RealisticMapGen.cs" />
     <Compile Include="Generator\SimpleGen.cs" />
     <Compile Include="Levels\EnvPreset.cs" />
     <Compile Include="Levels\Hacks.cs" />

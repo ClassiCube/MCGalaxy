@@ -8,7 +8,7 @@ namespace MCGalaxy.Generator.fCraft
     public sealed class fCraftMapGenArgs 
     {
         public string MapName;
-        public MapGenThemeName Theme = MapGenThemeName.Forest;
+        public MapGenBiomeName Biome = MapGenBiomeName.Forest;
         
         public int   Seed; // 0
         public int   MaxHeight = 20;
@@ -102,7 +102,7 @@ namespace MCGalaxy.Generator.fCraft
                 case MapGenTemplate.Dunes:
                     return new fCraftMapGenArgs {
                         AddWater = false,
-                        Theme = MapGenThemeName.Desert,
+                        Biome = MapGenBiomeName.Desert,
                         MaxHeight = 12,
                         MaxDepth = 7,
                         FeatureScale = 2,
@@ -124,7 +124,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Ice:
                     return new fCraftMapGenArgs {
-                        Theme = MapGenThemeName.Arctic,
+                        Biome = MapGenBiomeName.Arctic,
                         MaxHeight = 2,
                         MaxDepth = 2032,
                         FeatureScale = 2,

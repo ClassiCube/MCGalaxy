@@ -87,9 +87,9 @@ namespace MCGalaxy.Generator
             int width = lvl.Width, length = lvl.Length, half = lvl.Height / 2;
             int waterHeight = half - 1;
             
-            MapGenThemeName theme = MapGenThemeName.Forest;
+            MapGenBiomeName theme = MapGenBiomeName.Forest;
             if (!MapGen.ParseArgs(p, seed, out noiseSeed, ref theme)) return false;
-            MapGenTheme biome = MapGenTheme.Get(theme);
+            MapGenBiome biome = MapGenBiome.Get(theme);
             
             for (int z = 0; z < length; ++z)
                 for (int x = 0; x < width; ++x)

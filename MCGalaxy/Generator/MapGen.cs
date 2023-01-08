@@ -61,13 +61,13 @@ namespace MCGalaxy.Generator
         }
         
         public static bool ParseArgs(Player p, string input, 
-                                     out int seed, ref MapGenThemeName theme) {
+                                     out int seed, ref MapGenBiomeName biome) {
             if (int.TryParse(input, out seed)) return true;
             
             seed = new Random().Next();
             if (input.Length == 0) return true;
             
-            return CommandParser.GetEnum(p, input, "Seed", ref theme);
+            return CommandParser.GetEnum(p, input, "Seed", ref biome);
         }
 
         

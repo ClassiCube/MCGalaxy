@@ -41,11 +41,11 @@ namespace MCGalaxy.Generator.Realistic
         public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
             this.args = args;
             int rng_seed;
-            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Theme)) return false;
+            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Biome)) return false;
             
             rng = new Random(rng_seed);
-            MapGenTheme theme = MapGenTheme.Get(args.Theme);
-            theme.ApplyEnv(lvl.Config);
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
+            biome.ApplyEnv(lvl.Config);
             
             terrain = new float[lvl.Width * lvl.Length];
             overlay = new float[lvl.Width * lvl.Length];

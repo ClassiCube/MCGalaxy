@@ -19,13 +19,13 @@ using System;
 
 namespace MCGalaxy.Generator
 {
-    public enum MapGenThemeName
+    public enum MapGenBiomeName
     {
         Forest, Arctic, Desert, Hell, Swamp, Mine
     }
     
     /// <summary> Contains environment settings and the types of blocks that are used to generate a map </summary>
-    public struct MapGenTheme
+    public struct MapGenBiome
     {
         /// <summary> The block that appears at the top of ground (e.g. Grass) </summary>
         public byte Surface;
@@ -50,20 +50,20 @@ namespace MCGalaxy.Generator
             if (Border  != 0)       env.EdgeBlock    = Border;
         }
         
-        public static MapGenTheme Get(MapGenThemeName theme) {
+        public static MapGenBiome Get(MapGenBiomeName theme) {
             switch (theme)
             {
-                case MapGenThemeName.Arctic: return Arctic;
-                case MapGenThemeName.Desert: return Desert;
-                case MapGenThemeName.Hell:   return Hell;
-                case MapGenThemeName.Swamp:  return Swamp;
-                case MapGenThemeName.Mine:   return Mine;
+                case MapGenBiomeName.Arctic: return Arctic;
+                case MapGenBiomeName.Desert: return Desert;
+                case MapGenBiomeName.Hell:   return Hell;
+                case MapGenBiomeName.Swamp:  return Swamp;
+                case MapGenBiomeName.Mine:   return Mine;
             }
             return Forest;
         }
         
                 
-        public static MapGenTheme Forest = new MapGenTheme()
+        public static MapGenBiome Forest = new MapGenBiome()
         {
             Surface    = Block.Grass,
             Ground     = Block.Dirt,
@@ -73,7 +73,7 @@ namespace MCGalaxy.Generator
             Bedrock    = Block.Stone,
         };
         
-        public static MapGenTheme Arctic = new MapGenTheme()
+        public static MapGenBiome Arctic = new MapGenBiome()
         {
             Surface    = Block.White,
             Ground     = Block.White,
@@ -86,7 +86,7 @@ namespace MCGalaxy.Generator
             FogColor   = "#AFAFAF",
         };
         
-        public static MapGenTheme Desert = new MapGenTheme()
+        public static MapGenBiome Desert = new MapGenBiome()
         {
             Surface    = Block.Sand,
             Ground     = Block.Sand,
@@ -101,7 +101,7 @@ namespace MCGalaxy.Generator
             Border     = Block.Sandstone,
         };
         
-        public static MapGenTheme Hell = new MapGenTheme()
+        public static MapGenBiome Hell = new MapGenBiome()
         {
             Surface    = Block.Obsidian,
             Ground     = Block.Stone,
@@ -115,7 +115,7 @@ namespace MCGalaxy.Generator
             Horizon    = Block.StillLava,
         };
         
-        public static MapGenTheme Swamp = new MapGenTheme()
+        public static MapGenBiome Swamp = new MapGenBiome()
         {
             Surface    = Block.Dirt,
             Ground     = Block.Dirt,
@@ -125,7 +125,7 @@ namespace MCGalaxy.Generator
             Bedrock    = Block.Stone,
         };
         
-        public static MapGenTheme Mine = new MapGenTheme()
+        public static MapGenBiome Mine = new MapGenBiome()
         {
             Surface    = Block.Gravel,
             Ground     = Block.Cobblestone,
