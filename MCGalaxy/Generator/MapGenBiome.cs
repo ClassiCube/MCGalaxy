@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Generator
 {
@@ -41,6 +42,7 @@ namespace MCGalaxy.Generator
         public string FogColor;
         public byte Horizon;
         public byte Border;
+        public string TreeType;
         
         public void ApplyEnv(EnvConfig env) {
             if (CloudColor != null) env.CloudColor = CloudColor;
@@ -62,6 +64,14 @@ namespace MCGalaxy.Generator
             return Forest;
         }
         
+        public Tree GetTreeGen(string defaultType) {
+            if (TreeType == null) return null;
+            
+            string type = TreeType;
+            if (type.Length == 0) type = defaultType;
+            return Tree.TreeTypes[type]();
+        }
+        
                 
         public static MapGenBiome Forest = new MapGenBiome()
         {
@@ -71,6 +81,7 @@ namespace MCGalaxy.Generator
             Water      = Block.StillWater,
             SeaFloor   = Block.Sand,
             Bedrock    = Block.Stone,
+            TreeType   = "",
         };
         
         public static MapGenBiome Arctic = new MapGenBiome()
@@ -99,6 +110,7 @@ namespace MCGalaxy.Generator
             FogColor   = "#FFEE88",
             Horizon    = Block.Sand,
             Border     = Block.Sandstone,
+            TreeType   = "Cactus",
         };
         
         public static MapGenBiome Hell = new MapGenBiome()

@@ -31,12 +31,13 @@ namespace MCGalaxy.Generator.Realistic
 {
     public sealed class RealisticMapGen 
     {
-        float[] terrain, overlay, overlay2;
+        float[] terrain, overlay, overlayT;
         float treeDens;
         short treeDist;
         Random rng;
         ushort waterHeight;
         RealisticMapGenArgs args;
+        Tree tree;
         
         public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
             this.args = args;
@@ -49,7 +50,11 @@ namespace MCGalaxy.Generator.Realistic
             
             terrain = new float[lvl.Width * lvl.Length];
             overlay = new float[lvl.Width * lvl.Length];
-            if (args.GenTrees) overlay2 = new float[lvl.Width * lvl.Length];
+            
+            if (args.GenTrees) {
+                overlayT = new float[lvl.Width * lvl.Length];
+                tree     = biome.GetTreeGen("Fern");
+            }
             
             waterHeight = args.GetLiquidLevel(lvl.Height);
             waterHeight = (ushort)Math.Min(waterHeight, lvl.MaxY);
@@ -61,7 +66,7 @@ namespace MCGalaxy.Generator.Realistic
 
             if (args.GenOverlay2) {
                 Logger.Log(LogType.SystemActivity, "Planning trees");
-                GeneratePerlinNoise(overlay2, lvl);
+                GeneratePerlinNoise(overlayT, lvl);
             }
 
             Logger.Log(LogType.SystemActivity, "Converting height map, and applying overlays");
@@ -129,14 +134,10 @@ namespace MCGalaxy.Generator.Realistic
                     }
                 }
                 
-                if (args.GenTrees && overlay[index] < 0.65f && overlay2[index] < treeDens) {
+                if (tree != null && overlay[index] < 0.65f && overlayT[index] < treeDens) {
                     if (lvl.IsAirAt(x, (ushort)(height + 1), z)) {
                         if (lvl.GetBlock(x, height, z) == Block.Grass || args.UseCactus) {
                             if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist)) {
-                                Tree tree = null;
-                                if (args.UseCactus) tree = new CactusTree();
-                                else tree = new NormalTree();
-                                
                                 tree.SetData(rng, tree.DefaultSize(rng));
                                 tree.Generate(x, (ushort)(height + 1), z, (xT, yT, zT, bT) =>
                                             {
@@ -169,7 +170,7 @@ namespace MCGalaxy.Generator.Realistic
             if (height > waterHeight) {
                 for (ushort yy = 0; height - yy >= 0; yy++) 
                 {
-            		block = yy < 3 ? Block.Stone : Block.Obsidian;
+                    block = yy < 3 ? Block.Stone : Block.Obsidian;
                     lvl.SetTile(x, (ushort)(height - yy), z, block);
                     
                     // NOTE: Although your natural assumption would be that the following
