@@ -321,17 +321,17 @@ namespace MCGalaxy
         }
         
         public static void DoGC() {
+            var sw = Stopwatch.StartNew();
             long start = GC.GetTotalMemory(false);
             GC.Collect();
             GC.WaitForPendingFinalizers();
             
             long end = GC.GetTotalMemory(false);
             double deltaKB = (start - end) / 1024.0;
-            if (deltaKB >= 100.0) {
-                string track = (end / 1024.0).ToString("F2");
-                string delta = deltaKB.ToString("F2");
-                Logger.Log(LogType.BackgroundActivity, "GC performed (tracking {0} KB, freed {1} KB)", track, delta);
-            }
+            if (deltaKB < 100.0) return;
+            
+            Logger.Log(LogType.BackgroundActivity, "GC performed in {0:F2} ms (tracking {1:F2} KB, freed {2:F2} KB)",
+                       sw.Elapsed.TotalMilliseconds, end / 1024.0, deltaKB);
         }
         
         
