@@ -48,6 +48,7 @@ namespace MCGalaxy.Generator.Realistic
             RangeHigh = 1.3f,
             StartHeight = 0.04f,
             DisplacementMax = 0.02f,
+            GenFlowers      = false,
             UseLavaLiquid   = true,
             GetLiquidLevel  = (height) => 5,
             Biome = MapGenBiomeName.Hell,

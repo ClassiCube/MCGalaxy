@@ -37,6 +37,7 @@ namespace MCGalaxy.Generator.Realistic
         Random rng;
         ushort waterHeight;
         RealisticMapGenArgs args;
+        MapGenBiome biome;
         Tree tree;
         
         public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
@@ -45,7 +46,7 @@ namespace MCGalaxy.Generator.Realistic
             if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Biome)) return false;
             
             rng = new Random(rng_seed);
-            MapGenBiome biome = MapGenBiome.Get(args.Biome);
+            biome = MapGenBiome.Get(args.Biome);
             biome.ApplyEnv(lvl.Config);
             
             terrain = new float[lvl.Width * lvl.Length];
@@ -88,90 +89,51 @@ namespace MCGalaxy.Generator.Realistic
                     height = Evaluate(lvl, Range(terrain[i], rangeLo, rangeHi));
                 }
                 
-                if (!args.UseLavaLiquid)
-                    GenNonLavaColumn(x, height, z, lvl, i);
-                else
-                    GenLavaColumn(x, height, z, lvl, i);
+                if (height > waterHeight) {
+                    GenAboveWaterColumn(x, height, z, lvl, i);
+                    GenFolilage(x, height, z, lvl, i);
+                } else {
+                    GenUnderwaterColumn(x, height, z, lvl, i);
+                }
             }
             return true;
         }
-
-        void GenNonLavaColumn(ushort x, ushort height, ushort z, Level lvl, int index) {
-            if (height > waterHeight) {
-                int pos = x + lvl.Width * (z + height * lvl.Length);
-                for (ushort yy = 0; height - yy >= 0; yy++) 
-                {
-                    if (args.SimpleColumns) {
-                        lvl.blocks[pos] = Block.Sand;
-                    } else if (overlay[index] < 0.72f) {
-                        if (args.IslandColumns) { //increase sand height for island
-                            if (height > waterHeight + 2) {
-                                if (yy == 0)     lvl.blocks[pos] = Block.Grass; //top layer
-                                else if (yy < 3) lvl.blocks[pos] = Block.Dirt;  //next few
-                                else lvl.blocks[pos] = Block.Stone;              //ten rock it
-                            } else {
-                                lvl.blocks[pos] = Block.Sand;                   //SAAAND extra for islands
-                            } // TODO avoid redundant else if chain above
-                        } else {
-                            if (yy == 0)     lvl.blocks[pos] = Block.Grass;
-                            else if (yy < 3) lvl.blocks[pos] = Block.Dirt;
-                            else lvl.blocks[pos] = Block.Stone;
-                        }
-                    } else {
-                        lvl.blocks[pos] = Block.Stone;
-                    }
-                    pos -= lvl.Width * lvl.Length;
-                }
-
-                if (args.GenFlowers && overlay[index] < 0.25f) {
-                    switch (rng.Next(12)) {
-                        case 10:
-                            lvl.SetTile(x, (ushort)(height + 1), z, Block.Rose); break;
-                        case 11:
-                            lvl.SetTile(x, (ushort)(height + 1), z, Block.Dandelion); break;
-                        default:
-                            break;
-                    }
-                }
-                
-                if (tree != null && overlay[index] < 0.65f && overlayT[index] < treeDens) {
-                    if (lvl.IsAirAt(x, (ushort)(height + 1), z)) {
-                        if (lvl.GetBlock(x, height, z) == Block.Grass || args.UseCactus) {
-                            if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist)) {
-                                tree.SetData(rng, tree.DefaultSize(rng));
-                                tree.Generate(x, (ushort)(height + 1), z, (xT, yT, zT, bT) =>
-                                            {
-                                                if (lvl.IsAirAt(xT, yT, zT))
-                                                    lvl.SetTile(xT, yT, zT, (byte)bT);
-                                            });
-                            }
-                        }
-                    }
-                }
-            } else { //Must be on/under the water line then
-                int pos = x + lvl.Width * (z + waterHeight * lvl.Length);
-                for (ushort yy = 0; waterHeight - yy >= 0; yy++) 
-                {
-                    if (waterHeight - yy > height) {
-                        lvl.blocks[pos] = Block.StillWater;    //better fill the water above me
-                    } else if (waterHeight - yy > height - 3) {
-                        byte block = overlay[index] < 0.75f ? Block.Sand : Block.Gravel; // sand on top
-                        lvl.blocks[pos] = block;
-                    } else {
-                        lvl.blocks[pos] = Block.Stone;
-                    }
-                    pos -= lvl.Width * lvl.Length;
-                }
-            }
-        }
         
-        void GenLavaColumn(ushort x, ushort height, ushort z, Level lvl, int index) {
-            byte block;
-            if (height > waterHeight) {
+        void GenAboveWaterColumn(ushort x, ushort height, ushort z, Level lvl, int index) {
+            int pos = x + lvl.Width * (z + height * lvl.Length);
+            
+            if (args.SimpleColumns) {
+                lvl.blocks[pos] = biome.Surface;
+                pos -= lvl.Width * lvl.Length;
+                    
+                for (ushort yy = 1; height - yy >= 0; yy++) 
+                {
+                    lvl.blocks[pos] = biome.Ground;
+                    pos -= lvl.Width * lvl.Length;
+                }
+            } else if (!args.UseLavaLiquid) {
                 for (ushort yy = 0; height - yy >= 0; yy++) 
                 {
-                    block = yy < 3 ? Block.Stone : Block.Obsidian;
-                    lvl.SetTile(x, (ushort)(height - yy), z, block);
+                    if (overlay[index] < 0.72f) {
+                        if (args.IslandColumns && height <= waterHeight + 2) {
+                            lvl.blocks[pos] = Block.Sand; // extra sand for islands
+                        } else {
+                            if (yy == 0)     lvl.blocks[pos] = biome.Surface;
+                            else if (yy < 3) lvl.blocks[pos] = biome.Ground;
+                            else lvl.blocks[pos] = biome.Cliff;
+                        }
+                    } else {
+                        lvl.blocks[pos] = biome.Cliff;
+                    }
+                    pos -= lvl.Width * lvl.Length;
+                }
+            } else {
+                byte topBlock = Block.Air;
+                
+                for (ushort yy = 0; height - yy >= 0; yy++) 
+                {
+                    lvl.blocks[pos] = yy < 3 ? biome.Cliff : biome.SeaFloor;
+                    pos -= lvl.Width * lvl.Length;
                     
                     // NOTE: Although your natural assumption would be that the following
                     //  code should be outside the for loop, for backwards compatibility
@@ -179,15 +141,64 @@ namespace MCGalaxy.Generator.Realistic
                     
                     // add occasional lava pools on top of surface
                     if (overlay[index] < 0.3f && rng.Next(13) >= 9) {
-                        lvl.SetTile(x, (ushort)(height + 1), z, Block.Lava);
+                        lvl.SetTile(x, (ushort)(height + 1), z, biome.Water);
                     }
-                    lvl.SetTile(x, height, z, (rng.Next(100) % 3 == 1 ? Block.Black : Block.Obsidian));
+                    topBlock = rng.Next(100) % 3 == 1 ? Block.Black : biome.Surface;
+                }               
+                lvl.SetTile(x, height, z, topBlock);
+            }
+        }
+
+        void GenFolilage(ushort x, ushort height, ushort z, Level lvl, int index) {
+            if (args.GenFlowers && overlay[index] < 0.25f) {
+                switch (rng.Next(12)) {
+                    case 10:
+                        lvl.SetTile(x, (ushort)(height + 1), z, Block.Rose); break;
+                    case 11:
+                        lvl.SetTile(x, (ushort)(height + 1), z, Block.Dandelion); break;
+                    default:
+                        break;
+                }
+            }
+            
+            if (tree != null && overlay[index] < 0.65f && overlayT[index] < treeDens) {
+                if (lvl.IsAirAt(x, (ushort)(height + 1), z)) {
+                    if (lvl.GetBlock(x, height, z) == Block.Grass || args.UseCactus) {
+                        if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist)) {
+                            tree.SetData(rng, tree.DefaultSize(rng));
+                            tree.Generate(x, (ushort)(height + 1), z, (xT, yT, zT, bT) =>
+                                          {
+                                              if (lvl.IsAirAt(xT, yT, zT))
+                                                  lvl.SetTile(xT, yT, zT, (byte)bT);
+                                          });
+                        }
+                    }
+                }
+            }
+        }
+
+        void GenUnderwaterColumn(ushort x, ushort height, ushort z, Level lvl, int index) {
+            int pos = x + lvl.Width * (z + waterHeight * lvl.Length);
+            byte block;
+            
+            if (!args.UseLavaLiquid) {                
+                for (ushort yy = 0; waterHeight - yy >= 0; yy++) 
+                {
+                    if (waterHeight - yy > height) {
+                        lvl.blocks[pos] = biome.Water;    //better fill the water above me
+                    } else if (waterHeight - yy > height - 3) {
+                        block = overlay[index] < 0.75f ? Block.Sand : Block.Gravel; // sand on top
+                        lvl.blocks[pos] = block;
+                    } else {
+                        lvl.blocks[pos] = biome.Cliff;
+                    }
+                    pos -= lvl.Width * lvl.Length;
                 }
             } else {
                 for (ushort yy = 0; waterHeight - yy >= 0; yy++) 
                 {
                     if (waterHeight - yy > height - 1) {
-                        lvl.SetTile(x, (ushort)(waterHeight - yy), z, Block.Lava); //better fill the water above me
+                        lvl.blocks[pos] = biome.Water;
                     } else if (waterHeight - yy > height - 3) {
                         if (overlay[index] < 0.9f) {
                             block = yy < height ? Block.Lava : Block.Stone;
@@ -196,8 +207,9 @@ namespace MCGalaxy.Generator.Realistic
                             lvl.SetTile(x, (ushort)(waterHeight - yy), (ushort)(z - 5), Block.Lava);  //killer lava
                         }
                     } else {
-                        lvl.SetTile(x, (ushort)(waterHeight - yy), z, Block.Cobblestone); //and just make the rest cobblestone
+                        lvl.blocks[pos] = Block.Cobblestone; //and just make the rest cobblestone
                     }
+                    pos -= lvl.Width * lvl.Length;
                 }
             }
         }
