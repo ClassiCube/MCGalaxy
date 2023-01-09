@@ -201,13 +201,12 @@ namespace MCGalaxy.Generator.Realistic
                         lvl.blocks[pos] = biome.Water;
                     } else if (waterHeight - yy > height - 3) {
                         if (overlay[index] < 0.9f) {
-                            block = yy < height ? Block.Lava : Block.Stone;
-                            lvl.SetTile(x, (ushort)(height - yy), z, block);
+                            lvl.blocks[pos] = yy < height ? biome.Water : biome.SeaFloor;
                         } else {
-                            lvl.SetTile(x, (ushort)(waterHeight - yy), (ushort)(z - 5), Block.Lava);  //killer lava
+                            lvl.blocks[pos] = biome.Water;
                         }
                     } else {
-                        lvl.blocks[pos] = Block.Cobblestone; //and just make the rest cobblestone
+                        lvl.blocks[pos] = biome.Bedrock;
                     }
                     pos -= lvl.Width * lvl.Length;
                 }
