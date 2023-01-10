@@ -34,8 +34,8 @@ namespace MCGalaxy.Generator
         public byte Ground;
         public byte Cliff;
         public byte Water;
-        public byte SeaFloor;
         public byte Bedrock;
+        public byte BeachSandy, BeachRocky;
         
         public string CloudColor;
         public string SkyColor;
@@ -79,9 +79,10 @@ namespace MCGalaxy.Generator
             Ground     = Block.Dirt,
             Cliff      = Block.Stone,
             Water      = Block.StillWater,
-            SeaFloor   = Block.Sand,
             Bedrock    = Block.Stone,
-            TreeType   = "",
+            BeachSandy = Block.Sand,
+            BeachRocky = Block.Gravel,
+            TreeType   = "", // "use default for generator"
         };
         
         public static MapGenBiome Arctic = new MapGenBiome()
@@ -90,8 +91,9 @@ namespace MCGalaxy.Generator
             Ground     = Block.White,
             Cliff      = Block.Stone,
             Water      = Block.StillWater,
-            SeaFloor   = Block.White,
             Bedrock    = Block.Stone,
+            BeachSandy = Block.White,
+            BeachRocky = Block.Stone,
             CloudColor = "#8E8E8E",
             SkyColor   = "#8E8E8E",
             FogColor   = "#AFAFAF",
@@ -103,8 +105,9 @@ namespace MCGalaxy.Generator
             Ground     = Block.Sand,
             Cliff      = Block.Gravel,
             Water      = Block.StillWater,
-            SeaFloor   = Block.Sand,
             Bedrock    = Block.Stone,
+            BeachSandy = Block.Sand,
+            BeachRocky = Block.Gravel,
             CloudColor = "#FFEE88",
             SkyColor   = "#FFEE88",
             FogColor   = "#FFEE88",
@@ -119,8 +122,9 @@ namespace MCGalaxy.Generator
             Ground     = Block.Stone,
             Cliff      = Block.Stone,
             Water      = Block.StillLava,
-            SeaFloor   = Block.Obsidian,
             Bedrock    = Block.Stone,
+            BeachSandy = Block.Obsidian,
+            BeachRocky = Block.Obsidian,
             CloudColor = "#000000",
             SkyColor   = "#FFCC00",
             FogColor   = "#FF6600",
@@ -133,8 +137,9 @@ namespace MCGalaxy.Generator
             Ground     = Block.Dirt,
             Cliff      = Block.Stone,
             Water      = Block.StillWater,
-            SeaFloor   = Block.Leaves,
             Bedrock    = Block.Stone,
+            BeachSandy = Block.Leaves,
+            BeachRocky = Block.Dirt,
         };
         
         public static MapGenBiome Mine = new MapGenBiome()
@@ -143,8 +148,9 @@ namespace MCGalaxy.Generator
             Ground     = Block.Cobblestone,
             Cliff      = Block.Stone,
             Water      = Block.StillWater,
-            SeaFloor   = Block.Stone,
             Bedrock    = Block.Bedrock,
+            BeachSandy = Block.Stone,
+            BeachRocky = Block.Cobblestone,
             CloudColor = "#444444",
             SkyColor   = "#444444",
             FogColor   = "#777777",

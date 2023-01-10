@@ -53,7 +53,7 @@ namespace MCGalaxy.Generator.fCraft {
             bGroundSurface   = biome.Surface;
             bWater    = biome.Water;
             bGround   = biome.Ground;
-            bSeaFloor = biome.SeaFloor;
+            bSeaFloor = biome.BeachSandy;
             bBedrock  = biome.Bedrock;
             bCliff    = biome.Cliff;
             

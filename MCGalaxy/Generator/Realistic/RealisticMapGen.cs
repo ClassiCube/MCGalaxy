@@ -116,7 +116,7 @@ namespace MCGalaxy.Generator.Realistic
                 {
                     if (overlay[index] < 0.72f) {
                         if (args.IslandColumns && height <= waterHeight + 2) {
-                            lvl.blocks[pos] = Block.Sand; // extra sand for islands
+                            lvl.blocks[pos] = biome.BeachSandy; // extra sand for islands
                         } else {
                             if (yy == 0)     lvl.blocks[pos] = biome.Surface;
                             else if (yy < 3) lvl.blocks[pos] = biome.Ground;
@@ -132,7 +132,7 @@ namespace MCGalaxy.Generator.Realistic
                 
                 for (ushort yy = 0; height - yy >= 0; yy++) 
                 {
-                    lvl.blocks[pos] = yy < 3 ? biome.Cliff : biome.SeaFloor;
+                    lvl.blocks[pos] = yy < 3 ? biome.Cliff : biome.BeachSandy; // TODO rethink this
                     pos -= lvl.Width * lvl.Length;
                     
                     // NOTE: Although your natural assumption would be that the following
@@ -162,16 +162,14 @@ namespace MCGalaxy.Generator.Realistic
             }
             
             if (tree != null && overlay[index] < 0.65f && overlayT[index] < treeDens) {
-                if (lvl.IsAirAt(x, (ushort)(height + 1), z)) {
-                    if (lvl.GetBlock(x, height, z) == Block.Grass || args.UseCactus) {
-                        if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist)) {
-                            tree.SetData(rng, tree.DefaultSize(rng));
-                            tree.Generate(x, (ushort)(height + 1), z, (xT, yT, zT, bT) =>
-                                          {
-                                              if (lvl.IsAirAt(xT, yT, zT))
-                                                  lvl.SetTile(xT, yT, zT, (byte)bT);
-                                          });
-                        }
+                if (lvl.IsAirAt(x, (ushort)(height + 1), z) && lvl.GetBlock(x, height, z) == biome.Surface) {
+                    if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist)) {
+                        tree.SetData(rng, tree.DefaultSize(rng));
+                        tree.Generate(x, (ushort)(height + 1), z, (xT, yT, zT, bT) =>
+                                      {
+                                          if (lvl.IsAirAt(xT, yT, zT))
+                                              lvl.SetTile(xT, yT, zT, (byte)bT);
+                                      });
                     }
                 }
             }
@@ -185,9 +183,9 @@ namespace MCGalaxy.Generator.Realistic
                 for (ushort yy = 0; waterHeight - yy >= 0; yy++) 
                 {
                     if (waterHeight - yy > height) {
-                        lvl.blocks[pos] = biome.Water;    //better fill the water above me
+                        lvl.blocks[pos] = biome.Water;
                     } else if (waterHeight - yy > height - 3) {
-                        block = overlay[index] < 0.75f ? Block.Sand : Block.Gravel; // sand on top
+                        block = overlay[index] < 0.75f ? biome.BeachSandy : biome.BeachRocky;
                         lvl.blocks[pos] = block;
                     } else {
                         lvl.blocks[pos] = biome.Cliff;
@@ -201,7 +199,7 @@ namespace MCGalaxy.Generator.Realistic
                         lvl.blocks[pos] = biome.Water;
                     } else if (waterHeight - yy > height - 3) {
                         if (overlay[index] < 0.9f) {
-                            lvl.blocks[pos] = yy < height ? biome.Water : biome.SeaFloor;
+                            lvl.blocks[pos] = yy < height ? biome.Water : biome.BeachSandy;
                         } else {
                             lvl.blocks[pos] = biome.Water;
                         }
@@ -314,20 +312,19 @@ namespace MCGalaxy.Generator.Realistic
         }
 
         //Forces the edge of a map to slope lower for island map types
-        float NegateEdge(ushort x, ushort z, Level lvl) {
-            float tempx = 0.0f, tempy = 0.0f;
-            float temp;
-            if (x != 0) { tempx = ((float)x / (float)lvl.Width) * 0.5f; }
-            if (z != 0) { tempy = ((float)z / (float)lvl.Length) * 0.5f; }
+        static float NegateEdge(ushort x, ushort z, Level lvl) {
+            float xAdj = ((float)x / (float)lvl.Width ) * 0.5f;
+            float zAdj = ((float)z / (float)lvl.Length) * 0.5f;
+            float adj;
             
-            tempx = Math.Abs(tempx - 0.25f);
-            tempy = Math.Abs(tempy - 0.25f);
+            xAdj = Math.Abs(xAdj - 0.25f);
+            zAdj = Math.Abs(zAdj - 0.25f);
             
-            if (tempx > tempy)
-                temp = tempx - 0.15f;
+            if (xAdj > zAdj)
+                adj = xAdj - 0.15f;
             else
-                temp = tempy - 0.15f;
-            return temp > 0 ? temp : 0;
+                adj = zAdj - 0.15f;
+            return adj > 0 ? adj : 0;
         }
     }
 }

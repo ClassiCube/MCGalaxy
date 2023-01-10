@@ -106,7 +106,7 @@ namespace MCGalaxy.Generator
                 } else {
                     // top of column is above water
                     int sandHeight = (int)Math.Floor(noise * 15) + half;
-                    byte topBlock  = dirtHeight < sandHeight ? biome.Surface : biome.SeaFloor;
+                    byte topBlock  = dirtHeight < sandHeight ? biome.Surface : biome.BeachSandy;
                     lvl.SetTile((ushort)x, (ushort)dirtHeight, (ushort)z, topBlock);
                 }
                 
