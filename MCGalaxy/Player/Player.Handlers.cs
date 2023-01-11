@@ -438,12 +438,12 @@ namespace MCGalaxy
 
             if (IsPartialSpaced(text)) {
                 partialMessage += text.Substring(0, text.Length - 2) + " ";
-                Message("&3Partial message: &f" + partialMessage);
+                SendRawMessage("&3Partial message: &f" + partialMessage);
                 LimitPartialMessage();
                 return true;
             } else if (IsPartialJoined(text)) {
                 partialMessage += text.Substring(0, text.Length - 2);
-                Message("&3Partial message: &f" + partialMessage);
+                SendRawMessage("&3Partial message: &f" + partialMessage);
                 LimitPartialMessage();
                 return true;
             } else if (partialMessage.Length > 0) {

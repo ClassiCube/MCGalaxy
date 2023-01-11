@@ -539,7 +539,7 @@ namespace MCGalaxy.Modules.Relay
                 SuperName = bot.RelayName;
             }
             
-            public override void Message(byte type, string message) {
+            public override void Message(string message) {
                 Bot.SendMessage(ChannelID, message);
             }
         }

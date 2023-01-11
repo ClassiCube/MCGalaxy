@@ -376,8 +376,11 @@ namespace MCGalaxy.Network
         }
 
         public override void SendChat(string message) {
-            message = CleanupColors(message);
-            List<string> lines = LineWrapper.Wordwrap(message, hasEmoteFix);
+            int bufferLen;
+            // See comment in CleanupColors
+            char[] buffer = LineWrapper.CleanupColors(message, out bufferLen, 
+                                                      hasTextColors, hasTextColors);
+            List<string> lines = LineWrapper.Wordwrap(buffer, bufferLen, hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
             // multi-line messages from multiple threads don't interleave

@@ -129,7 +129,7 @@ namespace MCGalaxy.Gui
             SuperName = "Console";
         }
             
-        public override void Message(byte type, string message) {
+        public override void Message(string message) {
             message = Chat.Format(message, this);
             Messages += message + "\r\n";
         }

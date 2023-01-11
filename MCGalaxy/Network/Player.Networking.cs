@@ -37,14 +37,16 @@ namespace MCGalaxy
         public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
         public void Message(string message, params object[] args) { Message(string.Format(message, args)); }
         
-        public void Message(string message) { Message(0, message); }
-        
-        public virtual void Message(byte type, string message) {
+        public virtual void Message(string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) message = "&S" + message;
             message = Chat.Format(message, this);
             
-            bool cancel = false;
+            SendRawMessage(message);
+        }
+        
+        void SendRawMessage(string message) {
+        	bool cancel = false;
             OnMessageRecievedEvent.Call(this, ref message, ref cancel);
             if (cancel) return;
             

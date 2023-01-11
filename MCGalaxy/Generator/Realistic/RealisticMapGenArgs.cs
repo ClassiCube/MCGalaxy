@@ -36,7 +36,6 @@ namespace MCGalaxy.Generator.Realistic
         public float TreeDensity = 0.35f;
         public short TreeDistance = 3;
         public bool GenFlowers = true, GenTrees = true;
-        public bool UseCactus = false;
         
         // Fault parameters
         public float StartHeight = 0.5f;
@@ -90,7 +89,6 @@ namespace MCGalaxy.Generator.Realistic
             TreeDistance = 24,
             GenFlowers = false, 
             GenOverlay2 = false,
-            UseCactus  = true, 
             SimpleColumns  = true,
             GetLiquidLevel = (height) => 0,
             Biome = MapGenBiomeName.Desert,

@@ -41,7 +41,7 @@ namespace MCGalaxy {
             get { return "Console [&a" + Server.Config.ConsoleName + "&S]"; }
         }
         
-        public override void Message(byte type, string message) {
+        public override void Message(string message) {
             Logger.Log(LogType.ConsoleMessage, message);
         }
     }
