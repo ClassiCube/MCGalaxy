@@ -69,6 +69,7 @@ namespace MCGalaxy {
             SetIP(Socket.IP);
             
             spamChecker = new SpamChecker(this);
+            partialLog  = new List<DateTime>(20);
             session.ID  = Interlocked.Increment(ref sessionCounter) & SESSION_ID_MASK;
             
             for (int b = 0; b < BlockBindings.Length; b++) 

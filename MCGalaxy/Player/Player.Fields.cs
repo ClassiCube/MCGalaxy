@@ -218,6 +218,7 @@ namespace MCGalaxy {
         
         SpamChecker spamChecker;
         internal DateTime cmdUnblocked;
+        List<DateTime> partialLog;
 
         public WarpList Waypoints = new WarpList();
         public DateTime LastPatrol;

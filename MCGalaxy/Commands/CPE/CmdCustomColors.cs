@@ -18,8 +18,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.CPE {    
-    public sealed class CmdCustomColors : Command2 {        
+namespace MCGalaxy.Commands.CPE 
+{    
+    public sealed class CmdCustomColors : Command2 
+    {        
         public override string name { get { return "CustomColors"; } }
         public override string shortcut { get { return "ccols"; } }
         public override string type { get { return CommandTypes.Chat; } }

@@ -18,8 +18,10 @@
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.Bots {
-    public sealed class CmdBot : Command2 {
+namespace MCGalaxy.Commands.Bots 
+{
+    public sealed class CmdBot : Command2 
+    {
         public override string name { get { return "Bot"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override bool museumUsable { get { return false; } }

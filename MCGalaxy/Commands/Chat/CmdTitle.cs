@@ -17,8 +17,10 @@
  */
 using MCGalaxy.DB;
 
-namespace MCGalaxy.Commands.Chatting {    
-    public class CmdTitle : EntityPropertyCmd {        
+namespace MCGalaxy.Commands.Chatting 
+{    
+    public class CmdTitle : EntityPropertyCmd 
+    {        
         public override string name { get { return "Title"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }

@@ -18,10 +18,10 @@
 using System;
 using MCGalaxy.DB;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class LoginMessageItem : SimpleItem {
-        
+namespace MCGalaxy.Eco 
+{
+    public sealed class LoginMessageItem : SimpleItem 
+    {
         public LoginMessageItem() {
             Aliases = new string[] { "login", "loginmsg", "loginmessage" };
         }
@@ -48,8 +48,8 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class LogoutMessageItem : SimpleItem {
-        
+    public sealed class LogoutMessageItem : SimpleItem 
+    {
         public LogoutMessageItem() {
             Aliases = new string[] { "logout", "logoutmsg", "logoutmessage" };
         }

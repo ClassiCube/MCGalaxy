@@ -18,8 +18,10 @@
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
 
-namespace MCGalaxy.Commands.Chatting {    
-    public class CmdColor : EntityPropertyCmd {
+namespace MCGalaxy.Commands.Chatting
+{    
+    public class CmdColor : EntityPropertyCmd 
+    {
         public override string name { get { return "Color"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

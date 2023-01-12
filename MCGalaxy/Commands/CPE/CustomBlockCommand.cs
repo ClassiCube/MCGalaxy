@@ -22,9 +22,10 @@ using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 using BlockRaw = System.Byte;
 
-namespace MCGalaxy.Commands.CPE {
-    internal static class CustomBlockCommand {
-        
+namespace MCGalaxy.Commands.CPE 
+{
+    internal static class CustomBlockCommand 
+    {
         public static void Execute(Player p, string message, CommandData data, bool global, string cmd) {
             string[] parts = message.SplitSpaces(4);
             Level lvl = p.IsSuper ? null : p.level;

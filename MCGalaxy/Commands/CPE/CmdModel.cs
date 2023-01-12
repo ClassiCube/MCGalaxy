@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.CPE {
-    public class CmdModel : EntityPropertyCmd {
+namespace MCGalaxy.Commands.CPE 
+{
+    public class CmdModel : EntityPropertyCmd 
+    {
         public override string name { get { return "Model"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

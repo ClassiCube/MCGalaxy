@@ -15,10 +15,11 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands.CPE {
-    public sealed class CmdReachDistance : Command2 {
+namespace MCGalaxy.Commands.CPE
+{
+    public sealed class CmdReachDistance : Command2
+    {
         public override string name { get { return "ReachDistance"; } }
         public override string shortcut { get { return "Reach"; } }
         public override string type { get { return CommandTypes.Building; } }

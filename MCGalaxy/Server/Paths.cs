@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy 
+{
     /// <summary> Provides a centralised list of files and paths used. </summary>
-    public static class Paths {
-        
+    public static class Paths 
+    {
         public const string CustomColorsFile = "text/customcolors.txt";
         public const string TempRanksFile = "text/tempranks.txt";
         public const string TempBansFile = "text/tempbans.txt";

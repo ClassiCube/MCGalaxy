@@ -15,10 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.DB;
-
-namespace MCGalaxy.Commands.Chatting {
-    public class CmdTColor : EntityPropertyCmd {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public class CmdTColor : EntityPropertyCmd 
+    {
         public override string name { get { return "TColor"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }

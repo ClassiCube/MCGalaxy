@@ -17,14 +17,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using MCGalaxy.Commands;
 
-namespace MCGalaxy.Eco {
-    
+namespace MCGalaxy.Eco 
+{ 
     /// <summary> An abstract object that can be bought in the economy. (e.g. a rank, title, levels, etc) </summary>
-    public abstract class Item {
-        
+    public abstract class Item
+    {
         /// <summary> Simple name for this item. </summary>
         public abstract string Name { get; }
         

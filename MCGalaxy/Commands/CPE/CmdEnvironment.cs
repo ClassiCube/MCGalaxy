@@ -17,10 +17,11 @@
  */
 using System;
 using System.IO;
-using MCGalaxy.Config;
 
-namespace MCGalaxy.Commands.CPE {
-    public sealed class CmdEnvironment : Command2 {
+namespace MCGalaxy.Commands.CPE 
+{
+    public sealed class CmdEnvironment : Command2 
+    {
         public override string name { get { return "Environment"; } }
         public override string shortcut { get { return "Env"; } }
         public override string type { get { return CommandTypes.World; } }

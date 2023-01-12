@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.CPE {
-    public class CmdEntityRot : EntityPropertyCmd {
+namespace MCGalaxy.Commands.CPE 
+{
+    public class CmdEntityRot : EntityPropertyCmd 
+    {
         public override string name { get { return "EntityRot"; } }
         public override string shortcut { get { return "EntRot"; } }
         public override string type { get { return CommandTypes.Other; } }

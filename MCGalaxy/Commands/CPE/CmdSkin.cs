@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Bots;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands.CPE {
-    public class CmdSkin : EntityPropertyCmd {
+namespace MCGalaxy.Commands.CPE
+{
+    public class CmdSkin : EntityPropertyCmd 
+    {
         public override string name { get { return "Skin"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

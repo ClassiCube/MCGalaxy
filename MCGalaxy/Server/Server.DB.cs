@@ -20,9 +20,10 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
-    public sealed partial class Server {
-        
+namespace MCGalaxy
+{
+    public sealed partial class Server
+    {
         static ColumnDesc[] playersTable = new ColumnDesc[] {
             new ColumnDesc("ID", ColumnType.Integer, priKey: true, autoInc: true, notNull: true),
             new ColumnDesc("Name", ColumnType.VarChar, 17),

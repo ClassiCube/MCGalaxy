@@ -20,9 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Eco {
-    public static partial class Economy {
-        
+namespace MCGalaxy.Eco 
+{
+    public static partial class Economy 
+    {
         static ColumnDesc[] ecoTable = new ColumnDesc[] {
             new ColumnDesc("player", ColumnType.VarChar, 20, priKey: true),
             new ColumnDesc("money", ColumnType.Int32),

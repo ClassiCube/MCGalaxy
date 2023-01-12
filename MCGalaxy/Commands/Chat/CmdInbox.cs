@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdInbox : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdInbox : Command2
+    {
         public override string name { get { return "Inbox"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }

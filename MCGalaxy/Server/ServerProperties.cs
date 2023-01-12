@@ -18,13 +18,12 @@
 using System;
 using System.IO;
 using MCGalaxy.Commands;
-using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
-    
-    public static class SrvProperties {
-        
+namespace MCGalaxy 
+{
+    public static class SrvProperties 
+    {
         public static void Load() {
             old = new OldPerms();
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))

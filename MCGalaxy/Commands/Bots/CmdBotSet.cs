@@ -16,11 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 using MCGalaxy.Bots;
 
-namespace MCGalaxy.Commands.Bots {
-    public sealed class CmdBotSet : Command2 {
+namespace MCGalaxy.Commands.Bots 
+{
+    public sealed class CmdBotSet : Command2 
+    {
         public override string name { get { return "BotSet"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }

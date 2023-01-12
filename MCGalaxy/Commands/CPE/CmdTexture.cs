@@ -17,8 +17,10 @@
  */
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Commands.CPE {
-    public sealed class CmdTexture : Command2 {
+namespace MCGalaxy.Commands.CPE 
+{
+    public sealed class CmdTexture : Command2 
+    {
         public override string name { get { return "Texture"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

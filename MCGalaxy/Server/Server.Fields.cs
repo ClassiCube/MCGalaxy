@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy {
-    public sealed partial class Server {
+namespace MCGalaxy 
+{
+    public sealed partial class Server 
+    {
         public static bool cancelcommand;        
         public delegate void OnConsoleCommand(string cmd, string message);
         public static event OnConsoleCommand ConsoleCommand;

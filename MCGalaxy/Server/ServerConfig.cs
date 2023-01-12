@@ -20,9 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Config;
 using MCGalaxy.Modules.Relay.IRC;
 
-namespace MCGalaxy {
-    public sealed class ServerConfig : EnvConfig {
-
+namespace MCGalaxy 
+{
+    public sealed class ServerConfig : EnvConfig 
+    {
         [ConfigString("server-name", "Server", "[MCGalaxy] Default", false, " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")]
         public string Name = "[MCGalaxy] Default";
         [ConfigString("motd", "Server", "Welcome", false)]

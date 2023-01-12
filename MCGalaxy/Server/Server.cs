@@ -42,7 +42,6 @@ namespace MCGalaxy
 {
     public sealed partial class Server 
     {
-        
         public Server() { Server.s = this; }
         
         //True = cancel event

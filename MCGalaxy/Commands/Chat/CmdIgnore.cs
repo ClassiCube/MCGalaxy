@@ -18,10 +18,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdIgnore : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdIgnore : Command2
+    {
         public override string name { get { return "Ignore"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }

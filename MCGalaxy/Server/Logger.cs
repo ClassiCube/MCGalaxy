@@ -20,10 +20,10 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 
-namespace MCGalaxy {
-    
-    public enum LogType {
-        
+namespace MCGalaxy 
+{
+    public enum LogType 
+    {
         /// <summary> Background system activity, such as auto-saving maps, performing GC, etc. </summary>
         BackgroundActivity,
         

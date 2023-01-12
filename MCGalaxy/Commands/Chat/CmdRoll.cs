@@ -16,8 +16,11 @@
     permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands.Chatting {    
-    public sealed class CmdRoll : MessageCmd {
+
+namespace MCGalaxy.Commands.Chatting 
+{    
+    public sealed class CmdRoll : MessageCmd 
+    {
         public override string name { get { return "Roll"; } }
         static volatile Random rng;
         static readonly object rngLock = new object();

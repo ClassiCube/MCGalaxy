@@ -410,12 +410,6 @@ namespace MCGalaxy
             Chat.MessageChat(this, "λFULL: &f" + text, null, true);
         }
         
-        void LimitPartialMessage() {
-            if (partialMessage.Length < 100 * 64) return;
-            partialMessage = "";
-            Message("&WPartial message cleared due to exceeding 100 lines");
-        }
-        
         bool FilterChat(ref string text, bool continued) {
             // Handle /womid [version] which informs the server of the WoM client version
             if (text.StartsWith("/womid")) {
@@ -437,14 +431,10 @@ namespace MCGalaxy
             }
 
             if (IsPartialSpaced(text)) {
-                partialMessage += text.Substring(0, text.Length - 2) + " ";
-                SendRawMessage("&3Partial message: &f" + partialMessage);
-                LimitPartialMessage();
+                AppendPartialMessage(text.Substring(0, text.Length - 2) + " ");
                 return true;
             } else if (IsPartialJoined(text)) {
-                partialMessage += text.Substring(0, text.Length - 2);
-                SendRawMessage("&3Partial message: &f" + partialMessage);
-                LimitPartialMessage();
+                AppendPartialMessage(text.Substring(0, text.Length - 2));
                 return true;
             } else if (partialMessage.Length > 0) {
                 text = partialMessage + text;
@@ -465,6 +455,24 @@ namespace MCGalaxy
         static bool IsPartialJoined(string text) {
             return text.EndsWith(" <") || text.EndsWith(" \\");
         }
+        
+        void LimitPartialMessage() {
+            if (partialMessage.Length < 100 * 64) return;
+            partialMessage = "";
+            Message("&WPartial message cleared due to exceeding 100 lines");
+        }
+
+        void AppendPartialMessage(string part) {
+            if (!partialLog.AddSpamEntry(20, TimeSpan.FromSeconds(1))) {
+                Message("&WTried to add over 20 partial message in one second, slow down");
+                return;
+            }
+
+            partialMessage += part;
+            SendRawMessage("&3Partial message: &f" + partialMessage);
+            LimitPartialMessage();
+        }
+
         
         void DoCommand(string text) {
             // Typing / repeats last command executed

@@ -15,8 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdEmote : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdEmote : Command2 
+    {
         public override string name { get { return "Emote"; } }
         public override string shortcut { get { return "<3"; } }
         public override string type { get { return CommandTypes.Chat; } }
