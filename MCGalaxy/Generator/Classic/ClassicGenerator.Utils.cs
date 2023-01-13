@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy;
 
-namespace ClassicalSharp.Generator {
-    
-    public sealed partial class ClassicGenerator {
-        
+namespace MCGalaxy.Generator.Classic
+{
+    public sealed partial class ClassicGenerator 
+    {
         static int Floor(float value) {
             int valueI = (int)value;
             return value < valueI ? valueI - 1 : valueI;

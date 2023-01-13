@@ -21,7 +21,7 @@ using System.Threading;
 using MCGalaxy.Commands;
 using MCGalaxy.Generator.fCraft;
 using MCGalaxy.Generator.Realistic;
-using ClassicalSharp.Generator;
+using MCGalaxy.Generator.Classic;
 
 namespace MCGalaxy.Generator 
 {

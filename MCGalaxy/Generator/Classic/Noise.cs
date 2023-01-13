@@ -5,10 +5,10 @@
 // https://github.com/UnknownShadow200/ClassiCube/wiki/Minecraft-Classic-map-generation-algorithm
 using System;
 
-namespace ClassicalSharp.Generator {
-
-    public sealed class ImprovedNoise {
-        
+namespace MCGalaxy.Generator.Classic
+{
+    public sealed class ImprovedNoise 
+    {      
         public ImprovedNoise(JavaRandom rnd) {
             // shuffle randomly using fisher-yates
             for (int i = 0; i < 256; i++)
@@ -55,8 +55,8 @@ namespace ClassicalSharp.Generator {
         byte[] p = new byte[512];
     }
     
-    public sealed class OctaveNoise {
-        
+    public sealed class OctaveNoise 
+    {
         readonly ImprovedNoise[] baseNoise;
         public OctaveNoise(int octaves, JavaRandom rnd) {
             baseNoise = new ImprovedNoise[octaves];
@@ -76,8 +76,8 @@ namespace ClassicalSharp.Generator {
         }
     }
     
-    public sealed class CombinedNoise {
-        
+    public sealed class CombinedNoise 
+    {
         readonly OctaveNoise noise1, noise2;
         public CombinedNoise(OctaveNoise noise1, OctaveNoise noise2) {
             this.noise1 = noise1;

@@ -45,7 +45,7 @@ namespace MCGalaxy.Generator.Realistic
             int rng_seed;
             if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Biome)) return false;
             
-            rng = new Random(rng_seed);
+            rng   = new Random(rng_seed);
             biome = MapGenBiome.Get(args.Biome);
             biome.ApplyEnv(lvl.Config);
             
