@@ -95,7 +95,7 @@ namespace MCGalaxy.Generator.Realistic
                 
                 if (height > waterHeight) {
                     GenAboveWaterColumn(x, height, z, lvl, i);
-                    GenFolilage(x, height, z, lvl, i);
+                    GenFoliage(x, height, z, lvl, i);
                 } else {
                     GenUnderwaterColumn(x, height, z, lvl, i);
                 }
@@ -153,7 +153,7 @@ namespace MCGalaxy.Generator.Realistic
             }
         }
 
-        void GenFolilage(ushort x, ushort height, ushort z, Level lvl, int index) {
+        void GenFoliage(ushort x, ushort height, ushort z, Level lvl, int index) {
             if (args.GenFlowers && overlay[index] < 0.25f) {
                 switch (rng.Next(12)) {
                     case 10:

@@ -27,7 +27,6 @@ namespace MCGalaxy.Generator
             MapGen.Register("Billow",             type, GenBillow2D, MapGen.DEFAULT_HELP);
             MapGen.Register("RidgedMultifractal", type, GenRidged2D, MapGen.DEFAULT_HELP);
             MapGen.Register("Perlin",             type, GenPerlin2D, MapGen.DEFAULT_HELP);
-            MapGen.Register("Checkerboard", type, GenCheckerboard, "&HSeed does nothing");
             MapGen.Register("Voronoi",         type, GenVoronoi,         MapGen.DEFAULT_HELP);          
             MapGen.Register("Perlin3D",        type, GenPerlin3D,        MapGen.DEFAULT_HELP);
             MapGen.Register("Perlin3Dyadjust", type, GenPerlin3DYAdjust, MapGen.DEFAULT_HELP);
@@ -50,11 +49,6 @@ namespace MCGalaxy.Generator
         static bool GenPerlin2D(Player p, Level lvl, string seed) {
             Perlin module = new Perlin();
             return Gen2D(p, lvl, module, seed, out module.Seed);
-        }
-        
-        static bool GenCheckerboard(Player p, Level lvl, string seed) {
-            int value;
-            return Gen2D(p, lvl, new Checkerboard(), seed, out value);
         }
         
         static bool GenVoronoi(Player p, Level lvl, string seed) {
