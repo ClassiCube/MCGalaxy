@@ -43,15 +43,15 @@ namespace MCGalaxy.Generator.Realistic
         Tree tree;
         
         public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args, PreprocessGen preprocessor) {
-            this.args = args;
             int rng_seed;
-            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Biome)) return false;
+            MapGenBiomeName theme = args.Biome;
+            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref theme)) return false;
             
             rng   = new Random(rng_seed);
-            biome = MapGenBiome.Get(args.Biome);
+            biome = MapGenBiome.Get(theme);
             biome.ApplyEnv(lvl.Config);
             
-            if (preprocessor != null) preprocessor(lvl, rng_seed, args.Biome);
+            if (preprocessor != null) preprocessor(lvl, rng_seed, theme);
             terrain = new float[lvl.Width * lvl.Length];
             overlay = new float[lvl.Width * lvl.Length];
             
@@ -60,6 +60,7 @@ namespace MCGalaxy.Generator.Realistic
                 tree     = biome.GetTreeGen("Fern");
             }
             
+            this.args   = args;
             waterHeight = args.GetLiquidLevel(lvl.Height);
             waterHeight = (ushort)Math.Min(waterHeight, lvl.MaxY);
 
