@@ -99,6 +99,7 @@ namespace MCGalaxy.Generator
         }
         
         static MapGen() {
+            RealisticMapGen.RegisterGenerators();
             SimpleGen.RegisterGenerators();
             fCraftMapGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();

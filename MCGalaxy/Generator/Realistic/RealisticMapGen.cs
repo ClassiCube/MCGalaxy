@@ -29,6 +29,8 @@ using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Generator.Realistic 
 {
+    public delegate void PreprocessGen(Level lvl, int seed, MapGenBiomeName theme);
+	
     public sealed class RealisticMapGen 
     {
         float[] terrain, overlay, overlayT;
@@ -40,7 +42,7 @@ namespace MCGalaxy.Generator.Realistic
         MapGenBiome biome;
         Tree tree;
         
-        public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
+        public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args, PreprocessGen preprocessor) {
             this.args = args;
             int rng_seed;
             if (!MapGen.ParseArgs(p, seed, out rng_seed, ref args.Biome)) return false;
@@ -49,6 +51,7 @@ namespace MCGalaxy.Generator.Realistic
             biome = MapGenBiome.Get(args.Biome);
             biome.ApplyEnv(lvl.Config);
             
+            if (preprocessor != null) preprocessor(lvl, rng_seed, args.Biome);
             terrain = new float[lvl.Width * lvl.Length];
             overlay = new float[lvl.Width * lvl.Length];
             
@@ -325,6 +328,80 @@ namespace MCGalaxy.Generator.Realistic
             else
                 adj = zAdj - 0.15f;
             return adj > 0 ? adj : 0;
+        }
+        
+        
+        delegate byte NextBlock();
+        
+        public static void RegisterGenerators() {
+            const GenType type = GenType.Simple;
+            MapGen.Register("Island",    type, GenIsland,    MapGen.DEFAULT_HELP);
+            MapGen.Register("Mountains", type, GenMountains, MapGen.DEFAULT_HELP);
+            MapGen.Register("Forest",    type, GenForest,    MapGen.DEFAULT_HELP);
+            MapGen.Register("Ocean",     type, GenOcean,     MapGen.DEFAULT_HELP);
+            MapGen.Register("Desert",    type, GenDesert,  MapGen.DEFAULT_HELP);
+            MapGen.Register("Hell",      type, GenHell,    MapGen.DEFAULT_HELP);
+        }
+        
+        static bool GenIsland(Player p, Level lvl, string seed) {
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Island);
+        }
+        
+        static bool GenMountains(Player p, Level lvl, string seed) {
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Mountains);
+        }
+        
+        static bool GenForest(Player p, Level lvl, string seed) {
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Forest);
+        }
+        
+        static bool GenOcean(Player p, Level lvl, string seed) {
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Ocean);
+        }
+        
+        static bool GenDesert(Player p, Level lvl, string seed) {
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Desert);
+        }
+        
+        static bool GenHell(Player p, Level lvl, string seed) {
+            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Hell, PreprocessHell);
+        }
+        
+        static void PreprocessHell(Level lvl, int seed, MapGenBiomeName theme) {
+            Random rng = new Random(seed);
+            int width = lvl.Width, height = lvl.Height, length = lvl.Length;
+            int index = 0, oneY = width * length;
+            
+            MapGenBiome biome = MapGenBiome.Get(theme);
+            byte[] blocks = lvl.blocks;
+            
+            // first layer used to be bedrock, but is now skipped over
+            //  (since map generation would just replace it anyways)
+            index += oneY;
+            
+            for (int y = 1; y < height; ++y)
+                for (int z = 0; z < length; ++z)
+                    for (int x = 0; x < width; ++x)
+            {
+            	if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == height - 1) {
+                    blocks[index] = biome.BeachRocky;
+                } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
+                    if (rng.Next(1000) != 7) { index++; continue; }
+                    
+                    int colIndex = z * width + x;
+                    for (int i = 1; i < (height - y); ++i) 
+                    {
+                        int yy = height - i;
+                        blocks[colIndex + yy * oneY] = biome.Water;
+                    }
+                }
+                index++;
+            }
+        }
+        
+        static bool GenRealistic(Player p, Level lvl, string seed, 
+                                 RealisticMapGenArgs args, PreprocessGen preprocessor = null) {
+            return new RealisticMapGen().Gen(p, lvl, seed, args, preprocessor);
         }
     }
 }

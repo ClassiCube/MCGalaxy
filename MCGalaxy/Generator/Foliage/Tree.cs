@@ -65,11 +65,11 @@ namespace MCGalaxy.Generator.Foliage {
         
         public static Dictionary<string, TreeConstructor> TreeTypes = 
             new Dictionary<string, TreeConstructor>() {
-            { "Fern", () => new NormalTree() }, { "Cactus", () => new CactusTree() },
+            { "Fern", () => new NormalTree() },   { "Cactus", () => new CactusTree() },
             { "Notch", () => new ClassicTree() }, { "Swamp", () => new SwampTree() },
             { "Bamboo", () => new BambooTree() }, { "Palm", () => new PalmTree() },
-            { "Oak", () => new OakTree() }, { "Ash", () => new AshTree() },            
-            { "Round", () => new RoundTree() }, { "Cone", () => new ConeTree() }, 
+            { "Oak", () => new OakTree() },       { "Ash", () => new AshTree() },            
+            { "Round", () => new RoundTree() },   { "Cone", () => new ConeTree() }, 
             { "Rainforest", () => new RainforestTree() }, { "Mangrove", () => new MangroveTree() },      
         };
         

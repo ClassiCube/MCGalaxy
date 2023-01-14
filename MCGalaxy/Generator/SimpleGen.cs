@@ -26,72 +26,12 @@ namespace MCGalaxy.Generator
         
         public static void RegisterGenerators() {
             const GenType type = GenType.Simple;
-            MapGen.Register("Island",    type, GenIsland,    MapGen.DEFAULT_HELP);
-            MapGen.Register("Mountains", type, GenMountains, MapGen.DEFAULT_HELP);
-            MapGen.Register("Forest",    type, GenForest,    MapGen.DEFAULT_HELP);
-            MapGen.Register("Ocean",     type, GenOcean,     MapGen.DEFAULT_HELP);
-            MapGen.Register("Flat",  type, GenFlat,  "&HSeed specifies grass height (default half of level height)");
-            MapGen.Register("Pixel", type, GenPixel, "&HSeed does nothing");
-            MapGen.Register("Empty", type, GenEmpty, "&HSeed does nothing");
-            MapGen.Register("Desert",  type, GenDesert,  MapGen.DEFAULT_HELP);
+            MapGen.Register("Flat",    type, GenFlat,  "&HSeed specifies grass height (default half of level height)");
+            MapGen.Register("Pixel",   type, GenPixel, "&HSeed does nothing");
+            MapGen.Register("Empty",   type, GenEmpty, "&HSeed does nothing");
             MapGen.Register("Space",   type, GenSpace,   MapGen.DEFAULT_HELP);
             MapGen.Register("Rainbow", type, GenRainbow, MapGen.DEFAULT_HELP);
-            MapGen.Register("Hell",    type, GenHell,    MapGen.DEFAULT_HELP);
         }
-        
-        static bool GenIsland(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Island);
-        }
-        
-        static bool GenMountains(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Mountains);
-        }
-        
-        static bool GenForest(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Forest);
-        }
-        
-        static bool GenOcean(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Ocean);
-        }
-        
-        static bool GenDesert(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Desert);
-        }
-        
-        static bool GenHell(Player p, Level lvl, string seed) {
-            Random rng = MapGen.MakeRng(seed);
-            int width = lvl.Width, height = lvl.Height, length = lvl.Length;
-            int index = 0;
-            byte[] blocks = lvl.blocks;
-            
-            for (int y = 0; y < height; ++y)
-                for (int z = 0; z < length; ++z)
-                    for (int x = 0; x < width; ++x)
-            {
-                if (y == 0) {
-                    blocks[index] = Block.Bedrock;
-                } else if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == 0 || y == height - 1) {
-                    blocks[index] = Block.Obsidian;
-                } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
-                    if (rng.Next(1000) != 7) { index++; continue; }
-                    
-                    int colIndex = z * width + x;
-                    for (int i = 1; i < (height - y); ++i) {
-                        int yy = height - i;
-                        blocks[colIndex + yy * width * length] = Block.Lava;
-                    }
-                }
-                index++;
-            }
-
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Hell);
-        }
-        
-        static bool GenRealistic(Player p, Level lvl, string seed, RealisticMapGenArgs args) {
-            return new RealisticMapGen().Gen(p, lvl, seed, args);
-        }
-        
         
         unsafe static bool GenFlat(Player p, Level lvl, string seed) {
             int grassHeight = lvl.Height / 2, v;

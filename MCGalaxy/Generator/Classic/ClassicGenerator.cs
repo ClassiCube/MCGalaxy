@@ -8,21 +8,7 @@ using MCGalaxy.Generator;
 namespace MCGalaxy.Generator.Classic
 {    
     public sealed partial class ClassicGenerator 
-    {    
-        public static void RegisterGenerators() {
-            MapGen.Register("Classic", GenType.Simple, Gen, MapGen.DEFAULT_HELP);
-        }
-        
-        static bool Gen(Player p, Level lvl, string seed) {
-            MapGenBiomeName theme = MapGenBiomeName.Forest;
-            int rng_seed;
-            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref theme)) return false;
-            
-            new ClassicGenerator().Generate(lvl, rng_seed, theme);
-            return true;
-        }
-    	
-    	
+    {
         int waterLevel, oneY, Width, Length, Height;
         byte[] blocks;
         short[] heightmap;
@@ -461,6 +447,20 @@ namespace MCGalaxy.Generator.Classic
                 blocks[index] = Block.Log;
                 index += oneY;
             }
+        }
+        
+        
+        public static void RegisterGenerators() {
+            MapGen.Register("Classic", GenType.Simple, Gen, MapGen.DEFAULT_HELP);
+        }
+        
+        static bool Gen(Player p, Level lvl, string seed) {
+            MapGenBiomeName theme = MapGenBiomeName.Forest;
+            int rng_seed;
+            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref theme)) return false;
+            
+            new ClassicGenerator().Generate(lvl, rng_seed, theme);
+            return true;
         }
     }
 }
