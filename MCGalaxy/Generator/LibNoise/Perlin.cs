@@ -24,23 +24,20 @@ using System;
 
 namespace LibNoise
 {
-    public sealed class Perlin : GradientNoiseBasis, IModule
+    public sealed class Perlin : IModule
     {
-        public double Frequency;
         public double Persistence;
-        public int Seed;
         public int OctaveCount;
         public double Lacunarity;
 
         public Perlin()
         {
-            Frequency = 1.0;
-            Lacunarity = 2.0;
+            Lacunarity  = 2.0;
             OctaveCount = 6;
             Persistence = 0.5;
         }
 
-        public double GetValue(double x, double y, double z)
+        public override double GetValue(double x, double y, double z)
         {
             double value = 0.0;
             double signal = 0.0;
@@ -52,7 +49,7 @@ namespace LibNoise
 
             for(int octave = 0; octave < OctaveCount; octave++)
             {
-                signal = GradientCoherentNoise(x, y, z, Seed + octave);
+                signal = GradientNoise.GradientCoherentNoise(x, y, z, Seed + octave);
                 //signal = cachedNoise3(x, y, z);
 
                 value += signal * curPersistence;

@@ -332,8 +332,6 @@ namespace MCGalaxy.Generator.Realistic
         }
         
         
-        delegate byte NextBlock();
-        
         public static void RegisterGenerators() {
             const GenType type = GenType.Simple;
             MapGen.Register("Island",    type, GenIsland,    MapGen.DEFAULT_HELP);

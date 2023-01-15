@@ -24,13 +24,13 @@ using System;
 
 namespace LibNoise
 {
-    public class GradientNoiseBasis
+    public static class GradientNoise
     {
-        const int XNoiseGen = 1619;
-        const int YNoiseGen = 31337;
-        const int ZNoiseGen = 6971;
-        const int SeedNoiseGen = 1013;
-        const int ShiftNoiseGen = 8;
+        const int X_NOISE_GEN = 1619;
+        const int Y_NOISE_GEN = 31337;
+        const int Z_NOISE_GEN = 6971;
+        const int SEED_NOISE = 1013;
+        const int SHIFT_NOISE_GEN = 8;
 
         static double[] RandomVectors = 
         {
@@ -308,33 +308,33 @@ namespace LibNoise
             double zs = SCurve3(z - z0);
 
             double n0, n1, ix0, ix1, iy0, iy1;
-            n0 = GradientNoise(x, y, z, x0, y0, z0, seed);
-            n1 = GradientNoise(x, y, z, x1, y0, z0, seed);
+            n0 = GradientRawNoise(x, y, z, x0, y0, z0, seed);
+            n1 = GradientRawNoise(x, y, z, x1, y0, z0, seed);
             ix0 = LinearInterpolate(n0, n1, xs);
-            n0 = GradientNoise(x, y, z, x0, y1, z0, seed);
-            n1 = GradientNoise(x, y, z, x1, y1, z0, seed);
+            n0 = GradientRawNoise(x, y, z, x0, y1, z0, seed);
+            n1 = GradientRawNoise(x, y, z, x1, y1, z0, seed);
             ix1 = LinearInterpolate(n0, n1, xs);
             iy0 = LinearInterpolate(ix0, ix1, ys);
 
-            n0 = GradientNoise(x, y, z, x0, y0, z1, seed);
-            n1 = GradientNoise(x, y, z, x1, y0, z1, seed);
+            n0 = GradientRawNoise(x, y, z, x0, y0, z1, seed);
+            n1 = GradientRawNoise(x, y, z, x1, y0, z1, seed);
             ix0 = LinearInterpolate(n0, n1, xs);
-            n0 = GradientNoise(x, y, z, x0, y1, z1, seed);
-            n1 = GradientNoise(x, y, z, x1, y1, z1, seed);
+            n0 = GradientRawNoise(x, y, z, x0, y1, z1, seed);
+            n1 = GradientRawNoise(x, y, z, x1, y1, z1, seed);
             ix1 = LinearInterpolate(n0, n1, xs);
             iy1 = LinearInterpolate(ix0, ix1, ys);
 
             return LinearInterpolate(iy0, iy1, zs);
         }
 
-        static double GradientNoise(double fx, double fy, double fz, int ix, int iy, int iz, int seed)
+        static double GradientRawNoise(double fx, double fy, double fz, int ix, int iy, int iz, int seed)
         {
             int vectorIndex = (
-                  XNoiseGen * ix
-                + YNoiseGen * iy
-                + ZNoiseGen * iz
-                + SeedNoiseGen * seed);
-            vectorIndex ^= (vectorIndex >> ShiftNoiseGen);
+                  X_NOISE_GEN * ix
+                + Y_NOISE_GEN * iy
+                + Z_NOISE_GEN * iz
+                + SEED_NOISE * seed);
+            vectorIndex ^= (vectorIndex >> SHIFT_NOISE_GEN);
             vectorIndex &= 0xff;
 
             double xvGradient = RandomVectors[(vectorIndex * 3)    ];

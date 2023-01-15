@@ -38,57 +38,54 @@ namespace MCGalaxy.Generator
         
         static bool GenBillow2D(Player p, Level lvl, string seed) {
             Billow module = new Billow();
-            return Gen2D(p, lvl, module, seed, out module.Seed);
+            return Gen2D(p, lvl, module, seed);
         }
         
         static bool GenRidged2D(Player p, Level lvl, string seed) {
             RidgedMultifractal module = new RidgedMultifractal();
-            return Gen2D(p, lvl, module, seed, out module.Seed);
+            return Gen2D(p, lvl, module, seed);
         }
         
         static bool GenPerlin2D(Player p, Level lvl, string seed) {
             Perlin module = new Perlin();
-            return Gen2D(p, lvl, module, seed, out module.Seed);
+            return Gen2D(p, lvl, module, seed);
         }
         
         static bool GenVoronoi(Player p, Level lvl, string seed) {
             Voronoi module = new Voronoi();
-            return Gen2D(p, lvl, module, seed, out module.Seed);
+            return Gen2D(p, lvl, module, seed);
         }
         
         static bool GenPerlin3D(Player p, Level lvl, string seed) {
-            Perlin perlin3D = new Perlin();
-            perlin3D.Seed   = MapGen.MakeInt(seed);
-            return Gen3D(lvl, perlin3D);
+            Perlin module = new Perlin();
+            return Gen3D(lvl, module, seed);
         }
         
         static bool GenPerlin3DYAdjust(Player p, Level lvl, string seed) {
-            Perlin adjNoise = new Perlin();
-            adjNoise.Seed   = MapGen.MakeInt(seed);
-            return Gen3DYAdjust(lvl, adjNoise);
+            Perlin module = new Perlin();
+            return Gen3DYAdjust(lvl, module, seed);
         }
         
         static bool GenBillow3D(Player p, Level lvl, string seed) {
-            Billow billow3D = new Billow();
-            billow3D.Seed   = MapGen.MakeInt(seed);
-            return Gen3D(lvl, billow3D);
+            Billow module = new Billow();
+            return Gen3D(lvl, module, seed);
         }
         
         #endregion
         
-        static bool Gen2D(Player p, Level lvl, IModule module, 
-                          string seed, out int noiseSeed) {
+        static bool Gen2D(Player p, Level lvl, IModule module, string seed) {
             int width = lvl.Width, length = lvl.Length, half = lvl.Height / 2;
-            int waterHeight = half - 1;
+            int waterHeight  = half - 1;
+            module.Frequency = 1 / 100.0;
             
             MapGenBiomeName theme = MapGenBiomeName.Forest;
-            if (!MapGen.ParseArgs(p, seed, out noiseSeed, ref theme)) return false;
+            if (!MapGen.ParseArgs(p, seed, out module.Seed, ref theme)) return false;
             MapGenBiome biome = MapGenBiome.Get(theme);
             
             for (int z = 0; z < length; ++z)
                 for (int x = 0; x < width; ++x)
             {
-                double noise   = module.GetValue(x / 100.0, 0.1, z / 100.0);
+                double noise   = module.GetValue(x, 10, z);
                 int dirtHeight = (int)Math.Floor(noise * 10) + half;
                 
                 if (dirtHeight < waterHeight) {
@@ -115,26 +112,32 @@ namespace MCGalaxy.Generator
             return true;
         }
         
-        static bool Gen3D(Level lvl, IModule module) {
+        static bool Gen3D(Level lvl, IModule module, string seed) {
+            module.Seed = MapGen.MakeInt(seed);
+            module.Frequency = 1 / 100.0;
+            
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
             {
-                double value = module.GetValue(x / 100.0, y / 100.0, z / 100.0);
+                double value = module.GetValue(x, y, z);
                 if (value >= 0.1)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }
             return true;
         }
         
-        static bool Gen3DYAdjust(Level lvl, IModule module) { 
+        static bool Gen3DYAdjust(Level lvl, IModule module, string seed) {
+            module.Seed = MapGen.MakeInt(seed);
+            module.Frequency = 1 / 100.0;
+            
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
             {
-                double value = Math.Floor((module.GetValue(x / 100.0, y / 100.0, z / 100.0) + 2) * 10);
+                double value = Math.Floor((module.GetValue(x, y, z) + 2) * 10);
                 if (value > 30 * y / height)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, Block.Grass);
             }

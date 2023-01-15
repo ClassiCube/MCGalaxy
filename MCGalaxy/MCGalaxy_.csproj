@@ -470,7 +470,7 @@
     <Compile Include="Generator\ImprovedNoise.cs" />
     <Compile Include="Generator\LibNoise\AdvNoiseGen.cs" />
     <Compile Include="Generator\LibNoise\Billow.cs" />
-    <Compile Include="Generator\LibNoise\GradientNoiseBasis.cs" />
+    <Compile Include="Generator\LibNoise\GradientNoise.cs" />
     <Compile Include="Generator\LibNoise\IModule.cs" />
     <Compile Include="Generator\LibNoise\Perlin.cs" />
     <Compile Include="Generator\LibNoise\RidgedMultifractal.cs" />
