@@ -50,12 +50,14 @@ namespace MCGalaxy.Generator.fCraft {
         
         void ApplyBiome(Level map) {
             MapGenBiome biome = MapGenBiome.Get(args.Biome);
-            bGroundSurface   = biome.Surface;
+            bGroundSurface    = biome.Surface;
             bWater    = biome.Water;
             bGround   = biome.Ground;
             bSeaFloor = biome.BeachSandy;
             bBedrock  = biome.Bedrock;
             bCliff    = biome.Cliff;
+            
+            args.AddWater = biome.Water != Block.Air;
             
             // TODO: temp hack, need a better solution
             if (args.Biome == MapGenBiomeName.Arctic) groundThickness = 1;
@@ -412,7 +414,6 @@ namespace MCGalaxy.Generator.fCraft {
             
             args.Biome      = theme;
             args.AddTrees   = theme == MapGenBiomeName.Forest;
-            args.AddWater   = theme != MapGenBiomeName.Desert;
             args.WaterLevel = (lvl.Height - 1) / 2;
 
             new fCraftMapGen(args).Generate(lvl);

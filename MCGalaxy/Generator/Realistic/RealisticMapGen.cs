@@ -372,7 +372,7 @@ namespace MCGalaxy.Generator.Realistic
             byte[] blocks = lvl.blocks;
             
             // first layer used to be bedrock, but is now skipped over
-            //  (since map generation would just replace it anyways)
+            //  (since map generation will just replace it anyways)
             index += oneY;
             
             for (int y = 1; y < height; ++y)

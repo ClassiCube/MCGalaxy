@@ -69,7 +69,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Atoll:
                     return new fCraftMapGenArgs {
-                        //Theme = MapGenThemeName.Desert,
+                        //Biome = MapGenBiomeName.Sandy, TODO maybe?
                         MaxHeight = 2,
                         MaxDepth = 39,
                         UseBias = true,
