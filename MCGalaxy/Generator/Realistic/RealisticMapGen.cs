@@ -66,15 +66,13 @@ namespace MCGalaxy.Generator.Realistic
 
             GenerateFault(terrain, lvl);
             FilterAverage(lvl);
-            Logger.Log(LogType.SystemActivity, "Creating overlay");
+            Logger.Log(LogType.SystemActivity, "Generating terrain..");
             GeneratePerlinNoise(overlay, lvl);
 
             if (args.GenOverlay2) {
-                Logger.Log(LogType.SystemActivity, "Planning trees");
                 GeneratePerlinNoise(overlayT, lvl);
             }
 
-            Logger.Log(LogType.SystemActivity, "Converting height map, and applying overlays");
             float rangeLo = args.RangeLow;
             float rangeHi = args.RangeHigh;
             treeDens = args.TreeDensity;
@@ -270,7 +268,6 @@ namespace MCGalaxy.Generator.Realistic
 
         //applys the average filter
         void FilterAverage(Level lvl) {
-            Logger.Log(LogType.SystemActivity, "Applying average filtering");
             float[] filtered = new float[terrain.Length];
 
             for (int i = 0; i < filtered.Length; i++) 
