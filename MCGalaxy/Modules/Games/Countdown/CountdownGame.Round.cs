@@ -292,7 +292,7 @@ namespace MCGalaxy.Modules.Games.Countdown
                 winner.Message("Congratulations, you won this round of countdown!");
                 PlayerActions.Respawn(winner);
                 
-                AwardMoney(winner, 5, 10,
+                AwardMoney(winner, Config.RewardMin, Config.RewardMax,
                            new Random(), 0);
             } else {
                 Player[] players = Players.Items;

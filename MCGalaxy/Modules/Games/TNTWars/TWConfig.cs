@@ -34,9 +34,9 @@ namespace MCGalaxy.Modules.Games.TW
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "TNT Wars"; } }
         
-        [ConfigEnum("Mode", null, TWGameMode.TDM, typeof(TWGameMode))]
+        [ConfigEnum("Mode", "Defaults", TWGameMode.TDM, typeof(TWGameMode))]
         public TWGameMode Mode = TWGameMode.TDM;
-        [ConfigEnum("Difficulty", null, TWDifficulty.Normal, typeof(TWDifficulty))]
+        [ConfigEnum("Difficulty", "Defaults", TWDifficulty.Normal, typeof(TWDifficulty))]
         public TWDifficulty Difficulty = TWDifficulty.Normal;
     }
     

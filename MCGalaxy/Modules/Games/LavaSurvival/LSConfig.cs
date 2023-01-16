@@ -24,8 +24,17 @@ namespace MCGalaxy.Modules.Games.LS
 {
     public sealed class LSConfig : RoundsGameConfig 
     {
-        [ConfigInt("lives", null, 3, 0)]
+        [ConfigInt("lives", "Game", 3, 0)]
         public int MaxLives = 3;
+        
+        [ConfigInt("below-sealevel-reward-min", "Rewards",  5, 0)]
+        public int BSL_RewardMin =  5;
+        [ConfigInt("below-sealevel-reward-max", "Rewards", 10, 0)]
+        public int BSL_RewardMax = 10;        
+        [ConfigInt("above-sealevel-reward-min", "Rewards", 10, 0)]
+        public int ASL_RewardMin = 10;
+        [ConfigInt("above-sealevel-reward-max", "Rewards", 15, 0)]
+        public int ASL_RewardMax = 15;
         
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }

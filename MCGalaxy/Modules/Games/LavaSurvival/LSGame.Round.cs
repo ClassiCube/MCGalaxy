@@ -90,10 +90,10 @@ namespace MCGalaxy.Modules.Games.LS
             if (IsPlayerDead(p)) return;
             
             if (p.Pos.FeetBlockCoords.Y >= Map.GetEdgeLevel()) {
-                AwardMoney(p, 10, 15, 
+                AwardMoney(p, Config.ASL_RewardMin, Config.ASL_RewardMax, 
                            rnd, 0);
             } else {
-                AwardMoney(p, 5, 10, 
+                AwardMoney(p, Config.BSL_RewardMin, Config.BSL_RewardMax, 
                            rnd, 0);                
             }
         }

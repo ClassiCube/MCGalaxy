@@ -53,13 +53,13 @@ namespace MCGalaxy.Games
     /// <summary> Stores overall game configuration state. </summary>
     public abstract class RoundsGameConfig 
     {
-        [ConfigBool("start-on-server-start", "Game", false)] 
+        [ConfigBool("start-on-server-start", "General", false)] 
         public bool StartImmediately;
-        [ConfigBool("set-main-level", "Game", false)] 
+        [ConfigBool("set-main-level", "General", false)] 
         public bool SetMainLevel;
-        [ConfigBool("map-in-heartbeat", "Game", false)]
+        [ConfigBool("map-in-heartbeat", "General", false)]
         public bool MapInHeartbeat;
-        [ConfigStringList("maps", "Game")] 
+        [ConfigStringList("maps", "General")] 
         public List<string> Maps = new List<string>();
 
         /// <summary> Whether users are allowed to auto-join maps used by this game. </summary>
@@ -74,7 +74,7 @@ namespace MCGalaxy.Games
             
             using (StreamWriter w = new StreamWriter(Path)) {
                 w.WriteLine("#" + GameName + " configuration");
-                ConfigElement.SerialiseElements(cfg, w, this);
+                ConfigElement.Serialise(cfg, w, this);
             }
         }
         
