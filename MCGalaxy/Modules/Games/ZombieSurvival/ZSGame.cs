@@ -145,6 +145,28 @@ namespace MCGalaxy.Modules.Games.ZS
             HookCommands();
             HookItems();
         }
+
+        protected override void EndGame() {
+            RoundEnd = DateTime.MinValue;
+            hooked   = false;
+            UnhookStats();
+            UnhookCommands();
+            UnhookItems();
+            
+            Alive.Clear();
+            Infected.Clear();
+            BountyData.Bounties.Clear(); // TODO only do it when all games end
+            
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player pl in players) 
+            {
+                if (pl.level != Map) continue;
+                ZSData data = Get(pl);
+                
+                ResetRoundState(pl, data);
+                ResetInvisibility(pl, data);
+            }
+        }
         
         public static bool IsInfected(Player p) { return p.infected; }
 
@@ -200,28 +222,6 @@ namespace MCGalaxy.Modules.Games.ZS
             
             data.ResetInvisibility();
             Entities.GlobalSpawn(p, false);
-        }
-
-        protected override void EndGame() {
-            RoundEnd = DateTime.MinValue;
-            hooked   = false;
-            UnhookStats();
-            UnhookCommands();
-            UnhookItems();
-            
-            Alive.Clear();
-            Infected.Clear();
-            BountyData.Bounties.Clear(); // TODO only do it when all games end
-            
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) 
-            {
-                if (pl.level != Map) continue;
-                ZSData data = Get(pl);
-                
-                ResetRoundState(pl, data);
-                ResetInvisibility(pl, data);
-            }
         }
         
         public override void PlayerJoinedGame(Player p) {

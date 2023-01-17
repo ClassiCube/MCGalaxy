@@ -552,6 +552,7 @@
     <Compile Include="Modules\Games\CTF\CtfGame.Round.cs" />
     <Compile Include="Modules\Games\CTF\CtfPlugin.cs" />
     <Compile Include="Modules\Games\LavaSurvival\CmdLavaSurvival.cs" />
+    <Compile Include="Modules\Games\LavaSurvival\Commands\CmdLives.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSConfig.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSGame.cs" />
     <Compile Include="Modules\Games\LavaSurvival\LSGame.DB.cs" />
@@ -708,6 +709,7 @@
     <Folder Include="Modules\Games\CTF" />
     <Folder Include="Modules\Games\LavaSurvival" />
     <Folder Include="Modules\Games\Countdown" />
+    <Folder Include="Modules\Games\LavaSurvival\Commands" />
     <Folder Include="Modules\Games\TNTWars" />
     <Folder Include="Modules\Games\ZombieSurvival" />
     <Folder Include="Modules\Games\ZombieSurvival\Commands" />

@@ -36,7 +36,7 @@ namespace MCGalaxy.Modules.Games.LS
         
         protected override string WelcomeMessage {
             get { return "&cLava Survival &Sis running! Type &T/LS go &Sto join"; }
-		}
+        }
         
         bool flooded, fastMode, destroyMode, waterMode, layerMode, floodUp;
         BlockID floodBlock;
@@ -93,6 +93,8 @@ namespace MCGalaxy.Modules.Games.LS
             if (hooked) return;
             
             hooked = true;
+            //HookStats();
+            HookCommands();
             HookItems();
         }
         
@@ -102,11 +104,20 @@ namespace MCGalaxy.Modules.Games.LS
             UpdateBlockHandlers();
             
             hooked = false;
+            //UnhookStats();
+            UnhookCommands();
             UnhookItems();
         }
         
         public bool IsPlayerDead(Player p) {
             return Config.MaxLives > 0 && Get(p).TimesDied >= Config.MaxLives;
+        }
+        
+        public string DescribeLives(Player p) {
+            if (Config.MaxLives <= 0) return "(infinite)";
+
+            int lives = Config.MaxLives - Get(p).TimesDied;
+            return lives <= 0 ? "&40" : lives.ToString();
         }
         
         public override bool HandlesBlockchange(Player p, ushort x, ushort y, ushort z) {
