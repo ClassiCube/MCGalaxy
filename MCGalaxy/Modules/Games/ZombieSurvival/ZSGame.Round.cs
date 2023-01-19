@@ -315,20 +315,20 @@ namespace MCGalaxy.Modules.Games.ZS
             }
         }
 
-        static void RewardMoney(Player p, ZSData data, Player[] alive, Random rnd) {
+        void RewardMoney(Player p, ZSData data, Player[] alive, Random rnd) {
             if (p.IsLikelyInsideBlock()) {
                 p.Message("You may not hide inside a block! No " + Server.Config.Currency + " for you.");
                 return;
             }
             
             if (alive.Length == 0) {
-                AwardMoney(p, 1, 5,
-                           rnd, data.CurrentInfected);
+                AwardMoney(p, Config.ZombiesRewardMin, Config.ZombiesRewardMax,
+                           rnd, data.CurrentInfected * Config.ZombiesRewardMultiplier);
             } else if (alive.Length == 1 && !p.infected) {
-                AwardMoney(p, 5, 10,
+                AwardMoney(p, Config.SoleHumanRewardMin, Config.SoleHumanRewardMax,
                            rnd, 0);
             } else if (alive.Length > 1 && !p.infected) {
-                AwardMoney(p, 2, 6,
+                AwardMoney(p, Config.HumansRewardMin, Config.HumansRewardMax,
                            rnd, 0);
             }
         }

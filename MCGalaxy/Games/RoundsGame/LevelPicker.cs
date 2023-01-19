@@ -102,7 +102,8 @@ namespace MCGalaxy.Games
         void VoteCountdown(IGame game) {
             // Show message for non-CPE clients
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != game.Map || pl.Supports(CpeExt.MessageTypes)) continue;
                 pl.Message("You have " + VoteTime + " seconds to vote for the next map");
             }
@@ -112,7 +113,8 @@ namespace MCGalaxy.Games
                 players = PlayerInfo.Online.Items;
                 if (!game.Running) break;
                 
-                foreach (Player pl in players) {
+                foreach (Player pl in players) 
+                {
                     if (pl.level != map || !pl.Supports(CpeExt.MessageTypes)) continue;
                     string timeLeft = "&e" + (VoteTime - i) + "s &Sleft to vote";
                     pl.SendCpeMessage(CpeMessageType.BottomRight1, timeLeft);

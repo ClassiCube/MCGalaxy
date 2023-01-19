@@ -184,8 +184,8 @@ namespace MCGalaxy.SQL
         }
         
         
-        /// <summary> Adds IDbDataParameter for each argument to the given command. </summary>
-        public void FillParams(ISqlCommand cmd, object[] parameters) {
+        /// <summary> Sets the SQL command's parameter values to the given arguments </summary>
+        public static void FillParams(ISqlCommand cmd, object[] parameters) {
             if (parameters == null || parameters.Length == 0) return;
             
             string[] names = GetNames(parameters.Length);

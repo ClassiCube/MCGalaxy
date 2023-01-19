@@ -75,6 +75,22 @@ namespace MCGalaxy.Modules.Games.ZS
         [ConfigInt("revive-times", "Revive", 1, 0)]
         public int ReviveTimes = 1;
         
+        [ConfigInt("zombies-win-reward-min", "Zombie rewards", 1, 0)]
+        public int ZombiesRewardMin = 1;
+        [ConfigInt("zombies-win-reward-max", "Zombie rewards", 5, 0)]
+        public int ZombiesRewardMax = 5;
+        [ConfigInt("zombies-win-infected-multiplier", "Zombie rewards", 1, 0)]
+        public int ZombiesRewardMultiplier = 1;
+        
+        [ConfigInt("sole-human-reward-min", "Human rewards",  5, 0)]
+        public int SoleHumanRewardMin =  5;
+        [ConfigInt("sole-human-reward-max", "Human rewards", 10, 0)]
+        public int SoleHumanRewardMax = 10;
+        [ConfigInt("humans-win-reward-min", "Human rewards", 2, 0)]
+        public int HumansRewardMin = 2;
+        [ConfigInt("humans-win-reward-max", "Human rewards", 6, 0)]
+        public int HumansRewardMax = 6;
+        
         static ConfigElement[] cfg;
         public override bool AllowAutoload { get { return true; } }
         protected override string GameName { get { return "Zombie Survival"; } }

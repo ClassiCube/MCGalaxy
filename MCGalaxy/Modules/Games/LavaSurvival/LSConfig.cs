@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Games.LS
         [ConfigInt("below-sealevel-reward-min", "Rewards",  5, 0)]
         public int BSL_RewardMin =  5;
         [ConfigInt("below-sealevel-reward-max", "Rewards", 10, 0)]
-        public int BSL_RewardMax = 10;        
+        public int BSL_RewardMax = 10;
         [ConfigInt("above-sealevel-reward-min", "Rewards", 10, 0)]
         public int ASL_RewardMin = 10;
         [ConfigInt("above-sealevel-reward-max", "Rewards", 15, 0)]

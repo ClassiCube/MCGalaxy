@@ -62,10 +62,9 @@ namespace MCGalaxy.SQL
         }
         
         public bool Execute(string sql, params object[] args) {
-            IDatabaseBackend db = Database.Backend;
             try {
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
-                    db.FillParams(cmd, args);
+                    IDatabaseBackend.FillParams(cmd, args);
                     cmd.ExecuteNonQuery();
                     return true;
                 }
