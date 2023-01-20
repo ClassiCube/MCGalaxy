@@ -95,7 +95,8 @@ namespace MCGalaxy {
             new ChatToken("$kicked", "Times the player was kicked", TokenKicked),
             new ChatToken("$model", "Model of the player", TokenModel),
             new ChatToken("$skin", "Skin of the player", TokenSkin),
-            new ChatToken("$level", "Name of level/map player is on", TokenLevel),    
+            new ChatToken("$level", "Name of level/map player is on", TokenLevel),
+            new ChatToken("$currency", "Name of server currency", TokenCurrency),   
         };
 
         static string TokenDate(Player p) { return DateTime.Now.ToString("yyyy-MM-dd"); }
@@ -132,6 +133,7 @@ namespace MCGalaxy {
         static string TokenModel(Player p)   { return p.Model; }
         static string TokenSkin(Player p)    { return p.SkinName; }
         static string TokenLevel(Player p)   { return p.level == null ? null : p.level.name; }
+        static string TokenCurrency(Player p){ return Server.Config.Currency; }
 
         public static List<ChatToken> Custom = new List<ChatToken>();
         static bool hookedCustom;        
