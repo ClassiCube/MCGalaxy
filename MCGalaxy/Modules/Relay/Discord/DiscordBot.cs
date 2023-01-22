@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Config;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 
@@ -428,6 +429,31 @@ namespace MCGalaxy.Modules.Relay.Discord
             return BOLD + base.UnescapeNick(p) + BOLD;
         }
         
+        protected override void MessagePlayers(RelayPlayer p) {
+            ChannelSendEmbed embed = new ChannelSendEmbed(p.ChannelID);
+            int total;
+            List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
+            
+            embed.Color  = Config.EmbedColor;
+            embed.Title  = string.Format("{0} player{1} currently online",
+                                        total, total.Plural());
+            
+            foreach (OnlineListEntry e in entries) 
+            {
+                if (e.players.Count == 0) continue;
+                
+                embed.Fields.Add(
+                    ConvertMessage(FormatRank(e)),
+                    ConvertMessage(FormatPlayers(p, e))
+                );
+            }
+            AddGameStatus(embed);
+            Send(embed);
+        }
+        
+        static string FormatPlayers(Player p, OnlineListEntry e) {
+            return e.players.Join(pl => FormatNick(p, pl), ", ");
+        }
         
         static string FormatRank(OnlineListEntry e) {
             return string.Format(UNDERLINE + "{0}" + UNDERLINE + " (" + CODE + "{1}" + CODE + ")",
@@ -450,29 +476,21 @@ namespace MCGalaxy.Modules.Relay.Discord
                                  flags);
         }
         
-        static string FormatPlayers(Player p, OnlineListEntry e) {
-            return e.players.Join(pl => FormatNick(p, pl), ", ");
-        }
-        
-        protected override void MessagePlayers(RelayPlayer p) {
-            ChannelSendEmbed embed = new ChannelSendEmbed(p.ChannelID);
-            int total;
-            List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
+        void AddGameStatus(ChannelSendEmbed embed) {
+            if (!Config.EmbedGameStatuses) return;
             
-            embed.Color = Config.EmbedColor;
-            embed.Title = string.Format("{0} player{1} currently online",
-                                        total, total.Plural());
+            StringBuilder sb = new StringBuilder();
+            IGame[] games    = IGame.RunningGames.Items;
             
-            foreach (OnlineListEntry e in entries) 
+            foreach (IGame game in games)
             {
-                if (e.players.Count == 0) continue;
-                
-                embed.Fields.Add(
-                    ConvertMessage(FormatRank(e)),
-                    ConvertMessage(FormatPlayers(p, e))
-                );
+                Level lvl = game.Map;
+                if (!game.Running || lvl == null) continue;
+                sb.Append(BOLD + game.GameName + BOLD + " is running on " + lvl.name + "\n");
             }
-            Send(embed);
+            
+            if (sb.Length == 0) return;
+            embed.Fields.Add("Running games", ConvertMessage(sb.ToString()));
         }
         
         

@@ -24,38 +24,40 @@ namespace MCGalaxy.Modules.Relay.Discord
 {
     public sealed class DiscordConfig 
     {
-        [ConfigBool("enabled", null, false)]
+        [ConfigBool("enabled", "General", false)]
         public bool Enabled;
-        [ConfigString("bot-token", null, "", true)]
+        [ConfigString("bot-token", "General", "", true)]
         public string BotToken = "";
-        [ConfigString("status-message", null, "with {PLAYERS} players")]
-        public string StatusMessage = "with {PLAYERS} players";
-        [ConfigBool("use-nicknames", null, true)]
+        [ConfigBool("use-nicknames", "General", true)]
         public bool UseNicks = true;
         
-        [ConfigString("channel-ids", null, "", true)]
+        [ConfigString("channel-ids", "General", "", true)]
         public string Channels = "";
-        [ConfigString("op-channel-ids", null, "", true)]
+        [ConfigString("op-channel-ids", "General", "", true)]
         public string OpChannels = "";
-        [ConfigString("ignored-user-ids", null, "", true)]
+        [ConfigString("ignored-user-ids", "General", "", true)]
         public string IgnoredUsers = "";
         
-        [ConfigBool("presence-enabled", null, true)]
+        [ConfigBool("presence-enabled", "Presence (Status)", true)]
         public bool PresenceEnabled = true;
-        [ConfigEnum("presence-status", null, PresenceStatus.online, typeof(PresenceStatus))]
+        [ConfigEnum("presence-status", "Presence (Status)", PresenceStatus.online, typeof(PresenceStatus))]
         public PresenceStatus Status = PresenceStatus.online;        
-        [ConfigEnum("presence-activity", null, PresenceActivity.Playing, typeof(PresenceActivity))]
+        [ConfigEnum("presence-activity", "Presence (Status)", PresenceActivity.Playing, typeof(PresenceActivity))]
         public PresenceActivity Activity = PresenceActivity.Playing;
+        [ConfigString("status-message", "Presence (Status)", "with {PLAYERS} players")]
+        public string StatusMessage = "with {PLAYERS} players";
         
-        [ConfigInt("embed-color", null, 9758051)]
-        public int EmbedColor = 9758051;
-        
-        [ConfigBool("can-mention-users", null, true)]
+        [ConfigBool("can-mention-users", "Mentions", true)]
         public bool CanMentionUsers = true;
-        [ConfigBool("can-mention-roles", null, true)]
+        [ConfigBool("can-mention-roles", "Mentions", true)]
         public bool CanMentionRoles = true;
-        [ConfigBool("can-mention-everyone", null, false)]
+        [ConfigBool("can-mention-everyone", "Mentions", false)]
         public bool CanMentionHere;
+        
+        [ConfigInt("embed-color", "Embeds", 9758051)]
+        public int EmbedColor = 9758051;
+        [ConfigBool("embed-show-game-statuses", "Embeds", true)]
+        public bool EmbedGameStatuses = true;
         
         public const string PROPS_PATH = "properties/discordbot.properties";
         static ConfigElement[] cfg;
@@ -75,7 +77,7 @@ namespace MCGalaxy.Modules.Relay.Discord
                 w.WriteLine("# Discord relay bot configuration");
                 w.WriteLine("# See " + Updater.SourceURL + "/wiki/Discord-relay-bot/");
                 w.WriteLine();
-                ConfigElement.SerialiseElements(cfg, w, this);
+                ConfigElement.Serialise(cfg, w, this);
             }
         }
     }
