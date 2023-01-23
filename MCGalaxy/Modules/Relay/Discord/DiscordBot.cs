@@ -296,7 +296,14 @@ namespace MCGalaxy.Modules.Relay.Discord
                 
                 sb.Remove(i, 1); length--;
             }
+            
+            StripMarkdown(sb);
             return sb.ToString();
+        }
+        
+        static void StripMarkdown(StringBuilder sb) {
+            // TODO proper markdown parsing
+            sb.Replace("**", "");
         }
 
 
