@@ -44,7 +44,8 @@ namespace MCGalaxy.Modules.Games.LS
             } else if (prop.CaselessEq("block")) {
                 HandleSetBlock(p, args, cfg);
             } else if (prop.CaselessEq("other")) {
-                HandleSetOther(p, args, cfg);
+                HandleSetOther(p, args, cfg, 
+            	               (LSConfig)game.GetConfig());
             } else {
                 Help(p, "set");
             }
@@ -56,9 +57,12 @@ namespace MCGalaxy.Modules.Games.LS
             return true;
         }
         
-        static bool ParseTimespan(Player p, string arg, string[] args, ref TimeSpan span) {
-            if (!CommandParser.GetTimespan(p, args[3], ref span, "set " + arg + " to", "m")) return false;
-            p.Message("Set {0} to &b{1}", arg, span.Shorten(true));
+        static bool ParseTimespan(Player p, string arg, string[] args, ref TimeSpan? span) {
+            TimeSpan value = default(TimeSpan);
+            if (!CommandParser.GetTimespan(p, args[3], ref value, "set " + arg + " to", "m")) return false;
+            
+            span = value;
+            p.Message("Set {0} to &b{1}", arg, value.Shorten(true));
             return true;
         }
         
@@ -148,11 +152,11 @@ namespace MCGalaxy.Modules.Games.LS
             if (ok) SaveMapConfig(p, cfg);
         }
         
-        void HandleSetOther(Player p, string[] args, LSMapConfig cfg) {
+        void HandleSetOther(Player p, string[] args, LSMapConfig cfg, LSConfig gameCfg) {
             if (args.Length < 3) {
-                p.Message("Layer time: &b" + cfg.LayerInterval.Shorten(true));
-                p.Message("Round time: &b" + cfg.RoundTime.Shorten(true));
-                p.Message("Flood time: &b" + cfg.FloodTime.Shorten(true));
+        		p.Message("Layer time: &b" + gameCfg.GetLayerInterval(cfg).Shorten(true));
+        		p.Message("Round time: &b" + gameCfg.GetRoundTime(cfg).Shorten(true));
+        		p.Message("Flood time: &b" + gameCfg.GetFloodTime(cfg).Shorten(true));
                 p.Message("Safe zone: &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
                 return;
             }
@@ -168,11 +172,11 @@ namespace MCGalaxy.Modules.Games.LS
             bool ok = false;
             
             if (prop.CaselessEq("layer")) {
-                ok = ParseTimespan(p, "layer time", args, ref cfg.LayerInterval);
+                ok = ParseTimespan(p, "layer time", args, ref cfg._LayerInterval);
             } else if (prop.CaselessEq("round")) {
-                ok = ParseTimespan(p, "round time", args, ref cfg.RoundTime);
+                ok = ParseTimespan(p, "round time", args, ref cfg._RoundTime);
             } else if (prop.CaselessEq("flood")) {
-                ok = ParseTimespan(p, "flood time", args, ref cfg.FloodTime);
+                ok = ParseTimespan(p, "flood time", args, ref cfg._FloodTime);
             } else {
                 Help(p, "other");
             }

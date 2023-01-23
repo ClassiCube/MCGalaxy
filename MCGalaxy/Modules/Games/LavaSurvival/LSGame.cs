@@ -77,9 +77,9 @@ namespace MCGalaxy.Modules.Games.LS
             spreadDelay = fastMode ? 0 : 4;
 
             curLayer = 1;
-            roundTotalSecs    = (int)cfg.RoundTime.TotalSeconds;
-            floodDelaySecs    = (int)cfg.FloodTime.TotalSeconds;
-            layerIntervalSecs = (int)cfg.LayerInterval.TotalSeconds;
+            roundTotalSecs    = (int)Config.GetRoundTime(cfg).TotalSeconds;
+            floodDelaySecs    = (int)Config.GetFloodTime(cfg).TotalSeconds;
+            layerIntervalSecs = (int)Config.GetLayerInterval(cfg).TotalSeconds;
             
             if (RoundInProgress) Map.SetPhysics(destroyMode ? 2 : 1);
         }

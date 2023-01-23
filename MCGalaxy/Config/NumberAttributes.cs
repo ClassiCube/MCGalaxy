@@ -18,9 +18,10 @@
 using System;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Config {
-    
-    public abstract class ConfigIntegerAttribute : ConfigAttribute {        
+namespace MCGalaxy.Config 
+{    
+    public abstract class ConfigIntegerAttribute : ConfigAttribute 
+    {
         public ConfigIntegerAttribute(string name, string section) 
             : base(name, section) { }
          
@@ -44,7 +45,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigIntAttribute : ConfigIntegerAttribute {
+    public sealed class ConfigIntAttribute : ConfigIntegerAttribute 
+    {
         int defValue, minValue, maxValue;
         
         public ConfigIntAttribute()
@@ -58,7 +60,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigBlockAttribute : ConfigIntegerAttribute {
+    public sealed class ConfigBlockAttribute : ConfigIntegerAttribute 
+    {
         BlockID defBlock;
         public ConfigBlockAttribute() : this(null, null, Block.Air) { }
         public ConfigBlockAttribute(string name, string section, BlockID def)
@@ -71,7 +74,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigByteAttribute : ConfigIntegerAttribute {        
+    public class ConfigByteAttribute : ConfigIntegerAttribute 
+    {
         public ConfigByteAttribute() : this(null, null) { }
         public ConfigByteAttribute(string name, string section) : base(name, section) { }
         
@@ -80,7 +84,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigUShortAttribute : ConfigIntegerAttribute {
+    public class ConfigUShortAttribute : ConfigIntegerAttribute 
+    {
         public ConfigUShortAttribute() : this(null, null) { }
         public ConfigUShortAttribute(string name, string section) : base(name, section) { }
         
@@ -89,7 +94,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public abstract class ConfigRealAttribute : ConfigAttribute {
+    public abstract class ConfigRealAttribute : ConfigAttribute 
+    {
         public ConfigRealAttribute(string name, string section) 
             : base(name, section) { }
         
@@ -118,7 +124,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigFloatAttribute : ConfigRealAttribute {
+    public class ConfigFloatAttribute : ConfigRealAttribute 
+    {
         float defValue, minValue, maxValue;
         
         public ConfigFloatAttribute()
@@ -132,13 +139,18 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public class ConfigTimespanAttribute : ConfigRealAttribute {
+    public class ConfigTimespanAttribute : ConfigRealAttribute 
+    {
         bool mins; int def;
         public ConfigTimespanAttribute(string name, string section, int def, bool mins)
             : base(name, section) { this.def = def; this.mins = mins; }
         
         public override object Parse(string raw) {
             double value = ParseReal(raw, def, 0, int.MaxValue);
+            return ParseInput(value);
+        }
+        
+        protected TimeSpan ParseInput(double value) {
             if (mins) {
                 return TimeSpan.FromMinutes(value);
             } else {
@@ -150,6 +162,25 @@ namespace MCGalaxy.Config {
             TimeSpan span = (TimeSpan)value;
             double time = mins ? span.TotalMinutes : span.TotalSeconds;
             return time.ToString();
+        }
+    }
+    
+    public class ConfigOptTimespanAttribute : ConfigTimespanAttribute 
+    {
+        public ConfigOptTimespanAttribute(string name, string section, bool mins)
+            : base(name, section, -1, mins) { }
+        
+        public override object Parse(string raw) {
+            double value = ParseReal(raw, -1, -1, int.MaxValue);
+            if (value < 0) return null;
+            
+            return ParseInput(value);
+        }
+        
+        public override string Serialise(object value) {
+            if (value == null) return "";
+            
+            return base.Serialise(value);
         }
     }
 }

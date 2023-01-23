@@ -36,8 +36,33 @@ namespace MCGalaxy.Modules.Games.LS
         [ConfigInt("above-sealevel-reward-max", "Rewards", 15, 0)]
         public int ASL_RewardMax = 15;
         
+        
+        [ConfigTimespan("default-layer-interval", "Defaults", 2, true)]
+        public TimeSpan DefaultLayerInterval = TimeSpan.FromMinutes(2);
+        [ConfigTimespan("default-round-time", "Defaults", 15, true)]
+        public TimeSpan DefaultRoundTime = TimeSpan.FromMinutes(15);
+        [ConfigTimespan("default-flood-time", "Defaults", 5, true)]
+        public TimeSpan DefaultFloodTime = TimeSpan.FromMinutes(5);
+        
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }
+        
+        
+        public TimeSpan GetRoundTime(LSMapConfig mapCfg) {
+            return GetTimespan(mapCfg._RoundTime, DefaultRoundTime);
+        }
+        
+        public TimeSpan GetFloodTime(LSMapConfig mapCfg) {
+            return GetTimespan(mapCfg._FloodTime, DefaultFloodTime);
+        }
+        
+        public TimeSpan GetLayerInterval(LSMapConfig mapCfg) {
+            return GetTimespan(mapCfg._LayerInterval, DefaultLayerInterval);
+        }
+        
+        static TimeSpan GetTimespan(TimeSpan? mapValue, TimeSpan defaultValue) {         
+            return mapValue.HasValue ? mapValue.Value : defaultValue;
+        }
     }
     
     public sealed class LSMapConfig : RoundsGameMapConfig 
@@ -58,12 +83,12 @@ namespace MCGalaxy.Modules.Games.LS
         [ConfigInt("layer-count", null, 10, 0)]
         public int LayerCount = 10;
         
-        [ConfigTimespan("layer-interval", null, 2, true)]
-        public TimeSpan LayerInterval = TimeSpan.FromMinutes(2);
-        [ConfigTimespan("round-time", null, 15, true)]
-        public TimeSpan RoundTime = TimeSpan.FromMinutes(15);
-        [ConfigTimespan("flood-time", null, 5, true)]
-        public TimeSpan FloodTime = TimeSpan.FromMinutes(5);
+        [ConfigOptTimespan("layer-interval", null, true)]
+        public TimeSpan? _LayerInterval;
+        [ConfigOptTimespan("round-time", null, true)]
+        public TimeSpan? _RoundTime;
+        [ConfigOptTimespan("flood-time", null, true)]
+        public TimeSpan? _FloodTime;
         
         [ConfigVec3("block-flood", null)] public Vec3U16 FloodPos;
         [ConfigVec3("block-layer", null)] public Vec3U16 LayerPos;
@@ -82,6 +107,7 @@ namespace MCGalaxy.Modules.Games.LS
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(LSMapConfig));
             SaveTo(cfg, propsDir, map);
         }
+        
         
         public override void SetDefaults(Level lvl) {
             ushort x = (ushort)(lvl.Width / 2), y = (ushort)(lvl.Height / 2), z = (ushort)(lvl.Length / 2);

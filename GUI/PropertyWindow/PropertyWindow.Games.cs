@@ -176,6 +176,8 @@ namespace MCGalaxy.Gui
             }
             
             if (lsCurCfg == null) return;
+            LSConfig cfg = LSGame.Instance.Config;
+            
             ls_numWater.Value   = lsCurCfg.WaterChance;
             ls_numFast.Value    = lsCurCfg.FastChance;
             ls_numDestroy.Value = lsCurCfg.DestroyChance;
@@ -185,9 +187,9 @@ namespace MCGalaxy.Gui
             ls_numCount.Value = lsCurCfg.LayerCount;
             ls_numHeight.Value = lsCurCfg.LayerHeight;
             
-            ls_numRound.Value = lsCurCfg.RoundTime;
-            ls_numFlood.Value = lsCurCfg.FloodTime;
-            ls_numLayerTime.Value = lsCurCfg.LayerInterval;
+            ls_numRound.Value = cfg.GetRoundTime(lsCurCfg);
+            ls_numFlood.Value = cfg.GetFloodTime(lsCurCfg);
+            ls_numLayerTime.Value = cfg.GetLayerInterval(lsCurCfg);
         }
         
         void SaveLSMapSettings() {
@@ -201,9 +203,9 @@ namespace MCGalaxy.Gui
             lsCurCfg.LayerCount  = (int)ls_numCount.Value;
             lsCurCfg.LayerHeight = (int)ls_numHeight.Value;
             
-            lsCurCfg.RoundTime = ls_numRound.Value;
-            lsCurCfg.FloodTime = ls_numFlood.Value;
-            lsCurCfg.LayerInterval = ls_numLayerTime.Value;
+            lsCurCfg._RoundTime = ls_numRound.Value;
+            lsCurCfg._FloodTime = ls_numFlood.Value;
+            lsCurCfg._LayerInterval = ls_numLayerTime.Value;
             
             lsCurCfg.Save(lsCurMap);
             lsHelper.UpdateMapConfig(lsCurMap);
