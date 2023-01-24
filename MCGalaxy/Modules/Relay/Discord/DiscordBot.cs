@@ -392,13 +392,16 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         protected override void DoSendMessage(string channel, string message) {
+            message = ConvertMessage(message);
             ChannelSendMessage msg = new ChannelSendMessage(channel, message);
             msg.Allowed = allowed;
             Send(msg);
         }
         
-        protected override string ConvertMessage(string message) {
-            message = base.ConvertMessage(message);
+        /// <summary> Formats a message for displaying on Discord </summary>
+        /// <example> Escapes markdown characters such as _ and * </example>
+        string ConvertMessage(string message) {
+            message = ConvertMessageCommon(message);
             message = Colors.StripUsed(message);
             message = EscapeMarkdown(message);
             message = SpecialToMarkdown(message);
