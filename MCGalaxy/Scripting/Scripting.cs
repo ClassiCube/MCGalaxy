@@ -54,6 +54,9 @@ namespace MCGalaxy.Scripting
 
                 if (args.Name == assem.FullName) return assem;
             }
+            
+            Logger.Log(LogType.Warning, "Custom command/plugin [{0}] tried to load [{1}], but it could not be found",
+                       args.RequestingAssembly.FullName, args.Name);
             return null;
         }
 
