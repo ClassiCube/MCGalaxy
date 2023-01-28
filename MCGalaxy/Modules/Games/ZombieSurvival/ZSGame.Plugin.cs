@@ -141,7 +141,12 @@ namespace MCGalaxy.Modules.Games.ZS
             data.PledgeSurvive = false;
             p.SetPrefix();
             
-            if (RoundInProgress) {
+             
+            if (prevLevel == null && Alive.Contains(p)) {
+                // Fixes players who login at very end of 'round countdown' being added to
+                //  Alive list, but then becoming auto infected after level is finished sending
+                // TODO redo Player.Login.cs to not add to PlayerInfo.Online so early ??
+            } else if (RoundInProgress) {
                 p.Message("You joined in the middle of a round. &cYou are now infected!");
                 data.BlocksLeft = 25;
                 InfectPlayer(p, null);
