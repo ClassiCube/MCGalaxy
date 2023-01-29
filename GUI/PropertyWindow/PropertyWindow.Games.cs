@@ -194,6 +194,8 @@ namespace MCGalaxy.Gui
         
         void SaveLSMapSettings() {
             if (lsCurCfg == null) return;
+            LSConfig cfg = LSGame.Instance.Config;
+            
             lsCurCfg.WaterChance   = (int)ls_numWater.Value;
             lsCurCfg.FastChance    = (int)ls_numFast.Value;
             lsCurCfg.DestroyChance = (int)ls_numDestroy.Value;
@@ -203,9 +205,10 @@ namespace MCGalaxy.Gui
             lsCurCfg.LayerCount  = (int)ls_numCount.Value;
             lsCurCfg.LayerHeight = (int)ls_numHeight.Value;
             
-            lsCurCfg._RoundTime = ls_numRound.Value;
-            lsCurCfg._FloodTime = ls_numFlood.Value;
-            lsCurCfg._LayerInterval = ls_numLayerTime.Value;
+            // TODO function for this
+            if (ls_numRound.Value     != cfg.DefaultRoundTime)     lsCurCfg._RoundTime = ls_numRound.Value;
+            if (ls_numFlood.Value     != cfg.DefaultFloodTime)     lsCurCfg._FloodTime = ls_numFlood.Value;
+            if (ls_numLayerTime.Value != cfg.DefaultLayerInterval) lsCurCfg._LayerInterval = ls_numLayerTime.Value;
             
             lsCurCfg.Save(lsCurMap);
             lsHelper.UpdateMapConfig(lsCurMap);

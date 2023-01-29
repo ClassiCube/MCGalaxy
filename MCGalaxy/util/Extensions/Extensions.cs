@@ -117,14 +117,15 @@ namespace MCGalaxy
             }
         }
         
-        public static byte[] Decompress(this byte[] gzip, int capacity = 16) {
+        public static byte[] Decompress(this byte[] gzip, int capacity) {
             using (GZipStream src = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress)) {
                 const int size = 4096;
-                byte[] buffer = new byte[size];
+                byte[] buffer  = new byte[size];
                 
                 using (MemoryStream dst = new MemoryStream(capacity)) {
                     int count = 0;
-                    while ((count = src.Read(buffer, 0, size)) > 0) {
+                    while ((count = src.Read(buffer, 0, size)) > 0) 
+                    {
                         dst.Write(buffer, 0, count);
                     }
                     return dst.ToArray();

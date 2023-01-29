@@ -151,8 +151,10 @@ namespace MCGalaxy.SQL
         
         #region Raw SQL functions
         
-        /// <summary> Executes an SQL command that does not return any results. </summary>
-        public void Execute(string sql, object[] parameters, bool createDB) {
+        /// <summary> Executes an SQL command and returns the number of affected rows. </summary>
+        public int Execute(string sql, object[] parameters, bool createDB) {
+            int rows = 0;
+        	
             using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (!createDB && MultipleSchema)
@@ -160,10 +162,11 @@ namespace MCGalaxy.SQL
                 
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
-                    cmd.ExecuteNonQuery();
+                    rows = cmd.ExecuteNonQuery();
                 }
                 conn.Close();
             }
+            return rows;
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        

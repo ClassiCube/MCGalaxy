@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy.Modules.Games.LS
 {
@@ -30,6 +31,7 @@ namespace MCGalaxy.Modules.Games.LS
             if (!Running) return;
             roundSecs = 0;
             layerSecs = 0;
+            curLayer  = 1;
 
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) 
@@ -45,29 +47,37 @@ namespace MCGalaxy.Modules.Games.LS
             RoundInProgress = true;
             UpdateBlockHandlers();
             Map.SetPhysics(destroyMode ? 2 : 1);
+            Vec3U16 pos;
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
                 if (!flooded) AnnounceFloodTime();
                 
                 if (roundSecs >= floodDelaySecs) {
-                    if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
-                        ushort y = (ushort)(cfg.LayerPos.Y + ((cfg.LayerHeight * curLayer) - 1));
-                        Map.Blockchange(cfg.LayerPos.X, y, cfg.LayerPos.Z, floodBlock, true);
+                    if (!layerMode && roundSecs == floodDelaySecs) {
+                        FloodFrom(cfg.FloodPos);
+                    } else if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
+                        pos   = cfg.LayerPos;
+                        pos.Y = (ushort)(pos.Y + ((cfg.LayerHeight * curLayer) - 1));
+                        FloodFrom(pos);
                         curLayer++;
-                    } else if (!layerMode && roundSecs == floodDelaySecs) {
-                        Map.Message("&4Look out, here comes the flood!");
-                        Logger.Log(LogType.GameActivity, "[Lava Survival] Starting map flood.");
-                        Map.Blockchange(cfg.FloodPos.X, cfg.FloodPos.Y, cfg.FloodPos.Z, floodBlock, true);
                     }
                     
                     layerSecs++;
-                    flooded = true;
                 }
                 
                 roundSecs++; 
                 Thread.Sleep(1000);
             }
+        }
+        
+        void FloodFrom(Vec3U16 pos) {
+            Map.Blockchange(pos.X, pos.Y, pos.Z, floodBlock, true);
+            if (flooded) return;
+            
+            Map.Message("&4Look out, here comes the flood!");
+            Logger.Log(LogType.GameActivity, "[Lava Survival] Starting map flood.");
+            flooded = true;
         }
 
         public override void EndRound() {

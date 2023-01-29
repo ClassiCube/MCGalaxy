@@ -62,12 +62,12 @@ namespace MCGalaxy
                 }
                 
                 amount = GetTicks(num, GetUnit(value, i));
-                total = checked(total + amount);
+                total  = checked(total + amount);
                 num = 0;
             }
             
             amount = GetTicks(num, defaultUnit);
-            total = checked(total + amount);
+            total  = checked(total + amount);
             return TimeSpan.FromTicks(total);
         }
         

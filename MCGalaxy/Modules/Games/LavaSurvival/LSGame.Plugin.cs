@@ -91,5 +91,9 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("Sponges Left: &4" + data.SpongesLeft);
             }
         }
+    	
+    	/*bool NearLavaSpawn(ushort x, ushort y, ushort z) {
+    		cfg.FloodPos
+    	}*/
     }
 }
