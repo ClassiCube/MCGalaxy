@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.LS
@@ -76,7 +77,6 @@ namespace MCGalaxy.Modules.Games.LS
             }
             spreadDelay = fastMode ? 0 : 4;
 
-            curLayer = 1;
             roundTotalSecs    = (int)Config.GetRoundTime(cfg).TotalSeconds;
             floodDelaySecs    = (int)Config.GetFloodTime(cfg).TotalSeconds;
             layerIntervalSecs = (int)Config.GetLayerInterval(cfg).TotalSeconds;
@@ -135,11 +135,6 @@ namespace MCGalaxy.Modules.Games.LS
                 if (p.level == Map) Get(p).TimesDied = 0;
             }
         }
-
-        bool InSafeZone(ushort x, ushort y, ushort z) {
-            return x >= cfg.SafeZoneMin.X && x <= cfg.SafeZoneMax.X && y >= cfg.SafeZoneMin.Y
-                && y <= cfg.SafeZoneMax.Y && z >= cfg.SafeZoneMin.Z && z <= cfg.SafeZoneMax.Z;
-        }
         
         public override void PlayerJoinedGame(Player p) {
             bool announce = false;
@@ -148,6 +143,22 @@ namespace MCGalaxy.Modules.Games.LS
 
         static void ResetRoundState(Player p, LSData data) {
             data.SpongesLeft = 10;
+        }
+        
+        
+        bool InSafeZone(ushort x, ushort y, ushort z) {
+            return x >= cfg.SafeZoneMin.X && x <= cfg.SafeZoneMax.X && y >= cfg.SafeZoneMin.Y
+                && y <= cfg.SafeZoneMax.Y && z >= cfg.SafeZoneMin.Z && z <= cfg.SafeZoneMax.Z;
+        }
+        
+        Vec3U16 CurrentLayerPos() {
+            Vec3U16 pos = cfg.LayerPos;
+            pos.Y = (ushort)(pos.Y + ((cfg.LayerHeight * curLayer) - 1));
+            return pos;
+        }
+        
+        string FloodBlockName() {
+            return waterMode ? "water" : "lava";
         }
     }
 }

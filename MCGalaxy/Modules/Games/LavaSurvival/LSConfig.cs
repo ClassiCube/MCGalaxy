@@ -44,6 +44,11 @@ namespace MCGalaxy.Modules.Games.LS
         [ConfigTimespan("default-flood-time", "Defaults", 5, true)]
         public TimeSpan DefaultFloodTime = TimeSpan.FromMinutes(5);
         
+        [ConfigBool("lava-spawn-protection", "Protection", true)]
+        public bool SpawnProtection = true;
+        [ConfigInt("lava-spawn-protection-radius", "Protection", 5)]
+        public int SpawnProtectionRadius = 5;
+        
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }
         

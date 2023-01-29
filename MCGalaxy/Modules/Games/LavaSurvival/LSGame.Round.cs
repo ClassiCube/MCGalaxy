@@ -47,7 +47,6 @@ namespace MCGalaxy.Modules.Games.LS
             RoundInProgress = true;
             UpdateBlockHandlers();
             Map.SetPhysics(destroyMode ? 2 : 1);
-            Vec3U16 pos;
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
@@ -57,9 +56,7 @@ namespace MCGalaxy.Modules.Games.LS
                     if (!layerMode && roundSecs == floodDelaySecs) {
                         FloodFrom(cfg.FloodPos);
                     } else if (layerMode && (layerSecs % layerIntervalSecs) == 0 && curLayer <= cfg.LayerCount) {
-                        pos   = cfg.LayerPos;
-                        pos.Y = (ushort)(pos.Y + ((cfg.LayerHeight * curLayer) - 1));
-                        FloodFrom(pos);
+                        FloodFrom(CurrentLayerPos());
                         curLayer++;
                     }
                     
@@ -142,14 +139,13 @@ namespace MCGalaxy.Modules.Games.LS
         }
         
         void OutputRoundInfo(Player p) {
-            string block = waterMode ? "water" : "lava";
-            
+            string block = FloodBlockName();
             if (waterMode) p.Message("The map will be flooded with &9water &Sthis round!");
-            if (layerMode) p.Message("The " + block + " will &aflood in layers &Sthis round!");
+            if (layerMode) p.Message("The {0} will &aflood in layers &Sthis round!", block);
             
-            if (fastMode) p.Message("The lava will be &cfast &Sthis round!");
-            if (destroyMode) p.Message("The " + block + " will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!");
-            if (floodUp) p.Message("The " + block + " will &cflood upwards &Sthis round!");
+            if (fastMode) p.Message("The {0} will be &cfast &Sthis round!", block);
+            if (destroyMode) p.Message("The {0} will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!", block);
+            if (floodUp) p.Message("The {0} will &cflood upwards &Sthis round!", block);
         }
 
         public override void OutputTimeInfo(Player p) {

@@ -21,6 +21,7 @@ using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Games;
+using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.LS
@@ -66,13 +67,19 @@ namespace MCGalaxy.Modules.Games.LS
         
         void HandleBlockChanging(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {
             if (p.level != Map || !(placing || p.painting)) return;
+            
+            if (Config.SpawnProtection && NearLavaSpawn(x, y, z)) {
+                p.Message("You can't place blocks so close to the {0} spawn", FloodBlockName());
+                p.RevertBlock(x, y, z);
+            	cancel = true; return;
+            }
 
             block = p.GetHeldBlock();
             if (block != Block.Sponge) return;
             LSData data = Get(p);
 
             if (!p.Game.Referee && data.SpongesLeft <= 0) {
-                p.Message("You have no sponges left.");
+                p.Message("You have no sponges left");
                 p.RevertBlock(x, y, z);
                 cancel = true; return;
             }
@@ -91,9 +98,15 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("Sponges Left: &4" + data.SpongesLeft);
             }
         }
-    	
-    	/*bool NearLavaSpawn(ushort x, ushort y, ushort z) {
-    		cfg.FloodPos
-    	}*/
+        
+        bool NearLavaSpawn(ushort x, ushort y, ushort z) {
+    		Vec3U16 pos = layerMode ? CurrentLayerPos() : cfg.FloodPos;
+            int dist    = Config.SpawnProtectionRadius;
+            
+            int dx = Math.Abs(x - pos.X);
+            int dy = Math.Abs(y - pos.Y);
+            int dz = Math.Abs(z - pos.Z);
+            return dx <= dist && dy <= dist && dz <= dist;
+        }
     }
 }
