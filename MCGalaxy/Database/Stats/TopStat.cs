@@ -29,8 +29,11 @@ namespace MCGalaxy.DB
     public delegate string TopStatFormatter(string input);
     
     
-    /// <summary> Outputs ordered stats from a column in a database table. </summary>
-    public sealed class TopStat 
+    public struct TopResult { public string User, Value; }
+    
+    /// <summary> Outputs ordered stats from an underlying dsta source </summary>
+    /// <example> Most TopStats read from column in a database table </example>
+    public class TopStat 
     {    
         public readonly string Identifier, Table, Column, OrderBy;
         public readonly TopStatTitle Title;
@@ -50,14 +53,33 @@ namespace MCGalaxy.DB
             OrderBy += (ascending ? "asc" : "desc");
         }
         
+        
+        /// <summary> Retrieves unformatted results from the underlying data source </summary>
+        public virtual List<TopResult> GetResults(int maxResults, int offset) {
+            string limit = " LIMIT " + offset + "," + maxResults;
+            List<TopResult> stats = new List<TopResult>();
+            
+            Database.ReadRows(Table, "DISTINCT Name, " + Column, 
+                              record => stats.Add(ParseRow(record)),
+                              "ORDER BY" + OrderBy + limit);
+            return stats;
+        }
+        
+        static TopResult ParseRow(ISqlRecord record) {
+            TopResult result;
+            result.User  = record.GetStringValue(0);
+            result.Value = record.GetStringValue(1);
+            return result;
+        }
+        
+        
         public static TopStat Find(string name) {
             foreach (TopStat stat in Stats) 
             {
                 if (stat.Identifier.CaselessEq(name)) return stat;
             }
             return null;
-        }
-        
+        }       
         
         /// <summary> List of stats that can be ordered. </summary>
         public static List<TopStat> Stats = new List<TopStat>() {

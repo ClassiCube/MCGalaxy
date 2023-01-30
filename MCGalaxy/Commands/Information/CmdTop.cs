@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.DB;
-using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info 
 {
@@ -48,15 +47,13 @@ namespace MCGalaxy.Commands.Info
                 if (!CommandParser.GetInt(p, args[2], "Offset", ref offset, 0)) return;
             }
             
-            string limit = " LIMIT " + offset + "," + maxResults;
-            List<string[]> stats = Database.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
-                                                    "ORDER BY" + stat.OrderBy + limit);
-            
+            List<TopResult> stats = stat.GetResults(maxResults, offset);
             p.Message("&a{0}:", stat.Title());
+            
             for (int i = 0; i < stats.Count; i++) 
             {
-                string nick  = p.FormatNick(stats[i][0]);
-                string value = stat.Formatter(stats[i][1]);
+                string nick  = p.FormatNick(stats[i].User);
+                string value = stat.Formatter(stats[i].Value);
                 p.Message("{0}) {1} &S- {2}", offset + (i + 1), nick, value);
             }
         }
