@@ -71,42 +71,52 @@ namespace MCGalaxy.Modules.Games.LS
             if (Config.SpawnProtection && NearLavaSpawn(x, y, z)) {
                 p.Message("You can't place blocks so close to the {0} spawn", FloodBlockName());
                 p.RevertBlock(x, y, z);
-            	cancel = true; return;
+                cancel = true; return;
             }
 
             block = p.GetHeldBlock();
-            if (block != Block.Sponge) return;
             LSData data = Get(p);
+            
+            if (block == Block.Sponge) {
+                bool placed = TryPlaceBlock(p, ref data.SpongesLeft, "Sponges", Block.Sponge, x, y, z);
+                if (!placed) { cancel = true; return; }
 
-            if (!p.Game.Referee && data.SpongesLeft <= 0) {
-                p.Message("You have no sponges left");
-                p.RevertBlock(x, y, z);
-                cancel = true; return;
-            }
-
-            if (p.ChangeBlock(x, y, z, Block.Sponge) == ChangeResult.Unchanged) {
-                cancel = true; return;
-            }
-
-            PhysInfo C = default(PhysInfo);
-            C.X = x; C.Y = y; C.Z = z;
-            OtherPhysics.DoSponge(Map, ref C, !waterMode);
-
-            if (p.Game.Referee) return;
-            data.SpongesLeft--;
-            if ((data.SpongesLeft % 10) == 0 || data.SpongesLeft <= 10) {
-                p.Message("Sponges Left: &4" + data.SpongesLeft);
+                PhysInfo C = default(PhysInfo);
+                C.X = x; C.Y = y; C.Z = z;
+                OtherPhysics.DoSponge(Map, ref C, !waterMode);
+            } else if (block == Block.StillWater) {
+                bool placed = TryPlaceBlock(p, ref data.WaterLeft, "Water blocks", Block.StillWater, x, y, z);
+                if (!placed) { cancel = true; return; }
             }
         }
         
         bool NearLavaSpawn(ushort x, ushort y, ushort z) {
-    		Vec3U16 pos = layerMode ? CurrentLayerPos() : cfg.FloodPos;
+            Vec3U16 pos = layerMode ? CurrentLayerPos() : cfg.FloodPos;
             int dist    = Config.SpawnProtectionRadius;
             
             int dx = Math.Abs(x - pos.X);
             int dy = Math.Abs(y - pos.Y);
             int dz = Math.Abs(z - pos.Z);
             return dx <= dist && dy <= dist && dz <= dist;
+        }
+        
+        bool TryPlaceBlock(Player p, ref int blocksLeft, string type, 
+                           BlockID block, ushort x, ushort y, ushort z) {
+            if (!p.Game.Referee && blocksLeft <= 0) {
+                p.Message("You have no {0} left", type);
+                p.RevertBlock(x, y, z);
+                return false;
+            }
+
+            if (p.ChangeBlock(x, y, z, block) == ChangeResult.Unchanged)
+                return false;           
+            if (p.Game.Referee) return true;
+            
+            blocksLeft--;
+            if ((blocksLeft % 10) == 0 || blocksLeft <= 10) {
+                p.Message("{0} left: &4{1}", type, blocksLeft);
+            }
+            return true;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace MCGalaxy.Modules.Games.LS
 {
     public sealed class LSData 
     {
-        public int TimesDied, SpongesLeft;
+        public int TimesDied, SpongesLeft, WaterLeft;
     }
     
     public sealed partial class LSGame : RoundsGame 
@@ -143,6 +143,7 @@ namespace MCGalaxy.Modules.Games.LS
 
         static void ResetRoundState(Player p, LSData data) {
             data.SpongesLeft = 10;
+            data.WaterLeft   = 30;
         }
         
         
