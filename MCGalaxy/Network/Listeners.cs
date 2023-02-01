@@ -115,7 +115,7 @@ namespace MCGalaxy.Network
         static void AcceptCallback(IAsyncResult result) {
             if (Server.shuttingDown) return;
             TcpListen listen = (TcpListen)result.AsyncState;
-            TcpSocket s = null;
+            INetSocket s = null;
             
             try {
                 Socket raw  = listen.socket.EndAccept(result);
@@ -126,7 +126,13 @@ namespace MCGalaxy.Network
                     // intentionally non-clean connection close
                     try { raw.Close(); } catch { }
                 } else {
+                    #if NET_20
+                    // TODO better non-hardcoded detection? move to OperatingSystem?
+                    s = Environment.OSVersion.Platform == PlatformID.Win32Windows ? (INetSocket)(new TcpLegacySocket(raw)) : (INetSocket)(new TcpSocket(raw));
+                    #else
                     s = new TcpSocket(raw);
+                    #endif
+                    
                     if (announce) Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
                     s.Init();
                 }
@@ -139,7 +145,7 @@ namespace MCGalaxy.Network
 
         public override void Close() {
             try {
-        	    Listening = false;
+                Listening = false;
                 if (socket != null) socket.Close();
             } catch (Exception ex) { 
                 Logger.LogError(ex); 

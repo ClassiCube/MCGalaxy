@@ -327,4 +327,135 @@ namespace MCGalaxy.Network
             return IPAddress.IsLoopback(ip) || ip.Equals(ccnetIP);
         }
     }
+    
+    // TODO avoid copying so much of TcpSocket
+    #if NET_20  
+    /// <summary> Backwards compatible socket for older Windows versions where Recv/SendAsync doesn't work </summary>
+    public sealed class TcpLegacySocket : INetSocket 
+    {
+        readonly Socket socket;
+        byte[] recvBuffer = new byte[256];
+        
+        byte[] sendBuffer = new byte[4096];
+        readonly object sendLock = new object();
+        readonly Queue<byte[]> sendQueue = new Queue<byte[]>(64);
+        volatile bool sendInProgress;
+        
+        public TcpLegacySocket(Socket s) { socket = s; }
+        
+        public override void Init() {
+            ReceiveNextAsync();
+        }
+        
+        public override IPAddress IP {
+            get { return SocketUtil.GetIP(socket); }
+        }
+        public override bool LowLatency { set { socket.NoDelay = value; } }
+        
+        
+        static AsyncCallback recvCallback = RecvCallback;
+        void ReceiveNextAsync() {
+            socket.BeginReceive(recvBuffer, 0, recvBuffer.Length, 0, recvCallback, this);
+        }
+        
+        static void RecvCallback(IAsyncResult result) {
+            TcpLegacySocket s = (TcpLegacySocket)result.AsyncState;
+            if (s.Disconnected) return;
+            
+            try {
+                // If received 0, means socket was closed
+                int recvLen = s.socket.EndReceive(result);
+                if (recvLen == 0) { s.Disconnect(); return; }
+                
+                s.HandleReceived(s.recvBuffer, recvLen);
+                if (!s.Disconnected) s.ReceiveNextAsync();
+            } catch (SocketException) {
+                s.Disconnect();
+            } catch (ObjectDisposedException) {
+                // Socket was closed by another thread, mark as disconnected
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+                s.Disconnect();
+            }
+        }
+        
+        
+        static AsyncCallback sendCallback = SendCallback;
+        public override void Send(byte[] buffer, SendFlags flags) {
+            if (Disconnected || !socket.Connected) return;
+
+            // TODO: Low priority sending support
+            try {
+                if ((flags & SendFlags.Synchronous) != 0) {
+                    socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+                    return;
+                }
+                
+                lock (sendLock) {
+                    if (sendInProgress) {
+                        sendQueue.Enqueue(buffer);
+                    } else {
+                        TrySendAsync(buffer);
+                    }
+                }
+            } catch (SocketException) {
+                Disconnect();
+            } catch (ObjectDisposedException) {
+                // Socket was already closed by another thread
+            }
+        }
+        
+        void TrySendAsync(byte[] buffer) {
+            // BlockCopy has some overhead, not worth it for very small data
+            if (buffer.Length <= 16) {
+                for (int i = 0; i < buffer.Length; i++) {
+                    sendBuffer[i] = buffer[i];
+                }
+            } else {
+                Buffer.BlockCopy(buffer, 0, sendBuffer, 0, buffer.Length);
+            }
+
+            sendInProgress = true;
+            socket.BeginSend(sendBuffer, 0, buffer.Length, 0, sendCallback, this);
+        }
+        
+        static void SendCallback(IAsyncResult result) {
+            TcpLegacySocket s = (TcpLegacySocket)result.AsyncState;
+            try {
+                lock (s.sendLock) {
+                    s.socket.EndSend(result);
+                    s.sendInProgress = false;
+                    
+                    if (s.sendQueue.Count > 0) {
+                        s.TrySendAsync(s.sendQueue.Dequeue());
+                        if (s.Disconnected) s.sendQueue.Clear();
+                    }
+                }
+            } catch (SocketException) {
+                s.Disconnect();
+            } catch (ObjectDisposedException) {
+                // Socket was already closed by another thread
+            } catch (Exception ex) {
+                Logger.LogError(ex);
+            }
+        }
+        
+        // Close while also notifying higher level (i.e. show 'X disconnected' in chat)
+        void Disconnect() {
+            if (protocol != null) protocol.Disconnect();
+            Close();
+        }
+        
+        public override void Close() {
+            Disconnected = true;
+            pending.Remove(this);
+            
+            // swallow errors as connection is being closed anyways
+            try { socket.Shutdown(SocketShutdown.Both); } catch { }
+            try { socket.Close(); } catch { }
+            
+            lock (sendLock) { sendQueue.Clear(); }
+        }
+    }
+    #endif
 }

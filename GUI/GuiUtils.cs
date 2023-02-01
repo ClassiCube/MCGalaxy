@@ -22,6 +22,9 @@ using System.Windows.Forms;
 
 namespace MCGalaxy.Gui 
 {
+    // NET 2.0 doesn't have Action delegate defined
+    public delegate void UIAction();
+	
     /// <summary> Shortcuts for MessageBox.Show </summary>
     public static class Popup 
     {

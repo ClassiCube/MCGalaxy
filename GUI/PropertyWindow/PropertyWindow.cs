@@ -32,7 +32,7 @@ namespace MCGalaxy.Gui
             propsZG.SelectedObject = zsSettings;
         }
         
-        public void RunOnUI_Async(Action act) { BeginInvoke(act); }
+        public void RunOnUI_Async(UIAction act) { BeginInvoke(act); }
 
         void PropertyWindow_Load(object sender, EventArgs e) {
             // try to use same icon as main window
