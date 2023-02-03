@@ -47,21 +47,21 @@ namespace MCGalaxy.Commands.Info
                 if (!CommandParser.GetInt(p, args[2], "Offset", ref offset, 0)) return;
             }
             
-            List<TopResult> stats = stat.GetResults(maxResults, offset);
+            List<TopResult> results = stat.GetResults(maxResults, offset);
             p.Message("&a{0}:", stat.Title());
             
-            for (int i = 0; i < stats.Count; i++) 
+            for (int i = 0; i < results.Count; i++) 
             {
-                string nick  = p.FormatNick(stats[i].User);
-                string value = stat.Formatter(stats[i].Value);
-                p.Message("{0}) {1} &S- {2}", offset + (i + 1), nick, value);
+                p.Message("{0}) {1} &S- {2}", offset + (i + 1), 
+                          stat.FormatName(p, results[i].Name), 
+                          stat.Formatter(results[i].Value));
             }
         }
         
         public override void Help(Player p) {
             p.Message("&T/Top [max results] [stat] <offset>");
             p.Message("&HPrints a list of players who have the " +
-                           "most/top of a particular stat. Available stats:");
+                       "most/top of a particular stat. Available stats:");
             p.Message("&f" + TopStat.Stats.Join(stat => stat.Identifier));
         }
     }

@@ -29,7 +29,7 @@ namespace MCGalaxy.DB
     public delegate string TopStatFormatter(string input);
     
     
-    public struct TopResult { public string User, Value; }
+    public struct TopResult { public string Name, Value; }
     
     /// <summary> Outputs ordered stats from an underlying dsta source </summary>
     /// <example> Most TopStats read from column in a database table </example>
@@ -54,6 +54,10 @@ namespace MCGalaxy.DB
         }
         
         
+        public virtual string FormatName(Player p, string name) {
+            return p.FormatNick(name);
+        }
+        
         /// <summary> Retrieves unformatted results from the underlying data source </summary>
         public virtual List<TopResult> GetResults(int maxResults, int offset) {
             string limit = " LIMIT " + offset + "," + maxResults;
@@ -67,7 +71,7 @@ namespace MCGalaxy.DB
         
         static TopResult ParseRow(ISqlRecord record) {
             TopResult result;
-            result.User  = record.GetStringValue(0);
+            result.Name  = record.GetStringValue(0);
             result.Value = record.GetStringValue(1);
             return result;
         }

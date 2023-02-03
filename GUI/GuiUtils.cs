@@ -22,7 +22,7 @@ using System.Windows.Forms;
 
 namespace MCGalaxy.Gui 
 {
-    // NET 2.0 doesn't have Action delegate defined
+    // NET 2.0 doesn't include the "Action delegate without parameters" type
     public delegate void UIAction();
 	
     /// <summary> Shortcuts for MessageBox.Show </summary>
