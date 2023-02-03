@@ -22,7 +22,6 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable
     {
-        public string appName;
         // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasChangeModel, hasExtList, hasCP437;
 

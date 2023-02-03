@@ -208,7 +208,7 @@ namespace MCGalaxy.Network
             const int size = 1 + 64 + 2;
             if (left < size) return 0;
             
-            player.appName      = NetUtils.ReadString(buffer, offset + 1);
+            appName = NetUtils.ReadString(buffer, offset + 1);
             extensionCount = buffer[offset + 66];
             CheckReadAllExtensions(); // in case client supports 0 CPE packets
             return size;
@@ -636,7 +636,7 @@ namespace MCGalaxy.Network
         }
 
         public override string ClientName() {
-            if (!string.IsNullOrEmpty(player.appName)) return player.appName;
+            if (!string.IsNullOrEmpty(appName)) return appName;
             byte version = ProtocolVersion;
                   
             if (version == Server.VERSION_0016) return "Classic 0.0.16";
