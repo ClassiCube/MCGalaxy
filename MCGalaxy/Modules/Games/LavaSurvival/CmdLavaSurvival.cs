@@ -127,7 +127,6 @@ namespace MCGalaxy.Modules.Games.LS
         void HandleSetBlock(Player p, string[] args, LSMapConfig cfg) {
             if (args.Length < 3) {
                 p.Message("Fast lava chance: &b" + cfg.FastChance + "%");
-                p.Message("Destroy blocks chance: &b" + cfg.DestroyChance + "%");
                 p.Message("Water flood chance: &b" + cfg.WaterChance + "%");
                 p.Message("Flood upwards chance: &b" + cfg.FloodUpChance + "%");
                 return;
@@ -139,8 +138,6 @@ namespace MCGalaxy.Modules.Games.LS
             
             if (prop.CaselessEq("fast")) {
                 ok = ParseChance(p, "fast lava", args, ref cfg.FastChance);
-            }else if (prop.CaselessEq("destroy")) {
-                ok = ParseChance(p, "destroy blocks", args, ref cfg.DestroyChance);
             } else if (prop.CaselessEq("water")) {
                 ok = ParseChance(p, "water flood", args, ref cfg.WaterChance);
             } else if (prop.CaselessEq("upwards")) {

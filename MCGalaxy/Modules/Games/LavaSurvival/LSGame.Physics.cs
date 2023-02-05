@@ -71,7 +71,7 @@ namespace MCGalaxy.Modules.Games.LS
                 C.Data.Data++; return;
             }
             
-            if (!lvl.CheckSpongeLava(x, y, z)) {
+            if (!lvl.CheckSpongeWater(x, y, z)) {
                 BlockID block = C.Block;
                 SpreadLava(lvl, (ushort)(x + 1), y, z, block);
                 SpreadLava(lvl, (ushort)(x - 1), y, z, block);
@@ -113,12 +113,7 @@ namespace MCGalaxy.Modules.Games.LS
                     lvl.AddCheck(index); break;
                     
                 default:
-                    // Adv physics kills flowers and mushrooms in water
-                    if (!lvl.Props[block].WaterKills) break;
-                    
-                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) {
-                        lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
-                    }
+                    SpreadLiquid(lvl, x, y, z, index, block, true);
                     break;
             }
         }
@@ -154,14 +149,38 @@ namespace MCGalaxy.Modules.Games.LS
                     lvl.AddCheck(index); break;
 
                 default:
-                    //Adv physics kills flowers, wool, mushrooms, and wood type blocks in lava
-                    if (!lvl.Props[block].LavaKills) break;
-                    
-                    if (lvl.physics > 1 && !lvl.CheckSpongeWater(x, y, z)) {
-                        lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
-                    }
+                    SpreadLiquid(lvl, x, y, z, index, block, false);
                     break;
             }
+        }
+        
+        void SpreadLiquid(Level lvl, ushort x, ushort y, ushort z, int index, 
+                          BlockID block, bool isWater) {
+            if (floodMode == LSFloodMode.Calm) return;
+            
+            bool instaKills = isWater ?
+                lvl.Props[block].WaterKills : lvl.Props[block].LavaKills;
+            
+            // TODO need to kill less often
+            if (instaKills) {
+                if (!lvl.CheckSpongeWater(x, y, z)) {
+                    lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
+                }
+            } else if (!lvl.Props[block].OPBlock) {
+                PhysicsArgs C = default(PhysicsArgs);
+                C.Type1  = PhysicsArgs.Wait;   C.Value1 = GetDestoryDelay();
+                C.Type2  = PhysicsArgs.Revert; C.Value2 = Block.Air;
+                lvl.AddCheck(index, false, C);
+            }
+        }
+        
+        byte GetDestoryDelay() {
+            LSFloodMode mode = floodMode;
+            
+            if (mode == LSFloodMode.Disturbed) return 200;
+            if (mode == LSFloodMode.Furious)   return 100;
+            if (mode == LSFloodMode.Wild)      return  50;
+            return 10;
         }
     }
 }

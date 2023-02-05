@@ -46,7 +46,7 @@ namespace MCGalaxy.Modules.Games.LS
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;
             UpdateBlockHandlers();
-            Map.SetPhysics(destroyMode ? 2 : 1);
+            SetFloodMode(floodMode);
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
@@ -76,22 +76,6 @@ namespace MCGalaxy.Modules.Games.LS
             Logger.Log(LogType.GameActivity, "[Lava Survival] Starting map flood.");
             flooded = true;
         }
-
-        public override void EndRound() {
-            if (!RoundInProgress) return;
-            RoundInProgress = false;
-            flooded = false;
-            
-            Map.SetPhysics(5);
-            Map.Message("The round has ended!");
-            
-            Random rnd = new Random();
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) 
-            {
-                if (p.level == Map) RewardPlayer(p, rnd);
-            }
-        }
         
         void RewardPlayer(Player p, Random rnd) {
             if (IsPlayerDead(p)) return;
@@ -117,6 +101,23 @@ namespace MCGalaxy.Modules.Games.LS
             }
         }
 
+        public override void EndRound() {
+            if (!RoundInProgress) return;
+            RoundInProgress = false;
+            flooded = false;
+            
+            Map.SetPhysics(5);
+            Map.Message("The round has ended!");
+            
+            Random rnd = new Random();
+            Player[] players = PlayerInfo.Online.Items;
+            foreach (Player p in players) 
+            {
+                if (p.level == Map) RewardPlayer(p, rnd);
+            }
+        }
+        
+
         string FloodTimeLeftMessage() {
             TimeSpan left = TimeSpan.FromSeconds(floodDelaySecs - roundSecs);
             return "&3" + left.Shorten(true) + " &Suntil the flood starts";
@@ -125,6 +126,12 @@ namespace MCGalaxy.Modules.Games.LS
         string RoundTimeLeftMessage() {
             TimeSpan left = TimeSpan.FromSeconds(roundTotalSecs - roundSecs);
             return "&3" + left.Shorten(true) + " &Suntil the round ends";
+        }
+        
+        string ModeMessage(string block) {
+            LSFloodMode mode = floodMode;
+            
+            return block + " will be &c" + mode + " &Sthis round";
         }
 
         public override void OutputStatus(Player p) {
@@ -144,8 +151,8 @@ namespace MCGalaxy.Modules.Games.LS
             if (layerMode) p.Message("The {0} will &aflood in layers &Sthis round!", block);
             
             if (fastMode) p.Message("The {0} will be &cfast &Sthis round!", block);
-            if (destroyMode) p.Message("The {0} will &cdestroy plants " + (waterMode ? "" : "and flammable blocks ") + "&Sthis round!", block);
             if (floodUp) p.Message("The {0} will &cflood upwards &Sthis round!", block);
+            p.Message(ModeMessage(block));
         }
 
         public override void OutputTimeInfo(Player p) {

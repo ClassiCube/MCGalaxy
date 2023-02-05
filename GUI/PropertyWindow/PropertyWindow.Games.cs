@@ -180,7 +180,7 @@ namespace MCGalaxy.Gui
             
             ls_numWater.Value   = lsCurCfg.WaterChance;
             ls_numFast.Value    = lsCurCfg.FastChance;
-            ls_numDestroy.Value = lsCurCfg.DestroyChance;
+            //ls_numDestroy.Value = lsCurCfg.DestroyChance;
             ls_numFloodUp.Value = lsCurCfg.FloodUpChance;
             
             ls_numLayer.Value = lsCurCfg.LayerChance;
@@ -198,7 +198,7 @@ namespace MCGalaxy.Gui
             
             lsCurCfg.WaterChance   = (int)ls_numWater.Value;
             lsCurCfg.FastChance    = (int)ls_numFast.Value;
-            lsCurCfg.DestroyChance = (int)ls_numDestroy.Value;
+            //lsCurCfg.DestroyChance = (int)ls_numDestroy.Value;
             lsCurCfg.FloodUpChance = (int)ls_numFloodUp.Value;
             
             lsCurCfg.LayerChance = (int)ls_numLayer.Value;

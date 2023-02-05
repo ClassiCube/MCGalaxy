@@ -49,6 +49,17 @@ namespace MCGalaxy.Modules.Games.LS
         [ConfigInt("lava-spawn-protection-radius", "Protection", 5)]
         public int SpawnProtectionRadius = 5;
         
+        [ConfigInt("chance-calm",      "Mode chances", 35, 0, 100)]
+        public int CalmChance = 35;
+        [ConfigInt("chance-disturbed", "Mode chances", 45, 0, 100)]
+        public int DisturbedChance = 45;
+        [ConfigInt("chance-furious",   "Mode chances", 15, 0, 100)]
+        public int FuriousChance = 15;
+        [ConfigInt("chance-wild",      "Mode chances",  5, 0, 100)]
+        public int WildChance = 5;
+        [ConfigInt("chance-extreme",   "Mode chances",  0, 0, 100)]
+        public int ExtremeChance = 0;
+        
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }
         
@@ -74,8 +85,6 @@ namespace MCGalaxy.Modules.Games.LS
     {
         [ConfigInt("fast-chance", null, 0, 0, 100)]
         public int FastChance;
-        [ConfigInt("destroy-chance", null, 50, 0, 100)]
-        public int DestroyChance = 50;
         [ConfigInt("water-chance", null, 0, 0, 100)]
         public int WaterChance;
         [ConfigInt("flood-upwards-chance", null, 0, 0, 100)]

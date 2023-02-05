@@ -28,6 +28,11 @@ namespace MCGalaxy.Modules.Games.LS
         public int TimesDied, SpongesLeft, WaterLeft;
     }
     
+    public enum LSFloodMode
+    {
+        Calm, Disturbed, Furious, Wild, Extreme
+    }
+    
     public sealed partial class LSGame : RoundsGame 
     {
         LSMapConfig cfg = new LSMapConfig();
@@ -39,8 +44,9 @@ namespace MCGalaxy.Modules.Games.LS
             get { return "&cLava Survival &Sis running! Type &T/LS go &Sto join"; }
         }
         
-        bool flooded, fastMode, destroyMode, waterMode, layerMode, floodUp;
+        bool flooded, fastMode, waterMode, layerMode, floodUp;
         BlockID floodBlock;
+        LSFloodMode floodMode;
         int curLayer, spreadDelay;
         int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
         static bool hooked;
@@ -64,11 +70,10 @@ namespace MCGalaxy.Modules.Games.LS
             this.cfg = cfg;            
             Random rnd = new Random();
             
-            destroyMode = rnd.Next(1, 101) <= cfg.DestroyChance;
-            waterMode   = rnd.Next(1, 101) <= cfg.WaterChance;
-            layerMode   = rnd.Next(1, 101) <= cfg.LayerChance;
-            fastMode    = rnd.Next(1, 101) <= cfg.FastChance && !waterMode;
-            floodUp     = rnd.Next(1, 101) <= cfg.FloodUpChance;
+            waterMode = rnd.Next(1, 101) <= cfg.WaterChance;
+            layerMode = rnd.Next(1, 101) <= cfg.LayerChance;
+            fastMode  = rnd.Next(1, 101) <= cfg.FastChance && !waterMode;
+            floodUp   = rnd.Next(1, 101) <= cfg.FloodUpChance;
             
             if (waterMode) {
                 floodBlock = Block.Deadly_ActiveWater;
@@ -81,8 +86,32 @@ namespace MCGalaxy.Modules.Games.LS
             floodDelaySecs    = (int)Config.GetFloodTime(cfg).TotalSeconds;
             layerIntervalSecs = (int)Config.GetLayerInterval(cfg).TotalSeconds;
             
-            if (RoundInProgress) Map.SetPhysics(destroyMode ? 2 : 1);
+            SetFloodMode(RandomFloodMode(rnd));
         }
+        
+        LSFloodMode RandomFloodMode(Random rnd) {
+            int likelihood = rnd.Next(1, 101);
+            int threshold = 0;
+            
+            int[] chances = { Config.CalmChance, Config.DisturbedChance,
+                Config.WildChance, Config.FuriousChance, Config.ExtremeChance 
+            };
+            
+            for (int i = 0; i < chances.Length; i++)
+            {
+                threshold += chances[i];
+                if (likelihood <= threshold) return (LSFloodMode)i;
+            }
+            return LSFloodMode.Calm;
+        }        
+        
+        public void SetFloodMode(LSFloodMode mode) {
+            floodMode = mode;
+            if (!RoundInProgress) return;
+            
+            Map.SetPhysics(floodMode > LSFloodMode.Calm ? 2 : 1);
+        }
+        
                 
         protected override List<Player> GetPlayers() {
             return Map.getPlayers();
