@@ -170,6 +170,7 @@ namespace MCGalaxy.Modules.Games.LS
                 PhysicsArgs C = default(PhysicsArgs);
                 C.Type1  = PhysicsArgs.Wait;   C.Value1 = GetDestoryDelay();
                 C.Type2  = PhysicsArgs.Revert; C.Value2 = Block.Air;
+                // TODO dissipate
                 lvl.AddCheck(index, false, C);
             }
         }

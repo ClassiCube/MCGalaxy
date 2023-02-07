@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoRestart(Player p, Vec3S32[] m, object state, BlockID block) {
-            PhysicsArgs extraInfo = (PhysicsArgs)state;
+            PhysicsArgs args = (PhysicsArgs)state;
             List<int> buffer = new List<int>();
             int index;
             
@@ -102,7 +102,7 @@ namespace MCGalaxy.Commands.Building {
                 }
             }
 
-            if (extraInfo.Raw == 0) {
+            if (args.Raw == 0) {
                 if (buffer.Count > Server.Config.PhysicsRestartNormLimit) {
                     p.Message("Cannot restart more than " + Server.Config.PhysicsRestartNormLimit + " blocks.");
                     p.Message("Tried to restart " + buffer.Count + " blocks.");
@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.Building {
             }
 
             foreach (int index1 in buffer) {
-                p.level.AddCheck(index1, true, extraInfo);
+                p.level.AddCheck(index1, true, args);
             }
             p.Message("Activated " + buffer.Count + " blocks.");
             return true;

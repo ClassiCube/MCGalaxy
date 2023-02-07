@@ -105,21 +105,16 @@ namespace MCGalaxy.Levels.IO {
         }
         
         static void WritePhysicsSection(Level lvl, Stream gs, byte[] buffer) {
-            // Count the number of physics checks with extra info
-            int used = 0, count = lvl.ListCheck.Count;
+            int count = lvl.ListCheck.Count;
             Check[] checks = lvl.ListCheck.Items;
-            for (int i = 0; i < count; i++) {
-                if (checks[i].data.Raw == 0) continue;
-                used++;
-            }
-            if (used == 0) return;
+            if (count == 0) return;
             
             gs.WriteByte(0xFC); // 'Ph'ysics 'C'hecks
-            NetUtils.WriteI32(used, buffer, 0);
+            NetUtils.WriteI32(count, buffer, 0);
             gs.Write(buffer, 0, sizeof(int));
             
             // NOTE: We have to be extremely careful here to make sure
-            //   that exactly 'used' entries are actually written.
+            //   that exactly 'count' entries are actually written.
             // (this otherwise breaks zones getting imported from the map)
             
             // Locking physics tick ensures that the physics thread can't
@@ -132,10 +127,9 @@ namespace MCGalaxy.Levels.IO {
                 int* ptrInt = (int*)ptr;
                 const int bulkCount = bufferSize / 8;
             
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < count; i++) 
+                {
                     Check C = checks[i];
-                    // Does this check have extra physics data
-                    if (C.data.Raw == 0) continue;
                     *ptrInt = C.Index; ptrInt++;
                     *ptrInt = (int)C.data.Raw; ptrInt++;
                     entries++;

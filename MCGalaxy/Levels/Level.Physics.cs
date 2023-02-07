@@ -37,9 +37,11 @@ namespace MCGalaxy {
         	
             if (physics == 0 && level != 0 && blocks != null) {
                 for (int i = 0; i < blocks.Length; i++)
+                {
                     // Optimization hack, since no blocks under 183 ever need a restart
                     if (blocks[i] > 183 && Block.NeedRestart(blocks[i]))
                         AddCheck(i);
+                }
             }
             
             if (physics != level) OnPhysicsLevelChangedEvent.Call(this, level);
