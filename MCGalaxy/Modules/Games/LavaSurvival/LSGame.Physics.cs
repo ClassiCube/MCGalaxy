@@ -112,6 +112,11 @@ namespace MCGalaxy.Modules.Games.LS
                 case Block.FloatWood:
                     lvl.AddCheck(index); break;
                     
+                case Block.CoalOre: // TODO 
+                case Block.Water:
+                case Block.Deadly_ActiveWater:
+                    break; 
+                    
                 default:
                     SpreadLiquid(lvl, x, y, z, index, block, true);
                     break;
@@ -147,6 +152,12 @@ namespace MCGalaxy.Modules.Games.LS
                     
                 case Block.Gravel:
                     lvl.AddCheck(index); break;
+                    
+                case Block.CoalOre: // TODO 
+                case Block.Lava:
+                case Block.FastLava:
+                case Block.Deadly_ActiveLava:
+                    break;
 
                 default:
                     SpreadLiquid(lvl, x, y, z, index, block, false);
@@ -168,10 +179,9 @@ namespace MCGalaxy.Modules.Games.LS
                 }
             } else if (!lvl.Props[block].OPBlock) {
                 PhysicsArgs C = default(PhysicsArgs);
-                C.Type1  = PhysicsArgs.Wait;   C.Value1 = GetDestoryDelay();
-                C.Type2  = PhysicsArgs.Revert; C.Value2 = Block.Air;
-                // TODO dissipate
-                lvl.AddCheck(index, false, C);
+                C.Type1  = PhysicsArgs.Wait;      C.Value1 = GetDestoryDelay();
+                C.Type2  = PhysicsArgs.Dissipate; C.Value2 = GetDissipateChance();
+                lvl.AddUpdate(index, Block.CoalOre, C);
             }
         }
         
@@ -182,6 +192,15 @@ namespace MCGalaxy.Modules.Games.LS
             if (mode == LSFloodMode.Furious)   return 100;
             if (mode == LSFloodMode.Wild)      return  50;
             return 10;
+        }
+    	
+    	byte GetDissipateChance() {
+            LSFloodMode mode = floodMode;
+            
+            if (mode == LSFloodMode.Disturbed) return 50;
+            if (mode == LSFloodMode.Furious)   return 65;
+            if (mode == LSFloodMode.Wild)      return 80;
+            return 100;
         }
     }
 }

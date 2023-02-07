@@ -22,10 +22,11 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public static class LevelDB {
-        
-        public static void SaveBlockDB(Level lvl) {
+namespace MCGalaxy 
+{
+    public static class LevelDB 
+    {
+        internal static void SaveBlockDB(Level lvl) {
             if (lvl.BlockDB.Cache.Head == null) return;
             if (!lvl.Config.UseBlockDB) { lvl.BlockDB.Cache.Clear(); return; }
 

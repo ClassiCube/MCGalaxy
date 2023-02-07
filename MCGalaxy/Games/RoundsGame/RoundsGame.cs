@@ -215,7 +215,8 @@ namespace MCGalaxy.Games
             
             // Try to reset changes made to this map, if possible
             // TODO: do this in a nicer way
-            Map.blocks = old.blocks;
+            // TODO this doesn't work properly with physics either
+            Map.blocks       = old.blocks;
             Map.CustomBlocks = old.CustomBlocks;
             LevelActions.ReloadAll(Map, Player.Console, false);
             Map.Message("Reset map to latest backup");

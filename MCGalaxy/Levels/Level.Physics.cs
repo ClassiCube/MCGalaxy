@@ -333,8 +333,10 @@ namespace MCGalaxy {
         }
         
         public void ClearPhysics() {
-            for (int i = 0; i < ListCheck.Count; i++ )
+            for (int i = 0; i < ListCheck.Count; i++)
+            {
                 RevertPhysics(ListCheck.Items[i]);
+            }
             ClearPhysicsLists();
         }
         
