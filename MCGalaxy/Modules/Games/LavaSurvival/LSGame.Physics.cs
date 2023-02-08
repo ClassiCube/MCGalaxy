@@ -25,6 +25,7 @@ namespace MCGalaxy.Modules.Games.LS
     public sealed partial class LSGame : RoundsGame 
     {
         void UpdateBlockHandlers() {
+            Map.UpdateBlockHandlers(Block.Sponge);
             Map.UpdateBlockHandlers(Block.Water);
             Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
             Map.UpdateBlockHandlers(Block.Lava);
@@ -36,6 +37,8 @@ namespace MCGalaxy.Modules.Games.LS
 
             switch (block)
             {
+                case Block.Sponge:
+                    lvl.PhysicsHandlers[block] = DoSponge; break;
                 case Block.Water:
                 case Block.Deadly_ActiveWater:
                     lvl.PhysicsHandlers[block] = DoWater; break;
@@ -43,6 +46,15 @@ namespace MCGalaxy.Modules.Games.LS
                 case Block.Deadly_ActiveLava:
                     lvl.PhysicsHandlers[block] = DoLava; break;
             }
+        }
+        
+        void DoSponge(Level lvl, ref PhysInfo C) {
+            // revert to air after 200 ticks
+            if (C.Data.Value2++ <= 200) return;
+                      
+            lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
+            OtherPhysics.DoSpongeRemoved(lvl, C.Index, !waterMode);
+            C.Data.Data = PhysicsArgs.RemoveFromChecks;
         }
 
         void DoWater(Level lvl, ref PhysInfo C) {
@@ -193,8 +205,8 @@ namespace MCGalaxy.Modules.Games.LS
             if (mode == LSFloodMode.Wild)      return  50;
             return 10;
         }
-    	
-    	byte GetDissipateChance() {
+        
+        byte GetDissipateChance() {
             LSFloodMode mode = floodMode;
             
             if (mode == LSFloodMode.Disturbed) return 50;

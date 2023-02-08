@@ -131,7 +131,7 @@ namespace MCGalaxy.Modules.Games.LS
         string ModeMessage(string block) {
             LSFloodMode mode = floodMode;
             
-            return block + " will be &c" + mode + " &Sthis round";
+            return block.Capitalize() + " will be &c" + mode + " &Sthis round";
         }
 
         public override void OutputStatus(Player p) {
