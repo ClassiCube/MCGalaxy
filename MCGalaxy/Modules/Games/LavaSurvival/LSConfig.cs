@@ -95,7 +95,7 @@ namespace MCGalaxy.Modules.Games.LS
 
         [ConfigInt("layer-chance", null, 0, 0, 100)]
         public int LayerChance;
-        [ConfigInt("layer-height", null, 3, 0)]
+        [ConfigInt("layer-height", null, 3)]
         public int LayerHeight = 3;
         [ConfigInt("layer-count", null, 10, 0)]
         public int LayerCount = 10;

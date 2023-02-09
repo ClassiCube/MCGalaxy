@@ -45,7 +45,10 @@ namespace MCGalaxy.Modules.Games.LS
                 HandleSetBlock(p, args, cfg);
             } else if (prop.CaselessEq("other")) {
                 HandleSetOther(p, args, cfg, 
-            	               (LSConfig)game.GetConfig());
+                               (LSConfig)game.GetConfig());
+            } else if (prop.CaselessEq("layer")) {
+                HandleSetLayer(p, args, cfg, 
+                               (LSConfig)game.GetConfig());
             } else {
                 Help(p, "set");
             }
@@ -70,10 +73,7 @@ namespace MCGalaxy.Modules.Games.LS
         void HandleSetSpawn(Player p, string[] args, LSMapConfig cfg) {
             if (args.Length < 3) {
                 p.Message("Flood position: &b" + cfg.FloodPos);
-                p.Message("Layer position: &b" + cfg.LayerPos);
-                p.Message("Layer flood chance: &b" + cfg.LayerChance + "%");
-                p.Message("  &b{0} &Slayers, each &b{1} &Sblocks tall",
-                               cfg.LayerCount, cfg.LayerHeight);
+                p.Message("Safe zone: &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
                 return;
             }
             
@@ -82,45 +82,31 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("Place or destroy the block you want to be the flood block spawn point.");
                 p.MakeSelection(1, cfg, SetFloodPos);
                 return;
-            } else if (prop.CaselessEq("layer")) {
-                p.Message("Place or destroy the block you want to be the layer flood base spawn point.");
-                p.MakeSelection(1, cfg, SetLayerPos);
+            } else if (prop.CaselessEq("safe")) {
+                p.Message("Place or break two blocks to determine the edges.");
+                p.MakeSelection(2, cfg, SetSafeZone);
                 return;
             }
             
-            if (args.Length < 4) { Help(p, "spawn"); return; }
-            bool ok = false;
-            
-            if (prop.CaselessEq("height")) {
-                ok = CommandParser.GetInt(p, args[3], "Height", ref cfg.LayerHeight, 0);
-                if (ok) p.Message("Set layer height to &b" + cfg.LayerHeight + " blocks");
-            } else if (prop.CaselessEq("count")) {
-                ok = CommandParser.GetInt(p, args[3], "Count", ref cfg.LayerCount, 0);
-                if (ok) p.Message("Set layer count to &b" + cfg.LayerCount);
-            } else if (prop.CaselessEq("chance")) {
-                ok = ParseChance(p, "layer flood", args, ref cfg.LayerChance);
-            } else {
-                Help(p, "spawn");
-            }
-            
-            if (ok) SaveMapConfig(p, cfg);
+            Help(p, "spawn");
         }
         
         bool SetFloodPos(Player p, Vec3S32[] m, object state, BlockID block) {
             LSMapConfig cfg = (LSMapConfig)state;
-            cfg.FloodPos = (Vec3U16)m[0];
+            cfg.FloodPos    = (Vec3U16)m[0];
             SaveMapConfig(p, cfg);
 
             p.Message("Flood position set to &b({0})", m[0]);
             return false;
         }
         
-        bool SetLayerPos(Player p, Vec3S32[] m, object state, BlockID block) {
+        bool SetSafeZone(Player p, Vec3S32[] m, object state, BlockID block) {
             LSMapConfig cfg = (LSMapConfig)state;
-            cfg.LayerPos = (Vec3U16)m[0];
+            cfg.SafeZoneMin = (Vec3U16)Vec3S32.Min(m[0], m[1]);
+            cfg.SafeZoneMax = (Vec3U16)Vec3S32.Max(m[0], m[1]);
             SaveMapConfig(p, cfg);
 
-            p.Message("Layer position set to &b({0})", m[0]);
+            p.Message("Safe zone set! &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
             return false;
         }
         
@@ -151,26 +137,16 @@ namespace MCGalaxy.Modules.Games.LS
         
         void HandleSetOther(Player p, string[] args, LSMapConfig cfg, LSConfig gameCfg) {
             if (args.Length < 3) {
-        		p.Message("Layer time: &b" + gameCfg.GetLayerInterval(cfg).Shorten(true));
-        		p.Message("Round time: &b" + gameCfg.GetRoundTime(cfg).Shorten(true));
-        		p.Message("Flood time: &b" + gameCfg.GetFloodTime(cfg).Shorten(true));
-                p.Message("Safe zone: &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
+                p.Message("Round time: &b" + gameCfg.GetRoundTime(cfg).Shorten(true));
+                p.Message("Flood time: &b" + gameCfg.GetFloodTime(cfg).Shorten(true));
                 return;
             }
             
             string prop = args[2];
-            if (prop.CaselessEq("safe")) {
-                p.Message("Place or break two blocks to determine the edges.");
-                p.MakeSelection(2, cfg, SetSafeZone);
-                return;
-            }
-            
             if (args.Length < 4) { Help(p, "other"); return; }
             bool ok = false;
             
-            if (prop.CaselessEq("layer")) {
-                ok = ParseTimespan(p, "layer time", args, ref cfg._LayerInterval);
-            } else if (prop.CaselessEq("round")) {
+            if (prop.CaselessEq("round")) {
                 ok = ParseTimespan(p, "round time", args, ref cfg._RoundTime);
             } else if (prop.CaselessEq("flood")) {
                 ok = ParseTimespan(p, "flood time", args, ref cfg._FloodTime);
@@ -180,14 +156,51 @@ namespace MCGalaxy.Modules.Games.LS
             
             if (ok) SaveMapConfig(p, cfg);
         }
+
+
+        void HandleSetLayer(Player p, string[] args, LSMapConfig cfg, LSConfig gameCfg) {
+            if (args.Length < 3) {
+                p.Message("Layer flood chance: &b" + cfg.LayerChance + "%");
+                p.Message("Layer time: &b" + gameCfg.GetLayerInterval(cfg).Shorten(true));
+                p.Message("Layer position: &b" + cfg.LayerPos);
+                p.Message("  &b{0} &Slayers, each &b{1} &Sblocks tall",
+                          cfg.LayerCount, cfg.LayerHeight);
+                return;
+            }
+            
+            string prop = args[2];
+            if (prop.CaselessEq("spawn")) {
+                p.Message("Place or destroy the block you want to be the layer flood base spawn point.");
+                p.MakeSelection(1, cfg, SetLayerPos);
+                return;
+            }
+            
+            if (args.Length < 4) { Help(p, "layer"); return; }
+            bool ok = false;
+            
+            if (prop.CaselessEq("time")) {
+                ok = ParseTimespan(p, "layer time", args, ref cfg._LayerInterval);
+            } else if (prop.CaselessEq("height")) {
+                ok = CommandParser.GetInt(p, args[3], "Height", ref cfg.LayerHeight);
+                if (ok) p.Message("Set layer height to &b" + cfg.LayerHeight + " blocks");
+            } else if (prop.CaselessEq("count")) {
+                ok = CommandParser.GetInt(p, args[3], "Count", ref cfg.LayerCount, 0);
+                if (ok) p.Message("Set layer count to &b" + cfg.LayerCount);
+            } else if (prop.CaselessEq("chance")) {
+                ok = ParseChance(p, "layer flood", args, ref cfg.LayerChance);
+            } else {
+                Help(p, "layer");
+            }
+            
+            if (ok) SaveMapConfig(p, cfg);
+        }
         
-        bool SetSafeZone(Player p, Vec3S32[] m, object state, BlockID block) {
+        bool SetLayerPos(Player p, Vec3S32[] m, object state, BlockID block) {
             LSMapConfig cfg = (LSMapConfig)state;
-            cfg.SafeZoneMin = (Vec3U16)Vec3S32.Min(m[0], m[1]);
-            cfg.SafeZoneMax = (Vec3U16)Vec3S32.Max(m[0], m[1]);
+            cfg.LayerPos    = (Vec3U16)m[0];
             SaveMapConfig(p, cfg);
 
-            p.Message("Safe zone set! &b({0}) ({1})", cfg.SafeZoneMin, cfg.SafeZoneMax);
+            p.Message("Layers start position set to &b({0})", m[0]);
             return false;
         }
         
@@ -196,14 +209,11 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("&T/Help LS spawn &H- Views help for lava spawn settings");
                 p.Message("&T/Help LS block &H- Views help for lava block settings");
                 p.Message("&T/Help LS other &H- Views help for other settings");
+                p.Message("&T/Help LS layer &H- Views help for layered flood settings");
             } else if (message.CaselessEq("spawn")) {
-                p.Message("&T/LS set spawn &H- View lava spawns and layer info");
+                p.Message("&T/LS set spawn &H- View lava spawns and safe zone location");
                 p.Message("&T/LS set spawn flood &H- Set position lava floods from");
-                // TODO: /ls set layer instead
-                p.Message("&T/LS set spawn layer &H- Set start position layers flood from");
-                p.Message("&T/LS set spawn height [height] &H- Sets height of each layer");
-                p.Message("&T/LS set spawn count [count] &H- Sets number of layers to flood");
-                p.Message("&T/LS set spawn layer [chance] &H- Sets chance of layer flooding");
+                p.Message("&T/LS set spawn safe &H- Sets safe area that can't be flooded");
             } else if (message.CaselessEq("block")) {
                 p.Message("&T/LS set block &H- View lava block type settings");
                 p.Message("&T/LS set block fast [chance] &H- Sets chance of fast lava");
@@ -213,13 +223,19 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("&HSets chance of lava/water flooding upwards");
             } else if (message.CaselessEq("other")) {
                 p.Message("&T/LS set other &H- View times and safe zone location");
-                p.Message("&T/LS set other safe &H- Sets safe area that can't be flooded");
-                p.Message("&T/LS set other layer [timespan]");
-                p.Message("&HSet interval between layer floods");
                 p.Message("&T/LS set other flood [timespan]");
                 p.Message("&HSet how long until the map is flooded");
                 p.Message("&T/LS set other round [timespan]");
                 p.Message("&HSets how long until the round ends");
+            } else if (message.CaselessEq("layer")) {
+                p.Message("&T/LS set layer &H- View layer flooding info");
+                p.Message("&T/LS set layer spawn &H- Set start position layers flood from");
+                p.Message("&T/LS set layer height [height] &H- Sets height of each layer");
+                p.Message("&T/LS set layer count [count] &H- Sets number of layers");
+                p.Message("&T/LS set layer chance [chance]");
+                p.Message("&HSets chance of layer flooding occurring instead");
+                p.Message("&T/LS set layer time [timespan]");
+                p.Message("&HSets interval between layer floods");
             } else {
                 base.Help(p, message);
             }
