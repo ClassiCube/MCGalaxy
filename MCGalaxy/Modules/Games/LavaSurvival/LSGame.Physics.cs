@@ -49,8 +49,7 @@ namespace MCGalaxy.Modules.Games.LS
         }
         
         void DoSponge(Level lvl, ref PhysInfo C) {
-            // revert to air after 200 ticks
-            if (C.Data.Value2++ <= 200) return;
+            if (C.Data.Value2++ < Config.SpongeLife) return;
                       
             lvl.AddUpdate(C.Index, Block.Air, default(PhysicsArgs));
             OtherPhysics.DoSpongeRemoved(lvl, C.Index, !waterMode);
@@ -191,13 +190,14 @@ namespace MCGalaxy.Modules.Games.LS
                 }
             } else if (!lvl.Props[block].OPBlock) {
                 PhysicsArgs C = default(PhysicsArgs);
-                C.Type1  = PhysicsArgs.Wait;      C.Value1 = GetDestoryDelay();
-                C.Type2  = PhysicsArgs.Dissipate; C.Value2 = GetDissipateChance();
+                C.Type1  = PhysicsArgs.Wait;      C.Value1 = destroyDelay;
+                C.Type2  = PhysicsArgs.Dissipate; C.Value2 = dissipateChance;
                 lvl.AddUpdate(index, Block.CoalOre, C);
             }
         }
+    	
         
-        byte GetDestoryDelay() {
+        byte GetDestroyDelay() {
             LSFloodMode mode = floodMode;
             
             if (mode == LSFloodMode.Disturbed) return 200;

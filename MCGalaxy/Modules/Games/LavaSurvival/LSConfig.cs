@@ -59,6 +59,9 @@ namespace MCGalaxy.Modules.Games.LS
         public int WildChance = 5;
         [ConfigInt("chance-extreme",   "Mode chances",  0, 0, 100)]
         public int ExtremeChance = 0;
+               
+        [ConfigInt("sponge-life-ticks", "Sponges", 200, 0)]
+        public int SpongeLife = 200;
         
         public override bool AllowAutoload { get { return false; } }
         protected override string GameName { get { return "Lava Survival"; } }

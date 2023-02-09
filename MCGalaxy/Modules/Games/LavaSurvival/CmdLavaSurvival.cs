@@ -79,7 +79,7 @@ namespace MCGalaxy.Modules.Games.LS
             
             string prop = args[2];
             if (prop.CaselessEq("flood")) {
-                p.Message("Place or destroy the block you want to be the total flood block spawn point.");
+                p.Message("Place or destroy the block you want to be the flood block spawn point.");
                 p.MakeSelection(1, cfg, SetFloodPos);
                 return;
             } else if (prop.CaselessEq("layer")) {
@@ -211,8 +211,6 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("&HSets chance of water instead of lava flood");
                 p.Message("&T/LS set block upwards [chance]");
                 p.Message("&HSets chance of lava/water flooding upwards");
-                p.Message("&T/LS set block destroy [chance]");
-                p.Message("&HSets chance of the lava/water destroying blocks");
             } else if (message.CaselessEq("other")) {
                 p.Message("&T/LS set other &H- View times and safe zone location");
                 p.Message("&T/LS set other safe &H- Sets safe area that can't be flooded");
