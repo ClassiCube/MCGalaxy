@@ -167,15 +167,5 @@ namespace MCGalaxy.Modules.Games.LS
             Map.Config.PhysicsOverload = 1000000;
             return true;
         }
-
-        void KillPlayer(Player p) {
-            if (Config.MaxLives <= 0) return;
-            Get(p).TimesDied++;
-            if (!IsPlayerDead(p)) return;
-            
-            Chat.MessageFromLevel(p, "λNICK &4ran out of lives, and is out of the round!");
-            p.Message("&4You can still watch, but you cannot build.");
-            // TODO: Buy life message
-        }
     }
 }

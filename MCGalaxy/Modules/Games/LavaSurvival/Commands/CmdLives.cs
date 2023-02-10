@@ -25,8 +25,7 @@ namespace MCGalaxy.Modules.Games.LS
         public override string type { get { return CommandTypes.Games; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            string lives = LSGame.Instance.DescribeLives(p);
-            p.Message("You have {0} &Slives left", lives);
+            p.Message("You " + LSGame.Instance.DescribeLives(p));
         }
         
         public override void Help(Player p) {

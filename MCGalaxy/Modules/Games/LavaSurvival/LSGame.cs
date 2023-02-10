@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -141,17 +141,6 @@ namespace MCGalaxy.Modules.Games.LS
             UnhookItems();
         }
         
-        public bool IsPlayerDead(Player p) {
-            return Config.MaxLives > 0 && Get(p).TimesDied >= Config.MaxLives;
-        }
-        
-        public string DescribeLives(Player p) {
-            if (Config.MaxLives <= 0) return "(infinite)";
-
-            int lives = Config.MaxLives - Get(p).TimesDied;
-            return lives <= 0 ? "&40" : lives.ToString();
-        }
-        
         public override bool HandlesBlockchange(Player p, ushort x, ushort y, ushort z) {
             if (!IsPlayerDead(p)) return false;
             
@@ -164,7 +153,8 @@ namespace MCGalaxy.Modules.Games.LS
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) 
             {
-                if (p.level == Map) Get(p).TimesDied = 0;
+                if (p.level != Map) continue;
+                AddLives(p, Get(p).TimesDied, true);
             }
         }
         
@@ -192,6 +182,39 @@ namespace MCGalaxy.Modules.Games.LS
         
         string FloodBlockName() {
             return waterMode ? "water" : "lava";
+        }
+        
+        
+        public bool IsPlayerDead(Player p) {
+            return Config.MaxLives > 0 && Get(p).TimesDied >= Config.MaxLives;
+        }
+        
+        public string DescribeLives(Player p) {
+            if (Config.MaxLives <= 0) return "have &ainfinite &Slives";
+
+            int lives = Config.MaxLives - Get(p).TimesDied;
+            return lives <= 0 ? "are &4dead" : "have &a" + lives + " &Slives left";
+        }
+        
+        public void AddLives(Player p, int amount, bool silent) {
+            LSData data = Get(p);
+            if (Config.MaxLives <= 0) { data.TimesDied = 0; return; }
+            
+            data.TimesDied -= amount;
+            UpdateStatus1(p);
+            if (silent) return;
+            
+            p.Message("You " + DescribeLives(p));
+            if (!IsPlayerDead(p)) return;
+            
+            Chat.MessageFromLevel(p, "λNICK &4ran out of lives, and is out of the round!");
+            p.Message("&4You can still watch, but you cannot build.");
+            // TODO: Buy life message
+        }
+        
+        protected override string FormatStatus1(Player p) {
+            string money = "&a" + p.money + " &S" + Server.Config.Currency;
+            return money + ", you " + DescribeLives(p);
         }
     }
 }

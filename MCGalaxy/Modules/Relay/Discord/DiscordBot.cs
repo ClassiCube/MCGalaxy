@@ -48,11 +48,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         public DiscordConfig Config;
         
         TextFile replacementsFile = new TextFile("text/discord/replacements.txt",
-                                        "// This file is used to replace words/phrases sent to discord",
+                                        "// This file is used to replace words/phrases sent to Discord",
                                         "// Lines starting with // are ignored",
                                         "// Lines should be formatted like this:",
                                         "// example:http://example.org",
-                                        "// That would replace 'example' in messages sent with 'http://example.org'");
+                                        "// That would replace 'example' in messages sent to Discord with 'http://example.org'");
         
         
         protected override bool CanReconnect {

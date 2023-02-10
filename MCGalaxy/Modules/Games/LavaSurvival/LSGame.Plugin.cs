@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Blocks.Physics;
 using MCGalaxy.Events;
+using MCGalaxy.Events.EconomyEvents;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Games;
@@ -33,6 +34,7 @@ namespace MCGalaxy.Modules.Games.LS
             OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
             OnBlockHandlersUpdatedEvent.Register(HandleBlockHandlersUpdated, Priority.High);
             OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
+            OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
 
             base.HookEventHandlers();
         }
@@ -42,8 +44,14 @@ namespace MCGalaxy.Modules.Games.LS
             OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
             OnBlockHandlersUpdatedEvent.Unregister(HandleBlockHandlersUpdated);
             OnBlockChangingEvent.Unregister(HandleBlockChanging);
+            OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
 
             base.UnhookEventHandlers();
+        }
+        
+        void HandleMoneyChanged(Player p) {
+            if (p.level != Map) return;
+            UpdateStatus1(p);
         }
         
         void HandleJoinedLevel(Player p, Level prevLevel, Level level, ref bool announce) {
@@ -61,7 +69,7 @@ namespace MCGalaxy.Modules.Games.LS
             if (IsPlayerDead(p)) {
                 p.cancelDeath = true;
             } else {
-                KillPlayer(p);
+                AddLives(p, -1, false);
             }
         }
         

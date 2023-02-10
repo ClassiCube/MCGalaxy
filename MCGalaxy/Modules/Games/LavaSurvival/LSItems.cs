@@ -35,13 +35,11 @@ namespace MCGalaxy.Modules.Games.LS
                 p.Message("You can only buy a life " +
                           "when a round of lava survival is in progress."); return;
             }
-        	
-        	// TODO: Don't allow buying when Config.MaxLives == 0
-        	
-        	if (!CheckPrice(p)) return;
-        	
-        	LSGame.Get(p).TimesDied--;
-        	// TODO: announce lifes left
+            
+            // TODO: Don't allow buying when Config.MaxLives == 0        
+            if (!CheckPrice(p)) return;
+            
+            LSGame.Instance.AddLives(p, 1, false);
             Economy.MakePurchase(p, Price, "%3Life:");
         }
     }
