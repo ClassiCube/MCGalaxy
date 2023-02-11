@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Games.CTF
     public sealed partial class CTFGame : RoundsGame 
     {
         protected override void HookEventHandlers() {
-            OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
+            OnPlayerDiedEvent.Register(HandlePlayerDied, Priority.High);
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnPlayerCommandEvent.Register(HandlePlayerCommand, Priority.High);            
             OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
@@ -44,7 +44,7 @@ namespace MCGalaxy.Modules.Games.CTF
         }
         
         protected override void UnhookEventHandlers() {
-            OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
+            OnPlayerDiedEvent.Unregister(HandlePlayerDied);
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnPlayerCommandEvent.Unregister(HandlePlayerCommand);           
             OnBlockChangingEvent.Unregister(HandleBlockChanging);
@@ -58,7 +58,7 @@ namespace MCGalaxy.Modules.Games.CTF
         }
         
         
-        void HandlePlayerDeath(Player p, BlockID deathblock) {
+        void HandlePlayerDied(Player p, BlockID deathblock, ref TimeSpan cooldown) {
             if (p.level != Map || !Get(p).HasFlag) return;
             CtfTeam team = TeamOf(p);
             if (team != null) DropFlag(p, team);

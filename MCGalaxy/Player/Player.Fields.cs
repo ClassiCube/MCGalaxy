@@ -187,8 +187,7 @@ namespace MCGalaxy {
         internal int oldIndex = -1, lastWalkthrough = -1, startFallY = -1, lastFallY = -1;
         public DateTime drownTime = DateTime.MaxValue;
 
-        //Games
-        public DateTime lastDeath = DateTime.UtcNow;
+        public DateTime deathCooldown;
 
         public BlockID ModeBlock = Block.Invalid;
         /// <summary> The block ID this player's client specifies it is currently holding in hand. </summary>
@@ -231,7 +230,7 @@ namespace MCGalaxy {
         
         
         public bool cancelcommand, cancelchat;
-        public bool cancellogin, cancelconnecting, cancelDeath;
+        public bool cancellogin, cancelconnecting;
         
         Queue<SerialCommand> serialCmds = new Queue<SerialCommand>();
         object serialCmdsLock = new object();

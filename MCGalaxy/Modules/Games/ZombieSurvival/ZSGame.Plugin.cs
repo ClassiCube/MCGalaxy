@@ -39,7 +39,7 @@ namespace MCGalaxy.Modules.Games.ZS
             OnSendingModelEvent.Register(HandleSendingModel, Priority.High);
             
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);
-            OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
+            OnPlayerDiedEvent.Register(HandlePlayerDied, Priority.High);
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);           
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);
             OnGettingCanSeeEntityEvent.Register(HandleCanSeeEntity, Priority.High);
@@ -55,7 +55,7 @@ namespace MCGalaxy.Modules.Games.ZS
             OnSendingModelEvent.Unregister(HandleSendingModel);
             
             OnPlayerMoveEvent.Unregister(HandlePlayerMove);
-            OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
+            OnPlayerDiedEvent.Unregister(HandlePlayerDied);
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);            
             OnPlayerChatEvent.Unregister(HandlePlayerChat);
             OnGettingCanSeeEntityEvent.Unregister(HandleCanSeeEntity);
@@ -124,8 +124,8 @@ namespace MCGalaxy.Modules.Games.ZS
             if (reverted) cancel = true;
         }
 
-        void HandlePlayerDeath(Player p, BlockID cause) {
-            if (p.level != Map || p.cancelDeath || !Config.InfectUponDeath) return;
+        void HandlePlayerDied(Player p, BlockID cause, ref TimeSpan cooldown) {
+            if (p.level != Map || !Config.InfectUponDeath) return;
 
             if (!p.Game.Referee && RoundInProgress && !IsInfected(p)) {
                 InfectPlayer(p, null);

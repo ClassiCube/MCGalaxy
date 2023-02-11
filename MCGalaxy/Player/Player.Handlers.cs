@@ -328,7 +328,7 @@ namespace MCGalaxy
         
         bool Moved() { return _lastRot.RotY != Rot.RotY || _lastRot.HeadX != Rot.HeadX; }
         
-        void AnnounceDeath(string msg) {
+        public void AnnounceDeath(string msg) {
             //Chat.MessageFrom(ChatScope.Level, this, msg.Replace("@p", "λNICK"), level, Chat.FilterVisible(this));
             if (hidden) {
                 // Don't show usual death message to avoid confusion about whether others see your death
@@ -339,12 +339,12 @@ namespace MCGalaxy
         }
         
         public bool HandleDeath(BlockID block, string customMsg = "", bool explode = false, bool immediate = false) {
-            if (!immediate && lastDeath.AddSeconds(2) > DateTime.UtcNow) return false;
+            if (!immediate && DateTime.UtcNow < deathCooldown) return false;
             if (invincible) return false;
             
-            cancelDeath = false;
-            OnPlayerDeathEvent.Call(this, block);
-            if (cancelDeath) { cancelDeath = false; return false; }
+            bool cancel = false;
+            OnPlayerDyingEvent.Call(this, block, ref cancel);
+            if (cancel) { cancel = false; return false; }
 
             onTrain = false; trainInvincible = false; trainGrab = false;
             ushort x = (ushort)Pos.BlockX, y = (ushort)Pos.BlockY, z = (ushort)Pos.BlockZ;
@@ -364,7 +364,10 @@ namespace MCGalaxy
                 }
             }
             
+            TimeSpan cooldown = TimeSpan.FromSeconds(2);
+            OnPlayerDiedEvent.Call(this, block, ref cooldown);
             PlayerActions.Respawn(this);
+            
             TimesDied++;
             // NOTE: If deaths column is ever increased past 16 bits, remove this clamp
             if (TimesDied > short.MaxValue && Database.Backend.EnforcesIntegerLimits)
@@ -373,7 +376,7 @@ namespace MCGalaxy
             if (Server.Config.AnnounceDeathCount && (TimesDied > 0 && TimesDied % 10 == 0)) {
                 AnnounceDeath("@p &Shas died &3" + TimesDied + " times");
             }
-            lastDeath = DateTime.UtcNow;
+            deathCooldown = DateTime.UtcNow.Add(cooldown);
             return true;
         }
         

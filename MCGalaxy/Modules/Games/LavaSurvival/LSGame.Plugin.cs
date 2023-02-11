@@ -31,7 +31,8 @@ namespace MCGalaxy.Modules.Games.LS
     {
         protected override void HookEventHandlers() {
             OnJoinedLevelEvent.Register(HandleJoinedLevel, Priority.High);
-            OnPlayerDeathEvent.Register(HandlePlayerDeath, Priority.High);
+            OnPlayerDyingEvent.Register(HandlePlayerDying, Priority.High);
+            OnPlayerDiedEvent.Register(HandlePlayerDied, Priority.High);
             OnBlockHandlersUpdatedEvent.Register(HandleBlockHandlersUpdated, Priority.High);
             OnBlockChangingEvent.Register(HandleBlockChanging, Priority.High);
             OnMoneyChangedEvent.Register(HandleMoneyChanged, Priority.High);
@@ -41,7 +42,8 @@ namespace MCGalaxy.Modules.Games.LS
         
         protected override void UnhookEventHandlers() {
             OnJoinedLevelEvent.Unregister(HandleJoinedLevel);
-            OnPlayerDeathEvent.Unregister(HandlePlayerDeath);
+            OnPlayerDyingEvent.Unregister(HandlePlayerDying);
+            OnPlayerDiedEvent.Unregister(HandlePlayerDied);
             OnBlockHandlersUpdatedEvent.Unregister(HandleBlockHandlersUpdated);
             OnBlockChangingEvent.Unregister(HandleBlockChanging);
             OnMoneyChangedEvent.Unregister(HandleMoneyChanged);
@@ -63,14 +65,15 @@ namespace MCGalaxy.Modules.Games.LS
             if (RoundInProgress) OutputStatus(p);
         }
         
-        void HandlePlayerDeath(Player p, BlockID block) {
-            if (p.level != Map) return;
-         
-            if (IsPlayerDead(p)) {
-                p.cancelDeath = true;
-            } else {
-                AddLives(p, -1, false);
-            }
+        void HandlePlayerDying(Player p, BlockID block, ref bool cancel) {
+            if (p.level == Map && IsPlayerDead(p)) cancel = true;
+        }
+        
+        void HandlePlayerDied(Player p, BlockID block, ref TimeSpan cooldown) {
+            if (p.level != Map || IsPlayerDead(p)) return;
+            
+            cooldown = TimeSpan.FromSeconds(30);
+            AddLives(p, -1, false);
         }
         
         void HandleBlockChanging(Player p, ushort x, ushort y, ushort z, BlockID block, bool placing, ref bool cancel) {

@@ -81,6 +81,7 @@ namespace MCGalaxy
             } else if (clone != null) {
                 Leave(null, "Already logged in!", true); return;
             }
+            deathCooldown = DateTime.UtcNow.AddSeconds(2);
 
             SendRawMap(null, level);
             if (Socket.Disconnected) return;
