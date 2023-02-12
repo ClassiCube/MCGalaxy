@@ -63,7 +63,7 @@ namespace MCGalaxy
         public TimeSpan AfkKickTime = TimeSpan.FromMinutes(45);
         [ConfigString("Prefix", null, "", true)]
         public string Prefix = "";
-        [ConfigInt("CopySlots", null, 0, 0)]
+        [ConfigInt("CopySlots", null, 1, 1)]
         public int CopySlots = 1;
         [ConfigString("Filename", null, "", true, ".,_-+=")]
         internal string filename;
