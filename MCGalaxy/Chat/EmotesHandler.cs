@@ -20,7 +20,7 @@ namespace MCGalaxy {
             { "inversecircle", '◙' },
             { "male", '♂' }, { "mars", '♂' },
             { "female", '♀' }, { "venus", '♀' },
-            { "8", '♪' }, { "note", '♪' }, { "quaver", '♪' },
+            { "note", '♪' }, { "quaver", '♪' },
             { "notes", '♫' }, { "music", '♫' },
             { "sun", '☼' }, { "celestia", '☼' },
             { ">>", '►' }, { "right", '►' },
