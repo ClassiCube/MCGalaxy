@@ -49,7 +49,7 @@ namespace MCGalaxy.Modules.Games.LS
         LSFloodMode floodMode;
         int curLayer, spreadDelay;
         int roundTotalSecs, floodDelaySecs, layerIntervalSecs;
-        byte destroyDelay, dissipateChance;
+        byte destroyDelay, dissipateChance, burnChance;
         static bool hooked;
         
         public static LSGame Instance = new LSGame();
@@ -86,7 +86,6 @@ namespace MCGalaxy.Modules.Games.LS
             roundTotalSecs    = (int)Config.GetRoundTime(cfg).TotalSeconds;
             floodDelaySecs    = (int)Config.GetFloodTime(cfg).TotalSeconds;
             layerIntervalSecs = (int)Config.GetLayerInterval(cfg).TotalSeconds;
-            
             SetFloodMode(RandomFloodMode(rnd));
         }
         
@@ -110,6 +109,7 @@ namespace MCGalaxy.Modules.Games.LS
             floodMode       = mode;
             destroyDelay    = GetDestroyDelay();
             dissipateChance = GetDissipateChance();
+            burnChance      = GetBurnChance();
             
             if (!RoundInProgress) return;
             Map.SetPhysics(floodMode > LSFloodMode.Calm ? 2 : 1);

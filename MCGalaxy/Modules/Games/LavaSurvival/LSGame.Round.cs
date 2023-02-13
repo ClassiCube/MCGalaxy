@@ -46,7 +46,6 @@ namespace MCGalaxy.Modules.Games.LS
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;
             UpdateBlockHandlers();
-            SetFloodMode(floodMode);
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;

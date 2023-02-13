@@ -202,16 +202,17 @@ namespace MCGalaxy.Modules.Games.LS
         void SpreadLiquid(Level lvl, ushort x, ushort y, ushort z, int index, 
                           BlockID block, bool isWater) {
             if (floodMode == LSFloodMode.Calm) return;
+            Random rand = lvl.physRandom;
             
             bool instaKills = isWater ?
                 lvl.Props[block].WaterKills : lvl.Props[block].LavaKills;
             
             // TODO need to kill less often
-            if (instaKills) {
+            if (instaKills && floodMode > LSFloodMode.Disturbed) {
                 if (!lvl.CheckSpongeWater(x, y, z)) {
                     lvl.AddUpdate(index, Block.Air, default(PhysicsArgs));
                 }
-            } else if (!lvl.Props[block].OPBlock) {
+            } else if (!lvl.Props[block].OPBlock && rand.Next(1, 101) <= burnChance) {
                 PhysicsArgs C = default(PhysicsArgs);
                 C.Type1  = PhysicsArgs.Wait;      C.Value1 = destroyDelay;
                 C.Type2  = PhysicsArgs.Dissipate; C.Value2 = dissipateChance;
@@ -235,6 +236,15 @@ namespace MCGalaxy.Modules.Games.LS
             if (mode == LSFloodMode.Disturbed) return 50;
             if (mode == LSFloodMode.Furious)   return 65;
             if (mode == LSFloodMode.Wild)      return 80;
+            return 100;
+        }
+        
+        byte GetBurnChance() {
+            LSFloodMode mode = floodMode;
+            
+            if (mode == LSFloodMode.Disturbed) return 50;
+            if (mode == LSFloodMode.Furious)   return 70;
+            if (mode == LSFloodMode.Wild)      return 85;
             return 100;
         }
     }
