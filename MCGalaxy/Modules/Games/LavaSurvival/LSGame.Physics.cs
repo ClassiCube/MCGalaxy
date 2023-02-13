@@ -38,7 +38,10 @@ namespace MCGalaxy.Modules.Games.LS
             switch (block)
             {
                 case Block.Sponge:
+                    lvl.PlaceHandlers[block]   = PlaceSponge;
                     lvl.PhysicsHandlers[block] = DoSponge; break;
+                case Block.StillWater:
+                    lvl.PlaceHandlers[block] = PlaceWater; break;
                 case Block.Water:
                 case Block.Deadly_ActiveWater:
                     lvl.PhysicsHandlers[block] = DoWater; break;
@@ -47,6 +50,26 @@ namespace MCGalaxy.Modules.Games.LS
                     lvl.PhysicsHandlers[block] = DoLava; break;
             }
         }
+        
+        ChangeResult PlaceSponge(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
+            LSData data = Get(p);
+            bool placed = TryPlaceBlock(p, ref data.SpongesLeft, "Sponges", Block.Sponge, x, y, z);
+            if (!placed) return ChangeResult.Unchanged;
+
+            PhysInfo C = default(PhysInfo);
+            C.X = x; C.Y = y; C.Z = z;
+            OtherPhysics.DoSponge(Map, ref C, !waterMode);
+            return ChangeResult.Modified;
+        }
+        
+        ChangeResult PlaceWater(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
+            LSData data = Get(p);
+            bool placed = TryPlaceBlock(p, ref data.WaterLeft, "Water blocks", Block.StillWater, x, y, z);
+            if (!placed) return ChangeResult.Unchanged;
+
+            return ChangeResult.Modified;
+        }
+        
         
         void DoSponge(Level lvl, ref PhysInfo C) {
             if (C.Data.Value2++ < Config.SpongeLife) return;
@@ -195,7 +218,7 @@ namespace MCGalaxy.Modules.Games.LS
                 lvl.AddUpdate(index, Block.CoalOre, C);
             }
         }
-    	
+        
         
         byte GetDestroyDelay() {
             LSFloodMode mode = floodMode;

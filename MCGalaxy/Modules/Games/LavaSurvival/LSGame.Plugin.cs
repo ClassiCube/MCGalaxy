@@ -84,21 +84,6 @@ namespace MCGalaxy.Modules.Games.LS
                 p.RevertBlock(x, y, z);
                 cancel = true; return;
             }
-
-            block = p.GetHeldBlock();
-            LSData data = Get(p);
-            
-            if (block == Block.Sponge) {
-                bool placed = TryPlaceBlock(p, ref data.SpongesLeft, "Sponges", Block.Sponge, x, y, z);
-                if (!placed) { cancel = true; return; }
-
-                PhysInfo C = default(PhysInfo);
-                C.X = x; C.Y = y; C.Z = z;
-                OtherPhysics.DoSponge(Map, ref C, !waterMode);
-            } else if (block == Block.StillWater) {
-                bool placed = TryPlaceBlock(p, ref data.WaterLeft, "Water blocks", Block.StillWater, x, y, z);
-                if (!placed) { cancel = true; return; }
-            }
         }
         
         bool NearLavaSpawn(ushort x, ushort y, ushort z) {

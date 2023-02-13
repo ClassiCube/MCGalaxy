@@ -64,10 +64,8 @@ namespace MCGalaxy.Modules.Games.TW
         
         ChangeResult HandleTNTPlace(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
             TWData data = Get(p);
-            if (!CheckTNTPlace(p, data, x, y, z)) {
-                p.RevertBlock(x, y, z);
-                return ChangeResult.Modified;
-            }
+            if (!CheckTNTPlace(p, data, x, y, z)) 
+                return ChangeResult.Unchanged;
             
             data.TNTCounter++;
             int delay = 1250;
