@@ -26,6 +26,7 @@ namespace MCGalaxy.Modules.Games.LS
     {
         void UpdateBlockHandlers() {
             Map.UpdateBlockHandlers(Block.Sponge);
+            Map.UpdateBlockHandlers(Block.StillWater);
             Map.UpdateBlockHandlers(Block.Water);
             Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
             Map.UpdateBlockHandlers(Block.Lava);

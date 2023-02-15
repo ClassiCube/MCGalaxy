@@ -27,13 +27,19 @@ namespace MCGalaxy.Modules.Games.LS
     {
         static void HookItems() {
             Economy.RegisterItem(itemLife);
+            Economy.RegisterItem(itemSponges);
+            Economy.RegisterItem(itemWater);
         }
         
         static void UnhookItems() {
             Economy.Items.Remove(itemLife);
+            Economy.Items.Remove(itemSponges);
+            Economy.Items.Remove(itemWater);
         }       
         
-        static Item itemLife = new LifeItem();
+        static Item itemLife    = new LifeItem();
+        static Item itemSponges = new SpongesItem();
+        static Item itemWater   = new WaterItem();
                 
         
         static void HookCommands() {

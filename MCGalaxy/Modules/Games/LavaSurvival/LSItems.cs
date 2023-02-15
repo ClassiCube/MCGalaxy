@@ -43,4 +43,54 @@ namespace MCGalaxy.Modules.Games.LS
             Economy.MakePurchase(p, Price, "%3Life:");
         }
     }
+    
+    sealed class SpongesItem : SimpleItem 
+    {
+        public SpongesItem() {
+            Aliases = new string[] { "sponge", "sponges" };
+            Enabled = true;
+            Price   = 2;
+        }
+        
+        public override string Name { get { return "Sponges"; } }
+
+        protected internal override void OnPurchase(Player p, string args) {
+            if (!LSGame.Instance.RoundInProgress) {
+                p.Message("You can only buy sponges " +
+                          "when a round of lava survival is in progress."); return;
+            }   
+            if (!CheckPrice(p)) return;
+            
+            // TODO avoid code duplication
+            LSData data = LSGame.Get(p);
+            data.SpongesLeft += 10;
+            p.Message("Sponges left: &4{0}", data.SpongesLeft);
+            Economy.MakePurchase(p, Price, "%3Sponges:");
+        }
+    }
+    
+    sealed class WaterItem : SimpleItem 
+    {
+        public WaterItem() {
+            Aliases = new string[] { "water", "waters" };
+            Enabled = true;
+            Price   = 2;
+        }
+        
+        public override string Name { get { return "Water"; } }
+
+        protected internal override void OnPurchase(Player p, string args) {
+            if (!LSGame.Instance.RoundInProgress) {
+                p.Message("You can only buy water " +
+                          "when a round of lava survival is in progress."); return;
+            }   
+            if (!CheckPrice(p)) return;
+            
+            // TODO avoid code duplication
+            LSData data = LSGame.Get(p);
+            data.WaterLeft += 10;
+            p.Message("Water blocks left: &4{0}", data.WaterLeft);
+            Economy.MakePurchase(p, Price, "%3Water:");
+        }
+    }
 }
