@@ -34,14 +34,14 @@ namespace MCGalaxy.Modules.Games.ZS
         static ChatToken infectedToken, survivedToken;
         
         static void HookStats() {
-            statMostInfected = new TopStat("Infected", "ZombieStats", "TotalInfected",
-                                           () => "Most players infected", TopStat.FormatInteger);
-            statMaxInfected = new TopStat("Survived", "ZombieStats", "TotalRounds",
-                                          () => "Most rounds survived", TopStat.FormatInteger);
-            statMostSurvived = new TopStat("ConsecutiveInfected", "ZombieStats", "MaxInfected",
-                                           () => "Most consecutive infections", TopStat.FormatInteger);
-            statMaxSurvived = new TopStat("ConsecutiveSurvived", "ZombieStats", "MaxRounds",
-                                          () => "Most consecutive rounds survived", TopStat.FormatInteger);
+            statMostInfected = new DBTopStat("Infected", "Most players infected",
+        	                                 "ZombieStats", "TotalInfected", TopStat.FormatInteger);
+            statMaxInfected  = new DBTopStat("Survived", "Most rounds survived",
+        	                                 "ZombieStats", "TotalRounds",   TopStat.FormatInteger);
+            statMostSurvived = new DBTopStat("ConsecutiveInfected", "Most consecutive infections",
+        	                                 "ZombieStats", "MaxInfected",   TopStat.FormatInteger);
+            statMaxSurvived  = new DBTopStat("ConsecutiveSurvived", "Most consecutive rounds survived", 
+        	                                 "ZombieStats", "MaxRounds",     TopStat.FormatInteger);
             
             infectedToken = new ChatToken("$infected", "Total number of players infected",
                                           p => Get(p).TotalInfected.ToString());
@@ -55,10 +55,10 @@ namespace MCGalaxy.Modules.Games.ZS
             ChatTokens.Standard.Add(infectedToken);
             ChatTokens.Standard.Add(survivedToken);
             
-            TopStat.Stats.Add(statMostInfected);
-            TopStat.Stats.Add(statMostSurvived);
-            TopStat.Stats.Add(statMaxInfected);
-            TopStat.Stats.Add(statMaxSurvived);
+            TopStat.Register(statMostInfected);
+            TopStat.Register(statMostSurvived);
+            TopStat.Register(statMaxInfected);
+            TopStat.Register(statMaxSurvived);
         }
         
         static void UnhookStats() {
@@ -67,10 +67,10 @@ namespace MCGalaxy.Modules.Games.ZS
             ChatTokens.Standard.Remove(infectedToken);
             ChatTokens.Standard.Remove(survivedToken);
             
-            TopStat.Stats.Remove(statMostInfected);
-            TopStat.Stats.Remove(statMostSurvived);
-            TopStat.Stats.Remove(statMaxInfected);
-            TopStat.Stats.Remove(statMaxSurvived);
+            TopStat.Unregister(statMostInfected);
+            TopStat.Unregister(statMostSurvived);
+            TopStat.Unregister(statMaxInfected);
+            TopStat.Unregister(statMaxSurvived);
         }
         
         static void PrintOnlineZSStats(Player p, Player who) {

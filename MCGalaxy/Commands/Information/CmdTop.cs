@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Info
             }
             
             List<TopResult> results = stat.GetResults(maxResults, offset);
-            p.Message("&a{0}:", stat.Title());
+            p.Message("&a{0}:", stat.Title);
             
             for (int i = 0; i < results.Count; i++) 
             {
@@ -62,7 +62,7 @@ namespace MCGalaxy.Commands.Info
             p.Message("&T/Top [max results] [stat] <offset>");
             p.Message("&HPrints a list of players who have the " +
                        "most/top of a particular stat. Available stats:");
-            p.Message("&f" + TopStat.Stats.Join(stat => stat.Identifier));
+            TopStat.List(p);
         }
     }
 }

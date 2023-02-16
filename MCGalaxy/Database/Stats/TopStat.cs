@@ -31,26 +31,17 @@ namespace MCGalaxy.DB
     
     public struct TopResult { public string Name, Value; }
     
-    /// <summary> Outputs ordered stats from an underlying dsta source </summary>
-    /// <example> Most TopStats read from column in a database table </example>
-    public class TopStat 
+    /// <summary> Outputs ordered stats from an underlying data source </summary>
+    /// <example> Most TopStats are read from a column in a database table </example>
+    public abstract class TopStat 
     {    
-        public readonly string Identifier, Table, Column, OrderBy;
-        public readonly TopStatTitle Title;
-        public readonly TopStatFormatter Formatter;
+        public string Identifier, Title;
+        public TopStatFormatter Formatter;
         
-        public TopStat(string identifier, string table, string col, TopStatTitle title,
-                       TopStatFormatter formatter, bool ascending = false, string orderBy = null) {
+        public TopStat(string identifier, string title, TopStatFormatter formatter) {
             Identifier = identifier;
-            Table = table;
-            Column = col;
-            Title = title;
-            Formatter = formatter;
-            
-            OrderBy = orderBy;
-            if (OrderBy == null)
-                OrderBy = " " + col + " ";            
-            OrderBy += (ascending ? "asc" : "desc");
+            Title      = title;
+            Formatter  = formatter;
         }
         
         
@@ -59,84 +50,65 @@ namespace MCGalaxy.DB
         }
         
         /// <summary> Retrieves unformatted results from the underlying data source </summary>
-        public virtual List<TopResult> GetResults(int maxResults, int offset) {
-            string limit = " LIMIT " + offset + "," + maxResults;
-            List<TopResult> stats = new List<TopResult>();
-            
-            Database.ReadRows(Table, "DISTINCT Name, " + Column, 
-                              record => stats.Add(ParseRow(record)),
-                              "ORDER BY" + OrderBy + limit);
-            return stats;
-        }
-        
-        static TopResult ParseRow(ISqlRecord record) {
-            TopResult result;
-            result.Name  = record.GetStringValue(0);
-            result.Value = record.GetStringValue(1);
-            return result;
-        }
+        public abstract List<TopResult> GetResults(int maxResults, int offset);
         
         
         public static TopStat Find(string name) {
-            foreach (TopStat stat in Stats) 
+            foreach (TopStat stat in stats) 
             {
                 if (stat.Identifier.CaselessEq(name)) return stat;
             }
             return null;
-        }       
+        }
         
-        /// <summary> List of stats that can be ordered. </summary>
-        public static List<TopStat> Stats = new List<TopStat>() {
-            new TopStat("Logins", "Players",
-                        PlayerData.ColumnLogins, MostLogins, FormatInteger),
-            new TopStat("Deaths", "Players",
-                        PlayerData.ColumnDeaths, MostDeaths, FormatInteger),
-            new TopStat("Money", "Players",
-                        PlayerData.ColumnMoney, MostMoney, FormatInteger),            
-            new TopStat("Oldest", "Players", 
-                        PlayerData.ColumnFirstLogin, MostOldest, FormatDate, true),
-            new TopStat("Newest", "Players",
-                        PlayerData.ColumnFirstLogin, MostNewest, FormatDate),
-            new TopStat("Recent", "Players",
-                        PlayerData.ColumnLastLogin, MostRecent, FormatDate),
-            new TopStat("Least-Recent", "Players",
-                        PlayerData.ColumnLastLogin, MostNotRecent, FormatDate, true),
-            new TopStat("Kicked", "Players", 
-                        PlayerData.ColumnKicked, MostKicked, FormatInteger),
-            new TopStat("Modified", "Players",
-                        PlayerData.ColumnBlocks + " & " + PlayerData.LoBitsMask,
-                        MostModified, FormatInteger),
-            new TopStat("Drawn", "Players",
-                        PlayerData.ColumnDrawn + " & " + PlayerData.LoBitsMask,
-                        MostDrawn, FormatInteger),
-            new TopStat("Placed", "Players",
+        public static void List(Player p) {
+            p.Message("&f" + stats.Join(stat => stat.Identifier));
+        }
+        
+        public static void Register(TopStat stat) {
+            stats.Add(stat);
+        }
+        
+        public static void Unregister(TopStat stat) {
+            stats.Remove(stat);
+        }
+        
+        
+        static List<TopStat> stats = new List<TopStat>() {
+            new DBTopStat("Logins", "Most logins", "Players",
+                        PlayerData.ColumnLogins, FormatInteger),
+            new DBTopStat("Deaths", "Most deaths", "Players",
+                        PlayerData.ColumnDeaths, FormatInteger),
+            new DBTopStat("Money", "Most $currency", "Players",
+                        PlayerData.ColumnMoney, FormatInteger),            
+            new DBTopStat("Oldest", "Oldest players", "Players", 
+                        PlayerData.ColumnFirstLogin, FormatDate, true),
+            new DBTopStat("Newest", "Newest players", "Players",
+                        PlayerData.ColumnFirstLogin, FormatDate),
+            new DBTopStat("Recent", "Most recent players", "Players",
+                        PlayerData.ColumnLastLogin, FormatDate),
+            new DBTopStat("Least-Recent", "Least recent players", "Players",
+                        PlayerData.ColumnLastLogin, FormatDate, true),
+            new DBTopStat("Kicked", "Most times kicked", "Players", 
+                        PlayerData.ColumnKicked, FormatInteger),
+            new DBTopStat("Modified", "Most blocks modified", "Players",
+                        PlayerData.ColumnBlocks + " & " + PlayerData.LoBitsMask, FormatInteger),
+            new DBTopStat("Drawn", "Most blocks drawn", "Players",
+                        PlayerData.ColumnDrawn + " & " + PlayerData.LoBitsMask, FormatInteger),
+            new DBTopStat("Placed", "Most blocks placed", "Players",
                         // TODO: Check if this works on MySQL too
                         PlayerData.ColumnBlocks + " >> " + PlayerData.HiBitsShift + " & " + PlayerData.HiBitsMask,
-                        MostPlaced, FormatInteger),
-            new TopStat("Deleted", "Players",
+                        FormatInteger),
+            new DBTopStat("Deleted", "Most blocks deleted", "Players",
                         PlayerData.ColumnDrawn  + " >> " + PlayerData.HiBitsShift + " & " + PlayerData.HiBitsMask,
-                        MostDeleted, FormatInteger),
-            new TopStat("TimeSpent", "Players",
-                        PlayerData.ColumnTimeSpent, MostTime, FormatTimespan,
+                        FormatInteger),
+            new DBTopStat("TimeSpent", "Most time spent", "Players",
+                        PlayerData.ColumnTimeSpent, FormatTimespan,
                         false, " CAST(TimeSpent as unsigned) "),
-            new TopStat("Messages", "Players",
-                        PlayerData.ColumnMessages, MostMessages, FormatInteger),
+            new DBTopStat("Messages", "Most messages written", "Players",
+                        PlayerData.ColumnMessages, FormatInteger),
         };
         
-        static string MostLogins()    { return "Most logins"; }
-        static string MostDeaths()    { return "Most deaths"; }
-        static string MostMoney()     { return "Most " + Server.Config.Currency; }
-        static string MostNewest()    { return "Newest players"; }
-        static string MostOldest()    { return "Oldest players"; }
-        static string MostRecent()    { return "Most recent players"; }
-        static string MostNotRecent() { return "Least recent players"; }
-        static string MostKicked()    { return "Most times kicked"; }
-        static string MostModified()  { return "Most blocks modified"; }
-        static string MostDrawn()     { return "Most blocks drawn"; }
-        static string MostPlaced()    { return "Most blocks placed"; }
-        static string MostDeleted()   { return "Most blocks deleted"; }
-        static string MostTime()      { return "Most time spent"; }
-        static string MostMessages()  { return "Most messages written"; }
         
         public static string FormatInteger(string input) {
             long value = PlayerData.ParseLong(input);
@@ -153,5 +125,40 @@ namespace MCGalaxy.DB
             TimeSpan delta = DateTime.Now - time;
             return string.Format("{0:H:mm} on {0:d} ({1} ago)", time, delta.Shorten());
         }
+    }
+    
+    public class DBTopStat : TopStat
+    {    
+        public string Table, Column, OrderBy;
+        
+        public DBTopStat(string identifier, string title, string table, string column,
+                         TopStatFormatter formatter, bool ascending = false, string orderBy = null) 
+                        : base(identifier, title, formatter) {
+            Table  = table;
+            Column = column;
+            
+            OrderBy = orderBy;
+            if (OrderBy == null)
+                OrderBy = " " + column + " ";
+            OrderBy += (ascending ? "asc" : "desc");
+        }
+        
+        
+        public override List<TopResult> GetResults(int maxResults, int offset) {
+            string limit = " LIMIT " + offset + "," + maxResults;
+            List<TopResult> stats = new List<TopResult>();
+            
+            Database.ReadRows(Table, "DISTINCT Name, " + Column, 
+                              record => stats.Add(ParseRow(record)),
+                              "ORDER BY" + OrderBy + limit);
+            return stats;
+        }
+        
+        static TopResult ParseRow(ISqlRecord record) {
+            TopResult result;
+            result.Name  = record.GetStringValue(0);
+            result.Value = record.GetStringValue(1);
+            return result;
+        }     
     }
 }
