@@ -51,7 +51,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
 
-        protected void HandleGo(Player p, RoundsGame game) {
+        protected virtual void HandleGo(Player p, RoundsGame game) {
             if (!game.Running) {
                 p.Message("{0} is not running", game.GameName);
             } else {
@@ -66,7 +66,7 @@ namespace MCGalaxy.Commands.Fun {
             game.Start(p, map, int.MaxValue);
         }
         
-        protected void HandleEnd(Player p, RoundsGame game) {
+        protected virtual void HandleEnd(Player p, RoundsGame game) {
             if (game.RoundInProgress) {
                 game.EndRound();
             } else {
@@ -74,7 +74,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
         
-        protected void HandleStop(Player p, RoundsGame game) {
+        protected virtual void HandleStop(Player p, RoundsGame game) {
             if (!game.Running) {
                 p.Message("{0} is not running", game.GameName);
             } else {
@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Fun {
             }
         }
 
-        protected void HandleStatus(Player p, RoundsGame game) {
+        protected virtual void HandleStatus(Player p, RoundsGame game) {
             if (!game.Running) {
                 p.Message("{0} is not running", game.GameName);
             } else {
