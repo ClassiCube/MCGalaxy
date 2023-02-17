@@ -1,6 +1,7 @@
 ﻿// Part of fCraft | Copyright 2009-2015 Matvei Stefarov <me@matvei.org> | BSD-3 | See LICENSE.txt
 using System;
 using MCGalaxy.Commands;
+using MCGalaxy.Generator.Foliage;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Generator.fCraft {
@@ -27,6 +28,7 @@ namespace MCGalaxy.Generator.fCraft {
         byte bGroundSurface, bWater, bGround, bSeaFloor, bBedrock, bCliff;
         int groundThickness = 5;
         const int SeaFloorThickness = 3;
+        Tree tree;
 
         public fCraftMapGen( fCraftMapGenArgs generatorArgs ) {
             args  = generatorArgs;
@@ -64,6 +66,7 @@ namespace MCGalaxy.Generator.fCraft {
             if (args.Biome == MapGenBiomeName.Arctic) groundThickness = 1;
             
             biome.ApplyEnv(map.Config);
+            tree = biome.GetTreeGen("fCraft");
         }
         
 
@@ -331,58 +334,40 @@ namespace MCGalaxy.Generator.fCraft {
 
 
         void GenerateTrees( Level map ) {
-            int minHeight = args.TreeHeightMin;
-            int maxHeight = args.TreeHeightMax;
             int minTrunkPadding = args.TreeSpacingMin;
             int maxTrunkPadding = args.TreeSpacingMax;
-            const int topLayers = 2;
-            const double odds = 0.618;
 
-            Random rn = new Random();
+            Random rn = new Random(200);
             int width = _width, length = _length;
 
-            for( int x = 0; x < width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
-                for( int z = 0; z < length; z += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) {
-                    int nx = x + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
-                    int nz = z + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
+            for( int x = 0; x < width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) )
+                for( int z = 0; z < length; z += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) ) 
+            {
+                int nx = x + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
+                int nz = z + rn.Next( -(minTrunkPadding / 2), (maxTrunkPadding / 2) + 1 );
+                
+                if( nx < 0 || nx >= width || nz < 0 || nz >= length ) continue;
+                int ny = surfaceMap[nx * length + nz];
+
+                if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx * length + nz] < .5 ) {
                     
-                    if( nx < 0 || nx >= width || nz < 0 || nz >= length ) continue;
-                    int ny = surfaceMap[nx * length + nz];
-
-                    if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx * length + nz] < .5 ) {
-                        // Pick a random height for the tree between Min and Max,
-                        // discarding this tree if it would breach the top of the map
-                        int nh = rn.Next( minHeight, maxHeight + 1 );
-                        if( ny + nh + nh / 2 > map.Height )
-                            continue;
-
-                        // Generate the trunk of the tree
-                        for( int dy = 1; dy <= nh; dy++ )
-                            map.SetTile( (ushort)nx, (ushort)(ny + dy), (ushort)nz, Block.Log );
-
-                        for( int i = -1; i < nh / 2; i++ ) {
-                            // Should we draw thin (2x2) or thicker (4x4) foliage
-                            int radius = (i >= (nh / 2) - topLayers) ? 1 : 2;
-                            // Draw the foliage
-                            for( int dx = -radius; dx < radius + 1; dx++ )
-                                for( int dz = -radius; dz < radius + 1; dz++ )
-                            {
-                                // Drop random leaves from the edges
-                                if( rn.NextDouble() > odds && Math.Abs( dx ) == Math.Abs( dz ) && Math.Abs( dx ) == radius )
-                                    continue;
-                                // By default only replace an existing block if its air
-                                if( map.GetBlock( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz) ) == Block.Air ) {
-                                    map.SetTile( (ushort)(nx + dx), (ushort)(ny + nh + i), (ushort)(nz + dz), Block.Leaves );
-                                }
-                            }
-                        }
-                    }
+                    // discard this tree if it would breach the top of the map                    
+                    tree.SetData( rn, tree.DefaultSize( rn ) );
+                    int nh = tree.height;
+                    if( ny + nh + nh / 2 > map.Height )
+                        continue;
+                    
+                    tree.Generate( (ushort)nx, (ushort)ny, (ushort)nz, (xT, yT, zT, bT) =>
+                                  {
+                                      if( map.IsAirAt( xT, yT, zT ) )
+                                          map.SetTile( xT, yT, zT, (byte)bT );
+                                  });
                 }
             }
         }
 
         #endregion
-        
+            
         
         public static void RegisterGenerators() {
             string[] names = Enum.GetNames(typeof(MapGenBiomeName));

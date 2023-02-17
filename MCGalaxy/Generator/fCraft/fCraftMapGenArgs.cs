@@ -40,8 +40,6 @@ namespace MCGalaxy.Generator.fCraft
         public bool  AddGiantTrees; // false
         public int   TreeSpacingMin = 7;
         public int   TreeSpacingMax = 11;
-        public int   TreeHeightMin = 5;
-        public int   TreeHeightMax = 7;
 
         public bool  AddSnow; // false
         public int   SnowAltitude = 70;
@@ -101,7 +99,6 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Dunes:
                     return new fCraftMapGenArgs {
-                        AddWater = false,
                         Biome = MapGenBiomeName.Desert,
                         MaxHeight = 12,
                         MaxDepth = 7,
@@ -114,7 +111,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Hills:
                     return new fCraftMapGenArgs {
-                        AddWater = false,
+                        Biome = MapGenBiomeName.Plains,
                         MaxHeight = 8,
                         MaxDepth = 8,
                         FeatureScale = 2,
@@ -168,7 +165,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Mountains2:
                     return new fCraftMapGenArgs {
-                        AddWater = false,
+                        Biome = MapGenBiomeName.Plains,
                         MaxHeight = 40,
                         MaxDepth = 10,
                         FeatureScale = 1,

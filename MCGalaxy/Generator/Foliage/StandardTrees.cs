@@ -26,16 +26,17 @@ Ideas, concepts, and code were used from the following two sources:
  */
 using System;
 
-namespace MCGalaxy.Generator.Foliage {
-    public sealed class CactusTree : Tree {
-
+namespace MCGalaxy.Generator.Foliage 
+{
+    public sealed class CactusTree : Tree 
+    {
         public override long EstimateBlocksAffected() { return height + 3 * 2; }
         
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 6); }
                 
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = 1;
+            size   = 1;
             this.rnd = rnd;
         }
         
@@ -57,15 +58,15 @@ namespace MCGalaxy.Generator.Foliage {
         }
     }
 
-    public sealed class NormalTree : Tree {
-
+    public sealed class NormalTree : Tree 
+    {
         public override long EstimateBlocksAffected() { return height + size * size * size; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(5, 8); }
         
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = height - rnd.Next(2, 4);
+            size   = height - rnd.Next(2, 4);
             this.rnd = rnd;
         }
         
@@ -88,15 +89,16 @@ namespace MCGalaxy.Generator.Foliage {
         }
     }
 
-    public sealed class ClassicTree : Tree {
-        
+    public sealed class ClassicTree : Tree 
+    {
+        // 61 = max number of leaves possible, +1 for extra log
         public override long EstimateBlocksAffected() { return height + 65; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 7); }
         
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = 2;
+            size   = 2;
             this.rnd = rnd;
         }
         
@@ -123,15 +125,15 @@ namespace MCGalaxy.Generator.Foliage {
         }
     }
     
-    public sealed class SwampTree : Tree {
-        
+    public sealed class SwampTree : Tree 
+    {        
         public override long EstimateBlocksAffected() { return height + 145; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(4, 8); }
 
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = 3;
+            size   = 3;
             this.rnd = rnd;
         }
         
