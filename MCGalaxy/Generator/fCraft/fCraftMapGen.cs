@@ -58,6 +58,7 @@ namespace MCGalaxy.Generator.fCraft {
             bCliff    = biome.Cliff;
             
             args.AddWater = biome.Water != Block.Air;
+            args.AddTrees = biome.TreeType != null;
             
             // TODO: temp hack, need a better solution
             if (args.Biome == MapGenBiomeName.Arctic) groundThickness = 1;
@@ -351,8 +352,8 @@ namespace MCGalaxy.Generator.fCraft {
                     if( (map.GetBlock( (ushort)nx, (ushort)ny, (ushort)nz ) == bGroundSurface) && slopemap[nx * length + nz] < .5 ) {
                         // Pick a random height for the tree between Min and Max,
                         // discarding this tree if it would breach the top of the map
-                        int nh;
-                        if( (nh = rn.Next( minHeight, maxHeight + 1 )) + ny + nh / 2 > map.Height )
+                        int nh = rn.Next( minHeight, maxHeight + 1 );
+                        if( ny + nh + nh / 2 > map.Height )
                             continue;
 
                         // Generate the trunk of the tree
@@ -413,7 +414,6 @@ namespace MCGalaxy.Generator.fCraft {
             args.SnowAltitude = (int)Math.Round(args.SnowAltitude * ratio);
             
             args.Biome      = theme;
-            args.AddTrees   = theme == MapGenBiomeName.Forest;
             args.WaterLevel = (lvl.Height - 1) / 2;
 
             new fCraftMapGen(args).Generate(lvl);

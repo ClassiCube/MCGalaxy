@@ -22,7 +22,7 @@ namespace MCGalaxy.Generator
 {
     public enum MapGenBiomeName
     {
-        Forest, Arctic, Desert, Hell, Swamp, Mine, Sandy
+        Forest, Arctic, Desert, Hell, Swamp, Mine, Sandy, Plains
     }
     
     /// <summary> Contains environment settings and the types of blocks that are used to generate a map </summary>
@@ -61,6 +61,7 @@ namespace MCGalaxy.Generator
                 case MapGenBiomeName.Swamp:  return Swamp;
                 case MapGenBiomeName.Mine:   return Mine;
                 case MapGenBiomeName.Sandy:  return Sandy;
+                case MapGenBiomeName.Plains: return Plains;
             }
             return Forest;
         }
@@ -169,6 +170,19 @@ namespace MCGalaxy.Generator
             CloudColor = "#52C6F7",
             Border     = Block.Sand,
             TreeType   = "Palm",
+        };
+                
+        public static MapGenBiome Plains = new MapGenBiome()
+        {
+            Surface    = Block.Grass,
+            Ground     = Block.Dirt,
+            Cliff      = Block.Stone,
+            Water      = Block.Air,
+            Bedrock    = Block.Stone,
+            BeachSandy = Block.Grass,
+            BeachRocky = Block.Grass,
+            TreeType   = "", // "use default for generator"
+            Horizon    = Block.Grass,
         };
     }
 }
