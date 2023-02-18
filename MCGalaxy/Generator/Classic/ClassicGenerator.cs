@@ -384,7 +384,10 @@ namespace MCGalaxy.Generator.Classic
                             
                             tree.Generate((ushort)treeX, (ushort)treeY, (ushort)treeZ, (xT, yT, zT, bT) =>
                                   {
-                                      blocks[(yT * Length + zT) * Width + xT] = (byte)bT;
+                                      int idx = (yT * Length + zT) * Width + xT;
+                                      // don't place leafs over trunk
+                                      if (bT == Block.Leaves && blocks[index] == Block.Log) return;
+                                      blocks[idx] = (byte)bT;
                                   });
                         }
                     }

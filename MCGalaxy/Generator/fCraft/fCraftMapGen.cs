@@ -357,7 +357,7 @@ namespace MCGalaxy.Generator.fCraft {
                     if( ny + nh + nh / 2 > map.Height )
                         continue;
                     
-                    tree.Generate( (ushort)nx, (ushort)ny, (ushort)nz, (xT, yT, zT, bT) =>
+                    tree.Generate( (ushort)nx, (ushort)(ny + 1), (ushort)nz, (xT, yT, zT, bT) =>
                                   {
                                       if( map.IsAirAt( xT, yT, zT ) )
                                           map.SetTile( xT, yT, zT, (byte)bT );

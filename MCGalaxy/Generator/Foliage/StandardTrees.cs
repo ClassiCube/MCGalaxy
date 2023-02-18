@@ -47,14 +47,14 @@ namespace MCGalaxy.Generator.Foliage
             }
 
             int value = rnd.Next(1, 3);
-            int inX = value == 1 ? -1 : 0;
-            int inZ = value == 2 ? -1 : 0;
+            int dx = value == 1 ? -1 : 0;
+            int dz = value == 2 ? -1 : 0;
 
             for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
-                output((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ), Block.Green);
+                output((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), Block.Green);
             }
             for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
-                output((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ), Block.Green);
+                output((ushort)(x - dx), (ushort)(y + dy), (ushort)(z - dz), Block.Green);
             }
         }
     }

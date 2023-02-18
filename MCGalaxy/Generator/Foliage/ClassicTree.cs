@@ -27,6 +27,12 @@ namespace MCGalaxy.Generator.Foliage
             int baseHeight = height - 4;
             int topStartY  = y + baseHeight + 2;
             
+            // trunk
+            for (int dy = 0; dy < height - 1; dy++) 
+            {
+                output(x, (ushort)(y + dy), z, Block.Log);
+            }
+            
             // leaves bottom layer
             for (int yy = y + baseHeight; yy < topStartY; yy++)
                 for (int dz = -2; dz <= 2; dz++)
@@ -56,12 +62,6 @@ namespace MCGalaxy.Generator.Foliage
                 } else if (yy == topStartY && rng.NextFloat() >= 0.5) {
                     output(xx, (ushort)yy, zz, Block.Leaves);
                 }
-            }
-            
-            // then place trunk
-            for (int dy = 0; dy < height - 1; dy++) 
-            {
-                output(x, (ushort)(y + dy), z, Block.Log);
             }
         }
     }
