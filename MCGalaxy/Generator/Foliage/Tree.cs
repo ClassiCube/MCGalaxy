@@ -73,7 +73,7 @@ namespace MCGalaxy.Generator.Foliage
             { "Oak", () => new OakTree() },       { "Ash", () => new AshTree() },            
             { "Round", () => new RoundTree() },   { "Cone", () => new ConeTree() }, 
             { "Rainforest", () => new RainforestTree() }, { "Mangrove", () => new MangroveTree() },
-            { "fCraft", () => new fCraftTree() }, { "Classic", () => new ClassicTree2() }
+            { "fCraft", () => new fCraftTree() }
         };
         
         public static Tree Find(string name) {

@@ -353,13 +353,8 @@ namespace MCGalaxy.Generator.Classic
             CurrentState = "Planting trees";
             byte surface = biome.Surface;
             
-            if (biome.TreeType == null) return;
-            Tree tree;
-            if (biome.TreeType == "") {
-            	tree = new ClassicTree2() { rng = rnd };
-            } else {
-            	tree = Tree.TreeTypes[biome.TreeType]();
-            }
+            Tree tree = GetTreeGen();
+            if (tree == null) return;
             Random R = new Random();
             
             for (int i = 0; i < numPatches; i++) 
@@ -397,12 +392,19 @@ namespace MCGalaxy.Generator.Classic
             }
         }
         
+        Tree GetTreeGen() {
+            if (biome.TreeType == null) return null;
+            if (biome.TreeType == "")   return new ClassicTree() { rng = rnd };
+            
+            return Tree.TreeTypes[biome.TreeType]();
+        }
+        
         bool CanGrowTree(int treeX, int treeY, int treeZ, int treeHeight) {
-        	// check tree bounds
-        	if (treeY < 0     || (treeY + treeHeight - 1) >= Height) return false;
-        	if (treeX - 2 < 0 || treeX + 2 >= Width)  return false;
-        	if (treeZ - 2 < 0 || treeZ + 2 >= Length) return false;
-        	
+            // check tree bounds
+            if (treeY < 0     || (treeY + treeHeight - 1) >= Height) return false;
+            if (treeX - 2 < 0 || treeX + 2 >= Width)  return false;
+            if (treeZ - 2 < 0 || treeZ + 2 >= Length) return false;
+            
             // check tree base            
             int baseHeight = treeHeight - 4;
             for (int y = treeY; y < treeY + baseHeight; y++)
