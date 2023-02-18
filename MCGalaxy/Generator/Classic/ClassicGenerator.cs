@@ -386,7 +386,7 @@ namespace MCGalaxy.Generator.Classic
                                   {
                                       int idx = (yT * Length + zT) * Width + xT;
                                       // don't place leafs over trunk
-                                      if (bT == Block.Leaves && blocks[index] == Block.Log) return;
+                                      if (bT == Block.Leaves && blocks[idx] == Block.Log) return;
                                       blocks[idx] = (byte)bT;
                                   });
                         }
