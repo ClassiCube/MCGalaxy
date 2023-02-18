@@ -22,7 +22,8 @@ namespace MCGalaxy.Generator.fCraft
             for( int dy = 1; dy <= height; dy++ )
                 output( x, (ushort)(y + dy), z, Block.Log );
 
-            for( int i = -1; i < height / 2; i++ ) {
+            for( int i = -1; i < height / 2; i++ ) 
+            {
                 // Should we draw thin (2x2) or thicker (4x4) foliage
                 int radius = (i >= (height / 2) - topLayers) ? 1 : 2;
                 // Draw the foliage

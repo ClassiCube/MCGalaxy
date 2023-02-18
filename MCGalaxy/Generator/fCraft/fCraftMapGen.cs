@@ -337,7 +337,7 @@ namespace MCGalaxy.Generator.fCraft {
             int minTrunkPadding = args.TreeSpacingMin;
             int maxTrunkPadding = args.TreeSpacingMax;
 
-            Random rn = new Random(200);
+            Random rn = new Random();
             int width = _width, length = _length;
 
             for( int x = 0; x < width; x += rn.Next( minTrunkPadding, maxTrunkPadding + 1 ) )

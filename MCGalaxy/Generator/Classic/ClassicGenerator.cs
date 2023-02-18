@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy;
 using MCGalaxy.Generator;
+using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Generator.Classic
 {    
@@ -209,8 +210,10 @@ namespace MCGalaxy.Generator.Classic
             int waterY = waterLevel - 1;
             int index1 = (waterY * Length + 0) * Width + 0;
             int index2 = (waterY * Length + (Length - 1)) * Width + 0;
+            
             CurrentState = "Flooding edge water";
             byte water = biome.Water;
+            if (water == Block.Air) return;
             
             for (int x = 0; x < Width; x++) 
             {
@@ -231,8 +234,10 @@ namespace MCGalaxy.Generator.Classic
         
         void FloodFillWater() {
             int numSources = Width * Length / 800;
+            
             CurrentState = "Flooding water";
             byte water = biome.Water;
+            if (water == Block.Air) return;
             
             for (int i = 0; i < numSources; i++) 
             {
@@ -348,6 +353,15 @@ namespace MCGalaxy.Generator.Classic
             CurrentState = "Planting trees";
             byte surface = biome.Surface;
             
+            if (biome.TreeType == null) return;
+            Tree tree;
+            if (biome.TreeType == "") {
+            	tree = new ClassicTree2() { rng = rnd };
+            } else {
+            	tree = Tree.TreeTypes[biome.TreeType]();
+            }
+            Random R = new Random();
+            
             for (int i = 0; i < numPatches; i++) 
             {
                 int patchX = rnd.Next(Width), patchZ = rnd.Next(Length);
@@ -365,13 +379,18 @@ namespace MCGalaxy.Generator.Classic
                         
                         int treeY = heightmap[treeZ * Width + treeX] + 1;
                         if (treeY >= Height) continue;
-                        int treeHeight = 5 + rnd.Next(3);
+                        int treeHeight = tree.DefaultSize(R);
                         
                         int index = (treeY * Length + treeZ) * Width + treeX;
                         byte blockUnder = treeY > 0 ? blocks[index - oneY] : Block.Air;
                         
                         if (blockUnder == surface && CanGrowTree(treeX, treeY, treeZ, treeHeight)) {
-                            GrowTree(treeX, treeY, treeZ, treeHeight);
+                            tree.SetData(R, treeHeight);
+                            
+                            tree.Generate((ushort)treeX, (ushort)treeY, (ushort)treeZ, (xT, yT, zT, bT) =>
+                                  {
+                                      blocks[(yT * Length + zT) * Width + xT] = (byte)bT;
+                                  });
                         }
                     }
                 }
@@ -379,14 +398,17 @@ namespace MCGalaxy.Generator.Classic
         }
         
         bool CanGrowTree(int treeX, int treeY, int treeZ, int treeHeight) {
-            // check tree base
+        	// check tree bounds
+        	if (treeY < 0     || (treeY + treeHeight - 1) >= Height) return false;
+        	if (treeX - 2 < 0 || treeX + 2 >= Width)  return false;
+        	if (treeZ - 2 < 0 || treeZ + 2 >= Length) return false;
+        	
+            // check tree base            
             int baseHeight = treeHeight - 4;
             for (int y = treeY; y < treeY + baseHeight; y++)
                 for (int z = treeZ - 1; z <= treeZ + 1; z++)
                     for (int x = treeX - 1; x <= treeX + 1; x++)
             {
-                if (x < 0 || y < 0 || z < 0 || x >= Width || y >= Height || z >= Length)
-                    return false;
                 int index = (y * Length + z) * Width + x;
                 if (blocks[index] != 0) return false;
             }
@@ -396,57 +418,10 @@ namespace MCGalaxy.Generator.Classic
                 for (int z = treeZ - 2; z <= treeZ + 2; z++)
                     for (int x = treeX - 2; x <= treeX + 2; x++)
             {
-                if (x < 0 || y < 0 || z < 0 || x >= Width || y >= Height || z >= Length)
-                    return false;
                 int index = (y * Length + z) * Width + x;
                 if (blocks[index] != 0) return false;
             }
             return true;
-        }
-        
-        void GrowTree(int treeX, int treeY, int treeZ, int height) {
-            int baseHeight = height - 4;
-            int index = 0;
-            
-            // leaves bottom layer
-            for (int y = treeY + baseHeight; y < treeY + baseHeight + 2; y++)
-                for (int zz = -2; zz <= 2; zz++)
-                    for (int xx = -2; xx <= 2; xx++)
-            {
-                int x = xx + treeX, z = zz + treeZ;
-                index = (y * Length + z) * Width + x;
-                
-                if (Math.Abs(xx) == 2 && Math.Abs(zz) == 2) {
-                    if (rnd.NextFloat() >= 0.5)
-                        blocks[index] = Block.Leaves;
-                } else {
-                    blocks[index] = Block.Leaves;
-                }
-            }
-            
-            // leaves top layer
-            int bottomY = treeY + baseHeight + 2;
-            for (int y = treeY + baseHeight + 2; y < treeY + height; y++)
-                for (int zz = -1; zz <= 1; zz++)
-                    for (int xx = -1; xx <= 1; xx++)
-            {
-                int x = xx + treeX, z = zz + treeZ;
-                index = (y * Length + z) * Width + x;
-
-                if (xx == 0 || zz == 0) {
-                    blocks[index] = Block.Leaves;
-                } else if (y == bottomY && rnd.NextFloat() >= 0.5) {
-                    blocks[index] = Block.Leaves;
-                }
-            }
-            
-            // then place trunk
-            index = (treeY * Length + treeZ) * Width + treeX;
-            for (int y = 0; y < height - 1; y++) 
-            {
-                blocks[index] = Block.Log;
-                index += oneY;
-            }
         }
         
         

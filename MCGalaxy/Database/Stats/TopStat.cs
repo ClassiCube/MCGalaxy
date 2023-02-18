@@ -21,13 +21,8 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.DB 
 { 
-    /// <summary> Retrieves a title for a column. </summary>
-    /// <remarks> Title is displayed on a line before the values of that column. </remarks>
-    public delegate string TopStatTitle();
-    
-    /// <summary> Formats a value in a column. </summary>
+    /// <summary> Formats a raw stat value </summary>
     public delegate string TopStatFormatter(string input);
-    
     
     public struct TopResult { public string Name, Value; }
     
