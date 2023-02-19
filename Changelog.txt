@@ -1,4 +1,49 @@
-﻿v 1.9.4.6
+﻿v 1.9.4.7
+Game related changes:
+Added: LS: /lives command for showing you current number of lives
+Added: LS: Can now set default round/flood times
+Added: LS: Items for buying sponges and water blocks
+Improved: Discord bot shows running games in .who output
+Improved: Countdown: Can now specify default game speed in config
+Improved: Countdown: Money is now rewarded for surviving
+Improved: ZS: Can now configure reward money
+Improved: LS: Money is now rewarded for surviving
+Improved: LS: All blocks now burn after a delay when not in Calm mode
+Improved: LS: Prevent placing blocks near lava spawn by default
+Improved: LS: Water/lava killable blocks (e.g. log) don't insta-burn in Disturbed mode
+Improved: LS: Show money and lives left in top right (for CPE clients)
+Improved: LS: Show message in chat when you lose a life
+Improved: LS: death cooldown increased to 30 seconds
+Improved: LS: has sponges automatically disappear after configurable delay
+Improved: LS: Limit number of water blocks that can be placed
+Improved: LS: Move layer options to separate section of /ls set
+Improved: LS: Allow negative layer heights (i.e. allows lava layers from top to bottom of level)
+Fixed: ZS: Rare issue where when players joined server at very end of round countdown would get added to alive/human list but then subsequently get auto infected 
+Fixed: LS: Sponge/water block not being reverted client-side when insufficient permission to place the block
+Fixed: LS: Message not showing in chat when layer flooding starts
+Fixed: LS: Layer flooding not resetting properly when continuing next round on same level
+Map generator related changes:
+Added: Sandy and Plains map gen biomes
+Improved: Realistic map gen now support biomes
+Improved: Classic map gen now support biomes
+Improved: 3D noise map gens now support biomes
+Improved: Desert biome no longer has water
+Improved: Biomes can now specify custom tree type
+Improved: fCraft Hills and Mountains themes default to Plains biome
+Fixed: Hell map gen theme sometimes having gaps between levels of lava for very vertically small maps
+Removed: Checkerboard map gen theme 
+Other:
+Improved: Discord: Strip ** from messages (so that cross-server discord relay channels look nicer)
+Improved: Save all physics checks to .lvl file (not just those with non-zero args)
+Improved: Always show client name in 'player X connected' message (even for non-CPE clients)
+Improved: /tree notch now uses exact same tree generator as original classic
+Improved: Log warning when a command/plugin dll fails to find a DLL it depends on
+Improved: Log how long garbage collection takes
+Fixed: Could set CopySlots of a rank to 0 in ranks.properties
+Fixed: Can't connect to server on Windows 98 in .NET 2.0 build
+Fixed: Economy transaction descriptions showing currency at time of transaction instead of current currency
+
+v 1.9.4.6
 Added: LS: Configuration option for flood upwards chance
 Added: LS: Players can place sponges to stop lava flow (can place up to 10 per round by default)
 Added: LS: Added item to store for buying another life
