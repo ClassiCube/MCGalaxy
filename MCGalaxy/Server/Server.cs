@@ -99,9 +99,8 @@ namespace MCGalaxy
 
             EnsureFilesExist();
             IScripting.Init();
-            Command.InitAll();
 
-            LoadAllSettings();
+            LoadAllSettings(true);
             InitDatabase();
             Economy.LoadDatabase();
 
@@ -153,13 +152,17 @@ namespace MCGalaxy
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
         }     
         
-        public static void LoadAllSettings() {
+        public static void LoadAllSettings() { LoadAllSettings(false); }
+        
+        // TODO rethink this
+        static void LoadAllSettings(bool commands) {
             Colors.Load();
             Alias.LoadCustom();
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
             
             SrvProperties.Load();
+            if (commands) Command.InitAll();
             AuthService.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();

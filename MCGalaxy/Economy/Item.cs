@@ -67,7 +67,7 @@ namespace MCGalaxy.Eco
         
         
         /// <summary> Called when a player is attempting to purchase this item </summary>
-        /// <remarks> Usually called when a player does /buy [item name] &lt;value&gt; </remarks>
+        /// <remarks> Usually called when a player does /buy [item name] &lt;args&gt; </remarks>
         public abstract void OnPurchase(Player p, string args);
         
         /// <summary> Called when the player does /eco [item name] [option] &lt;value&gt; </summary>
