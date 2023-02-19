@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Games.LS
         
         public override string Name { get { return "Life"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (!LSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy a life " +
                           "when a round of lava survival is in progress."); return;
@@ -54,7 +54,7 @@ namespace MCGalaxy.Modules.Games.LS
         
         public override string Name { get { return "Sponges"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (!LSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy sponges " +
                           "when a round of lava survival is in progress."); return;
@@ -79,7 +79,7 @@ namespace MCGalaxy.Modules.Games.LS
         
         public override string Name { get { return "Water"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (!LSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy water " +
                           "when a round of lava survival is in progress."); return;

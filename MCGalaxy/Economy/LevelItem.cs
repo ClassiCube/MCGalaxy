@@ -72,7 +72,7 @@ namespace MCGalaxy.Eco
             }
         }
         
-        protected internal override void OnPurchase(Player p, string raw) {
+        public override void OnPurchase(Player p, string raw) {
             string[] args = raw.SplitSpaces();
             if (raw.Length == 0) { OnStoreCommand(p); return; }
             LevelPreset preset = FindPreset(args[0]);

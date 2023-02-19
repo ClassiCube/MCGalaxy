@@ -27,7 +27,7 @@ namespace MCGalaxy.Eco
         
         public override string Name { get { return "Title"; } }
         
-        protected internal override void OnPurchase(Player p, string title) {
+        public override void OnPurchase(Player p, string title) {
             if (title.Length == 0) {
                 PlayerOperations.SetTitle(p, p.name, "");
                 p.Message("&aYour title was removed for free."); return;
@@ -51,7 +51,7 @@ namespace MCGalaxy.Eco
         
         public override string Name { get { return "Nickname"; } }
         
-        protected internal override void OnPurchase(Player p, string nick) {
+        public override void OnPurchase(Player p, string nick) {
             if (nick.Length == 0) {
                 PlayerOperations.SetNick(p, p.name, "");
                 p.Message("&aYour nickname was removed for free."); return;
@@ -78,7 +78,7 @@ namespace MCGalaxy.Eco
         
         public override string Name { get { return "TitleColor"; } }
         
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (args.Length == 0) { OnStoreCommand(p); return; }
             string color = Matcher.FindColor(p, args);
             
@@ -103,7 +103,7 @@ namespace MCGalaxy.Eco
         
         public override string Name { get { return "Color"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (args.Length == 0) { OnStoreCommand(p); return; }
             string color = Matcher.FindColor(p, args);
             

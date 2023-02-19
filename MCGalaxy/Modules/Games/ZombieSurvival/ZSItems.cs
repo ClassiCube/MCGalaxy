@@ -32,7 +32,7 @@ namespace MCGalaxy.Modules.Games.ZS
         
         public override string Name { get { return "10Blocks"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             int count = 1;
             const string group = "Number of groups of 10 blocks";
             if (args.Length > 0 && !CommandParser.GetInt(p, args, group, ref count, 0, 10)) return;
@@ -61,7 +61,7 @@ namespace MCGalaxy.Modules.Games.ZS
         
         public override string Name { get { return "QueueLevel"; } }
         
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (ZSGame.Instance.Picker.QueuedMap != null) {
                 p.Message("Someone else has already queued a level."); return;
             }
@@ -91,7 +91,7 @@ namespace MCGalaxy.Modules.Games.ZS
         
         public override string Name { get { return "InfectMessage"; } }
         
-        protected internal override void OnPurchase(Player p, string msg) {
+        public override void OnPurchase(Player p, string msg) {
             if (msg.Length == 0) { OnStoreCommand(p); return; }
             
             if (!msg.Contains("<human>") && !msg.Contains("<zombie>")) {
@@ -126,7 +126,7 @@ namespace MCGalaxy.Modules.Games.ZS
         
         public override string Name { get { return "Invisibility"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "an invisibility potion")) return;
             if (!ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy an invisiblity potion " +
@@ -178,7 +178,7 @@ namespace MCGalaxy.Modules.Games.ZS
         
         public override string Name { get { return "Revive"; } }
         
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (!CheckPrice(p, Price, "a revive potion")) return;
             if (!ZSGame.Instance.RoundInProgress) {
                 p.Message("You can only buy a revive potion " +

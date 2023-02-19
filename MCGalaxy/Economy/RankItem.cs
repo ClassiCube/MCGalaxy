@@ -82,7 +82,7 @@ namespace MCGalaxy.Eco
             return null;
         }
         
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (args.Length > 0) {
                 p.Message("&WYou cannot provide a rank name, use &T/Buy rank &Wto buy the NEXT rank."); return;
             }

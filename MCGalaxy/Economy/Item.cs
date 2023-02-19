@@ -66,8 +66,9 @@ namespace MCGalaxy.Eco
         public abstract void Serialise(List<string> cfg);
         
         
-        /// <summary> Called when the player does /buy [item name] &lt;value&gt; </summary>
-        protected internal abstract void OnPurchase(Player p, string args);
+        /// <summary> Called when a player is attempting to purchase this item </summary>
+        /// <remarks> Usually called when a player does /buy [item name] &lt;value&gt; </remarks>
+        public abstract void OnPurchase(Player p, string args);
         
         /// <summary> Called when the player does /eco [item name] [option] &lt;value&gt; </summary>
         protected internal abstract void OnSetup(Player p, string[] args);
@@ -83,7 +84,8 @@ namespace MCGalaxy.Eco
         /// <summary> Called when the player does /store </summary>
         protected internal abstract void OnStoreOverview(Player p);
         
-        /// <summary> Called when the player does /store [item name] </summary>
+        /// <summary> Outputs detailed information about how to purchase this item to the given player </summary>
+        /// <remarks> Usually called when the player does /store [item name] </remarks>
         protected internal abstract void OnStoreCommand(Player p);
         
 

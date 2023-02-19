@@ -28,7 +28,7 @@ namespace MCGalaxy.Eco
         
         public override string Name { get { return "LoginMessage"; } }
         
-        protected internal override void OnPurchase(Player p, string msg) {
+        public override void OnPurchase(Player p, string msg) {
             if (msg.Length == 0) {
                 PlayerDB.SetLoginMessage(p.name, "");
                 p.Message("&aYour login message was removed for free.");
@@ -56,7 +56,7 @@ namespace MCGalaxy.Eco
         
         public override string Name { get { return "LogoutMessage"; } }
 
-        protected internal override void OnPurchase(Player p, string msg) {
+        public override void OnPurchase(Player p, string msg) {
             if (msg.Length == 0) {
                 PlayerDB.SetLogoutMessage(p.name, "");
                 p.Message("&aYour logout message was removed for free.");
