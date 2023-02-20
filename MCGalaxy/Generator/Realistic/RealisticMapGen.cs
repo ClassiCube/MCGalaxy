@@ -29,7 +29,7 @@ using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Generator.Realistic 
 {
-    public delegate void PreprocessGen(Level lvl, int seed, MapGenBiomeName theme);
+    public delegate void PreprocessGen(Level lvl, MapGenArgs args);
 	
     public sealed class RealisticMapGen 
     {
@@ -42,16 +42,15 @@ namespace MCGalaxy.Generator.Realistic
         MapGenBiome biome;
         Tree tree;
         
-        public bool Gen(Player p, Level lvl, string seed, RealisticMapGenArgs args, PreprocessGen preprocessor) {
-            int rng_seed;
-            MapGenBiomeName theme = args.Biome;
-            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref theme)) return false;
+        public bool Gen(Player p, Level lvl, MapGenArgs gen_args, 
+                        RealisticMapGenArgs args, PreprocessGen preprocessor) {
+            gen_args.Biome = args.Biome;
+            if (!gen_args.ParseArgs(p)) return false;
             
-            rng   = new Random(rng_seed);
-            biome = MapGenBiome.Get(theme);
-            biome.ApplyEnv(lvl.Config);
+            rng   = new Random(gen_args.Seed);
+            biome = MapGenBiome.Get(gen_args.Biome);
             
-            if (preprocessor != null) preprocessor(lvl, rng_seed, theme);
+            if (preprocessor != null) preprocessor(lvl, gen_args);
             terrain = new float[lvl.Width * lvl.Length];
             overlay = new float[lvl.Width * lvl.Length];
             
@@ -339,36 +338,36 @@ namespace MCGalaxy.Generator.Realistic
             MapGen.Register("Hell",      type, GenHell,    MapGen.DEFAULT_HELP);
         }
         
-        static bool GenIsland(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Island);
+        static bool GenIsland(Player p, Level lvl, MapGenArgs args) {
+            return GenRealistic(p, lvl, args, RealisticMapGenArgs.Island);
         }
         
-        static bool GenMountains(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Mountains);
+        static bool GenMountains(Player p, Level lvl, MapGenArgs args) {
+            return GenRealistic(p, lvl, args, RealisticMapGenArgs.Mountains);
         }
         
-        static bool GenForest(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Forest);
+        static bool GenForest(Player p, Level lvl, MapGenArgs args) {
+            return GenRealistic(p, lvl, args, RealisticMapGenArgs.Forest);
         }
         
-        static bool GenOcean(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Ocean);
+        static bool GenOcean(Player p, Level lvl, MapGenArgs args) {
+            return GenRealistic(p, lvl, args, RealisticMapGenArgs.Ocean);
         }
         
-        static bool GenDesert(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Desert);
+        static bool GenDesert(Player p, Level lvl, MapGenArgs args) {
+            return GenRealistic(p, lvl, args, RealisticMapGenArgs.Desert);
         }
         
-        static bool GenHell(Player p, Level lvl, string seed) {
-            return GenRealistic(p, lvl, seed, RealisticMapGenArgs.Hell, PreprocessHell);
+        static bool GenHell(Player p, Level lvl, MapGenArgs args) {
+            return GenRealistic(p, lvl, args, RealisticMapGenArgs.Hell, PreprocessHell);
         }
         
-        static void PreprocessHell(Level lvl, int seed, MapGenBiomeName theme) {
-            Random rng = new Random(seed);
+        static void PreprocessHell(Level lvl, MapGenArgs args) {
+            Random rng = new Random(args.Seed);
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             int index = 0, oneY = width * length;
             
-            MapGenBiome biome = MapGenBiome.Get(theme);
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
             byte[] blocks = lvl.blocks;
             
             // first layer used to be bedrock, but is now skipped over
@@ -395,9 +394,9 @@ namespace MCGalaxy.Generator.Realistic
             }
         }
         
-        static bool GenRealistic(Player p, Level lvl, string seed, 
+        static bool GenRealistic(Player p, Level lvl, MapGenArgs gen_args, 
                                  RealisticMapGenArgs args, PreprocessGen preprocessor = null) {
-            return new RealisticMapGen().Gen(p, lvl, seed, args, preprocessor);
+            return new RealisticMapGen().Gen(p, lvl, gen_args, args, preprocessor);
         }
     }
 }

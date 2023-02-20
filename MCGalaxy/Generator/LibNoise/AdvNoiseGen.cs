@@ -36,51 +36,51 @@ namespace MCGalaxy.Generator
         
         #region Implementations
         
-        static bool GenBillow2D(Player p, Level lvl, string seed) {
+        static bool GenBillow2D(Player p, Level lvl, MapGenArgs args) {
             Billow module = new Billow();
-            return Gen2D(p, lvl, module, seed);
+            return Gen2D(p, lvl, module, args);
         }
         
-        static bool GenRidged2D(Player p, Level lvl, string seed) {
+        static bool GenRidged2D(Player p, Level lvl, MapGenArgs args) {
             RidgedMultifractal module = new RidgedMultifractal();
-            return Gen2D(p, lvl, module, seed);
+            return Gen2D(p, lvl, module, args);
         }
         
-        static bool GenPerlin2D(Player p, Level lvl, string seed) {
+        static bool GenPerlin2D(Player p, Level lvl, MapGenArgs args) {
             Perlin module = new Perlin();
-            return Gen2D(p, lvl, module, seed);
+            return Gen2D(p, lvl, module, args);
         }
         
-        static bool GenVoronoi(Player p, Level lvl, string seed) {
+        static bool GenVoronoi(Player p, Level lvl, MapGenArgs args) {
             Voronoi module = new Voronoi();
-            return Gen2D(p, lvl, module, seed);
+            return Gen2D(p, lvl, module, args);
         }
         
-        static bool GenPerlin3D(Player p, Level lvl, string seed) {
+        static bool GenPerlin3D(Player p, Level lvl, MapGenArgs args) {
             Perlin module = new Perlin();
-            return Gen3D(p, lvl, module, seed);
+            return Gen3D(p, lvl, module, args);
         }
         
-        static bool GenPerlin3DYAdjust(Player p, Level lvl, string seed) {
+        static bool GenPerlin3DYAdjust(Player p, Level lvl, MapGenArgs args) {
             Perlin module = new Perlin();
-            return Gen3DYAdjust(p, lvl, module, seed);
+            return Gen3DYAdjust(p, lvl, module, args);
         }
         
-        static bool GenBillow3D(Player p, Level lvl, string seed) {
+        static bool GenBillow3D(Player p, Level lvl, MapGenArgs args) {
             Billow module = new Billow();
-            return Gen3D(p, lvl, module, seed);
+            return Gen3D(p, lvl, module, args);
         }
         
         #endregion
         
-        static bool Gen2D(Player p, Level lvl, IModule module, string seed) {
+        static bool Gen2D(Player p, Level lvl, IModule module, MapGenArgs args) {
             int width = lvl.Width, length = lvl.Length, half = lvl.Height / 2;
             int waterHeight  = half - 1;
             module.Frequency = 1 / 100.0;
             
-            MapGenBiomeName theme = MapGenBiomeName.Forest;
-            if (!MapGen.ParseArgs(p, seed, out module.Seed, ref theme)) return false;
-            MapGenBiome biome = MapGenBiome.Get(theme);
+            if (!args.ParseArgs(p)) return false;
+            module.Seed       = args.Seed;
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
             
             for (int z = 0; z < length; ++z)
                 for (int x = 0; x < width; ++x)
@@ -107,17 +107,15 @@ namespace MCGalaxy.Generator
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, block);
                 }
             }
-            
-            biome.ApplyEnv(lvl.Config);
             return true;
         }
         
-        static bool Gen3D(Player p, Level lvl, IModule module, string seed) {
+        static bool Gen3D(Player p, Level lvl, IModule module, MapGenArgs args) {
             module.Frequency = 1 / 100.0;
             
-            MapGenBiomeName theme = MapGenBiomeName.Forest;
-            if (!MapGen.ParseArgs(p, seed, out module.Seed, ref theme)) return false;
-            MapGenBiome biome = MapGenBiome.Get(theme);
+            if (!args.ParseArgs(p)) return false;
+            module.Seed       = args.Seed;
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
             
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
@@ -128,17 +126,15 @@ namespace MCGalaxy.Generator
                 if (value >= 0.1)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, biome.Surface);
             }
-            
-            biome.ApplyEnv(lvl.Config);
             return true;
         }
         
-        static bool Gen3DYAdjust(Player p, Level lvl, IModule module, string seed) {
+        static bool Gen3DYAdjust(Player p, Level lvl, IModule module, MapGenArgs args) {
             module.Frequency = 1 / 100.0;
             
-            MapGenBiomeName theme = MapGenBiomeName.Forest;
-            if (!MapGen.ParseArgs(p, seed, out module.Seed, ref theme)) return false;
-            MapGenBiome biome = MapGenBiome.Get(theme);
+            if (!args.ParseArgs(p)) return false;
+            module.Seed       = args.Seed;
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
             
             int width = lvl.Width, height = lvl.Height, length = lvl.Length;
             for (int y = 0; y < height; y++)
@@ -149,8 +145,6 @@ namespace MCGalaxy.Generator
                 if (value > 30 * y / height)
                     lvl.SetTile((ushort)x, (ushort)y, (ushort)z, biome.Surface);
             }
-            
-            biome.ApplyEnv(lvl.Config);
             return true;
         }
     }

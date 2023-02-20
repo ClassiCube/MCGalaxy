@@ -25,8 +25,24 @@ using MCGalaxy.Generator.Classic;
 
 namespace MCGalaxy.Generator 
 {
-    public delegate bool MapGenFunc(Player p, Level lvl, string seed);
+    public delegate bool MapGenFunc(Player p, Level lvl, MapGenArgs args);
     public enum GenType { Simple, fCraft, Advanced };
+        
+    public class MapGenArgs
+    {
+        public string Args;
+        public int Seed;
+        public MapGenBiomeName Biome;
+        
+        public bool ParseArgs(Player p) {
+            if (int.TryParse(Args, out Seed)) return true;
+            
+            Seed = new Random().Next();
+            if (Args.Length == 0) return true;
+            
+            return CommandParser.GetEnum(p, Args, "Seed", ref Biome);
+        }
+    }
     
     /// <summary> Map generators initialise the blocks in a level. </summary>
     /// <remarks> e.g. flatgrass generator, mountains theme generator, etc </remarks>
@@ -41,7 +57,13 @@ namespace MCGalaxy.Generator
         public bool Generate(Player p, Level lvl, string seed) {
             lvl.Config.Theme = Theme;
             lvl.Config.Seed  = seed;
-            return GenFunc(p, lvl, seed);
+            
+            MapGenArgs args = new MapGenArgs();
+            args.Args       = seed;
+            
+            bool success = GenFunc(p, lvl, args);
+            MapGenBiome.Get(args.Biome).ApplyEnv(lvl.Config);
+            return success;
         }
         
         
@@ -58,16 +80,6 @@ namespace MCGalaxy.Generator
             int value;
             if (!int.TryParse(seed, out value)) value = seed.GetHashCode();
             return value;
-        }
-        
-        public static bool ParseArgs(Player p, string input, 
-                                     out int seed, ref MapGenBiomeName biome) {
-            if (int.TryParse(input, out seed)) return true;
-            
-            seed = new Random().Next();
-            if (input.Length == 0) return true;
-            
-            return CommandParser.GetEnum(p, input, "Seed", ref biome);
         }
 
         
@@ -91,7 +103,7 @@ namespace MCGalaxy.Generator
         
         
         public const string DEFAULT_HELP = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
-        	
+            
         /// <summary> Adds a new map generator to the list of generators. </summary>
         public static void Register(string theme, GenType type, MapGenFunc func, string desc) {
             MapGen gen = new MapGen() { Theme = theme, GenFunc = func, Desc = desc, Type = type };

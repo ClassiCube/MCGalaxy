@@ -33,9 +33,9 @@ namespace MCGalaxy.Generator
             MapGen.Register("Rainbow", type, GenRainbow, MapGen.DEFAULT_HELP);
         }
         
-        unsafe static bool GenFlat(Player p, Level lvl, string seed) {
+        unsafe static bool GenFlat(Player p, Level lvl, MapGenArgs args) {
             int grassHeight = lvl.Height / 2, v;
-            if (int.TryParse(seed, out v) && v >= 0 && v <= lvl.Height) grassHeight = v;
+            if (int.TryParse(args.Args, out v) && v >= 0 && v <= lvl.Height) grassHeight = v;
             lvl.Config.EdgeLevel = grassHeight;
             int grassY = grassHeight - 1;
 
@@ -57,14 +57,14 @@ namespace MCGalaxy.Generator
         }
         
 
-        static bool GenEmpty(Player p, Level lvl, string seed) {
+        static bool GenEmpty(Player p, Level lvl, MapGenArgs args) {
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
             Cuboid(lvl, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
             lvl.Config.EdgeLevel = 1;
             return true;
         }
         
-        static bool GenPixel(Player p, Level lvl, string seed) {
+        static bool GenPixel(Player p, Level lvl, MapGenArgs args) {
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
             NextBlock nextBlock = () => Block.White;
             
@@ -79,9 +79,9 @@ namespace MCGalaxy.Generator
             return true;
         }
         
-        static bool GenSpace(Player p, Level lvl, string seed) {
+        static bool GenSpace(Player p, Level lvl, MapGenArgs args) {
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            Random rng = MapGen.MakeRng(seed);
+            Random rng = MapGen.MakeRng(args.Args);
             NextBlock nextBlock = () => rng.Next(100) == 0 ? Block.Iron : Block.Obsidian;
 
             // Cuboid the four walls
@@ -102,9 +102,9 @@ namespace MCGalaxy.Generator
             return true;
         }
         
-        static bool GenRainbow(Player p, Level lvl, string seed) {
+        static bool GenRainbow(Player p, Level lvl, MapGenArgs args) {
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            Random rng = MapGen.MakeRng(seed);
+            Random rng = MapGen.MakeRng(args.Args);
             NextBlock nextBlock = () => (byte)rng.Next(Block.Red, Block.White);
 
             // Cuboid the four walls
