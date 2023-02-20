@@ -114,7 +114,7 @@ namespace MCGalaxy
         }
         
         public bool CanJoin(Player p) {
-            if (p.IsConsole) return true;
+            if (p.IsConsole || this == Server.mainLevel) return true;
             
             bool skip = p.summonedMap != null && p.summonedMap.CaselessEq(name);
             LevelPermission plRank = skip ? LevelPermission.Console : p.Rank;
