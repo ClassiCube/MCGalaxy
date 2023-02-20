@@ -34,17 +34,21 @@ namespace MCGalaxy.Generator
         }
         
         unsafe static bool GenFlat(Player p, Level lvl, MapGenArgs args) {
-            int grassHeight = lvl.Height / 2, v;
-            if (int.TryParse(args.Args, out v) && v >= 0 && v <= lvl.Height) grassHeight = v;
+            args.RandomDefault = false;
+            if (!args.ParseArgs(p)) return false;
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
+            
+            int grassHeight = lvl.Height / 2;
+            if (args.Seed >= 0 && args.Seed <= lvl.Height) grassHeight = args.Seed;
             lvl.Config.EdgeLevel = grassHeight;
             int grassY = grassHeight - 1;
 
             fixed (byte* ptr = lvl.blocks) 
             {
                 if (grassY > 0)
-                    MapSet(lvl.Width, lvl.Length, ptr, 0, grassY - 1,  Block.Dirt);
+                    MapSet(lvl.Width, lvl.Length, ptr, 0, grassY - 1,  biome.Ground);
                 if (grassY >= 0 && grassY < lvl.Height)
-                    MapSet(lvl.Width, lvl.Length, ptr, grassY, grassY, Block.Grass);
+                    MapSet(lvl.Width, lvl.Length, ptr, grassY, grassY, biome.Surface);
             }
             return true;
         }
@@ -58,6 +62,8 @@ namespace MCGalaxy.Generator
         
 
         static bool GenEmpty(Player p, Level lvl, MapGenArgs args) {
+            if (!args.ParseArgs(p)) return false;
+            
             int maxX = lvl.Width - 1, maxZ = lvl.Length - 1;
             Cuboid(lvl, 0, 0, 0, maxX, 0, maxZ, () => Block.Bedrock);
             lvl.Config.EdgeLevel = 1;
@@ -65,6 +71,8 @@ namespace MCGalaxy.Generator
         }
         
         static bool GenPixel(Player p, Level lvl, MapGenArgs args) {
+            if (!args.ParseArgs(p)) return false;
+            
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
             NextBlock nextBlock = () => Block.White;
             
@@ -80,9 +88,13 @@ namespace MCGalaxy.Generator
         }
         
         static bool GenSpace(Player p, Level lvl, MapGenArgs args) {
+            args.Biome        = MapGenBiomeName.Space;
+            if (!args.ParseArgs(p)) return false;
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
+            
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            Random rng = MapGen.MakeRng(args.Args);
-            NextBlock nextBlock = () => rng.Next(100) == 0 ? Block.Iron : Block.Obsidian;
+            Random rng = new Random(args.Seed);
+            NextBlock nextBlock = () => rng.Next(100) == 0 ? biome.Ground : biome.Surface;
 
             // Cuboid the four walls
             Cuboid(lvl, 0, 2, 0,    maxX, maxY, 0,    nextBlock);
@@ -95,16 +107,15 @@ namespace MCGalaxy.Generator
             Cuboid(lvl, 0, 1, 0,    maxX, 1, maxZ,    nextBlock);
             Cuboid(lvl, 0, maxY, 0, maxX, maxY, maxZ, nextBlock);
             
-            lvl.Config.EdgeLevel    = 1;
-            lvl.Config.HorizonBlock = Block.Obsidian;
-            lvl.Config.SkyColor     = "#000000";
-            lvl.Config.FogColor     = "#000000";
+            lvl.Config.EdgeLevel = 1;
             return true;
         }
         
         static bool GenRainbow(Player p, Level lvl, MapGenArgs args) {
+            if (!args.ParseArgs(p)) return false;
+            
             int maxX = lvl.Width - 1, maxY = lvl.Height - 1, maxZ = lvl.Length - 1;
-            Random rng = MapGen.MakeRng(args.Args);
+            Random rng = new Random(args.Seed);
             NextBlock nextBlock = () => (byte)rng.Next(Block.Red, Block.White);
 
             // Cuboid the four walls

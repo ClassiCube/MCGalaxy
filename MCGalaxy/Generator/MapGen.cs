@@ -33,11 +33,12 @@ namespace MCGalaxy.Generator
         public string Args;
         public int Seed;
         public MapGenBiomeName Biome;
+        public bool RandomDefault = true;
         
         public bool ParseArgs(Player p) {
             if (int.TryParse(Args, out Seed)) return true;
             
-            Seed = new Random().Next();
+            Seed = RandomDefault ? new Random().Next() : -1;
             if (Args.Length == 0) return true;
             
             return CommandParser.GetEnum(p, Args, "Seed", ref Biome);
@@ -70,17 +71,11 @@ namespace MCGalaxy.Generator
         /// <summary> Creates an RNG initialised with the given seed. </summary>
         public static Random MakeRng(string seed) {
             if (seed.Length == 0) return new Random();
-            return new Random(MakeInt(seed));
-        }
-        
-        /// <summary> Generates an integer seed based on the given seed. </summary>
-        public static int MakeInt(string seed) {
-            if (seed.Length == 0) return new Random().Next();
             
             int value;
             if (!int.TryParse(seed, out value)) value = seed.GetHashCode();
-            return value;
-        }
+            return new Random(value);
+        } // TODO move to CmdMaze
 
         
         public static List<MapGen> Generators = new List<MapGen>();
