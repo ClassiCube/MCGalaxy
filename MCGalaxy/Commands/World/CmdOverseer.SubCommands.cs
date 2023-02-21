@@ -145,11 +145,13 @@ namespace MCGalaxy.Commands.World {
             if (p.group.OverseerMaps == 0) {
                 p.Message("Your rank is not allowed to create any /os maps."); return;
             }
-            string level = NextLevel(p);
+			
+            string level  = NextLevel(p);
             if (level == null) return;
-
-            if (value.Length == 0) value = "128 128 128";
-            else if (value.IndexOf(' ') == -1) value = "128 128 128 " + value;
+            string[] bits = value.SplitSpaces();
+            
+            if (value.Length == 0)    value = "128 128 128";
+            else if (bits.Length < 3) value = "128 128 128 " + value;
             string[] args = (level + " " + value.TrimEnd()).SplitSpaces();
 
             CmdNewLvl newLvl = (CmdNewLvl)Command.Find("NewLvl"); // TODO: this is a nasty hack, find a better way
