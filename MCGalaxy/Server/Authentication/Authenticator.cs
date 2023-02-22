@@ -38,6 +38,11 @@ namespace MCGalaxy.Authentication
                 if (auth.Authenticate(p, mppass)) return true;
             }
             
+            foreach (AuthService auth in AuthService.Services)
+            {
+                if (auth.FallbackAuthenticate(p)) return true;
+            }
+            
             return !Server.Config.VerifyNames || IPUtil.IsPrivate(p.IP);
         }
         

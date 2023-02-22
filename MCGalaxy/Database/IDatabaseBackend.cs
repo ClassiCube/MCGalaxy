@@ -170,7 +170,9 @@ namespace MCGalaxy.SQL
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public void Iterate(string sql, object[] parameters, ReaderCallback callback) {
+        public int Iterate(string sql, object[] parameters, ReaderCallback callback) {
+            int rows = 0;
+        	
             using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (MultipleSchema)
@@ -179,11 +181,12 @@ namespace MCGalaxy.SQL
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
                     using (ISqlReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) { callback(reader); }
+                        while (reader.Read()) { callback(reader); rows++; }
                     }
                 }
                 conn.Close();
             }
+            return rows;
         }
         
         
