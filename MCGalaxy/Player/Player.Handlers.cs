@@ -364,7 +364,7 @@ namespace MCGalaxy
                 }
             }
             
-            TimeSpan cooldown = TimeSpan.FromSeconds(2);
+            TimeSpan cooldown = Server.Config.DeathCooldown;
             OnPlayerDiedEvent.Call(this, block, ref cooldown);
             PlayerActions.Respawn(this);
             

@@ -67,7 +67,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         SchedulerTask heartbeat;
         TcpClient client;
         SslStream stream;
-        bool readable = true;
+        bool readable;
 
         public const int DEFAULT_INTENTS = INTENT_GUILD_MESSAGES | INTENT_DIRECT_MESSAGES | INTENT_MESSAGE_CONTENT;
         const int INTENT_GUILD_MESSAGES  = 1 << 9;
@@ -98,6 +98,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         public void Connect() {
             client = new TcpClient();
             client.Connect(host, 443);
+            readable = true;
 
             stream   = HttpUtil.WrapSSLStream(client.GetStream(), host);
             protocol = this;
