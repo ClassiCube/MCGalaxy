@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Moderation {
                 Group grp = GetGroup(p, data, grpName.Substring(1));
                 if (grp == null) return;
 
-                Allow(perms, grp.Permission);
+                perms.Allow(grp.Permission);
                 UpdatePerms(perms, p, " &Scan now be used by " + grp.ColoredName);
             } else if (grpName[0] == '-') {
                 Group grp = GetGroup(p, data, grpName.Substring(1));
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Moderation {
                     p.Message("You cannot disallow your own rank from using a {0}.", type); return;
                 }
                 
-                Disallow(perms, grp.Permission);
+                perms.Disallow(grp.Permission);
                 UpdatePerms(perms, p, " &Sis no longer usable by " + grp.ColoredName);
             } else {
                 Group grp = GetGroup(p, data, grpName);
@@ -54,24 +54,6 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         protected abstract void UpdatePerms(ItemPerms perms, Player p, string msg);
-        
-        static void Allow(ItemPerms perms, LevelPermission rank) {
-            if (perms.Disallowed != null && perms.Disallowed.Contains(rank)) {
-                perms.Disallowed.Remove(rank);
-            } else if (perms.Allowed == null || !perms.Allowed.Contains(rank)) {
-                if (perms.Allowed == null) perms.Allowed = new List<LevelPermission>();
-                perms.Allowed.Add(rank);
-            }
-        }
-        
-        static void Disallow(ItemPerms perms, LevelPermission rank) {
-            if (perms.Allowed != null && perms.Allowed.Contains(rank)) {
-                perms.Allowed.Remove(rank);
-            } else if (perms.Disallowed == null || !perms.Disallowed.Contains(rank)) {
-                if (perms.Disallowed == null) perms.Disallowed = new List<LevelPermission>();
-                perms.Disallowed.Add(rank);
-            }
-        }
         
         protected static Group GetGroup(Player p, CommandData data, string grpName) {
             Group grp = Matcher.FindRanks(p, grpName);

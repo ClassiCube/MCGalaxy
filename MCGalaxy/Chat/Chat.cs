@@ -90,7 +90,7 @@ namespace MCGalaxy {
         
         static bool DeprecatedFilter(Player pl, object arg)   { return false; }    
         public static bool FilterRank(Player pl, object arg)  { return pl.Rank == (LevelPermission)arg; }
-        public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl.Rank); }
+        public static bool FilterPerms(Player pl, object arg) { return ((ItemPerms)arg).UsableBy(pl); }
         public static bool FilterPM(Player pl, object arg)    { return pl == arg; }
         
         public static ChatMessageFilter[] scopeFilters = new ChatMessageFilter[] {

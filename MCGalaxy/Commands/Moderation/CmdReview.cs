@@ -70,7 +70,7 @@ namespace MCGalaxy.Commands.Moderation {
             
             foreach (Player pl in PlayerInfo.GetOnlineCanSee(p, data.Rank)) 
             {
-                if (nextPerms.UsableBy(pl.Rank)) {
+                if (nextPerms.UsableBy(pl)) {
                     anyStaff = true; break;
                 }
             }

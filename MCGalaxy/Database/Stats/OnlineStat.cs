@@ -115,7 +115,7 @@ namespace MCGalaxy.DB
         
         public static void IPLine(Player p, string name, string ip) {
             ItemPerms seeIpPerms = CommandExtraPerms.Find("WhoIs", 1);
-            if (!seeIpPerms.UsableBy(p.Rank)) return;
+            if (!seeIpPerms.UsableBy(p)) return;
             
             string ipMsg = ip;
             if (Server.bannedIP.Contains(ip)) ipMsg = "&8" + ip + ", which is banned";

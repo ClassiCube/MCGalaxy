@@ -66,7 +66,7 @@ namespace MCGalaxy.Bots {
                 }
                 
                 CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);
-                if (ins.Name.CaselessEq("kill") && !killPerms.UsableBy(p.Rank)) {
+                if (ins.Name.CaselessEq("kill") && !killPerms.UsableBy(p)) {
                     killPerms.MessageCannotUse(p); 
                     return null;
                 }
