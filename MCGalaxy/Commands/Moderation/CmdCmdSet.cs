@@ -30,13 +30,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (cmd == null) { p.Message("Could not find command entered"); return; }
             
             if (!p.CanUse(cmd)) {
-                CommandPerms.Find(cmd.name).MessageCannotUse(p);
+                cmd.Permissions.MessageCannotUse(p);
                 p.Message("Therefore you cannot change the permissions of &T/{0}", cmd.name); return;
             }
             
             if (args.Length == 2) {
-                CommandPerms perms = CommandPerms.Find(cmd.name);
-                SetPerms(p, args, data, perms, "command");
+                SetPerms(p, args, data, cmd.Permissions, "command");
             } else {
                 int num = 0;
                 if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref num)) return;

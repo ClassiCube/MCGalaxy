@@ -627,7 +627,7 @@ namespace MCGalaxy
             }
 
             if (!CanUse(command)) {
-                CommandPerms.Find(command.name).MessageCannotUse(this);
+                command.Permissions.MessageCannotUse(this);
                 return null;
             }
             

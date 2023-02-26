@@ -64,6 +64,7 @@ namespace MCGalaxy
         public virtual CommandParallelism Parallelism { 
             get { return type.CaselessEq(CommandTypes.Information) ? CommandParallelism.NoAndWarn : CommandParallelism.Yes; }
         }
+        public CommandPerms Permissions;
         
         public static List<Command> allCmds  = new List<Command>();
         public static bool IsCore(Command cmd) { 
@@ -77,9 +78,7 @@ namespace MCGalaxy
             allCmds.Clear();
             Alias.coreAliases.Clear();
 
-            foreach (Group grp in Group.AllRanks) { grp.Commands.Clear(); }
             Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-
             for (int i = 0; i < types.Length; i++) 
             {
                 Type type = types[i];
@@ -94,13 +93,8 @@ namespace MCGalaxy
         }
         
         public static void Register(Command cmd) {
-            allCmds.Add(cmd);
-            
-            CommandPerms perms = CommandPerms.GetOrAdd(cmd.name, cmd.defaultRank);
-            foreach (Group grp in Group.AllRanks) 
-            {
-                if (perms.UsableBy(grp.Permission)) grp.Commands.Add(cmd);
-            }
+            allCmds.Add(cmd);            
+            cmd.Permissions = CommandPerms.GetOrAdd(cmd.name, cmd.defaultRank);
             
             CommandPerm[] extra = cmd.ExtraPerms;
             if (extra != null) {
@@ -126,10 +120,6 @@ namespace MCGalaxy
         
         public static bool Unregister(Command cmd) {
             bool removed = allCmds.Remove(cmd);
-            foreach (Group grp in Group.AllRanks) 
-            {
-                grp.Commands.Remove(cmd);
-            }
             
             // typical usage: Command.Unregister(Command.Find("xyz"))
             // So don't throw exception if Command.Find returned null

@@ -97,22 +97,9 @@ namespace MCGalaxy.Commands
 
         /// <summary> Applies new command permissions to server state. </summary>
         public static void ApplyChanges() {
-            foreach (Group grp in Group.AllRanks) 
-            {
-                SetUsable(grp);
-            }
-        }
-        
-        public static void SetUsable(Group grp) {
-            List<Command> commands = new List<Command>();
-            foreach (CommandPerms perms in List) 
-            {
-                if (!perms.UsableBy(grp.Permission)) continue;
-                
-                Command cmd = Command.Find(perms.CmdName);
-                if (cmd != null) commands.Add(cmd);
-            }
-            grp.Commands = commands;
+            // does nothing... for now anyways 
+            //  (may be required if p.CanUse is changed to instead
+            //   use a list of usable commands as a field instead)
         }
         
 

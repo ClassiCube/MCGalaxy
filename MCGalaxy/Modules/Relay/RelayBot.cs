@@ -464,7 +464,7 @@ namespace MCGalaxy.Modules.Relay
             
             try {
                 if (!p.CanUse(cmd)) {
-                    CommandPerms.Find(cmd.name).MessageCannotUse(p);
+                    cmd.Permissions.MessageCannotUse(p);
                     return false;
                 }
                 if (!cmd.SuperUseable) {

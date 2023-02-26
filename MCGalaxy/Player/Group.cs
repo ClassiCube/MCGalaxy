@@ -69,7 +69,6 @@ namespace MCGalaxy
         internal string filename;
         
         public PlayerList Players;
-        public List<Command> Commands;
         public bool[] Blocks = new bool[Block.SUPPORTED_COUNT];
 
         public Group() { }
@@ -177,7 +176,6 @@ namespace MCGalaxy
             
             if (reloading) {
                 BlockPerms.SetUsable(grp);
-                CommandPerms.SetUsable(grp);
             }
             OnGroupLoadedEvent.Call(grp);
         }

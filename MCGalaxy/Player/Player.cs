@@ -189,7 +189,7 @@ namespace MCGalaxy {
             ip = addr.ToString();
         }
         
-        public bool CanUse(Command cmd) { return group.Commands.Contains(cmd); }
+        public bool CanUse(Command cmd) { return cmd.Permissions.UsableBy(this); }
         public bool CanUse(string cmdName) {
             Command cmd = Command.Find(cmdName);
             return cmd != null && CanUse(cmd);

@@ -82,7 +82,7 @@ namespace MCGalaxy.Commands.Info
             foreach (Command c in Command.allCmds) 
             {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (disabled == null && group.Commands.Contains(c)) cmds.Add(c);
+                if (disabled == null && c.Permissions.UsableBy(group.Permission)) cmds.Add(c);
             }   
             
             if (cmds.Count == 0) {
