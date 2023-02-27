@@ -23,7 +23,8 @@ namespace MCGalaxy.Generator
 {
     public static class HeightmapGen 
     {
-        public static bool Generate(Player p, Level lvl, string url) {
+        public static bool Generate(Player p, Level lvl, MapGenArgs args) {
+            string url = args.Args;
             if (url.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
             
             byte[] data = HttpUtil.DownloadImage(url, p);

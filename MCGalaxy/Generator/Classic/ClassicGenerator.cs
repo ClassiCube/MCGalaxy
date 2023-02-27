@@ -18,15 +18,14 @@ namespace MCGalaxy.Generator.Classic
         string CurrentState;
         MapGenBiome biome;
         
-        public byte[] Generate(Level lvl, int seed, MapGenBiomeName theme) {
+        public byte[] Generate(Level lvl, MapGenArgs args) {
             blocks = lvl.blocks;
             Width  = lvl.Width;
             Height = lvl.Height;
             Length = lvl.Length;
             
-            rnd   = new JavaRandom(seed);
-            biome = MapGenBiome.Get(theme);
-            biome.ApplyEnv(lvl.Config);
+            rnd   = new JavaRandom(args.Seed);
+            biome = MapGenBiome.Get(args.Biome);
             
             oneY = Width * Length;
             waterLevel = Height / 2;
@@ -434,12 +433,10 @@ namespace MCGalaxy.Generator.Classic
             MapGen.Register("Classic", GenType.Simple, Gen, MapGen.DEFAULT_HELP);
         }
         
-        static bool Gen(Player p, Level lvl, string seed) {
-            MapGenBiomeName theme = MapGenBiomeName.Forest;
-            int rng_seed;
-            if (!MapGen.ParseArgs(p, seed, out rng_seed, ref theme)) return false;
+        static bool Gen(Player p, Level lvl, MapGenArgs args) {
+            if (!args.ParseArgs(p)) return false;
             
-            new ClassicGenerator().Generate(lvl, rng_seed, theme);
+            new ClassicGenerator().Generate(lvl, args);
             return true;
         }
     }
