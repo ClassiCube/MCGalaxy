@@ -30,8 +30,8 @@ namespace MCGalaxy.Commands.World {
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            string[] args = message.SplitSpaces();
-            if (args.Length < 4 || args.Length > 6) { Help(p); return; }
+            string[] args = message.SplitSpaces(6);
+            if (args.Length < 4) { Help(p); return; }
             
             Level lvl = null;
             try {
