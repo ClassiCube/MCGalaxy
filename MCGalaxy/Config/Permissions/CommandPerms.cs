@@ -49,14 +49,6 @@ namespace MCGalaxy.Commands
             return null;
         }
 
-        /// <summary> Returns the minimum rank required to use the given command. </summary>
-        /// <remarks> This should NOT be used to determine if a rank can use the command,
-        /// because ranks can specifically be allowed to or denied from using a command. </remarks>
-        public static LevelPermission MinPerm(Command cmd) {
-            CommandPerms perms = Find(cmd.name);
-            return perms == null ? cmd.defaultRank : perms.MinRank;
-        }
-
         
         /// <summary> Gets or adds permissions for the given command. </summary>
         public static CommandPerms GetOrAdd(string cmd, LevelPermission min) {

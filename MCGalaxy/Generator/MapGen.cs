@@ -35,15 +35,22 @@ namespace MCGalaxy.Generator
         public MapGenBiomeName Biome;
         public bool RandomDefault = true;
         
-        // TODO argSelector/argParser
+        public Func<string, bool> ArgFilter = (Args) => false;
+        public Func<string, bool> ArgParser = null;
+        
         public bool ParseArgs(Player p) {
             bool gotSeed = false;
             foreach (string arg in Args.SplitSpaces())
             {
                 if (arg.Length == 0) continue;
-                if (int.TryParse(arg, out Seed)) { gotSeed = true; continue; }
                 
-                if (!CommandParser.GetEnum(p, arg, "Seed", ref Biome)) return false;
+                if (ArgFilter(arg)) {
+                    if (!ArgParser(arg)) return false;
+                } else if (int.TryParse(arg, out Seed)) { 
+                    gotSeed = true;
+                } else {
+                    if (!CommandParser.GetEnum(p, arg, "Seed", ref Biome)) return false;
+                }
             }
             
             if (!gotSeed) Seed = RandomDefault ? new Random().Next() : -1;

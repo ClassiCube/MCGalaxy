@@ -88,7 +88,7 @@ namespace MCGalaxy.Commands.Info
             if (cmds.Count == 0) {
                 p.Message("{0} &Scannot use any commands.", group.ColoredName); return;
             }            
-            SortCommands(cmds, sort);            
+            SortCommands(cmds, sort);
             if (own)
                 p.Message("Available commands:");
             else
@@ -153,8 +153,8 @@ namespace MCGalaxy.Commands.Info
                           .CompareTo(b.name));
             }
             if (sort == "rank" || sort == "ranks") {
-                cmds.Sort((a, b) => CommandPerms.MinPerm(a)
-                          .CompareTo(CommandPerms.MinPerm(b)));
+                cmds.Sort((a, b) => a.Permissions.MinRank
+                          .CompareTo(b.Permissions.MinRank));
             }
         }
         

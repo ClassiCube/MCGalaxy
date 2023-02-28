@@ -198,6 +198,7 @@ namespace MCGalaxy.Generator
             SkyColor   = "#000000",
             FogColor   = "#000000",
             Horizon    = Block.Obsidian,
+            Border     = Block.Obsidian,
         };
     }
 }

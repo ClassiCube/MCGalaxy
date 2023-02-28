@@ -133,7 +133,7 @@ namespace MCGalaxy
         
         
         public static string GetColoredName(Command cmd) {
-            LevelPermission perm = CommandPerms.MinPerm(cmd);
+            LevelPermission perm = cmd.Permissions.MinRank;
             return Group.GetColor(perm) + cmd.name;
         }
         
