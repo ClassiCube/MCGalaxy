@@ -25,17 +25,23 @@ namespace MCGalaxy.Levels.IO
     /// <summary> Reads/Loads block data (and potentially metadata) encoded in a particular format. </summary>
     public abstract class IMapImporter 
     {
-        public abstract string Extension { get; }
+        public abstract string Extension   { get; }
         public abstract string Description { get; }
+        
+        public virtual Level Read(string path, string name, bool metadata) {
+            using (FileStream fs = File.OpenRead(path))
+                return Read(fs, name, metadata);
+        }
         
         public abstract Level Read(Stream src, string name, bool metadata);
 
-        public Vec3U16 ReadDimensions(string path) {
+        public virtual Vec3U16 ReadDimensions(string path) {
             using (FileStream fs = File.OpenRead(path))
                 return ReadDimensions(fs);
         }
-        
+
         public abstract Vec3U16 ReadDimensions(Stream src);
+        
         
         protected static void ConvertCustom(Level lvl) {
             ushort x, y, z;
@@ -81,11 +87,9 @@ namespace MCGalaxy.Levels.IO
         }
         
         /// <summary> Decodes the given level file into a Level instance </summary>
-        public static Level Read(string path, string name, bool metadata) {
+        public static Level Decode(string path, string name, bool metadata) {
             IMapImporter imp = GetFor(path) ?? Formats[0];
-            
-            using (FileStream fs = File.OpenRead(path))
-                return imp.Read(fs, name, metadata);
+            return imp.Read(path, name, metadata);
         }
     }
 

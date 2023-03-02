@@ -48,7 +48,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         bool DoRestore(Player p, Vec3S32[] marks, object state, BlockID block) {
             string path  = (string)state;
-            Level source = IMapImporter.Read(path, "templevel", false);
+            Level source = IMapImporter.Decode(path, "templevel", false);
             
             RestoreSelectionDrawOp op = new RestoreSelectionDrawOp();
             op.Source = source;

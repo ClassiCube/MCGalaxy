@@ -393,7 +393,7 @@ namespace MCGalaxy
                 return clone;
             }
             
-            return IMapImporter.Read(path, name, false);
+            return IMapImporter.Decode(path, name, false);
         }
         
         
