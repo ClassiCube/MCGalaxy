@@ -19,7 +19,6 @@ using MCGalaxy.Authentication;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
@@ -31,10 +30,11 @@ namespace MCGalaxy
         public bool ProcessLogin(string user, string mppass) {
             LastAction = DateTime.UtcNow;
             name     = user; truename    = user;
-            SkinName = user; DisplayName = user; 
-            
+            SkinName = user; DisplayName = user;
+
+            // TODO move to ClassicProtocol
             if (Session.ProtocolVersion > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return false; 
+                Leave(null, "Unsupported protocol version " + Session.ProtocolVersion, true); return false;
             }
             if (user.Length < 1 || user.Length > 16) {
                 Leave(null, "Usernames must be between 1 and 16 characters", true); return false;
