@@ -22,7 +22,10 @@ namespace MCGalaxy.Blocks.Physics {
     public static class DoorPhysics {
         
         public static void Do(Level lvl, ref PhysInfo C) {
-            if (C.Data.Type1 != PhysicsArgs.Custom) return;
+            if (C.Data.Type1 != PhysicsArgs.Custom) { 
+                C.Data.Data = PhysicsArgs.RemoveFromChecks; return; 
+            }
+            
             if (C.Data.Data == 0) {
                 BlockID block = (BlockID)(C.Data.Value2 | (C.Data.ExtBlock << Block.ExtendedShift));
                 bool tdoor = lvl.Props[block].IsTDoor;
