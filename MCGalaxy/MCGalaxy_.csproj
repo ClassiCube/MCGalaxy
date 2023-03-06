@@ -601,7 +601,6 @@
     <Compile Include="Modules\Relay\IRC\IRCPlugin.cs" />
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
-    <Compile Include="Modules\Relay\RelayBotSender.cs" />
     <Compile Include="Modules\Security\IPThrottler.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\ClassicProtocol.cs" />
@@ -681,6 +680,7 @@
     <Compile Include="util\NET_20.cs" />
     <Compile Include="util\SparseBitSet.cs" />
     <Compile Include="util\Threading\IReaderWriterLock.cs" />
+    <Compile Include="util\Threading\AsyncWorker.cs" />
     <Compile Include="util\Threading\Scheduler.cs" />
     <Compile Include="util\Threading\ThreadSafeCache.cs" />
     <Compile Include="util\Threading\VolatileArray.cs" />

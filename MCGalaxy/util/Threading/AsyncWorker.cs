@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MCGalaxy.Modules.Relay 
+namespace MCGalaxy
 { 
-    /// <summary> Asynchronously sends data to an external communication service </summary>
-    public abstract class RelayBotSender<T> 
+    /// <summary> Asynchronously performs work on a background thread </summary>
+    public abstract class AsyncWorker<T> 
     {
         AutoResetEvent handle = new AutoResetEvent(false);
         volatile bool terminating;
         
-        protected Queue<T> requests = new Queue<T>();
-        protected readonly object reqLock = new object();
+        protected Queue<T> queue = new Queue<T>();
+        protected readonly object queueLock = new object();
         
         protected abstract void HandleNext();
         /// <summary> Name to assign the worker thread </summary>
@@ -47,7 +47,7 @@ namespace MCGalaxy.Modules.Relay
             
             // cleanup state
             try {
-                lock (reqLock) requests.Clear();
+                lock (queueLock) queue.Clear();
                 handle.Close();
             } catch {
             }
@@ -77,9 +77,9 @@ namespace MCGalaxy.Modules.Relay
             WakeupWorker();
         }
         
-        /// <summary> Asynchronously sends data </summary>
-        public void SendAsync(T msg) {
-            lock (reqLock) requests.Enqueue(msg);
+        /// <summary> Enqueues work to be performed asynchronously </summary>
+        public void QueueAsync(T msg) {
+            lock (queueLock) queue.Enqueue(msg);
             WakeupWorker();
         }
     }
