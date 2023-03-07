@@ -88,8 +88,10 @@ namespace MCGalaxy.Commands.Info
             ulong idl  = (end.IdleTime - beg.IdleTime);
             ulong sys  = (end.UserTime - beg.UserTime) + (end.KernelTime - beg.KernelTime);
             double cpu = sys * 100.0 / (sys + idl);
-            p.Message("  &a{0}% &Sby all processes", 
-                double.IsNaN(cpu) ? "(unknown)" : cpu.ToString("F2"));
+            int cores  = Environment.ProcessorCount;
+            p.Message("  &a{0}% &Sby all processes ({1} CPU core{2})", 
+                double.IsNaN(cpu) ? "(unknown)" : cpu.ToString("F2"),
+                cores, cores.Plural());
 
             // Private Bytes = memory the process has reserved just for itself
             int memory = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
