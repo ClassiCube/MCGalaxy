@@ -89,7 +89,7 @@ namespace MCGalaxy.Commands.Info
             ulong sys  = (end.UserTime - beg.UserTime) + (end.KernelTime - beg.KernelTime);
             double cpu = sys * 100.0 / (sys + idl);
             int cores  = Environment.ProcessorCount;
-            p.Message("  &a{0}% &Sby all processes ({1} CPU core{2})", 
+            p.Message("  &a{0}% &Sby all processes across {1} CPU core{2}", 
                 double.IsNaN(cpu) ? "(unknown)" : cpu.ToString("F2"),
                 cores, cores.Plural());
 

@@ -393,9 +393,20 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         protected override void DoSendMessage(string channel, string message) {
             message = ConvertMessage(message);
-            ChannelSendMessage msg = new ChannelSendMessage(channel, message);
-            msg.Allowed = allowed;
-            Send(msg);
+            const int MAX_MSG_LEN = 2000;
+            
+            // Discord doesn't allow more than 2000 characters in a single message,
+            //  so break up message into multiple parts for this extremely rare case
+            //  https://discord.com/developers/docs/resources/channel#create-message
+            for (int offset = 0; offset < message.Length; offset += MAX_MSG_LEN)
+            {
+                int partLen = Math.Min(message.Length - offset, MAX_MSG_LEN);
+                string part = message.Substring(offset, partLen);
+                
+                ChannelSendMessage msg = new ChannelSendMessage(channel, part);
+                msg.Allowed = allowed;
+                Send(msg);
+            }
         }
         
         /// <summary> Formats a message for displaying on Discord </summary>
