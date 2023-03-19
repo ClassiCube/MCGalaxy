@@ -62,6 +62,10 @@ namespace MCGalaxy
             OnPlayerFinishConnectingEvent.Call(this);
             if (cancelconnecting) { cancelconnecting = false; return; }
             
+            SessionStartTime = DateTime.UtcNow;
+            LastLogin = DateTime.Now;
+            TotalTime = TimeSpan.FromSeconds(1);
+            
             lock (PlayerInfo.Online.locker) {
                 // Check if any players online have same name
                 clone = FindClone(truename);
@@ -87,9 +91,6 @@ namespace MCGalaxy
             if (Socket.Disconnected) return;
             loggedIn = true;
 
-            SessionStartTime = DateTime.UtcNow;
-            LastLogin = DateTime.Now;
-            TotalTime = TimeSpan.FromSeconds(1);
             GetPlayerStats();
             ShowWelcome();
             CheckState();
