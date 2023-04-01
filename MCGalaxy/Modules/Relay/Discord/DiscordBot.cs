@@ -419,8 +419,8 @@ namespace MCGalaxy.Modules.Relay.Discord
             return message;
         }
         
-        static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
-        static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
+        static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|",  @"-",  @"#" };
+        static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|", @"\-", @"\#" };
         static string EscapeMarkdown(string message) {
             // don't let user use bold/italic etc markdown
             for (int i = 0; i < markdown_special.Length; i++) 
