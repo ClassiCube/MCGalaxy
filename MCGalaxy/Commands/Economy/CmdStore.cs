@@ -16,10 +16,13 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdStore : Command2 {
+namespace MCGalaxy.Commands.Eco 
+{
+    public sealed class CmdStore : Command2 
+    {
         public override string name { get { return "Store"; } }
         public override string shortcut { get { return "Shop"; } }
         public override string type { get { return CommandTypes.Economy; } }
@@ -29,11 +32,9 @@ namespace MCGalaxy.Commands.Eco {
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) {
-                foreach (Item item in Economy.Items) {
-                    if (!item.Enabled) continue;
-                    item.OnStoreOverview(p);
-                }
+            if (message.Length == 0 || IsListModifier(message)) {
+        		Paginator.Output(p, Economy.GetEnabledItems(), 
+        		                 PrintItemOverview, "Store", "enabled Items", message);
                 p.Message("&HUse &T/Store [item] &Hto see more information about that item.");
             } else {
                 Item item = Economy.GetItem(message);
@@ -44,6 +45,10 @@ namespace MCGalaxy.Commands.Eco {
                 }
                 item.OnStoreCommand(p);
             }
+        }
+        
+        static void PrintItemOverview(Player p, Item item) {
+        	item.OnStoreOverview(p);
         }
         
         public override void Help(Player p) {

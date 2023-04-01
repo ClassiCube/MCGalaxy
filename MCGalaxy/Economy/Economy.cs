@@ -135,6 +135,15 @@ namespace MCGalaxy.Eco
             return null;
         }
         
+        public static List<Item> GetEnabledItems() {
+            List<Item> enabled = new List<Item>();
+            foreach (Item item in Economy.Items) 
+            {
+                if (item.Enabled) enabled.Add(item);
+            }
+            return enabled;
+        }
+        
         /// <summary> Gets comma separated list of enabled items. </summary>
         public static string EnabledItemNames() {
             string items = Items.Join(x => x.Enabled ? x.ShopName : null);
