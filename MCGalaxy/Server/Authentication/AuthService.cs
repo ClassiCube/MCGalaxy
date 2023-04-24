@@ -18,9 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using MCGalaxy.Network;
 
 namespace MCGalaxy.Authentication
@@ -41,26 +38,10 @@ namespace MCGalaxy.Authentication
         public Heartbeat Beat;
         public AuthServiceConfig Config;
         
-        /// <summary> Attempts to authenticate the given player with the given mppass </summary>
-        public virtual bool Authenticate(Player p, string mppass) {
-            string calculated = Server.CalcMppass(p.truename, Beat.Salt);
-            if (!mppass.CaselessEq(calculated)) return false;
-
-            AcceptPlayer(p);
-            return true;
-        }
-        
-        public virtual bool FallbackAuthenticate(Player p) {
-            if (!Config.MojangAuth)                return false;
-            if (!MojangAuth.HasJoined(p.truename)) return false;
-                
-            AcceptPlayer(p);
-            return true;
-        }
-        
-        protected virtual void AcceptPlayer(Player p) {
+        public virtual void AcceptPlayer(Player p) {
             AuthServiceConfig cfg = Config;
             
+            p.VerifiedVia  = Config.URL;
             p.verifiedName = true;
             p.SkinName     = cfg.SkinPrefix + p.SkinName;
             
@@ -180,55 +161,6 @@ namespace MCGalaxy.Authentication
                     w.WriteLine("mojang-auth = " + c.MojangAuth);
                     w.WriteLine();
                 }
-            }
-        }
-    }
-    
-    public static class MojangAuth
-    {
-        const string HAS_JOINED_URL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username={0}&serverId={1}";
-        public static bool HasJoined(string username) {
-            string url = string.Format(HAS_JOINED_URL, username, GetServerID());
-            try
-            {
-                HttpWebRequest req   = HttpUtil.CreateRequest(url);
-                req.Timeout          = 5 * 1000;
-                req.ReadWriteTimeout = 5 * 1000;
-
-                using (HttpWebResponse response = (HttpWebResponse)req.GetResponse())
-                {
-                    return response.StatusCode == HttpStatusCode.OK;
-                }
-            } catch (Exception ex) {
-                HttpUtil.DisposeErrorResponse(ex);
-                Logger.LogError("Verifying Mojang session for " + username, ex);
-            }
-
-            return false;
-        }
-        
-        static string GetServerID() {
-            UpdateExternalIP();
-            byte[] data = Encoding.UTF8.GetBytes(externalIP + ":" + Server.Config.Port);
-            byte[] hash = new SHA1Managed().ComputeHash(data);
-            
-            // TODO this is bad, redo it
-            return hash.Join(b => b.ToString("x2"), "");
-        }
-        
-        static string externalIP;
-        static void UpdateExternalIP() {
-            if (externalIP != null) return;
-
-            try {
-                HttpWebRequest req = HttpUtil.CreateRequest("http://classicube.net/api/myip/");
-                
-                using (WebResponse response = req.GetResponse())
-                {
-                    externalIP = HttpUtil.GetResponseText(response);
-                }
-            } catch (Exception ex) {
-                Logger.LogError("Retrieving external IP", ex);
             }
         }
     }

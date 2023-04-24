@@ -23,28 +23,11 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy.Authentication
 {
-    /// <summary> Authenticates a player using the mppass provided at login,
-    /// and optionally manages additional verification for certain users </summary>
-    public abstract class Authenticator 
+    /// <summary> Manages optional additional verification for certain users </summary>
+    public abstract class PassAuthenticator 
     {        
         /// <summary> The currently/actively used authenticator </summary>
-        public static Authenticator Current = new DefaultAuthenticator();
-        
-        
-        /// <summary> Checks if the given player is allowed to login with the given mppass </summary>
-        public virtual bool VerifyLogin(Player p, string mppass) {
-            foreach (AuthService auth in AuthService.Services)
-            {
-                if (auth.Authenticate(p, mppass)) return true;
-            }
-            
-            foreach (AuthService auth in AuthService.Services)
-            {
-                if (auth.FallbackAuthenticate(p)) return true;
-            }
-            
-            return !Server.Config.VerifyNames || IPUtil.IsPrivate(p.IP);
-        }
+        public static PassAuthenticator Current = new DefaultPassAuthenticator();
         
         /// <summary> Informs the given player that they must first
         /// verify before they can perform the given action </summary>
@@ -89,8 +72,8 @@ namespace MCGalaxy.Authentication
         }
     }
     
-    /// <summary> Authenticator that loads/stores passwords in /extra/passwords folder </summary>
-    public class DefaultAuthenticator : Authenticator 
+    /// <summary> Password authenticator that loads/stores passwords in /extra/passwords folder </summary>
+    public class DefaultPassAuthenticator : PassAuthenticator 
     {
         const string PASS_FOLDER = "extra/passwords/";
         

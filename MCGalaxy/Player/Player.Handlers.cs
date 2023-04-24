@@ -65,7 +65,7 @@ namespace MCGalaxy
             bool deletingBlock = !painting && !placing;
 
             if (Unverified) {
-                Authenticator.Current.RequiresVerification(this, "modify blocks");
+                PassAuthenticator.Current.RequiresVerification(this, "modify blocks");
                 RevertBlock(x, y, z); return;
             }
 
@@ -585,7 +585,7 @@ namespace MCGalaxy
                 Message("You cannot use any commands while jailed."); return false;
             }
             if (Unverified && !(cmd == "pass" || cmd == "setpass")) {
-                Authenticator.Current.RequiresVerification(this, "use /" + cmd);
+                PassAuthenticator.Current.RequiresVerification(this, "use /" + cmd);
                 return false;
             }
             

@@ -226,6 +226,9 @@ namespace MCGalaxy {
         /// <summary> Whether player has completed login process and has been sent initial map. </summary>
         public bool loggedIn;
         public bool verifiedName;
+        /// <summary> The URL of the authentication service this player's name was verified via. Can be null </summary>
+        /// <example> http://www.classicube.net/heartbeat.jsp </example>
+        public string VerifiedVia;
         bool gotSQLData;
         
         

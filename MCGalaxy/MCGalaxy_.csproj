@@ -643,8 +643,9 @@
     <Compile Include="Levels\BlockQueue.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Scripting\ScriptingOperations.cs" />
-    <Compile Include="Server\Authentication\Authenticator.cs" />
+    <Compile Include="Server\Authentication\LoginAuthenticator.cs" />
     <Compile Include="Server\Authentication\AuthService.cs" />
+    <Compile Include="Server\Authentication\PassAuthenticator.cs" />
     <Compile Include="Server\FileLogger.cs" />
     <Compile Include="Server\Logger.cs" />
     <Compile Include="Player\Player.cs" />

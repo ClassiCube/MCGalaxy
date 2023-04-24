@@ -27,7 +27,7 @@ namespace MCGalaxy.Core {
         }
         
         static bool HandleConnectingCore(Player p, string mppass) {
-            if (!Authenticator.Current.VerifyLogin(p, mppass)) {
+            if (!LoginAuthenticator.VerifyLogin(p, mppass)) {
                 p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
             }
             if (!CheckTempban(p)) return false;

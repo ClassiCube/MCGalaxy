@@ -349,7 +349,7 @@ namespace MCGalaxy {
                 Message("Cannot {0} &Swhile chat moderation is on without &T/Voice&S", action); return false; 
             }
             if (Unverified) {
-                Authenticator.Current.RequiresVerification(this, action);
+                PassAuthenticator.Current.RequiresVerification(this, action);
                 return false;
             }
             return true;
@@ -364,7 +364,7 @@ namespace MCGalaxy {
         
         /// <summary> Checks if player is currently unverified, and if so, sends a message informing them </summary>
         public void CheckIsUnverified() {
-            if (NeedsVerification()) Authenticator.Current.NeedVerification(this);
+            if (NeedsVerification()) PassAuthenticator.Current.NeedVerification(this);
         }
         
           
