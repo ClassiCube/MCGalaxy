@@ -214,6 +214,10 @@ namespace MCGalaxy.Maths
             return new Vec3F32(a * b.X, a * b.Y, a * b.Z);
         }
         
+        public static Vec3F32 operator * (Vec3F32 a, float b) {
+            return new Vec3F32(a.X * b, a.Y * b, a.Y * b);
+        }
+
         public static Vec3F32 operator - (Vec3F32 a, Vec3F32 b) {
             return new Vec3F32(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
