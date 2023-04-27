@@ -43,7 +43,7 @@ namespace MCGalaxy.Drawing.Ops
         
         internal string who;
         internal int[] ids;
-        internal bool found = false;
+        internal int totalChanges = 0;
         
         public HighlightDrawOp() {
             Flags = 0;
@@ -91,7 +91,7 @@ namespace MCGalaxy.Drawing.Ops
             if (x < Min.X || y < Min.Y || z < Min.Z) return;
             if (x > Max.X || y > Max.Y || z > Max.Z) return;
             output(Place((ushort)x, (ushort)y, (ushort)z, highlight));
-            found = true;
+            totalChanges++;
         }
     }
 }

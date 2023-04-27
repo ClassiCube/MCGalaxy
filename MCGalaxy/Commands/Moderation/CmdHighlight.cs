@@ -85,9 +85,9 @@ namespace MCGalaxy.Commands.Moderation {
                        });
             buffer.Flush();
             
-            if (op.found) {
-                p.Message("Now highlighting past &b{0} &Sfor {1}",
-                           delta.Shorten(true), p.FormatNick(who));
+            if (op.totalChanges > 0) {
+                p.Message("Highlighting &T{0}&S changes by {1}&S in the past &b{2}",
+                           op.totalChanges.ToString("N0"), p.FormatNick(who), delta.Shorten(true));
                 p.Message("&WUse /reload to un-highlight");
             } else {
                 p.Message("No changes found by {1} &Sin the past &b{0}",
