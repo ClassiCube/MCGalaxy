@@ -17,6 +17,9 @@
  */
 
 namespace MCGalaxy.Commands {
+    /// <summary>
+    /// Extra permission number 1 is hardcoded as "can edit other player" and extra permission number 2 is hardcoded as "can edit bot"
+    /// </summary>
     public abstract class EntityPropertyCmd : Command2 {
         
         protected void UseBotOrOnline(Player p, CommandData data, string message, string type) {
@@ -73,11 +76,12 @@ namespace MCGalaxy.Commands {
             
             LevelPermission rank = Group.GroupIn(target).Permission;
             if (!CheckRank(p, data, target, rank, "change the " + type + " of", true)) return;
-            SetPlayerData(p, target, args.Length > 1 ? args[1] : "");
+            SetPlayerData(p, data, target, args.Length > 1 ? args[1] : "");
         }
 
         protected virtual void SetBotData(Player p, PlayerBot bot,    string args) { }      
         protected virtual void SetOnlineData(Player p, Player who,    string args) { }       
         protected virtual void SetPlayerData(Player p, string target, string args) { }
+        protected virtual void SetPlayerData(Player p, CommandData data, string target, string args) { SetPlayerData(p, target, args); }
     }
 }
