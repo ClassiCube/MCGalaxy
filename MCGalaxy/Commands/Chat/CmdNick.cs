@@ -26,13 +26,8 @@ namespace MCGalaxy.Commands.Chatting
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
-            get { return
-                    new[] {
-                        new CommandPerm(LevelPermission.Operator, "can change the nick of others"),
-                        new CommandPerm(LevelPermission.Guest, "can change the nick of bots"),
-                        new CommandPerm(LevelPermission.Guest, "can change their own nick"),
-                    };
-            }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the nick of others"),
+                    new CommandPerm(LevelPermission.Operator, "can change the nick of bots") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("xnick", "-own") }; }
@@ -61,8 +56,7 @@ namespace MCGalaxy.Commands.Chatting
             BotsFile.Save(p.level);
         }
         
-        protected override void SetPlayerData(Player p, CommandData data, string target, string nick) {
-            if (!CheckExtraPerm(p, data, 3)) return;
+        protected override void SetPlayerData(Player p, string target, string nick) {
             PlayerOperations.SetNick(p, target, nick);
         }
         
