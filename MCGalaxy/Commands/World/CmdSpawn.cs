@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.World {
             if (!IGame.CheckAllowed(p, "use &T/Spawn")) return;
             
             if (message.Length > 0) { Help(p); return; }
-            PlayerActions.Respawn(p);
+            PlayerActions.RespawnAt(p, p.level.SpawnPos, p.level.rotx, p.level.roty);
         }
         
         public override void Help(Player p) {
