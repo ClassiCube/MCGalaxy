@@ -139,19 +139,26 @@ namespace MCGalaxy {
         
         public static void Save(bool global, BlockDefinition[] defs, string path) {
             if (elems == null) elems = ConfigElement.GetAll(typeof(BlockDefinition));
-            
+
+            lock (defs) SaveCore(global, defs, path);
+        }
+
+        static void SaveCore(bool global, BlockDefinition[] defs, string path) {
+            string separator = null;
+
             using (StreamWriter w = new StreamWriter(path)) {
                 w.WriteLine("[");
-                string separator = null;
-                
-                for (int i = 0; i < defs.Length; i++) {
+                var ser = new JsonConfigWriter(w, elems);
+
+                for (int i = 0; i < defs.Length; i++) 
+                {
                     BlockDefinition def = defs[i];
                     // don't want to save global blocks in the level's custom blocks list
                     if (!global && def == GlobalDefs[i]) def = null;
                     if (def == null) continue;
                     
                     w.Write(separator);
-                    Json.Serialise(w, elems, def);
+                    ser.WriteObject(def);
                     separator = ",\r\n";
                 }
                 w.WriteLine("]");
