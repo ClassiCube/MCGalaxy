@@ -366,7 +366,7 @@ namespace MCGalaxy
         public static string CalcMppass(string name, string salt) {
             byte[] hash = null;
             lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
-            return BitConverter.ToString(hash).Replace("-", "");
+            return Utils.ToHexString(hash);
         }
         
         /// <summary> Converts a formatted username into its original username </summary>

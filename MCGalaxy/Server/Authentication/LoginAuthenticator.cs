@@ -21,6 +21,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using MCGalaxy.Network;
+using MCGalaxy.Util;
 
 namespace MCGalaxy.Authentication
 {
@@ -69,17 +70,23 @@ namespace MCGalaxy.Authentication
     /// <summary> Authenticates a player using the Mojang session verification API </summary>
     public class MojangAuthenticator : LoginAuthenticator 
     {
+        static ThreadSafeCache ip_cache = new ThreadSafeCache();
         public override bool Verify(Player p, string mppass) {
             foreach (AuthService auth in AuthService.Services)
             {
-                if (Authenticate(auth, p, mppass)) return true;
+                if (!auth.Config.MojangAuth) continue;
+                if (Authenticate(auth, p)) return true;
             }
             return false;
         }
         
-        static bool Authenticate(AuthService auth, Player p, string mppass) {
-            if (!auth.Config.MojangAuth) return false;
-            if (!HasJoined(p.truename))  return false;
+        static bool Authenticate(AuthService auth, Player p) {
+            object locker = ip_cache.GetLocker(p.ip);
+            // if a player from an IP is spamming login attempts,
+            //  prevent that from spamming Mojang's authentication servers too
+            lock (locker) {
+                if (!HasJoined(p.truename)) return false;
+            }
                 
             auth.AcceptPlayer(p);
             return true;
@@ -111,9 +118,7 @@ namespace MCGalaxy.Authentication
             UpdateExternalIP();
             byte[] data = Encoding.UTF8.GetBytes(externalIP + ":" + Server.Config.Port);
             byte[] hash = new SHA1Managed().ComputeHash(data);
-            
-            // TODO this is bad, redo it
-            return hash.Join(b => b.ToString("x2"), "");
+            return Utils.ToHexString(hash);
         }
         
         static string externalIP;

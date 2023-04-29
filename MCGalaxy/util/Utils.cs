@@ -103,5 +103,22 @@ namespace MCGalaxy {
             }
             return lines;
         }
+
+ 
+        public static string ToHexString(byte[] data) {            
+            char[] hex = new char[data.Length * 2];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                int value = data[i];
+                hex[i * 2 + 0] = HexEncode(value >> 4);
+                hex[i * 2 + 1] = HexEncode(value & 0x0F);
+            }
+            return new string(hex);
+        }
+
+        static char HexEncode(int i) {
+            return i < 10 ? (char)(i + '0') : (char)((i - 10) + 'a');
+        }
     }
 }

@@ -296,6 +296,13 @@ namespace MCGalaxy.Config {
     }
     
     public static class Json {
+
+        [Obsolete("Use JsonWriter instead", true)]
+        public static void Serialise(TextWriter dst, ConfigElement[] elems, object instance) {
+            JsonConfigWriter w = new JsonConfigWriter(dst, elems);
+            w.WriteObject(instance);
+        }
+        
         /// <summary> Shorthand for serialising an object to a JSON object </summary>
         public static string SerialiseObject(object obj) {
             StringWriter dst  = new StringWriter();
