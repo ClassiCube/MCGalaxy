@@ -1,4 +1,28 @@
-﻿v 1.9.4.7
+﻿v 1.9.4.8
+Added: Mojang server login authentication support (for Betacraft)
+Improved: /highight now displays how many changes were found (Thanks Goodly)
+Improved: Doing /spawn should always respawn you at level spawn
+Improved: Move /server update to separate /update command
+Improved: Increase summary errors when compiling fails from 2 to 5
+Improved: Allow changing death invulnerability cooldown from default of 1 second
+Improved: /store list output is now paginated
+Improved: /SInfo now includes number of CPU cores in output
+Improved: Kick message for unsupported protocol version also includes version number
+Fixed: Some markdown characters not being escaped for messages sent to Discord
+Fixed: Some physics entries wrongly never getting removed from physics list
+Fixed: Multiple people changing a block definition at the same time sometimes erroring
+Fixed: disabled-command option in server.properties not working
+Fixed: Messages with over 2000 characters failing to send to Discord
+Fixed: Main level should always ignore visit permission restrictions
+Removed: Unused destroys chance from LS map settings in GUI
+Map generator related changes:
+Improved: Allow providing spaces in map gen args to provide multiple arguments 
+Improved: Heightmap map gen theme now uses biome
+Improved: Flat and space themes now use biome blocks and env
+Improved: Pixel/empty/rainbow themes now use biome env
+Fixed: Doing '/os map add' with two arguments doing nothing
+
+v 1.9.4.7
 Game related changes:
 Added: LS: /lives command for showing you current number of lives
 Added: LS: Can now set default round/flood times
