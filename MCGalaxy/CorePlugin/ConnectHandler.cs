@@ -32,7 +32,7 @@ namespace MCGalaxy.Core {
         static void CheckReviewList(Player p) {
             if (!p.CanUse("Review")) return;
             ItemPerms checkPerms = CommandExtraPerms.Find("Review", 1);
-            if (!checkPerms.UsableBy(p.Rank)) return;
+            if (!checkPerms.UsableBy(p)) return;
             
             int count = Server.reviewlist.Count;
             if (count == 0) return;
@@ -42,8 +42,8 @@ namespace MCGalaxy.Core {
         }
         
         static void LoadReach(Player p) {
-            string reach = Server.reach.FindData(p.name);
-            if (reach == null) return;
+            string reach = Server.reach.Get(p.name);
+            if (String.IsNullOrEmpty(reach)) return;
             
             short reachDist;
             if (!short.TryParse(reach, out reachDist)) return;

@@ -18,8 +18,10 @@
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.CPE {    
-    public sealed class CmdHold : Command2 {
+namespace MCGalaxy.Commands.CPE 
+{    
+    public sealed class CmdHold : Command2 
+    {
         public override string name { get { return "Hold"; } }
         public override string shortcut { get { return "HoldThis"; } }
         public override string type { get { return CommandTypes.Building; } }

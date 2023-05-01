@@ -21,7 +21,7 @@ using MCGalaxy.Commands;
 
 namespace MCGalaxy.Modules.Moderation.Notes
 {
-    public class CmdNotes : Command2
+    class CmdNotes : Command2
     {
         public override string name { get { return "Notes"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -98,7 +98,7 @@ namespace MCGalaxy.Modules.Moderation.Notes
         }
     }
     
-    public sealed class CmdMyNotes : CmdNotes
+    sealed class CmdMyNotes : CmdNotes
     {
         public override string name { get { return "MyNotes"; } }
         public override string type { get { return CommandTypes.Other; } }

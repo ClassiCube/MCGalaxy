@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdVote : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdVote : Command2 
+    {
         public override string name { get { return "Vote"; } }
         public override string shortcut { get { return "vo"; } }
         public override string type { get { return CommandTypes.Chat; } }

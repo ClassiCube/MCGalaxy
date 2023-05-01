@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -44,8 +44,8 @@ namespace MCGalaxy
         // 11    | Extended custom blocks:
         //       |    0 to 255 are custom blocks 512 to 767
         //
-        // E.g. 0x080 = class 01, value 128 = physics block 128
-        // E.g. 0x180 = class 00, value 128 =  custom block 128
+        // E.g. 0x080 = class 00, value 128 = physics block 128
+        // E.g. 0x180 = class 01, value 128 =  custom block 128
         
         #if TEN_BIT_BLOCKS
         public const ushort MaxRaw = 767;

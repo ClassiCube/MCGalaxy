@@ -15,8 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands.Chatting {  
-    public abstract class MessageCmd : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{  
+    public abstract class MessageCmd : Command2 
+    {
         public override string type { get { return CommandTypes.Chat; } }
         public override bool UseableWhenFrozen { get { return true; } }
         

@@ -158,8 +158,11 @@ namespace MCGalaxy
             pos.Z = 16 + (cpSpawn ? p.checkpointZ : p.level.spawnz) * 32;
             byte yaw   = cpSpawn ? p.checkpointRotX : p.level.rotx;
             byte pitch = cpSpawn ? p.checkpointRotY : p.level.roty;
+            RespawnAt(p, pos, yaw, pitch);
+        }
+
+        public static void RespawnAt(Player p, Position pos, byte yaw, byte pitch) {
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
-            
             p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
         }
     }

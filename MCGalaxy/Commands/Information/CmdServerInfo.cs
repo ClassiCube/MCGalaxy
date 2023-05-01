@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -88,8 +88,10 @@ namespace MCGalaxy.Commands.Info
             ulong idl  = (end.IdleTime - beg.IdleTime);
             ulong sys  = (end.UserTime - beg.UserTime) + (end.KernelTime - beg.KernelTime);
             double cpu = sys * 100.0 / (sys + idl);
-            p.Message("  &a{0}% &Sby all processes", 
-                double.IsNaN(cpu) ? "(unknown)" : cpu.ToString("F2"));
+            int cores  = Environment.ProcessorCount;
+            p.Message("  &a{0}% &Sby all processes across {1} CPU core{2}", 
+                double.IsNaN(cpu) ? "(unknown)" : cpu.ToString("F2"),
+                cores, cores.Plural());
 
             // Private Bytes = memory the process has reserved just for itself
             int memory = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);

@@ -17,8 +17,10 @@
 */
 using System;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdLastCmd : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdLastCmd : Command2 
+    {
         public override string name { get { return "LastCmd"; } }
         public override string shortcut { get { return "Last"; } }
         public override string type { get { return CommandTypes.Information; } }

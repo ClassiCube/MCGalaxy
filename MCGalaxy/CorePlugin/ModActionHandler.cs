@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     Copyright 2011 MCForge
     
     Dual-licensed under the Educational Community License, Version 2.0 and
@@ -164,14 +164,16 @@ namespace MCGalaxy.Core {
         
         static void DoBanIP(ModAction e) {
             LogIPAction(e, "&8IP banned");
-            Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.", e.Target, e.Actor.name);
-            Server.bannedIP.Add(e.Target);
+            Logger.Log(LogType.UserActivity, "IP-BANNED: {0} by {1}.{2}", 
+                       e.Target, e.Actor.name, e.ReasonSuffixed);
+            Server.bannedIP.Update(e.Target, e.Reason);
             Server.bannedIP.Save();
         }
         
         static void DoUnbanIP(ModAction e) {
             LogIPAction(e, "&8IP unbanned");
-            Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", e.Target, e.Actor.name);
+            Logger.Log(LogType.UserActivity, "IP-UNBANNED: {0} by {1}.", 
+                       e.Target, e.Actor.name);
             Server.bannedIP.Remove(e.Target);
             Server.bannedIP.Save();
         }

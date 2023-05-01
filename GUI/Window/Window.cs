@@ -1,5 +1,5 @@
 /*    
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -28,8 +28,10 @@ using MCGalaxy.Generator;
 using MCGalaxy.Gui.Popups;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Gui {
-    public partial class Window : Form {
+namespace MCGalaxy.Gui 
+{
+    public partial class Window : Form 
+    {
         // for cross thread use
         delegate void StringCallback(string s);
         delegate void PlayerListCallback(List<Player> players);
@@ -237,7 +239,7 @@ Trying to mix two versions is unsupported - you may experience issues";
             RunOnUI_Async(() => main_btnProps.Enabled = true);
         }
 
-        public void RunOnUI_Async(Action act) { BeginInvoke(act); }
+        public void RunOnUI_Async(UIAction act) { BeginInvoke(act); }
         
         void Player_PlayerConnect(Player p) {
             RunOnUI_Async(() => {

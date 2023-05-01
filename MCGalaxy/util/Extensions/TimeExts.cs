@@ -17,11 +17,11 @@
  */
 using System;
 
-namespace MCGalaxy {
-
+namespace MCGalaxy 
+{
     /// <summary> Extension methods relating to timespans. </summary>
-    public static class TimeExts {
-        
+    public static class TimeExts 
+    {       
         public static string Shorten(this TimeSpan value, 
                                      bool seconds = false, bool spaces = true) {
             string time = "";
@@ -62,12 +62,12 @@ namespace MCGalaxy {
                 }
                 
                 amount = GetTicks(num, GetUnit(value, i));
-                total = checked(total + amount);
+                total  = checked(total + amount);
                 num = 0;
             }
             
             amount = GetTicks(num, defaultUnit);
-            total = checked(total + amount);
+            total  = checked(total + amount);
             return TimeSpan.FromTicks(total);
         }
         

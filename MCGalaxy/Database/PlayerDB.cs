@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{
     /// <summary> Stores per-player persistent data. </summary>
-    public static class PlayerDB {
-        
+    public static class PlayerDB 
+    {        
         static string LoginPath(string name)  { return "text/login/"  + name.ToLower() + ".txt"; }
         static string LogoutPath(string name) { return "text/logout/" + name.ToLower() + ".txt"; }
 

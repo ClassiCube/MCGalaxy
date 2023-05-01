@@ -66,8 +66,6 @@ namespace MCGalaxy.Modules.Compiling
             return true;
         }
 
-
-        const int MAX_LOG = 2;
         
         /// <summary> Attempts to compile the given source code files into a .dll </summary>
         /// <param name="p"> Player to send messages to </param>
@@ -95,6 +93,7 @@ namespace MCGalaxy.Modules.Compiling
             return false;
         }
         
+        const int MAX_LOG = 5;
         static void SummariseErrors(ICompilerErrors errors, string[] srcs, Player p) {
             int logged = 0;
             foreach (ICompilerError err in errors) 
@@ -105,10 +104,10 @@ namespace MCGalaxy.Modules.Compiling
                 if (logged >= MAX_LOG) break;
             }
             
-            if (errors.Count > MAX_LOG) {
-                p.Message(" &W.. and {0} more", errors.Count - MAX_LOG);
+            if (logged < errors.Count) {
+                p.Message(" &W.. and {0} more", errors.Count - logged);
             }
-            p.Message("&WCompilation error. See " + ICompiler.ERROR_LOG_PATH + " for more information.");
+            p.Message("&WCompiling failed. See " + ICompiler.ERROR_LOG_PATH + " for more detail");
         }
     }
 }

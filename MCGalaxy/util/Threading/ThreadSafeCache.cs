@@ -19,12 +19,14 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Tasks;
 
-namespace MCGalaxy.Util {
-    public sealed class ThreadSafeCache {
+namespace MCGalaxy.Util 
+{
+    public sealed class ThreadSafeCache 
+    {
         public static ThreadSafeCache DBCache = new ThreadSafeCache();
             
         readonly object locker = new object();
-        readonly Dictionary<string, object> items = new Dictionary<string, object>();
+        readonly Dictionary<string, object> items    = new Dictionary<string, object>();
         readonly Dictionary<string, DateTime> access = new Dictionary<string, DateTime>();
         
         public object GetLocker(string key) {

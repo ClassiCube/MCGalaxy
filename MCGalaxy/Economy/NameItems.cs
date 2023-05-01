@@ -17,17 +17,17 @@
  */
 using System;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class TitleItem : SimpleItem {
-        
+namespace MCGalaxy.Eco 
+{    
+    public sealed class TitleItem : SimpleItem 
+    {    
         public TitleItem() {
             Aliases = new string[] { "titles", "title" };
         }
         
         public override string Name { get { return "Title"; } }
         
-        protected internal override void OnPurchase(Player p, string title) {
+        public override void OnPurchase(Player p, string title) {
             if (title.Length == 0) {
                 PlayerOperations.SetTitle(p, p.name, "");
                 p.Message("&aYour title was removed for free."); return;
@@ -43,15 +43,15 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class NickItem : SimpleItem {
-        
+    public sealed class NickItem : SimpleItem 
+    {    
         public NickItem() {
             Aliases = new string[] { "nickname", "nick", "name" };
         }
         
         public override string Name { get { return "Nickname"; } }
         
-        protected internal override void OnPurchase(Player p, string nick) {
+        public override void OnPurchase(Player p, string nick) {
             if (nick.Length == 0) {
                 PlayerOperations.SetNick(p, p.name, "");
                 p.Message("&aYour nickname was removed for free."); return;
@@ -70,15 +70,15 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class TitleColorItem : SimpleItem {
-        
+    public sealed class TitleColorItem : SimpleItem 
+    {    
         public TitleColorItem() {
             Aliases = new string[] { "tcolor", "tcolour", "titlecolor", "titlecolour" };
         }
         
         public override string Name { get { return "TitleColor"; } }
         
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (args.Length == 0) { OnStoreCommand(p); return; }
             string color = Matcher.FindColor(p, args);
             
@@ -95,15 +95,15 @@ namespace MCGalaxy.Eco {
         }
     }
     
-    public sealed class ColorItem : SimpleItem {
-        
+    public sealed class ColorItem : SimpleItem 
+    {    
         public ColorItem() {
             Aliases = new string[] { "color", "colour" };
         }
         
         public override string Name { get { return "Color"; } }
 
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (args.Length == 0) { OnStoreCommand(p); return; }
             string color = Matcher.FindColor(p, args);
             

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -41,7 +41,7 @@ namespace MCGalaxy {
             get { return "Console [&a" + Server.Config.ConsoleName + "&S]"; }
         }
         
-        public override void Message(byte type, string message) {
+        public override void Message(string message) {
             Logger.Log(LogType.ConsoleMessage, message);
         }
     }
@@ -69,6 +69,7 @@ namespace MCGalaxy {
             SetIP(Socket.IP);
             
             spamChecker = new SpamChecker(this);
+            partialLog  = new List<DateTime>(20);
             session.ID  = Interlocked.Increment(ref sessionCounter) & SESSION_ID_MASK;
             
             for (int b = 0; b < BlockBindings.Length; b++) 
@@ -188,7 +189,7 @@ namespace MCGalaxy {
             ip = addr.ToString();
         }
         
-        public bool CanUse(Command cmd) { return group.Commands.Contains(cmd); }
+        public bool CanUse(Command cmd) { return cmd.Permissions.UsableBy(this); }
         public bool CanUse(string cmdName) {
             Command cmd = Command.Find(cmdName);
             return cmd != null && CanUse(cmd);
@@ -319,6 +320,7 @@ namespace MCGalaxy {
             
             DrawOps.Clear();
             if (spamChecker != null) spamChecker.Clear();
+            ClearSerialCommands();
         }
 
         #endregion
@@ -347,7 +349,7 @@ namespace MCGalaxy {
                 Message("Cannot {0} &Swhile chat moderation is on without &T/Voice&S", action); return false; 
             }
             if (Unverified) {
-                Authenticator.Current.RequiresVerification(this, action);
+                PassAuthenticator.Current.RequiresVerification(this, action);
                 return false;
             }
             return true;
@@ -362,7 +364,7 @@ namespace MCGalaxy {
         
         /// <summary> Checks if player is currently unverified, and if so, sends a message informing them </summary>
         public void CheckIsUnverified() {
-            if (NeedsVerification()) Authenticator.Current.NeedVerification(this);
+            if (NeedsVerification()) PassAuthenticator.Current.NeedVerification(this);
         }
         
           

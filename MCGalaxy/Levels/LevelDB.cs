@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -22,10 +22,11 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public static class LevelDB {
-        
-        public static void SaveBlockDB(Level lvl) {
+namespace MCGalaxy 
+{
+    public static class LevelDB 
+    {
+        internal static void SaveBlockDB(Level lvl) {
             if (lvl.BlockDB.Cache.Head == null) return;
             if (!lvl.Config.UseBlockDB) { lvl.BlockDB.Cache.Clear(); return; }
 

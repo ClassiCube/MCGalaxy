@@ -28,6 +28,7 @@ namespace MCGalaxy.Commands.World {
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Realm"), new CommandAlias("MyRealm") }; }
         }
+        public override CommandParallelism Parallelism { get { return CommandParallelism.NoAndWarn; } }
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }

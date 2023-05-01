@@ -40,7 +40,7 @@ namespace MCGalaxy.Core {
         static void HandlePurchase(EcoTransaction data) {
             Economy.EcoStats stats = Economy.RetrieveStats(data.TargetName);
             stats.TotalSpent += data.Amount;
-            stats.Purchase = data.ItemDescription + "%3 for %f" + data.Amount + " %3" + Server.Config.Currency
+            stats.Purchase = data.ItemDescription + " &3for &f" + data.Amount + " &3$currency"
                 + " on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             
             Player p = PlayerInfo.FindExact(data.TargetName);
@@ -85,8 +85,8 @@ namespace MCGalaxy.Core {
         }
 
         static string Format(string action, EcoTransaction data) {
-            string entry = "%f" + data.Amount + "%3 " + Server.Config.Currency + action
-                + "%3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            string entry = "&f" + data.Amount + " &3$currency" + action
+                + "&3 on %f" + DateTime.Now.ToString(CultureInfo.InvariantCulture);
             string reason = data.Reason;
             
             if (reason == null) return entry;

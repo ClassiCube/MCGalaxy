@@ -21,12 +21,42 @@ using System.Threading;
 using MCGalaxy.Commands;
 using MCGalaxy.Generator.fCraft;
 using MCGalaxy.Generator.Realistic;
-using ClassicalSharp.Generator;
+using MCGalaxy.Generator.Classic;
 
 namespace MCGalaxy.Generator 
 {
-    public delegate bool MapGenFunc(Player p, Level lvl, string seed);
+    public delegate bool MapGenFunc(Player p, Level lvl, MapGenArgs args);
     public enum GenType { Simple, fCraft, Advanced };
+        
+    public class MapGenArgs
+    {
+        public string Args;
+        public int Seed;
+        public MapGenBiomeName Biome;
+        public bool RandomDefault = true;
+        
+        public Func<string, bool> ArgFilter = (Args) => false;
+        public Func<string, bool> ArgParser = null;
+        
+        public bool ParseArgs(Player p) {
+            bool gotSeed = false;
+            foreach (string arg in Args.SplitSpaces())
+            {
+                if (arg.Length == 0) continue;
+                
+                if (ArgFilter(arg)) {
+                    if (!ArgParser(arg)) return false;
+                } else if (int.TryParse(arg, out Seed)) { 
+                    gotSeed = true;
+                } else {
+                    if (!CommandParser.GetEnum(p, arg, "Seed", ref Biome)) return false;
+                }
+            }
+            
+            if (!gotSeed) Seed = RandomDefault ? new Random().Next() : -1;
+            return true;
+        }
+    }
     
     /// <summary> Map generators initialise the blocks in a level. </summary>
     /// <remarks> e.g. flatgrass generator, mountains theme generator, etc </remarks>
@@ -41,29 +71,30 @@ namespace MCGalaxy.Generator
         public bool Generate(Player p, Level lvl, string seed) {
             lvl.Config.Theme = Theme;
             lvl.Config.Seed  = seed;
-            return GenFunc(p, lvl, seed);
+            
+            MapGenArgs args = new MapGenArgs();
+            args.Args       = seed;
+            
+            bool success = GenFunc(p, lvl, args);
+            MapGenBiome.Get(args.Biome).ApplyEnv(lvl.Config);
+            return success;
         }
         
         
         /// <summary> Creates an RNG initialised with the given seed. </summary>
         public static Random MakeRng(string seed) {
             if (seed.Length == 0) return new Random();
-            return new Random(MakeInt(seed));
-        }
-        
-        /// <summary> Generates an integer seed based on the given seed. </summary>
-        public static int MakeInt(string seed) {
-            if (seed.Length == 0) return new Random().Next();
             
             int value;
             if (!int.TryParse(seed, out value)) value = seed.GetHashCode();
-            return value;
-        }
+            return new Random(value);
+        } // TODO move to CmdMaze
 
         
         public static List<MapGen> Generators = new List<MapGen>();
         public static MapGen Find(string theme) {
-            foreach (MapGen gen in Generators) {
+            foreach (MapGen gen in Generators) 
+            {
                 if (gen.Theme.CaselessEq(theme)) return gen;
             }
             return null;
@@ -78,6 +109,9 @@ namespace MCGalaxy.Generator
             p.Message("&HAdvanced themes: &f" + FilterThemes(GenType.Advanced));
         }
         
+        
+        public const string DEFAULT_HELP = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
+            
         /// <summary> Adds a new map generator to the list of generators. </summary>
         public static void Register(string theme, GenType type, MapGenFunc func, string desc) {
             MapGen gen = new MapGen() { Theme = theme, GenFunc = func, Desc = desc, Type = type };
@@ -85,6 +119,7 @@ namespace MCGalaxy.Generator
         }
         
         static MapGen() {
+            RealisticMapGen.RegisterGenerators();
             SimpleGen.RegisterGenerators();
             fCraftMapGen.RegisterGenerators();
             AdvNoiseGen.RegisterGenerators();
@@ -113,7 +148,11 @@ namespace MCGalaxy.Generator
             try {
                 p.Message("Generating map \"{0}\"..", name);
                 lvl = new Level(name, x, y, z);
+                
+                DateTime start = DateTime.UtcNow;
                 if (!gen.Generate(p, lvl, seed)) { lvl.Dispose(); return null; }
+                Logger.Log(LogType.SystemActivity, "Generation completed in {0:F3} seconds", 
+                           (DateTime.UtcNow - start).TotalSeconds);
 
                 string msg = seed.Length > 0 ? "λNICK&S created level {0}&S with seed \"{1}\"" : "λNICK&S created level {0}";
                 Chat.MessageFrom(p, string.Format(msg, lvl.ColoredName, seed));

@@ -137,7 +137,8 @@ namespace MCGalaxy.Drawing
             w.Write(data.Length);
             w.Write(data);
             
-            for (int i = 0; i < extBlocks.Length; i++) {
+            for (int i = 0; i < extBlocks.Length; i++) 
+            {
                 if (extBlocks[i] == null) {
                     w.Write((byte)0); continue;
                 }
@@ -198,7 +199,8 @@ namespace MCGalaxy.Drawing
                     allExtBlocks = r.ReadBytes(dataLen).Decompress((Volume + 7) / 8);
                     UnpackPackedExtBlocks(allExtBlocks);
                 } else {
-                    for (int i = 0; i < extBlocks.Length; i++) {
+                    for (int i = 0; i < extBlocks.Length; i++) 
+                    {
                         if (r.ReadByte() == 0) continue;
                         dataLen = r.ReadUInt16();
                         extBlocks[i] = r.ReadBytes(dataLen).Decompress(chunkSize);
@@ -208,14 +210,16 @@ namespace MCGalaxy.Drawing
         }
         
         void UnpackExtBlocks(byte[] allExtBlocks) {
-            for (int i = 0; i < blocks.Length; i++) {
+            for (int i = 0; i < blocks.Length; i++) 
+            {
                 if (blocks[i] != Block.custom_block) continue;
                 Set((BlockID)(Block.Extended | allExtBlocks[i]), i);
             }
         }
         
         void UnpackPackedExtBlocks(byte[] allExtBlocks) {
-            for (int i = 0; i < blocks.Length; i++) {
+            for (int i = 0; i < blocks.Length; i++) 
+            {
                 bool isExt = (allExtBlocks[i >> 3] & (1 << (i & 0x7))) != 0;
                 if (isExt) { Set((BlockID)(Block.Extended | blocks[i]), i); }
             }
@@ -225,11 +229,12 @@ namespace MCGalaxy.Drawing
         public void LoadFromOld(Stream stream, Stream underlying) {
             byte[] raw = new byte[underlying.Length];
             underlying.Read(raw, 0, (int)underlying.Length);
-            raw = raw.Decompress();
+            raw = raw.Decompress(16);
             if (raw.Length == 0) return;
             
             CalculateBounds(raw);
-            for (int i = 0; i < raw.Length; i += 7) {
+            for (int i = 0; i < raw.Length; i += 7) 
+            {
                 ushort x = BitConverter.ToUInt16(raw, i + 0);
                 ushort y = BitConverter.ToUInt16(raw, i + 2);
                 ushort z = BitConverter.ToUInt16(raw, i + 4);
@@ -244,7 +249,9 @@ namespace MCGalaxy.Drawing
         void CalculateBounds(byte[] raw) {
             int minX = int.MaxValue, minY = int.MaxValue, minZ = int.MaxValue;
             int maxX = int.MinValue, maxY = int.MinValue, maxZ = int.MinValue;
-            for (int i = 0; i < raw.Length; i += 7) {
+            
+            for (int i = 0; i < raw.Length; i += 7) 
+            {
                 ushort x = BitConverter.ToUInt16(raw, i + 0);
                 ushort y = BitConverter.ToUInt16(raw, i + 2);
                 ushort z = BitConverter.ToUInt16(raw, i + 4);

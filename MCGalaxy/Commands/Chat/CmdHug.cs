@@ -16,8 +16,10 @@
     permissions and limitations under the Licenses.
  */
 
-namespace MCGalaxy.Commands.Chatting {    
-    public class CmdHug : MessageCmd {
+namespace MCGalaxy.Commands.Chatting 
+{    
+    public class CmdHug : MessageCmd 
+    {
         public override string name { get { return "Hug"; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can death hug") }; }

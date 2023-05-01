@@ -1,5 +1,5 @@
 /*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -30,12 +30,6 @@ namespace MCGalaxy {
             char last = line[length - 1];
             return last.UnicodeToCp437() != last;
         }
-
-        static bool StartsWithColor(string message, int offset) {
-            return message[offset] == '&' 
-                && (offset + 1) < message.Length
-                && Colors.Lookup(message[offset + 1]) != '\0';
-        }
         
         static char LastColor(char[] line, int length) {
             for (int i = length - 2; i >= 0; i--) {
@@ -65,9 +59,15 @@ namespace MCGalaxy {
             // TODO: This probably needs to account for colour codes
             return (c == '-' || c == '/' || c == '\\') && line[i - 1] != ' ';
         }
+
+        static bool StartsWithColor(char[] message, int messageLen, int offset) {
+            return message[offset] == '&' 
+                && (offset + 1) < messageLen
+                && Colors.Lookup(message[offset + 1]) != '\0';
+        }
         
         // TODO: Add outputLine argument, instead of returning string list
-        public static List<string> Wordwrap(string message, bool supportsEmotes) {
+        public static List<string> Wordwrap(char[] message, int messageLen, bool supportsEmotes) {
             List<string> lines   = new List<string>();
             const int limit      = NetUtils.StringSize; // max characters on one line
             const int maxLineLen = limit + 1; // +1 because need to know if length of line overshot limit
@@ -76,7 +76,7 @@ namespace MCGalaxy {
             bool firstLine = true;
             char lastColor = 'f';
             
-            for (int offset = 0; offset < message.Length; ) {
+            for (int offset = 0; offset < messageLen; ) {
                 int length = 0;
                 // "Line1", "> Line2", "> Line3"
                 if (!firstLine) {
@@ -84,7 +84,7 @@ namespace MCGalaxy {
                     length += 2;
                     
                     // Make sure split up lines have the right colour
-                    if (lastColor != 'f' && !StartsWithColor(message, offset)) {
+                    if (lastColor != 'f' && !StartsWithColor(message, messageLen, offset)) {
                         line[2] = '&'; line[3] = lastColor;
                         length += 2;
                     }
@@ -102,7 +102,7 @@ namespace MCGalaxy {
                 // Also trim leading spaces on subsequent lines
                 // (note that first line is NOT trimmed for spaces)
                 bool foundStart = firstLine;
-                for (; length < maxLineLen && offset < message.Length;) {
+                for (; length < maxLineLen && offset < messageLen;) {
                     char c = message[offset++];
                     
                     if (c != ' ' || foundStart) {
@@ -160,6 +160,14 @@ namespace MCGalaxy {
         /// <param name="customColors"> if false, converts custom colour codes into fallback colour codes </param>
         public static string CleanupColors(string value, bool fullAmpersands, bool customColors) {
             if (value.IndexOf('&') == -1) return value;
+            
+            int len;
+            char[] chars = CleanupColors(value, out len, fullAmpersands, customColors);
+            return new string(chars, 0, len);
+        }
+
+        public static char[] CleanupColors(string value, out int bufferLen,
+                                           bool fullAmpersands, bool customColors) {
             char[] chars = new char[value.Length];
             int lastIdx  = -1, len = 0;
             char lastColor  = 'f', col;
@@ -207,8 +215,8 @@ namespace MCGalaxy {
                 i++; // skip over color code
             }
 
-            len = TrimTrailingInvisible(chars, len);
-            return new string(chars, 0, len);
+            bufferLen = TrimTrailingInvisible(chars, len);
+            return chars;
         }
 
         // Trims trailing color codes and whitespace

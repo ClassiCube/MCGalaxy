@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -26,6 +26,8 @@ namespace MCGalaxy.Network
         public IPAddress IP;
         /// <summary> The port this network socket is listening on </summary>
         public int Port;
+        /// <summary> Whether connections are currently being accepted </summary>
+        public bool Listening;
 
         /// <summary> Begins listening for connections on the given IP and port </summary>
         /// <remarks> Client connections are asynchronously accepted </remarks>
@@ -88,8 +90,13 @@ namespace MCGalaxy.Network
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 Logger.Log(LogType.Warning, "Failed to start listening on port {0} ({1})", port, ex.Message);
+                
+                string msg = String.Format("Failed to start listening. Is another server or instance of {0} already running on port {1}?",
+                                           Server.SoftwareName, port);
+                Server.UpdateUrl(msg);
                 socket = null; return;
             }
+            Listening = true;
             Logger.Log(LogType.SystemActivity, "Started listening on port {0}... ", port);
         }
         
@@ -108,7 +115,7 @@ namespace MCGalaxy.Network
         static void AcceptCallback(IAsyncResult result) {
             if (Server.shuttingDown) return;
             TcpListen listen = (TcpListen)result.AsyncState;
-            TcpSocket s = null;
+            INetSocket s = null;
             
             try {
                 Socket raw  = listen.socket.EndAccept(result);
@@ -119,7 +126,13 @@ namespace MCGalaxy.Network
                     // intentionally non-clean connection close
                     try { raw.Close(); } catch { }
                 } else {
+                    #if NET_20
+                    // TODO better non-hardcoded detection? move to OperatingSystem?
+                    s = Environment.OSVersion.Platform == PlatformID.Win32Windows ? (INetSocket)(new TcpLegacySocket(raw)) : (INetSocket)(new TcpSocket(raw));
+                    #else
                     s = new TcpSocket(raw);
+                    #endif
+                    
                     if (announce) Logger.Log(LogType.UserActivity, s.IP + " connected to the server.");
                     s.Init();
                 }
@@ -131,7 +144,12 @@ namespace MCGalaxy.Network
         }
 
         public override void Close() {
-            if (socket != null) socket.Close();
+            try {
+                Listening = false;
+                if (socket != null) socket.Close();
+            } catch (Exception ex) { 
+                Logger.LogError(ex); 
+            }
         }
     }
 }

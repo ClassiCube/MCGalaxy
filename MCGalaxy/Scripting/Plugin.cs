@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -18,6 +18,11 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
+using MCGalaxy.Modules.Games.Countdown;
+using MCGalaxy.Modules.Games.CTF;
+using MCGalaxy.Modules.Games.LS;
+using MCGalaxy.Modules.Games.TW;
+using MCGalaxy.Modules.Games.ZS;
 using MCGalaxy.Modules.Moderation.Notes;
 using MCGalaxy.Modules.Relay.Discord;
 using MCGalaxy.Modules.Relay.IRC;
@@ -46,7 +51,7 @@ namespace MCGalaxy
         /// <summary> Name of the plugin. </summary>
         public abstract string name { get; }
         /// <summary> The oldest version of MCGalaxy this plugin is compatible with. </summary>
-        public abstract string MCGalaxy_Version { get; }
+        public virtual string MCGalaxy_Version { get { return null; } }
         /// <summary> Version of this plugin. </summary>
         public virtual int build { get { return 0; } }
         /// <summary> Message to display once this plugin is loaded. </summary>
@@ -57,8 +62,8 @@ namespace MCGalaxy
         public virtual bool LoadAtStartup { get { return true; } }
         
         
-        internal static List<Plugin> core = new List<Plugin>();
-        public static List<Plugin> all = new List<Plugin>();
+        public static List<Plugin> core   = new List<Plugin>();
+        public static List<Plugin> custom = new List<Plugin>();
         
         public static bool Load(Plugin p, bool auto) {
             try {
@@ -67,7 +72,7 @@ namespace MCGalaxy
                     Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", p.name, Server.SoftwareName);
                     return false;
                 }
-                all.Add(p);
+                custom.Add(p);
                 
                 if (p.LoadAtStartup || !auto) {
                     p.Load(auto);
@@ -85,23 +90,36 @@ namespace MCGalaxy
             }
         }
 
-        public static bool Unload(Plugin p, bool auto) {
-            bool success = true;
-            try {
-                p.Unload(auto);
-                Logger.Log(LogType.SystemActivity, "Plugin {0} was unloaded.", p.name);
-            } catch (Exception ex) {
-                Logger.LogError("Error unloading plugin " + p.name, ex);
-                success = false;
-            }
+        public static bool Unload(Plugin p) {
+            bool success = UnloadPlugin(p, false);
             
-            all.Remove(p);
+            // TODO only remove if successful?
+            custom.Remove(p);
+            core.Remove(p);
             return success;
         }
+        
+        static bool UnloadPlugin(Plugin p, bool auto) {
+            try {
+                p.Unload(auto);
+                return true;
+            } catch (Exception ex) {
+                Logger.LogError("Error unloading plugin " + p.name, ex);
+                return false;
+            }
+        }
 
+        
         public static void UnloadAll() {
-            for (int i = 0; i < all.Count; i++) {
-                Unload(all[i], true); i--;
+            for (int i = 0; i < custom.Count; i++) 
+            {
+                UnloadPlugin(custom[i], true);
+            }
+            custom.Clear();
+            
+            for (int i = 0; i < core.Count; i++) 
+            {
+                UnloadPlugin(core[i], true);
             }
         }
 
@@ -111,20 +129,22 @@ namespace MCGalaxy
             LoadCorePlugin(new DiscordPlugin());
             LoadCorePlugin(new IRCPlugin());
             LoadCorePlugin(new IPThrottler());
+            
+            LoadCorePlugin(new CountdownPlugin());
+            LoadCorePlugin(new CTFPlugin());
+            LoadCorePlugin(new LSPlugin());
+            LoadCorePlugin(new TWPlugin());
+            LoadCorePlugin(new ZSPlugin());
+            
             IScripting.AutoloadPlugins();
         }
         
         static void LoadCorePlugin(Plugin plugin) {
+            List<string> disabled = Server.Config.DisabledModules;
+            if (disabled.CaselessContains(plugin.name)) return;
+            
             plugin.Load(true);
-            Plugin.all.Add(plugin);
             Plugin.core.Add(plugin);
         }
     }
-
-    // This class is just kept around for backwards compatibility    
-    //   Plugin used to be completely abstract, with Plugin_Simple having virtual methods
-    //   However this is now obsolete as the virtual methods were moved into Plugin
-    [Obsolete("Derive from Plugin instead", true)]
-    public abstract class Plugin_Simple : Plugin { }
 }
-

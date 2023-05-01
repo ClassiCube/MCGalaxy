@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdPlayers : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdPlayers : Command2 
+    {
         public override string name { get { return "Players"; } }
         public override string shortcut { get { return "Who"; } }
         public override string type { get { return CommandTypes.Information; } }

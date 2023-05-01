@@ -108,7 +108,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             zone.RemoveFrom(lvl);
-            p.Message("Zone " + zone.ColoredName + " &Sdeleted");
+            p.Message("Zone {0} &Sdeleted", zone.ColoredName);
             lvl.Save(true);
         }
         
@@ -131,7 +131,7 @@ namespace MCGalaxy.Commands.Moderation {
                 zone.UnshowAll(p.level);
                 zone.Config.ShowAlpha = (byte)(alpha * 255);
                 zone.ShowAll(p.level);
-            } else if (opt.CaselessEq("col")) {
+            } else if (opt.CaselessEq("col") || opt.CaselessEq("color") || opt.CaselessEq("colour")) {
                 if (!CommandParser.GetHex(p, value, ref desc)) return;
                 
                 zone.Config.ShowColor = value;
@@ -171,7 +171,7 @@ namespace MCGalaxy.Commands.Moderation {
                 p.Message("&T/Zone set [name] alpha [value]");
                 p.Message("&HSets how solid the box shown around the zone is");
                 p.Message("&H0 - not shown at all, 0.5 - half solid, 1 - fully solid");
-                p.Message("&T/Zone set [name] col [hex color]");
+                p.Message("&T/Zone set [name] color [hex color]");
                 p.Message("&HSets the color of the box shown around the zone");
                 p.Message("&T/Zone set [name] motd [value]");
                 p.Message("&HSets the MOTD applied when in the zone. See &T/Help map motd");

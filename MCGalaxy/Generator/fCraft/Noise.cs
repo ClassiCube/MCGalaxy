@@ -143,7 +143,7 @@ namespace MCGalaxy.Generator.fCraft
             float multiplier, constant;
             CalculateNormalizationParams( map, low, high, out multiplier, out constant );
             for( int i = 0; i < map.Length; i++ ) {
-                map[i] = map[i] * multiplier + constant;
+                map[i] = map[i] * multiplier + constant; // (map[i] - min) * multiplier + low
             }
         }
 

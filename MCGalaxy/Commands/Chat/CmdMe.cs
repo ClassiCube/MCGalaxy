@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.Events.PlayerEvents;
 
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdMe : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdMe : Command2 
+    {
         public override string name { get { return "Me"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override bool MessageBlockRestricted { get { return true; } }

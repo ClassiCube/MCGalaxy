@@ -16,13 +16,12 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Eco;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Eco {
-    
-    public sealed class SnackItem : SimpleItem {
-        
+namespace MCGalaxy.Eco 
+{
+    public sealed class SnackItem : SimpleItem 
+    {
         public SnackItem() {
             Aliases = new string[] { "snack" };
             Price = 0;
@@ -30,7 +29,7 @@ namespace MCGalaxy.Eco {
         
         public override string Name { get { return "Snack"; } }
         
-        protected internal override void OnPurchase(Player p, string args) {
+        public override void OnPurchase(Player p, string args) {
             if (DateTime.UtcNow < p.NextEat) {
                 p.Message("You're still full - you need to wait at least " +
                           "10 seconds between snacks."); return;

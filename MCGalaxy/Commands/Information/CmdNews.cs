@@ -17,8 +17,10 @@
  */
 using MCGalaxy.Util;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdNews : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdNews : Command2 
+    {
         public override string name { get { return "News"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }

@@ -55,7 +55,7 @@ namespace MCGalaxy {
         public static Level FindLevels(Player p, string name) {
             int matches;
             return Find(p, name, out matches, LevelInfo.Loaded.Items,
-                        null, l => l.name, "loaded levels");
+                        null, l => l.name, l => l.ColoredName, "loaded levels");
         }
 
         /// <summary> Find partial matches of 'name' against the list of all map files. </summary>
@@ -71,7 +71,7 @@ namespace MCGalaxy {
             Group.MapName(ref name);
             int matches;
             return Find(p, name, out matches, Group.GroupList,
-                        null, g => Colors.Strip(g.Name), "ranks");
+                        null, g => Colors.Strip(g.Name), g => g.ColoredName, "ranks");
         }
         
         /// <summary> Find partial matches of 'name' against a list of warps. </summary>
@@ -94,11 +94,21 @@ namespace MCGalaxy {
         /// <returns> If exactly one match, the matching item. </returns>
         public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
                                 Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
+            return Find<T>(p, name, out matches, items, filter, nameGetter, nameGetter, group, limit);
+        }
+        
+        
+        /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
+        /// <returns> If exactly one match, the matching item. </returns>
+        public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
+                                Predicate<T> filter, StringFormatter<T> nameGetter, 
+                                StringFormatter<T> itemFormatter, string group, int limit = 5)  {
             T match = default(T); matches = 0;
-            StringBuilder nameMatches = new StringBuilder();
+            StringBuilder output = new StringBuilder();
             const StringComparison comp = StringComparison.OrdinalIgnoreCase;
 
-            foreach (T item in items) {
+            foreach (T item in items)
+            {
                 if (filter != null && !filter(item)) continue;
                 string itemName = nameGetter(item);
                 if (itemName.Equals(name, comp)) { matches = 1; return item; }
@@ -106,83 +116,23 @@ namespace MCGalaxy {
                 
                 match = item; matches++;
                 if (matches <= limit) {
-                    nameMatches.Append(itemName).Append(", ");
+                    output.Append(itemFormatter(item)).Append("&S, ");
                 } else if (matches == limit + 1) {
-                    nameMatches.Append("(and more)").Append(", ");
+                    output.Append("(and more), ");
                 }
             }
             
             if (matches == 1) return match;
             if (matches == 0) {
-                p.Message("No " + group + " match \"" + name + "\".");
-            } else {
-                OutputMulti(p, name, nameMatches, matches, group, limit);
-            }
-            return default(T);
-        }
-        
-        /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
-        /// <remarks> Outputs multiple matching entries, as 'items' enumerable may have multiple entries. </remarks>
-        /// <returns> If exactly one match, the matching list of items. </returns>
-        public static List<T> FindMulti<T>(Player p, string name, out int matches, IEnumerable items,
-                                           Predicate<T> filter, StringFormatter<T> nameGetter, string group, int limit = 5)  {
-            List<T> matchItems = null; matches = 0;
-            StringBuilder nameMatches = new StringBuilder();
-            List<string> outputtedNames = new List<string>(limit);
-            string match = null;
-            const StringComparison comp = StringComparison.OrdinalIgnoreCase;
-
-            foreach (T item in items) {
-                if (filter != null && !filter(item)) continue;
-                string itemName = nameGetter(item);
-                
-                // Found an exact name match - only output items now which exactly match
-                if (itemName.Equals(name, comp)) {
-                    if (match == null || !name.Equals(match, comp))
-                        matchItems = new List<T>();
-                    matchItems.Add(item);
-                    
-                    matches = 1; match = name;
-                    continue;
-                }
-                
-                if (itemName.IndexOf(name, comp) < 0) continue;
-                if (matches == 0) { // Found our first partial match - init the list
-                    matchItems = new List<T>();
-                    matchItems.Add(item);
-                    match = itemName;
-                } else if (match != null && itemName.Equals(match, comp)) { // Found same partial match
-                    matchItems.Add(item);
-                }
-                
-                // We do not want to output the same name multiple times
-                if (outputtedNames.CaselessContains(itemName) || matches > (limit + 1)) continue;
-                matches++;
-                
-                if (matches <= limit) {
-                    nameMatches.Append(itemName).Append(", ");
-                } else if (matches == limit + 1) {
-                    nameMatches.Append("(and more)").Append(", ");
-                }
-                outputtedNames.Add(itemName);
+                p.Message("No {0} match \"{1}\".", group, name); return default(T);
             }
             
-            if (matches == 1) return matchItems;
-            if (matches == 0) {
-                p.Message("No " + group + " found for \"" + name + "\".");
-            } else {
-                OutputMulti(p, name, nameMatches, matches, "players", limit);
-            }
-            return null;
-        }
-        
-        static void OutputMulti(Player p, string name, StringBuilder nameMatches,
-                                int matches, string group, int limit = 5) {
             string count = matches > limit ? limit + "+ " : matches + " ";
-            string names = nameMatches.ToString(0, nameMatches.Length - 2);
+            string names = output.ToString(0, output.Length - 2);
             
-            p.Message(count + group + " match \"" + name + "\":");
+            p.Message("{0}{1} match \"{2}\":", count, group, name);
             p.Message(names);
+            return default(T);
         }
 
         

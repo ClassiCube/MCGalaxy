@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using MCGalaxy.Config;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Games;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 
@@ -47,11 +48,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         public DiscordConfig Config;
         
         TextFile replacementsFile = new TextFile("text/discord/replacements.txt",
-                                        "// This file is used to replace words/phrases sent to discord",
+                                        "// This file is used to replace words/phrases sent to Discord",
                                         "// Lines starting with // are ignored",
                                         "// Lines should be formatted like this:",
                                         "// example:http://example.org",
-                                        "// That would replace 'example' in messages sent with 'http://example.org'");
+                                        "// That would replace 'example' in messages sent to Discord with 'http://example.org'");
         
         
         protected override bool CanReconnect {
@@ -295,7 +296,14 @@ namespace MCGalaxy.Modules.Relay.Discord
                 
                 sb.Remove(i, 1); length--;
             }
+            
+            StripMarkdown(sb);
             return sb.ToString();
+        }
+        
+        static void StripMarkdown(StringBuilder sb) {
+            // TODO proper markdown parsing
+            sb.Replace("**", "");
         }
 
 
@@ -380,25 +388,39 @@ namespace MCGalaxy.Modules.Relay.Discord
         /// <summary> Asynchronously sends a message to the discord API </summary>
         public void Send(DiscordApiMessage msg) {
             // can be null in gap between initial connection and ready event received
-            if (api != null) api.SendAsync(msg);
+            if (api != null) api.QueueAsync(msg);
         }
         
         protected override void DoSendMessage(string channel, string message) {
-            ChannelSendMessage msg = new ChannelSendMessage(channel, message);
-            msg.Allowed = allowed;
-            Send(msg);
+            message = ConvertMessage(message);
+            const int MAX_MSG_LEN = 2000;
+            
+            // Discord doesn't allow more than 2000 characters in a single message,
+            //  so break up message into multiple parts for this extremely rare case
+            //  https://discord.com/developers/docs/resources/channel#create-message
+            for (int offset = 0; offset < message.Length; offset += MAX_MSG_LEN)
+            {
+                int partLen = Math.Min(message.Length - offset, MAX_MSG_LEN);
+                string part = message.Substring(offset, partLen);
+                
+                ChannelSendMessage msg = new ChannelSendMessage(channel, part);
+                msg.Allowed = allowed;
+                Send(msg);
+            }
         }
         
-        protected override string ConvertMessage(string message) {
-            message = base.ConvertMessage(message);
+        /// <summary> Formats a message for displaying on Discord </summary>
+        /// <example> Escapes markdown characters such as _ and * </example>
+        string ConvertMessage(string message) {
+            message = ConvertMessageCommon(message);
             message = Colors.StripUsed(message);
             message = EscapeMarkdown(message);
             message = SpecialToMarkdown(message);
             return message;
         }
         
-        static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|" };
-        static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|" };
+        static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|",  @"-",  @"#" };
+        static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|", @"\-", @"\#" };
         static string EscapeMarkdown(string message) {
             // don't let user use bold/italic etc markdown
             for (int i = 0; i < markdown_special.Length; i++) 
@@ -428,6 +450,31 @@ namespace MCGalaxy.Modules.Relay.Discord
             return BOLD + base.UnescapeNick(p) + BOLD;
         }
         
+        protected override void MessagePlayers(RelayPlayer p) {
+            ChannelSendEmbed embed = new ChannelSendEmbed(p.ChannelID);
+            int total;
+            List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
+            
+            embed.Color  = Config.EmbedColor;
+            embed.Title  = string.Format("{0} player{1} currently online",
+                                        total, total.Plural());
+            
+            foreach (OnlineListEntry e in entries) 
+            {
+                if (e.players.Count == 0) continue;
+                
+                embed.Fields.Add(
+                    ConvertMessage(FormatRank(e)),
+                    ConvertMessage(FormatPlayers(p, e))
+                );
+            }
+            AddGameStatus(embed);
+            Send(embed);
+        }
+        
+        static string FormatPlayers(Player p, OnlineListEntry e) {
+            return e.players.Join(pl => FormatNick(p, pl), ", ");
+        }
         
         static string FormatRank(OnlineListEntry e) {
             return string.Format(UNDERLINE + "{0}" + UNDERLINE + " (" + CODE + "{1}" + CODE + ")",
@@ -450,29 +497,21 @@ namespace MCGalaxy.Modules.Relay.Discord
                                  flags);
         }
         
-        static string FormatPlayers(Player p, OnlineListEntry e) {
-            return e.players.Join(pl => FormatNick(p, pl), ", ");
-        }
-        
-        protected override void MessagePlayers(RelayPlayer p) {
-            ChannelSendEmbed embed = new ChannelSendEmbed(p.ChannelID);
-            int total;
-            List<OnlineListEntry> entries = PlayerInfo.GetOnlineList(p, p.Rank, out total);
+        void AddGameStatus(ChannelSendEmbed embed) {
+            if (!Config.EmbedGameStatuses) return;
             
-            embed.Color = Config.EmbedColor;
-            embed.Title = string.Format("{0} player{1} currently online",
-                                        total, total.Plural());
+            StringBuilder sb = new StringBuilder();
+            IGame[] games    = IGame.RunningGames.Items;
             
-            foreach (OnlineListEntry e in entries) 
+            foreach (IGame game in games)
             {
-                if (e.players.Count == 0) continue;
-                
-                embed.Fields.Add(
-                    ConvertMessage(FormatRank(e)),
-                    ConvertMessage(FormatPlayers(p, e))
-                );
+                Level lvl = game.Map;
+                if (!game.Running || lvl == null) continue;
+                sb.Append(BOLD + game.GameName + BOLD + " is running on " + lvl.name + "\n");
             }
-            Send(embed);
+            
+            if (sb.Length == 0) return;
+            embed.Fields.Add("Running games", ConvertMessage(sb.ToString()));
         }
         
         

@@ -24,10 +24,8 @@ using System;
 
 namespace LibNoise
 {
-    public sealed class RidgedMultifractal : GradientNoiseBasis, IModule
+    public sealed class RidgedMultifractal : IModule
     {
-        public double Frequency;
-        public int Seed;
         public int OctaveCount;
         
         double mLacunarity;
@@ -36,12 +34,11 @@ namespace LibNoise
 
         public RidgedMultifractal()
         {
-            Frequency = 1.0;
-            Lacunarity = 2.0;
+            Lacunarity  = 2.0;
             OctaveCount = 6;
         }
 
-        public double GetValue(double x, double y, double z)
+        public override double GetValue(double x, double y, double z)
         {
             x *= Frequency;
             y *= Frequency;
@@ -58,7 +55,7 @@ namespace LibNoise
 
             for (int octave = 0; octave < OctaveCount; octave++)
             {
-                signal = GradientCoherentNoise(x, y, z, (Seed + octave) & 0x7fffffff);
+                signal = GradientNoise.GradientCoherentNoise(x, y, z, (Seed + octave) & 0x7fffffff);
 
                 // Make the ridges.
                 signal = Math.Abs(signal);

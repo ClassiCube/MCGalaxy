@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -27,7 +27,7 @@ namespace MCGalaxy.Core {
         }
         
         static bool HandleConnectingCore(Player p, string mppass) {
-            if (!Authenticator.Current.VerifyLogin(p, mppass)) {
+            if (!LoginAuthenticator.VerifyLogin(p, mppass)) {
                 p.Leave(null, "Login failed! Close the game and sign in again.", true); return false;
             }
             if (!CheckTempban(p)) return false;
@@ -62,7 +62,7 @@ namespace MCGalaxy.Core {
                     p.Kick(null, "Banned by " + banner + " for another " + delta + reason, true);
                     return false;
                 }
-            } catch { }
+            } catch { } // TODO log error
             return true;
         }
         
@@ -89,8 +89,10 @@ namespace MCGalaxy.Core {
         }
         
         static bool CheckBanned(Player p) {
-            if (Server.bannedIP.Contains(p.ip)) {
-                p.Kick(null, Server.Config.DefaultBanMessage, true);
+            string ipban = Server.bannedIP.Get(p.ip);
+            if (ipban != null) {
+                ipban = ipban.Length > 0 ? ipban : Server.Config.DefaultBanMessage;
+                p.Kick(null, ipban, true);
                 return false;
             }
             if (p.Rank != LevelPermission.Banned) return true;

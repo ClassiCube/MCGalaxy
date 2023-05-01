@@ -168,33 +168,33 @@ namespace MCGalaxy.SQL
         #region Low level functions
         
         /// <summary> Executes an SQL command that does not return any results. </summary>
-        public static void Execute(string sql, params object[] args) {
-            Do(sql, false, null, args);
+        public static int Execute(string sql, params object[] args) {
+            return Do(sql, false, null, args);
         }
 
         /// <summary> Executes an SQL query, invoking callback function on each returned row. </summary>
-        public static void Iterate(string sql, ReaderCallback callback, params object[] args) {
-            Do(sql, false, callback, args);
+        public static int Iterate(string sql, ReaderCallback callback, params object[] args) {
+            return Do(sql, false, callback, args);
         }
 
-        internal static void Do(string sql, bool createDB, ReaderCallback callback, object[] args) {
+        internal static int Do(string sql, bool createDB, ReaderCallback callback, object[] args) {
             IDatabaseBackend db = Backend;
             Exception e = null;
             
             for (int i = 0; i < 5; i++) {
                 try {
                     if (callback != null) {
-                        db.Iterate(sql, args, callback);
+                        return db.Iterate(sql, args, callback);
                     } else {
-                        db.Execute(sql, args, createDB);
+                        return db.Execute(sql, args, createDB);
                     }
-                    return;
                 } catch (Exception ex) {
                     e = ex; // try yet again
                 }
             }
 
             Logger.LogError("Error executing SQL statement: " + sql, e);
+            return 0;
         }
         #endregion
         

@@ -104,14 +104,33 @@ namespace MCGalaxy.Events.PlayerEvents
         }
     }
 
-    public delegate void OnPlayerDeath(Player p, BlockID cause);
-    /// <summary> Called whenever a player dies </summary>
+    public delegate void OnPlayerDying(Player p, BlockID cause, ref bool cancel);
+    /// <summary> Called whenever a player is about to die </summary>
     /// <remarks> Can be caused by e.g. walking into a deadly block like nerve_gas </remarks>
-    public sealed class OnPlayerDeathEvent : IEvent<OnPlayerDeath> 
+    public sealed class OnPlayerDyingEvent : IEvent<OnPlayerDying> 
     {     
-        public static void Call(Player p, BlockID block) {
-            if (handlers.Count == 0) return;
-            CallCommon(pl => pl(p, block));
+        public static void Call(Player p, BlockID block, ref bool cancel) {
+            IEvent<OnPlayerDying>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try { items[i].method(p, block, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+    
+    public delegate void OnPlayerDied(Player p, BlockID cause, ref TimeSpan cooldown);
+    /// <summary> Called whenever a player has died </summary>
+    /// <remarks> Can be caused by e.g. walking into a deadly block like nerve_gas </remarks>
+    public sealed class OnPlayerDiedEvent : IEvent<OnPlayerDied> 
+    {     
+        public static void Call(Player p, BlockID block, ref TimeSpan cooldown) {
+            IEvent<OnPlayerDied>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try { items[i].method(p, block, ref cooldown); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
         }
     }
     

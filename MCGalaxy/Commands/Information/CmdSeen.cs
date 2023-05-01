@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.DB;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdSeen : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdSeen : Command2 
+    {
         public override string name { get { return "Seen"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }

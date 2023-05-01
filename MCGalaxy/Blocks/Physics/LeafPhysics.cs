@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -22,9 +22,10 @@ namespace MCGalaxy.Blocks.Physics {
     public unsafe static class LeafPhysics {
         
         public static void DoLeaf(Level lvl, ref PhysInfo C) {
-            // Decaying disabled? Then just remove from the physics list
             if (!lvl.Config.LeafDecay) {
-                C.Data.Data = PhysicsArgs.RemoveFromChecks; return;
+                if (lvl.physics > 1) ActivateablePhysics.CheckNeighbours(lvl, C.X, C.Y, C.Z);
+                C.Data.Data = PhysicsArgs.RemoveFromChecks; 
+                return;
             }
             
             // Delay checking for leaf decay for a random amount of time
@@ -75,6 +76,7 @@ namespace MCGalaxy.Blocks.Physics {
                     dists[idx] = -1;
             }
 
+            // TODO optimisable?
             for (int dist = 1; dist <= range; dist++) {
                 idx = 0;
                 

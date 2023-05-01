@@ -51,7 +51,7 @@ namespace MCGalaxy.Drawing.Brushes
             BrushFactory factory = BrushFactory.Find(parts[1]);
             if (factory == null) {
                 p.Message("No brush found with name \"{0}\".", parts[1]);
-                CmdBrush.List(p); return null;
+                BrushFactory.List(p); return null;
             }
             
             args.Message = parts.Length > 2 ? parts[2] : "";

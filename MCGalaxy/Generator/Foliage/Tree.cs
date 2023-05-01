@@ -18,15 +18,17 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Drawing.Brushes;
+using MCGalaxy.Generator.fCraft;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Generator.Foliage {
-
+namespace MCGalaxy.Generator.Foliage 
+{
     public delegate void TreeOutput(ushort x, ushort y, ushort z, BlockID block);
     
     public delegate Tree TreeConstructor();
     
-    public abstract class Tree {
+    public abstract class Tree 
+    {
         protected internal int height, size;
         protected Random rnd;
         
@@ -60,21 +62,23 @@ namespace MCGalaxy.Generator.Foliage {
                 if (block == Block.Log || block == Block.Green) return true;
             }
             return false;
-        }
+        } // TODO move to generic helper function
         
         
         public static Dictionary<string, TreeConstructor> TreeTypes = 
             new Dictionary<string, TreeConstructor>() {
-            { "Fern", () => new NormalTree() }, { "Cactus", () => new CactusTree() },
+            { "Fern", () => new NormalTree() },   { "Cactus", () => new CactusTree() },
             { "Notch", () => new ClassicTree() }, { "Swamp", () => new SwampTree() },
             { "Bamboo", () => new BambooTree() }, { "Palm", () => new PalmTree() },
-            { "Oak", () => new OakTree() }, { "Ash", () => new AshTree() },            
-            { "Round", () => new RoundTree() }, { "Cone", () => new ConeTree() }, 
-            { "Rainforest", () => new RainforestTree() }, { "Mangrove", () => new MangroveTree() },      
+            { "Oak", () => new OakTree() },       { "Ash", () => new AshTree() },            
+            { "Round", () => new RoundTree() },   { "Cone", () => new ConeTree() }, 
+            { "Rainforest", () => new RainforestTree() }, { "Mangrove", () => new MangroveTree() },
+            { "fCraft", () => new fCraftTree() }
         };
         
         public static Tree Find(string name) {
-            foreach (var entry in TreeTypes) {
+            foreach (var entry in TreeTypes) 
+            {
                 if (entry.Key.CaselessEq(name)) return entry.Value();
             }
             return null;

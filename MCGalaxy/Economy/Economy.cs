@@ -20,11 +20,22 @@ using System.Collections.Generic;
 using System.IO;
 using MCGalaxy.Events.EconomyEvents;
 
-namespace MCGalaxy.Eco {
-    
-    public static partial class Economy {
-
+namespace MCGalaxy.Eco 
+{    
+    public static partial class Economy 
+    {
         public static bool Enabled;
+        static Dictionary<string, List<string>> itemCfg = new Dictionary<string, List<string>>();
+        
+        static List<string> GetConfig(string item) {
+            List<string> cfg;
+            if (itemCfg.TryGetValue(item, out cfg)) return cfg;
+            
+            cfg = new List<string>();
+            itemCfg[item] = cfg;
+            return cfg;
+        }
+        
 
         public static void Load() {
             if (!File.Exists(Paths.EconomyPropsFile)) {
@@ -34,7 +45,8 @@ namespace MCGalaxy.Eco {
             
             using (StreamReader r = new StreamReader(Paths.EconomyPropsFile)) {
                 string line;
-                while ((line = r.ReadLine()) != null) {
+                while ((line = r.ReadLine()) != null) 
+                {
                     line = line.Trim();
                     try {
                         ParseLine(line);
@@ -46,21 +58,19 @@ namespace MCGalaxy.Eco {
         }
         
         static void ParseLine(string line) {
-            string[] args = line.Split(':');
-            if (args[0].CaselessEq("enabled")) {
-                Enabled = args[1].CaselessEq("true");
-            } else if (args.Length >= 3) {
-                Item item = GetItem(args[0]);
-                if (item == null) return;
-                
-                if (args[1].CaselessEq("enabled")) {
-                    item.Enabled = args[2].CaselessEq("true");
-                } else if (args[1].CaselessEq("purchaserank")) {
-                    item.PurchaseRank = (LevelPermission)int.Parse(args[2]);
-                } else {
-                    item.Parse(line, args);
-                }
-            }
+            string name, value;
+            line.Separate(':', out name, out value);
+            if (value.Length == 0) return;
+            
+            if (name.CaselessEq("enabled")) {
+                Enabled = value.CaselessEq("true"); return;
+            } 
+            
+            Item item = GetItem(name);
+            name = item != null ? item.Name : name;
+            
+            GetConfig(name).Add(value);            
+            if (item != null) item.LoadConfig(value);
         }
 
         static readonly object saveLock = new object();
@@ -75,32 +85,63 @@ namespace MCGalaxy.Eco {
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.EconomyPropsFile, false)) {
                 w.WriteLine("enabled:" + Enabled);
-                foreach (Item item in Items) {
+                
+                foreach (Item item in Items) 
+                {
+                    List<string> cfg = GetConfig(item.Name);
+                    cfg.Clear();
+                    item.SaveConfig(cfg);
+                }
+                
+                foreach (var kvp in itemCfg)
+                {
                     w.WriteLine();
-                    w.WriteLine(item.Name + ":enabled:" + item.Enabled);
-                    w.WriteLine(item.Name + ":purchaserank:" + (int)item.PurchaseRank);
-                    item.Serialise(w);
+                    foreach (string prop in kvp.Value)
+                    {
+                        w.WriteLine(kvp.Key + ":" + prop);
+                    }
                 }
             }
         }
  
         
-        public static List<Item> Items = new List<Item>() { new ColorItem(), new TitleColorItem(),
-            new TitleItem(), new RankItem(), new LevelItem(), new LoginMessageItem(),
-            new LogoutMessageItem(), new BlocksItem(), new QueueLevelItem(),
-            new InfectMessageItem(), new NickItem(), new ReviveItem(),
-            new InvisibilityItem(), new SnackItem() };
+        public static List<Item> Items = new List<Item>() { 
+            new ColorItem(), new TitleColorItem(), new TitleItem(), 
+            new RankItem(), new LevelItem(), new LoginMessageItem(),
+            new LogoutMessageItem(), new NickItem(), new SnackItem() 
+        };
+        
+        public static void RegisterItem(Item item) {
+            List<string> cfg = GetConfig(item.Name);
+            
+            foreach (string line in cfg)
+            {
+                item.LoadConfig(line);
+            }
+            Items.Add(item);
+        }
         
         /// <summary> Finds the item whose name or one of its aliases caselessly matches the input. </summary>
         public static Item GetItem(string name) {
-            foreach (Item item in Items) {
+            foreach (Item item in Items) 
+            {
                 if (name.CaselessEq(item.Name)) return item;
                 
-                foreach (string alias in item.Aliases) {
+                foreach (string alias in item.Aliases) 
+                {
                     if (name.CaselessEq(alias)) return item;
                 }
             }
             return null;
+        }
+        
+        public static List<Item> GetEnabledItems() {
+            List<Item> enabled = new List<Item>();
+            foreach (Item item in Economy.Items) 
+            {
+                if (item.Enabled) enabled.Add(item);
+            }
+            return enabled;
         }
         
         /// <summary> Gets comma separated list of enabled items. </summary>
@@ -109,7 +150,7 @@ namespace MCGalaxy.Eco {
             return items.Length == 0 ? "(no enabled items)" : items;
         }
         
-        public static RankItem Ranks { get { return (RankItem)Items[3]; } }
+        public static RankItem Ranks   { get { return (RankItem)Items[3]; } }
         public static LevelItem Levels { get { return (LevelItem)Items[4]; } }
         
         public static void MakePurchase(Player p, int cost, string item) {

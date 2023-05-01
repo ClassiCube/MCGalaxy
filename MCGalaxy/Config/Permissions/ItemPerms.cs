@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -47,11 +47,34 @@ namespace MCGalaxy
                 && (Disallowed == null || !Disallowed.Contains(perm));
         }
         
+        public bool UsableBy(Player p) { return UsableBy(p.group.Permission); }
+        
+        
+        public void Allow(LevelPermission rank) {
+            if (Disallowed != null && Disallowed.Contains(rank)) {
+                Disallowed.Remove(rank);
+            } else if (Allowed == null || !Allowed.Contains(rank)) {
+                if (Allowed == null) Allowed = new List<LevelPermission>();
+                Allowed.Add(rank);
+            }
+        }
+        
+        public void Disallow(LevelPermission rank) {
+            if (Allowed != null && Allowed.Contains(rank)) {
+                Allowed.Remove(rank);
+            } else if (Disallowed == null || !Disallowed.Contains(rank)) {
+                if (Disallowed == null) Disallowed = new List<LevelPermission>();
+                Disallowed.Add(rank);
+            }
+        }
+        
+        
         public void Describe(StringBuilder builder) {
             builder.Append(Group.GetColoredName(MinRank) + "&S+");
             
             if (Allowed != null && Allowed.Count > 0) {
-                foreach (LevelPermission perm in Allowed) {
+                foreach (LevelPermission perm in Allowed) 
+                {
                     builder.Append(", " + Group.GetColoredName(perm));
                 }
                 builder.Append("&S");
@@ -59,7 +82,8 @@ namespace MCGalaxy
             
             if (Disallowed != null && Disallowed.Count > 0) {
                 builder.Append( " (except ");
-                foreach (LevelPermission perm in Disallowed) {
+                foreach (LevelPermission perm in Disallowed) 
+                {
                     builder.Append(Group.GetColoredName(perm) + ", ");
                 }
                 builder.Remove(builder.Length - 2, 2);

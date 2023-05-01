@@ -17,10 +17,10 @@
  */
 using System;
 
-namespace MCGalaxy.Maths {
-    
-    public static class DirUtils {
-
+namespace MCGalaxy.Maths 
+{
+    public static class DirUtils 
+    {
         /* How yaw works:              * How pitch works:
          *                             *
          *         64 | +X             *         192 | +Y

@@ -51,8 +51,9 @@ namespace MCGalaxy.Commands.Moderation {
             Player[] players = PlayerInfo.Online.Items;
             DateTime cutoff  = DateTime.UtcNow.AddSeconds(-15);
             
-            foreach (Player target in players) {
-                if (except.UsableBy(target.Rank) || !p.CanSee(target, data.Rank)) continue;
+            foreach (Player target in players) 
+            {
+                if (except.UsableBy(target) || !p.CanSee(target, data.Rank)) continue;
                 if (target == p || target.LastPatrol > cutoff) continue;
                 candidates.Add(target);
             }

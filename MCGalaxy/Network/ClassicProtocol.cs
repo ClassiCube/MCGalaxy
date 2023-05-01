@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -208,7 +208,7 @@ namespace MCGalaxy.Network
             const int size = 1 + 64 + 2;
             if (left < size) return 0;
             
-            player.appName      = NetUtils.ReadString(buffer, offset + 1);
+            appName = NetUtils.ReadString(buffer, offset + 1);
             extensionCount = buffer[offset + 66];
             CheckReadAllExtensions(); // in case client supports 0 CPE packets
             return size;
@@ -376,8 +376,11 @@ namespace MCGalaxy.Network
         }
 
         public override void SendChat(string message) {
-            message = CleanupColors(message);
-            List<string> lines = LineWrapper.Wordwrap(message, hasEmoteFix);
+            int bufferLen;
+            // See comment in CleanupColors
+            char[] buffer = LineWrapper.CleanupColors(message, out bufferLen, 
+                                                      hasTextColors, hasTextColors);
+            List<string> lines = LineWrapper.Wordwrap(buffer, bufferLen, hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
             // multi-line messages from multiple threads don't interleave
@@ -633,7 +636,7 @@ namespace MCGalaxy.Network
         }
 
         public override string ClientName() {
-            if (!string.IsNullOrEmpty(player.appName)) return player.appName;
+            if (!string.IsNullOrEmpty(appName)) return appName;
             byte version = ProtocolVersion;
                   
             if (version == Server.VERSION_0016) return "Classic 0.0.16";

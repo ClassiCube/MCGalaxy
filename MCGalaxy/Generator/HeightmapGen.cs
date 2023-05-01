@@ -23,8 +23,17 @@ namespace MCGalaxy.Generator
 {
     public static class HeightmapGen 
     {
-        public static bool Generate(Player p, Level lvl, string url) {
-            if (url.Length == 0) { p.Message("You need to provide a url for the image."); return false; }
+        public static bool Generate(Player p, Level lvl, MapGenArgs args) {
+            string url = null;
+            int argIdx = 0;
+            
+            // only parse first argument
+            args.ArgFilter = (arg) => argIdx++ == 0;
+            args.ArgParser = (arg) => { url = arg; return true; };
+            
+            if (!args.ParseArgs(p)) return false;
+            if (url == null) { p.Message("You need to provide a url for the image."); return false; }
+            MapGenBiome biome = MapGenBiome.Get(args.Biome);
             
             byte[] data = HttpUtil.DownloadImage(url, p);
             if (data == null) return false;
@@ -45,7 +54,7 @@ namespace MCGalaxy.Generator
                     for (int x = 0; x < bmp.Width; x++)
                 {
                     int height = bmp.Get(x, z).R;
-                    byte layer = Block.Dirt, top = Block.Grass;
+                    byte layer = biome.Ground, top = biome.Surface;
                     
                     if (
                         IsCliff(height, bmp, x - 1, z) ||
@@ -53,7 +62,7 @@ namespace MCGalaxy.Generator
                         IsCliff(height, bmp, x, z - 1) ||
                         IsCliff(height, bmp, x, z + 1))
                     {
-                        layer = Block.Stone; top = Block.Stone;
+                        layer = biome.Cliff; top = biome.Cliff;
                     }
                     
                     // remap from 0..255 to 0..lvl.Height

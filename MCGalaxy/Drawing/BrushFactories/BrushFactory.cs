@@ -44,10 +44,15 @@ namespace MCGalaxy.Drawing.Brushes
         };
         
         public static BrushFactory Find(string name) {
-            foreach (BrushFactory entry in Brushes) {
+            foreach (BrushFactory entry in Brushes) 
+            {
                 if (entry.Name.CaselessEq(name)) return entry;
             }
             return null;
+        }
+        
+        public static void List(Player p) {
+            p.Message("&HAvailable brushes: &f" + Brushes.Join(b => b.Name));
         }
     }
     

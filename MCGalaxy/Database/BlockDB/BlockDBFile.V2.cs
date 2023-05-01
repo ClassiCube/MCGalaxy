@@ -19,9 +19,10 @@ using System;
 using System.IO;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.DB {
-    
-    public unsafe sealed class BlockDBFile_V2 : BlockDBFile {
+namespace MCGalaxy.DB 
+{
+    public unsafe sealed class BlockDBFile_V2 : BlockDBFile 
+    {
         const int BlockSize = BlockDBFile.BulkEntries;
         
         /* TODO: Last chunk in file may only be partially filled. need to prepend these entries when compressing more. */

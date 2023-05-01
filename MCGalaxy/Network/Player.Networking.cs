@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -22,7 +22,6 @@ namespace MCGalaxy
 {
     public partial class Player : IDisposable
     {
-        public string appName;
         // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasChangeModel, hasExtList, hasCP437;
 
@@ -37,14 +36,16 @@ namespace MCGalaxy
         public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
         public void Message(string message, params object[] args) { Message(string.Format(message, args)); }
         
-        public void Message(string message) { Message(0, message); }
-        
-        public virtual void Message(byte type, string message) {
+        public virtual void Message(string message) {
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) message = "&S" + message;
             message = Chat.Format(message, this);
             
-            bool cancel = false;
+            SendRawMessage(message);
+        }
+        
+        void SendRawMessage(string message) {
+        	bool cancel = false;
             OnMessageRecievedEvent.Call(this, ref message, ref cancel);
             if (cancel) return;
             

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -42,7 +42,6 @@ namespace MCGalaxy
 {
     public sealed partial class Server 
     {
-        
         public Server() { Server.s = this; }
         
         //True = cancel event
@@ -86,11 +85,9 @@ namespace MCGalaxy
             IOperatingSystem.DetectOS().Init();
             #pragma warning disable 0618
             Player.players = PlayerInfo.Online.list;
-            Server.levels = LevelInfo.Loaded.list;
             #pragma warning restore 0618
             
             StartTime = DateTime.UtcNow;
-            shuttingDown = false;
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;
             ForceEnableTLS();
@@ -101,10 +98,9 @@ namespace MCGalaxy
 #endif
 
             EnsureFilesExist();
-            MoveOutdatedFiles();
             IScripting.Init();
 
-            LoadAllSettings();
+            LoadAllSettings(true);
             InitDatabase();
             Economy.LoadDatabase();
 
@@ -154,34 +150,22 @@ namespace MCGalaxy
         
         static void EnsureDirectoryExists(string dir) {
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-        }
+        }     
         
-        static void MoveOutdatedFiles() {
-            try {
-                if (File.Exists("blocks.json")) File.Move("blocks.json", "blockdefs/global.json");
-            }
-            catch { }
-        }        
+        public static void LoadAllSettings() { LoadAllSettings(false); }
         
-        public static void LoadAllSettings() {
-            // Unload custom plugins
-            List<Plugin> plugins = new List<Plugin>(Plugin.all);
-            foreach (Plugin p in plugins) {
-                if (Plugin.core.Contains(p)) continue;
-                Plugin.Unload(p, false);
-            }
-            
-            ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
+        // TODO rethink this
+        static void LoadAllSettings(bool commands) {
             Colors.Load();
-            Alias.Load();
+            Alias.LoadCustom();
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
             
             SrvProperties.Load();
+            if (commands) Command.InitAll();
             AuthService.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();
-            Command.InitAll();
             Block.SetBlocks();
             BlockPerms.Load();
             AwardsList.Load();
@@ -199,12 +183,6 @@ namespace MCGalaxy
             TextFile announcementsFile = TextFile.Files["Announcements"];
             announcementsFile.EnsureExists();
             announcements = announcementsFile.GetText();
-            
-            // Reload custom plugins
-            foreach (Plugin p in plugins) {
-                if (Plugin.core.Contains(p)) continue;
-                Plugin.Load(p, false);
-            }
             
             OnConfigUpdatedEvent.Call();
         }
@@ -228,10 +206,7 @@ namespace MCGalaxy
             } catch { }
             
             // Stop accepting new connections and disconnect existing sessions
-            try {
-                if (Listener != null) Listener.Close();
-            } catch (Exception ex) { Logger.LogError(ex); }
-            
+            Listener.Close();            
             try {
                 Player[] players = PlayerInfo.Online.Items;
                 foreach (Player p in players) { p.Leave(msg); }
@@ -348,17 +323,17 @@ namespace MCGalaxy
         }
         
         public static void DoGC() {
+            var sw = Stopwatch.StartNew();
             long start = GC.GetTotalMemory(false);
             GC.Collect();
             GC.WaitForPendingFinalizers();
             
             long end = GC.GetTotalMemory(false);
             double deltaKB = (start - end) / 1024.0;
-            if (deltaKB >= 100.0) {
-                string track = (end / 1024.0).ToString("F2");
-                string delta = deltaKB.ToString("F2");
-                Logger.Log(LogType.BackgroundActivity, "GC performed (tracking {0} KB, freed {1} KB)", track, delta);
-            }
+            if (deltaKB < 100.0) return;
+            
+            Logger.Log(LogType.BackgroundActivity, "GC performed in {0:F2} ms (tracking {1:F2} KB, freed {2:F2} KB)",
+                       sw.Elapsed.TotalMilliseconds, end / 1024.0, deltaKB);
         }
         
         
@@ -391,7 +366,7 @@ namespace MCGalaxy
         public static string CalcMppass(string name, string salt) {
             byte[] hash = null;
             lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
-            return BitConverter.ToString(hash).Replace("-", "");
+            return Utils.ToHexString(hash);
         }
         
         /// <summary> Converts a formatted username into its original username </summary>

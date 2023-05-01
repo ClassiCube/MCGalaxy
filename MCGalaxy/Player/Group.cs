@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -63,13 +63,12 @@ namespace MCGalaxy
         public TimeSpan AfkKickTime = TimeSpan.FromMinutes(45);
         [ConfigString("Prefix", null, "", true)]
         public string Prefix = "";
-        [ConfigInt("CopySlots", null, 0, 0)]
+        [ConfigInt("CopySlots", null, 1, 1)]
         public int CopySlots = 1;
         [ConfigString("Filename", null, "", true, ".,_-+=")]
         internal string filename;
         
         public PlayerList Players;
-        public List<Command> Commands;
         public bool[] Blocks = new bool[Block.SUPPORTED_COUNT];
 
         public Group() { }
@@ -177,7 +176,6 @@ namespace MCGalaxy
             
             if (reloading) {
                 BlockPerms.SetUsable(grp);
-                CommandPerms.SetUsable(grp);
             }
             OnGroupLoadedEvent.Call(grp);
         }

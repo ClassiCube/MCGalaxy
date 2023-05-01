@@ -26,6 +26,7 @@ namespace MCGalaxy.Commands.Building {
         public override bool museumUsable { get { return false; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool SuperUseable { get { return false; } }
+        public override CommandParallelism Parallelism { get { return CommandParallelism.NoAndSilent; } }
         
         public override void Use(Player p, string message, CommandData data) {
             BlockID block = p.GetHeldBlock();

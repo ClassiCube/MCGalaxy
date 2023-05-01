@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -310,7 +310,7 @@ namespace MCGalaxy {
             
             if (String.IsNullOrEmpty(ClickedOnText)) return;
             ItemPerms perms = CommandExtraPerms.Find("About", 1) ?? new ItemPerms(LevelPermission.AdvBuilder);
-            if (!perms.UsableBy(p.Rank)) return; //don't show bot's ClickedOnText if player isn't allowed to see message block contents
+            if (!perms.UsableBy(p)) return; //don't show bot's ClickedOnText if player isn't allowed to see message block contents
             p.Message("  Clicked-on text: {0}", ClickedOnText);
         }
         

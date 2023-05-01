@@ -57,12 +57,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (p.passtries >= 3) { p.Kick("Did you really think you could keep on guessing?"); return; }
             if (password.IndexOf(' ') >= 0) { p.Message("Your password must be &Wone &Sword!"); return; }
 
-            if (!Authenticator.Current.HasPassword(p.name)) {
+            if (!PassAuthenticator.Current.HasPassword(p.name)) {
                 p.Message("You have not &Wset a password, &Suse &T/SetPass [Password] &Wto set one!");
                 return;
             } 
             
-            if (Authenticator.VerifyPassword(p, password)) return;
+            if (PassAuthenticator.VerifyPassword(p, password)) return;
             
              p.passtries++;
              p.Message("&WWrong Password. &SRemember your password is &Wcase sensitive.");
@@ -70,14 +70,14 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         static void SetPassword(Player p, string password) {
-            if (p.Unverified && Authenticator.Current.HasPassword(p.name)) {
-                Authenticator.Current.RequiresVerification(p, "can change your password");
+            if (p.Unverified && PassAuthenticator.Current.HasPassword(p.name)) {
+                PassAuthenticator.Current.RequiresVerification(p, "can change your password");
                 p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
                 return;
             }
             
             if (password.IndexOf(' ') >= 0) { p.Message("&WPassword must be one word."); return; }
-            Authenticator.Current.StorePassword(p.name, password);
+            PassAuthenticator.Current.StorePassword(p.name, password);
             p.Message("Your password was &aset to: &c" + password);
         }
         
@@ -86,12 +86,12 @@ namespace MCGalaxy.Commands.Moderation {
             if (target == null) return;
             
             if (p.Unverified) {
-                Authenticator.Current.RequiresVerification(p, "can reset passwords");
+                PassAuthenticator.Current.RequiresVerification(p, "can reset passwords");
                 return;
             }
             if (!CheckResetPerms(p, data)) return;
             
-            if (Authenticator.Current.ResetPassword(target)) {
+            if (PassAuthenticator.Current.ResetPassword(target)) {
                 p.Message("Reset password for {0}", p.FormatNick(target));
             } else {
                 p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));

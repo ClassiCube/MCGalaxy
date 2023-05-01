@@ -25,11 +25,11 @@ using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Network;
 
-namespace MCGalaxy.Games {
-
+namespace MCGalaxy.Games 
+{
     /// <summary> Stores map-specific game configuration state. </summary>
-    public abstract class RoundsGameMapConfig {
-        
+    public abstract class RoundsGameMapConfig 
+    {    
         protected void LoadFrom(ConfigElement[] cfg, string propsDir, string map) {
             string path = propsDir + map + ".properties";
             ConfigElement.ParseFile(cfg, path, this);
@@ -51,35 +51,36 @@ namespace MCGalaxy.Games {
     }
     
     /// <summary> Stores overall game configuration state. </summary>
-    public abstract class RoundsGameConfig {
-        [ConfigBool("start-on-server-start", "Game", false)] 
+    public abstract class RoundsGameConfig 
+    {
+        [ConfigBool("start-on-server-start", "General", false)] 
         public bool StartImmediately;
-        [ConfigBool("set-main-level", "Game", false)] 
+        [ConfigBool("set-main-level", "General", false)] 
         public bool SetMainLevel;
-        [ConfigBool("map-in-heartbeat", "Game", false)]
+        [ConfigBool("map-in-heartbeat", "General", false)]
         public bool MapInHeartbeat;
-        [ConfigStringList("maps", "Game")] 
+        [ConfigStringList("maps", "General")] 
         public List<string> Maps = new List<string>();
 
         /// <summary> Whether users are allowed to auto-join maps used by this game. </summary>
         /// <remarks> If false, users can only join these maps when manually /load ed. </remarks>
         public abstract bool AllowAutoload { get; }
-        protected abstract string PropsPath { get; }
         protected abstract string GameName { get; }
+        public string Path;
         
         ConfigElement[] cfg;
         public virtual void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(GetType());
             
-            using (StreamWriter w = new StreamWriter(PropsPath)) {
+            using (StreamWriter w = new StreamWriter(Path)) {
                 w.WriteLine("#" + GameName + " configuration");
-                ConfigElement.SerialiseElements(cfg, w, this);
+                ConfigElement.Serialise(cfg, w, this);
             }
         }
         
         public virtual void Load() {
             if (cfg == null) cfg = ConfigElement.GetAll(GetType());
-            ConfigElement.ParseFile(cfg, PropsPath, this);
+            ConfigElement.ParseFile(cfg, Path, this);
         }
         
         

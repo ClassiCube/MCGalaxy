@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{
     /// <summary> Converts names to integer ids and back </summary>
-    public static class NameConverter {
-        
+    public static class NameConverter 
+    {       
         // NOTE: this restriction is due to BlockDBCacheEntry
         public const int MaxPlayerID = 0x00FFFFFF;
         

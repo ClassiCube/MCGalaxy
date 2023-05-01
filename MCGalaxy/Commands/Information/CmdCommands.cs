@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -15,8 +15,10 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdCommands : Command2 {       
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdCommands : Command2 
+    {
         public override string name { get { return "Commands"; } }
         public override string shortcut { get { return "Cmds"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -77,15 +79,16 @@ namespace MCGalaxy.Commands.Info {
         
         static void PrintRankCommands(Player p, string sort, string modifier, Group group, bool own) {
             List<Command> cmds = new List<Command>();
-            foreach (Command c in Command.allCmds) {
+            foreach (Command c in Command.allCmds) 
+            {
                 string disabled = Command.GetDisabledReason(c.Enabled);
-                if (disabled == null && group.Commands.Contains(c)) cmds.Add(c);
+                if (disabled == null && c.Permissions.UsableBy(group.Permission)) cmds.Add(c);
             }   
             
             if (cmds.Count == 0) {
                 p.Message("{0} &Scannot use any commands.", group.ColoredName); return;
             }            
-            SortCommands(cmds, sort);            
+            SortCommands(cmds, sort);
             if (own)
                 p.Message("Available commands:");
             else
@@ -150,8 +153,8 @@ namespace MCGalaxy.Commands.Info {
                           .CompareTo(b.name));
             }
             if (sort == "rank" || sort == "ranks") {
-                cmds.Sort((a, b) => CommandPerms.MinPerm(a)
-                          .CompareTo(CommandPerms.MinPerm(b)));
+                cmds.Sort((a, b) => a.Permissions.MinRank
+                          .CompareTo(b.Permissions.MinRank));
             }
         }
         

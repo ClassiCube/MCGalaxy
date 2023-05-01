@@ -23,13 +23,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy 
+{   
     /// <summary> Converts an object into a string. </summary>
     public delegate string StringFormatter<T>(T value);
     
-    public static class Extensions {
-        
+    public static class Extensions 
+    {       
         static char[] space = new char[] { ' ' };
         
         /// <summary> Same as value.Split(' '), but doesn't allocate ' ' each time. </summary>
@@ -96,8 +96,9 @@ namespace MCGalaxy {
             return str.Split(comma);
         }
         
-        public static void Separate(this string str, out string prefix, out string suffix) {
-            int index = str.IndexOf(' ');
+        public static void Separate(this string str, char splitter,
+                                    out string prefix, out string suffix) {
+            int index = str.IndexOf(splitter);
             prefix = index == -1 ? str : str.Substring(0, index);
             suffix = index == -1 ? ""  : str.Substring(index + 1);
         }
@@ -116,14 +117,15 @@ namespace MCGalaxy {
             }
         }
         
-        public static byte[] Decompress(this byte[] gzip, int capacity = 16) {
+        public static byte[] Decompress(this byte[] gzip, int capacity) {
             using (GZipStream src = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress)) {
                 const int size = 4096;
-                byte[] buffer = new byte[size];
+                byte[] buffer  = new byte[size];
                 
                 using (MemoryStream dst = new MemoryStream(capacity)) {
                     int count = 0;
-                    while ((count = src.Read(buffer, 0, size)) > 0) {
+                    while ((count = src.Read(buffer, 0, size)) > 0) 
+                    {
                         dst.Write(buffer, 0, count);
                     }
                     return dst.ToArray();

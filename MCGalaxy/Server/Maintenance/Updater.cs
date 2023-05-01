@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -50,12 +50,9 @@ namespace MCGalaxy
 
         static void UpdateCheck() {
             if (!Server.Config.CheckForUpdates) return;
-            WebClient client = HttpUtil.CreateWebClient();
 
             try {
-                string latest = client.DownloadString(CurrentVersionURL);
-                
-                if (new Version(Server.Version) >= new Version(latest)) {
+                if (!NeedsUpdating()) {
                     Logger.Log(LogType.SystemActivity, "No update found!");
                 } else if (NewerVersionDetected != null) {
                     NewerVersionDetected(null, EventArgs.Empty);
@@ -63,8 +60,13 @@ namespace MCGalaxy
             } catch (Exception ex) {
                 Logger.LogError("Error checking for updates", ex);
             }
-            
-            client.Dispose();
+        }
+        
+        public static bool NeedsUpdating() {
+            using (WebClient client = HttpUtil.CreateWebClient()) {
+                string latest = client.DownloadString(CurrentVersionURL);
+                return new Version(latest) > new Version(Server.Version);
+            }
         }
 
         public static void PerformUpdate() {

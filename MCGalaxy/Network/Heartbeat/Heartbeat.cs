@@ -38,6 +38,15 @@ namespace MCGalaxy.Network
         public string URL;
         /// <summary> Salt used for verifying player names </summary>
         public string Salt = "";
+
+        public string GetHost() {
+            try {
+                return new Uri(URL).Host;
+            } catch (Exception ex) {
+                Logger.LogError("Getting host of " + URL, ex);
+                return URL;
+            }
+        }
         
         /// <summary> Gets the data to be sent for the next heartbeat </summary>
         protected abstract string GetHeartbeatData();
@@ -45,14 +54,18 @@ namespace MCGalaxy.Network
         protected abstract void OnRequest(HttpWebRequest request);
         /// <summary> Called when a response is received from the web server </summary>
         protected abstract void OnResponse(WebResponse response);
+        /// <summary> Called when a failure HTTP response is received from the web server </summary>
+        protected abstract void OnFailure(string response);
         
 
         /// <summary> Sends a heartbeat to the web server and then reads the response </summary>
         public void Pump() {
             byte[] data = Encoding.ASCII.GetBytes(GetHeartbeatData());
             Exception lastEx = null;
+            string lastResp  = null;
 
-            for (int i = 0; i < MAX_RETRIES; i++) {
+            for (int i = 0; i < MAX_RETRIES; i++) 
+            {
                 try {
                     HttpWebRequest req = HttpUtil.CreateRequest(URL);
                     req.Method      = "POST";
@@ -66,14 +79,15 @@ namespace MCGalaxy.Network
                     OnResponse(res);
                     return;
                 } catch (Exception ex) {
+                    lastResp = HttpUtil.GetErrorResponse(ex);
                     HttpUtil.DisposeErrorResponse(ex);
-                    lastEx = ex;
+                    lastEx   = ex;
                     continue;
                 }
             }
             
-            string hostUrl = new Uri(URL).Host;
-            Logger.Log(LogType.Warning, "Failed to send heartbeat to {0} ({1})", hostUrl, lastEx.Message);
+            OnFailure(lastResp);
+            Logger.Log(LogType.Warning, "Failed to send heartbeat to {0} ({1})", GetHost(), lastEx.Message);
         }
         
         
@@ -85,11 +99,17 @@ namespace MCGalaxy.Network
         
         /// <summary> Starts pumping heartbeats </summary>
         public static void Start() {
+            string hosts = Heartbeats.Join(hb => hb.GetHost().Replace("www.", ""));
+            Server.UpdateUrl("Finding " + hosts + " url..");
+
             OnBeat(null); // immedately call so URL is shown as soon as possible in console
             Server.Heartbeats.QueueRepeat(OnBeat, null, TimeSpan.FromSeconds(30));
         }
         
         static void OnBeat(SchedulerTask task) {
+            // no point if can't accept connections anyways
+            if (!Server.Listener.Listening) return;
+            
             foreach (Heartbeat beat in Heartbeats) { beat.Pump(); }
         }
     }

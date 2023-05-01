@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -187,8 +187,7 @@ namespace MCGalaxy {
         internal int oldIndex = -1, lastWalkthrough = -1, startFallY = -1, lastFallY = -1;
         public DateTime drownTime = DateTime.MaxValue;
 
-        //Games
-        public DateTime lastDeath = DateTime.UtcNow;
+        public DateTime deathCooldown;
 
         public BlockID ModeBlock = Block.Invalid;
         /// <summary> The block ID this player's client specifies it is currently holding in hand. </summary>
@@ -218,6 +217,7 @@ namespace MCGalaxy {
         
         SpamChecker spamChecker;
         internal DateTime cmdUnblocked;
+        List<DateTime> partialLog;
 
         public WarpList Waypoints = new WarpList();
         public DateTime LastPatrol;
@@ -226,11 +226,18 @@ namespace MCGalaxy {
         /// <summary> Whether player has completed login process and has been sent initial map. </summary>
         public bool loggedIn;
         public bool verifiedName;
+        /// <summary> The URL of the authentication service this player's name was verified via. Can be null </summary>
+        /// <example> http://www.classicube.net/heartbeat.jsp </example>
+        public string VerifiedVia;
         bool gotSQLData;
         
         
         public bool cancelcommand, cancelchat;
-        public bool cancellogin, cancelconnecting, cancelDeath;     
+        public bool cancellogin, cancelconnecting;
+        
+        Queue<SerialCommand> serialCmds = new Queue<SerialCommand>();
+        object serialCmdsLock = new object();
+        struct SerialCommand { public Command cmd; public string args; public CommandData data; }
       
         /// <summary> Called when a player removes or places a block.
         /// NOTE: Currently this prevents the OnBlockChange event from being called. </summary>

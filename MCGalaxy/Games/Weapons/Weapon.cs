@@ -47,9 +47,9 @@ namespace MCGalaxy.Games {
             p.weapon = this;
             
             if (p.Supports(CpeExt.PlayerClick)) {
-                p.Message(Name + " engaged, click to fire at will");
+                OnEnabled(p, true);
             } else {                
-                p.Message(Name + " engaged, fire at will");
+                OnEnabled(p, false);
                 p.aiming = true;
                 aimer = new AimBox();
                 aimer.Hook(p);
@@ -58,8 +58,18 @@ namespace MCGalaxy.Games {
 
         public virtual void Disable() {
             p.aiming = false;
-            p.Message(Name + " disabled");
+            OnDisabled(p);
             p.weapon = null;
+        }
+        
+        /// <summary> Called when the given player engages/equips this weapon </summary>
+        protected virtual void OnEnabled(Player p, bool clickToActivate) {
+            p.Message("{0} engaged, {1}fire at will", Name, clickToActivate ? "click to " : "");
+        }
+        
+        /// <summary> Called when given player disengages/releases this weapon </summary>
+        protected virtual void OnDisabled(Player p) {
+            p.Message(Name + " disabled");    
         }
         
         /// <summary> Called when the player fires this weapon. </summary>

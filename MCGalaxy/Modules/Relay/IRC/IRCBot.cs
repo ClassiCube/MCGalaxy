@@ -50,6 +50,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         static char[] newline = { '\n' };
         protected override void DoSendMessage(string channel, string message) {
             if (!ready) return;
+            message = ConvertMessage(message);
             
             // IRC messages can't have \r or \n in them
             //  https://stackoverflow.com/questions/13898584/insert-line-breaks-into-an-irc-message
@@ -160,11 +161,13 @@ namespace MCGalaxy.Modules.Relay.IRC
             return sb.ToString();
         }
         
-        protected override string ConvertMessage(string message) {
+        /// <summary> Formats a message for displaying on IRC </summary>
+        /// <example> Converts colors such as &amp;0 into IRC color codes </example>
+        string ConvertMessage(string message) {
             if (String.IsNullOrEmpty(message.Trim())) message = ".";
             const string resetSignal = "\x03\x0F";
             
-            message = base.ConvertMessage(message);
+            message = ConvertMessageCommon(message);
             message = message.Replace("%S", "&f"); // TODO remove
             message = message.Replace("&S", "&f");
             message = message.Replace("&f", resetSignal);

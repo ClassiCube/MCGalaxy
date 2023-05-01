@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.Games;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdWhere : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdWhere : Command2 
+    {
         public override string name { get { return "Where"; } }
         public override string type { get { return CommandTypes.Information; } }
         

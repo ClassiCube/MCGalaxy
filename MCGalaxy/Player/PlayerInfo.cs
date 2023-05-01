@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -69,7 +69,7 @@ namespace MCGalaxy
             if (exact != null && pl.CanSee(exact)) { matches = 1; return exact; }
             
             return Matcher.Find(pl, name, out matches, Online.Items,
-                                p => pl.CanSee(p), p => p.name, "online players");
+                                p => pl.CanSee(p), p => p.name, p => p.color + p.name, "online players");
         }
         
         public static string FindMatchesPreferOnline(Player p, string name) {

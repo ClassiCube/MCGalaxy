@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -114,7 +114,7 @@ namespace MCGalaxy
         }
         
         public bool CanJoin(Player p) {
-            if (p.IsConsole) return true;
+            if (p.IsConsole || this == Server.mainLevel) return true;
             
             bool skip = p.summonedMap != null && p.summonedMap.CaselessEq(name);
             LevelPermission plRank = skip ? LevelPermission.Console : p.Rank;
@@ -283,7 +283,7 @@ namespace MCGalaxy
             }
             
             try {
-                Level lvl = IMapImporter.Read(path, name, true);
+                Level lvl = IMapImporter.Decode(path, name, true);
                 LoadMetadata(lvl);
                 BotsFile.Load(lvl);
 
@@ -405,7 +405,8 @@ namespace MCGalaxy
         }
         
         public void UpdateAllBlockHandlers() {
-            for (int i = 0; i < Props.Length; i++) {
+            for (int i = 0; i < Props.Length; i++) 
+            {
                 UpdateBlockHandlers((BlockID)i);
             }
         }
@@ -424,6 +425,12 @@ namespace MCGalaxy
             CustomBlockDefs[block] = def;
             UpdateBlockHandlers(block);
             blockAABBs[block] = Block.BlockAABB(block, this);
+        }
+        
+        public int GetEdgeLevel() {
+            int edgeLevel = Config.EdgeLevel;
+            if (edgeLevel == EnvConfig.ENV_USE_DEFAULT) edgeLevel = Height / 2;//EnvConfig.DefaultEnvProp(EnvProp.EdgeLevel, Height);
+            return edgeLevel;
         }
     }
 }

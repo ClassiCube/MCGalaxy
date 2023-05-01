@@ -3,36 +3,30 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy;
+using MCGalaxy.Generator;
+using MCGalaxy.Generator.Foliage;
 
-namespace ClassicalSharp.Generator {
-    
-    public sealed partial class ClassicGenerator {
-        
+namespace MCGalaxy.Generator.Classic
+{    
+    public sealed partial class ClassicGenerator 
+    {
         int waterLevel, oneY, Width, Length, Height;
         byte[] blocks;
         short[] heightmap;
         JavaRandom rnd;
         int minHeight;
         string CurrentState;
+        MapGenBiome biome;
         
-        const string defHelp = "&HSeed affects how terrain is generated. If seed is the same, the generated level will be the same.";
-        public static void RegisterGenerators() {                                                
-            MCGalaxy.Generator.MapGen.Register("Classic", MCGalaxy.Generator.GenType.Simple, Gen, defHelp);
-        }
-        
-        static bool Gen(Player p, Level lvl, string seed) {      
-            int seed_ = MCGalaxy.Generator.MapGen.MakeInt(seed);
-            new ClassicGenerator().Generate(lvl, seed_);
-            return true;
-        }
-        
-        public byte[] Generate(Level lvl, int seed) {
+        public byte[] Generate(Level lvl, MapGenArgs args) {
             blocks = lvl.blocks;
             Width  = lvl.Width;
             Height = lvl.Height;
             Length = lvl.Length;
             
-            rnd = new JavaRandom(seed);
+            rnd   = new JavaRandom(args.Seed);
+            biome = MapGenBiome.Get(args.Biome);
+            
             oneY = Width * Length;
             waterLevel = Height / 2;
             minHeight  = Height;
@@ -65,22 +59,20 @@ namespace ClassicalSharp.Generator {
             short[] hMap = new short[Width * Length];
             CurrentState = "Building heightmap";
             
-            for (int z = 0; z < Length; z++) {
-                for (int x = 0; x < Width; x++) {
-                    double hLow = n1.Compute(x * 1.3f, z * 1.3f) / 6 - 4, height = hLow;
-                    
-                    if (n3.Compute(x, z) <= 0) {
-                        double hHigh = n2.Compute(x * 1.3f, z * 1.3f) / 5 + 6;
-                        height = Math.Max(hLow, hHigh);
-                    }
-                    
-                    height *= 0.5;
-                    if (height < 0) height *= 0.8f;
-                    
-                    int adjHeight = (int)(height + waterLevel);
-                    minHeight = adjHeight < minHeight ? adjHeight : minHeight;
-                    hMap[index++] = (short)adjHeight;
+            for (int z = 0; z < Length; z++)
+                for (int x = 0; x < Width; x++) 
+            {
+                double hLow = n1.Compute(x * 1.3f, z * 1.3f) / 12 - 2, height = hLow;
+                
+                if (n3.Compute(x, z) <= 0) {
+                    double hHigh = n2.Compute(x * 1.3f, z * 1.3f) / 10 + 3;
+                    height = Math.Max(hLow, hHigh);
                 }
+                if (height < 0) height *= 0.8f;
+                
+                int adjHeight = (int)(height + waterLevel);
+                minHeight = adjHeight < minHeight ? adjHeight : minHeight;
+                hMap[index++] = (short)adjHeight;
             }
             heightmap = hMap;
         }
@@ -91,35 +83,40 @@ namespace ClassicalSharp.Generator {
             int hMapIndex = 0, maxY = Height - 1, mapIndex = 0;
             // Try to bulk fill bottom of the map if possible
             int minStoneY = CreateStrataFast();
+            byte ground = biome.Ground;
+            byte cliff  = biome.Cliff;
 
-            for (int z = 0; z < Length; z++) {
-                for (int x = 0; x < Width; x++) {
-                    int dirtThickness = (int)(n.Compute(x, z) / 24 - 4);
-                    int dirtHeight = heightmap[hMapIndex++];
-                    int stoneHeight = dirtHeight + dirtThickness;    
-                    
-                    stoneHeight = Math.Min(stoneHeight, maxY);
-                    dirtHeight  = Math.Min(dirtHeight,  maxY);
-                    
-                    mapIndex = minStoneY * oneY + z * Width + x;
-                    for (int y = minStoneY; y <= stoneHeight; y++) {
-                        blocks[mapIndex] = Block.Stone; mapIndex += oneY;
-                    }
-                    
-                    stoneHeight = Math.Max(stoneHeight, 0);
-                    mapIndex = (stoneHeight + 1) * oneY + z * Width + x;
-                    for (int y = stoneHeight + 1; y <= dirtHeight; y++) {
-                        blocks[mapIndex] = Block.Dirt; mapIndex += oneY;
-                    }
+            for (int z = 0; z < Length; z++)
+                for (int x = 0; x < Width; x++) 
+            {
+                int dirtThickness = (int)(n.Compute(x, z) / 24 - 4);
+                int dirtHeight    = heightmap[hMapIndex++];
+                int stoneHeight   = dirtHeight + dirtThickness;    
+                
+                stoneHeight = Math.Min(stoneHeight, maxY);
+                dirtHeight  = Math.Min(dirtHeight,  maxY);
+                
+                mapIndex = minStoneY * oneY + z * Width + x;
+                for (int y = minStoneY; y <= stoneHeight; y++) 
+                {
+                    blocks[mapIndex] = cliff; mapIndex += oneY;
+                }
+                
+                stoneHeight = Math.Max(stoneHeight, 0);
+                mapIndex = (stoneHeight + 1) * oneY + z * Width + x;
+                for (int y = stoneHeight + 1; y <= dirtHeight; y++) 
+                {
+                    blocks[mapIndex] = ground; mapIndex += oneY;
                 }
             }
         }
         
         int CreateStrataFast() {
+            int count, mapIndex = 0;
+            
             // Make lava layer at bottom
-            int mapIndex = 0;
-            for (int z = 0; z < Length; z++)
-                for (int x = 0; x < Width; x++)
+            count = Length * Width;
+            for (int i = 0; i < count; i++)
             {
                 blocks[mapIndex++] = Block.Lava;
             }
@@ -127,13 +124,13 @@ namespace ClassicalSharp.Generator {
             // Invariant: the lowest value dirtThickness can possible be is -14
             int stoneHeight = minHeight - 14;
             if (stoneHeight <= 0) return 1; // no layer is fully stone
+            byte cliff = biome.Cliff;
             
             // We can quickly fill in bottom solid layers
-            for (int y = 1; y <= stoneHeight; y++)
-                for (int z = 0; z < Length; z++)
-                    for (int x = 0; x < Width; x++)
+            count = stoneHeight * Length * Width;
+            for (int i = 0; i < count; i++)
             {
-                blocks[mapIndex++] = Block.Stone;
+                blocks[mapIndex++] = cliff;
             }
             return stoneHeight;
         }
@@ -142,7 +139,8 @@ namespace ClassicalSharp.Generator {
             int cavesCount = blocks.Length / 8192;
             CurrentState = "Carving caves";
             
-            for (int i = 0; i < cavesCount; i++) {
+            for (int i = 0; i < cavesCount; i++) 
+            {
                 double caveX = rnd.Next(Width);
                 double caveY = rnd.Next(Height);
                 double caveZ = rnd.Next(Length);
@@ -152,7 +150,8 @@ namespace ClassicalSharp.Generator {
                 double phi   = rnd.NextFloat() * 2 * Math.PI, deltaPhi = 0;
                 double caveRadius = rnd.NextFloat() * rnd.NextFloat();
                 
-                for (int j = 0; j < caveLen; j++) {
+                for (int j = 0; j < caveLen; j++) 
+                {
                     caveX += Math.Sin(theta) * Math.Cos(phi);
                     caveZ += Math.Cos(theta) * Math.Cos(phi);
                     caveY += Math.Sin(phi);
@@ -179,7 +178,8 @@ namespace ClassicalSharp.Generator {
             int numVeins = (int)(blocks.Length * abundance / 16384);
             CurrentState = "Carving " + blockName;
             
-            for (int i = 0; i < numVeins; i++) {
+            for (int i = 0; i < numVeins; i++) 
+            {
                 double veinX = rnd.Next(Width);
                 double veinY = rnd.Next(Height);
                 double veinZ = rnd.Next(Length);
@@ -188,7 +188,8 @@ namespace ClassicalSharp.Generator {
                 double theta = rnd.NextFloat() * 2 * Math.PI, deltaTheta = 0;
                 double phi = rnd.NextFloat() * 2 * Math.PI, deltaPhi = 0;
                 
-                for (int j = 0; j < veinLen; j++) {
+                for (int j = 0; j < veinLen; j++) 
+                {
                     veinX += Math.Sin(theta) * Math.Cos(phi);
                     veinZ += Math.Cos(theta) * Math.Cos(phi);
                     veinY += Math.Sin(phi);
@@ -208,31 +209,40 @@ namespace ClassicalSharp.Generator {
             int waterY = waterLevel - 1;
             int index1 = (waterY * Length + 0) * Width + 0;
             int index2 = (waterY * Length + (Length - 1)) * Width + 0;
-            CurrentState = "Flooding edge water";
             
-            for (int x = 0; x < Width; x++) {
-                FloodFill(index1, Block.Water);
-                FloodFill(index2, Block.Water);
+            CurrentState = "Flooding edge water";
+            byte water = biome.Water;
+            if (water == Block.Air) return;
+            
+            for (int x = 0; x < Width; x++) 
+            {
+                FloodFill(index1, water);
+                FloodFill(index2, water);
                 index1++; index2++;
             }
             
             index1 = (waterY * Length + 0) * Width + 0;
             index2 = (waterY * Length + 0) * Width + (Width - 1);
-            for (int z = 0; z < Length; z++) {
-                FloodFill(index1, Block.Water);
-                FloodFill(index2, Block.Water);
+            for (int z = 0; z < Length; z++) 
+            {
+                FloodFill(index1, water);
+                FloodFill(index2, water);
                 index1 += Width; index2 += Width;
             }
         }
         
         void FloodFillWater() {
             int numSources = Width * Length / 800;
-            CurrentState = "Flooding water";
             
-            for (int i = 0; i < numSources; i++) {
+            CurrentState = "Flooding water";
+            byte water = biome.Water;
+            if (water == Block.Air) return;
+            
+            for (int i = 0; i < numSources; i++) 
+            {
                 int x = rnd.Next(Width), z = rnd.Next(Length);
                 int y = waterLevel - rnd.Next(1, 3);
-                FloodFill((y * Length + z) * Width + x, Block.StillWater);
+                FloodFill((y * Length + z) * Width + x, water);
             }
         }
         
@@ -240,7 +250,8 @@ namespace ClassicalSharp.Generator {
             int numSources = Width * Length / 20000;
             CurrentState = "Flooding lava";
             
-            for (int i = 0; i < numSources; i++) {
+            for (int i = 0; i < numSources; i++) 
+            {
                 int x = rnd.Next(Width), z = rnd.Next(Length);
                 int y = (int)((waterLevel - 3) * rnd.NextFloat() * rnd.NextFloat());
                 FloodFill((y * Length + z) * Width + x, Block.StillLava);
@@ -251,20 +262,24 @@ namespace ClassicalSharp.Generator {
             OctaveNoise n1 = new OctaveNoise(8, rnd), n2 = new OctaveNoise(8, rnd);
             CurrentState = "Creating surface";
             // TODO: update heightmap
+            byte surface = biome.Surface;
+            byte sandy   = biome.BeachSandy;
+            byte rocky   = biome.BeachRocky;
+            byte water   = biome.Water;
             
             int hMapIndex = 0;
-            for (int z = 0; z < Length; z++) {
-                for (int x = 0; x < Width; x++) {
-                    int y = heightmap[hMapIndex++];
-                    if (y < 0 || y >= Height) continue;
-                    
-                    int index = (y * Length + z) * Width + x;
-                    byte blockAbove = y >= (Height - 1) ? Block.Air : blocks[index + oneY];
-                    if (blockAbove == Block.Water && (n2.Compute(x, z) > 12)) {
-                        blocks[index] = Block.Gravel;
-                    } else if (blockAbove == Block.Air) {
-                        blocks[index] = (y <= waterLevel && (n1.Compute(x, z) > 8)) ? Block.Sand : Block.Grass;
-                    }
+            for (int z = 0; z < Length; z++)
+                for (int x = 0; x < Width; x++) 
+            {
+                int y = heightmap[hMapIndex++];
+                if (y < 0 || y >= Height) continue;
+                
+                int index = (y * Length + z) * Width + x;
+                byte blockAbove = y >= (Height - 1) ? Block.Air : blocks[index + oneY];
+                if (blockAbove == water && (n2.Compute(x, z) > 12)) {
+                    blocks[index] = rocky;
+                } else if (blockAbove == Block.Air) {
+                    blocks[index] = (y <= waterLevel && (n1.Compute(x, z) > 8)) ? sandy : surface;
                 }
             }
         }
@@ -272,13 +287,17 @@ namespace ClassicalSharp.Generator {
         void PlantFlowers() {
             int numPatches = Width * Length / 3000;
             CurrentState = "Planting flowers";
+            byte surface = biome.Surface;
             
-            for (int i = 0; i < numPatches; i++) {
+            for (int i = 0; i < numPatches; i++) 
+            {
                 byte type  = (byte)(Block.Dandelion + rnd.Next(2));
                 int patchX = rnd.Next(Width), patchZ = rnd.Next(Length);
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < 10; j++) 
+                {
                     int flowerX = patchX, flowerZ = patchZ;
-                    for (int k = 0; k < 5; k++) {
+                    for (int k = 0; k < 5; k++) 
+                    {
                         flowerX += rnd.Next(6) - rnd.Next(6);
                         flowerZ += rnd.Next(6) - rnd.Next(6);
                         if (flowerX < 0 || flowerZ < 0 || flowerX >= Width || flowerZ >= Length)
@@ -288,7 +307,7 @@ namespace ClassicalSharp.Generator {
                         if (flowerY <= 0 || flowerY >= Height) continue;
                         
                         int index = (flowerY * Length + flowerZ) * Width + flowerX;
-                        if (blocks[index] == Block.Air && blocks[index - oneY] == Block.Grass)
+                        if (blocks[index] == Block.Air && blocks[index - oneY] == surface)
                             blocks[index] = type;
                     }
                 }
@@ -298,16 +317,20 @@ namespace ClassicalSharp.Generator {
         void PlantMushrooms() {
             int numPatches = blocks.Length / 2000;
             CurrentState = "Planting mushrooms";
+            byte cliff = biome.Cliff;
             
-            for (int i = 0; i < numPatches; i++) {
+            for (int i = 0; i < numPatches; i++) 
+            {
                 byte type  = (byte)(Block.Mushroom + rnd.Next(2));
                 int patchX = rnd.Next(Width);
                 int patchY = rnd.Next(Height);
                 int patchZ = rnd.Next(Length);
                 
-                for (int j = 0; j < 20; j++) {
+                for (int j = 0; j < 20; j++) 
+                {
                     int mushX = patchX, mushY = patchY, mushZ = patchZ;
-                    for (int k = 0; k < 5; k++) {
+                    for (int k = 0; k < 5; k++) 
+                    {
                         mushX += rnd.Next(6) - rnd.Next(6);
                         mushZ += rnd.Next(6) - rnd.Next(6);
                         if (mushX < 0 || mushZ < 0 || mushX >= Width || mushZ >= Length)
@@ -317,7 +340,7 @@ namespace ClassicalSharp.Generator {
                             continue;
                         
                         int index = (mushY * Length + mushZ) * Width + mushX;
-                        if (blocks[index] == Block.Air && blocks[index - oneY] == Block.Stone)
+                        if (blocks[index] == Block.Air && blocks[index - oneY] == cliff)
                             blocks[index] = type;
                     }
                 }
@@ -327,13 +350,21 @@ namespace ClassicalSharp.Generator {
         void PlantTrees() {
             int numPatches = Width * Length / 4000;
             CurrentState = "Planting trees";
+            byte surface = biome.Surface;
             
-            for (int i = 0; i < numPatches; i++) {
+            Tree tree = GetTreeGen();
+            if (tree == null) return;
+            Random R = new Random();
+            
+            for (int i = 0; i < numPatches; i++) 
+            {
                 int patchX = rnd.Next(Width), patchZ = rnd.Next(Length);
                 
-                for (int j = 0; j < 20; j++) {
+                for (int j = 0; j < 20; j++) 
+                {
                     int treeX = patchX, treeZ = patchZ;
-                    for (int k = 0; k < 20; k++) {
+                    for (int k = 0; k < 20; k++) 
+                    {
                         treeX += rnd.Next(6) - rnd.Next(6);
                         treeZ += rnd.Next(6) - rnd.Next(6);
                         if (treeX < 0 || treeZ < 0 || treeX >= Width ||
@@ -342,28 +373,46 @@ namespace ClassicalSharp.Generator {
                         
                         int treeY = heightmap[treeZ * Width + treeX] + 1;
                         if (treeY >= Height) continue;
-                        int treeHeight = 5 + rnd.Next(3);
+                        int treeHeight = tree.DefaultSize(R);
                         
                         int index = (treeY * Length + treeZ) * Width + treeX;
                         byte blockUnder = treeY > 0 ? blocks[index - oneY] : Block.Air;
                         
-                        if (blockUnder == Block.Grass && CanGrowTree(treeX, treeY, treeZ, treeHeight)) {
-                            GrowTree(treeX, treeY, treeZ, treeHeight);
+                        if (blockUnder == surface && CanGrowTree(treeX, treeY, treeZ, treeHeight)) {
+                            tree.SetData(R, treeHeight);
+                            
+                            tree.Generate((ushort)treeX, (ushort)treeY, (ushort)treeZ, (xT, yT, zT, bT) =>
+                                  {
+                                      int idx = (yT * Length + zT) * Width + xT;
+                                      // don't place leafs over trunk
+                                      if (bT == Block.Leaves && blocks[idx] == Block.Log) return;
+                                      blocks[idx] = (byte)bT;
+                                  });
                         }
                     }
                 }
             }
         }
         
+        Tree GetTreeGen() {
+            if (biome.TreeType == null) return null;
+            if (biome.TreeType == "")   return new ClassicTree() { rng = rnd };
+            
+            return Tree.TreeTypes[biome.TreeType]();
+        }
+        
         bool CanGrowTree(int treeX, int treeY, int treeZ, int treeHeight) {
-            // check tree base
+            // check tree bounds
+            if (treeY < 0     || (treeY + treeHeight - 1) >= Height) return false;
+            if (treeX - 2 < 0 || treeX + 2 >= Width)  return false;
+            if (treeZ - 2 < 0 || treeZ + 2 >= Length) return false;
+            
+            // check tree base            
             int baseHeight = treeHeight - 4;
             for (int y = treeY; y < treeY + baseHeight; y++)
                 for (int z = treeZ - 1; z <= treeZ + 1; z++)
                     for (int x = treeX - 1; x <= treeX + 1; x++)
             {
-                if (x < 0 || y < 0 || z < 0 || x >= Width || y >= Height || z >= Length)
-                    return false;
                 int index = (y * Length + z) * Width + x;
                 if (blocks[index] != 0) return false;
             }
@@ -373,56 +422,22 @@ namespace ClassicalSharp.Generator {
                 for (int z = treeZ - 2; z <= treeZ + 2; z++)
                     for (int x = treeX - 2; x <= treeX + 2; x++)
             {
-                if (x < 0 || y < 0 || z < 0 || x >= Width || y >= Height || z >= Length)
-                    return false;
                 int index = (y * Length + z) * Width + x;
                 if (blocks[index] != 0) return false;
             }
             return true;
         }
         
-        void GrowTree(int treeX, int treeY, int treeZ, int height) {
-            int baseHeight = height - 4;
-            int index = 0;
+        
+        public static void RegisterGenerators() {
+            MapGen.Register("Classic", GenType.Simple, Gen, MapGen.DEFAULT_HELP);
+        }
+        
+        static bool Gen(Player p, Level lvl, MapGenArgs args) {
+            if (!args.ParseArgs(p)) return false;
             
-            // leaves bottom layer
-            for (int y = treeY + baseHeight; y < treeY + baseHeight + 2; y++)
-                for (int zz = -2; zz <= 2; zz++)
-                    for (int xx = -2; xx <= 2; xx++)
-            {
-                int x = xx + treeX, z = zz + treeZ;
-                index = (y * Length + z) * Width + x;
-                
-                if (Math.Abs(xx) == 2 && Math.Abs(zz) == 2) {
-                    if (rnd.NextFloat() >= 0.5)
-                        blocks[index] = Block.Leaves;
-                } else {
-                    blocks[index] = Block.Leaves;
-                }
-            }
-            
-            // leaves top layer
-            int bottomY = treeY + baseHeight + 2;
-            for (int y = treeY + baseHeight + 2; y < treeY + height; y++)
-                for (int zz = -1; zz <= 1; zz++)
-                    for (int xx = -1; xx <= 1; xx++)
-            {
-                int x = xx + treeX, z = zz + treeZ;
-                index = (y * Length + z) * Width + x;
-
-                if (xx == 0 || zz == 0) {
-                    blocks[index] = Block.Leaves;
-                } else if (y == bottomY && rnd.NextFloat() >= 0.5) {
-                    blocks[index] = Block.Leaves;
-                }
-            }
-            
-            // then place trunk
-            index = (treeY * Length + treeZ) * Width + treeX;
-            for (int y = 0; y < height - 1; y++) {
-                blocks[index] = Block.Log;
-                index += oneY;
-            }
+            new ClassicGenerator().Generate(lvl, args);
+            return true;
         }
     }
 }

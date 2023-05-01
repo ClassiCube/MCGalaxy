@@ -18,8 +18,10 @@
 using System.Collections.Generic;
 using MCGalaxy.Commands.Moderation;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdClones : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdClones : Command2 
+    {
         public override string name { get { return "Clones"; } }
         public override string shortcut { get { return "Alts"; } }
         public override string type { get { return CommandTypes.Information; } }

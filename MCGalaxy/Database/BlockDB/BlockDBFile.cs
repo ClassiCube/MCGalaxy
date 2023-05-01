@@ -20,10 +20,10 @@ using System.IO;
 using MCGalaxy.Maths;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.DB {
-    
-    public unsafe abstract class BlockDBFile {
-        
+namespace MCGalaxy.DB 
+{   
+    public unsafe abstract class BlockDBFile 
+    {        
         public const byte Version = 1;
         public const int EntrySize = 16;
         public const int HeaderEntries = 1;

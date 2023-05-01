@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -76,7 +76,7 @@ namespace MCGalaxy.Network {
         
         static IPEndPoint BindIPEndPointCallback(ServicePoint servicePoint, IPEndPoint remoteEP, int retryCount) {
             IPAddress localIP = null;
-            if (Server.Listener != null) {
+            if (Server.Listener.IP != null) {
                 localIP = Server.Listener.IP;
             } else if (!IPAddress.TryParse(Server.Config.ListenIP, out localIP)) {
                 return null;

@@ -15,13 +15,12 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using System;
-using MCGalaxy;
 using MCGalaxy.Bots;
-using MCGalaxy.DB;
 
-namespace MCGalaxy.Commands.Chatting {    
-    public class CmdNick : EntityPropertyCmd {       
+namespace MCGalaxy.Commands.Chatting 
+{    
+    public class CmdNick : EntityPropertyCmd 
+    {       
         public override string name { get { return "Nick"; } }
         public override string shortcut { get { return "Nickname"; } }
         public override string type { get { return CommandTypes.Chat; } }

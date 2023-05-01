@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -20,9 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Config;
 using MCGalaxy.Modules.Relay.IRC;
 
-namespace MCGalaxy {
-    public sealed class ServerConfig : EnvConfig {
-
+namespace MCGalaxy 
+{
+    public sealed class ServerConfig : EnvConfig 
+    {
         [ConfigString("server-name", "Server", "[MCGalaxy] Default", false, " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")]
         public string Name = "[MCGalaxy] Default";
         [ConfigString("motd", "Server", "Welcome", false)]
@@ -152,6 +153,10 @@ namespace MCGalaxy {
         public string ListenIP = "0.0.0.0";
         [ConfigStringList("disabled-commands", "Other")]
         public List<string> DisabledCommands = new List<string>();
+        [ConfigStringList("disabled-modules", "Other")]
+        public List<string> DisabledModules = new List<string>();
+        [ConfigTimespan("death-invulnerability-cooldown", "Other", 2, false)]
+        public TimeSpan DeathCooldown = TimeSpan.FromSeconds(2);
 
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;

@@ -25,9 +25,11 @@ namespace MCGalaxy.SQL
     /// <summary> Abstracts a SQL based database management system </summary>
     public abstract class IDatabaseBackend 
     {        
-        /// <summary> Whether this backend enforces the character length in VARCHAR columns. </summary>
-        public abstract bool EnforcesTextLength { get; }        
-        /// <summary> Whether this backend supports multiple database schemas. </summary>
+        /// <summary> Whether this backend enforces the character length in VARCHAR columns </summary>
+        public abstract bool EnforcesTextLength { get; }
+        /// <summary> Whether this backend enforces integer limits based on column types </summary>
+        public abstract bool EnforcesIntegerLimits { get; } 
+        /// <summary> Whether this backend supports multiple database schemas </summary>
         public abstract bool MultipleSchema { get; }
         public abstract string EngineName { get; }
 
@@ -149,8 +151,10 @@ namespace MCGalaxy.SQL
         
         #region Raw SQL functions
         
-        /// <summary> Executes an SQL command that does not return any results. </summary>
-        public void Execute(string sql, object[] parameters, bool createDB) {
+        /// <summary> Executes an SQL command and returns the number of affected rows. </summary>
+        public int Execute(string sql, object[] parameters, bool createDB) {
+            int rows = 0;
+        	
             using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (!createDB && MultipleSchema)
@@ -158,14 +162,17 @@ namespace MCGalaxy.SQL
                 
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
-                    cmd.ExecuteNonQuery();
+                    rows = cmd.ExecuteNonQuery();
                 }
                 conn.Close();
             }
+            return rows;
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public void Iterate(string sql, object[] parameters, ReaderCallback callback) {
+        public int Iterate(string sql, object[] parameters, ReaderCallback callback) {
+            int rows = 0;
+        	
             using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (MultipleSchema)
@@ -174,16 +181,17 @@ namespace MCGalaxy.SQL
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
                     FillParams(cmd, parameters);
                     using (ISqlReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) { callback(reader); }
+                        while (reader.Read()) { callback(reader); rows++; }
                     }
                 }
                 conn.Close();
             }
+            return rows;
         }
         
         
-        /// <summary> Adds IDbDataParameter for each argument to the given command. </summary>
-        public void FillParams(ISqlCommand cmd, object[] parameters) {
+        /// <summary> Sets the SQL command's parameter values to the given arguments </summary>
+        public static void FillParams(ISqlCommand cmd, object[] parameters) {
             if (parameters == null || parameters.Length == 0) return;
             
             string[] names = GetNames(parameters.Length);

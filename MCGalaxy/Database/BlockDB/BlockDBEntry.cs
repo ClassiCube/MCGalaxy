@@ -19,10 +19,11 @@ using System;
 using System.Runtime.InteropServices;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.DB {
-
+namespace MCGalaxy.DB 
+{
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct BlockDBEntry {
+    public struct BlockDBEntry 
+    {
         /// <summary> ID within Players table of player who made the change. </summary>
         public int PlayerID;
         

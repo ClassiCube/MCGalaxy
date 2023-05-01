@@ -23,13 +23,13 @@ using System.Net.Sockets;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
 
-namespace MCGalaxy.Network 
+namespace MCGalaxy.Network
 {
     /// <summary> Heartbeat to ClassiCube.net's web server. </summary>
-    public sealed class ClassiCubeBeat : Heartbeat 
+    public sealed class ClassiCubeBeat : Heartbeat
     {
         string proxyUrl;
-        public string ServerHash;
+        public string LastResponse;
         bool checkedAddr;
         
         void CheckAddress() {
@@ -37,7 +37,7 @@ namespace MCGalaxy.Network
             checkedAddr    = true;
             
             try {
-                hostUrl = new Uri(URL).Host;
+                hostUrl = GetHost();
                 IPAddress[] addresses = Dns.GetHostAddresses(hostUrl);
                 EnsureIPv4Url(addresses);
             } catch (Exception ex) {
@@ -97,34 +97,44 @@ namespace MCGalaxy.Network
         
         protected override void OnResponse(WebResponse response) {
             string text = HttpUtil.GetResponseText(response);
-            if (String.IsNullOrEmpty(text)) return;
-            string hash = ExtractHash(text);
-
-            // only need to do this when contents have changed
-            if (hash == ServerHash) return;
-            ServerHash = hash;
-            Server.URL = text;
+            if (!NeedsProcessing(text)) return;
             
             if (!text.Contains("\"errors\":")) {
-                Server.UpdateUrl(Server.URL);
-                File.WriteAllText("text/externalurl.txt", Server.URL);
-                Logger.Log(LogType.SystemActivity, "Server URL found: " + Server.URL);
+                OnSuccess(text);
             } else {
                 string error = GetError(text);
                 if (error == null) error = "Error while finding URL. Is the port open?";
-                
-                Server.URL = error;
-                Server.UpdateUrl(Server.URL);
-                Logger.Log(LogType.Warning, text);
+                OnError(error);
             }
         }
         
-        static string ExtractHash(string response) {
-            // in form of http://www.classicube.net/server/play/<hash>/
-            if (response.EndsWith("/"))
-                response = response.Substring(0, response.Length - 1);
-            return response.Substring(response.LastIndexOf('/') + 1);
+        protected override void OnFailure(string response) {
+            if (NeedsProcessing(response)) OnError(response);
         }
+        
+        
+        bool NeedsProcessing(string text) {
+            if (String.IsNullOrEmpty(text)) return false;
+            if (text == LastResponse)       return false;
+            
+            // only need to process responses that have changed
+            LastResponse = text;
+            return true;
+        }
+        
+        static void OnSuccess(string text) {
+            text = Truncate(text);
+            Server.UpdateUrl(text);
+            File.WriteAllText("text/externalurl.txt", text);
+            Logger.Log(LogType.SystemActivity, "Server URL found: " + text);
+        }
+        
+        static void OnError(string error) {
+            error = Truncate(error);
+            Server.UpdateUrl(error);
+            Logger.Log(LogType.Warning, error);
+        }
+        
         
         static string GetError(string json) {
             JsonReader reader = new JsonReader(json);
@@ -145,6 +155,12 @@ namespace MCGalaxy.Network
                 if (err != null && err.Count > 0) return (string)err[0];
             }
             return null;
+        }
+        
+        static string Truncate(string text) {
+            if (text.Length < 256) return text;
+            
+            return text.Substring(0, 256) + "..";
         }
     }
 }

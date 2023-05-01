@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -18,8 +18,10 @@
 using MCGalaxy.Bots;
 using MCGalaxy.DB;
 
-namespace MCGalaxy.Commands.Chatting {    
-    public class CmdColor : EntityPropertyCmd {
+namespace MCGalaxy.Commands.Chatting
+{    
+    public class CmdColor : EntityPropertyCmd 
+    {
         public override string name { get { return "Color"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

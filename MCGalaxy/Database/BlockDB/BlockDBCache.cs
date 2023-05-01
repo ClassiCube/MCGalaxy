@@ -19,11 +19,11 @@ using System;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{
     /// <summary> Optimised in-memory BlockDB cache. </summary>
-    public sealed class BlockDBCache {
-        
+    public sealed class BlockDBCache 
+    {      
         public BlockDBCacheNode Tail, Head;
         
         /// <summary> Used to synchronise adding to Cache by multiple threads. </summary>
@@ -105,8 +105,8 @@ namespace MCGalaxy.DB {
         int nextSize = 10 * 1000;
     }
     
-    public sealed class BlockDBCacheNode {
-        
+    public sealed class BlockDBCacheNode 
+    {     
         public BlockDBCacheNode Prev, Next;
         
         /// <summary> The number of actually used entries within this particular node. </summary>

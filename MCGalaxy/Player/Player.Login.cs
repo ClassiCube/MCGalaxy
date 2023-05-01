@@ -1,5 +1,5 @@
 ﻿/*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -19,7 +19,6 @@ using MCGalaxy.Authentication;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.Network;
 using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
@@ -31,10 +30,11 @@ namespace MCGalaxy
         public bool ProcessLogin(string user, string mppass) {
             LastAction = DateTime.UtcNow;
             name     = user; truename    = user;
-            SkinName = user; DisplayName = user; 
-            
+            SkinName = user; DisplayName = user;
+
+            // TODO move to ClassicProtocol
             if (Session.ProtocolVersion > Server.VERSION_0030) {
-                Leave(null, "Unsupported protocol version", true); return false; 
+                Leave(null, "Unsupported protocol version " + Session.ProtocolVersion, true); return false;
             }
             if (user.Length < 1 || user.Length > 16) {
                 Leave(null, "Usernames must be between 1 and 16 characters", true); return false;
@@ -48,8 +48,8 @@ namespace MCGalaxy
             if (cancelconnecting) { cancelconnecting = false; return false; }
                 
             // mppass can be used as /pass when it is not used for name authentication            
-            if (!verifiedName && NeedsVerification() && Authenticator.Current.HasPassword(name))
-                Authenticator.VerifyPassword(this, mppass);
+            if (!verifiedName && NeedsVerification() && PassAuthenticator.Current.HasPassword(name))
+                PassAuthenticator.VerifyPassword(this, mppass);
             
             level   = Server.mainLevel;
             Loading = true;
@@ -61,6 +61,10 @@ namespace MCGalaxy
             Player clone = null;
             OnPlayerFinishConnectingEvent.Call(this);
             if (cancelconnecting) { cancelconnecting = false; return; }
+            
+            SessionStartTime = DateTime.UtcNow;
+            LastLogin = DateTime.Now;
+            TotalTime = TimeSpan.FromSeconds(1);
             
             lock (PlayerInfo.Online.locker) {
                 // Check if any players online have same name
@@ -81,14 +85,12 @@ namespace MCGalaxy
             } else if (clone != null) {
                 Leave(null, "Already logged in!", true); return;
             }
+            deathCooldown = DateTime.UtcNow.AddSeconds(2);
 
             SendRawMap(null, level);
             if (Socket.Disconnected) return;
             loggedIn = true;
 
-            SessionStartTime = DateTime.UtcNow;
-            LastLogin = DateTime.Now;
-            TotalTime = TimeSpan.FromSeconds(1);
             GetPlayerStats();
             ShowWelcome();
             CheckState();
@@ -105,7 +107,7 @@ namespace MCGalaxy
             hidden   = CanUse("Hide") && Server.hidden.Contains(name);
             if (hidden) Message("&8Reminder: You are still hidden.");
             
-            if (Chat.AdminchatPerms.UsableBy(Rank) && Server.Config.AdminsJoinSilently) {
+            if (Chat.AdminchatPerms.UsableBy(this) && Server.Config.AdminsJoinSilently) {
                 hidden = true; adminchat = true;                
             }
 
@@ -138,12 +140,7 @@ namespace MCGalaxy
             if (Server.Config.PositionUpdateInterval > 1000)
                 Message("Lowlag mode is currently &aON.");
 
-            if (String.IsNullOrEmpty(appName)) {
-                Logger.Log(LogType.UserActivity, "{0} [{1}] connected.", truename, IP);
-            } else {
-                Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", truename, IP, appName);
-            }
-            
+            Logger.Log(LogType.UserActivity, "{0} [{1}] connected using {2}.", truename, IP, Session.ClientName());
             PlayerActions.PostSentMap(this, null, level, false);
             Loading = false;
         }
@@ -256,7 +253,7 @@ namespace MCGalaxy
             string altsMsg = "λNICK &Sis lately known as: " + alts.Join();
 
             Chat.MessageFrom(p, altsMsg,
-                             (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl.Rank));
+                             (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl));
                          
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             altsMsg = altsMsg.Replace("λNICK", name);

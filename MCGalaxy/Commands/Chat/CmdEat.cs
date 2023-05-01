@@ -18,8 +18,10 @@
 using System;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Chatting {  
-    public sealed class CmdEat : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{  
+    public sealed class CmdEat : Command2 
+    {
         public override string name { get { return "Eat"; } }
         public override string type { get { return CommandTypes.Chat; } }
         

@@ -18,10 +18,11 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.DB;
-using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdTop : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdTop : Command2 
+    {
         public override string name { get { return "Top"; } }
         public override string shortcut { get { return "Most"; } }
         public override string type { get { return CommandTypes.Information; } }
@@ -37,46 +38,31 @@ namespace MCGalaxy.Commands.Info {
             int maxResults = 0, offset = 0;
             if (!CommandParser.GetInt(p, args[0], "Max results", ref maxResults, 1, 15)) return;
 
-            TopStat stat = FindTopStat(args[1]);
+            TopStat stat = TopStat.Find(args[1]);
             if (stat == null) {
-                p.Message("&WUnrecognised type \"{0}\".", args[1]); return;
+                p.Message("&WNo stat found with name \"{0}\".", args[1]); return;
             }
             
             if (args.Length > 2) {
                 if (!CommandParser.GetInt(p, args[2], "Offset", ref offset, 0)) return;
             }
             
-            string limit = " LIMIT " + offset + "," + maxResults;
-            List<string[]> stats = Database.GetRows(stat.Table, "DISTINCT Name, " + stat.Column,
-                                                    "ORDER BY" + stat.OrderBy + limit);
+            List<TopResult> results = stat.GetResults(maxResults, offset);
+            p.Message("&a{0}:", stat.Title);
             
-            p.Message("&a{0}:", stat.Title());
-            for (int i = 0; i < stats.Count; i++) {
-                string nick  = p.FormatNick(stats[i][0]);
-                string value = stat.Formatter(stats[i][1]);
-                p.Message("{0}) {1} &S- {2}", offset + (i + 1), nick, value);
+            for (int i = 0; i < results.Count; i++) 
+            {
+                p.Message("{0}) {1} &S- {2}", offset + (i + 1), 
+                          stat.FormatName(p, results[i].Name), 
+                          stat.Formatter(results[i].Value));
             }
-        }
-        
-        static TopStat FindTopStat(string input) {
-            foreach (TopStat stat in TopStat.Stats) {
-                if (stat.Identifier.CaselessEq(input)) return stat;
-            }
-            
-            int number;
-            if (int.TryParse(input, out number)) {
-                // Backwards compatibility where top used to take a number
-                if (number >= 1 && number <= TopStat.Stats.Count)
-                    return TopStat.Stats[number - 1];
-            }
-            return null;
         }
         
         public override void Help(Player p) {
             p.Message("&T/Top [max results] [stat] <offset>");
             p.Message("&HPrints a list of players who have the " +
-                           "most/top of a particular stat. Available stats:");
-            p.Message("&f" + TopStat.Stats.Join(stat => stat.Identifier));
+                       "most/top of a particular stat. Available stats:");
+            TopStat.List(p);
         }
     }
 }

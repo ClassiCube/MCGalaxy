@@ -17,8 +17,10 @@ using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Info {
-    public class CmdSearch : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public class CmdSearch : Command2 
+    {
         public override string name { get { return "Search"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }

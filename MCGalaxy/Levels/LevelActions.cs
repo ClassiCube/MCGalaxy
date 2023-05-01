@@ -187,7 +187,7 @@ namespace MCGalaxy
         
         
         public static void Replace(Level old, Level lvl) {
-            LevelDB.SaveBlockDB(old);
+            old.SaveBlockDBChanges();
             LevelInfo.Remove(old);
             LevelInfo.Add(lvl);
             
@@ -393,7 +393,7 @@ namespace MCGalaxy
                 return clone;
             }
             
-            return IMapImporter.Read(path, name, false);
+            return IMapImporter.Decode(path, name, false);
         }
         
         

@@ -20,10 +20,10 @@ using System.IO;
 using MCGalaxy.Util;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.DB {
-    
-    public unsafe sealed class BlockDB {
-        
+namespace MCGalaxy.DB 
+{
+    public unsafe sealed class BlockDB 
+    {   
         /// <summary> Dimensions used to pack coordinates into an index. </summary>
         /// <remarks> May be different from actual level's dimensions, such as when the level has been resized. </remarks>
         public Vec3U16 Dims;

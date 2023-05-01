@@ -15,10 +15,11 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.DB;
 
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdLogoutMessage : EntityPropertyCmd {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdLogoutMessage : EntityPropertyCmd 
+    {
         public override string name { get { return "LogoutMessage"; } }
         public override string shortcut { get { return "LogoutMsg"; } }
         public override string type { get { return CommandTypes.Chat; } }

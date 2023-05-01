@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCLawl Team - Written by Valek (Modified for use with MCGalaxy)
+    Copyright 2010 MCLawl Team - Written by Valek (Modified for use with MCForge)
  
    Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -15,10 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-using MCGalaxy.DB;
-
-namespace MCGalaxy.Commands.Chatting {
-    public class CmdTColor : EntityPropertyCmd {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public class CmdTColor : EntityPropertyCmd 
+    {
         public override string name { get { return "TColor"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }

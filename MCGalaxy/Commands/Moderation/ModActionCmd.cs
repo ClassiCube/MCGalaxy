@@ -30,27 +30,33 @@ namespace MCGalaxy.Commands.Moderation {
         
         /// <summary> Expands @[rule number] to the actual rule with that number. </summary>
         public static string ExpandReason(Player p, string reason) {
+            int ruleNum;
+            string expanded = TryExpandReason(reason, out ruleNum);
+            if (expanded != null) return expanded;
+            
+            Dictionary<int, string> sections = GetRuleSections();            
+            p.Message("No rule has number \"{0}\". Current rule numbers are: {1}",
+                      ruleNum, sections.Keys.Join(n => n.ToString()));
+            return null;
+        }
+        
+        public static string TryExpandReason(string reason, out int ruleNum) {
+            ruleNum = 0;
             if (reason.Length == 0 || reason[0] != '@') return reason;
             
             reason = reason.Substring(1);
-            int num;
-            if (!int.TryParse(reason, out num)) return "@" + reason;
+            if (!int.TryParse(reason, out ruleNum)) return "@" + reason;
             
             // Treat @num as a shortcut for rule #num
-            Dictionary<int, string> sections = GetRuleSections();
-            string rule;
-            if (sections.TryGetValue(num, out rule)) return rule;
-            
-            p.Message("No rule has number \"{0}\". Current rule numbers are: {1}",
-                           num, sections.Keys.Join(n => n.ToString()));
-            return null;
+            Dictionary<int, string> sections = GetRuleSections();          
+            string rule; sections.TryGetValue(ruleNum, out rule); return rule;
         }
         
         static Dictionary<int, string> GetRuleSections() {
             Dictionary<int, string> sections = new Dictionary<int, string>();
             if (!File.Exists(Paths.RulesFile)) return sections;
             
-            string[] rules = File.ReadAllLines(Paths.RulesFile);
+            List<string> rules = Utils.ReadAllLinesList(Paths.RulesFile);
             foreach (string rule in rules)
                 ParseRule(rule, sections);
             return sections;
@@ -60,7 +66,8 @@ namespace MCGalaxy.Commands.Moderation {
             int ruleNum = -1;
             rule = Colors.Strip(rule);
             
-            for (int i = 0; i < rule.Length; i++) {
+            for (int i = 0; i < rule.Length; i++) 
+            {
                 char c = rule[i];
                 bool isNumber = c >= '0' && c <= '9';
                 bool isLetter = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');

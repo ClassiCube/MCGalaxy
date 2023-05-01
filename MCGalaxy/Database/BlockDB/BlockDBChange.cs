@@ -17,14 +17,13 @@
  */
 using System;
 using MCGalaxy.Blocks.Extended;
-using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{  
     /// <summary> Outputs information about a block and its changes to the user. </summary>
-    public static class BlockDBChange {
-        
+    public static class BlockDBChange 
+    {
         public static void Output(Player p, string name, BlockDBEntry e) {
             BlockID oldBlock = e.OldBlock, newBlock = e.NewBlock;
             DateTime time = BlockDB.Epoch.AddSeconds(e.TimeDelta);

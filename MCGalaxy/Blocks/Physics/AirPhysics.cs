@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -33,8 +33,12 @@ namespace MCGalaxy.Blocks.Physics {
             ActivateablePhysics.CheckAt(lvl, x, (ushort)(y - 1), z); 
 
             //Edge of map water
-            if (lvl.Config.EdgeWater && (y < lvl.Config.EdgeLevel && y >= (lvl.Config.EdgeLevel + lvl.Config.SidesOffset))) {
-                if (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1) {
+            if (lvl.Config.EdgeWater && (x == 0 || x == lvl.Width - 1 || z == 0 || z == lvl.Length - 1)) {
+                int edgeLevel   = lvl.GetEdgeLevel();
+                int sidesOffset = lvl.Config.SidesOffset;
+                if (sidesOffset == EnvConfig.ENV_USE_DEFAULT) sidesOffset = -2; // EnvConfig.DefaultEnvProp(EnvProp.SidesOffset, lvl.Height);
+
+                if (y < edgeLevel && y >= (edgeLevel + sidesOffset)) {
                     BlockID horizon = lvl.Config.HorizonBlock;
                     lvl.AddUpdate(C.Index, horizon == Block.Invalid ? Block.Water : horizon);
                 }

@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -16,8 +16,11 @@
     permissions and limitations under the Licenses.
 */
 using System;
-namespace MCGalaxy.Commands.Chatting {    
-    public sealed class CmdRoll : MessageCmd {
+
+namespace MCGalaxy.Commands.Chatting 
+{    
+    public sealed class CmdRoll : MessageCmd 
+    {
         public override string name { get { return "Roll"; } }
         static volatile Random rng;
         static readonly object rngLock = new object();

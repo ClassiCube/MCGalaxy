@@ -1,5 +1,5 @@
 /*
-Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 Dual-licensed under the Educational Community License, Version 2.0 and
 the GNU General Public License, Version 3 (the "Licenses"); you may
 not use this file except in compliance with the Licenses. You may
@@ -18,8 +18,10 @@ using MCGalaxy.Blocks;
 using MCGalaxy.Commands.CPE;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdHelp : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdHelp : Command2 
+    {
         public override string name { get { return "Help"; } }
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
@@ -210,7 +212,8 @@ namespace MCGalaxy.Commands.Info {
         }
         
         bool ParsePlugin(Player p, string message) {
-            foreach (Plugin plugin in Plugin.all) {
+            foreach (Plugin plugin in Plugin.custom) 
+            {
                 if (plugin.name.CaselessEq(message)) {
                     plugin.Help(p); return true;
                 }

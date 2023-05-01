@@ -44,6 +44,7 @@ namespace MCGalaxy.Scripting
 
         // only used for resolving plugin DLLs depending on other plugin DLLs
         static Assembly ResolvePluginAssembly(object sender, ResolveEventArgs args) {
+#if !NET_20
             if (args.RequestingAssembly == null)       return null;
             if (!IsPluginDLL(args.RequestingAssembly)) return null;
 
@@ -54,6 +55,10 @@ namespace MCGalaxy.Scripting
 
                 if (args.Name == assem.FullName) return assem;
             }
+            
+            Logger.Log(LogType.Warning, "Custom command/plugin [{0}] tried to load [{1}], but it could not be found",
+                       args.RequestingAssembly.FullName, args.Name);
+#endif
             return null;
         }
 

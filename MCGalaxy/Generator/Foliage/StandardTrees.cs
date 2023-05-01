@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -25,17 +25,19 @@ Ideas, concepts, and code were used from the following two sources:
 
  */
 using System;
+using MCGalaxy.Generator.Classic;
 
-namespace MCGalaxy.Generator.Foliage {
-    public sealed class CactusTree : Tree {
-
+namespace MCGalaxy.Generator.Foliage 
+{
+    public sealed class CactusTree : Tree 
+    {
         public override long EstimateBlocksAffected() { return height + 3 * 2; }
         
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 6); }
                 
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = 1;
+            size   = 1;
             this.rnd = rnd;
         }
         
@@ -45,27 +47,27 @@ namespace MCGalaxy.Generator.Foliage {
             }
 
             int value = rnd.Next(1, 3);
-            int inX = value == 1 ? -1 : 0;
-            int inZ = value == 2 ? -1 : 0;
+            int dx = value == 1 ? -1 : 0;
+            int dz = value == 2 ? -1 : 0;
 
             for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
-                output((ushort)(x + inX), (ushort)(y + dy), (ushort)(z + inZ), Block.Green);
+                output((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), Block.Green);
             }
             for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
-                output((ushort)(x - inX), (ushort)(y + dy), (ushort)(z - inZ), Block.Green);
+                output((ushort)(x - dx), (ushort)(y + dy), (ushort)(z - dz), Block.Green);
             }
         }
     }
 
-    public sealed class NormalTree : Tree {
-
+    public sealed class NormalTree : Tree 
+    {
         public override long EstimateBlocksAffected() { return height + size * size * size; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(5, 8); }
         
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = height - rnd.Next(2, 4);
+            size   = height - rnd.Next(2, 4);
             this.rnd = rnd;
         }
         
@@ -88,50 +90,15 @@ namespace MCGalaxy.Generator.Foliage {
         }
     }
 
-    public sealed class ClassicTree : Tree {
-        
-        public override long EstimateBlocksAffected() { return height + 65; }
-                
-        public override int DefaultSize(Random rnd) { return rnd.Next(3, 7); }
-        
-        public override void SetData(Random rnd, int value) {
-            height = value;
-            size = 2;
-            this.rnd = rnd;
-        }
-        
-        public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
-            for (int dy = 0; dy <= height; dy++)
-                output(x, (ushort)(y + dy), z, Block.Log);
-
-            for (int dy = height - 2; dy <= height + 1; dy++) {
-                int extent = dy > height - 1 ? 1 : 2;
-                for (int dz = -extent; dz <= extent; dz++)
-                    for (int dx = -extent; dx <= extent; dx++)
-                {
-                    ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy), zz = (ushort)(z + dz);
-                    if (xx == x && zz == z && dy <= height) continue;
-
-                    if (Math.Abs(dx) == extent && Math.Abs(dz) == extent) {
-                        if (dy > height) continue;
-                        if (rnd.Next(2) == 0) output(xx, yy, zz, Block.Leaves);
-                    } else {
-                        output(xx, yy, zz, Block.Leaves);
-                    }
-                }
-            }
-        }
-    }
-    
-    public sealed class SwampTree : Tree {
-        
+    public sealed class SwampTree : Tree 
+    {        
         public override long EstimateBlocksAffected() { return height + 145; }
                 
         public override int DefaultSize(Random rnd) { return rnd.Next(4, 8); }
 
         public override void SetData(Random rnd, int value) {
             height = value;
-            size = 3;
+            size   = 3;
             this.rnd = rnd;
         }
         

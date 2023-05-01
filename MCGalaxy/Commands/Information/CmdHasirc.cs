@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCLawl Team - Written by Valek (Modified for use with MCGalaxy)
+    Copyright 2010 MCLawl Team - Written by Valek (Modified for use with MCForge)
  
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -15,8 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands.Info {
-    public sealed class CmdHasirc : Command2 {
+namespace MCGalaxy.Commands.Info 
+{
+    public sealed class CmdHasirc : Command2 
+    {
         public override string name { get { return "HasIRC"; } }
         public override string shortcut { get { return "IRC"; } }
         public override string type { get { return CommandTypes.Information; } }

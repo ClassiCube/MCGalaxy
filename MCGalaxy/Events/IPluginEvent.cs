@@ -40,8 +40,8 @@ namespace MCGalaxy.Events
     public class IEvent<IMethod> 
     {
         protected internal static VolatileArray<IEvent<IMethod>> handlers = new VolatileArray<IEvent<IMethod>>();
-        protected internal IMethod method;
-        protected Priority priority;
+        public IMethod method;
+        public Priority priority;
         
         /// <summary> Registers the given handler to this event. </summary>
         /// <param name="priority"> The priority (imporantance) of the given handler. </param>
@@ -68,7 +68,8 @@ namespace MCGalaxy.Events
             Delegate methodDel = (Delegate)((object)method);
             IEvent<IMethod>[] items = handlers.Items;
             
-            foreach (var p in items) {
+            foreach (var p in items) 
+            {
                 Delegate pMethodDel = (Delegate)((object)p.method);
                 if (pMethodDel == methodDel) return p;
             }
@@ -93,7 +94,8 @@ namespace MCGalaxy.Events
         
         protected static void CallCommon(Action<IMethod> action) {
             IEvent<IMethod>[] items = handlers.Items;
-            for (int i = 0; i < items.Length; i++) {
+            for (int i = 0; i < items.Length; i++) 
+            {
                 IEvent<IMethod> handler = items[i];
                 
                 try { action(handler.method); } 

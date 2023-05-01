@@ -133,20 +133,20 @@ namespace MCGalaxy.Modules.Relay.Discord
     /// <summary> Implements a basic web client for sending messages to the Discord API </summary>
     /// <remarks> https://discord.com/developers/docs/reference </remarks>
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
-    public sealed class DiscordApiClient : RelayBotSender<DiscordApiMessage>
+    public sealed class DiscordApiClient : AsyncWorker<DiscordApiMessage>
     {
         public string Token;
         const string host = "https://discord.com/api/v10";
         
         DiscordApiMessage GetNextRequest() {
-            if (requests.Count == 0) return null;
-            DiscordApiMessage first = requests.Dequeue();
+            if (queue.Count == 0) return null;
+            DiscordApiMessage first = queue.Dequeue();
             
             // try to combine messages to minimise API calls
-            while (requests.Count > 0) {
-                DiscordApiMessage next = requests.Peek();
+            while (queue.Count > 0) {
+                DiscordApiMessage next = queue.Peek();
                 if (!next.CombineWith(first)) break;
-                requests.Dequeue();
+                queue.Dequeue();
             }
             return first;
         }
@@ -156,8 +156,8 @@ namespace MCGalaxy.Modules.Relay.Discord
             DiscordApiMessage msg = null;
             WebResponse res = null;
             
-            lock (reqLock)   { msg = GetNextRequest(); }
-            if (msg == null) { WaitForWork(); return; }
+            lock (queueLock) { msg = GetNextRequest(); }
+            if (msg == null) { WaitForWork(); return;  }
             
             for (int retry = 0; retry < 10; retry++) 
             {

@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -18,18 +18,15 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using MCGalaxy.Commands.World;
 using MCGalaxy.DB;
-using MCGalaxy.Games;
 using MCGalaxy.Generator;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
-using MCGalaxy.Util;
 
-namespace MCGalaxy {
-    
-    public sealed partial class Server {
-
+namespace MCGalaxy 
+{
+    public sealed partial class Server 
+    {
         static void LoadMainLevel(SchedulerTask task) {
             try {
                 mainLevel = LevelActions.Load(Player.Console, Server.Config.MainLevel, false);
@@ -67,7 +64,6 @@ namespace MCGalaxy {
             invalidIds = PlayerList.Load("extra/invalidids.txt");
             Player.Console.DatabaseID = NameConverter.InvalidNameID("(console)");
             
-            bannedIP = PlayerList.Load("ranks/banned-ip.txt");
             hidden   = PlayerList.Load("ranks/hidden.txt");
             vip      = PlayerList.Load("text/vip.txt");
             noEmotes = PlayerList.Load("text/emotelist.txt");
@@ -79,8 +75,9 @@ namespace MCGalaxy {
             rotations   = PlayerExtList.Load("extra/rotations.txt");
             modelScales = PlayerExtList.Load("extra/modelscales.txt");
 
-            muted  = PlayerExtList.Load("ranks/muted.txt");
-            frozen = PlayerExtList.Load("ranks/frozen.txt");
+            bannedIP  = PlayerExtList.Load("ranks/banned-ip.txt");
+            muted     = PlayerExtList.Load("ranks/muted.txt");
+            frozen    = PlayerExtList.Load("ranks/frozen.txt");
             tempRanks = PlayerExtList.Load(Paths.TempRanksFile);
             tempBans  = PlayerExtList.Load(Paths.TempBansFile);
             whiteList = PlayerList.Load("ranks/whitelist.txt");
@@ -96,8 +93,7 @@ namespace MCGalaxy {
             }
         }
         
-        static void SetupSocket(SchedulerTask task) {
-            Listener = new TcpListen();            
+        static void SetupSocket(SchedulerTask task) {        
             IPAddress ip;
             
             if (!IPAddress.TryParse(Server.Config.ListenIP, out ip)) {
@@ -119,12 +115,6 @@ namespace MCGalaxy {
         }
         
         static void InitRest(SchedulerTask task) {
-            CountdownGame.Instance.AutoStart();
-            ZSGame.Instance.AutoStart();
-            LSGame.Instance.AutoStart();
-            CTFGame.Instance.AutoStart();
-            TWGame.Instance.AutoStart();
-            
             MainScheduler.QueueRepeat(BlockQueue.Loop, null, 
                                       TimeSpan.FromMilliseconds(BlockQueue.Interval));
             Critical.QueueRepeat(ServerTasks.TickPlayers, null,

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -16,10 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.Bots {
-    public sealed class CmdBots : Command2 {
+namespace MCGalaxy.Commands.Bots
+{
+    public sealed class CmdBots : Command2
+    {
         public override string name { get { return "Bots"; } }
         public override string shortcut { get { return "BotList"; } }
         public override string type { get { return CommandTypes.Other; } }

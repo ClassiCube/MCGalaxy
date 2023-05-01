@@ -29,6 +29,7 @@ namespace MCGalaxy.Network
         public byte[] fallback = new byte[256]; // fallback for classic+CPE block IDs
         public BlockID MaxRawBlock = Block.CLASSIC_MAX_BLOCK;
         public bool hasCpe;
+        public string appName;
 
         // these are checked very frequently, so avoid overhead of .Supports(
         public bool hasCustomBlocks, hasExtBlocks, hasBlockDefs, hasBulkBlockUpdate;

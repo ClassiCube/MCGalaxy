@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the    Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -18,23 +18,16 @@
 using System;
 using System.IO;
 using MCGalaxy.Commands;
-using MCGalaxy.Games;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy {
-    
-    public static class SrvProperties {
-        
+namespace MCGalaxy 
+{
+    public static class SrvProperties 
+    {
         public static void Load() {
             old = new OldPerms();
             if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
                 Server.SettingsUpdate();
-            
-            CountdownGame.Config.Load();
-            ZSGame.Config.Load();
-            LSGame.Config.Load();
-            CTFGame.Config.Load();
-            TWGame.Config.Load();
 
             Database.UpdateActiveBackend();
             

@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.DB;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Chatting {
-    public sealed class CmdSend : Command2 {
+namespace MCGalaxy.Commands.Chatting 
+{
+    public sealed class CmdSend : Command2 
+    {
         public override string name { get { return "Send"; } }
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }

@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
         
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -26,8 +26,6 @@ namespace MCGalaxy.Blocks.Physics {
         public static void PhysWater(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
-                return;
 
             switch (block) {
                 case Block.Air:
@@ -63,8 +61,6 @@ namespace MCGalaxy.Blocks.Physics {
         public static void PhysLava(Level lvl, ushort x, ushort y, ushort z, BlockID type) {
             int index;
             BlockID block = lvl.GetBlock(x, y, z, out index);
-            if (LSGame.Instance.Running && LSGame.Instance.Map == lvl && LSGame.Instance.InSafeZone(x, y, z))
-                return;
 
             switch (block) {
                 case Block.Air:

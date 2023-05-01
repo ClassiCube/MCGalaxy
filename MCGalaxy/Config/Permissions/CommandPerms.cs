@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -49,14 +49,6 @@ namespace MCGalaxy.Commands
             return null;
         }
 
-        /// <summary> Returns the minimum rank required to use the given command. </summary>
-        /// <remarks> This should NOT be used to determine if a rank can use the command,
-        /// because ranks can specifically be allowed to or denied from using a command. </remarks>
-        public static LevelPermission MinPerm(Command cmd) {
-            CommandPerms perms = Find(cmd.name);
-            return perms == null ? cmd.defaultRank : perms.MinRank;
-        }
-
         
         /// <summary> Gets or adds permissions for the given command. </summary>
         public static CommandPerms GetOrAdd(string cmd, LevelPermission min) {
@@ -97,22 +89,9 @@ namespace MCGalaxy.Commands
 
         /// <summary> Applies new command permissions to server state. </summary>
         public static void ApplyChanges() {
-            foreach (Group grp in Group.AllRanks) 
-            {
-                SetUsable(grp);
-            }
-        }
-        
-        public static void SetUsable(Group grp) {
-            List<Command> commands = new List<Command>();
-            foreach (CommandPerms perms in List) 
-            {
-                if (!perms.UsableBy(grp.Permission)) continue;
-                
-                Command cmd = Command.Find(perms.CmdName);
-                if (cmd != null) commands.Add(cmd);
-            }
-            grp.Commands = commands;
+            // does nothing... for now anyways 
+            //  (may be required if p.CanUse is changed to instead
+            //   use a list of usable commands as a field instead)
         }
         
 

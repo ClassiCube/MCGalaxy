@@ -23,11 +23,11 @@ using MCGalaxy.Maths;
 using MCGalaxy.SQL;
 using MCGalaxy.Util;
 
-namespace MCGalaxy.DB {
-    
+namespace MCGalaxy.DB 
+{
     /// <summary> Exports a BlockDB table to the new binary format. </summary>
-    public sealed class BlockDBTableDumper {
-        
+    public sealed class BlockDBTableDumper 
+    {       
         string mapName;
         Dictionary<string, int> nameCache = new Dictionary<string, int>();
         Stream stream;

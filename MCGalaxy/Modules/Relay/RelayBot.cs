@@ -108,14 +108,16 @@ namespace MCGalaxy.Modules.Relay
         
         /// <summary> Sends a message to all channels setup for general public chat </summary>
         public void SendPublicMessage(string message) {
-            foreach (string chan in Channels) {
+            foreach (string chan in Channels) 
+            {
                 SendMessage(chan, message);
             }
         }
         
         /// <summary> Sends a message to all channels setup for staff chat only </summary>
         public void SendStaffMessage(string message) {
-            foreach (string chan in OpChannels) {
+            foreach (string chan in OpChannels) 
+            {
                 SendMessage(chan, message);
             }
         }
@@ -124,19 +126,16 @@ namespace MCGalaxy.Modules.Relay
         /// <remarks> Channels can specify either group chat or direct messages </remarks>
         public void SendMessage(string channel, string message) {
             if (!Enabled || !Connected) return;
-            DoSendMessage(channel, ConvertMessage(message));
+            DoSendMessage(channel, message);
         }
         
-        /// <summary> Formats a message for displaying on the external communication service </summary>
-        /// <example> IRC converts colors such as &amp;0 into IRC color codes </example>
-        protected virtual string ConvertMessage(string message) {
+        protected abstract void DoSendMessage(string channel, string message);
+        
+        protected string ConvertMessageCommon(string message) {
             message = EmotesHandler.Replace(message);
             message = ChatTokens.ApplyCustom(message);
             return message;
         }
-        /// <summary> Sends a chat message to the given channel </summary>
-        /// <remarks> Assumes the message has already been formatted using ConvertMessage </remarks>
-        protected abstract void DoSendMessage(string channel, string message);
         
         
         /// <summary> Attempts to connect to the external communication service </summary>
@@ -465,7 +464,7 @@ namespace MCGalaxy.Modules.Relay
             
             try {
                 if (!p.CanUse(cmd)) {
-                    CommandPerms.Find(cmd.name).MessageCannotUse(p);
+                    cmd.Permissions.MessageCannotUse(p);
                     return false;
                 }
                 if (!cmd.SuperUseable) {
@@ -539,7 +538,7 @@ namespace MCGalaxy.Modules.Relay
                 SuperName = bot.RelayName;
             }
             
-            public override void Message(byte type, string message) {
+            public override void Message(string message) {
                 Bot.SendMessage(ChannelID, message);
             }
         }

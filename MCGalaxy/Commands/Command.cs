@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
 
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -61,39 +61,40 @@ namespace MCGalaxy
         /// <remarks> return false to prevent this command showing in /last (e.g. /pass, /hide) </remarks>
         public virtual bool UpdatesLastCmd { get { return true; } }
         
+        public virtual CommandParallelism Parallelism { 
+            get { return type.CaselessEq(CommandTypes.Information) ? CommandParallelism.NoAndWarn : CommandParallelism.Yes; }
+        }
+        public CommandPerms Permissions;
+        
         public static List<Command> allCmds  = new List<Command>();
-        public static List<Command> coreCmds = new List<Command>();
-        public static bool IsCore(Command cmd) { return coreCmds.Contains(cmd); }
+        public static bool IsCore(Command cmd) { 
+            return cmd.GetType().Assembly == Assembly.GetExecutingAssembly(); // TODO common method
+        }
+
         public static List<Command> CopyAll() { return new List<Command>(allCmds); }
         
         
         public static void InitAll() {
-            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
             allCmds.Clear();
-            coreCmds.Clear();      
-            foreach (Group grp in Group.AllRanks) { grp.Commands.Clear(); }
-            
-            for (int i = 0; i < types.Length; i++) {
+            Alias.coreAliases.Clear();
+
+            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+            for (int i = 0; i < types.Length; i++) 
+            {
                 Type type = types[i];
-                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract) continue;
+                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract || !type.IsPublic) continue;
                 
                 Command cmd = (Command)Activator.CreateInstance(type);
                 if (Server.Config.DisabledCommands.CaselessContains(cmd.name)) continue;
                 Register(cmd);
             }
             
-            coreCmds = new List<Command>(allCmds);
             IScripting.AutoloadCommands();
         }
         
         public static void Register(Command cmd) {
-            allCmds.Add(cmd);
-            
-            CommandPerms perms = CommandPerms.GetOrAdd(cmd.name, cmd.defaultRank);
-            foreach (Group grp in Group.AllRanks) 
-            {
-                if (perms.UsableBy(grp.Permission)) grp.Commands.Add(cmd);
-            }
+            allCmds.Add(cmd);            
+            cmd.Permissions = CommandPerms.GetOrAdd(cmd.name, cmd.defaultRank);
             
             CommandPerm[] extra = cmd.ExtraPerms;
             if (extra != null) {
@@ -105,13 +106,20 @@ namespace MCGalaxy
             }           
             Alias.RegisterDefaults(cmd);
         }
+
+        public static void TryRegister(bool announce, params Command[] commands)
+        {
+            foreach (Command cmd in commands)
+            {
+                if (Find(cmd.name) != null) continue;
+
+                Register(cmd);
+                if (announce) Logger.Log(LogType.SystemActivity, "Command /{0} loaded", cmd.name);
+            }
+        }
         
         public static bool Unregister(Command cmd) {
             bool removed = allCmds.Remove(cmd);
-            foreach (Group grp in Group.AllRanks) 
-            {
-                grp.Commands.Remove(cmd);
-            }
             
             // typical usage: Command.Unregister(Command.Find("xyz"))
             // So don't throw exception if Command.Find returned null
@@ -119,9 +127,13 @@ namespace MCGalaxy
             return removed;
         }
         
+        public static void Unregister(params Command[] commands) {
+            foreach (Command cmd in commands) Unregister(cmd);
+        }
+        
         
         public static string GetColoredName(Command cmd) {
-            LevelPermission perm = CommandPerms.MinPerm(cmd);
+            LevelPermission perm = cmd.Permissions.MinRank;
             return Group.GetColor(perm) + cmd.name;
         }
         
@@ -176,7 +188,6 @@ namespace MCGalaxy
     public abstract class Command2 : Command 
     {
         public override void Use(Player p, string message) {
-            if (p == null) p = Player.Console;
             Use(p, message, p.DefaultCmdData);
         }
     }
@@ -184,7 +195,12 @@ namespace MCGalaxy
     [Flags]
     public enum CommandEnable 
     {
-        Always = 0, Economy = 1, Zombie = 2, Lava = 4,
+        Always = 0, Economy = 1
+    }
+    
+    public enum CommandParallelism
+    {
+        NoAndSilent, NoAndWarn, Yes
     }
 }
 

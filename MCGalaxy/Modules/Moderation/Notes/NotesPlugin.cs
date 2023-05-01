@@ -17,23 +17,29 @@
 */
 using System;
 using MCGalaxy.Events;
+using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Moderation.Notes 
 {
     public sealed class NotesPlugin : Plugin 
     {
-        public override string creator { get { return Server.SoftwareName + " team"; } }
-        public override string MCGalaxy_Version { get { return Server.Version; } }
-        public override string name { get { return "Core_NotesPlugin"; } }
+        public override string name { get { return "Notes"; } }
+
+        Command cmdNotes   = new CmdNotes();
+        Command cmdMyNotes = new CmdMyNotes();
 
         public override void Load(bool startup) {
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
+            Command.Register(cmdNotes);
+            Command.Register(cmdMyNotes);
         }
         
         public override void Unload(bool shutdown) {
             OnModActionEvent.Unregister(HandleModerationAction);
+            Command.Unregister(cmdNotes, cmdMyNotes);
         }
-        
+
+
         static void HandleModerationAction(ModAction action) {
             switch (action.Type) {
                 case ModActionType.Frozen:

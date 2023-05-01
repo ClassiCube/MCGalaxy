@@ -21,13 +21,13 @@ using MCGalaxy.Commands;
 using MCGalaxy.Eco;
 using MCGalaxy.Modules.Awards;
 
-namespace MCGalaxy.DB {
-
+namespace MCGalaxy.DB 
+{
     public delegate void OnlineStatPrinter(Player p, Player who);
     
     /// <summary> Prints stats for an online player in /info. </summary>
-    public static class OnlineStat {
-
+    public static class OnlineStat 
+    {
         /// <summary> List of stats that can be output to /info. </summary>
         public static List<OnlineStatPrinter> Stats = new List<OnlineStatPrinter>() {
             CoreLine,
@@ -115,7 +115,7 @@ namespace MCGalaxy.DB {
         
         public static void IPLine(Player p, string name, string ip) {
             ItemPerms seeIpPerms = CommandExtraPerms.Find("WhoIs", 1);
-            if (!seeIpPerms.UsableBy(p.Rank)) return;
+            if (!seeIpPerms.UsableBy(p)) return;
             
             string ipMsg = ip;
             if (Server.bannedIP.Contains(ip)) ipMsg = "&8" + ip + ", which is banned";
@@ -135,7 +135,7 @@ namespace MCGalaxy.DB {
         }
         
         public static void EntityLine(Player p, Player who) {
-            bool hasSkin = !who.SkinName.CaselessEq(who.truename);
+            bool hasSkin  = !who.SkinName.CaselessEq(who.truename);
             // TODO remove hardcoding
             bool hasModel = !(who.Model.CaselessEq("humanoid") || who.Model.CaselessEq("human"));
             

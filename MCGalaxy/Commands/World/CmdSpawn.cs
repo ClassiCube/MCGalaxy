@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCGalaxy)
+    Copyright 2010 MCSharp team (Modified for use with MCZall/MCLawl/MCForge)
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.World {
             if (!IGame.CheckAllowed(p, "use &T/Spawn")) return;
             
             if (message.Length > 0) { Help(p); return; }
-            PlayerActions.Respawn(p);
+            PlayerActions.RespawnAt(p, p.level.SpawnPos, p.level.rotx, p.level.roty);
         }
         
         public override void Help(Player p) {

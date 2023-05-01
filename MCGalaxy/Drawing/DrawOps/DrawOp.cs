@@ -62,7 +62,7 @@ namespace MCGalaxy.Drawing.Ops
         /// <summary> BlockDB change flags for blocks affected by this draw operation </summary>
         public ushort Flags = BlockDBFlags.Drawn;
         
-        /// <summary> Lock held on the associated level's BlockDB. Can be null. </summary>
+        /// <summary> Lock held on the associated level's BlockDB. Can be null and usually is null. </summary>
         public IDisposable BlockDBReadLock;
         
         /// <summary> Whether this draw operation can be undone. </summary>
