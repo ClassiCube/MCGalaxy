@@ -362,5 +362,17 @@ namespace MCGalaxy {
                 PlayerActions.ReloadMap(pl);
             }
         }
+        
+        
+        public static BlockDefinition ParseName(string name, BlockDefinition[] defs) {
+            // air is deliberately skipped
+            for (int b = 1; b < defs.Length; b++) 
+            {
+                BlockDefinition def = defs[b];
+                if (def == null) continue;
+                if (def.Name.Replace(" ", "").CaselessEq(name)) return def;
+            }
+            return null;
+        }
     }
 }

@@ -20,9 +20,10 @@ using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
-    public static partial class Block {
-        
+namespace MCGalaxy 
+{
+    public static partial class Block 
+    {        
         public static BlockProps[] Props = new BlockProps[Block.SUPPORTED_COUNT];
         public static Dictionary<string, byte> Aliases = new Dictionary<string, byte>();
         

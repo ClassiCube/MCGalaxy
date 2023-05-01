@@ -48,16 +48,16 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveCommands() {
-        	if (commandPermsChanged.Count > 0)
-        		SaveCommandPermissions();
-        	if (commandExtraPermsChanged.Count > 0) 
-        		SaveExtraCommandPermissions();
+            if (commandPermsChanged.Count > 0)
+                SaveCommandPermissions();
+            if (commandExtraPermsChanged.Count > 0) 
+                SaveExtraCommandPermissions();
             
             LoadCommands();
         }
         
         void SaveCommandPermissions() {
-        	foreach (CommandPerms changed in commandPermsChanged) 
+            foreach (CommandPerms changed in commandPermsChanged) 
             {
                 CommandPerms orig = CommandPerms.Find(changed.CmdName);
                 changed.CopyPermissionsTo(orig);
@@ -68,7 +68,7 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveExtraCommandPermissions() {
-        	foreach (CommandExtraPerms changed in commandExtraPermsChanged) 
+            foreach (CommandExtraPerms changed in commandExtraPermsChanged) 
             {
                 CommandExtraPerms orig = CommandExtraPerms.Find(changed.CmdName, changed.Num);
                 changed.CopyPermissionsTo(orig);
@@ -129,7 +129,7 @@ namespace MCGalaxy.Gui {
         
         void cmd_btnCustom_Click(object sender, EventArgs e) {
             using (CustomCommands form = new CustomCommands()) {
-        		form.ShowDialog();
+                form.ShowDialog();
             }
         }
         
