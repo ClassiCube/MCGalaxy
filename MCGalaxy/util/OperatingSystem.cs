@@ -66,6 +66,9 @@ namespace MCGalaxy
             if (kernel == "Darwin") return new macOS();
             if (kernel == "Linux")  return new LinuxOS();
 
+            if (kernel == "FreeBSD") return new FreeBSD_OS();
+            if (kernel == "NetBSD")  return new NetBSD_OS();
+
             return new UnixOS();
         }
 
@@ -94,47 +97,13 @@ namespace MCGalaxy
 
     class UnixOS : IOperatingSystem
     {
-        // https://stackoverflow.com/questions/15145241/is-there-an-equivalent-to-the-windows-getsystemtimes-function-in-linux
-        public override CPUTime MeasureAllCPUTime() {
-            try {
-                using (StreamReader r = new StreamReader("/proc/stat"))
-                {
-                    string line = r.ReadLine();
-                    if (line.StartsWith("cpu ")) return ParseCpuLine(line);
-                }
-            } catch (FileNotFoundException) { }
-
-            return default(CPUTime);
-        }
-
-        static CPUTime ParseCpuLine(string line) {
-            // Linux : cpu  [USER TIME] [NICE TIME] [SYSTEM TIME] [IDLE TIME] [I/O WAIT TIME] [IRQ TIME] [SW IRQ TIME]
-            // NetBSD: cpu [USER TIME] [NICE TIME] [SYSTEM TIME] [IDLE TIME]
-            line = line.Replace("  ", " ");
-            string[] bits = line.SplitSpaces();
-
-            ulong user = ulong.Parse(bits[1]);
-            ulong nice = ulong.Parse(bits[2]);
-            ulong kern = ulong.Parse(bits[3]);
-            ulong idle = ulong.Parse(bits[4]);
-            // TODO interrupt time too?
-
-            CPUTime all;
-            all.UserTime   = user + nice;
-            all.KernelTime = kern;
-            all.IdleTime   = idle;
-            return all;
-        }
-
+        public override CPUTime MeasureAllCPUTime() { return default(CPUTime); }
 
         public override bool IsWindows { get { return false; } }
-
-        [DllImport("libc", SetLastError = true)]
-        protected static extern int execvp(string path, string[] argv);
         
         public override void RestartProcess() {
             if (!Server.CLIMode) return;
-            
+
             // With using normal Process.Start with mono, after Environment.Exit
             //  is called, all FDs (including standard input) are also closed.
             // Unfortunately, this causes the new server process to constantly error with
@@ -165,7 +134,7 @@ namespace MCGalaxy
 
             // try to exec using actual runtime path first
             //   e.g. /usr/bin/mono-sgen, /home/test/.dotnet/dotnet
-            string exe = Process.GetCurrentProcess().MainModule.FileName;
+            string exe = GetExePath();
             execvp(exe, new string[] { exe, Server.RestartPath, null });
             Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
 
@@ -175,6 +144,17 @@ namespace MCGalaxy
             Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
 #endif
         }
+
+        [DllImport("libc", SetLastError = true)]
+        protected static extern int execvp(string path, string[] argv);
+
+        protected static string GetExePath() {
+            return Process.GetCurrentProcess().MainModule.FileName;
+        }
+
+
+        [DllImport("libc", SetLastError = true)]
+        protected unsafe static extern int sysctlbyname(string name, void* oldp, IntPtr* oldlenp, IntPtr newp, IntPtr newlen);
     }
 
     class LinuxOS : UnixOS
@@ -206,6 +186,76 @@ namespace MCGalaxy
                 Logger.LogError("Changing SSL/TLS certificates folder", ex);
             }
 #endif
+        }
+
+
+        // https://stackoverflow.com/questions/15145241/is-there-an-equivalent-to-the-windows-getsystemtimes-function-in-linux
+        public override CPUTime MeasureAllCPUTime() {
+            try {
+                using (StreamReader r = new StreamReader("/proc/stat"))
+                {
+                    string line = r.ReadLine();
+                    if (line.StartsWith("cpu ")) return ParseCpuLine(line);
+                }
+            } catch (FileNotFoundException) { }
+
+            return default(CPUTime);
+        }
+
+        static CPUTime ParseCpuLine(string line) {
+            // "cpu  [USER TIME] [NICE TIME] [SYSTEM TIME] [IDLE TIME] [I/O WAIT TIME] [IRQ TIME] [SW IRQ TIME]"
+            line = line.Replace("  ", " ");
+            string[] bits = line.SplitSpaces();
+
+            ulong user = ulong.Parse(bits[1]);
+            ulong nice = ulong.Parse(bits[2]);
+            ulong kern = ulong.Parse(bits[3]);
+            ulong idle = ulong.Parse(bits[4]);
+            // TODO interrupt time too?
+
+            CPUTime all;
+            all.UserTime   = user + nice;
+            all.KernelTime = kern;
+            all.IdleTime   = idle;
+            return all;
+        }
+    }
+
+    class FreeBSD_OS : UnixOS
+    {
+        // https://stackoverflow.com/questions/5329149/using-system-calls-from-c-how-do-i-get-the-utilization-of-the-cpus
+        public unsafe override CPUTime MeasureAllCPUTime() {
+            const int CPUSTATES = 5;
+
+            UIntPtr* states = stackalloc UIntPtr[CPUSTATES];
+            IntPtr size     = (IntPtr)(CPUSTATES * IntPtr.Size);
+            sysctlbyname("kern.cp_time", states, &size, IntPtr.Zero, IntPtr.Zero);
+
+            CPUTime all;
+            all.UserTime   = states[0].ToUInt64() + states[1].ToUInt64(); // CP_USER + CP_NICE
+            all.KernelTime = states[2].ToUInt64(); // CP_SYS
+            all.IdleTime   = states[4].ToUInt64(); // CP_IDLE
+            // TODO interrupt time too?
+            return all;
+        }
+    }
+
+    class NetBSD_OS : UnixOS
+    {
+        // https://man.netbsd.org/sysctl.7
+        public unsafe override CPUTime MeasureAllCPUTime() {
+            const int CPUSTATES = 5;
+
+            ulong* states = stackalloc ulong[CPUSTATES];
+            IntPtr size   = (IntPtr)(CPUSTATES * sizeof(ulong));
+            sysctlbyname("kern.cp_time", states, &size, IntPtr.Zero, IntPtr.Zero);
+
+            CPUTime all;
+            all.UserTime   = states[0] + states[1]; // CP_USER + CP_NICE
+            all.KernelTime = states[2]; // CP_SYS
+            all.IdleTime   = states[4]; // CP_IDLE
+            // TODO interrupt time too?
+            return all;
         }
     }
 
