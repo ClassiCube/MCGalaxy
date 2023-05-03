@@ -30,17 +30,21 @@ namespace MCGalaxy
 
     public abstract class IOperatingSystem
     {
-        /// <summary> Measures CPU use by all processes in the system </summary>
-        public abstract CPUTime MeasureAllCPUTime();
-        /// <summary> Attempts to restart the server process in-place </summary>
-        /// <remarks> Does not return when restart is successful 
-        /// (since current process image is replaced) </remarks>
-        public abstract void RestartProcess();
+        /// <summary> Whether the operating system currently being run on is Windows </summary>
         public abstract bool IsWindows { get; }
         public virtual string StandaloneName { get { return "UNSUPPORTED"; } }
-
+        
         public virtual void Init() { }
+        
+        /// <summary> Measures CPU use by all processes in the system </summary>
+        public abstract CPUTime MeasureAllCPUTime();
+        
+        /// <summary> Attempts to restart the server process in-place </summary>
+        /// <remarks> Does not return when in-place restart is successful 
+        /// (since the current process image is replaced) </remarks>
+        public abstract void RestartProcess();
 
+        
         static IOperatingSystem detectedOS;
         public static IOperatingSystem DetectOS() {
             detectedOS = detectedOS ?? DoDetectOS();
@@ -52,9 +56,12 @@ namespace MCGalaxy
             if (platform == PlatformID.Win32NT || platform == PlatformID.Win32Windows)
                 return new WindowsOS();
 
-            sbyte* ascii  = stackalloc sbyte[8192];
-            uname(ascii);
-            string kernel = new String(ascii);
+            // uname actually outputs a struct, with first field being OS name
+            //  https://man7.org/linux/man-pages/man2/uname.2.html
+            // 8 kb should be more than enough to store the struct uname outputs
+            sbyte* utsname = stackalloc sbyte[8192];
+            uname(utsname);
+            string kernel  = new String(utsname);
 
             if (kernel == "Darwin") return new macOS();
             if (kernel == "Linux")  return new LinuxOS();
@@ -83,65 +90,6 @@ namespace MCGalaxy
 
         public override void RestartProcess() { }
         public override bool IsWindows { get { return true; } }
-    }
-
-    class macOS : UnixOS
-    {
-        public override string StandaloneName { 
-            get { return IntPtr.Size == 8 ? "mac64" : "mac32"; } 
-        }
-
-        // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
-        // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
-        public override CPUTime MeasureAllCPUTime() {
-            uint[] info = new uint[4]; // CPU_STATE_MAX
-            uint count  = 4; // HOST_CPU_LOAD_INFO_COUNT 
-            int flavor  = 3; // HOST_CPU_LOAD_INFO
-            host_statistics(mach_host_self(), flavor, info, ref count);
-
-            CPUTime all;
-            all.IdleTime   = info[2]; // CPU_STATE_IDLE
-            all.UserTime   = info[0] + info[3]; // CPU_STATE_USER + CPU_STATE_NICE
-            all.KernelTime = info[1]; // CPU_STATE_SYSTEM
-            return all;
-        }
-
-        [DllImport("libc")]
-        static extern IntPtr mach_host_self();
-        [DllImport("libc")]
-        static extern int host_statistics(IntPtr port, int flavor, uint[] info, ref uint count);
-    }
-
-    class LinuxOS : UnixOS
-    {
-        public override string StandaloneName {
-            get { return IntPtr.Size == 8 ? "nix64" : "nix32"; }
-        }
-
-        public override void Init() {
-            base.Init();
-#if MCG_STANDALONE
-            if (!Directory.Exists("certs")) return;
-
-            // by default mono looks in these directories for SSL/TLS certificates:
-            //  - ~/.config/.mono/new-certs/Trust
-            //  - /usr/share/.mono/new-certs/Trust
-            // but that won't work when distributed in a standalone build - so in this case, have to
-            //  modify internal runtime state to make it look elsewhere for certifcates on Linux
-            try
-            {
-                Type settingsType  = Type.GetType("Mono.Security.Interface.MonoTlsSettings, Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
-                PropertyInfo defSettingsProp = settingsType.GetProperty("DefaultSettings", BindingFlags.Static | BindingFlags.Public);
-                object defSettings = defSettingsProp.GetValue(null, null);
-
-                Type settingsObjType   = defSettings.GetType();
-                PropertyInfo pathsProp = settingsObjType.GetProperty("CertificateSearchPaths", BindingFlags.Instance | BindingFlags.NonPublic);
-                pathsProp.SetValue(defSettings, new string[] { "@pem:certs", "@trusted" }, null);
-            } catch (Exception ex) {
-                Logger.LogError("Changing SSL/TLS certificates folder", ex);
-            }
-#endif
-        }
     }
 
     class UnixOS : IOperatingSystem
@@ -179,15 +127,14 @@ namespace MCGalaxy
         }
 
 
-        public override void RestartProcess() {
-            if (Server.CLIMode) HACK_Execvp();
-        }
         public override bool IsWindows { get { return false; } }
 
         [DllImport("libc", SetLastError = true)]
-        static extern int execvp(string path, string[] argv);
+        protected static extern int execvp(string path, string[] argv);
         
-        static void HACK_Execvp() {
+        public override void RestartProcess() {
+            if (!Server.CLIMode) return;
+            
             // With using normal Process.Start with mono, after Environment.Exit
             //  is called, all FDs (including standard input) are also closed.
             // Unfortunately, this causes the new server process to constantly error with
@@ -228,5 +175,64 @@ namespace MCGalaxy
             Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
 #endif
         }
+    }
+
+    class LinuxOS : UnixOS
+    {
+        public override string StandaloneName {
+            get { return IntPtr.Size == 8 ? "nix64" : "nix32"; }
+        }
+
+        public override void Init() {
+            base.Init();
+#if MCG_STANDALONE
+            if (!Directory.Exists("certs")) return;
+
+            // by default mono looks in these directories for SSL/TLS certificates:
+            //  - ~/.config/.mono/new-certs/Trust
+            //  - /usr/share/.mono/new-certs/Trust
+            // but that won't work when distributed in a standalone build - so in this case, have to
+            //  modify internal runtime state to make it look elsewhere for certifcates on Linux
+            try
+            {
+                Type settingsType  = Type.GetType("Mono.Security.Interface.MonoTlsSettings, Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
+                PropertyInfo defSettingsProp = settingsType.GetProperty("DefaultSettings", BindingFlags.Static | BindingFlags.Public);
+                object defSettings = defSettingsProp.GetValue(null, null);
+
+                Type settingsObjType   = defSettings.GetType();
+                PropertyInfo pathsProp = settingsObjType.GetProperty("CertificateSearchPaths", BindingFlags.Instance | BindingFlags.NonPublic);
+                pathsProp.SetValue(defSettings, new string[] { "@pem:certs", "@trusted" }, null);
+            } catch (Exception ex) {
+                Logger.LogError("Changing SSL/TLS certificates folder", ex);
+            }
+#endif
+        }
+    }
+
+    class macOS : UnixOS
+    {
+        public override string StandaloneName { 
+            get { return IntPtr.Size == 8 ? "mac64" : "mac32"; } 
+        }
+
+        // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
+        // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
+        public override CPUTime MeasureAllCPUTime() {
+            uint[] info = new uint[4]; // CPU_STATE_MAX
+            uint count  = 4; // HOST_CPU_LOAD_INFO_COUNT 
+            int flavor  = 3; // HOST_CPU_LOAD_INFO
+            host_statistics(mach_host_self(), flavor, info, ref count);
+
+            CPUTime all;
+            all.IdleTime   = info[2]; // CPU_STATE_IDLE
+            all.UserTime   = info[0] + info[3]; // CPU_STATE_USER + CPU_STATE_NICE
+            all.KernelTime = info[1]; // CPU_STATE_SYSTEM
+            return all;
+        }
+
+        [DllImport("libc")]
+        static extern IntPtr mach_host_self();
+        [DllImport("libc")]
+        static extern int host_statistics(IntPtr port, int flavor, uint[] info, ref uint count);
     }
 }

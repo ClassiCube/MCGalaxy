@@ -62,6 +62,7 @@ namespace MCGalaxy
         public virtual bool LoadAtStartup { get { return true; } }
         
         
+        /// <summary> List of plugins/modules included in the server software </summary>
         public static List<Plugin> core   = new List<Plugin>();
         public static List<Plugin> custom = new List<Plugin>();
         
