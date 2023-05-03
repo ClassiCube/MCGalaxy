@@ -134,7 +134,7 @@ namespace MCGalaxy
 
             // try to exec using actual runtime path first
             //   e.g. /usr/bin/mono-sgen, /home/test/.dotnet/dotnet
-            string exe = GetExePath();
+            string exe = GetProcessExePath();
             execvp(exe, new string[] { exe, Server.RestartPath, null });
             Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
 
@@ -148,7 +148,7 @@ namespace MCGalaxy
         [DllImport("libc", SetLastError = true)]
         protected static extern int execvp(string path, string[] argv);
 
-        protected static string GetExePath() {
+        protected static string GetProcessExePath() {
             return Process.GetCurrentProcess().MainModule.FileName;
         }
 
@@ -218,6 +218,35 @@ namespace MCGalaxy
             all.KernelTime = kern;
             all.IdleTime   = idle;
             return all;
+        }
+
+
+        public override void RestartProcess() {
+            if (!Server.CLIMode) return;
+
+            try {
+                // try to restart using process's original command line arguments so that they are preserved
+                // e.g. for "mono --debug MCGalaxyCLI.exe"
+                string exe    = GetProcessExePath();
+                string[] args = GetProcessCommandLineArgs();
+                execvp(exe, args);
+            } catch (Exception ex) {
+                Logger.LogError("Restarting process", ex);
+            }
+ 
+            base.RestartProcess();
+        }
+
+        static string[] GetProcessCommandLineArgs() {
+            // /proc/self/cmdline returns the command line arguments
+            //   of the process separated by NUL characters
+            using (StreamReader r = new StreamReader("/proc/self/cmdline"))
+            {
+                string[] args = r.ReadToEnd().Split('\0');
+                // last argument will be a 0 length string - replace with null for execvp
+                args[args.Length - 1] = null;
+                return args;
+            }
         }
     }
 
