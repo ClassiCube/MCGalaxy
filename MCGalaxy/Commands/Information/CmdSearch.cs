@@ -14,8 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.DB;
-using MCGalaxy.SQL;
+using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info 
@@ -87,10 +86,9 @@ namespace MCGalaxy.Commands.Info
         }
         
         static void SearchPlayers(Player p, string keyword, string modifier) {
-            List<PlayerData> stats = new List<PlayerData>();
-            Database.ReadRows("Players", "*", record => stats.Add(PlayerData.Parse(record)));
-
-            List<string> players = Matcher.Filter(stats, keyword, pl => pl.Name);
+            Player[] online = PlayerInfo.Online.Items;
+            List<string> players = Matcher.Filter(online, keyword, pl => pl.name,
+                                                  pl => p.CanSee(pl), pl => pl.ColoredName);
             OutputList(p, keyword, "search players", "players", modifier, players);
         }
         
