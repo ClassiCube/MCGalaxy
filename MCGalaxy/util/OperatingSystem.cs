@@ -25,7 +25,12 @@ namespace MCGalaxy
 {
     public struct CPUTime
     {
-        public ulong IdleTime, KernelTime, UserTime;
+        /// <summary> Total time spent being idle / not executing code </summary>
+        public ulong IdleTime;
+        /// <summary> Total time spent executing code in Kernel mode </summary>
+        public ulong KernelTime;
+        /// <summary> Total time spent executing code in User mode </summary>
+        public ulong UserTime;
     }
 
     public abstract class IOperatingSystem

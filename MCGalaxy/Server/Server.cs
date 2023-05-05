@@ -250,7 +250,10 @@ namespace MCGalaxy
 
             foreach (Level lvl in loaded)
             {
-                if (!lvl.SaveChanges) continue;
+                if (!lvl.SaveChanges) {
+                    Logger.Log(LogType.SystemActivity, "Skipping save for level {0}", lvl.ColoredName);
+                    continue;
+                }
 
                 autoload = autoload + lvl.name + "=" + lvl.physics + Environment.NewLine;
                 lvl.Save();
