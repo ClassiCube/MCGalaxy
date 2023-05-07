@@ -33,7 +33,8 @@ namespace MCGalaxy.Scripting
                 return false; 
             }
 
-            p.Message("Successfully loaded &T{0}", cmds.Join(c => "/" + c.name));
+            p.Message("Successfully loaded &T{0}", 
+                      cmds.Join(c => "/" + c.name));
             return true;
         }
 
@@ -43,12 +44,14 @@ namespace MCGalaxy.Scripting
                 return false;
             }
             
-            if (!IScripting.LoadPlugin(path, false)) {
+            List<Plugin> plugins = IScripting.LoadPlugin(path, false);
+            if (plugins == null) {
                 p.Message("&WError loading plugin. See error logs for more information.");
                 return false;
             }
 
-            p.Message("Plugin loaded successfully.");
+            p.Message("Plugin {0} loaded successfully",
+                      plugins.Join(pl => pl.name));
             return true;
         }
     }

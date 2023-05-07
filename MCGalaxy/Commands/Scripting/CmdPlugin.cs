@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Scripting
             if (plugin == null) return;
             
             if (Plugin.Unload(plugin)) {
-                p.Message("Plugin unloaded successfully.");
+                p.Message("Plugin {0} unloaded successfully", plugin.name);
             } else {
                 p.Message("&WError unloading plugin. See error logs for more information.");
             }

@@ -182,19 +182,19 @@ namespace MCGalaxy.Scripting
         }
         
         /// <summary> Loads all plugins from the given .dll path. </summary>
-        public static bool LoadPlugin(string path, bool auto) {
+        public static List<Plugin> LoadPlugin(string path, bool auto) {
             try {
                 Assembly lib = LoadAssembly(path);
                 List<Plugin> plugins = LoadTypes<Plugin>(lib);
                 
                 foreach (Plugin plugin in plugins) 
                 {
-                    if (!Plugin.Load(plugin, auto)) return false;
+                    if (!Plugin.Load(plugin, auto)) return null;
                 }
-                return true;
+                return plugins;
             } catch (Exception ex) {
                 Logger.LogError("Error loading plugins from " + path, ex);
-                return false;
+                return null;
             }
         }
     }
