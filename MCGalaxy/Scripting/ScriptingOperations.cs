@@ -42,7 +42,7 @@ namespace MCGalaxy.Scripting
             if (!File.Exists(path)) {
                 p.Message("File &9{0} &Snot found.", path);
                 return false;
-            }
+            } // TODO: Move error handling elsewhere
             
             List<Plugin> plugins = IScripting.LoadPlugin(path, false);
             if (plugins == null) {

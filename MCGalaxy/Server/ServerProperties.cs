@@ -26,15 +26,18 @@ namespace MCGalaxy
     {
         public static void Load() {
             old = new OldPerms();
-            if (PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor))
-                Server.SettingsUpdate();
-
-            Database.UpdateActiveBackend();
+            PropertiesFile.Read(Paths.ServerPropsFile, ref old, LineProcessor);
             
+            ApplyChanges();
+            Save();
+        }
+        
+        public static void ApplyChanges() {
             if (!Directory.Exists(Server.Config.BackupDirectory))
                 Server.Config.BackupDirectory = "levels/backups";
             
-            Save();
+            Server.SettingsUpdate();
+            Database.UpdateActiveBackend();
             Server.SetMainLevel(Server.Config.MainLevel);
         }
         

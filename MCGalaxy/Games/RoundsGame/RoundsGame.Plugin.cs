@@ -27,7 +27,9 @@ namespace MCGalaxy.Games {
     public abstract partial class RoundsGame : IGame {
         
         protected virtual void HookEventHandlers() {
-            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);  
+            OnLevelUnloadEvent.Register(HandleLevelUnload, Priority.High);
+            OnMainLevelChangingEvent.Register(HandleMainChanged, Priority.High);
+            
             OnSendingHeartbeatEvent.Register(HandleSendingHeartbeat, Priority.High);
             OnInfoSaveEvent.Register(HandleSaveStats, Priority.High);
             
@@ -38,6 +40,8 @@ namespace MCGalaxy.Games {
         
         protected virtual void UnhookEventHandlers() {
             OnLevelUnloadEvent.Unregister(HandleLevelUnload);
+            OnMainLevelChangingEvent.Unregister(HandleMainChanged);
+            
             OnSendingHeartbeatEvent.Unregister(HandleSendingHeartbeat);
             OnInfoSaveEvent.Unregister(HandleSaveStats);
             
@@ -83,12 +87,6 @@ namespace MCGalaxy.Games {
             }
         }
         
-        protected void HandleLevelUnload(Level lvl, ref bool cancel) {
-            if (lvl != Map) return;
-            Logger.Log(LogType.GameActivity, "Unload cancelled! A {0} game is currently going on!", GameName);
-            cancel = true;
-        }
-        
         protected void HandlePlayerAction(Player p, PlayerAction action, string message, bool stealth) {
             if (!(action == PlayerAction.Referee || action == PlayerAction.UnReferee)) return;
             if (p.level != Map) return;
@@ -105,6 +103,19 @@ namespace MCGalaxy.Games {
             
             Entities.GlobalSpawn(p, false, "");
             TabList.Update(p, true);
+        }
+        
+        
+        void HandleLevelUnload(Level lvl, ref bool cancel) {
+            if (lvl != Map) return;
+            Logger.Log(LogType.GameActivity, "Unload cancelled! A {0} game is currently going on!", GameName);
+            cancel = true;
+        }
+        
+        void HandleMainChanged(ref string map) {
+            Level cur = Map; // in case Map is changed by another thread
+            if (!GetConfig().SetMainLevel || cur == null) return;
+            map = cur.name;
         }
     }
 }

@@ -29,6 +29,7 @@ using MCGalaxy.Commands;
 using MCGalaxy.DB;
 using MCGalaxy.Drawing;
 using MCGalaxy.Eco;
+using MCGalaxy.Events.LevelEvents;
 using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Network;
@@ -307,6 +308,7 @@ namespace MCGalaxy
         }
         
         public static bool SetMainLevel(string map) {
+            OnMainLevelChangingEvent.Call(ref map);
             string main = mainLevel != null ? mainLevel.name : Server.Config.MainLevel;
             if (map.CaselessEq(main)) return false;
             
@@ -315,13 +317,13 @@ namespace MCGalaxy
                 lvl = LevelActions.Load(Player.Console, map, false);
             if (lvl == null) return false;
             
-            SetMainLevel(lvl); return true;
+            SetMainLevel(lvl); 
+            return true;
         }
         
         public static void SetMainLevel(Level lvl) {
-            Level oldMain = mainLevel;
+            Level oldMain = mainLevel;            
             mainLevel = lvl;
-            Server.Config.MainLevel = lvl.name;         
             oldMain.AutoUnload();
         }
         

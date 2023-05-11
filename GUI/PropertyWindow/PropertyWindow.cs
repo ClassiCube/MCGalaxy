@@ -109,7 +109,7 @@ namespace MCGalaxy.Gui
             SaveBlocks();
             SaveGameProps();
 
-            SrvProperties.Load(); // loads when saving?
+            SrvProperties.ApplyChanges();
         }
 
         void btnDiscard_Click(object sender, EventArgs e) { Dispose(); }

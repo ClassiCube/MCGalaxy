@@ -49,8 +49,11 @@ namespace MCGalaxy.Commands.World {
                 if (!LevelInfo.Check(p, data.Rank, map, "set main to this map")) return;
                 
                 Server.SetMainLevel(map);
+                Server.Config.MainLevel = map; 
                 SrvProperties.Save();
-                p.Message("Set main level to {0}", Server.mainLevel.ColoredName);
+                
+                p.Message("Set main level to {0}", 
+                          LevelInfo.GetConfig(map).Color + map);
             }
         }
         
