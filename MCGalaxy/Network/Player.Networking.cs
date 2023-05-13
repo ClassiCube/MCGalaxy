@@ -56,7 +56,7 @@ namespace MCGalaxy
             }
         }
 
-        public void SendCpeMessage(CpeMessageType type, string message, Chat.PersistentMessage.Priority priority = Chat.PersistentMessage.Priority.Default) {
+        public void SendCpeMessage(CpeMessageType type, string message, Chat.PersistentMessage.Priority priority = Chat.PersistentMessage.Priority.Normal) {
             if (type != CpeMessageType.Normal && !Supports(CpeExt.MessageTypes)) {
                 if (type >= CpeMessageType.Announcement) type = CpeMessageType.Normal;
                 else return;
