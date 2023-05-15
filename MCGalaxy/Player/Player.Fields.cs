@@ -31,7 +31,8 @@ namespace MCGalaxy {
 
         public PlayerIgnores Ignores = new PlayerIgnores();
         public static string lastMSG = "";
-        internal Dictionary<CpeMessageType, List<Chat.PersistentMessage>> fields = new Dictionary<CpeMessageType, List<Chat.PersistentMessage>>();
+        internal readonly object persistentMessageLocker = new object();
+        internal Dictionary<CpeMessageType, List<Chat.PersistentMessage>> persistentMessages = new Dictionary<CpeMessageType, List<Chat.PersistentMessage>>();
         public Zone ZoneIn;
         
         //TpA

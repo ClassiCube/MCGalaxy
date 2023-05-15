@@ -254,35 +254,39 @@ namespace MCGalaxy {
             /// </summary>
             internal static bool Handle(Player p, CpeMessageType type, string message, Priority priority) {
                 if (!IsPersistent(type)) return false;
-                if (!p.fields.ContainsKey(type)) {
-                    p.fields[type] = new List<PersistentMessage>();
-                }
-                var field = p.fields[type];
+                lock (p.persistentMessageLocker) {
 
-                PersistentMessage thisMsg = null;
-                foreach (var persMsg in field) { //Find an existing message with same priority
-                    if (persMsg.priority == priority) { thisMsg = persMsg; break; }
-                }
-
-                if (string.IsNullOrEmpty(message)) { //Clearing the message case
-                    if (thisMsg == null) { return true; } //No message exists with this priority, meaning no action needs to be taken when clearing it
-                    field.Remove(thisMsg);
-                    PersistentMessage highestRemainingMsg = null;
-                    foreach (var persMsg in field) {
-                        if (highestRemainingMsg == null || persMsg.priority > highestRemainingMsg.priority) { highestRemainingMsg = persMsg; }
+                    if (!p.persistentMessages.ContainsKey(type)) {
+                        p.persistentMessages[type] = new List<PersistentMessage>();
                     }
-                    if (highestRemainingMsg == null) { p.Session.SendMessage(type, ""); return true; } //No messages remain, clear field and quit
+                    var field = p.persistentMessages[type]; //field represents one of the top or bottom right lines
 
-                    p.Session.SendMessage(type, highestRemainingMsg.message); //reveal highest remaining message
-                    return true;
-                }
+                    PersistentMessage thisMsg = null;
+                    foreach (var persMsg in field) { //Find an existing message with same priority
+                        if (persMsg.priority == priority) { thisMsg = persMsg; break; }
+                    }
 
+                    if (string.IsNullOrEmpty(message)) { //Clearing the message case
+                        if (thisMsg == null) { return true; } //No message exists with this priority, meaning no action needs to be taken when clearing it
+                        field.Remove(thisMsg);
+                        PersistentMessage highestRemainingMsg = null;
+                        foreach (var persMsg in field) {
+                            if (highestRemainingMsg == null || persMsg.priority > highestRemainingMsg.priority) { highestRemainingMsg = persMsg; }
+                        }
+                        if (highestRemainingMsg == null) { p.Session.SendMessage(type, ""); return true; } //No messages remain, clear field and quit
 
-                if (thisMsg == null) { thisMsg = new PersistentMessage(message, priority); field.Add(thisMsg); } else { thisMsg.message = message; }
+                        p.Session.SendMessage(type, highestRemainingMsg.message); //reveal highest remaining message
+                        return true;
+                    }
 
-                foreach (var persMsg in field) {
-                    if (persMsg.priority > priority) { return true; } //If any other message in this field has higher priority, do not send to client
-                }
+                    if (thisMsg == null) { thisMsg = new PersistentMessage(message, priority); field.Add(thisMsg); } else { thisMsg.message = message; }
+
+                    foreach (var persMsg in field) {
+                        if (persMsg.priority > priority) { return true; } //If any other message in this field has higher priority, do not send to client
+                    }
+
+                } //end lock
+
                 p.Session.SendMessage(type, message);
                 return true;
             }
