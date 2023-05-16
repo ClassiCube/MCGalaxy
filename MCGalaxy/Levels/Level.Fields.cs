@@ -47,7 +47,7 @@ namespace MCGalaxy {
         public BlockDefinition[] CustomBlockDefs = new BlockDefinition[Block.SUPPORTED_COUNT];
         public BlockProps[] Props = new BlockProps[Block.SUPPORTED_COUNT];
         public ExtrasCollection Extras = new ExtrasCollection();
-        public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>(false);
+        public VolatileArray<PlayerBot> Bots = new VolatileArray<PlayerBot>();
         bool unloadedBots;
         
         public HandleDelete[] DeleteHandlers = new HandleDelete[Block.SUPPORTED_COUNT];

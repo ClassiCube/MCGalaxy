@@ -24,7 +24,7 @@ namespace MCGalaxy
     {
         /// <summary> Array of all currently online players. </summary>
         /// <remarks> Note this field is highly volatile, you should cache references to the items array. </remarks>
-        public static VolatileArray<Player> Online = new VolatileArray<Player>(true);
+        public static VolatileArray<Player> Online = new VolatileArray<Player>();
         
         public static Group GetGroup(string name) {
             Player target = FindExact(name);

@@ -84,9 +84,6 @@ namespace MCGalaxy
             zoneConfig   = ConfigElement.GetAll(typeof(ZoneConfig));
 
             IOperatingSystem.DetectOS().Init();
-            #pragma warning disable 0618
-            Player.players = PlayerInfo.Online.list;
-            #pragma warning restore 0618
             
             StartTime = DateTime.UtcNow;
             Logger.Log(LogType.SystemActivity, "Starting Server");

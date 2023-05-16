@@ -18,9 +18,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace MCGalaxy {
-    public sealed class VolatileArray<T> where T : class {
-
+namespace MCGalaxy 
+{
+    public sealed class VolatileArray<T> where T : class 
+    {
         /// <remarks> Note this field is highly volatile, you should cache references to it. </remarks>
         public volatile T[] Items = new T[0];
         
@@ -31,24 +32,17 @@ namespace MCGalaxy {
         /// to minimise the amount of time the object is locked for. </remarks>
         public readonly object locker = new object();
         
-        public List<T> list;
-        
-        readonly bool useList;
-        
-        public VolatileArray(bool useList = false) {
-            this.useList = useList;
-            if (useList) list = new List<T>();
-        }
+        public VolatileArray(bool ignored = false) { } // used to mean 'useList'
         
         public bool Add(T value) {
             lock (locker) {
                 T[] newItems = new T[Items.Length + 1];
-                for (int i = 0; i < Items.Length; i++) {
+                for (int i = 0; i < Items.Length; i++) 
+                {
                     if (object.ReferenceEquals(Items[i], value)) return false;
                     newItems[i] = Items[i];
                 }
 
-                if (useList) list.Add(value);
                 newItems[Items.Length] = value;
                 Items = newItems;
             }
@@ -57,7 +51,8 @@ namespace MCGalaxy {
         
         public bool Contains(T value) {
             lock (locker) {
-                for (int i = 0; i < Items.Length; i++) {
+                for (int i = 0; i < Items.Length; i++) 
+                {
                     if (object.ReferenceEquals(Items[i], value)) return true;
                 }
             }
@@ -67,11 +62,11 @@ namespace MCGalaxy {
         public bool Remove(T value) {
             lock (locker) {
                 if (Items.Length == 0) return false;
-                if (useList) list.Remove(value);
                 
                 T[] newItems = new T[Items.Length - 1];
                 int j = 0;
-                for (int i = 0; i < Items.Length; i++) {
+                for (int i = 0; i < Items.Length; i++) 
+                {
                     if (object.ReferenceEquals(Items[i], value)) continue;
                     
                     // For some reason item wasn't in the list
@@ -95,7 +90,6 @@ namespace MCGalaxy {
         public bool RemoveFirst() {
             lock (locker) {
                 if (Items.Length == 0) return false;
-                if (useList) list.RemoveAt(0);
                 
                 T[] newItems = new T[Items.Length - 1];
                 for (int i = 1; i < Items.Length; i++)
@@ -107,7 +101,6 @@ namespace MCGalaxy {
         
         public void Clear() {
             lock (locker) {
-                if (useList) list.Clear();
                 Items = new T[0];
             }
         }

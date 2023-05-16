@@ -325,9 +325,7 @@ namespace MCGalaxy {
 
         #endregion
         #region == OTHER ==
-        
-        [Obsolete("Use PlayerInfo.Online.Items")]
-        public static List<Player> players;
+
         public const string USERNAME_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._";
         
         internal byte UserType() { return group.Blocks[Block.Bedrock] ? (byte)100 : (byte)0; }

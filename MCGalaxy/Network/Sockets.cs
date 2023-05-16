@@ -85,7 +85,7 @@ namespace MCGalaxy.Network
         }
         
         
-        internal static VolatileArray<INetSocket> pending = new VolatileArray<INetSocket>(false);
+        internal static VolatileArray<INetSocket> pending = new VolatileArray<INetSocket>();
         public static ProtocolConstructor[] Protocols     = new ProtocolConstructor[256];
         
         void IdentifyProtocol(byte opcode) {
