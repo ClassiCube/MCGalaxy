@@ -22,11 +22,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace MCGalaxy.Scripting 
-{    
+namespace MCGalaxy.Scripting
+{
+    public sealed class AlreadyLoadedException : Exception
+    {
+        public AlreadyLoadedException(string msg) : base(msg) { }
+    }
+    
     /// <summary> Utility methods for loading assemblies, commands, and plugins </summary>
-    public static class IScripting 
-    {     
+    public static class IScripting
+    {
         public const string COMMANDS_DLL_DIR = "extra/commands/dll/";
         public const string PLUGINS_DLL_DIR  = "plugins/";
         
@@ -44,7 +49,7 @@ namespace MCGalaxy.Scripting
 
         // only used for resolving plugin DLLs depending on other plugin DLLs
         static Assembly ResolvePluginAssembly(object sender, ResolveEventArgs args) {
-#if !NET_20
+            #if !NET_20
             if (args.RequestingAssembly == null)       return null;
             if (!IsPluginDLL(args.RequestingAssembly)) return null;
 
@@ -58,7 +63,7 @@ namespace MCGalaxy.Scripting
             
             Logger.Log(LogType.Warning, "Custom command/plugin [{0}] tried to load [{1}], but it could not be found",
                        args.RequestingAssembly.FullName, args.Name);
-#endif
+            #endif
             return null;
         }
 
@@ -70,7 +75,7 @@ namespace MCGalaxy.Scripting
         public static List<T> LoadTypes<T>(Assembly lib) {
             List<T> instances = new List<T>();
             
-            foreach (Type t in lib.GetTypes()) 
+            foreach (Type t in lib.GetTypes())
             {
                 if (t.IsAbstract || t.IsInterface || !t.IsSubclassOf(typeof(T))) continue;
                 object instance = Activator.CreateInstance(t);
@@ -118,48 +123,38 @@ namespace MCGalaxy.Scripting
         }
         
         static void AutoloadCommands(string path) {
-            string error;
-            List<Command> cmds = LoadCommands(path, out error);
+            List<Command> cmds;
             
-            if (error != null) { 
-                Logger.Log(LogType.Warning, error);
-            } else {
-                Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from {1}", 
-                           cmds.Join(c => "/" + c.name), Path.GetFileName(path));
+            try {
+                cmds = LoadCommands(path);
+            } catch (Exception ex) {
+                Logger.LogError("Error loading commands from " + path, ex);
+                return;
             }
+            
+            Logger.Log(LogType.SystemActivity, "AUTOLOAD: Loaded {0} from {1}",
+                       cmds.Join(c => "/" + c.name), Path.GetFileName(path));
         }
         
         /// <summary> Loads and registers all the commands from the given .dll path </summary>
-        /// <param name="error"> If an error occurs, set to a string describing the error </param>
-        /// <returns> The list of commands loaded </returns>
-        public static List<Command> LoadCommands(string path, out string error) {
-            error = null;
-            try {
-                Assembly lib = LoadAssembly(path);
-                List<Command> commands = LoadTypes<Command>(lib);
-                if (commands.Count == 0) error = "&WNo commands in " + path;
+        public static List<Command> LoadCommands(string path) {
+            Assembly lib = LoadAssembly(path);
+            List<Command> commands = LoadTypes<Command>(lib);
+            
+            if (commands.Count == 0)
+                throw new InvalidOperationException("No commands in " + path);
+            
+            foreach (Command cmd in commands)
+            {
+                if (Command.Find(cmd.name) != null)
+                    throw new AlreadyLoadedException("/" + cmd.name + " is already loaded");
                 
-                foreach (Command cmd in commands) 
-                {
-                    if (Command.Find(cmd.name) != null) {
-                        error = "/" + cmd.name + " is already loaded";
-                        return null;
-                    }
-                    
-                    Command.Register(cmd);
-                }
-                return commands;
-            } catch (Exception ex) {
-                error = DescribeLoadError(path, ex);
-                return null;
+                Command.Register(cmd);
             }
+            return commands;
         }
         
-        static string DescribeLoadError(string path, Exception ex) {
-            if (ex is FileNotFoundException)
-                return "File &9" + path + " &Snot found.";
-            
-            Logger.LogError("Error loading commands from " + path, ex);
+        public static string DescribeLoadError(string path, Exception ex) {
             string file = Path.GetFileName(path);
             
             if (ex is BadImageFormatException) {
@@ -167,7 +162,9 @@ namespace MCGalaxy.Scripting
             } else if (ex is FileLoadException) {
                 return "&W" + file + " or one of its dependencies could not be loaded. Details in the error log.";
             }
+            
             return "&WAn unknown error occured. Details in the error log.";
+            // p.Message("&WError loading plugin. See error logs for more information.");
         }
         
         
@@ -178,24 +175,30 @@ namespace MCGalaxy.Scripting
             // Ensure that plugin files are loaded in a consistent order,
             //  in case plugins have a dependency on other plugins
             Array.Sort<string>(files);
-            foreach (string path in files) { LoadPlugin(path, true); }
+            
+            foreach (string path in files)
+            {
+                try {
+                    LoadPlugin(path, true);
+                } catch (Exception ex) {
+                    Logger.LogError("Error loading plugins from " + path, ex);
+                }
+            }
         }
         
         /// <summary> Loads all plugins from the given .dll path. </summary>
         public static List<Plugin> LoadPlugin(string path, bool auto) {
-            try {
-                Assembly lib = LoadAssembly(path);
-                List<Plugin> plugins = LoadTypes<Plugin>(lib);
+            Assembly lib = LoadAssembly(path);
+            List<Plugin> plugins = LoadTypes<Plugin>(lib);
+            
+            foreach (Plugin pl in plugins)
+            {
+                if (Plugin.FindCustom(pl.name) != null)
+                    throw new AlreadyLoadedException("Plugin " + pl.name + " is already loaded");
                 
-                foreach (Plugin plugin in plugins) 
-                {
-                    if (!Plugin.Load(plugin, auto)) return null;
-                }
-                return plugins;
-            } catch (Exception ex) {
-                Logger.LogError("Error loading plugins from " + path, ex);
-                return null;
+                Plugin.Load(pl, auto);
             }
+            return plugins;
         }
     }
 }

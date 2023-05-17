@@ -212,13 +212,11 @@ namespace MCGalaxy.Commands.Info
         }
         
         bool ParsePlugin(Player p, string message) {
-            foreach (Plugin plugin in Plugin.custom) 
-            {
-                if (plugin.name.CaselessEq(message)) {
-                    plugin.Help(p); return true;
-                }
-            }
-            return false;
+            Plugin pl = Plugin.FindCustom(message);
+            if (pl == null) return false;
+            
+            pl.Help(p); 
+            return true;
         }
 
         public override void Help(Player p) {

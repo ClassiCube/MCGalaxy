@@ -66,46 +66,54 @@ namespace MCGalaxy
         public static List<Plugin> core   = new List<Plugin>();
         public static List<Plugin> custom = new List<Plugin>();
         
-        public static bool Load(Plugin p, bool auto) {
+        public static Plugin FindCustom(string name) {
+            foreach (Plugin pl in custom) 
+            {
+                if (pl.name.CaselessEq(name)) return pl;
+            }
+            return null;
+        }
+        
+        
+        public static void Load(Plugin pl, bool auto) {
+            string ver = pl.MCGalaxy_Version;
+            if (!String.IsNullOrEmpty(ver) && new Version(ver) > new Version(Server.Version)) {
+                string msg = string.Format("Plugin '{0}' requires a more recent version of {1}!", pl.name, Server.SoftwareName);
+                throw new InvalidOperationException(msg);
+            }
+            
             try {
-                string ver = p.MCGalaxy_Version;
-                if (!String.IsNullOrEmpty(ver) && new Version(ver) > new Version(Server.Version)) {
-                    Logger.Log(LogType.Warning, "Plugin ({0}) requires a more recent version of {1}!", p.name, Server.SoftwareName);
-                    return false;
-                }
-                custom.Add(p);
+                custom.Add(pl);
                 
-                if (p.LoadAtStartup || !auto) {
-                    p.Load(auto);
-                    Logger.Log(LogType.SystemActivity, "Plugin {0} loaded...build: {1}", p.name, p.build);
+                if (pl.LoadAtStartup || !auto) {
+                    pl.Load(auto);
+                    Logger.Log(LogType.SystemActivity, "Plugin {0} loaded...build: {1}", pl.name, pl.build);
                 } else {
-                    Logger.Log(LogType.SystemActivity, "Plugin {0} was not loaded, you can load it with /pload", p.name);
+                    Logger.Log(LogType.SystemActivity, "Plugin {0} was not loaded, you can load it with /pload", pl.name);
                 }
                 
-                if (!String.IsNullOrEmpty(p.welcome)) Logger.Log(LogType.SystemActivity, p.welcome);
-                return true;
-            } catch (Exception ex) {
-                Logger.LogError("Error loading plugin " + p.name, ex);               
-                if (!String.IsNullOrEmpty(p.creator)) Logger.Log(LogType.Warning, "You can go bug {0} about it.", p.creator);
-                return false;
+                if (!String.IsNullOrEmpty(pl.welcome)) Logger.Log(LogType.SystemActivity, pl.welcome);
+            } catch {           
+                if (!String.IsNullOrEmpty(pl.creator)) Logger.Log(LogType.Warning, "You can go bug {0} about {1} failing to load.", pl.creator, pl.name);
+                throw;
             }
         }
 
-        public static bool Unload(Plugin p) {
-            bool success = UnloadPlugin(p, false);
+        public static bool Unload(Plugin pl) {
+            bool success = UnloadPlugin(pl, false);
             
             // TODO only remove if successful?
-            custom.Remove(p);
-            core.Remove(p);
+            custom.Remove(pl);
+            core.Remove(pl);
             return success;
         }
         
-        static bool UnloadPlugin(Plugin p, bool auto) {
+        static bool UnloadPlugin(Plugin pl, bool auto) {
             try {
-                p.Unload(auto);
+                pl.Unload(auto);
                 return true;
             } catch (Exception ex) {
-                Logger.LogError("Error unloading plugin " + p.name, ex);
+                Logger.LogError("Error unloading plugin " + pl.name, ex);
                 return false;
             }
         }

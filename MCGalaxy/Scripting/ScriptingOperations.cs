@@ -17,42 +17,56 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
+using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Scripting 
-{    
-    public static class ScriptingOperations 
-    {     
+namespace MCGalaxy.Scripting
+{
+    public static class ScriptingOperations
+    {
         public static bool LoadCommands(Player p, string path) {
-            string error;
-            List<Command> cmds = IScripting.LoadCommands(path, out error);
-            
-            if (error != null) { 
-                p.Message(error); 
-                return false; 
+            if (!File.Exists(path)) {
+                p.Message("File &9{0} &Snot found.", path);
+                return false;
             }
-
-            p.Message("Successfully loaded &T{0}", 
-                      cmds.Join(c => "/" + c.name));
-            return true;
+            
+            try {
+                List<Command> cmds = IScripting.LoadCommands(path);
+                
+                p.Message("Successfully loaded &T{0}",
+                          cmds.Join(c => "/" + c.name));
+                return true;
+            } catch (AlreadyLoadedException ex) {
+                p.Message(ex.Message);
+                return false;
+            } catch (Exception ex) {
+                p.Message(IScripting.DescribeLoadError(path, ex));
+                Logger.LogError("Error loading commands from " + path, ex);
+                return false;
+            }
         }
 
         public static bool LoadPlugins(Player p, string path) {
             if (!File.Exists(path)) {
                 p.Message("File &9{0} &Snot found.", path);
                 return false;
-            } // TODO: Move error handling elsewhere
+            }
             
-            List<Plugin> plugins = IScripting.LoadPlugin(path, false);
-            if (plugins == null) {
-                p.Message("&WError loading plugin. See error logs for more information.");
+            try {
+                List<Plugin> plugins = IScripting.LoadPlugin(path, false);
+                
+                p.Message("Plugin {0} loaded successfully",
+                          plugins.Join(pl => pl.name));
+                return true;
+            } catch (AlreadyLoadedException ex) {
+                p.Message(ex.Message);
+                return false;
+            } catch (Exception ex) {
+                p.Message(IScripting.DescribeLoadError(path, ex));
+                Logger.LogError("Error loading plugins from " + path, ex);
                 return false;
             }
-
-            p.Message("Plugin {0} loaded successfully",
-                      plugins.Join(pl => pl.name));
-            return true;
         }
     }
 }
