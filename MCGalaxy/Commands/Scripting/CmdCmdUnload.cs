@@ -15,8 +15,12 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands.Scripting {
-    public sealed class CmdCmdUnload : Command2 {
+using MCGalaxy.Scripting;
+
+namespace MCGalaxy.Commands.Scripting 
+{
+    public sealed class CmdCmdUnload : Command2 
+    {
         public override string name { get { return "CmdUnload"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
@@ -31,14 +35,8 @@ namespace MCGalaxy.Commands.Scripting {
             
             if (cmd == null) {
                 p.Message("\"{0}\" is not a valid or loaded command.", cmdName); return;
-            }
-            
-            if (Command.IsCore(cmd)) {
-                p.Message("&T/{0} &Sis a core command, you cannot unload it.", cmdName); return;
-            }
-   
-            Command.Unregister(cmd);
-            p.Message("Command &T/{0} &Swas successfully unloaded.", cmd.name);
+            }           
+            ScriptingOperations.UnloadCommand(p, cmd);
         }
 
         public override void Help(Player p) {

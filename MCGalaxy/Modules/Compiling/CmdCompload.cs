@@ -30,25 +30,41 @@ namespace MCGalaxy.Modules.Compiling
         protected override void CompilePlugin(Player p, string[] paths, ICompiler compiler) {
             string dst = IScripting.PluginPath(paths[0]);
             
+            UnloadPlugin(p, paths[0]);
             base.CompilePlugin(p, paths, compiler);
             ScriptingOperations.LoadPlugins(p, dst);
+        }
+        
+        static void UnloadPlugin(Player p, string name) {
+            Plugin plugin = Plugin.FindCustom(name);
+            
+            if (plugin == null) return;
+            ScriptingOperations.UnloadPlugin(p, plugin);
         }
         
         protected override void CompileCommand(Player p, string[] paths, ICompiler compiler) {
             string cmd = paths[0];
             string dst = IScripting.CommandPath(cmd);
             
+            UnloadCommand(p, cmd);
             base.CompileCommand(p, paths, compiler);
             ScriptingOperations.LoadCommands(p, dst);
-            // TODO print command help directly
-            Command.Find("Help").Use(p, cmd, p.DefaultCmdData);
+        }
+        
+        static void UnloadCommand(Player p, string cmdName) {
+            string cmdArgs = "";
+            Command.Search(ref cmdName, ref cmdArgs);
+            Command cmd = Command.Find(cmdName);
+            
+            if (cmd == null) return;
+            ScriptingOperations.UnloadCommand(p, cmd);
         }
 
         public override void Help(Player p) {
             p.Message("&T/CompLoad [command]");
-            p.Message("&HCompiles and loads a C# command into the server for use.");
+            p.Message("&HCompiles and loads (or reloads) a C# command into the server");
             p.Message("&T/CompLoad plugin [plugin]");
-            p.Message("&HCompiles and loads a C# plugin into the server for use.");
+            p.Message("&HCompiles and loads (or reloads) a C# plugin into the server");
         }        
     }
 }

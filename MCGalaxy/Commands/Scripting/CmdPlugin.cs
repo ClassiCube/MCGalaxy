@@ -65,18 +65,14 @@ namespace MCGalaxy.Commands.Scripting
             int matches;
             Plugin plugin = Matcher.Find(p, name, out matches, Plugin.custom, 
                                          null, pln => pln.name, "plugins");
-            if (plugin == null) return;
             
-            if (Plugin.Unload(plugin)) {
-                p.Message("Plugin {0} unloaded successfully", plugin.name);
-            } else {
-                p.Message("&WError unloading plugin. See error logs for more information.");
-            }
+            if (plugin == null) return;
+            ScriptingOperations.UnloadPlugin(p, plugin);
         }
         
         public override void Help(Player p) {
             p.Message("&T/Plugin load [filename]");
-            p.Message("&HLoad a plugin from your plugins folder");
+            p.Message("&HLoad a compiled plugin from the &fplugins &Hfolder");
             p.Message("&T/Plugin unload [name]");
             p.Message("&HUnloads a currently loaded plugin");
             p.Message("&T/Plugin list");

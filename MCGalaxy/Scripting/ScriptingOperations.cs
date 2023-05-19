@@ -68,5 +68,27 @@ namespace MCGalaxy.Scripting
                 return false;
             }
         }
+        
+        
+        public static bool UnloadCommand(Player p, Command cmd) {          
+            if (Command.IsCore(cmd)) {
+                p.Message("&T/{0} &Sis a core command, you cannot unload it.", cmd.name); 
+                return false;
+            }
+   
+            Command.Unregister(cmd);
+            p.Message("Command &T/{0} &unloaded successfully", cmd.name);
+            return true;
+        }
+        
+        public static bool UnloadPlugin(Player p, Plugin plugin) {
+            if (!Plugin.Unload(plugin)) {
+                p.Message("&WError unloading plugin. See error logs for more information.");
+                return false;
+            }
+            
+            p.Message("Plugin {0} &Sunloaded successfully", plugin.name);
+            return true;
+        }
     }
 }
