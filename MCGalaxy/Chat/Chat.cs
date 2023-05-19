@@ -241,7 +241,13 @@ namespace MCGalaxy {
         }
 
         public class PersistentMessage {
-            public enum Priority { Lowest, Low, Normal, High, Highest }
+            public enum Priority {
+                Lowest = 0,
+                Low = 5,
+                Normal = 10,
+                High = 15,
+                Highest = 20
+            }
 
             public string message;
             public Priority priority;
