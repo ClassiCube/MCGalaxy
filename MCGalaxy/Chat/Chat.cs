@@ -14,6 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Text;
+using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Events.ServerEvents;
 
@@ -237,6 +238,68 @@ namespace MCGalaxy {
             
             isCommand = true;
             return text.Substring(1);
+        }
+
+        public class PersistentMessage {
+            public enum Priority {
+                Lowest = 0,
+                Low = 5,
+                Normal = 10,
+                High = 15,
+                Highest = 20
+            }
+
+            public string message;
+            public Priority priority;
+            public PersistentMessage(string message, Priority priority) {
+                this.message = message; this.priority = priority;
+            }
+
+            /// <summary>
+            /// Returns false if no persistent message was handled, otherwise true.
+            /// </summary>
+            internal static bool Handle(Player p, CpeMessageType type, string message, Priority priority) {
+                if (!IsPersistent(type)) return false;
+                lock (p.persistentMessageLocker) {
+
+                    if (!p.persistentMessages.ContainsKey(type)) {
+                        p.persistentMessages[type] = new List<PersistentMessage>();
+                    }
+                    var field = p.persistentMessages[type]; //field represents one of the top or bottom right lines
+
+                    PersistentMessage thisMsg = null;
+                    foreach (var persMsg in field) { //Find an existing message with same priority
+                        if (persMsg.priority == priority) { thisMsg = persMsg; break; }
+                    }
+
+                    if (string.IsNullOrEmpty(message)) { //Clearing the message case
+                        if (thisMsg == null) { return true; } //No message exists with this priority, meaning no action needs to be taken when clearing it
+                        field.Remove(thisMsg);
+                        PersistentMessage highestRemainingMsg = null;
+                        foreach (var persMsg in field) {
+                            if (highestRemainingMsg == null || persMsg.priority > highestRemainingMsg.priority) { highestRemainingMsg = persMsg; }
+                        }
+                        if (highestRemainingMsg == null) { p.Session.SendMessage(type, ""); return true; } //No messages remain, clear field and quit
+
+                        p.Session.SendMessage(type, highestRemainingMsg.message); //reveal highest remaining message
+                        return true;
+                    }
+
+                    if (thisMsg == null) { thisMsg = new PersistentMessage(message, priority); field.Add(thisMsg); } else { thisMsg.message = message; }
+
+                    foreach (var persMsg in field) {
+                        if (persMsg.priority > priority) { return true; } //If any other message in this field has higher priority, do not send to client
+                    }
+
+                } //end lock
+
+                p.Session.SendMessage(type, message);
+                return true;
+            }
+            static bool IsPersistent(CpeMessageType type) {
+                return type == CpeMessageType.Status1 || type == CpeMessageType.Status2 || type == CpeMessageType.Status3 ||
+                    type == CpeMessageType.BottomRight1 || type == CpeMessageType.BottomRight2 || type == CpeMessageType.BottomRight3;
+            }
         }
     }
 }

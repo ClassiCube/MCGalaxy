@@ -55,14 +55,19 @@ namespace MCGalaxy
                 Logger.LogError(e);
             }
         }
-        
+
         public void SendCpeMessage(CpeMessageType type, string message) {
+            SendCpeMessage(type, message, Chat.PersistentMessage.Priority.Normal);
+        }
+
+        public void SendCpeMessage(CpeMessageType type, string message, Chat.PersistentMessage.Priority priority = Chat.PersistentMessage.Priority.Normal) {
             if (type != CpeMessageType.Normal && !Supports(CpeExt.MessageTypes)) {
                 if (type == CpeMessageType.Announcement) type = CpeMessageType.Normal;
                 else return;
             }
             
             message = Chat.Format(message, this);
+            if (Chat.PersistentMessage.Handle(this, type, message, priority)) { return; }
             Session.SendMessage(type, message);
         }
 
