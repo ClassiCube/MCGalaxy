@@ -25,7 +25,7 @@ namespace MCGalaxy.Modules.Games.LS
 {
     public sealed class LSData 
     {
-        public int TimesDied, SpongesLeft, WaterLeft;
+        public int TimesDied, SpongesLeft, WaterLeft, DoorsLeft;
     }
     
     public enum LSFloodMode
@@ -166,6 +166,7 @@ namespace MCGalaxy.Modules.Games.LS
         static void ResetRoundState(Player p, LSData data) {
             data.SpongesLeft = 10;
             data.WaterLeft   = 30;
+            data.DoorsLeft   =  0;
         }
         
         

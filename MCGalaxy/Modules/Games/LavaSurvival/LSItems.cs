@@ -93,4 +93,29 @@ namespace MCGalaxy.Modules.Games.LS
             Economy.MakePurchase(p, Price, "%3Water:");
         }
     }
+    
+    sealed class DoorsItem : SimpleItem 
+    {
+        public DoorsItem() {
+            Aliases = new string[] { "door", "doors" };
+            Enabled = true;
+            Price   = 2;
+        }
+        
+        public override string Name { get { return "Door"; } }
+
+        public override void OnPurchase(Player p, string args) {
+            if (!LSGame.Instance.RoundInProgress) {
+                p.Message("You can only buy doors " +
+                          "when a round of lava survival is in progress."); return;
+            }   
+            if (!CheckPrice(p)) return;
+            
+            // TODO avoid code duplication
+            LSData data = LSGame.Get(p);
+            data.DoorsLeft += 6;
+            p.Message("Door blocks left: &4{0}", data.DoorsLeft);
+            Economy.MakePurchase(p, Price, "%3Doors:");
+        }
+    }
 }

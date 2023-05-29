@@ -30,17 +30,22 @@ namespace MCGalaxy.Commands.CPE
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }      
-            string[] args = message.SplitSpaces(3);
+            string[] args = message.SplitSpaces(2);
             
-            CpeMessageType type = 0;
-            if (!CommandParser.GetEnum(p, args[0], "Type", ref type)) return;
+            BlockID block;
+            if (!CommandParser.GetBlock(p, args[0], out block)) return;
+            bool locked = false;
+            if (args.Length > 1 && !CommandParser.GetBool(p, args[1], ref locked)) return;
             
-            PersistentMessagePriority pri = 0;
-            if (!CommandParser.GetEnum(p, args[1], "PRI", ref pri)) return;
+            if (Block.IsPhysicsType(block)) {
+                p.Message("Cannot hold physics blocks"); return;
+            }
             
-            string msg = args.Length > 2 ? args[2] : "";
-            p.SendCpeMessage(type, msg, pri);
-            p.Message("----");
+            if (p.Session.SendHoldThis(block, locked)) {
+                p.Message("Set your held block to {0}.", Block.GetName(p, block));
+            } else {
+                p.Message("Your client doesn't support changing your held block.");
+            }
         }
         
         public override void Help(Player p) {

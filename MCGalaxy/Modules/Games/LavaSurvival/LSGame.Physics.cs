@@ -31,6 +31,7 @@ namespace MCGalaxy.Modules.Games.LS
             Map.UpdateBlockHandlers(Block.Deadly_ActiveWater);
             Map.UpdateBlockHandlers(Block.Lava);
             Map.UpdateBlockHandlers(Block.Deadly_ActiveLava);
+            Map.UpdateBlockHandlers(Block.Door_Log);
         }
 
         void HandleBlockHandlersUpdated(Level lvl, BlockID block) {
@@ -49,6 +50,8 @@ namespace MCGalaxy.Modules.Games.LS
                 case Block.Lava:
                 case Block.Deadly_ActiveLava:
                     lvl.PhysicsHandlers[block] = DoLava; break;
+                case Block.Door_Log:
+                    lvl.PlaceHandlers[block] = PlaceDoor; break;
             }
         }
         
@@ -66,6 +69,14 @@ namespace MCGalaxy.Modules.Games.LS
         ChangeResult PlaceWater(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
             LSData data = Get(p);
             bool placed = TryPlaceBlock(p, ref data.WaterLeft, "Water blocks", Block.StillWater, x, y, z);
+            if (!placed) return ChangeResult.Unchanged;
+
+            return ChangeResult.Modified;
+        }
+        
+        ChangeResult PlaceDoor(Player p, BlockID newBlock, ushort x, ushort y, ushort z) {
+            LSData data = Get(p);
+            bool placed = TryPlaceBlock(p, ref data.DoorsLeft, "Door blocks", Block.Door_Log, x, y, z);
             if (!placed) return ChangeResult.Unchanged;
 
             return ChangeResult.Modified;
