@@ -77,7 +77,7 @@ namespace MCGalaxy.Scripting
             }
    
             Command.Unregister(cmd);
-            p.Message("Command &T/{0} &unloaded successfully", cmd.name);
+            p.Message("Command &T/{0} &Sunloaded successfully", cmd.name);
             return true;
         }
         

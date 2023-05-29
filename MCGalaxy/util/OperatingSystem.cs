@@ -21,7 +21,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace MCGalaxy 
+namespace MCGalaxy.Platform
 {
     public struct CPUTime
     {
@@ -178,8 +178,7 @@ namespace MCGalaxy
             //  - /usr/share/.mono/new-certs/Trust
             // but that won't work when distributed in a standalone build - so in this case, have to
             //  modify internal runtime state to make it look elsewhere for certifcates on Linux
-            try
-            {
+            try {
                 Type settingsType  = Type.GetType("Mono.Security.Interface.MonoTlsSettings, Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
                 PropertyInfo defSettingsProp = settingsType.GetProperty("DefaultSettings", BindingFlags.Static | BindingFlags.Public);
                 object defSettings = defSettingsProp.GetValue(null, null);

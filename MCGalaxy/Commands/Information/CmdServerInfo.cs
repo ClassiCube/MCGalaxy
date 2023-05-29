@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using MCGalaxy.Platform;
 using MCGalaxy.SQL;
 
 namespace MCGalaxy.Commands.Info 
