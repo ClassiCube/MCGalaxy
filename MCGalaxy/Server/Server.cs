@@ -47,7 +47,7 @@ namespace MCGalaxy
         public Server() { Server.s = this; }
         
         //True = cancel event
-        //Fale = dont cacnel event
+        //False = dont cancel event
         public static bool Check(string cmd, string message) {
             if (ConsoleCommand != null) ConsoleCommand(cmd, message);
             return cancelcommand;
@@ -147,7 +147,7 @@ namespace MCGalaxy
             EnsureDirectoryExists("text/discord"); // TODO move to discord plugin
         }
         
-        static void EnsureDirectoryExists(string dir) {
+        public static void EnsureDirectoryExists(string dir) {
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
         }     
         
