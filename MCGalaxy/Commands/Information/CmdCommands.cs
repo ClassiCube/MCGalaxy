@@ -81,8 +81,7 @@ namespace MCGalaxy.Commands.Info
             List<Command> cmds = new List<Command>();
             foreach (Command c in Command.allCmds) 
             {
-                string disabled = Command.GetDisabledReason(c.Enabled);
-                if (disabled == null && c.Permissions.UsableBy(group.Permission)) cmds.Add(c);
+                if (c.Permissions.UsableBy(group.Permission)) cmds.Add(c);
             }   
             
             if (cmds.Count == 0) {
@@ -123,11 +122,10 @@ namespace MCGalaxy.Commands.Info
 
             foreach (Command c in Command.allCmds) 
             {
-                string disabled = Command.GetDisabledReason(c.Enabled);
                 string category = MapCategory(c.type);
                 if (!type.CaselessEq(category)) continue;
                 
-                if (disabled == null && p.CanUse(c)) cmds.Add(c);
+                if (p.CanUse(c)) cmds.Add(c);
                 foundAny = true;
             }
             if (!foundAny) return false;

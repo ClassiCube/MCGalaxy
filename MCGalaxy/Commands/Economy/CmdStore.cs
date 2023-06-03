@@ -26,12 +26,13 @@ namespace MCGalaxy.Commands.Eco
         public override string name { get { return "Store"; } }
         public override string shortcut { get { return "Shop"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Item") }; }
         }
 
-        public override void Use(Player p, string message, CommandData data) {
+        public override void Use(Player p, string message, CommandData data) {            
+            if (!Economy.CheckIsEnabled(p, this)) return;
+            
             if (message.Length == 0 || IsListModifier(message)) {
         		Paginator.Output(p, Economy.GetEnabledItems(), 
         		                 PrintItemOverview, "Store", "enabled Items", message);

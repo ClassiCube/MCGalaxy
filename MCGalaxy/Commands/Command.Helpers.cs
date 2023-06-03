@@ -20,18 +20,10 @@ using MCGalaxy.Commands;
 using MCGalaxy.Eco;
 using MCGalaxy.Games;
 
-namespace MCGalaxy {
-    
-    public abstract partial class Command {
-
-        public static string GetDisabledReason(CommandEnable enable) {
-            if (enable == CommandEnable.Always) return null;
-            if (enable == CommandEnable.Economy && !Economy.Enabled)
-                return "economy is disabled.";
-
-            return null;
-        }
-        
+namespace MCGalaxy 
+{    
+    public abstract partial class Command 
+    {
         protected bool CheckSuper(Player p, string message, string type) {
             if (message.Length > 0 || !p.IsSuper) return false;
             SuperRequiresArgs(p, type);

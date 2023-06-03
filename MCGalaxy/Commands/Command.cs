@@ -44,7 +44,6 @@ namespace MCGalaxy
         public virtual void Help(Player p, string message) { Help(p); Formatter.PrintCommandInfo(p, this); }
         
         public virtual CommandPerm[] ExtraPerms { get { return null; } }
-        public virtual CommandEnable Enabled { get { return CommandEnable.Always; } }
         public virtual CommandAlias[] Aliases { get { return null; } }
         
         /// <summary> Whether this command is usable by 'super' players (Console, IRC, etc) </summary>
@@ -191,13 +190,7 @@ namespace MCGalaxy
             Use(p, message, p.DefaultCmdData);
         }
     }
-    
-    [Flags]
-    public enum CommandEnable 
-    {
-        Always = 0, Economy = 1
-    }
-    
+
     public enum CommandParallelism
     {
         NoAndSilent, NoAndWarn, Yes

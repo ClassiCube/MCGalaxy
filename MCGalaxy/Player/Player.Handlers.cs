@@ -631,10 +631,6 @@ namespace MCGalaxy
                 return null;
             }
             
-            string reason = Command.GetDisabledReason(command.Enabled);
-            if (reason != null) {
-                Message("Command is disabled as " + reason); return null;
-            }
             if (level != null && level.IsMuseum && !command.museumUsable) {
                 Message("Cannot use &T/{0} &Swhile in a museum.", command.name); return null;
             }

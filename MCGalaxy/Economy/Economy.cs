@@ -27,6 +27,13 @@ namespace MCGalaxy.Eco
         public static bool Enabled;
         static Dictionary<string, List<string>> itemCfg = new Dictionary<string, List<string>>();
         
+        public static bool CheckIsEnabled(Player p, Command cmd) {
+            if (Economy.Enabled) return true;
+            
+            p.Message("Cannot use &T/{0} &Scurrently as economy is disabled", cmd.name);
+            return false;
+        }
+        
         static List<string> GetConfig(string item) {
             List<string> cfg;
             if (itemCfg.TryGetValue(item, out cfg)) return cfg;

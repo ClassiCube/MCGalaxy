@@ -19,16 +19,19 @@ using System;
 using MCGalaxy.Eco;
 using MCGalaxy.Events.EconomyEvents;
 
-namespace MCGalaxy.Commands.Eco {
-    public abstract class MoneyCmd : Command2 {
+namespace MCGalaxy.Commands.Eco 
+{
+    public abstract class MoneyCmd : Command2 
+    {
         public override string type { get { return CommandTypes.Economy; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
 
         protected bool ParseArgs(Player p, string message, ref bool all, 
                                  string action, out EcoTransaction data) {
             data = new EcoTransaction();
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return false; }
+            
+            if (!Economy.CheckIsEnabled(p, this)) return false;
             
             data.TargetName = args[0];
             data.Reason = args.Length > 2 ? args[2] : null;

@@ -387,7 +387,8 @@ namespace MCGalaxy
         }
         
         void LoadDefaultProps() {
-            for (int b = 0; b < Props.Length; b++) {
+            for (int b = 0; b < Props.Length; b++) 
+            {
                 Props[b] = BlockProps.MakeDefault(Props, this, (BlockID)b);
             }
         }

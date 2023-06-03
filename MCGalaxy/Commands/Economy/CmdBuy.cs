@@ -18,15 +18,18 @@
 using System;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Eco {
-    public sealed class CmdBuy : Command2 {
+namespace MCGalaxy.Commands.Eco 
+{
+    public sealed class CmdBuy : Command2 
+    {
         public override string name { get { return "Buy"; } }
         public override string shortcut { get { return "Purchase"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) {
+            if (!Economy.CheckIsEnabled(p, this)) return;
+            
             string[] parts = message.SplitSpaces(2);
             Item item = Economy.GetItem(parts[0]);
             if (item == null) { Help(p); return; }

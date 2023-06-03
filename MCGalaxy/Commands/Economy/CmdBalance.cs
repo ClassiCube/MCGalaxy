@@ -18,17 +18,20 @@
 using System;
 using MCGalaxy.Eco;
 
-namespace MCGalaxy.Commands.Eco { 
-    public sealed class CmdBalance : Command2 {        
+namespace MCGalaxy.Commands.Eco 
+{
+    public sealed class CmdBalance : Command2 
+    {
         public override string name { get { return "Balance"; } }
         public override string shortcut { get { return "Money"; } }
         public override string type { get { return CommandTypes.Economy; } }
-        public override CommandEnable Enabled { get { return CommandEnable.Economy; } }
         
         public override void Use(Player p, string message, CommandData data) {
             if (CheckSuper(p, message, "player name")) return;
             if (message.Length == 0) message = p.name;
             if (!Formatter.ValidPlayerName(p, message)) return;
+            
+            if (!Economy.CheckIsEnabled(p, this)) return;
             
             int matches = 1;
             Player who  = PlayerInfo.FindMatches(p, message, out matches);
