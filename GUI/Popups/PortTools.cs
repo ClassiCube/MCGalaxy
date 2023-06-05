@@ -14,66 +14,89 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MCGalaxy.Gui.Popups 
+namespace MCGalaxy.Gui.Popups
 {
-    public partial class PortTools : Form 
+    public partial class PortTools : Form
     {
         readonly BackgroundWorker worker;
+        readonly UPnP upnp;
         int port;
         
         public PortTools(int port) {
             InitializeComponent();
             worker = new BackgroundWorker { WorkerSupportsCancellation = true };
-            worker.DoWork += mWorkerForwarder_DoWork;
-            worker.RunWorkerCompleted += mWorkerForwarder_RunWorkerCompleted;
+            worker.DoWork += AsyncWorker_DoWork;
+            worker.RunWorkerCompleted += AsyncWorker_OnCompleted;
             
             this.port = port;
             btnForward.Text = "Forward " + port;
+            
+            upnp = new UPnP();
+            upnp.Log = LogUPnP;
         }
         
         void PortTools_Load(object sender, EventArgs e) {
             GuiUtils.SetIcon(this);
         }
 
-        void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            GuiUtils.OpenBrowser("https://www.canyouseeme.org/");
-        }
-
         void PortChecker_FormClosing(object sender, FormClosingEventArgs e) {
             worker.CancelAsync();
+        }
+
+        void linkManually_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            GuiUtils.OpenBrowser("https://www.canyouseeme.org/");
         }
 
         void linkHelpForward_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             GuiUtils.OpenBrowser("https://portforward.com");
         }
-
+        
         void btnForward_Click(object sender, EventArgs e) {
-            SetUPnPEnabled(false);
-            worker.RunWorkerAsync(true);
+            StartForwardOrDelete(true);
         }
 
         void btnDelete_Click(object sender, EventArgs e) {
+            StartForwardOrDelete(false);
+        }
+        
+        
+        void StartForwardOrDelete(bool forwardingMode) {
             SetUPnPEnabled(false);
-            worker.RunWorkerAsync(false);
+            txtLogs.Text = "";
+            MakeLogsVisible();
+            worker.RunWorkerAsync(forwardingMode);
+        }
+        
+        void MakeLogsVisible() {
+            if (gbLogs.Visible) return;
+            // https://stackoverflow.com/questions/5962595/how-do-you-resize-a-form-to-fit-its-content-automatically
+            this.AutoSize  = true;
+            gbLogs.Visible = true;
+        }
+        
+        void SetUPnPEnabled(bool enabled) {
+            btnDelete.Enabled  = enabled;
+            btnForward.Enabled = enabled;
         }
 
-        void mWorkerForwarder_DoWork(object sender, DoWorkEventArgs e) {
-            bool adding = (bool)e.Argument;
+        
+        void AsyncWorker_DoWork(object sender, DoWorkEventArgs e) {
+            bool forwarding = (bool)e.Argument;
             
             try {
-                if (!UPnP.Discover()) {
+                if (!upnp.Discover()) {
                     e.Result = 0;
-                } else if (adding) {                   
-                    UPnP.ForwardPort(port, UPnP.TCP_PROTOCOL, Server.SoftwareName + "Server");
+                } else if (forwarding) {
+                    upnp.ForwardPort(port, UPnP.TCP_PROTOCOL, Server.SoftwareName + "Server");
                     e.Result = 1;
                 } else {
-                    UPnP.DeleteForwardingRule(port, UPnP.TCP_PROTOCOL);
+                    upnp.DeleteForwardingRule(port, UPnP.TCP_PROTOCOL);
                     e.Result = 3;
                 }
             } catch (Exception ex) {
@@ -82,7 +105,7 @@ namespace MCGalaxy.Gui.Popups
             }
         }
 
-        void mWorkerForwarder_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+        void AsyncWorker_OnCompleted(object sender, RunWorkerCompletedEventArgs e) {
             if (e.Cancelled) return;
             SetUPnPEnabled(true);
 
@@ -107,9 +130,10 @@ namespace MCGalaxy.Gui.Popups
             }
         }
         
-        void SetUPnPEnabled(bool enabled) {
-            btnDelete.Enabled  = enabled;
-            btnForward.Enabled = enabled;        
+        void LogUPnP(string message) {
+            RunOnUI_Async(() => txtLogs.AppendText(message + "\r\n"));
         }
+        
+        void RunOnUI_Async(UIAction act) { BeginInvoke(act); }
     }
 }
