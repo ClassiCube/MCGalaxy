@@ -146,7 +146,7 @@ namespace MCGalaxy.Gui.Popups {
                 return null;
             }
             
-            string tmp = "extra/commands/" + Path.GetRandomFileName() + ".dll";
+            string tmp = "extra/commands/TMP_" + Path.GetRandomFileName() + ".dll";
             ConsoleHelpPlayer p = new ConsoleHelpPlayer();
             if (CompilerOperations.Compile(p, compiler, "Command", new[] { path }, tmp))
                 return tmp;

@@ -18,10 +18,11 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
+namespace MCGalaxy.Bots 
+{    
     /// <summary> Causes the bot to nod spin around for a certain interval. </summary>
-    public class SpinInstruction : BotInstruction {
+    public class SpinInstruction : BotInstruction 
+    {
         public SpinInstruction() { Name = "spin"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -64,7 +65,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to nod down up and down for a certain interval. </summary>
-    public sealed class NodInstruction : SpinInstruction {
+    public sealed class NodInstruction : SpinInstruction 
+    {
         public NodInstruction() { Name = "nod"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {

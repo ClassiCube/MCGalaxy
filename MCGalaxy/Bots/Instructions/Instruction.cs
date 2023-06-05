@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
+namespace MCGalaxy.Bots 
+{    
     /// <summary> Represents an action that a bot will perform </summary>
-    public abstract class BotInstruction {
-        
+    public abstract class BotInstruction 
+    {        
         /// <summary> Gets the identifying name for this instruction. </summary>
         public string Name;
         
@@ -62,7 +62,8 @@ namespace MCGalaxy.Bots {
         }
     }
     
-    public struct InstructionData { 
+    public struct InstructionData 
+    {
         public string Name;
         public object Metadata;
     }

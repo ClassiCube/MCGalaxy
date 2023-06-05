@@ -18,10 +18,11 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
+namespace MCGalaxy.Bots 
+{    
     /// <summary> Causes the bot to reset to the and execute first instruction. </summary>
-    public sealed class ResetInstruction : BotInstruction {
+    public sealed class ResetInstruction : BotInstruction 
+    {
         public ResetInstruction() { Name = "reset"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -36,7 +37,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to be removed from the world. </summary>
-    public sealed class RemoveInstruction : BotInstruction {
+    public sealed class RemoveInstruction : BotInstruction 
+    {
         public RemoveInstruction() { Name = "remove"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -51,7 +53,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to switch to a different AI. </summary>
-    public sealed class LinkScriptInstruction : BotInstruction {
+    public sealed class LinkScriptInstruction : BotInstruction 
+    {
         public LinkScriptInstruction() { Name = "linkscript"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -86,7 +89,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to wait/do nothing for a certain interval. </summary>
-    public sealed class WaitInstruction : BotInstruction {
+    public sealed class WaitInstruction : BotInstruction 
+    {
         public WaitInstruction() { Name = "wait"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {

@@ -86,13 +86,7 @@ namespace MCGalaxy.DB
         
         /// <summary> Returns the fields of the row whose Name field caselessly equals the given name </summary>
         public static PlayerData FindData(string name) {
-            string suffix   = Database.Backend.CaselessWhereSuffix;
-            PlayerData data = null;
-
-            Database.ReadRows("Players", "*",
-                                record => data = PlayerData.Parse(record),
-                                "WHERE Name=@0" + suffix, name);
-            return data;
+            return FindExact(name, "*", PlayerData.Parse);
         }
 
         /// <summary> Returns the Name field of the row whose Name field caselessly equals the given name </summary>
@@ -126,9 +120,7 @@ namespace MCGalaxy.DB
         
         
         public static string MatchNames(Player p, string name) {
-            List<string> names = new List<string>();
-            MatchMulti(name, "Name",
-                       record => names.Add(record.GetText(0)));
+            List<string> names = MatchMulti(name, "Name", r => r.GetText(0));
             
             int matches;
             return Matcher.Find(p, name, out matches, names,
@@ -136,9 +128,7 @@ namespace MCGalaxy.DB
         }
         
         public static string[] MatchValues(Player p, string name, string columns) {
-            List<string[]> name_values = new List<string[]>();
-            MatchMulti(name, columns,
-                       record => name_values.Add(Database.ParseFields(record)));
+            List<string[]> name_values = MatchMulti(name, columns, Database.ParseFields);
 
             int matches;
             return Matcher.Find(p, name, out matches, name_values,
@@ -146,19 +136,46 @@ namespace MCGalaxy.DB
         }  
         
         public static PlayerData Match(Player p, string name) {
-            List<PlayerData> stats = new List<PlayerData>();
-            MatchMulti(name, "*", record => stats.Add(PlayerData.Parse(record)));
+            List<PlayerData> stats = MatchMulti(name, "*", PlayerData.Parse);
             
             int matches;
             return Matcher.Find(p, name, out matches, stats,
                                 null, stat => stat.Name, "players", 20);
         }
         
-        static void MatchMulti(string name, string columns, ReaderCallback callback) {
+        
+        static List<T> MatchMulti<T>(string name, string columns, Func<ISqlRecord, T> parseRecord) where T : class {
+            List<T> list = FindPartial(name, columns, parseRecord);
+            if (list.Count < 25) return list;
+            
+            // As per the LIMIT in FindPartial, the SQL backend stops after finding 25 matches
+            // However, this means that the case of e.g. 30 partial matches and then 1
+            //  exact match, WON'T be in the returned list - so check for this case explicitly            
+            T exact = FindExact(name, columns, parseRecord);
+            if (exact == null) return list;
+            
+            list.Clear();
+            list.Add(exact);
+            return list;
+        }
+        
+        static List<T> FindPartial<T>(string name, string columns, Func<ISqlRecord, T> parseRecord) {
             string suffix = Database.Backend.CaselessLikeSuffix;
-            Database.ReadRows("Players", columns, callback,
-                              "WHERE Name LIKE @0 ESCAPE '#' LIMIT 101" + suffix,
+            List<T> list  = new List<T>();
+            
+            Database.ReadRows("Players", columns, r => list.Add(parseRecord(r)),
+                              "WHERE Name LIKE @0 ESCAPE '#' LIMIT 25" + suffix,
                               "%" + name.Replace("_", "#_") + "%");
+            return list;
+        }
+        
+        static T FindExact<T>(string name, string columns, Func<ISqlRecord, T> parseRecord) where T : class {
+            string suffix = Database.Backend.CaselessWhereSuffix;
+            T exact = null;
+            
+            Database.ReadRows("Players", columns, r => exact = parseRecord(r),
+                              "WHERE Name=@0" + suffix, name);
+            return exact;
         }
         
         
@@ -166,7 +183,7 @@ namespace MCGalaxy.DB
             if (!Directory.Exists("text/login"))
                 Directory.CreateDirectory("text/login");
             if (!Directory.Exists("text/logout"))
-            	Directory.CreateDirectory("text/logout");
+                Directory.CreateDirectory("text/logout");
             if (!Directory.Exists("players"))
                 Directory.CreateDirectory("players");
         }

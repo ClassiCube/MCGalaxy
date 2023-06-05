@@ -18,10 +18,11 @@
 using System;
 using System.IO;
 
-namespace MCGalaxy.Bots {
-    
+namespace MCGalaxy.Bots 
+{    
     /// <summary> Causes the bot to instantly teleport to a position. </summary>
-    public class TeleportInstruction : BotInstruction {
+    public class TeleportInstruction : BotInstruction 
+    {
         public TeleportInstruction() { Name = "teleport"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -64,7 +65,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to gradually move to to a position. </summary>
-    public sealed class WalkInstruction : TeleportInstruction {
+    public sealed class WalkInstruction : TeleportInstruction 
+    {
         public WalkInstruction() { Name = "walk"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -90,7 +92,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to begin jumping. </summary>
-    public sealed class JumpInstruction : BotInstruction {
+    public sealed class JumpInstruction : BotInstruction 
+    {
         public JumpInstruction() { Name = "jump"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
@@ -108,7 +111,8 @@ namespace MCGalaxy.Bots {
     }
     
     /// <summary> Causes the bot to change how fast it moves. </summary>
-    public sealed class SpeedInstruction : BotInstruction {
+    public sealed class SpeedInstruction : BotInstruction 
+    {
         public SpeedInstruction() { Name = "speed"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {

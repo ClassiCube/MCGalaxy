@@ -26,9 +26,9 @@ namespace MCGalaxy.Gui.Popups {
             this.components = new System.ComponentModel.Container();
             this.linkManually = new System.Windows.Forms.LinkLabel();
             this.gbUpnp = new System.Windows.Forms.GroupBox();
+            this.btnForward = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.lblResult = new System.Windows.Forms.Label();
-            this.btnForward = new System.Windows.Forms.Button();
             this.lblInfo = new System.Windows.Forms.Label();
             this.linkHelpForward = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -49,17 +49,6 @@ namespace MCGalaxy.Gui.Popups {
             this.linkManually.Text = "Check port open";
             this.linkManually.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkManually_LinkClicked);
             // 
-            // linkHelpForward
-            // 
-            this.linkHelpForward.AutoSize = true;
-            this.linkHelpForward.Location = new System.Drawing.Point(172, 10);
-            this.linkHelpForward.Name = "linkHelpForward";
-            this.linkHelpForward.Size = new System.Drawing.Size(114, 13);
-            this.linkHelpForward.TabIndex = 2;
-            this.linkHelpForward.TabStop = true;
-            this.linkHelpForward.Text = "Need help forwarding?";
-            this.linkHelpForward.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkHelpForward_LinkClicked);
-            // 
             // gbUpnp
             // 
             this.gbUpnp.Controls.Add(this.btnForward);
@@ -68,7 +57,7 @@ namespace MCGalaxy.Gui.Popups {
             this.gbUpnp.Controls.Add(this.lblInfo);
             this.gbUpnp.Location = new System.Drawing.Point(11, 42);
             this.gbUpnp.Name = "gbUpnp";
-            this.gbUpnp.Size = new System.Drawing.Size(274, 105);
+            this.gbUpnp.Size = new System.Drawing.Size(274, 107);
             this.gbUpnp.TabIndex = 7;
             this.gbUpnp.TabStop = false;
             this.gbUpnp.Text = "Auto port forward";
@@ -106,14 +95,26 @@ namespace MCGalaxy.Gui.Popups {
             // lblInfo
             // 
             this.lblInfo.AutoSize = true;
-            this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInfo.Location = new System.Drawing.Point(22, 16);
+            this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInfo.Location = new System.Drawing.Point(5, 17);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(239, 36);
+            this.lblInfo.Size = new System.Drawing.Size(266, 39);
             this.lblInfo.TabIndex = 12;
             this.lblInfo.Text = "This uses UPnP, which not all routers support.\r\nIf this doesn\'t work, you will ha" +
             "ve to\r\n manually port forward in your router.";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblInfo.Click += new System.EventHandler(this.LblInfoClick);
+            // 
+            // linkHelpForward
+            // 
+            this.linkHelpForward.AutoSize = true;
+            this.linkHelpForward.Location = new System.Drawing.Point(172, 10);
+            this.linkHelpForward.Name = "linkHelpForward";
+            this.linkHelpForward.Size = new System.Drawing.Size(114, 13);
+            this.linkHelpForward.TabIndex = 2;
+            this.linkHelpForward.TabStop = true;
+            this.linkHelpForward.Text = "Need help forwarding?";
+            this.linkHelpForward.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkHelpForward_LinkClicked);
             // 
             // gbLogs
             // 
@@ -141,7 +142,7 @@ namespace MCGalaxy.Gui.Popups {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(296, 158);
+            this.ClientSize = new System.Drawing.Size(296, 160);
             this.Controls.Add(this.gbLogs);
             this.Controls.Add(this.gbUpnp);
             this.Controls.Add(this.linkManually);
@@ -160,19 +161,19 @@ namespace MCGalaxy.Gui.Popups {
             this.gbLogs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-		}
-		private System.Windows.Forms.TextBox txtLogs;
-		private System.Windows.Forms.GroupBox gbLogs;
+        }
+        private System.Windows.Forms.TextBox txtLogs;
+        private System.Windows.Forms.GroupBox gbLogs;
 
-		#endregion
+        #endregion
 
-		private System.Windows.Forms.LinkLabel linkManually;
-		private System.Windows.Forms.GroupBox gbUpnp;
-		private System.Windows.Forms.LinkLabel linkHelpForward;
-		private System.Windows.Forms.Label lblResult;
-		private System.Windows.Forms.Button btnForward;
-		private System.Windows.Forms.Label lblInfo;
-		private System.Windows.Forms.Button btnDelete;
-		private System.Windows.Forms.ToolTip toolTip1;
-	}
+        private System.Windows.Forms.LinkLabel linkManually;
+        private System.Windows.Forms.GroupBox gbUpnp;
+        private System.Windows.Forms.LinkLabel linkHelpForward;
+        private System.Windows.Forms.Label lblResult;
+        private System.Windows.Forms.Button btnForward;
+        private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.ToolTip toolTip1;
+    }
 }

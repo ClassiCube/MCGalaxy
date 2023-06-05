@@ -19,10 +19,11 @@ using System;
 using System.IO;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Bots {
-    
+namespace MCGalaxy.Bots 
+{
     /// <summary> Causes the bot to move towards the closest player, within a defined search radius. </summary>
-    public sealed class HuntInstruction : BotInstruction {
+    public sealed class HuntInstruction : BotInstruction 
+    {
         public HuntInstruction() { Name = "hunt"; }
         
         public override bool Execute(PlayerBot bot, InstructionData data) {
