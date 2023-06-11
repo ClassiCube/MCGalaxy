@@ -22,18 +22,16 @@ using MCGalaxy.Maths;
 using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-
+namespace MCGalaxy.Games 
+{
     /// <summary> Represents a missile that adjusts the direction it is
     /// travelling in based on the player's current orientation. </remarks>
-    public class Missile : Weapon {
+    public class Missile : Weapon 
+    {
         public override string Name { get { return "Missile"; } }
         public WeaponType type;
         
-        public override void Disable() {
-            p.aiming = false;
-            p.weapon = null;
-        }
+        protected override void OnDisabled(Player p) { }
 
         protected override void OnActivated(Vec3F32 dir, BlockID block) {
             MissileData args = new MissileData();
@@ -47,7 +45,8 @@ namespace MCGalaxy.Games {
             Disable();
         }
         
-        protected class MissileData : AmmunitionData {
+        protected class MissileData : AmmunitionData 
+        {
             public WeaponType type;
             public Vec3U16 pos;
             public List<Vec3S32> buffer = new List<Vec3S32>();
@@ -93,7 +92,8 @@ namespace MCGalaxy.Games {
             args.dir   = DirUtils.GetDirVector(p.Rot.RotY, p.Rot.HeadX);
             int i;
             
-            for (i = 1; ; i++) {
+            for (i = 1; ; i++) 
+            {
                 Vec3U16 target = args.PosAt(i);
                 BlockID block  = p.level.GetBlock(target.X, target.Y, target.Z);
                 
@@ -145,7 +145,8 @@ namespace MCGalaxy.Games {
         }
     }   
         
-    public class PenetrativeMissile : Missile {
+    public class PenetrativeMissile : Missile 
+    {
         public override string Name { get { return "Penetrative missile"; } }
         
         protected override bool OnHitBlock(MissileData args, Vec3U16 pos, BlockID block) {
@@ -158,7 +159,8 @@ namespace MCGalaxy.Games {
         }
     }
        
-    public class ExplosiveMissile : Missile {
+    public class ExplosiveMissile : Missile 
+    {
         public override string Name { get { return "Explosive missile"; } }
         
         protected override void OnHitPlayer(MissileData args, Player pl) {
@@ -175,7 +177,8 @@ namespace MCGalaxy.Games {
         }
     }
         
-    public class TeleportMissile : Missile {
+    public class TeleportMissile : Missile 
+    {
         public override string Name { get { return "Teleporter missile"; } }
         
         protected override void OnHitPlayer(MissileData args, Player pl) {

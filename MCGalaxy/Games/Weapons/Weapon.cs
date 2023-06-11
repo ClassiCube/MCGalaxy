@@ -20,14 +20,15 @@ using System.Collections.Generic;
 using MCGalaxy.Commands;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-
+namespace MCGalaxy.Games 
+{
     /// <summary> Represents a weapon which can interact with blocks or players until it dies. </summary>
-    public abstract class Weapon {
-
+    public abstract class Weapon 
+    {
         public abstract string Name { get; }
         static bool hookedEvents;
         
@@ -41,6 +42,8 @@ namespace MCGalaxy.Games {
                 OnBlockChangingEvent.Register(BlockChangingCallback, Priority.Low);
                 hookedEvents = true;
             }
+        	
+        	if (p.weaponBuffer == null) p.weaponBuffer = new BufferedBlockSender();
             
             this.p   = p;
             p.ClearBlockchange();
@@ -60,7 +63,7 @@ namespace MCGalaxy.Games {
             p.aiming = false;
             OnDisabled(p);
             p.weapon = null;
-        }
+        }      
         
         /// <summary> Called when the given player engages/equips this weapon </summary>
         protected virtual void OnEnabled(Player p, bool clickToActivate) {
@@ -71,6 +74,7 @@ namespace MCGalaxy.Games {
         protected virtual void OnDisabled(Player p) {
             p.Message(Name + " disabled");    
         }
+        
         
         /// <summary> Called when the player fires this weapon. </summary>
         /// <remarks> Activated by clicking through either PlayerClick or on a glass box around the player. </remarks>
@@ -113,7 +117,8 @@ namespace MCGalaxy.Games {
         
         protected static Player PlayerAt(Player p, Vec3U16 pos, bool skipSelf) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != p.level) continue;
                 if (p == pl && skipSelf) continue;
                 
@@ -129,17 +134,20 @@ namespace MCGalaxy.Games {
         
         public static WeaponType ParseType(string type) {
             if (type.Length == 0) return WeaponType.Normal;
-            if (type.CaselessEq("destroy")) return WeaponType.Destroy;
-            if (type.CaselessEq("tp") || type.CaselessEq("teleport")) return WeaponType.Teleport;
-            if (type.CaselessEq("explode")) return WeaponType.Explode;
-            if (type.CaselessEq("laser"))   return WeaponType.Laser;
+            
+            if (type.CaselessEq("destroy"))  return WeaponType.Destroy;
+            if (type.CaselessEq("tp"))       return WeaponType.Teleport;
+            if (type.CaselessEq("teleport")) return WeaponType.Teleport;
+            if (type.CaselessEq("explode"))  return WeaponType.Explode;
+            if (type.CaselessEq("laser"))    return WeaponType.Laser;
             return WeaponType.Invalid;
         }
     }
     
     public enum WeaponType { Invalid, Normal, Destroy, Teleport, Explode, Laser };
     
-    public class AmmunitionData {
+    public class AmmunitionData 
+    {
         public BlockID block;
         public Vec3U16 start;
         public Vec3F32 dir;
@@ -170,8 +178,8 @@ namespace MCGalaxy.Games {
     }
     
     /// <summary> Manages the glass box around the player. Adjusts based on where player is looking. </summary>
-    internal sealed class AimBox {
-        
+    internal sealed class AimBox 
+    {        
         Player player;
         List<Vec3U16> lastGlass = new List<Vec3U16>();
         List<Vec3U16> curGlass  = new List<Vec3U16>();
@@ -207,7 +215,8 @@ namespace MCGalaxy.Games {
             Check(p.level, x + dx, y, z + dz);
 
             // Revert all glass blocks now not in the ray from the player's direction
-            for (int i = 0; i < lastGlass.Count; i++) {
+            for (int i = 0; i < lastGlass.Count; i++) 
+            {
                 Vec3U16 pos = lastGlass[i];
                 if (curGlass.Contains(pos)) continue;
                 
@@ -217,7 +226,8 @@ namespace MCGalaxy.Games {
             }
 
             // Place the new glass blocks that are in the ray from the player's direction
-            foreach (Vec3U16 pos in curGlass) {
+            foreach (Vec3U16 pos in curGlass) 
+            {
                 if (lastGlass.Contains(pos)) continue;
                 lastGlass.Add(pos);
                 p.SendBlockchange(pos.X, pos.Y, pos.Z, Block.Glass);

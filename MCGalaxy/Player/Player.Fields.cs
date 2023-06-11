@@ -136,9 +136,10 @@ namespace MCGalaxy {
         internal DateTime lastAccessStatus;
         public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>();
 
+        public bool isFlying;
         public bool aiming;
         public Weapon weapon;
-        public bool isFlying;
+        internal BufferedBlockSender weaponBuffer;
 
         public bool joker;
         public bool Unverified, verifiedPass;

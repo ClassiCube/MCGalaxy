@@ -149,8 +149,9 @@ namespace MCGalaxy.DB
             if (list.Count < 25) return list;
             
             // As per the LIMIT in FindPartial, the SQL backend stops after finding 25 matches
-            // However, this means that the case of e.g. 30 partial matches and then 1
-            //  exact match, WON'T be in the returned list - so check for this case explicitly            
+            // However, this means that e.g. in the case of 30 partial matches and
+            //    then 1 exact match, the exact WON'T be part of the returned list
+            // So explicitly check for this case
             T exact = FindExact(name, columns, parseRecord);
             if (exact == null) return list;
             

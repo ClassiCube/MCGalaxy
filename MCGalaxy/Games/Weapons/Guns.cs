@@ -17,13 +17,15 @@
  */
 using System;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Games {
-
+namespace MCGalaxy.Games 
+{
     /// <summary> Represents a gun weapon that fires in a straight line from where player is looking. </remarks>
-    public class Gun : Weapon {
+    public class Gun : Weapon 
+    {
         public override string Name { get { return "Gun"; } }
 
         protected override void OnActivated(Vec3F32 dir, BlockID block) {
@@ -41,6 +43,71 @@ namespace MCGalaxy.Games {
             args.iterations = 4;
             return args;
         }
+        
+        protected void BufferedRevert(Vec3U16 pos, BufferedBlockSender buffer) {
+            int index;
+            BlockID block = p.level.GetBlock(pos.X, pos.Y, pos.Z, out index);
+            
+            if (index == -1) return;
+            buffer.Add(index, block);
+        }
+        
+        
+        protected void GunCallback(SchedulerTask task) {
+            BufferedBlockSender buffer = p.weaponBuffer;
+            buffer.level = p.level;
+            AmmunitionData args = (AmmunitionData)task.State;
+            
+            if (args.moving) {
+                args.moving    = TickGun(args, buffer);
+            } else {
+                task.Repeating = TickRevert(task, buffer);
+            }
+            
+            buffer.Flush(); // TODO bufferedblocksender across guns
+        }
+        
+        bool TickGun(AmmunitionData args, BufferedBlockSender buffer) {
+            while (true) 
+            {
+                Vec3U16 pos = args.PosAt(args.iterations);
+                args.iterations++;
+
+                BlockID cur = p.level.GetBlock(pos.X, pos.Y, pos.Z);
+                if (cur == Block.Invalid) return false;
+                if (cur != Block.Air && !args.all.Contains(pos) && OnHitBlock(args, pos, cur))
+                    return false;
+
+                buffer.Add(p.level.PosToInt(pos.X, pos.Y, pos.Z), args.block);
+                args.visible.Add(pos);
+                args.all.Add(pos);
+                
+                Player pl = PlayerAt(p, pos, true);
+                if (pl != null) { OnHitPlayer(args, pl); return false; }
+                if (TickMove(args, buffer)) return true;
+            }
+        }
+        
+        protected virtual bool TickMove(AmmunitionData args, BufferedBlockSender buffer) {
+            if (args.iterations > 12) {
+                Vec3U16 pos = args.visible[0];
+                args.visible.RemoveAt(0);
+                BufferedRevert(pos, buffer);
+            }
+            return true;
+        }
+        
+        protected virtual bool TickRevert(SchedulerTask task, BufferedBlockSender buffer) {
+            AmmunitionData args = (AmmunitionData)task.State;
+            
+            if (args.visible.Count > 0) {
+                Vec3U16 pos = args.visible[0];
+                args.visible.RemoveAt(0);
+                BufferedRevert(pos, buffer);
+            }
+            return args.visible.Count > 0;
+        }
+        
 
         /// <summary> Called when a bullet has collided with a block. </summary>
         /// <returns> true if this block stops the bullet, false if it should continue moving. </returns>
@@ -52,58 +119,10 @@ namespace MCGalaxy.Games {
         protected virtual void OnHitPlayer(AmmunitionData args, Player pl) {
             pl.HandleDeath(Block.Cobblestone, "@p &Swas shot by " + p.ColoredName);
         }
-        
-        protected virtual bool TickMove(AmmunitionData args) {
-            if (args.iterations > 12) {
-                Vec3U16 pos = args.visible[0];
-                args.visible.RemoveAt(0);
-                p.level.BroadcastRevert(pos.X, pos.Y, pos.Z);
-            }
-            return true;
-        }
-        
-        protected virtual bool TickRevert(SchedulerTask task) {
-            AmmunitionData args = (AmmunitionData)task.State;
-            
-            if (args.visible.Count > 0) {
-                Vec3U16 pos = args.visible[0];
-                args.visible.RemoveAt(0);
-                p.level.BroadcastRevert(pos.X, pos.Y, pos.Z);
-            }
-            return args.visible.Count > 0;
-        }
-        
-        protected void GunCallback(SchedulerTask task) {
-            AmmunitionData args = (AmmunitionData)task.State;
-            if (args.moving) {
-                args.moving    = TickGun(args);
-            } else {
-                task.Repeating = TickRevert(task);
-            }
-        }
-        
-        bool TickGun(AmmunitionData args) {
-            while (true) {
-                Vec3U16 pos = args.PosAt(args.iterations);
-                args.iterations++;
-
-                BlockID cur = p.level.GetBlock(pos.X, pos.Y, pos.Z);
-                if (cur == Block.Invalid) return false;
-                if (cur != Block.Air && !args.all.Contains(pos) && OnHitBlock(args, pos, cur))
-                    return false;
-
-                p.level.BroadcastChange(pos.X, pos.Y, pos.Z, args.block);
-                args.visible.Add(pos);
-                args.all.Add(pos);
-                
-                Player pl = PlayerAt(p, pos, true);
-                if (pl != null) { OnHitPlayer(args, pl); return false; }
-                if (TickMove(args)) return true;
-            }
-        }
     }
     
-    public class PenetrativeGun : Gun {
+    public class PenetrativeGun : Gun 
+    {
         public override string Name { get { return "Penetrative gun"; } }
         
         protected override bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
@@ -116,7 +135,8 @@ namespace MCGalaxy.Games {
         }
     }
     
-    public class ExplosiveGun : Gun {
+    public class ExplosiveGun : Gun 
+    {
         public override string Name { get { return "Explosive gun"; } }
         
         protected override bool OnHitBlock(AmmunitionData args, Vec3U16 pos, BlockID block) {
@@ -133,15 +153,17 @@ namespace MCGalaxy.Games {
         }
     }
     
-    public class LaserGun : ExplosiveGun {
+    public class LaserGun : ExplosiveGun 
+    {
         public override string Name { get { return "Laser"; } }
         
-        protected override bool TickMove(AmmunitionData args) {
+        protected override bool TickMove(AmmunitionData args, BufferedBlockSender buffer) {
             // laser immediately strikes target
             return false;
         }
         
-        protected override bool TickRevert(SchedulerTask task) {
+        protected override bool TickRevert(SchedulerTask task, BufferedBlockSender buffer) 
+        {
             AmmunitionData args = (AmmunitionData)task.State;
             
             if (args.all.Count > 0) {
@@ -149,8 +171,9 @@ namespace MCGalaxy.Games {
                 task.Delay = TimeSpan.FromMilliseconds(400);
                 args.all.Clear();
             } else {
-                foreach (Vec3U16 pos in args.visible) {
-                    p.level.BroadcastRevert(pos.X, pos.Y, pos.Z);
+                foreach (Vec3U16 pos in args.visible) 
+                {
+                    BufferedRevert(pos, buffer);
                 }
                 args.visible.Clear();
             }
@@ -158,7 +181,8 @@ namespace MCGalaxy.Games {
         }
     }
     
-    public class TeleportGun : Gun {
+    public class TeleportGun : Gun 
+    {
         public override string Name { get { return "Teleporter gun"; } }
         
         protected override void OnHitPlayer(AmmunitionData args, Player pl) {

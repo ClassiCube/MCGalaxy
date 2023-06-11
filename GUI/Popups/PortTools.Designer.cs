@@ -103,7 +103,6 @@ namespace MCGalaxy.Gui.Popups {
             this.lblInfo.Text = "This uses UPnP, which not all routers support.\r\nIf this doesn\'t work, you will ha" +
             "ve to\r\n manually port forward in your router.";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblInfo.Click += new System.EventHandler(this.LblInfoClick);
             // 
             // linkHelpForward
             // 
