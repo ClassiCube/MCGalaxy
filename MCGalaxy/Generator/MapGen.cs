@@ -26,6 +26,7 @@ using MCGalaxy.Generator.Classic;
 namespace MCGalaxy.Generator 
 {
     public delegate bool MapGenFunc(Player p, Level lvl, MapGenArgs args);
+    public delegate bool MapGenArgSelector(string arg);
     public enum GenType { Simple, fCraft, Advanced };
         
     public class MapGenArgs
@@ -35,8 +36,8 @@ namespace MCGalaxy.Generator
         public MapGenBiomeName Biome;
         public bool RandomDefault = true;
         
-        public Func<string, bool> ArgFilter = (Args) => false;
-        public Func<string, bool> ArgParser = null;
+        public MapGenArgSelector ArgFilter = (Args) => false;
+        public MapGenArgSelector ArgParser = null;
         
         public bool ParseArgs(Player p) {
             bool gotSeed = false;

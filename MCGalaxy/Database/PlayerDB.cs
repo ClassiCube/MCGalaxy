@@ -144,7 +144,8 @@ namespace MCGalaxy.DB
         }
         
         
-        static List<T> MatchMulti<T>(string name, string columns, Func<ISqlRecord, T> parseRecord) where T : class {
+        delegate T RecordParser<T>(ISqlRecord record); 
+        static List<T> MatchMulti<T>(string name, string columns, RecordParser<T> parseRecord) where T : class {
             List<T> list = FindPartial(name, columns, parseRecord);
             if (list.Count < 25) return list;
             
@@ -160,7 +161,7 @@ namespace MCGalaxy.DB
             return list;
         }
         
-        static List<T> FindPartial<T>(string name, string columns, Func<ISqlRecord, T> parseRecord) {
+        static List<T> FindPartial<T>(string name, string columns, RecordParser<T> parseRecord) {
             string suffix = Database.Backend.CaselessLikeSuffix;
             List<T> list  = new List<T>();
             
@@ -170,7 +171,7 @@ namespace MCGalaxy.DB
             return list;
         }
         
-        static T FindExact<T>(string name, string columns, Func<ISqlRecord, T> parseRecord) where T : class {
+        static T FindExact<T>(string name, string columns, RecordParser<T> parseRecord) where T : class {
             string suffix = Database.Backend.CaselessWhereSuffix;
             T exact = null;
             

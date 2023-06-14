@@ -199,15 +199,15 @@ namespace MCGalaxy.Modules.Relay.Discord
             OnReady();
         }
         
-        void PrintAttachments(JsonObject data, string channel) {
+        void PrintAttachments(RelayUser user, JsonObject data, string channel) {
             object raw;
             if (!data.TryGetValue("attachments", out raw)) return;
             
             JsonArray list = raw as JsonArray;
             if (list == null) return;
-            RelayUser user = ExtractUser(data);
             
-            foreach (object entry in list) {
+            foreach (object entry in list) 
+            {
                 JsonObject attachment = entry as JsonObject;
                 if (attachment == null) continue;
                 
@@ -245,7 +245,7 @@ namespace MCGalaxy.Modules.Relay.Discord
                 HandleDirectMessage(user, channel, message);
             } else {
                 HandleChannelMessage(user, channel, message);
-                PrintAttachments(data, channel);
+                PrintAttachments(user, data, channel);
             }
         }
         
