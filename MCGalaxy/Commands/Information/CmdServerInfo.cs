@@ -17,8 +17,6 @@
  */
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using MCGalaxy.Platform;
 using MCGalaxy.SQL;
@@ -62,7 +60,7 @@ namespace MCGalaxy.Commands.Info
         }
 
         static DateTime startTime;
-        static TimeSpan startCPU;
+        static ProcInfo startUsg;
 
         static void OutputResourceUsage(Player p) {
             Process proc = Process.GetCurrentProcess();
@@ -71,23 +69,23 @@ namespace MCGalaxy.Commands.Info
 
             if (startTime == default(DateTime)) {
                 startTime = DateTime.UtcNow;
-                startCPU  = proc.TotalProcessorTime;
+                startUsg  = os.MeasureResourceUsage(proc, false);
             }
 
-            CPUTime beg     = os.MeasureAllCPUTime();
-            TimeSpan begCPU = proc.TotalProcessorTime;
+            CPUTime allBeg  = os.MeasureAllCPUTime();
+            ProcInfo begUsg = os.MeasureResourceUsage(proc, false);
 
             // measure CPU usage over one second
             Thread.Sleep(1000);
-            TimeSpan endCPU = proc.TotalProcessorTime;
-            CPUTime end     = os.MeasureAllCPUTime();
+            ProcInfo endUsg = os.MeasureResourceUsage(proc, true);
+            CPUTime allEnd  = os.MeasureAllCPUTime();
 
             p.Message("&a{0}% &SCPU usage now, &a{1}% &Soverall",
-                MeasureCPU(begCPU,   endCPU, TimeSpan.FromSeconds(1)),
-                MeasureCPU(startCPU, endCPU, DateTime.UtcNow - startTime));
+                MeasureCPU(begUsg.ProcessorTime,   endUsg.ProcessorTime, TimeSpan.FromSeconds(1)),
+                MeasureCPU(startUsg.ProcessorTime, endUsg.ProcessorTime, DateTime.UtcNow - startTime));
 
-            ulong idl  = (end.IdleTime - beg.IdleTime);
-            ulong sys  = (end.UserTime - beg.UserTime) + (end.KernelTime - beg.KernelTime);
+            ulong idl  = allEnd.IdleTime      - allBeg.IdleTime;
+            ulong sys  = allEnd.ProcessorTime - allBeg.ProcessorTime;
             double cpu = sys * 100.0 / (sys + idl);
             int cores  = Environment.ProcessorCount;
             p.Message("  &a{0}% &Sby all processes across {1} CPU core{2}", 
@@ -95,9 +93,9 @@ namespace MCGalaxy.Commands.Info
                 cores, cores.Plural());
 
             // Private Bytes = memory the process has reserved just for itself
-            int memory = (int)Math.Round(proc.PrivateMemorySize64 / 1048576.0);
+            int memory = (int)Math.Round(endUsg.PrivateMemorySize / 1048576.0);
             p.Message("&a{0} &Sthreads, using &a{1} &Smegabytes of memory",
-                proc.Threads.Count, memory);
+                endUsg.NumThreads, memory);
         }
 
         static string MeasureCPU(TimeSpan beg, TimeSpan end, TimeSpan interval) {

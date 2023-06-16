@@ -31,6 +31,16 @@ namespace MCGalaxy.Platform
         public ulong KernelTime;
         /// <summary> Total time spent executing code in User mode </summary>
         public ulong UserTime;
+        
+        /// <summary> Total time spent executing code </summary>
+        public ulong ProcessorTime { get { return KernelTime + UserTime; } }
+    }
+    
+    public struct ProcInfo
+    {
+        public TimeSpan ProcessorTime;
+        public long PrivateMemorySize;
+        public int NumThreads;
     }
 
     public abstract class IOperatingSystem
@@ -41,13 +51,26 @@ namespace MCGalaxy.Platform
         
         public virtual void Init() { }
         
-        /// <summary> Measures CPU use by all processes in the system </summary>
-        public abstract CPUTime MeasureAllCPUTime();
-        
-        /// <summary> Attempts to restart the server process in-place </summary>
+        /// <summary> Attempts to restart the process in-place </summary>
         /// <remarks> Does not return when in-place restart is successful 
         /// (since the current process image is replaced) </remarks>
         public abstract void RestartProcess();
+        
+        
+        /// <summary> Measures CPU use by all processes in the system </summary>
+        public abstract CPUTime MeasureAllCPUTime();
+        
+        /// <summary> Measures resource usage by the current process </summary>
+        public virtual ProcInfo MeasureResourceUsage(Process proc, bool all) {
+            ProcInfo info = default(ProcInfo);
+            
+            info.ProcessorTime = proc.TotalProcessorTime;
+            if (all) {
+                info.PrivateMemorySize = proc.PrivateMemorySize64;
+                info.NumThreads        = proc.Threads.Count;
+            }
+            return info;
+        }
 
         
         static IOperatingSystem detectedOS;
@@ -83,6 +106,10 @@ namespace MCGalaxy.Platform
 
     class WindowsOS : IOperatingSystem
     {
+        public override void RestartProcess() { }
+        public override bool IsWindows { get { return true; } }
+        
+        
         public override CPUTime MeasureAllCPUTime() {
             CPUTime all = default(CPUTime);
             GetSystemTimes(out all.IdleTime, out all.KernelTime, out all.UserTime);
@@ -95,15 +122,10 @@ namespace MCGalaxy.Platform
 
         [DllImport("kernel32.dll")]
         static extern int GetSystemTimes(out ulong idleTime, out ulong kernelTime, out ulong userTime);
-
-        public override void RestartProcess() { }
-        public override bool IsWindows { get { return true; } }
     }
 
     class UnixOS : IOperatingSystem
     {
-        public override CPUTime MeasureAllCPUTime() { return default(CPUTime); }
-
         public override bool IsWindows { get { return false; } }
         
         public override void RestartProcess() {
@@ -158,6 +180,8 @@ namespace MCGalaxy.Platform
         }
 
 
+        public override CPUTime MeasureAllCPUTime() { return default(CPUTime); }
+
         [DllImport("libc", SetLastError = true)]
         protected unsafe static extern int sysctlbyname(string name, void* oldp, IntPtr* oldlenp, IntPtr newp, IntPtr newlen);
     }
@@ -195,13 +219,11 @@ namespace MCGalaxy.Platform
 
         // https://stackoverflow.com/questions/15145241/is-there-an-equivalent-to-the-windows-getsystemtimes-function-in-linux
         public override CPUTime MeasureAllCPUTime() {
-            try {
-                using (StreamReader r = new StreamReader("/proc/stat"))
-                {
-                    string line = r.ReadLine();
-                    if (line.StartsWith("cpu ")) return ParseCpuLine(line);
-                }
-            } catch (FileNotFoundException) { }
+            using (StreamReader r = new StreamReader("/proc/stat"))
+            {
+                string line = r.ReadLine();
+                if (line.StartsWith("cpu ")) return ParseCpuLine(line);
+            }
 
             return default(CPUTime);
         }
