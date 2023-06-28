@@ -29,10 +29,12 @@ namespace MCGalaxy.Modules.Games.ZS
         [ConfigInt("infection-start-countdown", "Round", 30, 0)]
         public int InfectionCountdown = 30; 
         
-        [ConfigFloat("zombie-hitbox-distance", "Zombie", 1f)]
+        [ConfigFloat("zombie-hitbox-distance", "Collisions", 1f)]
         public float HitboxDist = 1f;
-        [ConfigFloat("zombie-max-move-distance", "Zombie", 1.5625f)]
+        [ConfigFloat("zombie-max-move-distance", "Collisions", 1.5625f)]
         public float MaxMoveDist = 1.5625f;
+        [ConfigInt("collisions-check-interval", "Collisions", 150, 20, 2000)]
+        public int CollisionsCheckInterval = 150;
         
         [ConfigString("human-tablist-group", "Human", "&fHumans")]
         public string HumanTabListGroup = "&fHumans";

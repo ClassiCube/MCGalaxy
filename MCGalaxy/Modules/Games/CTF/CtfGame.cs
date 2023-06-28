@@ -190,7 +190,7 @@ namespace MCGalaxy.Modules.Games.CTF
         }
         
         CtfTeam TeamOf(Player p) {
-            if (Red.Members.Contains(p)) return Red;
+            if (Red.Members.Contains(p))  return Red;
             if (Blue.Members.Contains(p)) return Blue;
             return null;
         }

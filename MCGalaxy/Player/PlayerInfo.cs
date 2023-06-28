@@ -89,7 +89,8 @@ namespace MCGalaxy
             Player[] players = PlayerInfo.Online.Items;
             name = Server.ToRawUsername(name);
             
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (p.truename.CaselessEq(name)) return p;
             }
             return null;

@@ -212,7 +212,8 @@ namespace MCGalaxy.Commands.Moderation {
                 // TODO ip.ToString()
                 if (PlayerDB.FindName(account) == null) return message;
 
-                // Some classicube.net accounts can be parsed as valid IPs, so warn in this case.
+                // ClassiCube.net used to allow registering accounts with . anywhere in name,
+                //  so some older names can be parsed as valid IPs. Warn in this case
                 p.Message("Note: \"{0}\" is both an IP and an account name. "
                           + "If you meant the account, use &T/{1} @{0}", message, cmd);
                 return message;

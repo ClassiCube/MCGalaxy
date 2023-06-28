@@ -118,7 +118,8 @@ namespace MCGalaxy.Modules.Games.ZS
             Player[] players = PlayerInfo.Online.Items;
             List<Player> playing = new List<Player>();
             
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != Map || pl.Game.Referee) continue;
                 playing.Add(pl);
             }

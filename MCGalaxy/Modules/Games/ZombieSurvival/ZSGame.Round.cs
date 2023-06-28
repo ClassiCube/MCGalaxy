@@ -103,7 +103,7 @@ namespace MCGalaxy.Modules.Games.ZS
                 
                 DoCollisions(alive, infected, random);
                 CheckInvisibilityTime();
-                Thread.Sleep(200);
+                Thread.Sleep(Config.CollisionsCheckInterval);
                 alive = Alive.Items;
             }
         }

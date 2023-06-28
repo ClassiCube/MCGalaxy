@@ -32,9 +32,10 @@ namespace MCGalaxy.Modules.Games.CTF
             if (!Running) return;
             
             RoundInProgress = true;
-            while (Running && RoundInProgress && !HasSomeoneWon()) {
+            while (Running && RoundInProgress && !HasSomeoneWon()) 
+            {
                 Tick();
-                Thread.Sleep(300);
+                Thread.Sleep(Config.CollisionsCheckInterval);
             }
         }
               
@@ -46,7 +47,8 @@ namespace MCGalaxy.Modules.Games.CTF
             int dist = (int)(Config.TagDistance * 32);
             Player[] online = PlayerInfo.Online.Items;
             
-            foreach (Player p in online) {
+            foreach (Player p in online) 
+            {
                 if (p.level != Map) continue;
                 CtfTeam team = TeamOf(p);
                 CtfData data = Get(p);
@@ -54,19 +56,19 @@ namespace MCGalaxy.Modules.Games.CTF
                 // Draw flag above player head
                 if (data.HasFlag) DrawPlayerFlag(p, data);
                 
-                if (team == null || data.TagCooldown) continue;
+                if (team == null || data.TagCooldown)   continue;
                 if (!OnOwnTeamSide(p.Pos.BlockZ, team)) continue;
                 CtfTeam opposing = Opposing(team);
                 
                 Player[] opponents = opposing.Members.Items;
-                foreach (Player other in opponents) {
+                foreach (Player other in opponents) 
+                {
                     if (!InRange(p, other, dist)) continue;
                     CtfData otherData = Get(other);
 
                     otherData.TagCooldown = true;
                     other.Message(p.ColoredName + " &Stagged you!");
                     PlayerActions.Respawn(other);
-                    Thread.Sleep(300); // TODO: get rid of this
                     
                     if (otherData.HasFlag) DropFlag(p, opposing);
                     data.Points += cfg.Tag_PointsGained;
