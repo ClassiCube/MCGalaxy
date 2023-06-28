@@ -19,12 +19,12 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy 
+{    
     /// <summary> Retrieves or updates a user's ban/unban information. </summary>
     /// <remarks> This is NOT the list of banned players (ranks/banned.txt) </remarks>
-    public static class Ban {
-        
+    public static class Ban 
+    {        
         static PlayerMetaList bans = new PlayerMetaList("text/bans.txt");
         static PlayerMetaList unbans = new PlayerMetaList("text/unbans.txt");
         
@@ -40,7 +40,8 @@ namespace MCGalaxy {
         
         public static void UnpackTempBanData(string line, out string reason, out string banner, out DateTime expiry) {
             string[] parts = line.SplitSpaces(3);
-            banner = parts[0];
+            // banner name used to be p.truename
+            banner = Server.FromRawUsername(parts[0]);
             
             // Timestamp used to be raw DateTime ticks, is now UTC timestamp
             long timestamp = long.Parse(parts[1]);
@@ -58,8 +59,7 @@ namespace MCGalaxy {
             if (reason.Length == 0) reason = Server.Config.DefaultBanMessage;
             reason = reason.Replace(" ", "%20");
             
-            string player = banner.truename;
-            AddBanEntry(player, target.ToLower(), reason, stealth.ToString(), oldrank);
+            AddBanEntry(banner.name, target.ToLower(), reason, stealth, oldrank);
         }
         
         /// <summary> Adds an unban entry for the given user (who unbanned them and why they were unbanned) </summary>
@@ -67,19 +67,18 @@ namespace MCGalaxy {
             if (reason.Length == 0) reason = "(none given)";
             reason = reason.Replace(" ", "%20");
             
-            string player = unbanner.truename;
-            AddUnbanEntry(player, target.ToLower(), reason);
+            AddUnbanEntry(unbanner.name, target.ToLower(), reason);
         }
         
-        static void AddBanEntry(string pl, string who, string reason, string stealth, string oldrank) {
+        static void AddBanEntry(string pl, string target, string reason, bool stealth, string oldrank) {
             string time = DateTime.UtcNow.ToUnixTime().ToString();
-            string data = pl + " " + who + " " + reason + " " + stealth + " " + time + " " + oldrank;
+            string data = pl + " " + target + " " + reason + " " + stealth + " " + time + " " + oldrank;
             bans.Append(data);
         }
         
-        static void AddUnbanEntry(string pl, string who, string reason) {
+        static void AddUnbanEntry(string pl, string target, string reason) {
             string time = DateTime.UtcNow.ToUnixTime().ToString();
-            string data = pl + " " + who + " " + reason + " " + time;
+            string data = pl + " " + target + " " + reason + " " + time;
             unbans.Append(data);
         }
         
@@ -88,11 +87,13 @@ namespace MCGalaxy {
         public static void GetBanData(string who, out string banner, out string reason, 
                                       out DateTime time, out string prevRank) {
             who = who.ToLower();
-            foreach (string line in File.ReadAllLines(bans.file)) {
+            foreach (string line in File.ReadAllLines(bans.file)) 
+            {
                 string[] parts = line.SplitSpaces();
                 if (parts.Length <= 5 || parts[1] != who) continue;
                 
-                banner   = parts[0];
+                // banner name used to be p.truename
+                banner   = Server.FromRawUsername(parts[0]);
                 reason   = parts[2].Replace("%20", " ");
                 time     = GetDate(parts[4]);
                 prevRank = parts[5];
@@ -106,11 +107,13 @@ namespace MCGalaxy {
                                         out DateTime time) {
             who = who.ToLower();
             unbanner = null; reason = null;
-            foreach (string line in File.ReadAllLines(unbans.file)) {
+            foreach (string line in File.ReadAllLines(unbans.file)) 
+            {
                 string[] parts = line.SplitSpaces();
                 if (parts.Length <= 3 || parts[1] != who) continue;
                 
-                unbanner = parts[0];
+                // unbanner name used to be p.truename
+                unbanner = Server.FromRawUsername(parts[0]);
                 reason   = parts[2].Replace("%20", " ");
                 time     = GetDate(parts[3]);
                 return;

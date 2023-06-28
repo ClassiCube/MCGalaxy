@@ -111,9 +111,10 @@ namespace MCGalaxy.Core {
             LogAction(e, who, "&8banned");
             
             if (e.Duration.Ticks != 0) {
-                string banner = e.Actor.truename;
                 DateTime end = DateTime.UtcNow.Add(e.Duration);
-                Server.tempBans.Update(e.Target, Ban.PackTempBanData(e.Reason, banner, end));
+                string data  = Ban.PackTempBanData(e.Reason, e.Actor.name, end);
+                
+                Server.tempBans.Update(e.Target, data);
                 Server.tempBans.Save();
 
                 if (who != null) who.Kick("Banned for " + e.Duration.Shorten(true) + "." + e.ReasonSuffixed);

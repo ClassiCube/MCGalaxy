@@ -65,7 +65,7 @@ namespace MCGalaxy.Commands.Info
             if (tempExpiry >= DateTime.UtcNow) {
                 TimeSpan delta = tempExpiry - DateTime.UtcNow;
                 p.Message("Temp-banned &S by {1} &Sfor another {0}",
-                               delta.Shorten(), GetName(p, tempBanner));
+                          delta.Shorten(), p.FormatNick(tempBanner));
                 if (tempReason.Length > 0) {
                     p.Message("Reason: {0}",tempReason);
                 }
@@ -85,14 +85,8 @@ namespace MCGalaxy.Commands.Info
             
             TimeSpan delta = DateTime.UtcNow - time;
             p.Message("{0} {1} ago by {2}",
-                          type, delta.Shorten(), GetName(p, banner));
+                          type, delta.Shorten(), p.FormatNick(banner));
             p.Message("Reason: {0}", reason);
-        }
-        
-        static string GetName(Player p, string user) {
-            // ban/unban uses truename
-            user = Server.FromRawUsername(user);
-            return p.FormatNick(user);
         }
         
         public override void Help(Player p) {

@@ -38,12 +38,12 @@ namespace MCGalaxy.Network
         
         
         public ushort NextTwoWayPingData() {
-        	int pingValue = Interlocked.Increment(ref pingCounter);
-        	int pingHead  = (Interlocked.Increment(ref nextPingHead) - 1) % 10;
-        	
-        	Entries[pingHead].Data     = (ushort)pingValue;
-        	Entries[pingHead].TimeRecv = default(DateTime);
-        	Entries[pingHead].TimeSent = DateTime.UtcNow;
+            int pingValue = Interlocked.Increment(ref pingCounter);
+            int pingHead  = (Interlocked.Increment(ref nextPingHead) - 1) % 10;
+            
+            Entries[pingHead].Data     = (ushort)pingValue;
+            Entries[pingHead].TimeRecv = default(DateTime);
+            Entries[pingHead].TimeSent = DateTime.UtcNow;
 
             return (ushort)pingValue;
         }
