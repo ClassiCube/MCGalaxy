@@ -31,21 +31,21 @@ namespace MCGalaxy.Commands.Info
             if (CheckSuper(p, message, "player name")) return;
             if (message.Length == 0) message = p.name;
             
-            string plName = PlayerInfo.FindMatchesPreferOnline(p, message);
-            if (plName == null) return;
-            string nick = p.FormatNick(plName);
+            string target = PlayerInfo.FindMatchesPreferOnline(p, message);
+            if (target == null) return;
+            string nick = p.FormatNick(target);
             
-            string tempData = Server.tempBans.FindData(plName);
+            string tempData = Server.tempBans.FindData(target);
             string tempBanner = null, tempReason = null;
             DateTime tempExpiry = DateTime.MinValue;
             if (tempData != null) {
                 Ban.UnpackTempBanData(tempData, out tempReason, out tempBanner, out tempExpiry);
             }
             
-            bool permaBanned = Group.BannedRank.Players.Contains(plName);
+            bool permaBanned = Group.BannedRank.Players.Contains(target);
             bool isBanned = permaBanned || tempExpiry >= DateTime.UtcNow;
             string msg = nick;
-            string ip  = PlayerDB.FindIP(plName);
+            string ip  = PlayerDB.FindIP(target);
             bool ipBanned = ip != null && Server.bannedIP.Contains(ip);
             
             if (!ipBanned && isBanned) msg += " &Sis &cBANNED";
@@ -55,7 +55,7 @@ namespace MCGalaxy.Commands.Info
             
             string banner, reason, prevRank;
             DateTime time;
-            Ban.GetBanData(plName, out banner, out reason, out time, out prevRank);
+            Ban.GetBanData(target, out banner, out reason, out time, out prevRank);
             if (banner != null && permaBanned) {
                 string grpName = Group.GetColoredName(prevRank);
                 msg += " &S(Former rank: " + grpName + "&S)";
@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands.Info
             } else {
                 p.Message("No previous bans recorded for {0}&S.", nick);
             }            
-            Ban.GetUnbanData(plName, out banner, out reason, out time);
+            Ban.GetUnbanData(target, out banner, out reason, out time);
             DisplayDetails(p, banner, reason, time, permaBanned ? "Last unbanned" : "Unbanned");
         }
         

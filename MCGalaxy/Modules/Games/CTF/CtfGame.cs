@@ -68,7 +68,7 @@ namespace MCGalaxy.Modules.Games.CTF
 		}
         
         const string ctfExtrasKey = "MCG_CTF_DATA";
-        static CtfData Get(Player p) {
+        internal static CtfData Get(Player p) {
             CtfData data = TryGet(p);
             if (data != null) return data;
             data = new CtfData();

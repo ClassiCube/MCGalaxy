@@ -373,10 +373,10 @@ namespace MCGalaxy
         }
         
         /// <summary> Converts a formatted username into its original username </summary>
-        /// <remarks> If ClassiCubeAccountPlus option is set, removes trailing + </remarks>
+        /// <remarks> If ClassiCubeAccountPlus option is set, removes + </remarks>
         public static string ToRawUsername(string name) {
             if (Config.ClassicubeAccountPlus)
-                return name.RemoveLastPlus();
+                return name.Replace("+", "");
             return name;
         }
 
@@ -385,7 +385,13 @@ namespace MCGalaxy
         public static string FromRawUsername(string name) {
             if (!Config.ClassicubeAccountPlus) return name;
 
-            if (!name.EndsWith("+")) name += "+";
+            // NOTE:
+            // This is technically incorrect when the server has both
+            //   classicube-account-plus enabled and is using authentication service suffixes
+            // (e.g. ToRawUsername("Test+$") ==> "Test$", so adding + to end is wrong)
+            // But since that is an unsupported combination to run the server in anyways,
+            //  I decided that it is not worth complicating the implementation for
+            if (!name.Contains("+")) name += "+";
             return name;
         }
     }
