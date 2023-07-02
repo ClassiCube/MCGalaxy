@@ -17,8 +17,10 @@
 */
 using MCGalaxy.Drawing.Transforms;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdAbort : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdAbort : Command2 
+    {
         public override string name { get { return "Abort"; } }
         public override string shortcut { get { return "a"; } }
         public override string type { get { return CommandTypes.Building; } }

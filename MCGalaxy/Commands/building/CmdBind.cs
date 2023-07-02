@@ -17,8 +17,10 @@
 */
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Building {    
-    public sealed class CmdBind : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdBind : Command2 
+    {
         public override string name { get { return "Bind"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }

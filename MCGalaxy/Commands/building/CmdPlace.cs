@@ -19,8 +19,10 @@ using System;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdPlace : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdPlace : Command2 
+    {
         public override string name { get { return "Place"; } }
         public override string shortcut { get { return "pl"; } }
         public override bool museumUsable { get { return false; } }

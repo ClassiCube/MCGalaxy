@@ -15,8 +15,10 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDelete : Command2 {        
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdDelete : Command2 
+    {
         public override string name { get { return "Delete"; } }
         public override string shortcut { get { return "d"; } }
         public override string type { get { return CommandTypes.Building; } }

@@ -17,8 +17,10 @@
 */
 using MCGalaxy.Drawing.Transforms;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDoNotMark : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdDoNotMark : Command2 
+    {
         public override string name { get { return "DoNotMark"; } }
         public override string shortcut { get { return "dnm"; } }
         public override string type { get { return CommandTypes.Building; } }

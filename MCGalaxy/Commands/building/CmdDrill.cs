@@ -20,8 +20,10 @@ using MCGalaxy.DB;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdDrill : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdDrill : Command2 
+    {
         public override string name { get { return "Drill"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool museumUsable { get { return false; } }

@@ -27,10 +27,11 @@ namespace MCGalaxy.Drawing.Transforms
         public override string[] Help { get { return HelpString; } }
         
         static string[] HelpString = new string[] {
-            "&TArguments: [angleX] [angleY] [angleZ] <centre>",
-            "&H[angle] values are values in degrees.",
-            "&H[centre] if given, indicates to scale from the centre of a draw operation, " +
-            "instead of outwards from the first mark. Recommended for cuboid and cylinder.",
+            "&TArguments: [angleX] [angleY] [angleZ]",
+            "&HRotates the output of the draw operation around its bottom left corner",
+            "&TArguments: [angleX] [angleY] [angleZ] centre",
+            "&HRotates the output of the draw operation around its centre",
+            "&H  Note: [angle] values are in degrees",
         };
         
         public override Transform Construct(Player p, string message) {
@@ -45,9 +46,10 @@ namespace MCGalaxy.Drawing.Transforms
             rotater.SetAngles(angleX, angleY, angleZ);
 
             if (args.Length == 3) return rotater; // no centre argument
-            if (!args[args.Length - 1].CaselessEq("centre")) {
+            if (!IsCentre(args[args.Length - 1])) {
                 p.Message("The mode must be either \"centre\", or not given."); return null;
             }
+            
             rotater.CentreOrigin = true;
             return rotater;
         }
@@ -57,6 +59,10 @@ namespace MCGalaxy.Drawing.Transforms
                 p.MessageLines(HelpString); return false;
             }
             return true;
+        }
+        
+        static bool IsCentre(string input) {
+            return input.CaselessEq("centre") || input.CaselessEq("center");
         }
     }
 }

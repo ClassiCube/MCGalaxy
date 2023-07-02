@@ -19,8 +19,10 @@ using System;
 using System.IO;
 using MCGalaxy.Events;
 
-namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdMute : Command2 {
+namespace MCGalaxy.Commands.Moderation 
+{
+    public sealed class CmdMute : Command2 
+    {
         public override string name { get { return "Mute"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }

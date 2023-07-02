@@ -17,8 +17,10 @@
  */
 using System;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdCalculate : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdCalculate : Command2 
+    {
         public override string name { get { return "Calculate"; } }
         public override string shortcut { get { return "Calc"; } }
         public override string type { get { return CommandTypes.Building; } }

@@ -27,6 +27,8 @@ namespace MCGalaxy.Commands.Chatting
         public override string type { get { return CommandTypes.Chat; } }
         public override bool SuperUseable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
+        public override CommandParallelism Parallelism { get { return CommandParallelism.NoAndWarn; } }
+        
         const int i_text = 0, i_sent = 1, i_from = 2;
         
         public override void Use(Player p, string message, CommandData data) {

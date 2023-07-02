@@ -25,8 +25,10 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdCopy : Command2 {
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdCopy : Command2 
+    {
         public override string name { get { return "Copy"; } }
         public override string shortcut { get { return "c"; } }
         public override string type { get { return CommandTypes.Building; } }

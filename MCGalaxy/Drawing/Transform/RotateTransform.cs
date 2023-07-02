@@ -48,7 +48,7 @@ namespace MCGalaxy.Drawing.Transforms
             if (angle < 0) angle += 360.0;
 
             // trying to use shear with angles close to 180 tends to cause issues
-            //  (due to Math.Tan(angle / 2) approaching tan(45 degrees))
+            //  (due to Math.Tan(angle / 2) approaching tan(90 degrees))
             // so avoid this by reducing the angles to 0-90 degrees,
             //  then rotating the output appropriately afterwards
             if (angle >= 0 && angle <= 90) {
