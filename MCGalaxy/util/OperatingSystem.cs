@@ -6,8 +6,8 @@
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
     
-    http://www.opensource.org/licenses/ecl2.php
-    http://www.gnu.org/licenses/gpl-3.0.html
+    https://opensource.org/license/ecl-2-0/
+    https://www.gnu.org/licenses/gpl-3.0.html
     
     Unless required by applicable law or agreed to in writing,
     software distributed under the Licenses are distributed on an "AS IS"
@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 
 namespace MCGalaxy.Platform
 {
+    /// <summary> Summarises resource usage of all CPU cores in the system </summary>
     public struct CPUTime
     {
         /// <summary> Total time spent being idle / not executing code </summary>
@@ -36,6 +37,7 @@ namespace MCGalaxy.Platform
         public ulong ProcessorTime { get { return KernelTime + UserTime; } }
     }
     
+    /// <summary> Summarises resource usage of current process </summary>
     public struct ProcInfo
     {
         public TimeSpan ProcessorTime;
@@ -320,6 +322,7 @@ namespace MCGalaxy.Platform
             get { return IntPtr.Size == 8 ? "mac64" : "mac32"; } 
         }
 
+    	
         // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
         // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
         public override CPUTime MeasureAllCPUTime() {

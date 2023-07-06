@@ -6,8 +6,8 @@
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
     
-    http://www.opensource.org/licenses/ecl2.php
-    http://www.gnu.org/licenses/gpl-3.0.html
+    https://opensource.org/license/ecl-2-0/
+    https://www.gnu.org/licenses/gpl-3.0.html
     
     Unless required by applicable law or agreed to in writing,
     software distributed under the Licenses are distributed on an "AS IS"
@@ -27,6 +27,7 @@ namespace MCGalaxy.Commands.Chatting
         public override string type { get { return CommandTypes.Chat; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool UseableWhenFrozen { get { return true; } }
+        public override CommandParallelism Parallelism { get { return CommandParallelism.NoAndWarn; } }
         
         public override void Use(Player p, string message, CommandData data) {
             string[] parts = message.SplitSpaces(2);
@@ -42,8 +43,16 @@ namespace MCGalaxy.Commands.Chatting
                 p.Message("&WMessage was too long. It has been trimmed to:");
                 p.Message(message);
             }
-            
             Database.CreateTable("Inbox" + name, createInbox);
+            
+            int pending = Database.CountRows("Inbox" + name, "WHERE PlayerFrom=@0", p.name);
+            if (pending >= 200) {
+                p.Message("{0} &calready has 200+ messages from you currently in their inbox. " +
+                          "Try again later after they have deleted some of their inbox messages",
+                          p.FormatNick(name));
+                return;
+            }
+            
             Database.AddRow("Inbox" + name, "PlayerFrom, TimeSent, Contents",
                             p.name, DateTime.Now.ToString(Database.DateFormat), message);
             p.CheckForMessageSpam();

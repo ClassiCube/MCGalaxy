@@ -6,8 +6,8 @@
     not use this file except in compliance with the Licenses. You may
     obtain a copy of the Licenses at
     
-    http://www.opensource.org/licenses/ecl2.php
-    http://www.gnu.org/licenses/gpl-3.0.html
+    https://opensource.org/license/ecl-2-0/
+    https://www.gnu.org/licenses/gpl-3.0.html
     
     Unless required by applicable law or agreed to in writing,
     software distributed under the Licenses are distributed on an "AS IS"
@@ -22,6 +22,7 @@ using System.Text;
 namespace MCGalaxy.Network 
 {
     /// <summary> Abstracts WebSocket handling </summary>
+    /// <remarks> See RFC 6455 for websocket specification </remarks>
     public abstract class BaseWebSocket : INetSocket, INetProtocol 
     {
         protected bool conn, upgrade;
@@ -29,6 +30,12 @@ namespace MCGalaxy.Network
         
         /// <summary> Computes a base64-encoded handshake verification key </summary>
         protected static string ComputeKey(string rawKey) {
+            // RFC 6455, section 1.3 - Opening Handshake
+            //   For this header field, the server has to take the value (as present
+            //    in the header field... and concatenate this with the GUID
+            //    "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" in string form
+            //   A SHA-1 hash, base64-encoded, of this concatenation is 
+            //    then returned in the server's handshake.
             string key = rawKey + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
             SHA1   sha = SHA1.Create();
             byte[] raw = sha.ComputeHash(Encoding.ASCII.GetBytes(key));
@@ -49,6 +56,8 @@ namespace MCGalaxy.Network
             string name  = raw.Substring(0, sep);
             string value = raw.Substring(sep + 1).Trim();
             
+            // RFC 6455, section 1.3 - Opening Handshake
+            //   To this end, the WebSocket client's handshake is an HTTP Upgrade request
             if (name.CaselessEq("Connection")) {
                 conn    = value.CaselessContains("Upgrade");
             } else if (name.CaselessEq("Upgrade")) {
@@ -100,9 +109,9 @@ namespace MCGalaxy.Network
         int GetDisconnectReason() {
             if (frameLen < 2) return REASON_NORMAL;
             
-            // See section 5.5.1 of websockets specification:
-            //  "... If there is a body, the first two bytes of the body MUST 
-            //   be a 2-byte unsigned integer (in network byte order)..."
+            // RFC 6455, section 5.5.1 - Close
+            //   If there is a body, the first two bytes of the body MUST 
+            //    be a 2-byte unsigned integer (in network byte order)...
             return (frame[0] << 8) | frame[1];
         }
         
