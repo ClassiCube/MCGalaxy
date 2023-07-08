@@ -114,11 +114,13 @@ namespace MCGalaxy.SQL
         
         /// <summary> Inserts/Copies all the rows from the source table into the destination table. </summary>
         /// <remarks> May NOT work correctly if the tables have different schema. </remarks>
-        public static void CopyAllRows(string srcTable, string dstTable) {
+        /// <returns> The number of rows copied </returns>
+        public static int CopyAllRows(string srcTable, string dstTable) {
             ValidateName(srcTable);
             ValidateName(dstTable);
+            
             string sql = Backend.CopyAllRowsSql(srcTable, dstTable);
-            Execute(sql, null);
+            return Execute(sql, null);
         }
         
         /// <summary> Iterates over read rows for the given table. </summary>
@@ -127,30 +129,35 @@ namespace MCGalaxy.SQL
         public static void ReadRows(string table, string columns,
                                     ReaderCallback callback, string modifier = "", params object[] args) {
             ValidateName(table);
+            
             string sql = Backend.ReadRowsSql(table, columns, modifier);
             Iterate(sql, callback, args);
         }
         
-        /// <summary> Updates rows for the given table. </summary>
-        /// <param name="modifier"> Optional SQL to filter which rows are updated. </param>
-        public static void UpdateRows(string table, string columns,
-                                       string modifier = "", params object[] args) {
+        /// <summary> Updates rows for the given table </summary>
+        /// <param name="modifier"> Optional SQL to filter which rows are updated. Can be just "" </param>
+        /// <returns> The number of rows updated </returns>
+        public static int UpdateRows(string table, string columns,
+                                     string modifier, params object[] args) {
             ValidateName(table);
             string sql = Backend.UpdateRowsSql(table, columns, modifier);
-            Execute(sql, args);
+            return Execute(sql, args);
         }
         
         /// <summary> Deletes rows for the given table. </summary>
-        /// <param name="modifier"> Optional SQL to filter which rows are deleted. </param>
-        public static void DeleteRows(string table, string modifier = "", params object[] args) {
+        /// <param name="modifier"> Optional SQL to filter which rows are deleted. Can be just "" </param>
+        /// <returns> The number of rows deleted </returns>
+        public static int DeleteRows(string table, string modifier, params object[] args) {
             ValidateName(table);
+            
             string sql = Backend.DeleteRowsSql(table, modifier);
-            Execute(sql, args);
+            return Execute(sql, args);
         }
 
         /// <summary> Adds a row to the given table. </summary>
         public static void AddRow(string table, string columns, params object[] args) {
             ValidateName(table);
+            
             string sql = Backend.AddRowSql(table, columns, args.Length);
             Execute(sql, args);
         }
@@ -158,6 +165,7 @@ namespace MCGalaxy.SQL
         /// <summary> Adds or replaces a row (same primary key) in the given table. </summary>
         public static void AddOrReplaceRow(string table, string columns, params object[] args) {
             ValidateName(table);
+            
             string sql = Backend.AddOrReplaceRowSql(table, columns, args.Length);
             Execute(sql, args);
         }

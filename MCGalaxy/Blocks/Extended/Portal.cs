@@ -137,16 +137,12 @@ namespace MCGalaxy.Blocks.Extended {
         public static void Set(string map, ushort x, ushort y, ushort z,
                                ushort exitX, ushort exitY, ushort exitZ, string exitMap) {
             Database.CreateTable("Portals" + map, LevelDB.createPortals);
-            int count = Database.CountRows("Portals" + map,
-                                           "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            object[] args = new object[] { x, y, z,  exitX, exitY, exitZ,  exitMap };
             
-            if (count == 0) {
-                Database.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap",
-                                x, y, z, exitX, exitY, exitZ, exitMap);
-            } else {
-                Database.UpdateRows("Portals" + map, "ExitMap=@6, ExitX=@3, ExitY=@4, ExitZ=@5",
-                                    "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z,
-                                    exitX, exitY, exitZ, exitMap);
+            int changed = Database.UpdateRows("Portals" + map, "ExitX=@3, ExitY=@4, ExitZ=@5, ExitMap=@6",
+                                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", args);
+            if (changed == 0) {
+                Database.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap", args);
             }
             
             Level lvl = LevelInfo.FindExact(map);
