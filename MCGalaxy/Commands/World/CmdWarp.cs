@@ -19,7 +19,7 @@ using System;
 using System.Threading;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.Misc {
+namespace MCGalaxy.Commands.World {
     public class CmdWarp : Command2 {
         public override string name { get { return "Warp"; } }
         public override string type { get { return CommandTypes.World; } }

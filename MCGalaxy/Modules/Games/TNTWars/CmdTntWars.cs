@@ -25,7 +25,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.TW
 {
-    public sealed class CmdTntWars : RoundsGameCmd 
+    sealed class CmdTntWars : RoundsGameCmd 
     {
         public override string name { get { return "TntWars"; } }
         public override string shortcut { get { return "tw"; } }

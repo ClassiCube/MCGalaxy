@@ -18,7 +18,7 @@
 using System;
 using System.Threading;
 
-namespace MCGalaxy.Commands.World {
+namespace MCGalaxy.Commands.Misc {
     public sealed class CmdDelay : Command2 {
         public override string name { get { return "Delay"; } }
         public override string type { get { return CommandTypes.Other; } }

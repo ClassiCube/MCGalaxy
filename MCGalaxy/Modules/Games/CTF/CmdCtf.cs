@@ -24,7 +24,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.CTF
 {
-    public sealed class CmdCTF : RoundsGameCmd 
+    sealed class CmdCTF : RoundsGameCmd 
     {
         public override string name { get { return "CTF"; } }
         public override string shortcut { get { return "CTFSetup"; } }

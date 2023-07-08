@@ -25,7 +25,7 @@ using MCGalaxy.Generator;
 
 namespace MCGalaxy.Modules.Games.Countdown
 {    
-    public sealed class CmdCountdown : RoundsGameCmd 
+    sealed class CmdCountdown : RoundsGameCmd 
     {
         public override string name { get { return "CountDown"; } }
         public override string shortcut { get { return "CD"; } }
