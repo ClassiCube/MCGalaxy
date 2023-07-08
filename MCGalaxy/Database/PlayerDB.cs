@@ -176,7 +176,7 @@ namespace MCGalaxy.DB
             T exact = null;
             
             Database.ReadRows("Players", columns, r => exact = parseRecord(r),
-                              "WHERE Name=@0" + suffix, name);
+                              "WHERE Name=@0 LIMIT 1 " + suffix, name);
             return exact;
         }
         

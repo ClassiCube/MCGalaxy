@@ -32,7 +32,7 @@ namespace MCGalaxy
             name     = user; truename    = user;
             SkinName = user; DisplayName = user;
 
-            // TODO move to ClassicProtocol
+            // TODO move to ClassicProtocol (SetRawName)
             if (Session.ProtocolVersion > Server.VERSION_0030) {
                 Leave(null, "Unsupported protocol version " + Session.ProtocolVersion, true); return false;
             }
@@ -210,9 +210,18 @@ namespace MCGalaxy
         
         void GetPlayerStats() {
             PlayerData data = null;
-            Database.ReadRows("Players", "*",
-                                record => data = PlayerData.Parse(record),
-                                "WHERE Name=@0", name);
+            
+            if (verifiedName || Server.Config.VerifyNames) {
+                // Existing servers may have multiple records for the same name with differing case
+                // So for backwards compatibility, do a case sensitive name lookup
+                //   to avoid retrieving player stats from the wrong row
+                Database.ReadRows("Players", "*",
+                                    record => data = PlayerData.Parse(record),
+                                    "WHERE Name=@0", name);
+            } else {
+                data = PlayerDB.FindData(name);
+            }
+            
             if (data == null) {
                 PlayerData.Create(this);
                 Chat.MessageFrom(this, "λNICK &Shas connected for the first time!");
