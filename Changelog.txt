@@ -1,4 +1,25 @@
-﻿v 1.9.4.8
+﻿v 1.9.4.9
+Improved: Allow using block names in /lb and /gb commands (e.g. /lb edit, /gb copy, etc)
+Improved: Try to preserve process's raw command line arguments when restarting on Linux
+Improved: Change /compload to also unload the command/plugin first
+Improved: Port forwarding GUI now also has logs panel
+Improved: /pload and /punload output message now also includes name of plugin
+Improved: Plugins can now use CPE message priority to temporarily override and then restore lower priority CPE messages
+Improved: Log which levels have their saving deliberately skipped at shutdown/restart (e.g. due to games)
+Improved: Support 'all processes CPU usage' in /ServerInfo on FreeBSD too
+Improved: /help transform rotate
+Fixed: Doing /info [name] when there were over 100 partial matches before an exact match, would still show 'multiple names matched' instead of displaying the information of the exactly matching player
+Fixed: Prevent being able to load the same plugin multiple times
+Fixed: Changed PlayerDB data lookup on login to be case insensitive when name verification is disabled and the player's name is unverified
+Fixed: Some issues occurring when server runs in unsupported mode of having both classicube-account-plus enabled and player name suffixes for login authentication services
+Fixed: GUI getting stuck in restart loop when System.Windows.Forms DLL loaded successfully, but System.Drawing DLL failed to load
+Minigame related changes:
+Added: Item for buying doors in Lava Survival
+Improved: Can now configure collision check interval for Zombie Survival, and slightly reduce default interval
+Improved: Can now configure collision check interval for Capture the Flag, and slightly reduce default interval
+Fixed: Opening settings GUI or doing /server reload would cause server main level to get loaded, even when a game that changed main level was running
+
+v 1.9.4.8
 Added: Mojang server login authentication support (for Betacraft)
 Improved: /highight now displays how many changes were found (Thanks Goodly)
 Improved: Doing /spawn should always respawn you at level spawn
