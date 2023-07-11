@@ -22,40 +22,42 @@ using MCGalaxy.Util;
 namespace MCGalaxy.DB 
 { 
     public unsafe sealed class BlockDBFile_V1 : BlockDBFile 
-    {        
+    {
+        public override byte Version { get { return 1; } }
+        
         public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
-            for (int i = 0; i < entries.Count; i += BulkEntries) {
+            byte[] bulk = new byte[BulkEntries * V1_ENTRY_SIZE];
+            for (int i = 0; i < entries.Count; i += BulkEntries) 
+            {
                 int bulkCount = Math.Min(BulkEntries, entries.Count - i);
-                for (int j = 0; j < bulkCount; j++) {
-                    WriteEntry(entries.Items[i + j], bulk, j * EntrySize);
+                for (int j = 0; j < bulkCount; j++) 
+                {
+                    WriteEntry(entries.Items[i + j], bulk, j * V1_ENTRY_SIZE);
                 }
-                s.Write(bulk, 0, bulkCount * EntrySize);
+                s.Write(bulk, 0, bulkCount * V1_ENTRY_SIZE);
             }
         }
 
         public override void WriteEntries(Stream s, BlockDBCache cache) {
-            byte[] bulk = new byte[BulkEntries * EntrySize];
+            byte[] bulk = new byte[BulkEntries * V1_ENTRY_SIZE];
             BlockDBCacheNode node = cache.Tail;
             
             while (node != null) {
                 int count = node.Count;
-                for (int i = 0; i < count; i += BulkEntries) {
+                for (int i = 0; i < count; i += BulkEntries) 
+                {
                     int bulkCount = Math.Min(BulkEntries, count - i);
-                    for (int j = 0; j < bulkCount; j++) {
+                    for (int j = 0; j < bulkCount; j++) 
+                    {
                         BlockDBEntry entry = node.Unpack(node.Entries[i + j]);
-                        WriteEntry(entry, bulk, j * EntrySize);
+                        WriteEntry(entry, bulk, j * V1_ENTRY_SIZE);
                     }
-                    s.Write(bulk, 0, bulkCount * EntrySize);
+                    s.Write(bulk, 0, bulkCount * V1_ENTRY_SIZE);
                 }
                 
                 lock (cache.Locker)
                     node = node.Next;
             }
-        }
-
-        public override long CountEntries(Stream s) {
-            return (s.Length / BlockDBFile.EntrySize) - BlockDBFile.HeaderEntries;
         }
         
         // Inlined WriteI32/WriteU16 for better performance
@@ -81,25 +83,30 @@ namespace MCGalaxy.DB
             bulk[index + 15] = (byte)(entry.Flags >> 8);
         }
         
+        
+        public override long CountEntries(Stream s) {
+            return (s.Length - HEADER_SIZE) / V1_ENTRY_SIZE;
+        }
+        
         public unsafe override int ReadForward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
-            long remaining = (s.Length - s.Position) / EntrySize;
+            long remaining = (s.Length - s.Position) / V1_ENTRY_SIZE; // TODO mask instead
             int count = (int)Math.Min(remaining, BulkEntries);
             
             if (count > 0) {
-                BlockDBFile.ReadFully(s, bulk, 0, count * EntrySize);
+                ReadFully(s, bulk, 0, count * V1_ENTRY_SIZE);
             }
             return count;
         }
          
         public unsafe override int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long pos = s.Position;
-            long remaining = (pos / EntrySize) - HeaderEntries;
+            long remaining = (pos - HEADER_SIZE) / V1_ENTRY_SIZE;
             int count = (int)Math.Min(remaining, BulkEntries);
             
             if (count > 0) {
-                pos -= count * EntrySize;
+                pos -= count * V1_ENTRY_SIZE;
                 s.Position = pos;
-                BlockDBFile.ReadFully(s, bulk, 0, count * EntrySize);
+                ReadFully(s, bulk, 0, count * V1_ENTRY_SIZE);
                 s.Position = pos; // set correct position for next backward read
             }
             return count;

@@ -183,7 +183,7 @@ namespace MCGalaxy.DB
             if (!File.Exists(FilePath)) {
                 using (Stream s = OpenWrite()) {
                     fileDims = Dims;
-                    BlockDBFile.WriteHeader(s, fileDims);
+                    format.WriteHeader(s, fileDims);
                 }
             } else {
                 using (Stream s = OpenRead()) {

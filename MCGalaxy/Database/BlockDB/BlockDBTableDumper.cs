@@ -65,7 +65,7 @@ namespace MCGalaxy.DB
                     stream = File.Create(BlockDBFile.DumpPath(mapName));
                     string lvlPath = LevelInfo.MapPath(mapName);
                     dims = IMapImporter.Formats[0].ReadDimensions(lvlPath);
-                    BlockDBFile.WriteHeader(stream, dims);
+                    BlockDBFile.V1.WriteHeader(stream, dims);
                 }
                 
                 // Only log maps which have a used BlockDB to avoid spam
@@ -102,7 +102,7 @@ namespace MCGalaxy.DB
             
             byte[] bulk = new byte[4096];
             using (Stream cbdb = File.OpenRead(path)) {
-                cbdb.Read(bulk, 0, BlockDBFile.EntrySize); // header
+                cbdb.Read(bulk, 0, BlockDBFile.HEADER_SIZE);
                 int read = 0;
                 while ((read = cbdb.Read(bulk, 0, 4096)) > 0) {
                     stream.Write(bulk, 0, read);
