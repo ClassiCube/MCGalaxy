@@ -25,9 +25,10 @@ namespace MCGalaxy.DB
     public unsafe abstract class BlockDBFile 
     {
         public const int RAW_ENTRY_SIZE = 16; // size of a BlockDBEntry
-        public const int V1_ENTRY_SIZE  = 16;
         public const int HEADER_SIZE    = 16; 
-        public const int BulkEntries    = 4096;
+        public const int BULK_ENTRIES   = 4096;
+        
+        public const int BULK_BUFFER_SIZE = HEADER_SIZE * BULK_ENTRIES;
         
         public static BlockDBFile V1 = new BlockDBFile_V1();
         
@@ -55,20 +56,26 @@ namespace MCGalaxy.DB
         
         public abstract byte Version { get; }
         
-        public void WriteHeader(Stream s, Vec3U16 dims) {
-            byte[] header = new byte[HEADER_SIZE];
+        public abstract void WriteHeader(Stream s, Vec3U16 dims);
+        
+        protected void FillHeader(Stream s, byte[] header, Vec3U16 dims) {
             NetUtils.Write("CBDB_MCG", header, 0, false);
             WriteU16(Version, header,  8);
             WriteU16(dims.X,  header, 10);
             WriteU16(dims.Y,  header, 12);
             WriteU16(dims.Z,  header, 14);
-            s.Write(header, 0, HEADER_SIZE);
         }
         
+        /// <summary> Returns number of entries in the backing file. </summary>
+        public abstract long CountEntries(Stream s);
         
-        public abstract void WriteEntries(Stream s, FastList<BlockDBEntry> entries);
+        
+        public abstract void WriteEntries(Stream s, BlockDBEntry[] entries, int count);
 
         public abstract void WriteEntries(Stream s, BlockDBCache cache);
+        
+        public abstract void WriteRaw(Stream s, byte[] bulk, BlockDBEntry* entryPtr, int count);
+      
         
         /// <summary> Reads a block of BlockDB entries, in a forward streaming manner. </summary>
         /// <returns> The number of entries read. </returns>
@@ -78,8 +85,6 @@ namespace MCGalaxy.DB
         /// <returns> The number of entries read. </returns>
         public abstract int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entryPtr);
         
-        /// <summary> Returns number of entries in the backing file. </summary>
-        public abstract long CountEntries(Stream s);
 
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public static void DeleteBackingFile(string map) {
@@ -100,15 +105,15 @@ namespace MCGalaxy.DB
             Logger.Log(LogType.BackgroundActivity, "Resizing BlockDB for " + db.MapName);
             string filePath = FilePath(db.MapName);
             string tempPath = TempPath(db.MapName);
+            
             BlockDBFile fmt;
+            byte[] bulk = new byte[BULK_BUFFER_SIZE];
+            Vec3U16 dims;
             
             using (Stream src = File.OpenRead(filePath), dst = File.Create(tempPath)) {
-                Vec3U16 dims;
                 fmt = ReadHeader(src, out dims);
-                fmt.WriteHeader(dst,  db.Dims);
-                
+                fmt.WriteHeader(dst,  db.Dims);                
                 int width = db.Dims.X, length = db.Dims.Z;
-                byte[] bulk = new byte[BulkEntries * RAW_ENTRY_SIZE];
                 
                 fixed (byte* ptr = bulk) {
                     BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
@@ -125,7 +130,7 @@ namespace MCGalaxy.DB
                             int z = (index / dims.X) % dims.Z;
                             entryPtr[i].Index = (y * length + z) * width + x;
                         }
-                        dst.Write(bulk, 0, count * V1_ENTRY_SIZE);
+                        fmt.WriteRaw(dst, bulk, entryPtr, count);
                     }
                 }
             }
@@ -149,7 +154,7 @@ namespace MCGalaxy.DB
         
         /// <summary> Iterates from the very oldest to newest entry in the BlockDB. </summary>
         public void FindChangesAt(Stream s, int index, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * RAW_ENTRY_SIZE];
+            byte[] bulk = new byte[BULK_BUFFER_SIZE];
             fixed (byte* ptr = bulk) {
                 while (true) 
                 {
@@ -169,7 +174,7 @@ namespace MCGalaxy.DB
         /// <summary> Iterates from the very newest to oldest entry in the BlockDB. </summary>
         /// <returns> whether an entry before start time was reached. </returns>
         public bool FindChangesBy(Stream s, int[] ids, int start, int end, Action<BlockDBEntry> output) {
-            byte[] bulk = new byte[BulkEntries * RAW_ENTRY_SIZE];
+            byte[] bulk = new byte[BULK_BUFFER_SIZE];
             s.Position = s.Length;
             fixed (byte* ptr = bulk) {
                 while (true) 
@@ -197,13 +202,17 @@ namespace MCGalaxy.DB
         }
         
         
-        static ushort ReadU16(byte[] array, int offset) {
+        protected static ushort ReadU16(byte[] array, int offset) {
             return (ushort)(array[offset] | array[offset + 1] << 8);
         }
         
-        static void WriteU16(ushort value, byte[] array, int index) {
+        protected static void WriteU16(ushort value, byte[] array, int index) {
             array[index++] = (byte)(value);
             array[index++] = (byte)(value >> 8);
+        }
+        
+        protected static int ReadI32(byte[] bulk, int idx) {
+            return bulk[idx] | (bulk[idx + 1] << 8) | (bulk[idx + 2] << 16) | (bulk[idx + 3] << 24);
         }
         
         protected static void ReadFully(Stream stream, byte[] dst, int offset, int count) {

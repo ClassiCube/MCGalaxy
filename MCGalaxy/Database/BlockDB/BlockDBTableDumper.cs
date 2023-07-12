@@ -34,18 +34,19 @@ namespace MCGalaxy.DB
         bool errorOccurred;
         Vec3U16 dims;
         BlockDBEntry entry;
-        FastList<BlockDBEntry> buffer = new FastList<BlockDBEntry>(4096);
+        BlockDBEntry[] buffer = new BlockDBEntry[BlockDBFile.BULK_ENTRIES];
+        int bufferCount;
         uint entriesWritten;
         
         public void DumpTable(string table) {
-            buffer.Count = 0;
+            bufferCount    = 0;
             entriesWritten = 0;
-            errorOccurred = false;
+            errorOccurred  = false;
             mapName = table.Substring("Block".Length);
             
             try {
                 Database.ReadRows(table, "*", DumpRow);
-                WriteBuffer(true);
+                FlushBuffer();
                 AppendCbdbFile();
                 SaveCbdbFile();
             } finally {
@@ -65,7 +66,7 @@ namespace MCGalaxy.DB
                     stream = File.Create(BlockDBFile.DumpPath(mapName));
                     string lvlPath = LevelInfo.MapPath(mapName);
                     dims = IMapImporter.Formats[0].ReadDimensions(lvlPath);
-                    BlockDBFile.V1.WriteHeader(stream, dims);
+                    BlockDBFile.V1.WriteHeader(stream, dims); // TODO: BlockDBFile.CurrentVersion ??
                 }
                 
                 // Only log maps which have a used BlockDB to avoid spam
@@ -75,37 +76,47 @@ namespace MCGalaxy.DB
                     Logger.Log(LogType.SystemActivity, "Dumping BlockDB for " + mapName + progress);
                 }
                 
-                UpdateBlock(record);
-                UpdateCoords(record);
-                UpdatePlayerID(record);
-                UpdateTimestamp(record);
+                ExtractBlock(record);
+                ExtractCoords(record);
+                ExtractPlayerID(record);
+                ExtractTimestamp(record);
                 
-                buffer.Add(entry);
-                WriteBuffer(false);
+                buffer[bufferCount++] = entry;
+                if (bufferCount == BlockDBFile.BULK_ENTRIES)
+                    FlushBuffer();
             } catch (Exception ex) {
                 Logger.LogError(ex);
                 errorOccurred = true;
             }
         }
         
-        void WriteBuffer(bool force) {
-            if (buffer.Count == 0) return;
-            if (!force && buffer.Count < 4096) return;
+        void FlushBuffer() {
+            if (bufferCount == 0) return;
             
-            BlockDBFile.V1.WriteEntries(stream, buffer);
-            buffer.Count = 0;
+            BlockDBFile.V1.WriteEntries(stream, buffer, bufferCount);
+            bufferCount = 0;
         }
         
-        void AppendCbdbFile() {
+        unsafe void AppendCbdbFile() {
             string path = BlockDBFile.FilePath(mapName);
             if (!File.Exists(path) || stream == null) return;
             
-            byte[] bulk = new byte[4096];
+            BlockDBFile fmt;
+            byte[] bulk = new byte[BlockDBFile.BULK_BUFFER_SIZE];
+            Vec3U16 dims;
+            
             using (Stream cbdb = File.OpenRead(path)) {
-                cbdb.Read(bulk, 0, BlockDBFile.HEADER_SIZE);
-                int read = 0;
-                while ((read = cbdb.Read(bulk, 0, 4096)) > 0) {
-                    stream.Write(bulk, 0, read);
+                fmt = BlockDBFile.ReadHeader(cbdb, out dims);               
+                fixed (byte* ptr = bulk) {
+                    BlockDBEntry* entryPtr = (BlockDBEntry*)ptr;
+                    
+                    while (true) 
+                    {
+                        int count = fmt.ReadForward(cbdb, bulk, entryPtr);
+                        if (count == 0) break;
+                        
+                        BlockDBFile.V1.WriteRaw(stream, bulk, entryPtr, count); // TODO: BlockDBFile.CurrentVersion ??
+                    }
                 }
             }
         }
@@ -122,7 +133,7 @@ namespace MCGalaxy.DB
         }
         
         
-        void UpdateBlock(ISqlRecord record) {
+        void ExtractBlock(ISqlRecord record) {
             entry.OldRaw    = Block.Invalid;
             entry.NewRaw    = (byte)record.GetInt32(5);
             byte blockFlags = (byte)record.GetInt32(6);
@@ -136,14 +147,14 @@ namespace MCGalaxy.DB
             }
         }
         
-        void UpdateCoords(ISqlRecord record) {
+        void ExtractCoords(ISqlRecord record) {
             int x = record.GetInt32(2);
             int y = record.GetInt32(3);
             int z = record.GetInt32(4);
             entry.Index = x + dims.X * (z + dims.Z * y);
         }
         
-        void UpdatePlayerID(ISqlRecord record) {
+        void ExtractPlayerID(ISqlRecord record) {
             int id;
             string user = record.GetString(0);
             if (!nameCache.TryGetValue(user, out id)) {
@@ -157,7 +168,7 @@ namespace MCGalaxy.DB
             entry.PlayerID = id;
         }
         
-        void UpdateTimestamp(ISqlRecord record) {
+        void ExtractTimestamp(ISqlRecord record) {
             DateTime time   = record.GetDateTime(1).ToUniversalTime();
             entry.TimeDelta = (int)time.Subtract(BlockDB.Epoch).TotalSeconds;
         }

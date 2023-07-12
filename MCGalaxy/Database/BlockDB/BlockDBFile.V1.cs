@@ -17,36 +17,52 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Maths;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.DB 
 { 
     public unsafe sealed class BlockDBFile_V1 : BlockDBFile 
     {
+        const int V1_ENTRY_SIZE = 16; // Same size as RAW_ENTRY_SIZE (size of a BlockDB record)
+        // TODO V1_ENTRY_SHIFT
+        
         public override byte Version { get { return 1; } }
         
-        public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
-            byte[] bulk = new byte[BulkEntries * V1_ENTRY_SIZE];
-            for (int i = 0; i < entries.Count; i += BulkEntries) 
+        public override void WriteHeader(Stream s, Vec3U16 dims) {
+            byte[] header = new byte[HEADER_SIZE];
+            FillHeader(s, header, dims);
+            s.Write(header, 0, HEADER_SIZE);
+        }
+        
+        public override long CountEntries(Stream s) {
+            return (s.Length - HEADER_SIZE) / V1_ENTRY_SIZE;
+        }
+        
+        
+        public override void WriteEntries(Stream s, BlockDBEntry[] entries, int count) {
+            byte[] bulk = new byte[BULK_BUFFER_SIZE];
+            for (int i = 0; i < count; i += BULK_ENTRIES) 
             {
-                int bulkCount = Math.Min(BulkEntries, entries.Count - i);
+                int bulkCount = Math.Min(BULK_ENTRIES, count - i);
+                // TODO BlockCopy
                 for (int j = 0; j < bulkCount; j++) 
                 {
-                    WriteEntry(entries.Items[i + j], bulk, j * V1_ENTRY_SIZE);
+                    WriteEntry(entries[i + j], bulk, j * V1_ENTRY_SIZE);
                 }
                 s.Write(bulk, 0, bulkCount * V1_ENTRY_SIZE);
             }
         }
 
         public override void WriteEntries(Stream s, BlockDBCache cache) {
-            byte[] bulk = new byte[BulkEntries * V1_ENTRY_SIZE];
+            byte[] bulk = new byte[BULK_BUFFER_SIZE];
             BlockDBCacheNode node = cache.Tail;
             
             while (node != null) {
                 int count = node.Count;
-                for (int i = 0; i < count; i += BulkEntries) 
+                for (int i = 0; i < count; i += BULK_ENTRIES) 
                 {
-                    int bulkCount = Math.Min(BulkEntries, count - i);
+                    int bulkCount = Math.Min(BULK_ENTRIES, count - i);
                     for (int j = 0; j < bulkCount; j++) 
                     {
                         BlockDBEntry entry = node.Unpack(node.Entries[i + j]);
@@ -58,6 +74,10 @@ namespace MCGalaxy.DB
                 lock (cache.Locker)
                     node = node.Next;
             }
+        }
+        
+        public override void WriteRaw(Stream s, byte[] bulk, BlockDBEntry* entryPtr, int count) {
+            s.Write(bulk, 0, count * V1_ENTRY_SIZE);
         }
         
         // Inlined WriteI32/WriteU16 for better performance
@@ -84,13 +104,9 @@ namespace MCGalaxy.DB
         }
         
         
-        public override long CountEntries(Stream s) {
-            return (s.Length - HEADER_SIZE) / V1_ENTRY_SIZE;
-        }
-        
         public unsafe override int ReadForward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long remaining = (s.Length - s.Position) / V1_ENTRY_SIZE; // TODO mask instead
-            int count = (int)Math.Min(remaining, BulkEntries);
+            int count = (int)Math.Min(remaining, BULK_ENTRIES);
             
             if (count > 0) {
                 ReadFully(s, bulk, 0, count * V1_ENTRY_SIZE);
@@ -101,7 +117,8 @@ namespace MCGalaxy.DB
         public unsafe override int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long pos = s.Position;
             long remaining = (pos - HEADER_SIZE) / V1_ENTRY_SIZE;
-            int count = (int)Math.Min(remaining, BulkEntries);
+            int count = (int)Math.Min(remaining, BULK_ENTRIES);
+            // TODO rethink this s.Position and don't set twice
             
             if (count > 0) {
                 pos -= count * V1_ENTRY_SIZE;

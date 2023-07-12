@@ -17,23 +17,20 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Maths;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.DB 
 {
     public unsafe sealed class BlockDBFile_V2 : BlockDBFile 
     {
-        const int BlockSize = BlockDBFile.BulkEntries;
+        const int CHUNK_SIZE = BlockDBFile.BULK_ENTRIES;
         
         public override byte Version { get { return 2; } }
         
-        /* TODO: Last chunk in file may only be partially filled. need to prepend these entries when compressing more. */
-        public override void WriteEntries(Stream s, FastList<BlockDBEntry> entries) {
+        public override void WriteHeader(Stream s, Vec3U16 dims) {
             throw new NotImplementedException();
-        }
-
-        public override void WriteEntries(Stream s, BlockDBCache cache) {
-            throw new NotImplementedException();
+            // TODO: Write a full chunk
         }
 
         public override long CountEntries(Stream s) {
@@ -41,20 +38,36 @@ namespace MCGalaxy.DB
             s.Position  = 16;
             ReadFully(s, data, 0, data.Length);
             
-            uint lo = (uint)ReadInt32(data, 0);
-            uint hi = (uint)ReadInt32(data, 4);
+            uint lo = (uint)ReadI32(data, 0);
+            uint hi = (uint)ReadI32(data, 4);
             return (long)((ulong)lo | ((ulong)hi << 32));
         }
         
+        
+        /* TODO: Last chunk in file may only be partially filled. need to prepend these entries when compressing more. */
+        public override void WriteEntries(Stream s, BlockDBEntry[] entries, int count) {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteEntries(Stream s, BlockDBCache cache) {
+            throw new NotImplementedException();
+        }
+        
+        public override void WriteRaw(Stream s, byte[] bulk, BlockDBEntry* entryPtr, int count) {
+            throw new NotImplementedException();
+        }
+        
+        
         public unsafe override int ReadForward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long pos = s.Position;
+            // TODO: Align position to CHUNK_SIZE. and read partial if necessary
             // Version 2 expects all chunks to be aligned to 4096 bytes
-            if (pos < BlockSize) { s.Position = BlockSize; pos = BlockSize; }
+            if (pos < CHUNK_SIZE) { s.Position = CHUNK_SIZE; pos = CHUNK_SIZE; }
             long remaining = s.Length - pos;
             if (remaining == 0) return 0;
             
-            int bytes = (int)Math.Min(remaining, BlockSize);
-            int offset = bulk.Length - BlockSize;
+            int bytes = (int)Math.Min(remaining, CHUNK_SIZE);
+            int offset = bulk.Length - CHUNK_SIZE;
             
             // NOTE: bulk and entriesPtr point to same thing
             // But we read into the end of the bulk array, thus the entriesPtr pointing
@@ -65,9 +78,9 @@ namespace MCGalaxy.DB
         
         public unsafe override int ReadBackward(Stream s, byte[] bulk, BlockDBEntry* entriesPtr) {
             long pos = s.Position;
-            if (pos > BlockSize) {
-                int bytes = (int)Math.Min(pos - BlockSize, BlockSize);
-                int offset = bulk.Length - BlockSize;
+            if (pos > CHUNK_SIZE) {
+                int bytes = (int)Math.Min(pos - CHUNK_SIZE, CHUNK_SIZE);
+                int offset = bulk.Length - CHUNK_SIZE;
                 
                 pos -= bytes;
                 s.Position = pos;
@@ -79,63 +92,66 @@ namespace MCGalaxy.DB
         }
         
         unsafe static int DecompressChunk(byte[] bulk, int idx, BlockDBEntry* ptr) {
-            byte comp = bulk[idx]; idx++;
-            int count = bulk[idx] | (bulk[idx + 1] << 8); idx += 2;
+            int comp  = bulk[idx + 0] | (bulk[idx + 1] << 8);
+            int count = bulk[idx + 2] | (bulk[idx + 3] << 8); // TODO mask to bulk_entries
+            idx += 4;
             
+            // TODO byte ushort modes for playerID
+            // TODO: always read these fields... ?
             int playerID = 0;
-            if ((comp & 0x01) < 0x01) { playerID = ReadInt32(bulk, idx); idx += 4; }
+            if ((comp & 0x03) < 0x03) { playerID = ReadI32(bulk, idx); idx += 4; }
             int time = 0;
-            if ((comp & 0x06) < 0x06) { time = ReadInt32(bulk, idx); idx += 4; }
+            if ((comp & 0x0C) < 0x0C) { time = ReadI32(bulk, idx); idx += 4; }
             int index = 0;
-            if ((comp & 0x18) < 0x18) { index = ReadInt32(bulk, idx); idx += 4; }
+            if ((comp & 0x30) < 0x30) { index = ReadI32(bulk, idx); idx += 4; }
             
             byte oldRaw = 0;
-            if ((comp & 0x20) < 0x20) { oldRaw = bulk[idx]; idx++; }
+            if ((comp &  0x40) < 0x20)  { oldRaw = bulk[idx]; idx++; }
             byte newRaw = 0;
-            if ((comp & 0x40) < 0x40) { newRaw = bulk[idx]; idx++; }
+            if ((comp &  0x80) < 0x40)  { newRaw = bulk[idx]; idx++; }
             ushort flags = 0;
-            if ((comp & 0x80) < 0x80) { flags = (ushort)(bulk[idx] | (bulk[idx + 1] << 8)); idx += 2; }
+            if ((comp & 0x100) < 0x100) { flags = (ushort)(bulk[idx] | (bulk[idx + 1] << 8)); idx += 2; }
 
-            for (int i = 0; i < count; i++) {
-                switch (comp & 0x01) {
-                    case 0x00: ptr->PlayerID = playerID; break;
-                    default: ptr->PlayerID = ReadInt32(bulk, idx); idx += 4; break;
+            for (int i = 0; i < count; i++)
+            {
+                switch (comp & 0x03) {
+                    case 0: ptr->PlayerID = playerID; break;
+                    case 1: ptr->PlayerID = bulk[idx]; idx++; break;
+                    case 2: ptr->PlayerID = bulk[idx] | (bulk[idx + 1] << 8); idx += 2; break;
+                    case 3: ptr->PlayerID = ReadI32(bulk, idx); idx += 4; break;
                 }
                 
-                switch ((comp & 0x06) >> 1) {
+                switch ((comp & 0x0C) >> 2) {
                     case 0: ptr->TimeDelta = time; break;
                     case 1: ptr->TimeDelta = time + bulk[idx]; idx++; break;
                     case 2: ptr->TimeDelta = time + (bulk[idx] | (bulk[idx + 1] << 8)); idx += 2; break;
-                    case 3: ptr->TimeDelta = ReadInt32(bulk, idx); idx += 4; break;
+                    case 3: ptr->TimeDelta = ReadI32(bulk, idx); idx += 4; break;
                 }
                 
-                switch ((comp & 0x18) >> 3) {
+                switch ((comp & 0x30) >> 4) {
                     case 0: ptr->Index = index; break;
                     case 1: ptr->Index = index + (sbyte)bulk[idx]; idx++; break;
                     case 2: ptr->Index = index + (short)(bulk[idx] | (bulk[idx + 1] << 8)); idx += 2; break;
-                    case 3: ptr->Index = ReadInt32(bulk, idx); idx += 4; break;
-                }
-                
-                switch (comp & 0x20) {
-                    case 0x00: ptr->OldRaw = oldRaw; break;
-                    default: ptr->OldRaw = bulk[idx]; idx++; break;
+                    case 3: ptr->Index = ReadI32(bulk, idx); idx += 4; break;
                 }
                 
                 switch (comp & 0x40) {
-                    case 0x00: ptr->NewRaw = newRaw; break;
-                    default: ptr->NewRaw = bulk[idx]; idx++; break;
+                    case 0x00: ptr->OldRaw = oldRaw; break;
+                    default:   ptr->OldRaw = bulk[idx]; idx++; break;
                 }
                 
                 switch (comp & 0x80) {
+                    case 0x00: ptr->NewRaw = newRaw; break;
+                    default:   ptr->NewRaw = bulk[idx]; idx++; break;
+                }
+                
+            	// TODO more flags modes (same base mode, differing old/new
+                switch (comp & 0x100) {
                     case 0x00: ptr->Flags = flags; break;
-                    default: ptr->Flags = (ushort)(bulk[idx] | (bulk[idx + 1] << 8)); idx += 2; break;
+                    default:   ptr->Flags = (ushort)(bulk[idx] | (bulk[idx + 1] << 8)); idx += 2; break;
                 }
             }
             return count;
-        }
-        
-        static int ReadInt32(byte[] bulk, int idx) {
-            return bulk[idx] | (bulk[idx + 1] << 8) | (bulk[idx + 2] << 16) | (bulk[idx + 3] << 24);
         }
     }
 }
