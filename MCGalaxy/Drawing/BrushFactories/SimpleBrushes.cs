@@ -166,14 +166,14 @@ namespace MCGalaxy.Drawing.Brushes
             Player p = args.Player;
             if (args.Message.Length == 0) {
                 if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return null;
-                return new StripedBrush(args.Block, Block.Air);
+                return new StripedBrush(args.Block, Block.Invalid);
             }
             string[] parts = args.Message.SplitSpaces();
             
             BlockID block1;
             if (!CommandParser.GetBlockIfAllowed(p, parts[0], "draw with", out block1, true)) return null;
             if (parts.Length == 1)
-                return new StripedBrush(block1, Block.Air);
+                return new StripedBrush(block1, Block.Invalid);
             
             BlockID block2;
             if (!CommandParser.GetBlockIfAllowed(p, parts[1], "draw with", out block2, true)) return null;

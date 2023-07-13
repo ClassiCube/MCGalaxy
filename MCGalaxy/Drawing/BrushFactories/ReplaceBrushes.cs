@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Commands;
 using BlockID = System.UInt16;
 
@@ -52,14 +53,14 @@ namespace MCGalaxy.Drawing.Brushes
         }
         
         internal static BlockID[] GetBlocks(Player p, int start, int max, string[] parts) {
-            BlockID[] blocks = new BlockID[max - start];
+            List<BlockID> blocks = new List<BlockID>(max - start);
+            
             for (int i = 0; start < max; start++, i++) 
             {
-                BlockID block;
-                if (!CommandParser.GetBlockIfAllowed(p, parts[start], "draw with", out block)) return null;
-                blocks[i] = block;
+               int count = CommandParser.GetBlocksIfAllowed(p, parts[start], "draw with", blocks, false);
+               if (count == 0) return null;
             }
-            return blocks;
+            return blocks.ToArray();
         }
         
         static bool GetTargetBlock(BrushArgs args, string[] parts, out BlockID target) {
