@@ -27,7 +27,7 @@ namespace MCGalaxy.Drawing.Brushes
     public static class FrequencyBrush 
     {       
         public static bool GetBlocks(BrushArgs args, 
-    	                             out List<BlockID> blocks, out List<int> freqs,
+                                     out List<BlockID> blocks, out List<int> freqs,
                                      Predicate<string> argFilter, 
                                      Predicate<string> argHandler) {
             string[] parts = args.Message.SplitSpaces(); // out List blocks
@@ -53,9 +53,8 @@ namespace MCGalaxy.Drawing.Brushes
                 int sepIndex = parts[i].IndexOf('/'); 
                 string arg   = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
                 
-                BlockID block;
-                if (!CommandParser.GetBlockIfAllowed(p, arg, "draw with", out block, true)) return false;
-                blocks.Add(block);
+                int count = CommandParser.GetBlocksIfAllowed(p, arg, "draw with", blocks, true);
+                if (count == 0) return false;
                 
                 int freq = 1;
                 if (sepIndex >= 0) {
@@ -63,7 +62,8 @@ namespace MCGalaxy.Drawing.Brushes
                     if (!CommandParser.GetInt(p, arg, "Frequency", ref freq, 1, 1000)) return false;
                 }
                 
-                freqs.Add(freq);
+                for (int j = 0; j < count; j++)
+                    freqs.Add(freq);
             }
             
             // treat 0 arguments as the same as if it was 1 argument of "held block"

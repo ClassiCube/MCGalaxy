@@ -292,7 +292,7 @@ namespace MCGalaxy.Commands.CPE
         }
         
         static void PrintBlock(Player p, BlockDefinition def) {
-		    p.Message("Custom block &T{0} &Shas name &T{1}", def.RawID, def.Name);
+            p.Message("Custom block &T{0} &Shas name &T{1}", def.RawID, def.Name);
         }
 
         
@@ -685,43 +685,45 @@ namespace MCGalaxy.Commands.CPE
             return true;
         }
         
-		static bool CheckRaw(Player p, string arg, BlockDefinitionsArgs args,
-		                     out int raw, bool air = false) {
+        static bool CheckRaw(Player p, string arg, BlockDefinitionsArgs args,
+                             out int raw, bool air = false) {
             raw = -1;
             int min = (air ? 0 : 1);
             int max = Block.MaxRaw;
             
             // Check for block names (can't use standard parsing behaviour)
             if (!int.TryParse(arg, out raw)) {
-            	BlockDefinition def = BlockDefinition.ParseName(arg, args.defs);
-            	
-            	if (def == null) {
+                BlockDefinition def = BlockDefinition.ParseName(arg, args.defs);
+                
+                if (def == null) {
                     p.Message("&W{0} is not a valid block {1} custom block name", arg, args.scope);
-            		return false;
-            	}
-            	raw = def.RawID;
-            	return true;
+                    return false;
+                }
+                raw = def.RawID;
+                return true;
             }
             
             return CommandParser.GetInt(p, arg, "Block ID", ref raw, min, max);
         }
         
-		static bool CheckRawBlocks(Player p, string arg, BlockDefinitionsArgs args,
-		                           out int min, out int max, bool air = false) {
+        static bool CheckRawBlocks(Player p, string arg, BlockDefinitionsArgs args,
+                                   out int min, out int max, bool air = false) {
+            string[] bits;
             bool success;
+            
             // Either "[id]" or "[min]-[max]"
-            if (arg.IndexOf('-') == -1) {
+            if (CommandParser.IsRawBlockRange(arg, out bits)) {
+                success = CheckRaw(p, bits[0], args, out min, air) 
+                        & CheckRaw(p, bits[1], args, out max, air);                
+            } else {
                 success = CheckRaw(p, arg, args, out min, air);
                 max     = min;
-            } else {
-                string[] bits = arg.Split(new char[] { '-' }, 2);
-                success = CheckRaw(p, bits[0], args, out min, air) & CheckRaw(p, bits[1], args, out max, air);
             }
             return success;
         }
         
-		static bool CheckBlock(Player p, string arg, BlockDefinitionsArgs args,
-		                       out BlockID block, bool air = false) {
+        static bool CheckBlock(Player p, string arg, BlockDefinitionsArgs args,
+                               out BlockID block, bool air = false) {
             int raw;
             bool success = CheckRaw(p, arg, args, out raw, air);
             

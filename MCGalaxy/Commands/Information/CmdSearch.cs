@@ -52,7 +52,8 @@ namespace MCGalaxy.Commands.Info
         
         static void SearchBlocks(Player p, string keyword, string modifier) {
             List<BlockID> blocks = new List<BlockID>();
-            for (int b = 0; b < Block.SUPPORTED_COUNT; b++) {
+            for (int b = 0; b < Block.SUPPORTED_COUNT; b++) 
+            {
                 BlockID block = (BlockID)b;
                 if (Block.ExistsFor(p, block)) blocks.Add(block);
             }

@@ -62,7 +62,8 @@ namespace MCGalaxy.Commands.Info
         
         static void OutputBlocks(Player p, string type, string modifier, Predicate<BlockID> selector) {
             List<BlockID> blocks = new List<BlockID>(Block.SUPPORTED_COUNT);
-            for (BlockID b = 0; b < Block.SUPPORTED_COUNT; b++) {
+            for (BlockID b = 0; b < Block.SUPPORTED_COUNT; b++) 
+            {
                 if (Block.ExistsFor(p, b) && selector(b)) blocks.Add(b);
             }
 

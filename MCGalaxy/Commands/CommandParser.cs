@@ -16,15 +16,16 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands {
-    
+namespace MCGalaxy.Commands
+{ 
     /// <summary> Provides helper methods for parsing arguments for commands. </summary>
-    public static class CommandParser {
-        
+    public static class CommandParser 
+    {       
         /// <summary> Attempts to parse the given argument as a boolean. </summary>
         public static bool GetBool(Player p, string input, ref bool result) {
             if (input.CaselessEq("1") || input.CaselessEq("true")
@@ -224,6 +225,49 @@ namespace MCGalaxy.Commands {
             if (p.group.Blocks[block]) return true;
             BlockPerms.Find(block).MessageCannotUse(p, action);
             return false;
+        }
+        
+        
+        public static int GetBlocksIfAllowed(Player p, string input, string action, 
+                                             List<BlockID> blocks, bool allowSkip) {
+            string[] bits;
+            if (!IsRawBlockRange(input, out bits)) {
+                BlockID block;
+                if (!GetBlockIfAllowed(p, input, action, out block, allowSkip)) return 0;
+                
+                blocks.Add(block);
+                return 1;
+            }
+            
+            BlockID min = 0, max = 0;
+            if (!GetUShort(p, bits[0], "Raw block ID", ref min, Block.Air, Block.MaxRaw)) return 0;
+            if (!GetUShort(p, bits[1], "Raw block ID", ref max, Block.Air, Block.MaxRaw)) return 0;
+            
+            int count = 0;
+            for (BlockID raw = min; raw <= max; raw++)
+            {
+                BlockID b = Block.FromRaw(raw);
+                if (!IsBlockAllowed(p, action, b)) continue;
+                if (!Block.ExistsFor(p, b))        continue;
+                
+                blocks.Add(b);
+                count++;
+            }
+            
+            if (count > 0) return count;
+            p.Message("&WNo usable blocks exist in the range from {0} to {1}",
+                      min, max);
+            return 0;
+        }
+        
+        internal static bool IsRawBlockRange(string input, out string[] bits) {
+            bits = null;
+            if (input.IndexOf('-') == -1) return false;
+            bits = input.Split(new char[] { '-' }, 2);
+            
+            int tmp;
+            return int.TryParse(bits[0], out tmp)
+                && int.TryParse(bits[1], out tmp);
         }
     }
 }

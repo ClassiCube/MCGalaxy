@@ -59,7 +59,7 @@ namespace MCGalaxy
             if (BlockID.TryParse(input, out block)) {
                 if (block < Block.CPE_COUNT || (block <= Block.MaxRaw && defs[FromRaw(block)] != null)) {
                     return FromRaw(block);
-                }
+                } // TODO redo to use ExistsFor?
             }
             
             BlockDefinition def = BlockDefinition.ParseName(input, defs);
