@@ -199,14 +199,7 @@ namespace MCGalaxy.Commands {
                 block = Block.Air; return false;
             }
         }
-
-        /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
-        /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
-        [Obsolete("Use GetBlockIfAllowed with explicit action argument instead")]
-        public static bool GetBlockIfAllowed(Player p, string input, out BlockID block, bool allowSkip = false) {
-            return GetBlockIfAllowed(p, input, "draw with", out block, allowSkip);
-        }
-
+        
         /// <summary> Attempts to parse the given argument as either a block name or a block ID. </summary>
         /// <remarks> Also ensures the player is allowed to place the given block. </remarks>
         public static bool GetBlockIfAllowed(Player p, string input, string action, 

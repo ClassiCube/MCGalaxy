@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
 using BlockID = System.UInt16;
 
@@ -26,10 +27,10 @@ namespace MCGalaxy.Drawing.Brushes
         readonly BlockID gridBlock, cellBlock, borderBlock;
         readonly int gridSize, blocksCount;
 
-        public GridBrush(BlockID[] blocks, int[] counts) {
+        public GridBrush(List<BlockID> blocks, List<int> counts) {
             gridBlock   = blocks[0];
             cellBlock   = blocks[1];
-            borderBlock = blocks.Length > 2 ? blocks[2] : Block.Invalid;
+            borderBlock = blocks.Count > 2 ? blocks[2] : Block.Invalid;
 
             gridSize    = counts[0];
             blocksCount = counts[0] + counts[1];

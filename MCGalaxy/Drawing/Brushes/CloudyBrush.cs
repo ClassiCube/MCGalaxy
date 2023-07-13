@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Generator;
 using BlockID = System.UInt16;
@@ -29,17 +30,17 @@ namespace MCGalaxy.Drawing.Brushes
         readonly float[] thresholds;
         readonly ImprovedNoise noise;
         
-        public CloudyBrush(BlockID[] blocks, int[] counts, NoiseArgs n) {
-            this.blocks = blocks;
-            this.counts = counts;
-            this.thresholds = new float[counts.Length];
+        public CloudyBrush(List<BlockID> blocks, List<int> counts, NoiseArgs n) {
+            this.blocks = blocks.ToArray();
+            this.counts = counts.ToArray();
+            this.thresholds = new float[counts.Count];
             Random r = n.Seed == int.MinValue ? new Random() : new Random(n.Seed);
             noise = new ImprovedNoise(r);
             
-            noise.Frequency = n.Frequency;
-            noise.Amplitude = n.Amplitude;
-            noise.Octaves = n.Octaves;
-            noise.Lacunarity = n.Lacunarity;
+            noise.Frequency   = n.Frequency;
+            noise.Amplitude   = n.Amplitude;
+            noise.Octaves     = n.Octaves;
+            noise.Lacunarity  = n.Lacunarity;
             noise.Persistence = n.Persistence;
         }
         
@@ -112,7 +113,8 @@ namespace MCGalaxy.Drawing.Brushes
             N = N > 1 ? 1 : N;
             
             next = blocks.Length - 1;
-            for (int i = 0; i < thresholds.Length; i++) {
+            for (int i = 0; i < thresholds.Length; i++) 
+            {
                 if (N <= thresholds[i]) { next = i; break; }
             }
             return blocks[next];

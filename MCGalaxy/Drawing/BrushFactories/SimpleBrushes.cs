@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Commands;
 using BlockID = System.UInt16;
 
@@ -44,6 +45,8 @@ namespace MCGalaxy.Drawing.Brushes
             return new SolidBrush(block);
         }
         
+        // Usually this shouldn't be overriden, but since SolidBrush is the default brush, 
+        //  it's worth overriding this to avoid an unnecessary object allocation
         public override bool Validate(BrushArgs args) {
             if (args.Message.Length == 0) return true;
             BlockID block;
@@ -72,11 +75,14 @@ namespace MCGalaxy.Drawing.Brushes
                 return new CheckeredBrush(args.Block, Block.Invalid);
             }
 
-            int[] count;
-            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);            
-            if (toAffect == null) return null;
+            List<BlockID> toAffect;
+            List<int> freqs;
+            
+            bool ok = FrequencyBrush.GetBlocks(args, out toAffect, out freqs, 
+                                               P => false, null);
+            if (!ok) return null;
 
-            BlockID[] blocks = FrequencyBrush.Combine(toAffect, count);
+            BlockID[] blocks = FrequencyBrush.Combine(toAffect, freqs);
             if (blocks.Length == 2)
                 return new CheckeredBrush(blocks[0], blocks[1]);
             return new CheckeredPaletteBrush(blocks);
@@ -96,11 +102,14 @@ namespace MCGalaxy.Drawing.Brushes
         };
         
         public override Brush Construct(BrushArgs args) {
-            int[] count;
-            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count, P => false, null);            
-            if (toAffect == null) return null;
+            List<BlockID> toAffect;
+            List<int> freqs;
+            
+            bool ok = FrequencyBrush.GetBlocks(args, out toAffect, out freqs, 
+                                               P => false, null);
+            if (!ok) return null;
 
-            return new GridBrush(toAffect, count);
+            return new GridBrush(toAffect, freqs);
         }
     }
     

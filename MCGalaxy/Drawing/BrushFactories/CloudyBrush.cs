@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Commands;
 using BlockID = System.UInt16;
 
@@ -46,12 +47,14 @@ namespace MCGalaxy.Drawing.Brushes
             n.Persistence = 0.75f;
             n.Lacunarity = 2;
             
-            int[] count;
-            BlockID[] toAffect = FrequencyBrush.GetBlocks(args, out count,
-                                            Filter, arg => Handler(arg, args.Player, ref n));
+            List<BlockID> toAffect;
+            List<int> freqs;
             
-            if (toAffect == null) return null;
-            return new CloudyBrush(toAffect, count, n);
+            bool ok = FrequencyBrush.GetBlocks(args, out toAffect, out freqs,
+                                               Filter, arg => Handler(arg, args.Player, ref n));
+            if (!ok) return null;
+            
+            return new CloudyBrush(toAffect, freqs, n);
         }
         
         // Only want to handle non block options.
