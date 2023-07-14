@@ -53,7 +53,7 @@ namespace MCGalaxy.Drawing.Brushes
                 int sepIndex = parts[i].IndexOf('/'); 
                 string arg   = sepIndex >= 0 ? parts[i].Substring(0, sepIndex) : parts[i];
                 
-                int count = CommandParser.GetBlocksIfAllowed(p, arg, "draw with", blocks, true);
+                int count = CommandParser.GetBlocks(p, arg, blocks, true);
                 if (count == 0) return false;
                 
                 int freq = 1;
@@ -68,9 +68,6 @@ namespace MCGalaxy.Drawing.Brushes
             
             // treat 0 arguments as the same as if it was 1 argument of "held block"
             if (blocks.Count == 0) {
-                // Check if allowed to place the held block
-                if (!CommandParser.IsBlockAllowed(p, "draw with", args.Block)) return false;
-                
                 blocks.Add(args.Block);
                 freqs.Add(1);
             }
@@ -79,6 +76,12 @@ namespace MCGalaxy.Drawing.Brushes
             if (blocks.Count == 1) {
                 blocks.Add(Block.Invalid);
                 freqs.Add(1);
+            }
+            
+            foreach (BlockID b in blocks)
+            {
+                if (b == Block.Invalid) continue; // "Skip" block
+                if (!CommandParser.IsBlockAllowed(p, "draw with", b)) return false;
             }
             return true;
         }

@@ -228,12 +228,15 @@ namespace MCGalaxy.Commands
         }
         
         
-        public static int GetBlocksIfAllowed(Player p, string input, string action, 
-                                             List<BlockID> blocks, bool allowSkip) {
+        public static int GetBlocks(Player p, string input, 
+                                    List<BlockID> blocks, bool allowSkip) {
             string[] bits;
             if (!IsRawBlockRange(input, out bits)) {
                 BlockID block;
-                if (!GetBlockIfAllowed(p, input, action, out block, allowSkip)) return 0;
+                
+                if (!allowSkip || !IsSkipBlock(input, out block)) {
+                    if (!GetBlock(p, input, out block)) return 0;
+                }
                 
                 blocks.Add(block);
                 return 1;
@@ -247,8 +250,7 @@ namespace MCGalaxy.Commands
             for (BlockID raw = min; raw <= max; raw++)
             {
                 BlockID b = Block.FromRaw(raw);
-                if (!IsBlockAllowed(p, action, b)) continue;
-                if (!Block.ExistsFor(p, b))        continue;
+                if (!Block.ExistsFor(p, b)) continue;
                 
                 blocks.Add(b);
                 count++;

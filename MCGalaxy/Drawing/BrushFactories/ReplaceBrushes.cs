@@ -57,8 +57,14 @@ namespace MCGalaxy.Drawing.Brushes
             
             for (int i = 0; start < max; start++, i++) 
             {
-               int count = CommandParser.GetBlocksIfAllowed(p, parts[start], "draw with", blocks, false);
-               if (count == 0) return null;
+                int count = CommandParser.GetBlocks(p, parts[start], blocks, false);
+                if (count == 0) return null;
+            }
+            
+            foreach (BlockID b in blocks)
+            {
+                if (b == Block.Invalid) continue; // "Skip" block
+                if (!CommandParser.IsBlockAllowed(p, "replace", b)) return null;
             }
             return blocks.ToArray();
         }

@@ -16,23 +16,29 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy.Commands.Building {
-    public sealed class CmdMeasure : Command2 {      
+namespace MCGalaxy.Commands.Building 
+{
+    public sealed class CmdMeasure : Command2 
+    {
         public override string name { get { return "Measure"; } }
         public override string shortcut { get { return "ms"; } }
         public override string type { get { return CommandTypes.Building; } }
         public override bool SuperUseable { get { return false; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            BlockID[] toCount = null;
+            List<BlockID> toCount = null;
             if (message.Length > 0) {
                 string[] args = message.SplitSpaces();
-                toCount = new BlockID[args.Length];
-                for (int i = 0; i < toCount.Length; i++) {
-                    if (!CommandParser.GetBlock(p, args[i], out toCount[i])) return;
+                toCount = new List<BlockID>(args.Length);
+                
+                for (int i = 0; i < args.Length; i++) 
+                {
+                    int count = CommandParser.GetBlocks(p, args[i], toCount, false);
+                    if (count == 0) return;
                 }
             }
             
@@ -41,8 +47,9 @@ namespace MCGalaxy.Commands.Building {
         }
         
         bool DoMeasure(Player p, Vec3S32[] m, object state, BlockID block) {
-            BlockID[] toCount = (BlockID[])state;
-            Vec3S32 min = Vec3S32.Min(m[0], m[1]), max = Vec3S32.Max(m[0], m[1]);
+            List<BlockID> toCount = (List<BlockID>)state;
+            Vec3S32 min  = Vec3S32.Min(m[0], m[1]);
+            Vec3S32 max  = Vec3S32.Max(m[0], m[1]);
             int[] counts = new int[Block.SUPPORTED_COUNT];
             
             for (ushort y = (ushort)min.Y; y <= (ushort)max.Y; y++)
@@ -61,15 +68,15 @@ namespace MCGalaxy.Commands.Building {
             string title = "Block types: ";
             if (toCount == null) {
                 toCount = MostFrequentBlocks(counts);
-                title = "Top " + toCount.Length + " block types: ";
+                title   = "Top " + toCount.Count + " block types: ";
             }
             
             string blocks = toCount.Join(bl => Block.GetName(p, bl) + FormatCount(counts[bl], volume));
-            p.Message(title +  blocks);
+            p.Message(title + blocks);
             return true;
         }
         
-        static BlockID[] MostFrequentBlocks(int[] countsRaw) {
+        static List<BlockID> MostFrequentBlocks(int[] countsRaw) {
             BlockID[] blocks = new BlockID[Block.SUPPORTED_COUNT];
             int[] counts = new int[Block.SUPPORTED_COUNT]; // copy array as Sort works in place
             int total = 0;
@@ -79,12 +86,14 @@ namespace MCGalaxy.Commands.Building {
                 counts[i] = countsRaw[i];
                 if (counts[i] > 0) total++;
             }
-            Array.Sort(counts, blocks);
             
+            Array.Sort(counts, blocks);
             if (total > 5) total = 5;
-            BlockID[] mostFrequent = new BlockID[total];
-            for (int i = 0; i < total; i++) {
-                mostFrequent[i] = blocks[blocks.Length - 1 - i];
+            
+            List<BlockID> mostFrequent = new List<BlockID>(total);
+            for (int i = 0; i < total; i++) 
+            {
+                mostFrequent.Add(blocks[blocks.Length - 1 - i]);
             }
             return mostFrequent;
         }

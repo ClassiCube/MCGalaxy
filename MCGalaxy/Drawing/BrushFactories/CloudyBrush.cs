@@ -64,9 +64,9 @@ namespace MCGalaxy.Drawing.Brushes
             char opt = arg[0];
             arg = arg.Substring(2); // get part after _ or =
             
-            if (opt == 'l') return ParseDecimal(p, arg, ref args.Lacunarity, 2.00f);
-            if (opt == 'a') return ParseDecimal(p, arg, ref args.Amplitude, 1.00f);
-            if (opt == 'f') return ParseDecimal(p, arg, ref args.Frequency, 0.08f);
+            if (opt == 'l') return ParseDecimal(p, arg, ref args.Lacunarity , 2.00f);
+            if (opt == 'a') return ParseDecimal(p, arg, ref args.Amplitude,   1.00f);
+            if (opt == 'f') return ParseDecimal(p, arg, ref args.Frequency,   0.08f);
             if (opt == 'p') return ParseDecimal(p, arg, ref args.Persistence, 0.75f);
             
             if (opt == 'o') {
