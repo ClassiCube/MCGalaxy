@@ -124,14 +124,15 @@ namespace MCGalaxy.Modules.Games.ZS
             if (data == null || (data.TotalRoundsSurvived == 0 && data.TotalInfected == 0)) return;
             
             object[] args = new object[] {
-                data.TotalRoundsSurvived, data.MaxRoundsSurvived, data.TotalInfected, data.MaxInfected,      
+                data.TotalRoundsSurvived, data.MaxRoundsSurvived, 
+                data.TotalInfected, data.MaxInfected,
                 p.name
             };
             
-            int changed = Database.UpdateRows("ZombieStats", "TotalRounds=@0, MaxRounds=@1, TotalInfected=@2, MaxInfected=@3",
+            int changed = Database.UpdateRows("ZombieStats", "TotalRounds=@0,MaxRounds=@1, TotalInfected=@2,MaxInfected=@3",
                                               "WHERE Name=@4", args);
             if (changed == 0) {
-                Database.AddRow("ZombieStats", "TotalRounds, MaxRounds, TotalInfected, MaxInfected, Name", args);
+                Database.AddRow("ZombieStats", "TotalRounds,MaxRounds, TotalInfected,MaxInfected, Name", args);
             }
         }
         

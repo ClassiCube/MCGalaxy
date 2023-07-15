@@ -142,7 +142,7 @@ namespace MCGalaxy.Blocks.Extended {
             int changed = Database.UpdateRows("Portals" + map, "ExitX=@3, ExitY=@4, ExitZ=@5, ExitMap=@6",
                                               "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", args);
             if (changed == 0) {
-                Database.AddRow("Portals" + map, "EntryX, EntryY, EntryZ, ExitX, ExitY, ExitZ, ExitMap", args);
+                Database.AddRow("Portals" + map, "EntryX,EntryY,EntryZ, ExitX,ExitY,ExitZ, ExitMap", args);
             }
             
             Level lvl = LevelInfo.FindExact(map);

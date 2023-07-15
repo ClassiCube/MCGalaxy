@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.Chatting
                 if (args.Length == 1) {
                     p.Message("You need to provide either \"all\" or a number."); return;
                 } else if (args[1].CaselessEq("all")) {
-                    Database.DeleteRows("Inbox" + p.name);
-                    p.Message("Deleted all messages.");
+                    int count = Database.DeleteRows("Inbox" + p.name, "");
+                    p.Message("Deleted all {0} messages.", count);
                 } else {
                     DeleteByID(p, args[1], entries);
                 }

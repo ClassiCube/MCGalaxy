@@ -166,7 +166,7 @@ namespace MCGalaxy.Blocks.Extended {
             int changed = Database.UpdateRows("Messages" + map, "Message=@3",
                                              "WHERE X=@0 AND Y=@1 AND Z=@2", args);
             if (changed == 0) {
-                Database.AddRow("Messages" + map, "X, Y, Z, Message", args);
+                Database.AddRow("Messages" + map, "X,Y,Z, Message", args);
             }
             
             Level lvl = LevelInfo.FindExact(map);
