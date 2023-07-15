@@ -55,13 +55,15 @@ namespace MCGalaxy.Modules.Games.CTF
             CtfData data = TryGet(p);
             if (data == null || data.Points == 0 && data.Captures == 0 && data.Tags == 0) return;
             
-            int count = Database.CountRows("CTF", "WHERE Name=@0", p.name);
-            if (count == 0) {
-                Database.AddRow("CTF", "Points, Captures, tags, Name",
-                                data.Points, data.Captures, data.Tags, p.name);
-            } else {
-                Database.UpdateRows("CTF", "Points=@0, Captures=@1, tags=@2", "WHERE Name=@3",
-                                    data.Points, data.Captures, data.Tags, p.name);
+            object[] args = new object[] {
+            	 data.Points, data.Captures, data.Tags, 
+            	 p.name
+            };
+            
+            int changed = Database.UpdateRows("CTF", "Points=@0, Captures=@1, tags=@2", 
+                                              "WHERE Name=@3", args);
+            if (changed == 0) {
+                Database.AddRow("CTF", "Points, Captures, tags, Name", args);
             }
         }
     }

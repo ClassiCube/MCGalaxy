@@ -160,15 +160,13 @@ namespace MCGalaxy.Blocks.Extended {
             contents = Colors.Escape(contents);
             contents = contents.UnicodeToCp437();
             
-            Database.CreateTable("Messages" + map, LevelDB.createMessages);            
-            int count = Database.CountRows("Messages" + map,
-                                           "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z);
+            Database.CreateTable("Messages" + map, LevelDB.createMessages);
+            object[] args = new object[] { x, y, z,  contents };
             
-            if (count == 0) {
-                Database.AddRow("Messages" + map, "X, Y, Z, Message", x, y, z, contents);
-            } else {
-                Database.UpdateRows("Messages" + map, "Message=@3",
-                                    "WHERE X=@0 AND Y=@1 AND Z=@2", x, y, z, contents);
+            int changed = Database.UpdateRows("Messages" + map, "Message=@3",
+                                             "WHERE X=@0 AND Y=@1 AND Z=@2", args);
+            if (changed == 0) {
+                Database.AddRow("Messages" + map, "X,Y,Z, Message", args);
             }
             
             Level lvl = LevelInfo.FindExact(map);
