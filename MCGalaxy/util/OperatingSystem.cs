@@ -53,10 +53,12 @@ namespace MCGalaxy.Platform
         
         public virtual void Init() { }
         
-        /// <summary> Attempts to restart the process in-place </summary>
-        /// <remarks> Does not return when in-place restart is successful 
+        /// <summary> Attempts to restart the current process </summary>
+        /// <remarks> Does not return if the restart is performed in-place
         /// (since the current process image is replaced) </remarks>
-        public abstract void RestartProcess();
+        public virtual void RestartProcess() { 
+            Process.Start(Server.GetRestartPath()); 
+        }
         
         
         /// <summary> Measures CPU use by all processes in the system </summary>
@@ -108,7 +110,6 @@ namespace MCGalaxy.Platform
 
     class WindowsOS : IOperatingSystem
     {
-        public override void RestartProcess() { }
         public override bool IsWindows { get { return true; } }
         
         
@@ -131,8 +132,15 @@ namespace MCGalaxy.Platform
         public override bool IsWindows { get { return false; } }
         
         public override void RestartProcess() {
-            if (!Server.CLIMode) return;
+            if (!Server.CLIMode) { base.RestartProcess(); return; }
 
+            RestartInPlace();
+            // If restarting in place fails, it's better to let the server die
+            //  instead of allowing a new instance to be spun up which will
+            //  be spammed with constant errors
+        }
+        
+        protected virtual void RestartInPlace() {
             // With using normal Process.Start with mono, after Environment.Exit
             //  is called, all FDs (including standard input) are also closed.
             // Unfortunately, this causes the new server process to constantly error with
@@ -249,9 +257,7 @@ namespace MCGalaxy.Platform
         }
 
 
-        public override void RestartProcess() {
-            if (!Server.CLIMode) return;
-
+        protected override void RestartInPlace() {
             try {
                 // try to restart using process's original command line arguments so that they are preserved
                 // e.g. for "mono --debug MCGalaxyCLI.exe"
@@ -262,7 +268,7 @@ namespace MCGalaxy.Platform
                 Logger.LogError("Restarting process", ex);
             }
  
-            base.RestartProcess();
+            base.RestartInPlace();
         }
 
         static string[] GetProcessCommandLineArgs() {
@@ -322,7 +328,7 @@ namespace MCGalaxy.Platform
             get { return IntPtr.Size == 8 ? "mac64" : "mac32"; } 
         }
 
-    	
+        
         // https://stackoverflow.com/questions/20471920/how-to-get-total-cpu-idle-time-in-objective-c-c-on-os-x
         // /usr/include/mach/host_info.h, /usr/include/mach/machine.h, /usr/include/mach/mach_host.h
         public override CPUTime MeasureAllCPUTime() {

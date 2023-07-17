@@ -234,11 +234,8 @@ namespace MCGalaxy
             try { FileLogger.Flush(null); } catch { }
             
             if (restarting) {
-                // first try to use excevp to restart in CLI mode under mono 
-                // - see detailed comment in HACK_Execvp for why this is required
                 IOperatingSystem.DetectOS().RestartProcess();
-
-                Process.Start(GetRestartPath());
+                // TODO: FileLogger.Flush again maybe for if execvp fails?
             }
             Environment.Exit(0);
         }
