@@ -653,6 +653,7 @@
     <Compile Include="Server\Maintenance\Updater.cs" />
     <Compile Include="Server\Maintenance\ZipReader.cs" />
     <Compile Include="Server\Maintenance\ZipWriter.cs" />
+    <Compile Include="util\Formatting\Wildcard.cs" />
     <Compile Include="util\ImageUtils.cs" />
     <Compile Include="util\OperatingSystem.cs" />
     <Compile Include="Server\Server.cs" />

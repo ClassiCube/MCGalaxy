@@ -16,18 +16,16 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 using MCGalaxy.Modules.Awards;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy 
+{  
     /// <summary> Finds partial matches of a 'name' against the names of the items in an enumerable. </summary>
     /// <remarks> returns number of matches found, and the matching item if only 1 match is found. </remarks>
-    public static class Matcher {
-
+    public static class Matcher 
+    {
         /// <summary> Finds partial matches of 'name' against the list of all awards. </summary>
         public static string FindAwards(Player p, string name) {
             int matches;
@@ -133,32 +131,6 @@ namespace MCGalaxy {
             p.Message("{0}{1} match \"{2}\":", count, group, name);
             p.Message(names);
             return default(T);
-        }
-
-        
-        /// <summary> Filters the given list of items to matching item names. Accepts * and ? wildcard tokens. </summary>
-        public static List<string> Filter<T>(IList<T> input, string keyword, StringFormatter<T> nameGetter,
-                                          Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
-            List<string> matches = new List<string>();
-            Regex regex = null;
-            // wildcard matching
-            if (keyword.Contains("*") || keyword.Contains("?")) {
-                string pattern = "^" + Regex.Escape(keyword).Replace("\\?", ".").Replace("\\*", ".*") + "$";
-                regex = new Regex(pattern, RegexOptions.IgnoreCase);
-            }
-            
-            foreach (T item in input) {
-                if (filter != null && !filter(item)) continue;
-                string name = nameGetter(item);
-                
-                if (regex != null) { if (!regex.IsMatch(name)) continue; }
-                else { if (!name.CaselessContains(keyword))    continue; }
-                
-                // format this item for display
-                if (listFormatter != null) name = listFormatter(item);
-                matches.Add(name);
-            }
-            return matches;
         }
     }
 }
