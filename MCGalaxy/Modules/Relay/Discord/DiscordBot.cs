@@ -173,12 +173,21 @@ namespace MCGalaxy.Modules.Relay.Discord
             return raw as string;
         }
         
+        string GetUser(JsonObject author) {
+            // User's chosen display name (configurable)
+            object name = null;
+            author.TryGetValue("global_name", out name);
+            if (name != null) return (string)name;
+
+            return (string)author["username"];
+        }
+        
         RelayUser ExtractUser(JsonObject data) {
             JsonObject author = (JsonObject)data["author"];
             
             RelayUser user = new RelayUser();
-            user.Nick = GetNick(data) ?? (string)author["username"];
-            user.ID   =                  (string)author["id"];
+            user.Nick = GetNick(data) ?? GetUser(author);
+            user.ID   = (string)author["id"];
             return user;
         }
 
