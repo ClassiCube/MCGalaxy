@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Config;
+using MCGalaxy.Generator;
 using MCGalaxy.Modules.Relay.IRC;
 
 namespace MCGalaxy 
@@ -239,7 +240,7 @@ namespace MCGalaxy
         public string HelpDescriptionColor = "&e";
         [ConfigColor("warning-error-color", "Colors", "&c")]
         public string WarningErrorColor = "&c";
-        
+
         [ConfigBool("cheapmessage", "Messages", true)]
         public bool ShowInvincibleMessage = true;        
         [ConfigString("cheap-message-given", "Messages", " is now invincible")]
@@ -260,6 +261,11 @@ namespace MCGalaxy
         public string DefaultLoginMessage = "connected";
         [ConfigString("default-logout-message", "Messages", "disconnected")]
         public string DefaultLogoutMessage = "disconnected";
+
+        [ConfigString("default-mapgen-theme", "Mapgen", "flat")]
+        public string DefaultMapGenTheme = "flat";
+        [ConfigEnum("default-mapgen-biome", "Mapgen", MapGenBiomeName.Forest, typeof(MapGenBiomeName))]
+        public MapGenBiomeName DefaultMapGenBiome = MapGenBiomeName.Forest;
 
         static readonly bool[] defLogLevels = new bool[] { 
             true,true,true,true,true,true, true,true,true, 

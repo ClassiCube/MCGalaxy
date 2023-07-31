@@ -47,7 +47,7 @@ namespace MCGalaxy.Commands.World {
         
         internal Level GenerateMap(Player p, string[] args, CommandData data) {
             if (args.Length < 4) return null;
-            string theme = args.Length > 4 ? args[4] : "flat";
+            string theme = args.Length > 4 ? args[4] : Server.Config.DefaultMapGenTheme;
             string seed  = args.Length > 5 ? args[5] : "";
 
             MapGen gen = MapGen.Find(theme);

@@ -33,8 +33,8 @@ namespace MCGalaxy.Generator
     {
         public string Args;
         public int Seed;
-        public MapGenBiomeName Biome;
-        public bool RandomDefault = true;
+        public MapGenBiomeName Biome = Server.Config.DefaultMapGenBiome;
+        public bool RandomDefault    = true;
         
         public MapGenArgSelector ArgFilter = (Args) => false;
         public MapGenArgSelector ArgParser = null;
