@@ -68,9 +68,10 @@ namespace MCGalaxy.Blocks
         
         static void SaveCore() {
             using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
-                WriteHeader(w, "each block", "Block ID", "lava");
+                WriteHeader(w, "block", "each block", "Block ID", "lava");
 
-                foreach (BlockPerms perms in List) {
+                foreach (BlockPerms perms in List) 
+                {
                     if (Block.Undefined(perms.ID)) continue;
                     w.WriteLine(perms.Serialise());
                 }

@@ -98,14 +98,20 @@ namespace MCGalaxy
         }
         
         
-        protected static void WriteHeader(StreamWriter w, string type, string name, string example) {
+        protected static void WriteHeader(StreamWriter w, string itemName, string itemDesc, 
+                                          string headerName, string headerExample) {
             w.WriteLine("#Version 2");
-            w.WriteLine("#   This file list the ranks that can use " + type);
-            w.WriteLine("#   Disallow and allow can be left empty");
-            w.WriteLine("#   Works entirely on rank permission values, not rank names");
+            w.WriteLine("#   This file contains the permissions to use {0}", itemDesc);
+            w.WriteLine("#   How permissions work:");
+            w.WriteLine("#   - If the player's rank is in Disallowed, they cannot use the {0}", itemName);
+            w.WriteLine("#   - Otherwise if the player's rank is in Allowed, they can use the {0}", itemName);
+            w.WriteLine("#   - Otherwise if the player's rank is >= Lowest Rank, they can use the {0}", itemName);
             w.WriteLine("#");
-            w.WriteLine("#   Layout: " + name + " : LowestRank : Disallow : Allow");
-            w.WriteLine("#   " + example + " : 60 : 80,67 : 40,41,55");
+            w.WriteLine("#   Layout: {0} : LowestRank : Disallowed : Allowed", headerName);
+            w.WriteLine("#      e.g. {0} : 60 : 80,67 : 40,41,55", headerExample);
+            w.WriteLine("#   Notes:");
+            w.WriteLine("#   - Disallowed and Allowed can be left empty");
+            w.WriteLine("#   - Works entirely on rank permission values, not rank names");
             w.WriteLine("");
         }
         
