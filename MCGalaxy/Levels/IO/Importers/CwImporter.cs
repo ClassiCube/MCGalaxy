@@ -114,7 +114,7 @@ namespace MCGalaxy.Levels.IO {
             if (!comp.Contains("TextureURL")) return;
             
             string url = comp["TextureURL"].StringValue;
-            if (url.CaselessEnds(".png"))
+            if (url.CaselessContains(".png"))
                 lvl.Config.Terrain = url == Server.Config.DefaultTerrain ? "" : url;
             else
                 lvl.Config.TexturePack = url == Server.Config.DefaultTexture ? "" : url;

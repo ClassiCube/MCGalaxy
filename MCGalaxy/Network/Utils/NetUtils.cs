@@ -18,9 +18,11 @@
 using System;
 using BlockID = System.UInt16;
 
-namespace MCGalaxy {
+namespace MCGalaxy 
+{
     /// <summary> Utility methods for reading/writing big endian integers, and fixed length strings. </summary>
-    public static class NetUtils {
+    public static class NetUtils 
+    {
         public const int StringSize = 64;        
 
         /// <summary> Reads a signed 16 bit big endian integer. </summary>

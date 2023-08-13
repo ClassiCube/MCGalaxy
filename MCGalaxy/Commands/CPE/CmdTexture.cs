@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.CPE
             } else {
                 HttpUtil.FilterURL(ref url);
                 
-                if (!(url.EndsWith(".png") || url.EndsWith(".zip"))) {
-                    p.Message("URL must end in .png (for terrain) or .zip (for texture pack)"); return;
+                if (!(url.CaselessContains(".png") || url.CaselessContains(".zip"))) {
+                    p.Message("URL must contain either .png (for terrain) or .zip (for texture pack)"); return;
                 }
                 if (url.Length > NetUtils.StringSize) {
                     p.Message("The URL must be " + NetUtils.StringSize + " characters or less."); return;
@@ -66,10 +66,10 @@ namespace MCGalaxy.Commands.CPE
                 
                 if (url.Length == 0) {
                     p.Message("Reset server textures to default");
-                } else if (url.CaselessEnds(".png")) {
+                } else if (url.CaselessContains(".png")) {
                     Server.Config.DefaultTerrain = url;
                     p.Message("Set server's default terrain to " + url);
-                } else if (url.CaselessEnds(".zip")) {
+                } else if (url.CaselessContains(".zip")) {
                     Server.Config.DefaultTexture = url;
                     p.Message("Set server's default texture pack to " + url);
                 }
@@ -81,10 +81,10 @@ namespace MCGalaxy.Commands.CPE
                 
                 if (url.Length == 0) {
                     p.Message("Reset level textures to server default");
-                } else if (url.CaselessEnds(".png")) {
+                } else if (url.CaselessContains(".png")) {
                     p.level.Config.Terrain = url;
                     p.Message("Set level's terrain to " + url);
-                } else if (url.CaselessEnds(".zip")) {
+                } else if (url.CaselessContains(".zip")) {
                     p.level.Config.TexturePack = url;
                     p.Message("Set level's texture pack to " + url);
                 }
