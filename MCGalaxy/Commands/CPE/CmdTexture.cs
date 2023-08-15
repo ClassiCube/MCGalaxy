@@ -55,8 +55,8 @@ namespace MCGalaxy.Commands.CPE
                 if (!(url.CaselessContains(".png") || url.CaselessContains(".zip"))) {
                     p.Message("URL must contain either .png (for terrain) or .zip (for texture pack)"); return;
                 }
-                if (url.Length > NetUtils.StringSize) {
-                    p.Message("The URL must be " + NetUtils.StringSize + " characters or less."); return;
+                if (url.Length > (NetUtils.StringSize * 2)) {
+                    p.Message("The URL must be " + (NetUtils.StringSize * 2) + " characters or less."); return;
                 }
             }
 

@@ -135,7 +135,7 @@ namespace MCGalaxy
             new CpeExtension(CpeExt.BlockDefinitionsExt, "Allows defining custom blocks with more flexible shapes (/LB and /GB)", 2),
             new CpeExtension(CpeExt.TextColors,          "Allows customising chat color codes (/CustomColors)"),   
             new CpeExtension(CpeExt.BulkBlockUpdate,     "Allows sending block updates in a faster way"),
-            new CpeExtension(CpeExt.EnvMapAspect,        "Allows customising map appearance (/Env and /Texture)"),
+            new CpeExtension(CpeExt.EnvMapAspect,        "Allows customising map appearance (/Env and /Texture)", 2),
             new CpeExtension(CpeExt.PlayerClick,         "Allows retrieving precise details on mouse clicks"),
             new CpeExtension(CpeExt.EntityProperty,      "Allows customising properties of entities (/EntityRot)"),   
             new CpeExtension(CpeExt.ExtEntityPositions,  "Allows entities to appear at positions past 1023"),

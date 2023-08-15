@@ -85,7 +85,9 @@ namespace MCGalaxy
             } else if (clone != null) {
                 Leave(null, "Already logged in!", true); return;
             }
+            
             deathCooldown = DateTime.UtcNow.AddSeconds(2);
+            LoadCpeData();
 
             SendRawMap(null, level);
             if (Socket.Disconnected) return;
@@ -100,7 +102,6 @@ namespace MCGalaxy
             Game.Team   = Team.TeamIn(this);
             SetPrefix();
 
-            LoadCpeData();
             if (Server.noEmotes.Contains(name)) { parseEmotes = !Server.Config.ParseEmotes; }
 
             hideRank = Rank;

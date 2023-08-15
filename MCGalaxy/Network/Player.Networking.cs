@@ -168,11 +168,15 @@ namespace MCGalaxy
             int edgeHeight   = CurrentEnvProp(EnvProp.EdgeLevel,   zone);
             int maxFogDist   = CurrentEnvProp(EnvProp.MaxFog,      zone);
             
-            byte side = (byte)CurrentEnvProp(EnvProp.SidesBlock, zone);
-            byte edge = (byte)CurrentEnvProp(EnvProp.EdgeBlock,  zone);
-
+            byte side  = (byte)CurrentEnvProp(EnvProp.SidesBlock, zone);
+            byte edge  = (byte)CurrentEnvProp(EnvProp.EdgeBlock,  zone);
             string url = GetTextureUrl();
-            if (Supports(CpeExt.EnvMapAspect)) {
+            
+            if (Supports(CpeExt.EnvMapAspect, 2)) {
+                // reset all other textures back to client default.
+                if (url != lastUrl) Send(Packet.EnvMapUrlV2("", hasCP437));
+                Send(Packet.EnvMapUrlV2(url, hasCP437));
+            } else if (Supports(CpeExt.EnvMapAspect)) {
                 // reset all other textures back to client default.
                 if (url != lastUrl) Send(Packet.EnvMapUrl("", hasCP437));
                 Send(Packet.EnvMapUrl(url, hasCP437));
