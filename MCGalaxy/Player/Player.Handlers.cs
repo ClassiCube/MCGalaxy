@@ -295,7 +295,7 @@ namespace MCGalaxy
                 Session.SendSetEnvColor((byte)i, col);
             }
             
-            if (Supports(CpeExt.EnvMapAspect)) {
+            if (Supports(CpeExt.EnvMapAspect) || Supports(CpeExt.EnvMapAspect, 2)) {
                 for (EnvProp i = 0; i < EnvProp.Max; i++) {
                     int value = CurrentEnvProp(i, zone);
                     Send(Packet.EnvMapProperty(i, value));
