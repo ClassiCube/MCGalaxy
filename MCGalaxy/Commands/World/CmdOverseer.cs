@@ -32,69 +32,94 @@ namespace MCGalaxy.Commands.World {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces(3);
-            string cmd  = args[0];
-            string arg1 = args.Length > 1 ? args[1] : "";
-            string arg2 = args.Length > 2 ? args[2] : "";
-            
-            bool mapOnly = !(cmd.CaselessEq("go") || cmd.CaselessEq("map"));
-            if (mapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
-                p.Message("You may only perform that action on your own map."); return;
-            }
-            
-            if (cmd.CaselessEq("Spawn"))           cmd = "SetSpawn";
-            if (cmd.CaselessEq("BlockProperties")) cmd = "BlockProps";
-            
-            foreach (SubCommand subCmd in subCommands) {
-                if (!subCmd.Group.CaselessEq(cmd)) continue;
-                
-                subCmd.Handler(p, arg1, arg2); return;
-            }
-            Help(p);
+            SubCommand.UseSubCommands(p, message, shortcut, coreSubCommands);
         }
-        
         public override void Help(Player p, string message) {
             message = message.SplitSpaces()[0]; // only first argument
-            foreach (SubCommand subCmd in subCommands) {
-                if (!subCmd.Group.CaselessEq(message)) continue;
-                p.MessageLines(subCmd.Help);
-                return;
-            }
-            p.Message("Unrecognised command \"{0}\".", message);
+            SubCommand.HelpSubCommands(p, message, shortcut, coreSubCommands);
         }
         
         public override void Help(Player p) {
             p.Message("&T/os [command] [args]");
             p.Message("&HAllows you to modify and manage your personal realms.");
-            p.Message("&HCommands: &S{0}", subCommands.Join(grp => grp.Group));
-            p.Message("&HUse &T/Help os [command] &Hfor more details");
+            SubCommand.HelpSubCommands(p, shortcut, coreSubCommands);
         }
         
         
-        delegate void SubCommandHandler(Player p, string cmd, string value);
-        class SubCommand {
-            public string Group;
-            public SubCommandHandler Handler;
-            public string[] Help;
-            
-            public SubCommand(string grpName, SubCommandHandler handler, string[] help) {
+        public delegate void SubCommandHandler(Player p, string cmd, string value);
+        public class SubCommand {
+            public readonly string Group;
+            public readonly SubCommandHandler Handler;
+            string[] Help;
+            public readonly bool MapOnly;
+            string[] Aliases;
+
+            public SubCommand(string grpName, SubCommandHandler handler, string[] help, bool mapOnly = true, string[] aliases = null) {
                 Group   = grpName;
                 Handler = handler;
                 Help    = help;
+                MapOnly = mapOnly;
+                Aliases = aliases;
+            }
+            public bool Match(string cmd) {
+                if (Aliases != null) {
+                    foreach (string alias in Aliases) {
+                        if (alias.CaselessEq(cmd)) { return true; }
+                    }
+                }
+                return Group.CaselessEq(cmd);
+            }
+            public bool Allowed(Player p, string domCommand) {
+                if (MapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
+                    p.Message("You may only perform &T/{0} {1}&S after you join your map.", domCommand, Group.ToLower());
+                    return false;
+                }
+                return true;
+            }
+            public void DisplayHelp(Player p) {
+                p.MessageLines(Help);
+            }
+
+
+            public static void UseSubCommands(Player p, string message, string domCommandName, List<SubCommand> subCommands) {
+                string[] args = message.SplitSpaces(3);
+                string cmd = args[0];
+                string arg1 = args.Length > 1 ? args[1] : "";
+                string arg2 = args.Length > 2 ? args[2] : "";
+
+                foreach (SubCommand subCmd in subCommands) {
+                    if (!subCmd.Match(cmd)) { continue; }
+                    if (!subCmd.Allowed(p, "os")) { return; }
+                    subCmd.Handler(p, arg1, arg2);
+                    return;
+                }
+                p.Message("There is no {0} command \"{1}\".", domCommandName, message);
+                p.Message("See &T/help {0}&S for all {0} commands.", domCommandName);
+            }
+            public static void HelpSubCommands(Player p, string message, string domCommandName, List<SubCommand> subCommands) {
+                foreach (SubCommand subCmd in subCommands) {
+                    if (!subCmd.Match(message)) { continue; }
+                    subCmd.DisplayHelp(p);
+                    return;
+                }
+                p.Message("There is no {0} command \"{1}\" to display help for.", domCommandName, message);
+            }
+            public static void HelpSubCommands(Player p, string domCommandName, List<SubCommand> subCommands) {
+                p.Message("&HCommands: &S{0}", subCommands.Join(grp => grp.Group));
+                p.Message("&HUse &T/Help {0} [command] &Hfor more details", domCommandName);
             }
         }
         
-       List<SubCommand> subCommands = new List<SubCommand>() {
-            new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp),
+       List<SubCommand> coreSubCommands = new List<SubCommand>() {
+            new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
             new SubCommand("Env",        HandleEnv,        envHelp),
-            new SubCommand("go",         HandleGoto,       gotoHelp),
+            new SubCommand("go",         HandleGoto,       gotoHelp, false),
             new SubCommand("Kick",       HandleKick,       kickHelp),
             new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
-            new SubCommand("lb",         HandleLevelBlock, levelBlockHelp),
-            new SubCommand("LevelBlock", HandleLevelBlock, levelBlockHelp),
-            new SubCommand("Map",        HandleMap,        mapHelp),
+            new SubCommand("lb",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
+            new SubCommand("Map",        HandleMap,        mapHelp, false),
             new SubCommand("Preset",     HandlePreset,     presetHelp),
-            new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp),
+            new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
             new SubCommand("Zone",       HandleZone,       zoneHelp),
             new SubCommand("Zones",      HandleZones,      zonesHelp),
         };
