@@ -160,16 +160,31 @@ namespace MCGalaxy.Commands.World {
             new SubCommand("Zone",       HandleZone,       zoneHelp),
             new SubCommand("Zones",      HandleZones,      zonesHelp),
         };
-    }
 
+        public static void RegisterSubCommand(SubCommand subCmd) {
+            foreach (SubCommand sub in coreSubCommands) {
+                if (subCmd.AnyMatchingAlias(sub)) {
+                    throw new System.ArgumentException(
+                        String.Format("One or more aliases of the existing subcommand \"{0}\" conflicts with the subcommand \"{1}\" that is being registered.",
+                        sub.Group, subCmd.Group));
+                }
+            }
+            coreSubCommands.Add(subCmd);
+        }
+        public static void UnregisterSubCommand(SubCommand subCmd) {
+            coreSubCommands.Remove(subCmd);
+        }
+    }
+}
+namespace MCGalaxy.Commands {
     public delegate void SubCommandHandler(Player p, string cmd, string value);
     public class SubCommand {
         public enum UsageResult { NoneFound, Success, Disallowed }
 
         public readonly string Group;
-        public readonly SubCommandHandler Handler;
+        readonly SubCommandHandler Handler;
         string[] Help;
-        public readonly bool MapOnly;
+        readonly bool MapOnly;
         string[] Aliases;
 
         public SubCommand(string grpName, SubCommandHandler handler, string[] help, bool mapOnly = true, string[] aliases = null) {
@@ -186,6 +201,14 @@ namespace MCGalaxy.Commands.World {
                 }
             }
             return Group.CaselessEq(cmd);
+        }
+        public bool AnyMatchingAlias(SubCommand other) {
+            if (Aliases != null) {
+                foreach (string alias in Aliases) {
+                    if (other.Match(alias)) { return true; }
+                }
+            }
+            return other.Match(Group);
         }
         bool Allowed(Player p, string domCommand) {
             if (MapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {

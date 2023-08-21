@@ -107,7 +107,7 @@ namespace MCGalaxy.Commands.World {
             new SubCommand("Physics",  HandleMapPhysics, null),
             new SubCommand("Add",      HandleMapAdd,     null, false, new string[] { "create", "new" } ),
             new SubCommand("Delete",   HandleMapDelete,  null, true , new string[] { "del", "remove" } ),
-            new SubCommand("Save",     (p, _, __) => { UseCommand(p, "Save", ""); }, null),
+            new SubCommand("Save",     (p, _, __)  => { UseCommand(p, "Save", ""); }, null),
             new SubCommand("Restore",  (p, arg, _) => { UseCommand(p, "Restore", arg); }, null),
             new SubCommand("Resize",   HandleMapResize,   null),
             new SubCommand("PerVisit", HandleMapPerVisit, null),
