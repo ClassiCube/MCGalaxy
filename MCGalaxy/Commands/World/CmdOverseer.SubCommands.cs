@@ -93,14 +93,20 @@ namespace MCGalaxy.Commands.World {
                 return;
             }
             if (DisallowedMapOption(opt.Name)) {
-                p.Message("&WYou cannot change {0} map option via /os map.", opt.Name);
+                p.Message("&WYou cannot change the {0} map option via /os map.", opt.Name);
+                return;
+            }
+            if (!LevelInfo.IsRealmOwner(p.level, p.name)) {
+                p.Message("You may only use &T/os map {0}&S after you join your map.", opt.Name);
                 return;
             }
             opt.SetFunc(p, p.level, value);
             p.level.SaveSettings();
         }
         static bool DisallowedMapOption(string opt) {
-            return opt == LevelOptions.Speed || opt == LevelOptions.Overload || opt == LevelOptions.RealmOwner;
+            return 
+                opt == LevelOptions.Speed || opt == LevelOptions.Overload || opt == LevelOptions.RealmOwner ||
+                opt == LevelOptions.Goto  || opt == LevelOptions.Unload;
         }
 
         static List<SubCommand> mapSubCommands = new List<SubCommand>() {

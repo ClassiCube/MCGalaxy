@@ -150,10 +150,10 @@ namespace MCGalaxy.Commands.World {
         static List<SubCommand> coreSubCommands = new List<SubCommand>() {
             new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
             new SubCommand("Env",        HandleEnv,        envHelp),
-            new SubCommand("go",         HandleGoto,       gotoHelp, false),
+            new SubCommand("Go",         HandleGoto,       gotoHelp, false),
             new SubCommand("Kick",       HandleKick,       kickHelp),
             new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
-            new SubCommand("lb",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
+            new SubCommand("LB",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
             new SubCommand("Map",        HandleMap,        mapHelp, false),
             new SubCommand("Preset",     HandlePreset,     presetHelp),
             new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
@@ -212,7 +212,7 @@ namespace MCGalaxy.Commands {
         }
         bool Allowed(Player p, string domCommand) {
             if (MapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
-                p.Message("You may only perform &T/{0} {1}&S after you join your map.", domCommand, Group.ToLower());
+                p.Message("You may only use &T/{0} {1}&S after you join your map.", domCommand, Group.ToLower());
                 return false;
             }
             return true;
