@@ -442,7 +442,7 @@ namespace MCGalaxy.Modules.Relay
                 
         bool HandleCommand(RelayUser user, string channel, string message, string[] parts) {
             string cmdName = parts.Length > 1 ? parts[1].ToLower() : "";
-            string cmdArgs = parts.Length > 2 ? parts[2] : "";
+            string cmdArgs = parts.Length > 2 ? parts[2].Trim()    : "";
             Command.Search(ref cmdName, ref cmdArgs);
             
             string error;

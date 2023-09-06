@@ -120,8 +120,12 @@ namespace MCGalaxy.Network {
         
         static string AdjustDropbox(string url, int prefixLen) {
             url = "https://dl.dropbox" + url.Substring(prefixLen);
-            url = url.Replace("dl=0", "dl=1");
-            return url.Replace("%dl=1", "&dl=1");
+
+            return url
+                .Replace("dl=1", "dl=0")
+                .Replace("?dl=0", "")
+                .Replace("&dl=0", "")
+                .Replace("%dl=0", "");
         }
         
         

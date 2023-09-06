@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Building
                 for (ushort z = (ushort)min.Z; z <= (ushort)max.Z; z++)
                     for (ushort x = (ushort)min.X; x <= (ushort)max.X; x++)
             {
-                counts[p.level.GetBlock(x, y, z)]++;
+                counts[p.level.FastGetBlock(x, y, z)]++;
             }
 
             int width = max.X - min.X + 1, height = max.Y - min.Y + 1, length = max.Z - min.Z + 1;
