@@ -72,7 +72,7 @@ namespace MCGalaxy.Bots
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords target = (Coords)data.Metadata;
             bot.TargetPos = new Position(target.X, target.Y, target.Z);
-            bot.movement = true;
+            bot.movement  = true;
 
             if (bot.Pos.BlockX == bot.TargetPos.BlockX && bot.Pos.BlockZ == bot.TargetPos.BlockZ) {
                 bot.SetYawPitch(target.RotX, target.RotY);
@@ -80,7 +80,8 @@ namespace MCGalaxy.Bots
                 bot.NextInstruction(); return false;
             }
             
-            bot.AdvanceRotation(); return true;
+            bot.FaceTowards(bot.Pos, bot.TargetPos);
+            return true;
         }
         
         public override string[] Help { get { return help; } }

@@ -152,30 +152,30 @@ namespace MCGalaxy {
             }
             return Entities.SelfID;
         }
-
         
-        public void AdvanceRotation() {
-            if (!movement && Instructions.Count > 0) {
-                Orientation rot = Rot;
-                if (rot.RotY < 245) rot.RotY += 8;
-                else rot.RotY = 0;
-
-                if (rot.HeadX > 32 && rot.HeadX < 64) rot.HeadX = 224;
-                else if (rot.HeadX > 250) rot.HeadX = 0;
-                else rot.HeadX += 4;
-                Rot = rot;
-            }
-        }
         
         public void NextInstruction() {
             cur++;
             if (cur == Instructions.Count) cur = 0;
         }
+        
+        public void FaceTowards(Position srcPos, Position dstPos) {
+            Vec3F32 dir;
+            dir.X = dstPos.X - srcPos.X;
+            dir.Y = dstPos.Y - srcPos.Y;
+            dir.Z = dstPos.Z - srcPos.Z;
+            dir   = Vec3F32.Normalise(dir);
+            
+            Orientation rot = Rot;
+            DirUtils.GetYawPitch(dir, out rot.RotY, out rot.HeadX);          
+            Rot = rot;
+        }
 
         
         public static void GlobalUpdatePosition() {
             Level[] levels = LevelInfo.Loaded.Items;
-            for (int i = 0; i < levels.Length; i++) {
+            for (int i = 0; i < levels.Length; i++) 
+            {
                 UpdatePositions(levels[i]);
             }
         }
