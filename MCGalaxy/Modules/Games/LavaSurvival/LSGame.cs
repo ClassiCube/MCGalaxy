@@ -111,7 +111,10 @@ namespace MCGalaxy.Modules.Games.LS
             dissipateChance = GetDissipateChance();
             burnChance      = GetBurnChance();
             
-            if (!RoundInProgress) return;
+            if (RoundInProgress) UpdatePhysicsLevel();
+        }
+        
+        void UpdatePhysicsLevel() {
             Map.SetPhysics(floodMode > LSFloodMode.Calm ? 2 : 1);
         }
         

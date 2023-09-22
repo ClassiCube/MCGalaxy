@@ -219,7 +219,9 @@ namespace MCGalaxy.Games
             Map.blocks       = old.blocks;
             Map.CustomBlocks = old.CustomBlocks;
             LevelActions.ReloadAll(Map, Player.Console, false);
+            
             Map.Message("Reset map to latest backup");
+            UpdateMapConfig();
         }
         
         void TransferPlayers(Level lastMap) {

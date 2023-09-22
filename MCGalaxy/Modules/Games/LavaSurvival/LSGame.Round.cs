@@ -46,6 +46,7 @@ namespace MCGalaxy.Modules.Games.LS
             RoundStart = DateTime.UtcNow;
             RoundInProgress = true;
             UpdateBlockHandlers();
+            UpdatePhysicsLevel();
 
             while (RoundInProgress && roundSecs < roundTotalSecs) {
                 if (!Running) return;
@@ -105,7 +106,7 @@ namespace MCGalaxy.Modules.Games.LS
             RoundInProgress = false;
             flooded = false;
             
-            Map.SetPhysics(5);
+            Map.SetPhysics(0);
             Map.Message("The round has ended!");
             
             Random rnd = new Random();
