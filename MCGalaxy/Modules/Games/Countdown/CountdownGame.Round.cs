@@ -129,6 +129,8 @@ namespace MCGalaxy.Modules.Games.Countdown
         }
         
         void Cuboid(int x1, int y1, int z1, int x2, int y2, int z2, BlockID block) {
+        	if (!Running) return;
+        	
             for (int y = y1; y <= y2; y++)
                 for (int z = z1; z <= z2; z++)
                     for (int x = x1; x <= x2; x++)
@@ -220,8 +222,10 @@ namespace MCGalaxy.Modules.Games.Countdown
             Cuboid(x1, 4, z1, x2, 4, z2, Block.Air);
             bulk.Flush();
             
-            // Remove glass borders, if neighbouring squares were previously removed
             bool airMaxX = false, airMinZ = false, airMaxZ = false, airMinX = false;
+            if (!Running) return;
+            
+            // Remove glass borders, if neighbouring squares were previously removed
             if (Map.IsAirAt(x1, 4, (ushort)(z2 + 2))) {
                 TryChangeBlock(x1, 4, z2 + 1, Block.Air);
                 TryChangeBlock(x2, 4, z2 + 1, Block.Air);
