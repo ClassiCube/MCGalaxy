@@ -136,7 +136,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     public sealed class DiscordApiClient : AsyncWorker<DiscordApiMessage>
     {
         public string Token;
-        const string host = "https://discord.com/api/v10";
+        public string Host;
         
         DiscordApiMessage GetNextRequest() {
             if (queue.Count == 0) return null;
@@ -162,7 +162,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             for (int retry = 0; retry < 10; retry++) 
             {
                 try {
-                    HttpWebRequest req = HttpUtil.CreateRequest(host + msg.Path);
+                    HttpWebRequest req = HttpUtil.CreateRequest(Host + msg.Path);
                     req.Method         = msg.Method;
                     req.ContentType    = "application/json";
                     req.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;

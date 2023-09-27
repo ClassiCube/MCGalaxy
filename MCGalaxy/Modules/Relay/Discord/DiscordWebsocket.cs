@@ -42,6 +42,8 @@ namespace MCGalaxy.Modules.Relay.Discord
     {       
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;
+        public string Host;
+        
         public bool CanReconnect = true, SentIdentify;
         public DiscordSession Session;
         
@@ -86,28 +88,27 @@ namespace MCGalaxy.Modules.Relay.Discord
         const int OPCODE_HEARTBEAT_ACK   = 11;
         
         
-        public DiscordWebsocket() {
-            path = "/?v=10&encoding=json";
+        public DiscordWebsocket(string apiPath) {
+            path = apiPath;
         }
         
-        const string host = "gateway.discord.gg";
         // stubs
         public override bool LowLatency { set { } }
         public override IPAddress IP { get { return null; } }
         
         public void Connect() {
             client = new TcpClient();
-            client.Connect(host, 443);
+            client.Connect(Host, 443);
             readable = true;
 
-            stream   = HttpUtil.WrapSSLStream(client.GetStream(), host);
+            stream   = HttpUtil.WrapSSLStream(client.GetStream(), Host);
             protocol = this;
             Init();
         }
         
         protected override void WriteCustomHeaders() {
             WriteHeader("Authorization: Bot " + Token);
-            WriteHeader("Host: " + host);
+            WriteHeader("Host: " + Host);
         }
         
         public override void Close() {

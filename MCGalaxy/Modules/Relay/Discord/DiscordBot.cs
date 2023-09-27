@@ -54,15 +54,20 @@ namespace MCGalaxy.Modules.Relay.Discord
                                         "// example:http://example.org",
                                         "// That would replace 'example' in messages sent to Discord with 'http://example.org'");
         
+        public string APIHost = "https://discord.com/api/v10";
+        public string WSHost  = "gateway.discord.gg";
+        public string WSPath  = "/?v=10&encoding=json";
+        
         
         protected override bool CanReconnect {
             get { return canReconnect && (socket == null || socket.CanReconnect); }
         }
         
         protected override void DoConnect() {
-            socket = new DiscordWebsocket();
+            socket = new DiscordWebsocket(WSPath);
             socket.Session   = session;
             socket.Token     = Config.BotToken;
+            socket.Host      = WSHost;
             socket.Presence  = Config.PresenceEnabled;
             socket.Status    = Config.Status;
             socket.Activity  = Config.Activity;
@@ -203,6 +208,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             if (api == null) {
                 api = new DiscordApiClient();
                 api.Token = Config.BotToken;
+                api.Host  = APIHost;
                 api.RunAsync();
             }
             OnReady();
@@ -243,8 +249,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             //  "Bots no longer receive Channel Create Gateway Event for DMs"
             // Therefore the code is now forced to instead calculate which
             //  channels are probably text channels, and which aren't        
-            if (!channelTypes.TryGetValue(channel, out type))
-            {
+            if (!channelTypes.TryGetValue(channel, out type)) {
                 type = GuessChannelType(data);
                 // channel is definitely a text/normal channel
                 if (type == CHANNEL_TEXT) channelTypes[channel] = type;
