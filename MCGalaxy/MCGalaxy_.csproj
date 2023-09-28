@@ -302,6 +302,7 @@
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
     <Compile Include="Commands\Scripting\CmdPlugin.cs" />
+    <Compile Include="Commands\SubCommand.cs" />
     <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
