@@ -23,7 +23,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Modules.Games.ZS
 {    
-    public sealed partial class ZSGame : RoundsGame 
+    public partial class ZSGame : RoundsGame 
     {
         string lastKiller = "";
         int infectCombo = 0;

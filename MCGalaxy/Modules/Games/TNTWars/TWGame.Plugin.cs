@@ -34,7 +34,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.TW
 {    
-    public sealed partial class TWGame : RoundsGame 
+    public partial class TWGame : RoundsGame 
     {    
         protected override void HookEventHandlers() {
             OnPlayerChatEvent.Register(HandlePlayerChat, Priority.High);

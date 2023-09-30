@@ -29,7 +29,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.ZS
 {
-    public sealed partial class ZSGame : RoundsGame 
+    public partial class ZSGame : RoundsGame 
     {
         protected override void HookEventHandlers() {
             OnEntitySpawnedEvent.Register(HandleEntitySpawned, Priority.High);

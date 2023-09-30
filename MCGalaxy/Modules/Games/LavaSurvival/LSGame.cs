@@ -33,7 +33,7 @@ namespace MCGalaxy.Modules.Games.LS
         Calm, Disturbed, Furious, Wild, Extreme
     }
     
-    public sealed partial class LSGame : RoundsGame 
+    public partial class LSGame : RoundsGame 
     {
         LSMapConfig cfg = new LSMapConfig();
         public LSConfig Config = new LSConfig();

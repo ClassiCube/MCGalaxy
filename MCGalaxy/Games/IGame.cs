@@ -155,7 +155,7 @@ namespace MCGalaxy.Games
             return dx <= dist && dy <= dist && dz <= dist;
         }
         
-        protected static void AwardMoney(Player p, int min, int max, Random rnd, int baseAmount) {
+        protected virtual void AwardMoney(Player p, int min, int max, Random rnd, int baseAmount) {
             int reward = baseAmount;
             if (min >= max) {
                 reward += min;

@@ -108,7 +108,7 @@ namespace MCGalaxy
         };
         static byte[] v6_fallback = {
             // Iron   DoubleSlab Slab  Brick TNT  Bookshelf MossyRocks   Obsidian
-               Stone, Gray,      Gray, Red,  Red, Wood,     Cobblestone, Cobblestone,
+               Stone, Gray,      Gray, Red,  Red, Wood,     Cobblestone, Black,
             // CobbleSlab   Rope      Sandstone Snow Fire  LightPink ForestGreen Brown
                Cobblestone, Mushroom, Sand,     Air, Lava, Pink,     Green,      Dirt,
             // DeepBlue Turquoise Ice    CeramicTile Magma        Pillar Crate StoneBrick

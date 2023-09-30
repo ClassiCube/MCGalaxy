@@ -23,7 +23,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Modules.Games.LS
 {    
-    public sealed partial class LSGame : RoundsGame 
+    public partial class LSGame : RoundsGame 
     {
         static void HookItems() {
             Economy.RegisterItem(itemLife);

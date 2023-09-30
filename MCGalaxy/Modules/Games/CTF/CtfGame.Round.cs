@@ -26,7 +26,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.CTF
 {    
-    public sealed partial class CTFGame : RoundsGame 
+    public partial class CTFGame : RoundsGame 
     {   
         protected override void DoRound() {
             if (!Running) return;

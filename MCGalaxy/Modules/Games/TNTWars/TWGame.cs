@@ -76,7 +76,7 @@ namespace MCGalaxy.Modules.Games.TW
         public TWTeam(string name, string color) { Name = name; Color = color; }
     }
     
-    public sealed partial class TWGame : RoundsGame 
+    public partial class TWGame : RoundsGame 
     {
         TWMapConfig cfg = new TWMapConfig();
         public TWConfig Config = new TWConfig();

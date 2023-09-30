@@ -22,7 +22,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.LS 
 {
-    public sealed partial class LSGame : RoundsGame 
+    public partial class LSGame : RoundsGame 
     {
         void UpdateBlockHandlers() {
             Map.UpdateBlockHandlers(Block.Sponge);

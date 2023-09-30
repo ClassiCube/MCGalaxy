@@ -28,7 +28,7 @@ using BlockID = System.UInt16;
 
 namespace MCGalaxy.Modules.Games.Countdown
 {
-    public sealed partial class CountdownGame : RoundsGame 
+    public partial class CountdownGame : RoundsGame 
     {          
         struct SquarePos 
         {

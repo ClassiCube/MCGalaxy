@@ -22,7 +22,7 @@ using MCGalaxy.Games;
 
 namespace MCGalaxy.Modules.Games.Countdown 
 {    
-    public sealed partial class CountdownGame : RoundsGame 
+    public partial class CountdownGame : RoundsGame 
     {       
          protected override void HookEventHandlers() {
             OnPlayerMoveEvent.Register(HandlePlayerMove, Priority.High);

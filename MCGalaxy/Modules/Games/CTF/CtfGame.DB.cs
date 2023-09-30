@@ -23,7 +23,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Modules.Games.CTF
 {
-    public sealed partial class CTFGame : RoundsGame 
+    public partial class CTFGame : RoundsGame 
     {
         struct CtfStats { public int Points, Captures, Tags; }
         

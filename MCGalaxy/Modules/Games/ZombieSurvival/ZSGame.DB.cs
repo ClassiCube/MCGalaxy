@@ -24,7 +24,7 @@ using MCGalaxy.SQL;
 
 namespace MCGalaxy.Modules.Games.ZS
 {    
-    public sealed partial class ZSGame : RoundsGame 
+    public partial class ZSGame : RoundsGame 
     {       
         struct ZombieStats { public int TotalRounds, MaxRounds, TotalInfected, MaxInfected; }
         
