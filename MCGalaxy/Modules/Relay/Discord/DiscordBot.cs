@@ -27,6 +27,17 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Modules.Relay.Discord 
 {
+    sealed class DiscordUser : RelayUser
+    {
+        public string ReferencedUser;
+        
+        public override string GetMessagePrefix() {
+            if (string.IsNullOrEmpty(ReferencedUser))
+                return "";
+            return "@" + ReferencedUser + " ";
+        }
+    }
+    
     public sealed class DiscordBot : RelayBot 
     {
         DiscordApiClient api;
@@ -165,6 +176,17 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         
+        DiscordUser ExtractUser(JsonObject data) {
+            JsonObject author = (JsonObject)data["author"];
+            
+            DiscordUser user = new DiscordUser();
+            user.Nick = GetNick(data) ?? GetUser(author);
+            user.ID   = (string)author["id"];
+            
+            user.ReferencedUser = ExtractReferencedUser(data);
+            return user;
+        }
+        
         string GetNick(JsonObject data) {
             if (!Config.UseNicks) return null;
             object raw;
@@ -187,52 +209,23 @@ namespace MCGalaxy.Modules.Relay.Discord
             return (string)author["username"];
         }
         
-        RelayUser ExtractUser(JsonObject data) {
-            JsonObject author = (JsonObject)data["author"];
+        string ExtractReferencedUser(JsonObject data) {
+            object refMsgRaw;
+            data.TryGetValue("referenced_message", out refMsgRaw);
             
-            RelayUser user = new RelayUser();
-            user.Nick = GetNick(data) ?? GetUser(author);
-            user.ID   = (string)author["id"];
-            return user;
-        }
-
-        
-        void HandleReadyEvent(JsonObject data) {
-            JsonObject user = (JsonObject)data["user"];
-            botUserID       = (string)user["id"];
-            HandleResumedEvent(data);
+            JsonObject refMsgData = refMsgRaw as JsonObject;
+            if (refMsgData == null) return null;
+            
+            object authorRaw;
+            refMsgData.TryGetValue("author", out authorRaw);
+            if (authorRaw == null) return null;
+            
+            return GetUser((JsonObject)authorRaw);
         }
         
-        void HandleResumedEvent(JsonObject data) {
-            // May not be null when reconnecting
-            if (api == null) {
-                api = new DiscordApiClient();
-                api.Token = Config.BotToken;
-                api.Host  = APIHost;
-                api.RunAsync();
-            }
-            OnReady();
-        }
-        
-        void PrintAttachments(RelayUser user, JsonObject data, string channel) {
-            object raw;
-            if (!data.TryGetValue("attachments", out raw)) return;
-            
-            JsonArray list = raw as JsonArray;
-            if (list == null) return;
-            
-            foreach (object entry in list) 
-            {
-                JsonObject attachment = entry as JsonObject;
-                if (attachment == null) continue;
-                
-                string url = (string)attachment["url"];
-                HandleChannelMessage(user, channel, url);
-            }
-        }
         
         void HandleMessageEvent(JsonObject data) {
-            RelayUser user = ExtractUser(data);
+            DiscordUser user = ExtractUser(data);
             // ignore messages from self
             if (user.ID == botUserID) return;
             
@@ -256,12 +249,30 @@ namespace MCGalaxy.Modules.Relay.Discord
             }
             
             if (type == CHANNEL_DIRECT) {
-                HandleDirectMessage(user, channel, message);
+                HandleDirectMessage(user,  channel, message);
             } else {
                 HandleChannelMessage(user, channel, message);
                 PrintAttachments(user, data, channel);
             }
         }
+        
+        void PrintAttachments(RelayUser user, JsonObject data, string channel) {
+            object raw;
+            if (!data.TryGetValue("attachments", out raw)) return;
+            
+            JsonArray list = raw as JsonArray;
+            if (list == null) return;
+            
+            foreach (object entry in list) 
+            {
+                JsonObject attachment = entry as JsonObject;
+                if (attachment == null) continue;
+                
+                string url = (string)attachment["url"];
+                HandleChannelMessage(user, channel, url);
+            }
+        }
+        
         
         void HandleChannelEvent(JsonObject data) {
             string channel = (string)data["id"];
@@ -285,6 +296,24 @@ namespace MCGalaxy.Modules.Relay.Discord
 
             // TODO are there any other cases to consider?
             return CHANNEL_DIRECT; // unknown
+        }
+
+        
+        void HandleReadyEvent(JsonObject data) {
+            JsonObject user = (JsonObject)data["user"];
+            botUserID       = (string)user["id"];
+            HandleResumedEvent(data);
+        }
+        
+        void HandleResumedEvent(JsonObject data) {
+            // May not be null when reconnecting
+            if (api == null) {
+                api = new DiscordApiClient();
+                api.Token = Config.BotToken;
+                api.Host  = APIHost;
+                api.RunAsync();
+            }
+            OnReady();
         }
 
 

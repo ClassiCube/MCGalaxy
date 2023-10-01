@@ -28,7 +28,12 @@ using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Relay 
 {
-    public class RelayUser { public string ID, Nick; }
+    public class RelayUser
+    { 
+        public string ID, Nick;
+        
+        public virtual string GetMessagePrefix() { return ""; }
+    }
 
     public delegate void OnDirectMessage(RelayBot bot, string channel, RelayUser user, string message, ref bool cancel);
     /// <summary> Called when an external communication service user sends a message directly to the relay bot </summary>
@@ -404,15 +409,16 @@ namespace MCGalaxy.Modules.Relay
             if (rawCmd.CaselessEq(Server.Config.IRCCommandPrefix)) {
                 if (!HandleCommand(user, channel, message, parts)) return;
             }
-
+            string msg = user.GetMessagePrefix() + message;
+            
             if (opchat) {
-                Logger.Log(LogType.RelayChat, "(OPs): ({0}) {1}: {2}", RelayName, user.Nick, message);
+                Logger.Log(LogType.RelayChat, "(OPs): ({0}) {1}: {2}", RelayName, user.Nick, msg);
                 Chat.MessageOps(string.Format("To Ops &f-&I({0}) {1}&f- {2}", RelayName, user.Nick,
-                                              Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+                                              Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(msg) : msg));
             } else if (chat) {
-                Logger.Log(LogType.RelayChat, "({0}) {1}: {2}", RelayName, user.Nick, message);
+                Logger.Log(LogType.RelayChat, "({0}) {1}: {2}", RelayName, user.Nick, msg);
                 MessageInGame(user.Nick, string.Format("&I({0}) {1}: &f{2}", RelayName, user.Nick,
-                                                       Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(message) : message));
+                                                       Server.Config.ProfanityFiltering ? ProfanityFilter.Parse(msg) : msg));
             }
         }
         
