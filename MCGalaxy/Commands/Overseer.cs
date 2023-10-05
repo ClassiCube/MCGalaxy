@@ -27,19 +27,13 @@ namespace MCGalaxy.Commands.World {
     /// </summary>
     public static class Overseer {
 
+        public static readonly string commandShortcut = "os";
         public static void RegisterSubCommand(SubCommand subCmd) {
-            foreach (SubCommand sub in coreSubCommands) {
-                if (subCmd.AnyMatchingAlias(sub)) {
-                    throw new System.ArgumentException(
-                        String.Format("One or more aliases of the existing subcommand \"{0}\" conflicts with the subcommand \"{1}\" that is being registered.",
-                        sub.Group, subCmd.Group));
-                }
-            }
-            coreSubCommands.Add(subCmd);
+            subCommandGroup.Register(subCmd);
         }
 
         public static void UnregisterSubCommand(SubCommand subCmd) {
-            coreSubCommands.Remove(subCmd);
+            subCommandGroup.Unregister(subCmd);
         }
 
         static void UseCommand(Player p, string cmd, string args) {
@@ -144,19 +138,20 @@ namespace MCGalaxy.Commands.World {
         };
         #endregion
 
-        internal static List<SubCommand> coreSubCommands = new List<SubCommand>() {
-            new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
-            new SubCommand("Env",        HandleEnv,        envHelp),
-            new SubCommand("Go",         HandleGoto,       gotoHelp, false),
-            new SubCommand("Kick",       HandleKick,       kickHelp),
-            new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
-            new SubCommand("LB",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
-            new SubCommand("Map",        HandleMap,        mapHelp, false),
-            new SubCommand("Preset",     HandlePreset,     presetHelp),
-            new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
-            new SubCommand("Zone",       HandleZone,       zoneHelp),
-            new SubCommand("Zones",      HandleZones,      zonesHelp),
-        };
+        internal static SubCommandGroup subCommandGroup = new SubCommandGroup(commandShortcut,
+                new List<SubCommand>() {
+                new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
+                new SubCommand("Env",        HandleEnv,        envHelp),
+                new SubCommand("Go",         HandleGoto,       gotoHelp, false),
+                new SubCommand("Kick",       HandleKick,       kickHelp),
+                new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
+                new SubCommand("LB",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
+                new SubCommand("Map",        HandleMap,        mapHelp, false),
+                new SubCommand("Preset",     HandlePreset,     presetHelp),
+                new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
+                new SubCommand("Zone",       HandleZone,       zoneHelp),
+                new SubCommand("Zones",      HandleZones,      zonesHelp), }
+            );
 
         static void HandleBlockProps(Player p, string arg1, string arg2) {
             string args = ("level " + arg1 + " " + arg2).Trim();
@@ -216,21 +211,21 @@ namespace MCGalaxy.Commands.World {
                 return;
             }
 
-            SubCommand.UsageResult result = SubCommand.UseSubCommands(p, message, "os map", mapSubCommands, false);
-            if (result != SubCommand.UsageResult.NoneFound) { return; }
+            SubCommandGroup.UsageResult result = mapSubCommandGroup.Use(p, message, false);
+            if (result != SubCommandGroup.UsageResult.NoneFound) { return; }
 
             LevelOption opt = LevelOptions.Find(cmd);
             if (opt == null) {
                 p.Message("Could not find map command or map option \"{0}\".", cmd);
-                p.Message("See &T/help os map &Sto display every command.");
+                p.Message("See &T/help {0} map &Sto display every command.", commandShortcut);
                 return;
             }
             if (DisallowedMapOption(opt.Name)) {
-                p.Message("&WYou cannot change the {0} map option via /os map.", opt.Name);
+                p.Message("&WYou cannot change the {0} map option via /{1} map.", opt.Name, commandShortcut);
                 return;
             }
             if (!LevelInfo.IsRealmOwner(p.level, p.name)) {
-                p.Message("You may only use &T/os map {0}&S after you join your map.", opt.Name);
+                p.Message("You may only use &T/{0} map {1}&S after you join your map.", commandShortcut, opt.Name);
                 return;
             }
             opt.SetFunc(p, p.level, value);
@@ -242,17 +237,18 @@ namespace MCGalaxy.Commands.World {
                 opt == LevelOptions.Goto || opt == LevelOptions.Unload;
         }
 
-        static List<SubCommand> mapSubCommands = new List<SubCommand>() {
-            new SubCommand("Physics",  HandleMapPhysics, null),
-            new SubCommand("Add",      HandleMapAdd,     null, false, new string[] { "create", "new" } ),
-            new SubCommand("Delete",   HandleMapDelete,  null, true , new string[] { "del", "remove" } ),
-            new SubCommand("Save",     (p, _, __)  => { UseCommand(p, "Save", ""); }, null),
-            new SubCommand("Restore",  (p, arg, _) => { UseCommand(p, "Restore", arg); }, null),
-            new SubCommand("Resize",   HandleMapResize,   null),
-            new SubCommand("PerVisit", HandleMapPerVisit, null),
-            new SubCommand("PerBuild", HandleMapPerBuild, null),
-            new SubCommand("Texture",  HandleMapTexture,  null, true, new string[] { "texturezip", "texturepack" } ),
-        };
+        static SubCommandGroup mapSubCommandGroup = new SubCommandGroup(commandShortcut + " map",
+                new List<SubCommand>() {
+                new SubCommand("Physics",  HandleMapPhysics, null),
+                new SubCommand("Add",      HandleMapAdd,     null, false, new string[] { "create", "new" } ),
+                new SubCommand("Delete",   HandleMapDelete,  null, true , new string[] { "del", "remove" } ),
+                new SubCommand("Save",     (p, _, __)  => { UseCommand(p, "Save", ""); }, null),
+                new SubCommand("Restore",  (p, arg, _) => { UseCommand(p, "Restore", arg); }, null),
+                new SubCommand("Resize",   HandleMapResize,   null),
+                new SubCommand("PerVisit", HandleMapPerVisit, null),
+                new SubCommand("PerBuild", HandleMapPerBuild, null),
+                new SubCommand("Texture",  HandleMapTexture,  null, true, new string[] { "texturezip", "texturepack" } ), }
+            );
 
         static void HandleMapPhysics(Player p, string value, string ignored) {
             if (value == "0" || value == "1" || value == "2" || value == "3" || value == "4" || value == "5") {
@@ -263,7 +259,7 @@ namespace MCGalaxy.Commands.World {
         }
         static void HandleMapAdd(Player p, string value, string value2) {
             if (p.group.OverseerMaps == 0) {
-                p.Message("Your rank is not allowed to create any /os maps."); return;
+                p.Message("Your rank is not allowed to create any /{0} maps.", commandShortcut); return;
             }
             value = (value + " " + value2).Trim();
 
@@ -280,7 +276,7 @@ namespace MCGalaxy.Commands.World {
             if (lvl == null) return;
 
             MapGen.SetRealmPerms(p, lvl);
-            p.Message("Use &T/os zone add [name] &Sto allow other players to build in the map.");
+            p.Message("Use &T/{0} zone add [name] &Sto allow other players to build in the map.", commandShortcut);
 
             try {
                 lvl.Save(true);
@@ -291,7 +287,7 @@ namespace MCGalaxy.Commands.World {
         }
         static void HandleMapDelete(Player p, string value, string ignored) {
             if (value.Length > 0) {
-                p.Message("To delete your current map, type &T/os map delete");
+                p.Message("To delete your current map, type &T/{0} map delete", commandShortcut);
                 return;
             }
             UseCommand(p, "DeleteLvl", p.level.name);
@@ -306,8 +302,8 @@ namespace MCGalaxy.Commands.World {
             if (CmdResizeLvl.DoResize(p, args, p.DefaultCmdData, out needConfirm)) return;
 
             if (!needConfirm) return;
-            p.Message("Type &T/os map resize {0} {1} {2} confirm &Sif you're sure.",
-                      args[1], args[2], args[3]);
+            p.Message("Type &T/{0} map resize {1} {2} {3} confirm &Sif you're sure.",
+                      commandShortcut, args[1], args[2], args[3]);
         }
         static void HandleMapPerVisit(Player p, string value, string value2) {
             // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here

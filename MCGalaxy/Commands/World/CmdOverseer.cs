@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace MCGalaxy.Commands.World {
     public sealed partial class CmdOverseer : Command2 {
         public override string name { get { return "Overseer"; } }
-        public override string shortcut { get { return "os"; } }
+        public override string shortcut { get { return Overseer.commandShortcut; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
         public override bool SuperUseable { get { return false; } }
@@ -32,18 +32,18 @@ namespace MCGalaxy.Commands.World {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
-            SubCommand.UseSubCommands(p, message, shortcut, Overseer.coreSubCommands);
+            Overseer.subCommandGroup.Use(p, message);
         }
         
         public override void Help(Player p, string message) {
             message = message.SplitSpaces()[0]; // only first argument
-            SubCommand.HelpSubCommands(p, message, shortcut, Overseer.coreSubCommands);
+            Overseer.subCommandGroup.DisplayHelpFor(p, message);
         }
         
         public override void Help(Player p) {
             p.Message("&T/os [command] [args]");
             p.Message("&HAllows you to modify and manage your personal realms.");
-            SubCommand.HelpSubCommands(p, shortcut, Overseer.coreSubCommands);
+            Overseer.subCommandGroup.DisplayAvailable(p);
         }
 
     }
