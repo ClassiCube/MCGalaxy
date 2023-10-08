@@ -299,9 +299,11 @@
     <Compile Include="Commands\other\CmdTp.cs" />
     <Compile Include="Commands\other\CmdTpA.cs" />
     <Compile Include="Commands\other\QuitCmds.cs" />
+    <Compile Include="Commands\Overseer.cs" />
     <Compile Include="Commands\Scripting\CmdCmdLoad.cs" />
     <Compile Include="Commands\Scripting\CmdCmdUnload.cs" />
     <Compile Include="Commands\Scripting\CmdPlugin.cs" />
+    <Compile Include="Commands\SubCommand.cs" />
     <Compile Include="Commands\World\CmdBlockProperties.cs" />
     <Compile Include="Commands\World\CmdCopyLVL.cs" />
     <Compile Include="Commands\World\CmdDeleteLvl.cs" />
@@ -315,7 +317,6 @@
     <Compile Include="Commands\World\CmdMuseum.cs" />
     <Compile Include="Commands\World\CmdNewLvl.cs" />
     <Compile Include="Commands\World\CmdOverseer.cs" />
-    <Compile Include="Commands\World\CmdOverseer.SubCommands.cs" />
     <Compile Include="Commands\World\CmdPause.cs" />
     <Compile Include="Commands\World\CmdWarp.cs" />
     <Compile Include="Commands\World\CmdWaypoint.cs" />
@@ -708,17 +709,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\Games" />
-    <Folder Include="Modules\Games\" />
-    <Folder Include="Modules\Games\CTF" />
-    <Folder Include="Modules\Games\LavaSurvival" />
-    <Folder Include="Modules\Games\Countdown" />
-    <Folder Include="Modules\Games\LavaSurvival\Commands" />
-    <Folder Include="Modules\Games\TNTWars" />
-    <Folder Include="Modules\Games\ZombieSurvival" />
-    <Folder Include="Modules\Games\ZombieSurvival\Commands" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
