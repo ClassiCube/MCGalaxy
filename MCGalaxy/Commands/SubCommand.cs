@@ -24,24 +24,32 @@ namespace MCGalaxy.Commands {
     /// Represents the name, behavior, and help text for a subcommand. Used with SubCommandGroup to offer a variety of subcommands to run based on user input.
     /// </summary>
     public class SubCommand {
-        public delegate void SubCommandBehavior(Player p, string cmd, string value);
+        public delegate void Behavior(Player p, string[] args);
+        public delegate void BehaviorOneArg(Player p, string arg);
 
         public readonly string Name;
-        public readonly SubCommandBehavior Behavior;
+        public readonly int ArgCount;
+        public readonly Behavior behavior;
         string[] Help;
         readonly bool MapOnly;
         string[] Aliases;
 
         /// <summary>
         /// When mapOnly is true, the subcommand can only be used when the player is the realm owner.
+        /// Args passed to behavior through SubCommandGroup.Use are guaranteed to be the length specified by argCount
         /// </summary>
-        public SubCommand(string grpName, SubCommandBehavior behavior, string[] help, bool mapOnly = true, string[] aliases = null) {
-            Name = grpName;
-            Behavior = behavior;
+        public SubCommand(string name, int argCount, Behavior behavior, string[] help, bool mapOnly = true, string[] aliases = null) {
+            if (argCount < 1) { throw new System.ArgumentException("argCount must be greater than or equal to 1."); }
+            Name = name;
+            ArgCount = argCount;
+            this.behavior = behavior;
             Help = help;
             MapOnly = mapOnly;
             Aliases = aliases;
         }
+        public SubCommand(string name, BehaviorOneArg simpleBehavior, string[] help, bool mapOnly = true, string[] aliases = null) :
+            this(name, 1, (p, args) => { simpleBehavior(p, args[0]); }, help, mapOnly, aliases) { }
+
         public bool Match(string cmd) {
             if (Aliases != null) {
                 foreach (string alias in Aliases) {
@@ -104,15 +112,22 @@ namespace MCGalaxy.Commands {
         }
 
         public UsageResult Use(Player p, string message, bool alertNoneFound = true) {
-            string[] args = message.SplitSpaces(3);
+            string[] args = message.SplitSpaces(2);
             string cmd = args[0];
-            string arg1 = args.Length > 1 ? args[1] : "";
-            string arg2 = args.Length > 2 ? args[2] : "";
 
             foreach (SubCommand subCmd in subCommands) {
                 if (!subCmd.Match(cmd)) { continue; }
                 if (!subCmd.Allowed(p, parentCommandName)) { return UsageResult.Disallowed; }
-                subCmd.Behavior(p, arg1, arg2);
+
+                string[] bArgs = new string[subCmd.ArgCount];
+                string[] cmdArgs = args.Length > 1 ? args[1].SplitSpaces(subCmd.ArgCount) : new string[] { "" };
+
+                for (int i = 0; i < bArgs.Length; i++) {
+                    if (i < cmdArgs.Length) { bArgs[i] = cmdArgs[i]; }
+                    else { bArgs[i] = ""; }
+                }
+
+                subCmd.behavior(p, bArgs);
                 return UsageResult.Success;
             }
             if (alertNoneFound) {
