@@ -23,12 +23,11 @@ namespace MCGalaxy.Commands {
     /// <summary>
     /// Represents the name, behavior, and help text for a subcommand. Used with SubCommandGroup to offer a variety of subcommands to run based on user input.
     /// </summary>
-    public class SubCommand {
-        public delegate void Behavior(Player p, string[] args);
-        public delegate void BehaviorOneArg(Player p, string arg);
-
+    public class SubCommand 
+    {
+        public delegate void Behavior(Player p, string arg);
+        
         public readonly string Name;
-        public readonly int ArgCount;
         public readonly Behavior behavior;
         string[] Help;
         readonly bool MapOnly;
@@ -38,34 +37,34 @@ namespace MCGalaxy.Commands {
         /// When mapOnly is true, the subcommand can only be used when the player is the realm owner.
         /// Args passed to behavior through SubCommandGroup.Use are guaranteed to be the length specified by argCount
         /// </summary>
-        public SubCommand(string name, int argCount, Behavior behavior, string[] help, bool mapOnly = true, string[] aliases = null) {
-            if (argCount < 1) { throw new System.ArgumentException("argCount must be greater than or equal to 1."); }
+        public SubCommand(string name, Behavior behavior, string[] help, bool mapOnly = true, string[] aliases = null) {
             Name = name;
-            ArgCount = argCount;
             this.behavior = behavior;
             Help = help;
             MapOnly = mapOnly;
             Aliases = aliases;
         }
-        public SubCommand(string name, BehaviorOneArg simpleBehavior, string[] help, bool mapOnly = true, string[] aliases = null) :
-            this(name, 1, (p, args) => { simpleBehavior(p, args[0]); }, help, mapOnly, aliases) { }
 
         public bool Match(string cmd) {
             if (Aliases != null) {
-                foreach (string alias in Aliases) {
-                    if (alias.CaselessEq(cmd)) { return true; }
+                foreach (string alias in Aliases) 
+                {
+                    if (alias.CaselessEq(cmd)) return true;
                 }
             }
             return Name.CaselessEq(cmd);
         }
+        
         public bool AnyMatchingAlias(SubCommand other) {
             if (Aliases != null) {
-                foreach (string alias in Aliases) {
-                    if (other.Match(alias)) { return true; }
+                foreach (string alias in Aliases) 
+                {
+                    if (other.Match(alias)) return true;
                 }
             }
             return other.Match(Name);
         }
+        
         public bool Allowed(Player p, string parentCommandName) {
             if (MapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
                 p.Message("You may only use &T/{0} {1}&S after you join your map.", parentCommandName, Name.ToLower());
@@ -73,6 +72,7 @@ namespace MCGalaxy.Commands {
             }
             return true;
         }
+        
         public void DisplayHelp(Player p) {
             if (Help == null || Help.Length == 0) {
                 p.Message("No help is available for {0}", Name);
@@ -85,7 +85,8 @@ namespace MCGalaxy.Commands {
     /// <summary>
     /// Represents a group of SubCommands that can be called from a given parent command. SubCommands can be added or removed using Register and Unregister.
     /// </summary>
-    public class SubCommandGroup {
+    public class SubCommandGroup 
+    {
         public enum UsageResult { NoneFound, Success, Disallowed }
 
         public readonly string parentCommandName;
@@ -97,9 +98,10 @@ namespace MCGalaxy.Commands {
         }
 
         public void Register(SubCommand subCmd) {
-            foreach (SubCommand sub in subCommands) {
+            foreach (SubCommand sub in subCommands) 
+            {
                 if (subCmd.AnyMatchingAlias(sub)) {
-                    throw new System.ArgumentException(
+                    throw new ArgumentException(
                         String.Format("One or more aliases of the existing subcommand \"{0}\" conflicts with the subcommand \"{1}\" that is being registered.",
                         sub.Name, subCmd.Name));
                 }
@@ -113,23 +115,18 @@ namespace MCGalaxy.Commands {
 
         public UsageResult Use(Player p, string message, bool alertNoneFound = true) {
             string[] args = message.SplitSpaces(2);
-            string cmd = args[0];
+            string cmd    = args[0];
 
-            foreach (SubCommand subCmd in subCommands) {
+            foreach (SubCommand subCmd in subCommands) 
+            {
                 if (!subCmd.Match(cmd)) { continue; }
                 if (!subCmd.Allowed(p, parentCommandName)) { return UsageResult.Disallowed; }
 
-                string[] bArgs = new string[subCmd.ArgCount];
-                string[] cmdArgs = args.Length > 1 ? args[1].SplitSpaces(subCmd.ArgCount) : new string[] { "" };
-
-                for (int i = 0; i < bArgs.Length; i++) {
-                    if (i < cmdArgs.Length) { bArgs[i] = cmdArgs[i]; }
-                    else { bArgs[i] = ""; }
-                }
-
-                subCmd.behavior(p, bArgs);
+                string value = args.Length > 1 ? args[1] : "";
+                subCmd.behavior(p, value);
                 return UsageResult.Success;
             }
+            
             if (alertNoneFound) {
                 p.Message("There is no {0} command \"{1}\".", parentCommandName, message);
                 p.Message("See &T/help {0}&S for all {0} commands.", parentCommandName);
@@ -143,7 +140,8 @@ namespace MCGalaxy.Commands {
         }
 
         public void DisplayHelpFor(Player p, string subCmdName) {
-            foreach (SubCommand subCmd in subCommands) {
+            foreach (SubCommand subCmd in subCommands) 
+            {
                 if (!subCmd.Match(subCmdName)) { continue; }
                 subCmd.DisplayHelp(p);
                 return;

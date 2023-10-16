@@ -56,22 +56,26 @@ namespace MCGalaxy
         
         /// <summary> Converts a string consisting of code page 437 indices into unicode. </summary>
         public static string Cp437ToUnicode(this string str) {
-            if (str == null || str.Length == 0 || !HasSpecial(str)) return str;
+            if (!HasSpecial(str)) return str;
             
             char[] c = str.ToCharArray();
             for (int i = 0; i < str.Length; i++)
+            {
                 c[i] = Cp437ToUnicode(str[i]);
+            }
             return new String(c);
         }
 
         /// <summary> Converts a unicode string into a string consisting of code page 437 indices. </summary>
         /// <remarks> Unicode characters not in code page 437 are converted to '?'. </remarks> 
         public static string UnicodeToCp437(this string str) {
-            if (str == null || str.Length == 0 || !HasSpecial(str)) return str;
+            if (!HasSpecial(str)) return str;
             
             char[] c = str.ToCharArray();
             for (int i = 0; i < str.Length; i++)
+            {
                 c[i] = UnicodeToCp437(str[i]);
+            }
             return new String(c);
         }
         
@@ -102,12 +106,25 @@ namespace MCGalaxy
         }
         
         static bool HasSpecial(string str) {
-            for (int i = 0; i < str.Length; i++) {
-                if (str[i] < ' ' || str[i] > '~') {
-                    return true;
-                }
+            if (String.IsNullOrEmpty(str)) return false;
+            
+            for (int i = 0; i < str.Length; i++) 
+            {
+                if (str[i] < ' ' || str[i] > '~') return true;
             }
             return false;
+        }
+        
+        
+        public static string[] SplitExact(this string str, int maxArgs) {
+            string[] output = new string[maxArgs];
+            string[] input  = String.IsNullOrEmpty(str) ? new string[0] : str.SplitSpaces(maxArgs);
+
+            for (int i = 0; i < output.Length; i++) 
+            {
+                output[i] = i < input.Length ? input[i] : "";
+            }
+            return output;
         }
     }
 }

@@ -51,14 +51,16 @@ namespace MCGalaxy
         /// <example> "abc def ghi xyz".Splice(3, 3) becomes "" </example>
         public static string Splice(this string value, int startCount, int endCount) {
             int start = 0;
-            for (int i = 0; i < startCount; i++) {
+            for (int i = 0; i < startCount; i++) 
+            {
                 start = value.IndexOf(' ', start) + 1;
                 if (start == 0) return "";
             }
             value = value.Substring(start);
             
             int end = value.Length;
-            for (int i = 0; i < endCount; i++) {
+            for (int i = 0; i < endCount; i++) 
+            {
                 end = value.LastIndexOf(' ', end - 1);
                 if (end == -1) return "";
             }
@@ -69,7 +71,8 @@ namespace MCGalaxy
         /// <example> "abc def".FixedSplit(new string[3], ' ') results in "abc", "def", null </example>
         public static void FixedSplit(this string value, string[] split, char splitter) {
             int start = 0, i = 0;
-            for (; i < split.Length && start <= value.Length; i++) {
+            for (; i < split.Length && start <= value.Length; i++) 
+            {
                 int end = value.IndexOf(splitter, start);
                 if (end == -1) end = value.Length;
                 
@@ -137,7 +140,9 @@ namespace MCGalaxy
         public static string Join(this IEnumerable<string> items, string separator = ", ") {
             StringBuilder builder = new StringBuilder();
             bool first = true;
-            foreach (string value in items) {
+            
+            foreach (string value in items) 
+            {
                 if (value == null) continue;
                  
                 if (!first) builder.Append(separator);
@@ -163,27 +168,30 @@ namespace MCGalaxy
         }
         
         const StringComparison comp = StringComparison.OrdinalIgnoreCase;
-        public static bool CaselessEq(this string a, string b) { return a.Equals(b, comp); }       
-        public static bool CaselessStarts(this string a, string b) { return a.StartsWith(b, comp); }        
-        public static bool CaselessEnds(this string a, string b) { return a.EndsWith(b, comp); }
+        public static bool CaselessEq(this string a, string b)       { return a.Equals(b, comp); }       
+        public static bool CaselessStarts(this string a, string b)   { return a.StartsWith(b, comp); }        
+        public static bool CaselessEnds(this string a, string b)     { return a.EndsWith(b, comp); }
         public static bool CaselessContains(this string a, string b) { return a.IndexOf(b, comp) >= 0; }
         
         public static bool CaselessContains(this List<string> items, string value) {
-            foreach (string item in items) {
+            foreach (string item in items) 
+            {
                 if (item.Equals(value, comp)) return true;
             }
             return false;
         }
         
         public static bool CaselessContains(this string[] items, string value) {
-            for (int i = 0; i < items.Length; i++) {
+            for (int i = 0; i < items.Length; i++) 
+            {
                 if (items[i].Equals(value, comp)) return true;
             }
             return false;
         }
         
         public static bool CaselessRemove(this List<string> items, string value) {
-            for (int i = 0; i < items.Count; i++) {
+            for (int i = 0; i < items.Count; i++) 
+            {
                 if (!items[i].Equals(value, comp)) continue;
                 items.RemoveAt(i); return true;
             }
@@ -191,7 +199,8 @@ namespace MCGalaxy
         }
         
         public static int CaselessIndexOf(this List<string> items, string value) {
-            for (int i = 0; i < items.Count; i++) {
+            for (int i = 0; i < items.Count; i++) 
+            {
                 if (items[i].Equals(value, comp)) return i;
             }
             return -1;

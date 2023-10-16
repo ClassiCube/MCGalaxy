@@ -50,7 +50,8 @@ namespace MCGalaxy.Commands.World {
         static string NextLevel(Player p) {
             int realms = p.group.OverseerMaps;
 
-            for (int i = 1; realms > 0; i++) {
+            for (int i = 1; realms > 0; i++) 
+            {
                 string map = GetLevelName(p, i);
                 if (!LevelInfo.MapExists(map)) return map;
 
@@ -140,17 +141,17 @@ namespace MCGalaxy.Commands.World {
 
         internal static SubCommandGroup subCommandGroup = new SubCommandGroup(commandShortcut,
                 new List<SubCommand>() {
-                new SubCommand("BlockProps",    HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
-                new SubCommand("Env",        2, HandleEnv,        envHelp),
-                new SubCommand("Go",            HandleGoto,       gotoHelp, false),
-                new SubCommand("Kick",          HandleKick,       kickHelp),
-                new SubCommand("KickAll",       HandleKickAll,    kickAllHelp),
-                new SubCommand("LB",            HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
-                new SubCommand("Map",        2, HandleMap,        mapHelp, false),
-                new SubCommand("Preset",        HandlePreset,     presetHelp),
-                new SubCommand("SetSpawn",      HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
-                new SubCommand("Zone",       2, HandleZone,       zoneHelp),
-                new SubCommand("Zones",      2, HandleZones,      zonesHelp), }
+                new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
+                new SubCommand("Env",        HandleEnv,        envHelp),
+                new SubCommand("Go",         HandleGoto,       gotoHelp, false),
+                new SubCommand("Kick",       HandleKick,       kickHelp),
+                new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
+                new SubCommand("LB",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
+                new SubCommand("Map",        HandleMap,        mapHelp, false),
+                new SubCommand("Preset",     HandlePreset,     presetHelp),
+                new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
+                new SubCommand("Zone",       HandleZone,       zoneHelp),
+                new SubCommand("Zones",      HandleZones,      zonesHelp), }
             );
 
         static void HandleBlockProps(Player p, string message) {
@@ -158,8 +159,10 @@ namespace MCGalaxy.Commands.World {
             UseCommand(p, "BlockProperties", "level " + message);
         }
 
-        static void HandleEnv(Player p, string[] args) {
-            Level lvl = p.level;
+        static void HandleEnv(Player p, string raw) {
+            string[] args = raw.SplitExact(2);
+            Level lvl     = p.level;
+            
             if (CmdEnvironment.Handle(p, lvl, args[0], args[1], lvl.Config, lvl.ColoredName)) return;
             p.MessageLines(envHelp);
         }
@@ -203,18 +206,17 @@ namespace MCGalaxy.Commands.World {
             CustomBlockCommand.Execute(p, lbArgs, p.DefaultCmdData, false, "/os lb");
         }
 
-        static void HandleMap(Player p, string[] args) {
-            string cmd = args[0];
-            string value = args[1];
-            string message = (cmd + " " + value).Trim();
-
-            if (message.Length == 0) {
-                p.MessageLines(mapHelp);
-                return;
+        static void HandleMap(Player p, string raw) {
+            if (raw.Length == 0) {
+                p.MessageLines(mapHelp); return;
             }
 
-            SubCommandGroup.UsageResult result = mapSubCommandGroup.Use(p, message, false);
-            if (result != SubCommandGroup.UsageResult.NoneFound) { return; }
+            SubCommandGroup.UsageResult result = mapSubCommandGroup.Use(p, raw, false);
+            if (result != SubCommandGroup.UsageResult.NoneFound) return;
+            
+            string[] args = raw.SplitExact(2);
+            string cmd    = args[0];
+            string value  = args[1];
 
             LevelOption opt = LevelOptions.Find(cmd);
             if (opt == null) {
@@ -233,10 +235,11 @@ namespace MCGalaxy.Commands.World {
             opt.SetFunc(p, p.level, value);
             p.level.SaveSettings();
         }
+        
         static bool DisallowedMapOption(string opt) {
             return
                 opt == LevelOptions.Speed || opt == LevelOptions.Overload || opt == LevelOptions.RealmOwner ||
-                opt == LevelOptions.Goto || opt == LevelOptions.Unload;
+                opt == LevelOptions.Goto  || opt == LevelOptions.Unload;
         }
 
         static SubCommandGroup mapSubCommandGroup = new SubCommandGroup(commandShortcut + " map",
@@ -259,6 +262,7 @@ namespace MCGalaxy.Commands.World {
                 p.Message("Accepted numbers are: 0, 1, 2, 3, 4 or 5");
             }
         }
+        
         static void HandleMapAdd(Player p, string message) {
             if (p.group.OverseerMaps == 0) {
                 p.Message("Your rank is not allowed to create any /{0} maps.", commandShortcut); return;
@@ -286,6 +290,7 @@ namespace MCGalaxy.Commands.World {
                 Server.DoGC();
             }
         }
+        
         static void HandleMapDelete(Player p, string message) {
             if (message.Length > 0) {
                 p.Message("To delete your current map, type &T/{0} map delete", commandShortcut);
@@ -293,6 +298,7 @@ namespace MCGalaxy.Commands.World {
             }
             UseCommand(p, "DeleteLvl", p.level.name);
         }
+        
         static void HandleMapResize(Player p, string message) {
             message = p.level.name + " " + message;
             string[] args = message.SplitSpaces();
@@ -309,6 +315,7 @@ namespace MCGalaxy.Commands.World {
             p.Message("Type &T/{0} map resize {1} {2} {3} confirm &Sif you're sure.",
                       commandShortcut, args[1], args[2], args[3]);
         }
+        
         static void HandleMapPerVisit(Player p, string message) {
             // Older realm maps didn't put you on visit whitelist, so make sure we put the owner here
             AccessController access = p.level.VisitAccess;
@@ -322,6 +329,7 @@ namespace MCGalaxy.Commands.World {
             message = p.level.name + " " + message;
             UseCommand(p, "PerVisit", message);
         }
+        
         static void HandleMapPerBuild(Player p, string message) {
             if (message.Length == 0) {
                 p.Message("See &T/help perbuild &Sfor how to use this command, but don't include [level].");
@@ -330,22 +338,25 @@ namespace MCGalaxy.Commands.World {
             message = p.level.name + " " + message;
             UseCommand(p, "PerBuild", message);
         }
+        
         static void HandleMapTexture(Player p, string message) {
             if (message.Length == 0) { message = "normal"; }
             UseCommand(p, "Texture", "levelzip " + message);
         }
 
         static void HandlePreset(Player p, string preset) {
-            HandleEnv(p, new string[] { "preset", preset });
+            string raw = ("preset " + preset).Trim();
+            HandleEnv(p, raw);
         }
 
         static void HandleSpawn(Player p, string unused) {
             UseCommand(p, "SetSpawn", "");
         }
 
-        static void HandleZone(Player p, string[] args) {
-            string cmd = args[0];
-            string name = args[1];
+        static void HandleZone(Player p, string raw) {
+            string[] args = raw.SplitExact(2);
+            string cmd    = args[0];
+            string name   = args[1];
 
             cmd = cmd.ToUpper();
             if (cmd == "LIST") {
@@ -370,8 +381,10 @@ namespace MCGalaxy.Commands.World {
             }
         }
 
-        static void HandleZones(Player p, string[] args) {
-            if (args[1].Length == 0) {
+        static void HandleZones(Player p, string raw) {
+            string[] args = raw.SplitSpaces(2);
+        	
+            if (args.Length == 1) {
                 p.Message("Arguments required. See &T/Help zone");
             } else {
                 UseCommand(p, "Zone", args[0] + " " + args[1]);
