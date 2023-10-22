@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Scripting
         
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(2);
-            if (IsListCommand(args[0])) {
+            if (IsListAction(args[0])) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 
                 p.Message("Loaded plugins:");

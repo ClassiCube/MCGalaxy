@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0 || message.CaselessEq("enter")) {
                 HandleEnter(p, data);
-            } else if (IsListCommand(message)) {
+            } else if (IsListAction(message)) {
                 HandleView(p, data);
             } else if (message.CaselessEq("leave")) {
                 HandleLeave(p);

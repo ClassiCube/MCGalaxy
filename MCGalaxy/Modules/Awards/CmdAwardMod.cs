@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Awards
             string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
 
-            if (IsCreateCommand(args[0])) {
+            if (IsCreateAction(args[0])) {
                 args = args[1].Split(awardArgs, 2);
                 if (args.Length == 1) { 
                     p.Message("&WUse a : to separate the award name from its description."); 
@@ -46,7 +46,7 @@ namespace MCGalaxy.Modules.Awards
                     Chat.MessageGlobal("Award added: &6{0} : {1}", award, desc);
                     AwardsList.Save();
                 }
-            } else if (IsDeleteCommand(args[0])) {
+            } else if (IsDeleteAction(args[0])) {
                 if (!AwardsList.Remove(args[1])) {
                     p.Message("This award does not exist."); return;
                 } else {

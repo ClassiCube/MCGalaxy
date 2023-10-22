@@ -56,7 +56,7 @@ namespace MCGalaxy.Commands.Building
                 if (!Formatter.ValidFilename(p, parts[1])) return;
                 
                 LoadCopy(p, parts[1]);
-            } else if (IsDeleteCommand(opt)) {
+            } else if (IsDeleteAction(opt)) {
                 if (parts.Length != 2) { Help(p); return; }
                 if (!Formatter.ValidFilename(p, parts[1])) return;
                 
@@ -64,7 +64,7 @@ namespace MCGalaxy.Commands.Building
                 if (path == null) { p.Message("No such copy exists."); return; }
                 File.Delete(path);
                 p.Message("Deleted copy " + parts[1]);
-            } else if (IsListCommand(opt)) {
+            } else if (IsListAction(opt)) {
                 string dir = "extra/savecopy/" + p.name;
                 if (!Directory.Exists(dir)) {
                     p.Message("You have no saved copies"); return;

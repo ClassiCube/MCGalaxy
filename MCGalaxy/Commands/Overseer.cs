@@ -363,7 +363,7 @@ namespace MCGalaxy.Commands.World {
                 UseCommand(p, "ZoneList", "");
             } else if (cmd == "ADD") {
                 UseCommand(p, "PerBuild", "+" + name);
-            } else if (Command.IsDeleteCommand(cmd)) {
+            } else if (Command.IsDeleteAction(cmd)) {
                 UseCommand(p, "PerBuild", "-" + name);
             } else if (cmd == "BLOCK") {
                 UseCommand(p, "PerVisit", "-" + name);

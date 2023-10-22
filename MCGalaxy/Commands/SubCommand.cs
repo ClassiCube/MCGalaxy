@@ -114,7 +114,7 @@ namespace MCGalaxy.Commands {
         }
 
         public UsageResult Use(Player p, string message, bool alertNoneFound = true) {
-            string[] args = message.SplitSpaces(2);
+            string[] args = message.SplitExact(2);
             string cmd    = args[0];
 
             foreach (SubCommand subCmd in subCommands) 
@@ -122,8 +122,7 @@ namespace MCGalaxy.Commands {
                 if (!subCmd.Match(cmd)) { continue; }
                 if (!subCmd.Allowed(p, parentCommandName)) { return UsageResult.Disallowed; }
 
-                string value = args.Length > 1 ? args[1] : "";
-                subCmd.behavior(p, value);
+                subCmd.behavior(p, args[1]);
                 return UsageResult.Success;
             }
             

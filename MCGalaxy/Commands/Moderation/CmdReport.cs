@@ -41,13 +41,13 @@ namespace MCGalaxy.Commands.Moderation {
                 Directory.CreateDirectory("extra/reported");
 
             string cmd = args[0];
-            if (IsListCommand(cmd)) {
+            if (IsListAction(cmd)) {
                 HandleList(p, args, data);
             } else if (cmd.CaselessEq("clear")) {
                 HandleClear(p, args, data);
-            } else if (IsDeleteCommand(cmd)) {
+            } else if (IsDeleteAction(cmd)) {
                 HandleDelete(p, args, data);
-            } else if (IsInfoCommand(cmd)) {
+            } else if (IsInfoAction(cmd)) {
                 HandleCheck(p, args, data);
             } else {
                 HandleAdd(p, args);

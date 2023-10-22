@@ -109,7 +109,7 @@ namespace MCGalaxy.Eco
                 if (!CommandParser.GetInt(p, args[3], "Price", ref cost, 0)) return;
                 p.Message("&aSet price of rank {0} &ato &f{1} &3{2}", grp.ColoredName, cost, Server.Config.Currency);
                 GetOrAdd(grp.Permission).Price = cost;
-            } else if (Command.IsDeleteCommand(args[1])) {
+            } else if (Command.IsDeleteAction(args[1])) {
                 Group grp = Matcher.FindRanks(p, args[2]);
                 if (grp == null) return;
                 if (p.Rank < grp.Permission) { p.Message("&WCannot remove a rank higher than yours."); return; }

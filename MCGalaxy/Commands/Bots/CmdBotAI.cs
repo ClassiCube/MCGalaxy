@@ -33,7 +33,7 @@ namespace MCGalaxy.Commands.Bots
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces();
             string cmd = args[0];
-            if (IsListCommand(cmd)) {
+            if (IsListAction(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 HandleList(p, modifier);
                 return;
@@ -45,11 +45,11 @@ namespace MCGalaxy.Commands.Bots
             if (!Formatter.ValidFilename(p, ai)) return;
             if (ai == "hunt" || ai == "kill") { p.Message("Reserved for special AI."); return; }
 
-            if (IsCreateCommand(cmd)) {
+            if (IsCreateAction(cmd)) {
                 HandleAdd(p, ai, args);
-            } else if (IsDeleteCommand(cmd)) {
+            } else if (IsDeleteAction(cmd)) {
                 HandleDelete(p, ai, args);
-            } else if (IsInfoCommand(cmd)) {
+            } else if (IsInfoAction(cmd)) {
                 HandleInfo(p, ai);
             } else {
                 Help(p);

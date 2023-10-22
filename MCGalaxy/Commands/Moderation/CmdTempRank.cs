@@ -32,11 +32,11 @@ namespace MCGalaxy.Commands.Moderation {
             
             if (args.Length >= 3) {
                 Assign(p, args, data);
-            } else if (IsListCommand(cmd)) {
+            } else if (IsListAction(cmd)) {
                 List(p);
-            } else if (IsDeleteCommand(cmd) && args.Length > 1) {
+            } else if (IsDeleteAction(cmd) && args.Length > 1) {
                 Delete(p, args[1], data);
-            } else if (IsInfoCommand(cmd) && args.Length > 1) {
+            } else if (IsInfoAction(cmd) && args.Length > 1) {
                 Info(p, args[1]);
             } else {
                 Help(p);

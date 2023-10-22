@@ -53,7 +53,7 @@ namespace MCGalaxy.Commands.Chatting
                 Toggle(p, ref p.Ignores.DrawOutput, "{0} ignoring draw command output"); return;
             } else if (action == "worldchanges") {
                 Toggle(p, ref p.Ignores.WorldChanges, "{0} ignoring world changes"); return;
-            } else if (IsListCommand(action)) {
+            } else if (IsListAction(action)) {
                 p.Ignores.Output(p); return;
             }
             

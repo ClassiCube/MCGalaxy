@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.World {
             
             BlockProps[] scope = GetScope(p, data, args[0]);
             if (scope == null) return;           
-            if (IsListCommand(args[1]) && (args.Length == 2 || IsListModifier(args[2]))) {
+            if (IsListAction(args[1]) && (args.Length == 2 || IsListModifier(args[2]))) {
                 ListProps(p, scope, args); return;
             }
             
@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.World {
             
             if (opt.CaselessEq("copy")) {
                 CopyProps(p, scope, block, args);
-            } else if (opt.CaselessEq("reset") || IsDeleteCommand(opt)) {
+            } else if (opt.CaselessEq("reset") || IsDeleteAction(opt)) {
                 ResetProps(p, scope, block);
             } else {
                 SetProps(p, scope, block, args);

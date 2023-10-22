@@ -84,25 +84,25 @@ namespace MCGalaxy
             return str.CaselessEq("all") || int.TryParse(str, out ignored);
         }      
         
-        protected internal static bool IsCreateCommand(string str) {
+        public static bool IsCreateAction(string str) {
             return str.CaselessEq("create") || str.CaselessEq("add") || str.CaselessEq("new");
         } 
         
-        protected internal static bool IsDeleteCommand(string str) {
+        public static bool IsDeleteAction(string str) {
             return str.CaselessEq("del") || str.CaselessEq("delete") || str.CaselessEq("remove");
         }
         
-        protected internal static bool IsEditCommand(string str) {
+        public static bool IsEditAction(string str) {
             return str.CaselessEq("edit") || str.CaselessEq("change") || str.CaselessEq("modify")
                 || str.CaselessEq("move") || str.CaselessEq("update");
         }  
 
-        protected internal static bool IsInfoCommand(string str) {
+        public static bool IsInfoAction(string str) {
             return str.CaselessEq("about") || str.CaselessEq("info") || str.CaselessEq("status")
                 || str.CaselessEq("check");
         }
         
-        protected internal static bool IsListCommand(string str) {
+        public static bool IsListAction(string str) {
             return str.CaselessEq("list") || str.CaselessEq("view");
         }
     }

@@ -115,11 +115,11 @@ namespace MCGalaxy.Eco
             LevelPreset preset = FindPreset(args[2]);
             string cmd = args[1];
             
-            if (Command.IsCreateCommand(cmd)) {
+            if (Command.IsCreateAction(cmd)) {
                 AddPreset(p, args, preset);
-            } else if (Command.IsDeleteCommand(cmd)) {
+            } else if (Command.IsDeleteAction(cmd)) {
                 RemovePreset(p, args, preset);
-            } else if (Command.IsEditCommand(cmd)) {
+            } else if (Command.IsEditAction(cmd)) {
                 EditPreset(p, args, preset);
             } else {
                 OnSetupHelp(p);

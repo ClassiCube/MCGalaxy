@@ -29,7 +29,7 @@ namespace MCGalaxy.Commands.Fun {
             RoundsGame game = Game;
             if (message.CaselessEq("go")) {
                 HandleGo(p, game); return;
-            } else if (IsInfoCommand(message)) {
+            } else if (IsInfoAction(message)) {
                 HandleStatus(p, game); return;
             }
             if (!CheckExtraPerm(p, data, 1)) return;
@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Fun {
                 HandleStop(p, game);
             } else if (message.CaselessEq("add")) {
                 RoundsGameConfig.AddMap(p, p.level.name, p.level.Config, game);
-            } else if (IsDeleteCommand(message)) {
+            } else if (IsDeleteAction(message)) {
                 RoundsGameConfig.RemoveMap(p, p.level.name, p.level.Config, game);
             } else if (message.CaselessStarts("set ") || message.CaselessStarts("setup ")) {
                 HandleSet(p, game, message.SplitSpaces());

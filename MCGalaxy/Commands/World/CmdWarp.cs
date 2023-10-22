@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.World {
             if (cmd.Length == 0) { Help(p); return; }
             bool checkExtraPerms = warps == WarpList.Global;
             
-            if (IsListCommand(cmd)) {
+            if (IsListAction(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 Paginator.Output(p, warps.Items, PrintWarp, 
                                  group + " list", group + "s", modifier);
@@ -58,20 +58,20 @@ namespace MCGalaxy.Commands.World {
             }
             
             string name = args[1];
-            if (IsCreateCommand(cmd)) {
+            if (IsCreateAction(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
                 if (warps.Exists(name)) { p.Message("{0} already exists", group); return; }
 
                 warps.Create(name, p);
                 p.Message("{0} {1} created.", group, name);
-            } else if (IsDeleteCommand(cmd)) {
+            } else if (IsDeleteAction(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;
                 
                 warps.Remove(warp, p);
                 p.Message("{0} {1} deleted.", group, warp.Name);
-            } else if (IsEditCommand(cmd)) {
+            } else if (IsEditAction(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
                 Warp warp = Matcher.FindWarps(p, warps, name);
                 if (warp == null) return;

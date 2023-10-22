@@ -43,10 +43,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (cmd.CaselessEq("add")) {
                 if (args.Length < 2) { Help(p); return; }
                 Add(p, args[1]);
-            } else if (IsDeleteCommand(cmd)) {
+            } else if (IsDeleteAction(cmd)) {
                 if (args.Length < 2) { Help(p); return; }
                 Remove(p, args[1]);
-            } else if (IsListCommand(cmd)) {
+            } else if (IsListAction(cmd)) {
                 string modifier = args.Length > 1 ? args[1] : "";
                 List(p, modifier);
             } else if (args.Length == 1) {

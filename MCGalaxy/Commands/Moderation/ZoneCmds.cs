@@ -40,10 +40,10 @@ namespace MCGalaxy.Commands.Moderation {
             if (message.Length == 0) { Help(p); return; }
             string opt = args[0];
             
-            if (IsCreateCommand(opt)) {
+            if (IsCreateAction(opt)) {
                 if (args.Length == 1) { Help(p); return; }
                 CreateZone(p, args, data, 1);
-            } else if (IsDeleteCommand(opt)) {
+            } else if (IsDeleteAction(opt)) {
                 if (args.Length == 1) { Help(p); return; }
                 DeleteZone(p, args, data);
             } else if (opt.CaselessEq("perbuild") || opt.CaselessEq("set")) {
