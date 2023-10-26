@@ -64,10 +64,10 @@ namespace MCGalaxy.Bots
         };
     }
     
-    /// <summary> Causes the bot to gradually move to to a position. </summary>
-    public sealed class WalkInstruction : TeleportInstruction 
+    /// <summary> Causes the bot to gradually move towards a position. </summary>
+    public class MoveInstruction : TeleportInstruction 
     {
-        public WalkInstruction() { Name = "walk"; }
+        public MoveInstruction() { Name = "move"; }
 
         public override bool Execute(PlayerBot bot, InstructionData data) {
             Coords target = (Coords)data.Metadata;
@@ -80,8 +80,27 @@ namespace MCGalaxy.Bots
                 bot.NextInstruction(); return false;
             }
             
-            bot.FaceTowards(bot.Pos, bot.TargetPos);
+            StartMoving(bot);
             return true;
+        }
+        
+        protected virtual void StartMoving(PlayerBot bot) { }
+        
+        public override string[] Help { get { return help; } }
+        static string[] help = new string[] {
+            "&T/BotAI add [name] walk",
+            "&HCauses the bot to move towards to a position.",
+            "&H  Note: The position saved to the AI is your current position.",
+        };
+    }
+    
+    /// <summary> Causes the bot to gradually walk towards to a position. </summary>
+    public sealed class WalkInstruction : MoveInstruction 
+    {
+        public WalkInstruction() { Name = "walk"; }
+        
+        protected override void StartMoving(PlayerBot bot) {
+            bot.FaceTowards(bot.Pos, bot.TargetPos);
         }
         
         public override string[] Help { get { return help; } }

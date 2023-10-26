@@ -49,13 +49,15 @@ namespace MCGalaxy.Bots
         public static List<BotInstruction> Instructions = new List<BotInstruction>() {
             new NodInstruction(), new SpinInstruction(), 
             new HuntInstruction(), new KillInstruction(), new StareInstruction(),
-            new TeleportInstruction(), new WalkInstruction(), new JumpInstruction(), new SpeedInstruction(),            
+            new TeleportInstruction(), new WalkInstruction(), new MoveInstruction(), 
+            new JumpInstruction(), new SpeedInstruction(),
             new RemoveInstruction(), new ResetInstruction(), new LinkScriptInstruction(), new WaitInstruction(),
         };
         
         /// <summary> Finds the instruction which has the given identifying name. </summary>
         public static BotInstruction Find(string name) {
-            foreach (BotInstruction ins in Instructions) {
+            foreach (BotInstruction ins in Instructions) 
+            {
                 if (ins.Name.CaselessEq(name)) return ins;
             }
             return null;
