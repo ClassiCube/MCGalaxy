@@ -159,9 +159,9 @@ namespace MCGalaxy.Bots
         
         static void FaceTowards(PlayerBot bot, Player p) {
             Position srcPos = bot.Pos;
-            srcPos.Y += ModelInfo.CalcEyeHeight(p);            
+            srcPos.Y += ModelInfo.CalcEyeHeight(bot);
             Position dstPos = p.Pos;
-            dstPos.Y += ModelInfo.CalcEyeHeight(bot);
+            dstPos.Y += ModelInfo.CalcEyeHeight(p);
             
             bot.FaceTowards(srcPos, dstPos);
         }

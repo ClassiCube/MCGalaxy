@@ -106,8 +106,8 @@ namespace MCGalaxy.Gui
                 Cursor c = Cursors.SizeNWSE;
             } catch (ArgumentException ex) {
                 Logger.LogError("checking Cursors", ex);
-                Popup.Warning("Video driver appears to be returning buggy cursor sizes\n\nAttempting to workaround this issue (might not work)");
                 try { BypassCursorsHACK(); } catch { }
+                Popup.Warning("Video driver appears to be returning buggy cursor sizes\n\nAttempted to workaround this issue (might not work)");
             } catch (Exception ex) {
                 Logger.LogError("checking Cursors", ex);
             } 
