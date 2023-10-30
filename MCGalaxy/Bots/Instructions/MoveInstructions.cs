@@ -88,7 +88,7 @@ namespace MCGalaxy.Bots
         
         public override string[] Help { get { return help; } }
         static string[] help = new string[] {
-            "&T/BotAI add [name] walk",
+            "&T/BotAI add [name] move",
             "&HCauses the bot to move towards to a position.",
             "&H  Note: The position saved to the AI is your current position.",
         };

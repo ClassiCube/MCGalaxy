@@ -596,6 +596,7 @@
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordApiClient.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
+    <Compile Include="Modules\Relay\Discord\DiscordMessages.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordWebsocket.cs" />
     <Compile Include="Modules\Relay\IRC\IRCNickList.cs" />
