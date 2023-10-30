@@ -162,7 +162,8 @@ namespace MCGalaxy
             
             SrvProperties.Load();
             if (commands) Command.InitAll();
-            AuthService.ReloadDefault();
+            AuthService.UpdateList();
+            Heartbeat.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();
             Block.SetBlocks();

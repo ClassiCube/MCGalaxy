@@ -18,108 +18,78 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using MCGalaxy.Network;
 
 namespace MCGalaxy.Authentication
 {
-    public sealed class AuthServiceConfig
+    public class AuthService
     {
+        public static List<AuthService> Services = new List<AuthService>();
+        
         public string URL;
+        public string Salt;
         public string NameSuffix = "";
         public string SkinPrefix = "";
         public bool MojangAuth;
-    }
-    
-    public class AuthService
-    {
-        /// <summary> List of all authentication services </summary>
-        public static List<AuthService> Services = new List<AuthService>();        
-        
-        public Heartbeat Beat;
-        public AuthServiceConfig Config;
         
         public virtual void AcceptPlayer(Player p) {
-            AuthServiceConfig cfg = Config;
-            
-            p.VerifiedVia  = Config.URL;
+            p.VerifiedVia  = URL;
             p.verifiedName = true;
-            p.SkinName     = cfg.SkinPrefix + p.SkinName;
+            p.SkinName     = SkinPrefix + p.SkinName;
             
-            p.name        += cfg.NameSuffix;
-            p.truename    += cfg.NameSuffix;
-            p.DisplayName += cfg.NameSuffix;
+            string suffix  = NameSuffix;
+            p.name        += suffix;
+            p.truename    += suffix;
+            p.DisplayName += suffix;
         }
+       
         
-        
-        static string lastUrls;
-        /// <summary> Reloads list of authentication services from server config </summary>
-        public static void ReloadDefault() {
-            string urls = Server.Config.HeartbeatURL;
-            
-            // don't reload services unless absolutely have to
-            if (urls != lastUrls) {
-                lastUrls = urls;
-                ReloadServices();
-            }
-            
-            LoadConfig();
-            foreach (AuthService service in Services)
-            {
-                service.Config = GetOrCreateConfig(service.Beat.URL);
-            }
-        }
-        
-        static void ReloadServices() {
-            // TODO only reload default auth services, don't clear all
-            foreach (AuthService service in Services) 
-            {
-                Heartbeat.Heartbeats.Remove(service.Beat);
-            }
-            Services.Clear();
-            
-            foreach (string url in lastUrls.SplitComma())
-            {
-                Heartbeat   beat = new ClassiCubeBeat() { URL  = url  };
-                AuthService auth = new AuthService()    { Beat = beat };
-                
-                Services.Add(auth);
-                Heartbeat.Register(beat);
-            }
-        }
-        
-        
-        static List<AuthServiceConfig> configs = new List<AuthServiceConfig>();
-        static AuthServiceConfig GetOrCreateConfig(string url)
+        public static AuthService GetOrCreate(string url, bool canSave = true)
         {
-            foreach (AuthServiceConfig c in configs)
+            foreach (AuthService s in Services)
             {
-                if (c.URL.CaselessEq(url)) return c;
+                if (s.URL.CaselessEq(url)) return s;
             }
             
-            AuthServiceConfig cfg = new AuthServiceConfig() { URL = url };
-            configs.Add(cfg);
+            AuthService service = new AuthService();
+            service.URL  = url;
+            service.Salt = Server.GenerateSalt();
+            Services.Add(service);
             
+            // TODO: Maybe seperate method instead
+            if (!canSave) return service;
             try {
-                SaveConfig();
+                SaveServices();
             } catch (Exception ex) {
                 Logger.LogError("Error saving authservices.properties", ex);
             }
-            return cfg;
+            return service;
         }
+ 
         
-        static void LoadConfig() {
-            configs.Clear();
+        static string lastUrls;
+        /// <summary> Reloads list of authentication services from server config </summary>
+        public static void UpdateList() {
+            string urls = Server.Config.HeartbeatURL;
+            LoadServices();
             
-            AuthServiceConfig cur = null;
+            if (urls == lastUrls) return;
+            lastUrls = urls;
+                
+            // only update services with defaults when absolutely have to
+            foreach (string url in urls.SplitComma())
+            {
+                GetOrCreate(url);
+            }
+        }  
+        
+        static void LoadServices() {
+            AuthService cur = null;
             PropertiesFile.Read(Paths.AuthServicesFile, ref cur, ParseProperty, '=', true);
-            if (cur != null) configs.Add(cur);
         }
         
-        static void ParseProperty(string key, string value, ref AuthServiceConfig cur) {
+        static void ParseProperty(string key, string value, ref AuthService cur) {
             if (key.CaselessEq("URL")) {
-                if (cur != null) configs.Add(cur);
-
-                cur = new AuthServiceConfig() { URL = value };
+                cur = GetOrCreate(value, false);
             } else if (key.CaselessEq("name-suffix")) {
                 if (cur == null) return;
                 cur.NameSuffix = value;
@@ -132,7 +102,7 @@ namespace MCGalaxy.Authentication
             }
         }
         
-        static void SaveConfig() {
+        static void SaveServices() {
             using (StreamWriter w = new StreamWriter(Paths.AuthServicesFile)) {
                 w.WriteLine("# Authentication services configuration");
                 w.WriteLine("#   There is no reason to modify these configuration settings, unless the server has been configured");
@@ -141,7 +111,7 @@ namespace MCGalaxy.Authentication
                 w.WriteLine();
                 w.WriteLine("#URL = string");
                 w.WriteLine("#   URL of the authentication service the following settings apply to");
-                w.WriteLine("#   (this must be the same as one of the heartbeat URLs specified in server.properties)");
+                w.WriteLine("#   (this should be the same as one of the heartbeat URLs specified in server.properties)");
                 w.WriteLine("#name-suffix = string");
                 w.WriteLine("#   Characters that are appended to usernames of players that login through the authentication service");
                 w.WriteLine("#   (used to prevent username collisions between authentication services that would otherwise occur)");
@@ -153,12 +123,12 @@ namespace MCGalaxy.Authentication
                 w.WriteLine("#   NOTE: This should only be used for the Betacraft.uk authentication service");
                 w.WriteLine();
                 
-                foreach (AuthServiceConfig c in configs) 
+                foreach (AuthService service in Services)
                 {
-                    w.WriteLine("URL = " + c.URL);
-                    w.WriteLine("name-suffix = " + c.NameSuffix);
-                    w.WriteLine("skin-prefix = " + c.SkinPrefix);
-                    w.WriteLine("mojang-auth = " + c.MojangAuth);
+                    w.WriteLine("URL = " + service.URL);
+                    w.WriteLine("name-suffix = " + service.NameSuffix);
+                    w.WriteLine("skin-prefix = " + service.SkinPrefix);
+                    w.WriteLine("mojang-auth = " + service.MojangAuth);
                     w.WriteLine();
                 }
             }

@@ -59,7 +59,7 @@ namespace MCGalaxy.Authentication
         }
         
         static bool Authenticate(AuthService auth, Player p, string mppass) {
-            string calc = Server.CalcMppass(p.truename, auth.Beat.Salt);
+            string calc = Server.CalcMppass(p.truename, auth.Salt);
             if (!mppass.CaselessEq(calc)) return false;
 
             auth.AcceptPlayer(p);
@@ -74,7 +74,7 @@ namespace MCGalaxy.Authentication
         public override bool Verify(Player p, string mppass) {
             foreach (AuthService auth in AuthService.Services)
             {
-                if (!auth.Config.MojangAuth) continue;
+                if (!auth.MojangAuth) continue;
                 if (Authenticate(auth, p)) return true;
             }
             return false;

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
+using MCGalaxy.Authentication;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Network 
@@ -93,7 +94,6 @@ namespace MCGalaxy.Network
         
         /// <summary> Adds the given heartbeat to the list of automatically pumped heartbeats </summary>
         public static void Register(Heartbeat beat) {
-            beat.Salt = Server.GenerateSalt();
             Heartbeats.Add(beat);
         }
         
@@ -111,6 +111,27 @@ namespace MCGalaxy.Network
             if (!Server.Listener.Listening) return;
             
             foreach (Heartbeat beat in Heartbeats) { beat.Pump(); }
+        }
+        
+        
+        static string lastUrls;
+        public static void ReloadDefault() {
+            string urls = Server.Config.HeartbeatURL;
+            // don't reload heartbeats unless absolutely have to
+            if (urls == lastUrls) return;
+            
+            lastUrls = urls;
+            // TODO only reload default heartbeats, don't clear all
+            Heartbeats.Clear();
+            
+            foreach (string url in urls.SplitComma())
+            {
+                AuthService service = AuthService.GetOrCreate(url);
+                
+                Heartbeat beat = new ClassiCubeBeat() { URL = url };
+                beat.Salt = service.Salt; // TODO: Just reference Service instead of copying salt?
+                Register(beat);
+            }
         }
     }
 }
