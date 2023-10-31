@@ -133,7 +133,7 @@ namespace MCGalaxy.Bots
         public StareInstruction() { Name = "stare"; }
         
         public override bool Execute(PlayerBot bot, InstructionData data) {
-            int search = 20000;
+            int search = 1000;
             if (data.Metadata != null) search = (ushort)data.Metadata;
             Player closest = HuntInstruction.ClosestPlayer(bot, search);
             
@@ -170,7 +170,7 @@ namespace MCGalaxy.Bots
         static string[] help = new string[] { 
             "&T/BotAI add [name] stare <radius>",
             "&HCauses the bot to stare at the closest player in the search radius.",
-            "&H  <radius> defaults to 20000 blocks.",
+            "&H  <radius> defaults to 1000 blocks.",
         };
     }
 }

@@ -66,25 +66,15 @@ namespace MCGalaxy.Authentication
         }
  
         
-        static string lastUrls;
-        /// <summary> Reloads list of authentication services from server config </summary>
-        public static void UpdateList() {
-            string urls = Server.Config.HeartbeatURL;
-            LoadServices();
-            
-            if (urls == lastUrls) return;
-            lastUrls = urls;
-                
-            // only update services with defaults when absolutely have to
-            foreach (string url in urls.SplitComma())
-            {
-                GetOrCreate(url);
-            }
-        }  
-        
-        static void LoadServices() {
+        /// <summary> Updates list of authentication services from authservices.properties </summary>
+        internal static void UpdateList() {
             AuthService cur = null;
             PropertiesFile.Read(Paths.AuthServicesFile, ref cur, ParseProperty, '=', true);
+           
+            // NOTE: Heartbeat.ReloadDefault will call GetOrCreate for all of the 
+            //  URLs specified in the HeartbeatURL server configuration property
+            // Therefore it is unnecessary to create default AuthServices here
+            //  (e.g. for when authservices.properties is empty or is missing a URL)
         }
         
         static void ParseProperty(string key, string value, ref AuthService cur) {

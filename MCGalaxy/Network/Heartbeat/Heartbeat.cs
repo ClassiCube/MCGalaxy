@@ -115,7 +115,7 @@ namespace MCGalaxy.Network
         
         
         static string lastUrls;
-        public static void ReloadDefault() {
+        internal static void ReloadDefault() {
             string urls = Server.Config.HeartbeatURL;
             // don't reload heartbeats unless absolutely have to
             if (urls == lastUrls) return;
