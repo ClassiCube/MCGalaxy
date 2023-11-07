@@ -76,7 +76,7 @@ namespace MCGalaxy {
         public string prefix = "";
         public string title = "";
         public string titlecolor = "";
-        public int passtries = 0;
+        public int passtries;
         public bool hasreadrules;
         public DateTime NextReviewTime, NextEat, NextTeamInvite;
         public float ReachDistance = 5;
@@ -84,7 +84,7 @@ namespace MCGalaxy {
               
         public string SuperName;
         /// <summary> Whether this player is a 'Super' player (Console, IRC, etc) </summary>
-        public bool IsSuper;
+        public readonly bool IsSuper;
         /// <summary> Whether this player is the console player instance. </summary>
         public bool IsConsole { get { return this == Player.Console; } }
         
@@ -204,7 +204,7 @@ namespace MCGalaxy {
 
         public Level level;
         public bool Loading = true; //True if player is loading a map.
-        internal int UsingGoto = 0, GeneratingMap = 0, LoadingMuseum = 0;
+        internal int UsingGoto, GeneratingMap, LoadingMuseum;
         public Vec3U16 lastClick = Vec3U16.Zero;
         
         public Position PreTeleportPos;
