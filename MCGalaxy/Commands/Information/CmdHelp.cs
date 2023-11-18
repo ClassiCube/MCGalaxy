@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.Blocks;
 using MCGalaxy.Commands.CPE;
+using MCGalaxy.Events.PlayerEvents;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info 
@@ -31,6 +32,10 @@ namespace MCGalaxy.Commands.Info
         }
 
         public override void Use(Player p, string message, CommandData data) {
+            bool cancel = false;
+            OnPlayerHelpEvent.Call(p, message, ref cancel);
+            if (cancel) return;
+            
             if (message.Length == 0) {
                 PrintHelpMenu(p);
             } else if (message.CaselessEq("ranks")) {

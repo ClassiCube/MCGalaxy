@@ -72,6 +72,21 @@ namespace MCGalaxy.Events.PlayerEvents
         }
     }
     
+    public delegate void OnPlayerHelp(Player p, string target, ref bool cancel);
+    /// <summary> Called whenever a player attempts to display help for something via /help </summary>
+    /// <remarks> You can cancel this event to prevent the default /help behaviour. </remarks>
+    public sealed class OnPlayerHelpEvent : IEvent<OnPlayerHelp> 
+    {      
+        public static void Call(Player p, string target, ref bool cancel) {
+            IEvent<OnPlayerHelp>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try { items[i].method(p, target, ref cancel); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+    
     public delegate void OnPlayerConnect(Player p);
     /// <summary> Called whenever a player connects to the server </summary>
     public sealed class OnPlayerConnectEvent: IEvent<OnPlayerConnect> 

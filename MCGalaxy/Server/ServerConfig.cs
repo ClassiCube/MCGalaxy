@@ -62,6 +62,8 @@ namespace MCGalaxy
         public bool verifyadmins = true;
         [ConfigPerm("verify-admin-perm", "Security", LevelPermission.Operator)]
         public LevelPermission VerifyAdminsRank = LevelPermission.Operator;
+        [ConfigPerm("reset-password-perm", "Security", LevelPermission.Operator)]
+        public LevelPermission ResetPasswordRank = LevelPermission.Owner;
         
         [ConfigBool("support-web-client", "Webclient", true)]
         public bool WebClient = true;

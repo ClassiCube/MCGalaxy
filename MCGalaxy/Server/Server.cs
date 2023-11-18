@@ -90,6 +90,7 @@ namespace MCGalaxy
             Logger.Log(LogType.SystemActivity, "Starting Server");
             ServicePointManager.Expect100Continue = false;
             ForceEnableTLS();
+            ExtraAuthenticator.SetActive(new DefaultPassAuthenticator());
 
             SQLiteBackend.Instance.LoadDependencies();
 #if !MCG_STANDALONE

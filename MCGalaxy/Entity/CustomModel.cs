@@ -46,11 +46,7 @@ namespace MCGalaxy {
         /* rotation origin point */
         public Vec3F32 rotationOrigin;
 
-        public Vec3F32 rotation = new Vec3F32 {
-            X = 0.0f,
-            Y = 0.0f,
-            Z = 0.0f,
-        };
+        public Vec3F32 rotation;
         public CustomModelAnim[] anims;
         public bool fullbright = false;
         public bool firstPersonArm = false;

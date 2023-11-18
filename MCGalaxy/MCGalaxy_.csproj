@@ -261,7 +261,6 @@
     <Compile Include="Commands\Moderation\CmdMute.cs" />
     <Compile Include="Commands\Moderation\CmdOhide.cs" />
     <Compile Include="Commands\Moderation\CmdP2P.cs" />
-    <Compile Include="Commands\Moderation\CmdPass.cs" />
     <Compile Include="Commands\Moderation\CmdPatrol.cs" />
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
     <Compile Include="Commands\Moderation\CmdReport.cs" />
