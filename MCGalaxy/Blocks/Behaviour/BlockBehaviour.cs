@@ -51,23 +51,31 @@ namespace MCGalaxy.Blocks {
             return null;
         }
         
+        // NOTE: These static declarations are just to save a few memory allocations
+        //  Behind the scenes, 'return XYZ;' is actually compiled into 'return new HandleDelete(XYZ);'
+        //  So by declaring a static variable, 'new HandleDelete(XYZ)' is only ever called once
+        //   instead of over and over - thereby slightly reducing memory usage
+        static HandleDelete DB_revert = DeleteBehaviour.RevertDoor;
+        static HandleDelete DB_oDoor  = DeleteBehaviour.oDoor;
+        static HandleDelete DB_Door   = DeleteBehaviour.Door;
+        
         /// <summary> Retrieves the default delete block handler for the given block. </summary>
         internal static HandleDelete GetDeleteHandler(BlockID block, BlockProps[] props) {
             switch (block) {
                 case Block.RocketStart:    return DeleteBehaviour.RocketStart;
                 case Block.Fireworks:      return DeleteBehaviour.Firework;
                 case Block.C4Detonator:    return DeleteBehaviour.C4Det;
-                case Block.Door_Log_air:   return DeleteBehaviour.RevertDoor;
-                case Block.Door_TNT_air:   return DeleteBehaviour.RevertDoor;
-                case Block.Door_Green_air: return DeleteBehaviour.RevertDoor;
+                case Block.Door_Log_air:   return DB_revert;
+                case Block.Door_TNT_air:   return DB_revert;
+                case Block.Door_Green_air: return DB_revert;
             }
             
             // NOTE: If this gets changed, make sure to change BlockOptions.cs too
             if (props[block].IsMessageBlock)              return DeleteBehaviour.DoMessageBlock;
             if (props[block].IsPortal)                    return DeleteBehaviour.DoPortal;            
-            if (props[block].IsTDoor)                     return DeleteBehaviour.RevertDoor;
-            if (props[block].oDoorBlock != Block.Invalid) return DeleteBehaviour.oDoor;
-            if (props[block].IsDoor)                      return DeleteBehaviour.Door;
+            if (props[block].IsTDoor)                     return DB_revert;
+            if (props[block].oDoorBlock != Block.Invalid) return DB_oDoor;
+            if (props[block].IsDoor)                      return DB_Door;
             return null;
         }
 
@@ -87,12 +95,17 @@ namespace MCGalaxy.Blocks {
         }
 
         
+        // See comments noted above for reasoning behind static declaration of some HandleDelete handlers
+        static HandlePhysics PH_do_Door  = DoorPhysics.Do;
+        static HandlePhysics PH_do_oDoor = DoorPhysics.oDoor;
+        static HandlePhysics PH_do_Other = OtherPhysics.DoOther;
+        
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
         internal static HandlePhysics GetPhysicsHandler(BlockID block, BlockProps[] props) {
             switch (block) {
-                case Block.Door_Log_air:   return DoorPhysics.Do;
-                case Block.Door_TNT_air:   return DoorPhysics.Do;
-                case Block.Door_Green_air: return DoorPhysics.Do;
+                case Block.Door_Log_air:   return PH_do_Door;
+                case Block.Door_TNT_air:   return PH_do_Door;
+                case Block.Door_Green_air: return PH_do_Door;
                 
                 case Block.SnakeTail: return SnakePhysics.DoTail;
                 case Block.Snake: return SnakePhysics.Do;
@@ -156,25 +169,25 @@ namespace MCGalaxy.Blocks {
 
             HandlePhysics animalAI = AnimalAIHandler(props[block].AnimalAI);
             if (animalAI != null) return animalAI;
-            if (props[block].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
+            if (props[block].oDoorBlock != Block.Invalid) return PH_do_oDoor;
             if (props[block].GrassBlock != Block.Invalid) return OtherPhysics.DoDirtGrow;
             if (props[block].DirtBlock  != Block.Invalid) return OtherPhysics.DoGrassDie;
             
             // TODO: should this be checking WaterKills/LavaKills
             // Adv physics updating anything placed next to water or lava
             if ((block >= Block.Red && block <= Block.RedMushroom) || block == Block.Wood || block == Block.Log || block == Block.Bookshelf) {
-                return OtherPhysics.DoOther;
+                return PH_do_Other;
             }
             return null;
         }
         
         /// <summary> Retrieves the default physics block handler for the given block. </summary>
         internal static HandlePhysics GetPhysicsDoorsHandler(BlockID block, BlockProps[] props) {
-            if (block == Block.Air)            return DoorPhysics.Do;
-            if (block == Block.Door_Log_air)   return DoorPhysics.Do;
-            if (block == Block.Door_TNT_air)   return DoorPhysics.Do;
-            if (block == Block.Door_Green_air) return DoorPhysics.Do;
-            if (props[block].oDoorBlock != Block.Invalid) return DoorPhysics.oDoor;
+            if (block == Block.Air)            return PH_do_Door;
+            if (block == Block.Door_Log_air)   return PH_do_Door;
+            if (block == Block.Door_TNT_air)   return PH_do_Door;
+            if (block == Block.Door_Green_air) return PH_do_Door;
+            if (props[block].oDoorBlock != Block.Invalid) return PH_do_oDoor;
             return null;
         }
         

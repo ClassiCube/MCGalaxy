@@ -134,7 +134,7 @@ namespace MCGalaxy {
 
         public bool staticCommands;
         internal DateTime lastAccessStatus;
-        public VolatileArray<SchedulerTask> CriticalTasks = new VolatileArray<SchedulerTask>();
+        public VolatileArray<SchedulerTask> CriticalTasks;
 
         public bool isFlying;
         public bool aiming;
@@ -174,7 +174,7 @@ namespace MCGalaxy {
         }
         
         // BlockDefinitions
-        internal int gbStep = 0, lbStep = 0;
+        internal int gbStep, lbStep;
         internal BlockDefinition gbBlock, lbBlock;
 
         //Undo
@@ -221,7 +221,7 @@ namespace MCGalaxy {
         internal DateTime cmdUnblocked;
         List<DateTime> partialLog;
 
-        public WarpList Waypoints = new WarpList();
+        public WarpList Waypoints;
         public DateTime LastPatrol;
         public LevelPermission Rank { get { return group.Permission; } }
 

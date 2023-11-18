@@ -27,6 +27,7 @@ using MCGalaxy.Games;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.SQL;
+using MCGalaxy.Tasks;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {
@@ -67,6 +68,9 @@ namespace MCGalaxy {
             Socket  = socket;
             Session = session;
             SetIP(Socket.IP);
+            
+            CriticalTasks = new VolatileArray<SchedulerTask>();
+            Waypoints     = new WarpList();
             
             spamChecker = new SpamChecker(this);
             partialLog  = new List<DateTime>(20);

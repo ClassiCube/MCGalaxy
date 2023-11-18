@@ -65,14 +65,14 @@ namespace MCGalaxy.Authentication
     public abstract class PassAuthenticator : ExtraAuthenticator
     {
         public override void RequiresVerification(Player p, string action) {
-            p.Message("&WYou must first verify with &T/Pass [Password] &Wbefore you can {0}", action);
+            p.Message("&WYou must first verify with &T/Pass [password] &Wbefore you can {0}", action);
         }
         
         public override void NeedVerification(Player p) {
             if (!HasPassword(p.name)) {
-                p.Message("&WPlease set your account verification password with &T/SetPass [password]!");
+                p.Message("&WPlease set your account verification password with &T/SetPass [password]");
             } else {
-                p.Message("&WPlease complete account verification with &T/Pass [password]!");
+                p.Message("&WPlease complete account verification with &T/Pass [password]");
             }
         }
         
@@ -158,7 +158,7 @@ namespace MCGalaxy.Authentication
             if (password.IndexOf(' ') >= 0) { p.Message("Your password must be &Wone &Sword!"); return; }
 
             if (!HasPassword(p.name)) {
-                p.Message("You have not &Wset a password, &Suse &T/SetPass [Password] &Wto set one");
+                p.Message("You have not &Wset a verification password yet, &Suse &T/SetPass [password] &Wto set one");
                 p.Message("Make sure to use a different password than your Minecraft one!");
                 return;
             }
@@ -173,14 +173,16 @@ namespace MCGalaxy.Authentication
         
         void DoSetPassword(Player p, string password) {
             if (p.Unverified && HasPassword(p.name)) {
-                RequiresVerification(p, "can change your password");
+                RequiresVerification(p, "can change your verification password");
                 p.Message("Forgot your password? Contact &W{0} &Sto &Wreset it.", Server.Config.OwnerName);
                 return;
             }
+            if (password.IndexOf(' ') >= 0) { 
+                p.Message("&WPassword must be one word."); return; 
+            }
             
-            if (password.IndexOf(' ') >= 0) { p.Message("&WPassword must be one word."); return; }
             StorePassword(p.name, password);
-            p.Message("Your password was &aset to: &c" + password);
+            p.Message("Your verification password was &aset to: &c" + password);
         }
         
         void DoResetPassword(Player p, string name, CommandData data) {
@@ -188,19 +190,19 @@ namespace MCGalaxy.Authentication
             if (target == null) return;
             
             if (p.Unverified) {
-                RequiresVerification(p, "can reset passwords");
+                RequiresVerification(p, "can reset verification passwords");
                 return;
             }
             if (data.Rank < Server.Config.ResetPasswordRank) {
-                p.Message("Only {0}&S+ can reset passwords",
+                p.Message("Only {0}&S+ can reset verification passwords",
                           Group.GetColoredName(Server.Config.ResetPasswordRank));
                 return;
             }
             
             if (ResetPassword(target)) {
-                p.Message("Reset password for {0}", p.FormatNick(target));
+                p.Message("Reset verification password for {0}", p.FormatNick(target));
             } else {
-                p.Message("{0} &Sdoes not have a password.", p.FormatNick(target));
+                p.Message("{0} &Sdoes not have a verification password.", p.FormatNick(target));
             }
         }
         

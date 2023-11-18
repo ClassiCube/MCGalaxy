@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Misc {
         public override string name { get { return "Ride"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool museumUsable { get { return false; } }
+        public override bool SuperUseable { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
             p.onTrain = !p.onTrain;

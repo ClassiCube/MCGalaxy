@@ -15,15 +15,6 @@ using SQLiteErrorCode = System.Int32;
 
 namespace MCGalaxy.SQL 
 {
-    enum SqlType
-    {
-        Single, Double, Decimal,
-        SByte, Int16, Int32, Int64,
-        Byte, UInt16, UInt32, UInt64,
-        Boolean, DateTime,
-        Binary, String, Object,
-    }
-
     [SuppressUnmanagedCodeSecurity]
     static class Interop 
     {
@@ -410,38 +401,6 @@ namespace MCGalaxy.SQL
                 Thread.Sleep((int)(seed % 150) + 1);
             }
         }
-        
-
-        internal static SqlType TypeToDbType(Type typ) {
-            TypeCode tc = Type.GetTypeCode(typ);
-            if (tc == TypeCode.Object) {
-                if (typ == typeof(byte[])) return SqlType.Binary;
-                return SqlType.String;
-            }
-            return type_to_dbtype[(int)tc];
-        }
-
-        static SqlType[] type_to_dbtype = {
-            SqlType.Object,   // Empty (0)
-            SqlType.Binary,   // Object (1)
-            SqlType.Object,   // DBNull (2)
-            SqlType.Boolean,  // Boolean (3)
-            SqlType.SByte,    // Char (4)
-            SqlType.SByte,    // SByte (5)
-            SqlType.Byte,     // Byte (6)
-            SqlType.Int16,    // Int16 (7)
-            SqlType.UInt16,   // UInt16 (8)
-            SqlType.Int32,    // Int32 (9)
-            SqlType.UInt32,   // UInt32 (10)
-            SqlType.Int64,    // Int64 (11)
-            SqlType.UInt64,   // UInt64 (12)
-            SqlType.Single,   // Single (13)
-            SqlType.Double,   // Double (14)
-            SqlType.Decimal,  // Decimal (15)
-            SqlType.DateTime, // DateTime (16)
-            SqlType.Object,   // ?? (17)
-            SqlType.String    // String (18)
-        };
     }
 
     enum TypeAffinity 
@@ -766,41 +725,47 @@ namespace MCGalaxy.SQL
             }
             return -1;
         }
-
+        
         SQLiteErrorCode BindParameter(int i, object obj) {
             if (obj == null || obj == DBNull.Value) {
                 return Interop.sqlite3_bind_null(handle, i);
             }
 
-            SqlType type = SQLiteConvert.TypeToDbType(obj.GetType());
-            switch (type) {
-                case SqlType.DateTime:
-                    return Bind_DateTime(i, Convert.ToDateTime(obj, CultureInfo.InvariantCulture));
-                case SqlType.Boolean:
-                    return Bind_Int32(i, Convert.ToBoolean(obj) ? 1 : 0);
-                case SqlType.SByte:
+            Type t = obj.GetType();
+            TypeCode tc = Type.GetTypeCode(t);
+            
+            // byte[] doesn't have its own typecode, so needs special handling here
+            if (tc == TypeCode.Object && t == typeof(byte[])) {
+                byte[] b = (byte[])obj;
+                return Interop.sqlite3_bind_blob(handle, i, b, b.Length, (IntPtr)(-1));
+            }
+            
+            switch (tc) {
+                case TypeCode.DateTime:
+            	    return Bind_DateTime(i, (DateTime)obj);
+                case TypeCode.Boolean:
+            	    return Bind_Int32(i, ((bool)obj) ? 1 : 0);
+                case TypeCode.Char: // TODO ushort instead?
+                case TypeCode.SByte:
                     return Bind_Int32(i, Convert.ToSByte(obj));
-                case SqlType.Int16:
+                case TypeCode.Int16:
                     return Bind_Int32(i, Convert.ToInt16(obj));
-                case SqlType.Int32:
+                case TypeCode.Int32:
                     return Bind_Int32(i, Convert.ToInt32(obj));
-                case SqlType.Int64:
+                case TypeCode.Int64:
                     return Bind_Int64(i, Convert.ToInt64(obj));
-                case SqlType.Byte:
+                case TypeCode.Byte:
                     return Bind_Int32(i, Convert.ToByte(obj));
-                case SqlType.UInt16:
+                case TypeCode.UInt16:
                     return Bind_Int32(i, Convert.ToUInt16(obj));
-                case SqlType.UInt32:
+                case TypeCode.UInt32:
                     return Bind_Int32(i, (int)Convert.ToUInt32(obj));
-                case SqlType.UInt64:
+                case TypeCode.UInt64:
                     return Bind_Int64(i, (long)Convert.ToUInt64(obj));
-                case SqlType.Single:
-                case SqlType.Double:
-                case SqlType.Decimal:
+                case TypeCode.Single:
+                case TypeCode.Double:
+                case TypeCode.Decimal:
                     return Interop.sqlite3_bind_double(handle, i, Convert.ToDouble(obj));
-                case SqlType.Binary:
-                    byte[] b = (byte[])obj;
-                    return Interop.sqlite3_bind_blob(handle, i, b, b.Length, (IntPtr)(-1));
                 default:
                     return Bind_Text(i, obj.ToString());
             }
