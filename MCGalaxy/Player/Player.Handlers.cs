@@ -445,9 +445,6 @@ namespace MCGalaxy
             }
 
             text = Regex.Replace(text, "  +", " ");
-            if (text.IndexOf('&') >= 0) {
-                Leave("Illegal character in chat message!", true); return true;
-            }
             return text.Length == 0;
         }
         

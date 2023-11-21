@@ -54,7 +54,7 @@ namespace MCGalaxy.Blocks {
         // NOTE: These static declarations are just to save a few memory allocations
         //  Behind the scenes, 'return XYZ;' is actually compiled into 'return new HandleDelete(XYZ);'
         //  So by declaring a static variable, 'new HandleDelete(XYZ)' is only ever called once
-        //   instead of over and over - thereby slightly reducing memory usage
+        //   instead of over and over - thereby slightly reducing memory usage by a few KB per Level
         static HandleDelete DB_revert = DeleteBehaviour.RevertDoor;
         static HandleDelete DB_oDoor  = DeleteBehaviour.oDoor;
         static HandleDelete DB_Door   = DeleteBehaviour.Door;
