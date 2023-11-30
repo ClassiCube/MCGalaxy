@@ -16,6 +16,7 @@ https://www.gnu.org/licenses/gpl-3.0.html
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -53,8 +54,8 @@ namespace MCGalaxy.Gui.Components {
             get { return _nightMode; }
             set {
                 _nightMode = value;
-                ForeColor = value ? Color.Black : Color.White;
-                BackColor = value ? Color.White : Color.Black;
+                BackColor = value ? Color.Black : Color.White;
+                ForeColor = value ? Color.White : Color.Black;
                 Invalidate();
             }
         }
@@ -151,25 +152,34 @@ namespace MCGalaxy.Gui.Components {
         
         
         void AppendFormatted(string message, Color foreColor) {
-            int index = 0;
-            char col = 'S';
+            int index  = 0;
+            char color = 'S';
             message = UIHelpers.Format(message);
             
-            while (index < message.Length) {
-                char curCol = col;
-                string part = UIHelpers.OutputPart(ref col, ref index, message);
-                if (part.Length > 0) AppendColoredText(part, GetCol(curCol, foreColor));
+            while (index < message.Length) 
+            {
+                char curCode = color;
+                string part  = UIHelpers.OutputPart(ref color, ref index, message);
+                if (part.Length > 0) AppendColoredText(part, GetColor(curCode, foreColor, _nightMode));
             }
         }
         
-        static Color GetCol(char c, Color foreCol) {
-            if (c == 'S' || c == 'f' || c == 'F' || c == '0') return foreCol;
+        static Dictionary<int, Color> color_cache = new Dictionary<int, Color>();
+        static Color GetColor(char c, Color foreCol, bool nightMode) {
+            if (c == 'S' || c == 'f' || c == 'F') return foreCol;
             Colors.Map(ref c);
 
-            ColorDesc col = Colors.Get(c);
-            if (col.Undefined) return foreCol;
+            ColorDesc color = Colors.Get(c);
+            if (color.Undefined) return foreCol;
             
-            return Color.FromArgb(col.R, col.G, col.B);
+            int key = color.R | (color.G << 8) | (color.B << 16);
+            Color rgb;
+            
+            if (!color_cache.TryGetValue(key, out rgb)) {
+                rgb = ColorUtils.AdjustBrightness(color, nightMode);
+                color_cache[key] = rgb;
+            }
+            return rgb;
         }
     }
 }

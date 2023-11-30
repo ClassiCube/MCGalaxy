@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorUtils.cs" />
     <Compile Include="Controls\ColoredTextBox.cs">
       <SubType>Component</SubType>
     </Compile>

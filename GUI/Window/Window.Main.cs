@@ -163,8 +163,8 @@ namespace MCGalaxy.Gui {
 
         
         void tsLog_Night_Click(object sender, EventArgs e) {
+            tsLog_night.Checked   = !tsLog_night.Checked;
             main_txtLog.NightMode = tsLog_night.Checked;
-            tsLog_night.Checked = !tsLog_night.Checked;
         }
 
         void tsLog_Colored_Click(object sender, EventArgs e) {
