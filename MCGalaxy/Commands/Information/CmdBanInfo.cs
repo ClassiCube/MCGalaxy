@@ -35,10 +35,11 @@ namespace MCGalaxy.Commands.Info
             if (target == null) return;
             string nick = p.FormatNick(target);
             
-            string tempData = Server.tempBans.FindData(target);
+            string tempData = Server.tempBans.Get(target);
             string tempBanner = null, tempReason = null;
             DateTime tempExpiry = DateTime.MinValue;
-            if (tempData != null) {
+
+            if (!string.IsNullOrEmpty(tempData)) {
                 Ban.UnpackTempBanData(tempData, out tempReason, out tempBanner, out tempExpiry);
             }
             

@@ -45,8 +45,8 @@ namespace MCGalaxy.Core {
         
         static bool CheckTempban(Player p) {
             try {
-                string data = Server.tempBans.FindData(p.name);
-                if (data == null) return true;
+                string data = Server.tempBans.Get(p.name);
+                if (string.IsNullOrEmpty(data)) return true;
                 
                 string banner, reason;
                 DateTime expiry;

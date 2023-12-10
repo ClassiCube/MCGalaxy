@@ -185,21 +185,22 @@ namespace MCGalaxy
         }
         
         void LoadCpeData() {
-            string skin = Server.skins.FindData(name);
-            if (skin != null) SkinName = skin;           
-            string model = Server.models.FindData(name);
-            if (model != null) Model = model;
+            string skin = Server.skins.Get(name);
+            if (!string.IsNullOrEmpty(skin)) SkinName = skin;
+            
+            string model = Server.models.Get(name);
+            if (!string.IsNullOrEmpty(model)) Model = model;
 
-            string modelScales = Server.modelScales.FindData(name);
-            if (modelScales != null) {
+            string modelScales = Server.modelScales.Get(name);
+            if (!string.IsNullOrEmpty(modelScales)) {
                 string[] bits = modelScales.SplitSpaces(3);
                 Utils.TryParseSingle(bits[0], out ScaleX);
                 Utils.TryParseSingle(bits[1], out ScaleY);
                 Utils.TryParseSingle(bits[2], out ScaleZ);
             }            
 
-            string rotations = Server.rotations.FindData(name);
-            if (rotations != null) {
+            string rotations = Server.rotations.Get(name);
+            if (!string.IsNullOrEmpty(rotations)) {
                 string[] bits = rotations.SplitSpaces(2);
                 Orientation rot = Rot;
                 byte.TryParse(bits[0], out rot.RotX);

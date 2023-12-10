@@ -540,6 +540,7 @@
     <Compile Include="Modules\Compiling\Compiler.cs" />
     <Compile Include="Modules\Compiling\CompilerOperations.cs" />
     <Compile Include="Modules\Compiling\CompilerBackends.cs" />
+    <Compile Include="Modules\Compiling\CompilerPlugin.cs" />
     <Compile Include="Modules\Games\Countdown\CountdownConfig.cs" />
     <Compile Include="Modules\Games\Countdown\CountdownPlugin.cs" />
     <Compile Include="Modules\Games\Countdown\CmdCountdown.cs" />
