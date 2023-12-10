@@ -21,7 +21,7 @@ using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Modules.Compiling 
 {
-    public sealed class CmdCompLoad : CmdCompile 
+    sealed class CmdCompLoad : CmdCompile 
     {
         public override string name { get { return "CompLoad"; } }
         public override string shortcut { get { return "cml"; } }

@@ -138,7 +138,11 @@ namespace MCGalaxy
             LoadCorePlugin(new DiscordPlugin());
             LoadCorePlugin(new IRCPlugin());
             LoadCorePlugin(new IPThrottler());
-            
+
+#if !MCG_STANDALONE
+            LoadCorePlugin(new MCGalaxy.Modules.Compiling.CompilerPlugin());
+#endif
+
             LoadCorePlugin(new CountdownPlugin());
             LoadCorePlugin(new CTFPlugin());
             LoadCorePlugin(new LSPlugin());

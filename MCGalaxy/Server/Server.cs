@@ -142,14 +142,14 @@ namespace MCGalaxy
             EnsureDirectoryExists("extra/bots");
             EnsureDirectoryExists(Paths.ImportsDir);
             EnsureDirectoryExists("blockdefs");
-#if !MCG_STANDALONE
-            EnsureDirectoryExists(MCGalaxy.Modules.Compiling.ICompiler.COMMANDS_SOURCE_DIR); // TODO move to compiling module
-#endif
-            EnsureDirectoryExists("text/discord"); // TODO move to discord plugin
         }
         
-        static void EnsureDirectoryExists(string dir) {
-            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+        public static void EnsureDirectoryExists(string dir) {
+            try {
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            } catch (Exception ex) {
+                Logger.LogError("Creating directory " + dir, ex);
+            }
         }     
         
         public static void LoadAllSettings() { LoadAllSettings(false); }

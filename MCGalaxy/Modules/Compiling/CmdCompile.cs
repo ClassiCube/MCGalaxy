@@ -22,7 +22,7 @@ using MCGalaxy.Scripting;
 
 namespace MCGalaxy.Modules.Compiling 
 {
-    public class CmdCompile : Command2 
+    class CmdCompile : Command2 
     {
         public override string name { get { return "Compile"; } }
         public override string type { get { return CommandTypes.Other; } }

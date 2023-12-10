@@ -93,6 +93,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         public static DiscordBot Bot = new DiscordBot();
         
         public override void Load(bool startup) {
+            Server.EnsureDirectoryExists("text/discord");
+
             Bot.Config = Config;
             Bot.ReloadConfig();
             Bot.Connect();

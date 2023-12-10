@@ -21,7 +21,7 @@ using MCGalaxy.Commands;
 
 namespace MCGalaxy.Modules.Compiling
 {
-    public sealed class CmdCmdCreate : CmdCompile 
+    sealed class CmdCmdCreate : CmdCompile 
     {
         public override string name { get { return "CmdCreate"; } }
         public override string shortcut { get { return ""; } }
