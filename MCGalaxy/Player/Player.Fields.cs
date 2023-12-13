@@ -221,7 +221,6 @@ namespace MCGalaxy {
         internal DateTime cmdUnblocked;
         List<DateTime> partialLog;
 
-        public WarpList Waypoints;
         public DateTime LastPatrol;
         public LevelPermission Rank { get { return group.Permission; } }
 

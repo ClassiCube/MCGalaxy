@@ -317,8 +317,6 @@
     <Compile Include="Commands\World\CmdNewLvl.cs" />
     <Compile Include="Commands\World\CmdOverseer.cs" />
     <Compile Include="Commands\World\CmdPause.cs" />
-    <Compile Include="Commands\World\CmdWarp.cs" />
-    <Compile Include="Commands\World\CmdWaypoint.cs" />
     <Compile Include="Commands\World\CmdPhysics.cs" />
     <Compile Include="Commands\World\CmdRenameLvl.cs" />
     <Compile Include="Commands\World\CmdResizeLvl.cs" />
@@ -604,6 +602,11 @@
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
     <Compile Include="Modules\Security\IPThrottler.cs" />
+    <Compile Include="Modules\Warps\CmdWarp.cs" />
+    <Compile Include="Modules\Warps\CmdWaypoint.cs" />
+    <Compile Include="Modules\Warps\Warp.cs" />
+    <Compile Include="Modules\Warps\WarpCommand.cs" />
+    <Compile Include="Modules\Warps\WarpPlugin.cs" />
     <Compile Include="Network\BaseWebSocket.cs" />
     <Compile Include="Network\ClassicProtocol.cs" />
     <Compile Include="Network\CPESupport.cs" />
@@ -634,7 +637,6 @@
     <Compile Include="Player\PlayerOperations.cs" />
     <Compile Include="Player\PlayerPhysics.cs" />
     <Compile Include="Player\SpamChecker.cs" />
-    <Compile Include="Player\Warp.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />
     <Compile Include="Network\Player.Networking.cs" />
     <Compile Include="Scripting\Plugin.cs" />
@@ -710,7 +712,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Modules\Warps" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

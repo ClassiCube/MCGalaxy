@@ -16,10 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MCGalaxy {
-    
+namespace MCGalaxy.Modules.Warps
+{  
     /// <summary> A named pair of position and orientation, located on a particular map. </summary>
-    public class Warp {
+    public class Warp 
+    {
         /// <summary> Position of this warp. </summary>
         public Position Pos;
         /// <summary> Orientation of this warp. </summary>
@@ -30,13 +31,15 @@ namespace MCGalaxy {
         public string Level;
     }
     
-    public sealed class WarpList {
-        public static WarpList Global = new WarpList();
+    public sealed class WarpList 
+    {
+        public static WarpList Global;
         public List<Warp> Items = new List<Warp>();
         public string Filename;
         
         public Warp Find(string name) {
-            foreach (Warp wp in Items) {
+            foreach (Warp wp in Items) 
+            {
                 if (wp.Name.CaselessEq(name)) return wp;
             }
             return null;
@@ -78,6 +81,16 @@ namespace MCGalaxy {
             } else {
                 p.Message("Unable to send you to the warp as the map it is on is not loaded.");
             }
+        }
+        
+        
+        /// <summary> Find partial matches of 'name' against this list of warps. </summary>
+        public Warp FindMatch(Player p, string name) {
+            string group = (this == Global) ? "warps" : "waypoints";
+            int matches;
+            
+            return Matcher.Find(p, name, out matches, Items,
+                                null, wp => wp.Name, group);
         }
         
 

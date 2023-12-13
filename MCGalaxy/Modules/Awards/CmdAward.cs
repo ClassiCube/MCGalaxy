@@ -34,10 +34,12 @@ namespace MCGalaxy.Modules.Awards
             }
                     
             string[] args = message.SplitSpaces(2);
-            if (args.Length < 2) { Help(p); return; }           
+            if (args.Length < 2) { Help(p); return; }
+            
             string plName = PlayerInfo.FindMatchesPreferOnline(p, args[0]);
             if (plName == null) return;
-            string award = Matcher.FindAwards(p, args[1]);
+            
+            string award  = AwardsList.FindMatch(p, args[1]);
             if (award == null) { p.Message("Use &T/Awards &Sfor a list of awards"); return; }
 
             string displayName = p.FormatNick(plName);

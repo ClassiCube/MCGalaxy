@@ -1,4 +1,4 @@
-/*
+﻿/*
     Copyright 2011 MCForge
         
     Dual-licensed under the    Educational Community License, Version 2.0 and
@@ -16,22 +16,16 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.Threading;
+using MCGalaxy.Commands;
 using MCGalaxy.Maths;
 
-namespace MCGalaxy.Commands.World {
-    public class CmdWarp : Command2 {
-        public override string name { get { return "Warp"; } }
+namespace MCGalaxy.Modules.Warps
+{
+    abstract class WarpCommand : Command2 
+    {
         public override string type { get { return CommandTypes.World; } }
         public override bool museumUsable { get { return false; } }
         public override bool SuperUseable { get { return false; } }
-        public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.Operator, "can manage warps") }; }
-        }
-        
-        public override void Use(Player p, string message, CommandData data) {
-            UseCore(p, message, data, WarpList.Global, "Warp");
-        }
         
         static void PrintWarp(Player p, Warp warp) {
             Vec3S32 pos = warp.Pos.BlockCoords;
@@ -52,7 +46,7 @@ namespace MCGalaxy.Commands.World {
                                  group + " list", group + "s", modifier);
                 return;
             } else if (args.Length == 1) {
-                Warp warp = Matcher.FindWarps(p, warps, cmd);
+                Warp warp = warps.FindMatch(p, cmd);
                 if (warp != null) warps.Goto(warp, p);
                 return;
             }
@@ -66,32 +60,32 @@ namespace MCGalaxy.Commands.World {
                 p.Message("{0} {1} created.", group, name);
             } else if (IsDeleteAction(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
-                Warp warp = Matcher.FindWarps(p, warps, name);
+                Warp warp = warps.FindMatch(p, name);
                 if (warp == null) return;
                 
                 warps.Remove(warp, p);
                 p.Message("{0} {1} deleted.", group, warp.Name);
             } else if (IsEditAction(cmd)) {
                 if (checkExtraPerms && !CheckExtraPerm(p, data, 1)) return;
-                Warp warp = Matcher.FindWarps(p, warps, name);
+                Warp warp = warps.FindMatch(p, name);
                 if (warp == null) return;
 
                 warps.Update(warp, p);
                 p.Message("{0} {1} moved.", group, warp.Name);
             } else if (cmd.CaselessEq("goto")) {
-                Warp warp = Matcher.FindWarps(p, warps, name);
+                Warp warp = warps.FindMatch(p, name);
                 if (warp != null) warps.Goto(warp, p);
             } else {
                 Help(p);
             }
         }
         
-        public override void Help(Player p) {
-            p.Message("&T/Warp [name] &H- Move to that warp");
-            p.Message("&T/Warp list &H- List all the warps");
-            p.Message("&T/Warp create [name] &H- Create a warp at your position");
-            p.Message("&T/Warp delete [name] &H- Deletes a warp");
-            p.Message("&T/Warp move [name] &H- Moves a warp to your position");
+        protected static WarpList LoadList(string path) {
+            WarpList list = new WarpList();
+            
+            list.Filename = path;
+            list.Load();
+            return list;
         }
     }
 }

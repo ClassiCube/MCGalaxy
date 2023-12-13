@@ -25,7 +25,6 @@ namespace MCGalaxy.Core {
             CheckReviewList(p);
             if (p.CanUse("ReachDistance")) LoadReach(p);
             
-            LoadWaypoints(p);
             p.Ignores.Load(p);
         }
         
@@ -50,15 +49,6 @@ namespace MCGalaxy.Core {
 
             p.ReachDistance = reachDist / 32f;
             p.Session.SendSetReach(p.ReachDistance);
-        }
-        
-        static void LoadWaypoints(Player p) {
-            try {
-                p.Waypoints.Filename = Paths.WaypointsDir + p.name + ".save";
-                p.Waypoints.Load();
-            } catch (Exception ex) {
-                Logger.LogError("Error loading waypoints", ex);
-            }
         }
     }
 }

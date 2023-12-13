@@ -17,15 +17,22 @@
  */
 using System;
 
-namespace MCGalaxy.Commands.World {
-    public sealed class CmdWaypoint : CmdWarp {
+namespace MCGalaxy.Modules.Warps
+{
+    sealed class CmdWaypoint : WarpCommand 
+    {
         public override string name { get { return "Waypoint"; } }
         public override string shortcut { get { return "wp"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
-        public override CommandPerm[] ExtraPerms { get { return null; } }
                 
-        public override void Use(Player p, string message, CommandData data) {
-            UseCore(p, message, data, p.Waypoints, "Waypoint");
+        public override void Use(Player p, string message, CommandData data) {            
+            if (!p.Extras.Contains("MCG_WAYPOINTS")) {
+                p.Extras["MCG_WAYPOINTS"] = LoadList(Paths.WAYPOINTS_DIR + p.name + ".save");
+            } 
+            
+            // TODO: Better thread safety
+            WarpList waypoints = (WarpList)p.Extras["MCG_WAYPOINTS"];
+            UseCore(p, message, data, waypoints, "Waypoint");
         }
 
         public override void Help(Player p) {

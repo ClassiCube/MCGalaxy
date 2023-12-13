@@ -18,15 +18,6 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Core;
-using MCGalaxy.Modules.Games.Countdown;
-using MCGalaxy.Modules.Games.CTF;
-using MCGalaxy.Modules.Games.LS;
-using MCGalaxy.Modules.Games.TW;
-using MCGalaxy.Modules.Games.ZS;
-using MCGalaxy.Modules.Moderation.Notes;
-using MCGalaxy.Modules.Relay.Discord;
-using MCGalaxy.Modules.Relay.IRC;
-using MCGalaxy.Modules.Security;
 using MCGalaxy.Scripting;
 
 namespace MCGalaxy 
@@ -134,20 +125,21 @@ namespace MCGalaxy
 
         public static void LoadAll() {
             LoadCorePlugin(new CorePlugin());
-            LoadCorePlugin(new NotesPlugin());
-            LoadCorePlugin(new DiscordPlugin());
-            LoadCorePlugin(new IRCPlugin());
-            LoadCorePlugin(new IPThrottler());
-
+            
+            LoadCorePlugin(new MCGalaxy.Modules.Moderation.Notes.NotesPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Relay.Discord.DiscordPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Relay.IRC.IRCPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Security.IPThrottler());
 #if !MCG_STANDALONE
             LoadCorePlugin(new MCGalaxy.Modules.Compiling.CompilerPlugin());
 #endif
+            LoadCorePlugin(new MCGalaxy.Modules.Warps.WarpsPlugin());
 
-            LoadCorePlugin(new CountdownPlugin());
-            LoadCorePlugin(new CTFPlugin());
-            LoadCorePlugin(new LSPlugin());
-            LoadCorePlugin(new TWPlugin());
-            LoadCorePlugin(new ZSPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Games.Countdown.CountdownPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Games.CTF.CTFPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Games.LS.LSPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Games.TW.TWPlugin());
+            LoadCorePlugin(new MCGalaxy.Modules.Games.ZS.ZSPlugin());
             
             IScripting.AutoloadPlugins();
         }

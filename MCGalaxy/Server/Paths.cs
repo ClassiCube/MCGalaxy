@@ -48,7 +48,7 @@ namespace MCGalaxy
         public const string CPEDisabledFile = "properties/cpe.properties";
         
         public const string ImportsDir = "extra/import/";
-        public const string WaypointsDir = "extra/Waypoints/";
+        public const string WAYPOINTS_DIR = "extra/Waypoints/";
         
         /// <summary> Relative path of the file containing a map's bots. </summary>
         public static string BotsPath(string map) { return "extra/bots/" + map + ".json"; }

@@ -138,7 +138,6 @@ namespace MCGalaxy
             PlayerDB.EnsureDirectoriesExist();
 
             EnsureDirectoryExists("extra");
-            EnsureDirectoryExists(Paths.WaypointsDir);
             EnsureDirectoryExists("extra/bots");
             EnsureDirectoryExists(Paths.ImportsDir);
             EnsureDirectoryExists("blockdefs");
@@ -172,8 +171,6 @@ namespace MCGalaxy
             AwardsList.Load();
             PlayerAwards.Load();
             Economy.Load();
-            WarpList.Global.Filename = "extra/warps.save";
-            WarpList.Global.Load();
             CommandExtraPerms.Load();
             ProfanityFilter.Init();
             Team.LoadList();

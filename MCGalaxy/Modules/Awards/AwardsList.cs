@@ -58,6 +58,15 @@ namespace MCGalaxy.Modules.Awards
         }
         
         
+        /// <summary> Finds partial matches of 'name' against the list of all awards </summary>
+        public static string FindMatch(Player p, string name) {
+            int matches;
+            Award award = Matcher.Find(p, name, out matches, Awards,
+                                       null, a => a.Name, "awards");
+            return award == null ? null : award.Name;
+        }
+        
+        
         static readonly object saveLock = new object();
         public static void Save() {
             lock (saveLock)

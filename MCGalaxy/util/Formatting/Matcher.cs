@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MCGalaxy.Modules.Awards;
 
 namespace MCGalaxy 
 {  
@@ -26,14 +25,6 @@ namespace MCGalaxy
     /// <remarks> returns number of matches found, and the matching item if only 1 match is found. </remarks>
     public static class Matcher 
     {
-        /// <summary> Finds partial matches of 'name' against the list of all awards. </summary>
-        public static string FindAwards(Player p, string name) {
-            int matches;
-            Award award = Find(p, name, out matches, AwardsList.Awards,
-                               null, a => a.Name, "awards");
-            return award == null ? null : award.Name;
-        }
-        
         /// <summary> Finds partial matches of 'color' against the list of colors. </summary>
         public static string FindColor(Player p, string color) {
             int matches;
@@ -70,14 +61,6 @@ namespace MCGalaxy
             int matches;
             return Find(p, name, out matches, Group.GroupList,
                         null, g => Colors.Strip(g.Name), g => g.ColoredName, "ranks");
-        }
-        
-        /// <summary> Find partial matches of 'name' against a list of warps. </summary>
-        public static Warp FindWarps(Player p, WarpList warps, string name) {
-            string group = (warps == WarpList.Global) ? "warps" : "waypoints";
-            int matches;
-            return Find(p, name, out matches, warps.Items,
-                        null, wp => wp.Name, group);
         }
         
         /// <summary> Find partial matches of 'name' against the list of zones in a map. </summary>

@@ -70,7 +70,6 @@ namespace MCGalaxy {
             SetIP(Socket.IP);
             
             CriticalTasks = new VolatileArray<SchedulerTask>();
-            Waypoints     = new WarpList();
             
             spamChecker = new SpamChecker(this);
             partialLog  = new List<DateTime>(20);
