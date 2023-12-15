@@ -21,29 +21,58 @@ using System.Threading;
 
 namespace MCGalaxy.Games 
 {
-    public class LevelPicker 
+    public abstract class LevelPicker 
     {
         public string QueuedMap;
         public List<string> RecentMaps = new List<string>();
-        public int VoteTime = 20;
         public bool Voting;
-
-        internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
-        internal int Votes1, Votes2, Votes3;
-        const int MIN_MAPS = 3;
-
-        public void AddRecentMap(string map) {
+        
+        public abstract List<string> GetCandidateMaps(RoundsGame game);
+        
+        public virtual string GetRandomMap(Random r, List<string> maps) {
+            int i = r.Next(0, maps.Count);
+            string map = maps[i];
+            maps.RemoveAt(i);
+            return map;
+        }
+        
+        
+        public abstract string ChooseNextLevel(RoundsGame game);
+        
+        
+        public virtual void AddRecentMap(string map) {
             if (RecentMaps.Count >= 20)
                 RecentMaps.RemoveAt(0);
             RecentMaps.Add(map);
         }
         
-        public void Clear() {
+        public virtual void Clear() {
             QueuedMap = null;
             RecentMaps.Clear();
         }
+        
+        
+        public abstract bool HandlesMessage(Player p, string message);
+        
+        public abstract void SendVoteMessage(Player p);
+        
+        public abstract void ResetVoteMessage(Player p);
+    }
+    
+    public class SimpleLevelPicker : LevelPicker
+    {
+        public int VoteTime = 20;
 
-        public string ChooseNextLevel(RoundsGame game) {
+        internal string Candidate1 = "", Candidate2 = "", Candidate3 = "";
+        internal int Votes1, Votes2, Votes3;
+        const int MIN_MAPS = 3;
+        
+        public override List<string> GetCandidateMaps(RoundsGame game) {
+            return new List<string>(game.GetConfig().Maps);
+        }
+        
+
+        public override string ChooseNextLevel(RoundsGame game) {
             if (QueuedMap != null) return QueuedMap;
             
             try {
@@ -90,7 +119,8 @@ namespace MCGalaxy.Games
         void DoLevelVote(IGame game) {
             Voting = true;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players) 
+            {
                 if (pl.level != game.Map) continue;
                 SendVoteMessage(pl);
             }
@@ -141,18 +171,17 @@ namespace MCGalaxy.Games
             }
         }
         
-        internal static string GetRandomMap(Random r, List<string> maps) {
-            int i = r.Next(0, maps.Count);
-            string map = maps[i];
-            maps.RemoveAt(i);
-            return map;
+        
+        public override bool HandlesMessage(Player p, string message) {
+            if (!Voting) return false;
+            
+            return
+                Player.CheckVote(message, p, "1", "one",   ref Votes1) ||
+                Player.CheckVote(message, p, "2", "two",   ref Votes2) ||
+                Player.CheckVote(message, p, "3", "three", ref Votes3);
         }
         
-        public virtual List<string> GetCandidateMaps(RoundsGame game) {
-            return new List<string>(game.GetConfig().Maps);
-        }
-        
-       public void SendVoteMessage(Player p) {
+        public override void SendVoteMessage(Player p) {
             const string line1 = "&eLevel vote - type &a1&e, &b2&e or &c3";
             string line2 = "&a" + Candidate1 + "&e, &b" + Candidate2 + "&e, &c" + Candidate3;
             
@@ -165,19 +194,10 @@ namespace MCGalaxy.Games
             }
         }
         
-        public void ResetVoteMessage(Player p) {
+        public override void ResetVoteMessage(Player p) {
             p.SendCpeMessage(CpeMessageType.BottomRight3, "");
             p.SendCpeMessage(CpeMessageType.BottomRight2, "");
             p.SendCpeMessage(CpeMessageType.BottomRight1, "");
-        }
-        
-        public bool HandlesMessage(Player p, string message) {
-            if (!Voting) return false;
-            
-            return
-                Player.CheckVote(message, p, "1", "one",   ref Votes1) ||
-                Player.CheckVote(message, p, "2", "two",   ref Votes2) ||
-                Player.CheckVote(message, p, "3", "three", ref Votes3);
         }
     }
 }

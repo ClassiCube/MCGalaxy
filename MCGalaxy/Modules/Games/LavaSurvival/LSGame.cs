@@ -53,7 +53,7 @@ namespace MCGalaxy.Modules.Games.LS
         static bool hooked;
         
         public static LSGame Instance = new LSGame();
-        public LSGame() { Picker = new LevelPicker(); }
+        public LSGame() { Picker = new SimpleLevelPicker(); }
         
         public static LSData Get(Player p) {
             object data;

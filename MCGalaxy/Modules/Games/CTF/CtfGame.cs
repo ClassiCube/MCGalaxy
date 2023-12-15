@@ -61,7 +61,7 @@ namespace MCGalaxy.Modules.Games.CTF
         CtfTeam Blue = new CtfTeam("Blue", Colors.blue);
         
         public static CTFGame Instance = new CTFGame();
-        public CTFGame() { Picker = new LevelPicker(); }
+        public CTFGame() { Picker = new SimpleLevelPicker(); }
         
         protected override string WelcomeMessage {
             get { return "&9Capture the Flag &Sis running! Type &T/CTF go &Sto join"; }

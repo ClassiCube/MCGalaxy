@@ -77,7 +77,7 @@ namespace MCGalaxy.Modules.Games.ZS
         public override RoundsGameConfig GetConfig() { return Config; }
         
         public static ZSGame Instance = new ZSGame();
-        public ZSGame() { Picker = new LevelPicker(); }
+        public ZSGame() { Picker = new SimpleLevelPicker(); }
         
         protected override string WelcomeMessage {
             get { return "&2Zombie Survival &Sis running! Type &T/ZS go &Sto join"; }

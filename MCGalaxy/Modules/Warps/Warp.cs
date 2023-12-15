@@ -77,9 +77,9 @@ namespace MCGalaxy.Modules.Warps
             
             if (p.level.name.CaselessEq(warp.Level)) {
                 p.SendPosition(warp.Pos, new Orientation(warp.Yaw, warp.Pitch));
-                p.Message("Sent you to waypoint/warp");
+                p.Message("Sent you to waypoint/warp {0}", warp.Name);
             } else {
-                p.Message("Unable to send you to the warp as the map it is on is not loaded.");
+                p.Message("&WUnable to send you to the warp as the map it is on is not loaded.");
             }
         }
         
@@ -102,7 +102,7 @@ namespace MCGalaxy.Modules.Warps
                 string line;
                 while ((line = r.ReadLine()) != null) {
                     line = line.Trim();
-                    if (line.StartsWith("#") || !line.Contains(":")) continue;
+                    if (line.IsCommentLine()) continue;
                     
                     string[] parts = line.Split(':');
                     Warp warp = new Warp();
@@ -116,7 +116,7 @@ namespace MCGalaxy.Modules.Warps
                         warp.Pitch = byte.Parse(parts[6]);
                         warps.Add(warp);
                     } catch (Exception ex) { 
-                        Logger.LogError("Error loading warp from " + Filename, ex); 
+                        Logger.LogError("Error loading warp " + line + " from " + Filename, ex); 
                     }
                 }
             }
@@ -126,8 +126,9 @@ namespace MCGalaxy.Modules.Warps
 
         public void Save() {
             using (StreamWriter w = new StreamWriter(Filename)) {
-                foreach (Warp warp in Items) {
-                    w.WriteLine(warp.Name + ":" + warp.Level + ":" + warp.Pos.X + ":" + 
+                foreach (Warp warp in Items) 
+                {
+                    w.WriteLine(warp.Name  + ":" + warp.Level + ":" + warp.Pos.X + ":" + 
                                 warp.Pos.Y + ":" + warp.Pos.Z + ":" + warp.Yaw + ":" + warp.Pitch);
                 }
             }

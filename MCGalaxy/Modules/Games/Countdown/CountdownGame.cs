@@ -46,7 +46,7 @@ namespace MCGalaxy.Modules.Games.Countdown
         public CountdownSpeed SpeedType;
         
         public static CountdownGame Instance = new CountdownGame();
-        public CountdownGame() { Picker = new LevelPicker(); }
+        public CountdownGame() { Picker = new SimpleLevelPicker(); }
         
         public override void UpdateMapConfig() { }
         

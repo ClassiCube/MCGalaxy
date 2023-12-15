@@ -101,7 +101,7 @@ namespace MCGalaxy.Games
             List<string> maps = Picker.GetCandidateMaps(this);
             
             if (maps == null || maps.Count == 0) return null;
-            return LevelPicker.GetRandomMap(new Random(), maps);
+            return Picker.GetRandomMap(new Random(), maps);
         }
         
         void RunGame() {

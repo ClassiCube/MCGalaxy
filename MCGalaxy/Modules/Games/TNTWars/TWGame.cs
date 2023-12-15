@@ -95,7 +95,7 @@ namespace MCGalaxy.Modules.Games.TW
         TNTImmuneFilter tntImmuneFilter;
         
         public static TWGame Instance = new TWGame();
-        public TWGame() { Picker = new LevelPicker(); }
+        public TWGame() { Picker = new SimpleLevelPicker(); }
         
         const string twExtrasKey = "MCG_TW_DATA";
         static TWData Get(Player p) {
