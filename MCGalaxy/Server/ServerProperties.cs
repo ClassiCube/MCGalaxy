@@ -44,13 +44,7 @@ namespace MCGalaxy
         static void LineProcessor(string key, string value, ref OldPerms perms) {
             // Backwards compatibility: some command extra permissions used to be part of server.properties
             // Backwards compatibility: map generation volume used to be part of server.properties
-            if (key.CaselessEq("review-view-perm")) {
-                perms.viewPerm = int.Parse(value);
-            } else if (key.CaselessEq("review-next-perm")) {
-                perms.nextPerm = int.Parse(value);
-            } else if (key.CaselessEq("review-clear-perm")) {
-                perms.clearPerm = int.Parse(value);
-            } else if (key.CaselessEq("opchat-perm")) {
+            if (key.CaselessEq("opchat-perm")) {
                 perms.opchatPerm = int.Parse(value);
             } else if (key.CaselessEq("adminchat-perm")) {
                 perms.adminchatPerm = int.Parse(value);
@@ -70,7 +64,7 @@ namespace MCGalaxy
         
         static OldPerms old;
         class OldPerms {
-            public int viewPerm = -1, nextPerm = -1, clearPerm = -1, opchatPerm = -1, adminchatPerm = -1;
+            public int opchatPerm = -1, adminchatPerm = -1;
             public int mapGenLimit = -1, mapGenLimitAdmin = -1;
             public int afkKickMins = -1; public LevelPermission afkKickMax = LevelPermission.Banned;
         }
@@ -87,20 +81,14 @@ namespace MCGalaxy
         }
         
         static void SetOldReview() {
-            if (old.clearPerm == -1 && old.nextPerm == -1 && old.viewPerm == -1
-                && old.opchatPerm == -1 && old.adminchatPerm == -1) return;
+            if (old.opchatPerm == -1 && old.adminchatPerm == -1) return;
             
             // Apply backwards compatibility
-            if (old.viewPerm != -1)
-                CommandExtraPerms.Find("Review", 1).MinRank = (LevelPermission)old.viewPerm;
-            if (old.nextPerm != -1)
-                CommandExtraPerms.Find("Review", 2).MinRank = (LevelPermission)old.nextPerm;
-            if (old.clearPerm != -1)
-                CommandExtraPerms.Find("Review", 3).MinRank = (LevelPermission)old.clearPerm;
             if (old.opchatPerm != -1)
                 Chat.OpchatPerms.MinRank    = (LevelPermission)old.opchatPerm;
             if (old.adminchatPerm != -1)
                 Chat.AdminchatPerms.MinRank = (LevelPermission)old.adminchatPerm;
+            
             CommandExtraPerms.Save();
         }
         

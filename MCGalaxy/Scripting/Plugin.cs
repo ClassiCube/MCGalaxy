@@ -126,14 +126,15 @@ namespace MCGalaxy
         public static void LoadAll() {
             LoadCorePlugin(new CorePlugin());
             
+            LoadCorePlugin(new MCGalaxy.Modules.Moderation.Review.ReviewPlugin());
             LoadCorePlugin(new MCGalaxy.Modules.Moderation.Notes.NotesPlugin());
             LoadCorePlugin(new MCGalaxy.Modules.Relay.Discord.DiscordPlugin());
             LoadCorePlugin(new MCGalaxy.Modules.Relay.IRC.IRCPlugin());
             LoadCorePlugin(new MCGalaxy.Modules.Security.IPThrottler());
+            LoadCorePlugin(new MCGalaxy.Modules.Warps.WarpsPlugin());
 #if !MCG_STANDALONE
             LoadCorePlugin(new MCGalaxy.Modules.Compiling.CompilerPlugin());
 #endif
-            LoadCorePlugin(new MCGalaxy.Modules.Warps.WarpsPlugin());
 
             LoadCorePlugin(new MCGalaxy.Modules.Games.Countdown.CountdownPlugin());
             LoadCorePlugin(new MCGalaxy.Modules.Games.CTF.CTFPlugin());

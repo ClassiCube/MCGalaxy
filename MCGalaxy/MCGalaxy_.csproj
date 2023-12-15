@@ -265,7 +265,6 @@
     <Compile Include="Commands\Moderation\CmdPossess.cs" />
     <Compile Include="Commands\Moderation\CmdReport.cs" />
     <Compile Include="Commands\Moderation\CmdRestoreSelection.cs" />
-    <Compile Include="Commands\Moderation\CmdReview.cs" />
     <Compile Include="Commands\Moderation\CmdSetRank.cs" />
     <Compile Include="Commands\Moderation\CmdTempBan.cs" />
     <Compile Include="Commands\Moderation\CmdTempRank.cs" />
@@ -591,6 +590,8 @@
     <Compile Include="Modules\Games\ZombieSurvival\ZSPlugin.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
+    <Compile Include="Modules\Moderation\Review\CmdReview.cs" />
+    <Compile Include="Modules\Moderation\Review\ReviewPlugin.cs" />
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordApiClient.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
@@ -713,6 +714,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Modules\Moderation\Review" />
     <Folder Include="Modules\Warps" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

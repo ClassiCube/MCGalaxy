@@ -20,10 +20,13 @@
  */
 using System;
 using System.Collections.Generic;
+using MCGalaxy.Commands;
 using MCGalaxy.Events.PlayerEvents;
 
-namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdReview : Command2 {
+namespace MCGalaxy.Modules.Moderation.Review
+{
+    class CmdReview : Command2 
+    {
         public override string name { get { return "Review"; } }
         public override string shortcut { get { return "rvw"; } }
         public override string type { get { return CommandTypes.Moderation; } }
@@ -100,7 +103,8 @@ namespace MCGalaxy.Commands.Moderation {
             
             p.Message("&9Players in the review queue:");
             int pos = 1;
-            foreach (string name in inQueue) {
+            foreach (string name in inQueue) 
+            {
                 Group grp = PlayerInfo.GetGroup(name);
                 p.Message("&a" + pos + ". &f" + name + " &a- Current Rank: " + grp.ColoredName);
                 pos++;
@@ -149,7 +153,8 @@ namespace MCGalaxy.Commands.Moderation {
             List<string> inQueue = Server.reviewlist.All();
             int pos = 1;
             
-            foreach (string name in inQueue) {
+            foreach (string name in inQueue) 
+            {
                 Player who = PlayerInfo.FindExact(name);
                 if (who == null) continue;
                 
@@ -161,7 +166,7 @@ namespace MCGalaxy.Commands.Moderation {
         public override void Help(Player p) {
             p.Message("&T/Review enter/view/leave/next/clear");
             p.Message("&HLets you enter, view, leave, or clear the review queue, or " +
-                               "teleport you to the next player in the review queue.");
+                      "teleport you to the next player in the review queue.");
         }
     }
 }

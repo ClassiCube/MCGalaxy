@@ -22,22 +22,9 @@ namespace MCGalaxy.Core {
     internal static class ConnectHandler {
         
         internal static void HandleConnect(Player p) {
-            CheckReviewList(p);
             if (p.CanUse("ReachDistance")) LoadReach(p);
             
             p.Ignores.Load(p);
-        }
-        
-        static void CheckReviewList(Player p) {
-            if (!p.CanUse("Review")) return;
-            ItemPerms checkPerms = CommandExtraPerms.Find("Review", 1);
-            if (!checkPerms.UsableBy(p)) return;
-            
-            int count = Server.reviewlist.Count;
-            if (count == 0) return;
-            
-            string suffix = count == 1 ? " player is " : " players are ";
-            p.Message(count + suffix + "waiting for a review. Type &T/Review view");
         }
         
         static void LoadReach(Player p) {

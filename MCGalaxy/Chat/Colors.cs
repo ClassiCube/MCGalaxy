@@ -158,7 +158,8 @@ namespace MCGalaxy {
             char[] chars = new char[value.Length];
             for (int i = 0; i < chars.Length; i++) { chars[i] = value[i]; }
             
-            for (int i = 0; i < chars.Length;) {
+            for (int i = 0; i < chars.Length;) 
+            {
                 int end = value.IndexOf(' ', i);
                 if (end == -1) end = value.Length;
                 
@@ -169,14 +170,14 @@ namespace MCGalaxy {
         }
         
         static bool IsUrlAt(char[] chars, int i, int len) {
-            const int prefixLen = 7; // "http://".Length
-            if (len < prefixLen) return false;
+            const int PREFIX_LEN = 7; // "http://".Length
+            if (len < PREFIX_LEN) return false;
             
             // skip color codes in url
             while (len > 0 && chars[i] == '&') { len -= 2; i += 2; }
             
             // Starts with "http" ?
-            if (len < prefixLen) return false;
+            if (len < PREFIX_LEN) return false;
             if (chars[i] != 'h' || chars[i + 1] != 't' || chars[i + 2] != 't' || chars[i + 3] != 'p') return false;
             len -= 4; i += 4;
             
@@ -230,7 +231,8 @@ namespace MCGalaxy {
             char[] output = new char[message.Length];
             int usedChars = 0;
             
-            for (int i = 0; i < message.Length; i++) {
+            for (int i = 0; i < message.Length; i++) 
+            {
                 char c = message[i];
                 if ((c == '%' || c == '&') && UsedColor(message, i)) {
                     i++; // Skip over the following color code
