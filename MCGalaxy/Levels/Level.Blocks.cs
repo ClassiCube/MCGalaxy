@@ -265,7 +265,7 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffect(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
-            if (!p.group.Blocks[old] || !p.group.Blocks[block]) return false;
+            if ((!p.group.Blocks[old] && !BuildIn(old)) || !p.group.Blocks[block]) return false;
             AccessController denier = CanAffect(p, x, y, z);
             if (denier == null) return true;
             
