@@ -136,7 +136,9 @@ namespace MCGalaxy.Commands.Info
             
             p.Message("Block \"{0}\" appears as &b{1}",
                       message, Block.GetName(p, Block.Convert(block)));
-            BlockPerms.Find(block).MessageCannotUse(p, "use");
+            
+            BlockPerms.GetPlace(block) .MessageCannotUse(p, "use");
+            BlockPerms.GetDelete(block).MessageCannotUse(p, "delete");
             
             DescribePhysics(p, message, block);
             return true;

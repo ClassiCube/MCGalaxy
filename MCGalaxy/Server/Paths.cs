@@ -38,7 +38,10 @@ namespace MCGalaxy
         public const string JokerFile = "text/joker.txt";        
         public const string EightBallFile = "text/8ball.txt";   
         
-        public const string BlockPermsFile = "properties/block.properties";
+        public const string BlockPermsFile  = "properties/block.properties";
+        public const string PlacePermsFile  = "properties/place.properties";
+        public const string DeletePermsFile = "properties/delete.properties";
+        
         public const string CmdPermsFile = "properties/command.properties";
         public const string CmdExtraPermsFile = "properties/ExtraCommandPermissions.properties";
         public const string EconomyPropsFile = "properties/economy.properties";

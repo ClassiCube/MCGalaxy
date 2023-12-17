@@ -17,8 +17,10 @@
  */
 using System.Collections.Generic;
 
-namespace MCGalaxy.Commands.Moderation {
-    public abstract class ItemPermsCmd : Command2 {
+namespace MCGalaxy.Commands.Moderation 
+{
+    public abstract class ItemPermsCmd : Command2 
+    {
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         

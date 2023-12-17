@@ -160,7 +160,7 @@ namespace MCGalaxy.Drawing.Ops
                 #endif
                 
                 // Check to make sure the block is actually different and that can be used
-                if (old == b.Block || !p.group.Blocks[old] || !p.group.Blocks[b.Block]) return;
+                if (old == b.Block || !p.group.CanDelete[old] || !p.group.CanPlace[b.Block]) return;
                 
                 // Check if player can affect block at coords in world
                 AccessController denier = lvl.CanAffect(p, b.X, b.Y, b.Z);

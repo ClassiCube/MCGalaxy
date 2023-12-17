@@ -28,7 +28,8 @@ namespace MCGalaxy.Blocks
         public BlockID ID;
         public override string ItemName { get { return ID.ToString(); } }
         
-        static BlockPerms[] List = new BlockPerms[Block.SUPPORTED_COUNT];
+        static BlockPerms[] PlaceList  = new BlockPerms[Block.SUPPORTED_COUNT];
+        static BlockPerms[] DeleteList = new BlockPerms[Block.SUPPORTED_COUNT];
         
         
         public BlockPerms(BlockID id, LevelPermission min) : base(min) {
@@ -41,8 +42,8 @@ namespace MCGalaxy.Blocks
         }        
        
 
-        /// <summary> Find the permissions for the given block. </summary>
-        public static BlockPerms Find(BlockID b) { return List[b]; }
+        public static BlockPerms GetPlace(BlockID b)  { return PlaceList[b];  }
+        public static BlockPerms GetDelete(BlockID b) { return DeleteList[b]; }
 
         
         public static void ResendAllBlockPermissions() {
@@ -67,10 +68,15 @@ namespace MCGalaxy.Blocks
         }
         
         static void SaveCore() {
-            using (StreamWriter w = new StreamWriter(Paths.BlockPermsFile)) {
-                WriteHeader(w, "block", "each block", "Block ID", "lava");
+            SaveList(Paths.PlacePermsFile,  PlaceList,  "use");
+            SaveList(Paths.DeletePermsFile, DeleteList, "delete");
+        }
+        
+        static void SaveList(string path, BlockPerms[] list, string action) {
+            using (StreamWriter w = new StreamWriter(path)) {
+                WriteHeader(w, "block", "each block", "Block ID", "lava", action);
 
-                foreach (BlockPerms perms in List) 
+                foreach (BlockPerms perms in list) 
                 {
                     if (Block.Undefined(perms.ID)) continue;
                     w.WriteLine(perms.Serialise());
@@ -88,9 +94,14 @@ namespace MCGalaxy.Blocks
         }
         
         public static void SetUsable(Group grp) {
-            foreach (BlockPerms perms in List) 
+            SetUsableList(PlaceList,  grp.CanPlace,  grp);
+            SetUsableList(DeleteList, grp.CanDelete, grp);
+        }
+        
+        static void SetUsableList(BlockPerms[] list, bool[] permsList, Group grp) {
+            foreach (BlockPerms perms in list) 
             {
-                grp.Blocks[perms.ID] = perms.UsableBy(grp.Permission);
+                permsList[perms.ID] = perms.UsableBy(grp.Permission);
             }
         }
         
@@ -103,14 +114,33 @@ namespace MCGalaxy.Blocks
 
         static void LoadCore() {
             SetDefaultPerms();
-            if (!File.Exists(Paths.BlockPermsFile)) { Save(); return; }
+            bool placeExists  = File.Exists(Paths.PlacePermsFile);
+            bool deleteExists = File.Exists(Paths.DeletePermsFile);
             
-            using (StreamReader r = new StreamReader(Paths.BlockPermsFile)) {
-                ProcessLines(r);
+            if (placeExists)  LoadFile(Paths.PlacePermsFile,  PlaceList);
+            if (deleteExists) LoadFile(Paths.DeletePermsFile, DeleteList);
+            if (placeExists || deleteExists) return;
+            
+            if (File.Exists(Paths.BlockPermsFile)) {
+                LoadFile(Paths.BlockPermsFile, PlaceList);
+                
+                // TODO proper migration
+                for (int i = 0; i < Block.SUPPORTED_COUNT; i++)
+                    PlaceList[i].CopyPermissionsTo(DeleteList[i]);
+                SetDefaultSpecialDeletePerms();
+                
+                File.Move(Paths.BlockPermsFile, Paths.BlockPermsFile + ".bak");
+            }
+            Save();
+        }
+        
+        static void LoadFile(string path, BlockPerms[] list) {
+            using (StreamReader r = new StreamReader(path)) {
+                ProcessLines(r, list);
             }
         }
         
-        static void ProcessLines(StreamReader r) {
+        static void ProcessLines(StreamReader r, BlockPerms[] list) {
             string[] args = new string[4];
             string line;
             
@@ -131,7 +161,7 @@ namespace MCGalaxy.Blocks
                     List<LevelPermission> allowed, disallowed;
                     
                     Deserialise(args, 1, out min, out allowed, out disallowed);
-                    Set(block, min, allowed, disallowed);
+                    Set(block, min, list,  allowed, disallowed);
                 } catch {
                     Logger.Log(LogType.Warning, "Hit an error on the block " + line);
                     continue;
@@ -139,19 +169,20 @@ namespace MCGalaxy.Blocks
             }
         }
         
-        static void Set(BlockID b, LevelPermission min,
+        static void Set(BlockID b, LevelPermission min, BlockPerms[] list,
                         List<LevelPermission> allowed, List<LevelPermission> disallowed) {
-            BlockPerms perms = List[b];
+            BlockPerms perms = list[b];
             if (perms == null) {
                 perms   = new BlockPerms(b, min);
-                List[b] = perms;
+                list[b] = perms;
             }
             perms.Init(min, allowed, disallowed);
         }
         
-        
+       
         static void SetDefaultPerms() {
-            for (BlockID block = 0; block < Block.SUPPORTED_COUNT; block++) {
+            for (BlockID block = 0; block < Block.SUPPORTED_COUNT; block++) 
+            {
                 BlockProps props = Block.Props[block];
                 LevelPermission min;
                 
@@ -167,8 +198,15 @@ namespace MCGalaxy.Blocks
                     min = DefaultPerm(block);
                 }
                 
-                Set(block, min, null, null);
+                Set(block, min, PlaceList,  null, null);
+                Set(block, min, DeleteList, null, null);
             }
+            SetDefaultSpecialDeletePerms();
+        }
+        
+        static void SetDefaultSpecialDeletePerms() {
+            for (BlockID b = Block.Water; b <= Block.StillLava; b++)
+                DeleteList[b].MinRank = LevelPermission.Guest;
         }
         
         static LevelPermission DefaultPerm(BlockID block) {

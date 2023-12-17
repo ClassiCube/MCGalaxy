@@ -29,15 +29,19 @@ namespace MCGalaxy.Commands.Moderation {
             BlockID block;
             if (!CommandParser.GetBlockIfAllowed(p, args[0], "change permissions of", out block)) return;
 
-            BlockPerms perms = BlockPerms.Find(block);
+            // TODO rethink messaging
+            BlockPerms perms = BlockPerms.GetPlace(block);
             SetPerms(p, args, data, perms, "block");
         }
         
-        protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {
+        protected override void UpdatePerms(ItemPerms perms, Player p, string msg) { 
+            BlockID block = ((BlockPerms)perms).ID;
+            
+            // TODO better solution
+            perms.CopyPermissionsTo(BlockPerms.GetDelete(block));
             BlockPerms.Save();
             BlockPerms.ApplyChanges();
             
-            BlockID block = ((BlockPerms)perms).ID;
             if (!Block.IsPhysicsType(block)) {
                 BlockPerms.ResendAllBlockPermissions();
             }
