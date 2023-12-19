@@ -364,17 +364,18 @@ namespace MCGalaxy.SQL
             return data;
         }
 
-        public unsafe static string FromUTF8(IntPtr ptr, int len) {
+        public static string FromUTF8(IntPtr ptr, int len) {
             if (ptr == IntPtr.Zero) return "";
-            byte* mem = (byte*)ptr;
             
             if (len < 0) {
                 len = 0;
-                while (mem[len] != 0) { len++; }
+                while (Marshal.ReadByte(ptr, len) != 0) { len++; }
             }
             if (len == 0) return "";
             
-            return utf8.GetString(mem, len);
+            byte[] data = new byte[len];
+            Marshal.Copy(ptr, data, 0, len);
+            return utf8.GetString(data, 0, len);
         }
         
         public static DateTime ToDateTime(string text) {

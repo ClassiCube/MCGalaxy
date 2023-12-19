@@ -522,7 +522,8 @@ namespace MCGalaxy.Modules.Relay
             return Group.DefaultRank;
         }
         
-        protected sealed class RelayPlayer : Player {
+        protected sealed class RelayPlayer : Player 
+        {
             public readonly string ChannelID;
             public readonly RelayUser User;
             public readonly RelayBot Bot;

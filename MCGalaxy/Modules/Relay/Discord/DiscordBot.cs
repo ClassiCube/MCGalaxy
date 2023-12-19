@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using MCGalaxy.Config;
+using MCGalaxy.Events;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
 using MCGalaxy.Tasks;
@@ -27,6 +28,23 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Modules.Relay.Discord 
 {
+    public delegate void OnSendingWhoEmbed(DiscordBot bot, RelayUser user, ref ChannelSendEmbed embed);
+    /// <summary> Called when sending an embed response to a .who message from Discord </summary>
+    public sealed class OnSendingWhoEmbedEvent : IEvent<OnSendingWhoEmbed> 
+    { 
+        public static void Call(DiscordBot bot, RelayUser user, ref ChannelSendEmbed embed) {
+            IEvent<OnSendingWhoEmbed>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try {
+                    items[i].method(bot, user, ref embed);
+                } catch (Exception ex) {
+                    LogHandlerException(ex, items[i]);
+                }
+            }
+        }
+    }
+    
     sealed class DiscordUser : RelayUser
     {
         public string ReferencedUser;
@@ -511,7 +529,9 @@ namespace MCGalaxy.Modules.Relay.Discord
                     ConvertMessage(FormatPlayers(p, e))
                 );
             }
+            
             AddGameStatus(embed);
+            OnSendingWhoEmbedEvent.Call(this, p.User, ref embed);
             Send(embed);
         }
         
