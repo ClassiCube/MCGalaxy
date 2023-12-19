@@ -364,18 +364,17 @@ namespace MCGalaxy.SQL
             return data;
         }
 
-        public static string FromUTF8(IntPtr ptr, int len) {
+        public unsafe static string FromUTF8(IntPtr ptr, int len) {
             if (ptr == IntPtr.Zero) return "";
+            byte* mem = (byte*)ptr;
             
             if (len < 0) {
                 len = 0;
-                while (Marshal.ReadByte(ptr, len) != 0) { len++; }
+                while (mem[len] != 0) { len++; }
             }
             if (len == 0) return "";
             
-            byte[] data = new byte[len];
-            Marshal.Copy(ptr, data, 0, len);
-            return utf8.GetString(data, 0, len);
+            return utf8.GetString(mem, len);
         }
         
         public static DateTime ToDateTime(string text) {
@@ -659,7 +658,8 @@ namespace MCGalaxy.SQL
             if (count <= 0) return;
 
             paramNames = new string[count];
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) 
+            {
                 IntPtr p = Interop.sqlite3_bind_parameter_name(handle, i + 1);
                 paramNames[i] = SQLiteConvert.FromUTF8(p, -1);
             }
