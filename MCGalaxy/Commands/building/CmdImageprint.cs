@@ -104,9 +104,9 @@ namespace MCGalaxy.Commands.Building {
         bool DoImage(Player p, Vec3S32[] m, object state, BlockID block) {
             if (m[0].X == m[1].X && m[0].Z == m[1].Z) { p.Message("No direction was selected"); return false; }
 
-            Thread thread = new Thread(() => DoDrawImage(p, m, (DrawArgs)state));
-            thread.Name = "ImagePrint";
-            thread.Start();
+            Thread thread;
+            Server.StartThread(out thread, "ImagePrint",
+                               () => DoDrawImage(p, m, (DrawArgs)state));
             return false;
         }
         

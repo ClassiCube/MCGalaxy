@@ -32,9 +32,7 @@ namespace MCGalaxy.Tasks {
         volatile SchedulerTask curTask; // for .ToString()
 
         public Scheduler(string name) {
-            thread = new Thread(Loop);
-            thread.Name = name;
-            thread.Start();
+            Server.StartThread(out thread, name, Loop);
         }
         
 

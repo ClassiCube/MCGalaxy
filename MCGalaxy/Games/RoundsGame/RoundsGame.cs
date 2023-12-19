@@ -81,9 +81,8 @@ namespace MCGalaxy.Games
                 if (pl.level == Map) PlayerJoinedGame(pl);
             }
             
-            Thread t = new Thread(RunGame);
-            t.Name = "Game_" + GameName;
-            t.Start();
+            Thread thread;
+            Server.StartThread(out thread, "Game_ " + GameName, RunGame);
         }
 
         /// <summary> Attempts to auto start this game with infinite rounds. </summary>

@@ -55,10 +55,9 @@ namespace MCGalaxy {
             lock (physThreadLock) {
                 if (physThread != null && physThread.ThreadState == ThreadState.Running) return;
                 if (ListCheck.Count == 0 || physThreadStarted) return;
-                
-                physThread = new Thread(PhysicsLoop);
-                physThread.Name = "Physics_" + name;
-                physThread.Start();
+                                
+                Server.StartThread(out physThread, "Physics_" + name, 
+                                   PhysicsLoop);
                 physThreadStarted = true;
             }
         }

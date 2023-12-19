@@ -521,10 +521,8 @@ namespace MCGalaxy
                     callback = ExecuteSerialCommands;
                 }
                 
-                Thread thread = new Thread(callback);
-                try { thread.Name = "CMD_" + cmd; } catch { }
-                thread.IsBackground = true;
-                thread.Start();
+                Thread thread;
+                Server.StartThread(out thread, "CMD_ " + cmd, callback);
             } catch (Exception e) {
                 Logger.LogError(e);
                 Message("&WCommand failed");
@@ -548,10 +546,9 @@ namespace MCGalaxy
                     messages.Add(args); commands.Add(command);
                 }
 
-                Thread thread = new Thread(() => UseCommands(commands, messages, data));
-                thread.Name = "CMDS_";
-                thread.IsBackground = true;
-                thread.Start();
+            	Thread thread;
+                Server.StartThread(out thread, "CMDS_", 
+            	                   () => UseCommands(commands, messages, data));
             } catch (Exception e) {
                 Logger.LogError(e);
                 Message("&WCommand failed.");

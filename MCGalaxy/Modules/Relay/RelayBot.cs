@@ -235,10 +235,8 @@ namespace MCGalaxy.Modules.Relay
         
         /// <summary> Starts the read loop in a background thread </summary>
         void RunAsync() {
-            worker      = new Thread(IOThread);
-            worker.Name = RelayName + "_RelayBot";
-            worker.IsBackground = true;
-            worker.Start();
+            Server.StartThread(out worker, RelayName + "_RelayBot", 
+        	                   IOThread);
         }
         
         protected abstract void DoConnect();
