@@ -57,8 +57,11 @@ namespace MCGalaxy.Commands.Info
                     offset = 5;
                 } else {
                     // Backwards compatibility with old format
-                    int min = int.Parse(args[2]), hour = int.Parse(args[3]);
-                    int day = int.Parse(args[4]), month = int.Parse(args[5]), year = int.Parse(args[6]);
+                    int min   = NumberUtils.ParseInt32(args[2]);
+                    int hour  = NumberUtils.ParseInt32(args[3]);
+                    int day   = NumberUtils.ParseInt32(args[4]);
+                    int month = NumberUtils.ParseInt32(args[5]);
+                    int year  = NumberUtils.ParseInt32(args[6]);
                     
                     delta = DateTime.Now - new DateTime(year, month, day, hour, min, 0);
                     newRank = args[7]; oldRank = args[8]; 

@@ -146,7 +146,7 @@ namespace MCGalaxy {
                 p.Message("Reset weather for {0} &Sto 0 (Sun)", area);
                 weather = EnvConfig.ENV_USE_DEFAULT;
             } else {
-                if (int.TryParse(value, out weather)) {
+                if (NumberUtils.TryParseInt32(value, out weather)) {
                 } else if (value.CaselessEq("sun"))  { weather = 0;
                 } else if (value.CaselessEq("rain")) { weather = 1;
                 } else if (value.CaselessEq("snow")) { weather = 2;

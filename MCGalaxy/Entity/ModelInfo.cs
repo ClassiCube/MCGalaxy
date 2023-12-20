@@ -69,7 +69,7 @@ namespace MCGalaxy
             string str = sep == -1 ? null : model.Substring(sep + 1);
             
             float scale;
-            if (!Utils.TryParseSingle(str, out scale)) scale = 1.0f;
+            if (!NumberUtils.TryParseSingle(str, out scale)) scale = 1.0f;
             if (scale < 0.01f) scale = 0.01f;
             
             // backwards compatibility for giant model

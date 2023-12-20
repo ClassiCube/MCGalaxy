@@ -128,7 +128,7 @@ namespace MCGalaxy
         protected static void Deserialise(string[] args, int idx, out LevelPermission min,
                                           out List<LevelPermission> allowed, 
                                           out List<LevelPermission> disallowed) {
-            min = (LevelPermission)int.Parse(args[idx]);
+            min = (LevelPermission)NumberUtils.ParseInt32(args[idx]);
             disallowed = ExpandPerms(args[idx + 1]);
             allowed = ExpandPerms(args[idx + 2]);
         }
@@ -139,7 +139,7 @@ namespace MCGalaxy
             List<LevelPermission> perms = new List<LevelPermission>();
             foreach (string perm in input.SplitComma()) 
             {
-                perms.Add((LevelPermission)int.Parse(perm));
+                perms.Add((LevelPermission)NumberUtils.ParseInt32(perm));
             }
             return perms;
         }

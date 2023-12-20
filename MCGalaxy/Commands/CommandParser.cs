@@ -98,7 +98,7 @@ namespace MCGalaxy.Commands
         public static bool GetInt(Player p, string input, string argName, ref int result,
                                   int min = int.MinValue, int max = int.MaxValue) {
             int value;
-            if (!int.TryParse(input, out value)) {
+            if (!NumberUtils.TryParseInt32(input, out value)) {
                 p.Message("&W\"{0}\" is not a valid integer.", input); return false;
             }
             
@@ -110,7 +110,7 @@ namespace MCGalaxy.Commands
         public static bool GetReal(Player p, string input, string argName, ref float result,
                                    float min = float.NegativeInfinity, float max = float.MaxValue) {
             float value;
-            if (!Utils.TryParseSingle(input, out value)) {
+            if (!NumberUtils.TryParseSingle(input, out value)) {
                 p.Message("&W\"{0}\" is not a valid number.", input); return false;
             }
             
@@ -268,8 +268,8 @@ namespace MCGalaxy.Commands
             bits = input.Split(new char[] { '-' }, 2);
             
             int tmp;
-            return int.TryParse(bits[0], out tmp)
-                && int.TryParse(bits[1], out tmp);
+            return NumberUtils.TryParseInt32(bits[0], out tmp)
+                && NumberUtils.TryParseInt32(bits[1], out tmp);
         }
     }
 }

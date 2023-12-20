@@ -69,7 +69,7 @@ namespace MCGalaxy.Commands.Building {
             int value;
             if (arg == "x" || arg == "y" || arg == "z") {
                 axis = char.ToUpper(arg[0]); return true;
-            } else if (int.TryParse(arg, out value)) {
+            } else if (NumberUtils.TryParseInt32(arg, out value)) {
                 // Clamp to [0, 360)
                 value %= 360;
                 if (value < 0) value += 360;

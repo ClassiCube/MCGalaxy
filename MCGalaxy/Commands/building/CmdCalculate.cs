@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Building
             double n1 = 0, n2 = 0, result = 0;
             string r1 = args[0], op = args[1], r2 = null, format = null;
             
-            if (!Utils.TryParseDouble(r1, out n1)) {
+            if (!NumberUtils.TryParseDouble(r1, out n1)) {
                 p.Message("&W\"{0}\" is not a valid number.", r1); return;
             }
 
@@ -41,7 +41,7 @@ namespace MCGalaxy.Commands.Building
                 if (args.Length == 2 ||op.Length > 1) { Help(p); return; }
                 r2 = args[2];
                 
-                if (!Utils.TryParseDouble(r2, out n2)) {
+                if (!NumberUtils.TryParseDouble(r2, out n2)) {
                     p.Message("&W\"{0}\" is not a valid number.", r2); return;
                 }
                 

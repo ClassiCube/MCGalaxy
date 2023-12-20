@@ -133,9 +133,12 @@ namespace MCGalaxy
             string[] date = raw.SplitSpaces();
             string[] minuteHour = date[5].Split(':');
             
-            int hour = int.Parse(minuteHour[0]), minute = int.Parse(minuteHour[1]);
-            int day = int.Parse(date[1]), month = int.Parse(date[2]), year = int.Parse(date[3]);
-            return new DateTime(year, month, day, hour, minute, 0).ToUniversalTime();
+            int hour  = NumberUtils.ParseInt32(minuteHour[0]);
+            int min   = NumberUtils.ParseInt32(minuteHour[1]);
+            int day   = NumberUtils.ParseInt32(date[1]);
+            int month = NumberUtils.ParseInt32(date[2]);
+            int year  = NumberUtils.ParseInt32(date[3]);
+            return new DateTime(year, month, day, hour, min, 0).ToUniversalTime();
         }
         
 

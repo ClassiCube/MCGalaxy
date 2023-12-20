@@ -109,9 +109,9 @@ namespace MCGalaxy.Modules.Warps
                     try {
                         warp.Name  = parts[0];
                         warp.Level = parts[1];
-                        warp.Pos.X = int.Parse(parts[2]);
-                        warp.Pos.Y = int.Parse(parts[3]);
-                        warp.Pos.Z = int.Parse(parts[4]);
+                        warp.Pos.X = NumberUtils.ParseInt32(parts[2]);
+                        warp.Pos.Y = NumberUtils.ParseInt32(parts[3]);
+                        warp.Pos.Z = NumberUtils.ParseInt32(parts[4]);
                         warp.Yaw   = byte.Parse(parts[5]);
                         warp.Pitch = byte.Parse(parts[6]);
                         warps.Add(warp);

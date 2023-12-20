@@ -36,9 +36,9 @@ namespace MCGalaxy.Bots
         
         public override InstructionData Parse(string[] args) {
             Coords coords;
-            coords.X = int.Parse(args[1]);
-            coords.Y = int.Parse(args[2]);
-            coords.Z = int.Parse(args[3]);
+            coords.X    = NumberUtils.ParseInt32(args[1]);
+            coords.Y    = NumberUtils.ParseInt32(args[2]);
+            coords.Z    = NumberUtils.ParseInt32(args[3]);
             coords.RotX = byte.Parse(args[4]);
             coords.RotY = byte.Parse(args[5]);
             
@@ -51,7 +51,8 @@ namespace MCGalaxy.Bots
             w.WriteLine(Name + " " + p.Pos.X + " " + p.Pos.Y + " " + p.Pos.Z + " " + p.Rot.RotY + " " + p.Rot.HeadX);
         }
         
-        protected struct Coords {
+        protected struct Coords 
+        {
             public int X, Y, Z;
             public byte RotX, RotY;
         }

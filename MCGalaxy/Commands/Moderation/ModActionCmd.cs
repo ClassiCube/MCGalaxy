@@ -45,7 +45,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (reason.Length == 0 || reason[0] != '@') return reason;
             
             reason = reason.Substring(1);
-            if (!int.TryParse(reason, out ruleNum)) return "@" + reason;
+            if (!NumberUtils.TryParseInt32(reason, out ruleNum)) return "@" + reason;
             
             // Treat @num as a shortcut for rule #num
             Dictionary<int, string> sections = GetRuleSections();          

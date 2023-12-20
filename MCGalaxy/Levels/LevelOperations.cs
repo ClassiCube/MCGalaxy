@@ -48,7 +48,7 @@ namespace MCGalaxy
             {
                 string restore = LevelInfo.BackupNameFrom(path);
                 int num;
-                if (int.TryParse(restore, out num)) continue;
+                if (NumberUtils.TryParseInt32(restore, out num)) continue;
 
                 count++;
                 custom.Append(", " + restore);

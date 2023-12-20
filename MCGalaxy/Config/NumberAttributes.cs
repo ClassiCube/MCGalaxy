@@ -28,7 +28,7 @@ namespace MCGalaxy.Config
         // separate function to avoid boxing in derived classes
         protected int ParseInteger(string raw, int def, int min, int max) {
             int value;
-            if (!int.TryParse(raw, out value)) {
+            if (!NumberUtils.TryParseInt32(raw, out value)) {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid integer '{2}', using default of {1}", Name, def, raw);
                 value = def;
             }
@@ -101,7 +101,7 @@ namespace MCGalaxy.Config
         
         protected double ParseReal(string raw, double def, double min, double max) {
             double value;
-            if (!Utils.TryParseDouble(raw, out value)) {
+            if (!NumberUtils.TryParseDouble(raw, out value)) {
                 Logger.Log(LogType.Warning, "Config key \"{0}\" has invalid number '{2}', using default of {1}", Name, def, raw);
                 value = def;
             }
@@ -118,8 +118,8 @@ namespace MCGalaxy.Config
         }
 
         public override string Serialise(object value) {
-            if (value is float)  return Utils.StringifyDouble((float)value);
-            if (value is double) return Utils.StringifyDouble((double)value);
+            if (value is float)  return NumberUtils.StringifyDouble((float)value);
+            if (value is double) return NumberUtils.StringifyDouble((double)value);
             return base.Serialise(value);
         }
     }

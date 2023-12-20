@@ -183,8 +183,8 @@ namespace MCGalaxy.Modules.Compiling
 
             if (full) {
                 ce.FileName = m.Groups[2].Value;
-                ce.Line     = int.Parse(m.Groups[4].Value, CultureInfo.InvariantCulture);
-                ce.Column   = int.Parse(m.Groups[5].Value, CultureInfo.InvariantCulture);
+                ce.Line     = NumberUtils.ParseInt32(m.Groups[4].Value);
+                ce.Column   = NumberUtils.ParseInt32(m.Groups[5].Value);
             }
 
             ce.IsWarning   = m.Groups[full ? 6 : 1].Value.CaselessEq("warning");

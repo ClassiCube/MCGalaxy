@@ -81,7 +81,7 @@ namespace MCGalaxy
         
         protected static bool IsListModifier(string str) {
             int ignored;
-            return str.CaselessEq("all") || int.TryParse(str, out ignored);
+            return str.CaselessEq("all") || NumberUtils.TryParseInt32(str, out ignored);
         }      
         
         public static bool IsCreateAction(string str) {

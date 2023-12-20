@@ -53,10 +53,15 @@ namespace MCGalaxy.Tasks {
                 string[] args = lines[i].SplitSpaces();
                 if (args.Length < 9) continue;
 
-                int min = int.Parse(args[4]), hour = int.Parse(args[5]);
-                int day = int.Parse(args[6]), month = int.Parse(args[7]), year = int.Parse(args[8]);
-                int periodH = int.Parse(args[3]), periodM = 0;
-                if (args.Length > 10) periodM = int.Parse(args[10]);
+                int min   = NumberUtils.ParseInt32(args[4]);
+                int hour  = NumberUtils.ParseInt32(args[5]);
+                int day   = NumberUtils.ParseInt32(args[6]);
+                int month = NumberUtils.ParseInt32(args[7]);
+                int year  = NumberUtils.ParseInt32(args[8]);
+                
+                int periodH = NumberUtils.ParseInt32(args[3]);
+                int periodM = 0;
+                if (args.Length > 10) periodM = NumberUtils.ParseInt32(args[10]);
                 
                 DateTime assigned = new DateTime(year, month, day, hour, min, 0);
                 DateTime expiry = assigned.AddHours(periodH).AddMinutes(periodM);

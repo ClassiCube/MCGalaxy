@@ -103,7 +103,7 @@ namespace MCGalaxy {
                 string backupName = BackupNameFrom(path);
                 int num;
                 
-                if (!int.TryParse(backupName, out num)) continue;
+                if (!NumberUtils.TryParseInt32(backupName, out num)) continue;
                 latest = Math.Max(num, latest);
             }
             return latest;

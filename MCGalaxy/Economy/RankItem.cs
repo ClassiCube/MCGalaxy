@@ -46,7 +46,7 @@ namespace MCGalaxy.Eco
             if (perm == LevelPermission.Null) return;
             
             RankEntry rank = GetOrAdd(perm);
-            rank.Price = int.Parse(args[1]);
+            rank.Price     = NumberUtils.ParseInt32(args[1]);
         }
         
         public override void Serialise(List<string> cfg) {

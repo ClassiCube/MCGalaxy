@@ -47,7 +47,7 @@ namespace MCGalaxy.Generator
                 
                 if (ArgFilter(arg)) {
                     if (!ArgParser(arg)) return false;
-                } else if (int.TryParse(arg, out Seed)) { 
+                } else if (NumberUtils.TryParseInt32(arg, out Seed)) { 
                     gotSeed = true;
                 } else {
                     if (!CommandParser.GetEnum(p, arg, "Seed", ref Biome)) return false;
@@ -87,7 +87,8 @@ namespace MCGalaxy.Generator
             if (seed.Length == 0) return new Random();
             
             int value;
-            if (!int.TryParse(seed, out value)) value = seed.GetHashCode();
+            if (!NumberUtils.TryParseInt32(seed, out value)) 
+                value = seed.GetHashCode();
             return new Random(value);
         } // TODO move to CmdMaze
 

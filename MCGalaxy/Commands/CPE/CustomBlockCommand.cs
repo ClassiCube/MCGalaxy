@@ -692,7 +692,7 @@ namespace MCGalaxy.Commands.CPE
             int max = Block.MaxRaw;
             
             // Check for block names (can't use standard parsing behaviour)
-            if (!int.TryParse(arg, out raw)) {
+            if (!NumberUtils.TryParseInt32(arg, out raw)) {
                 BlockDefinition def = BlockDefinition.ParseName(arg, args.defs);
                 
                 if (def == null) {

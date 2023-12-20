@@ -47,7 +47,7 @@ namespace MCGalaxy.Eco
             if (prop.CaselessEq("enabled")) {
                 Enabled = value.CaselessEq("true");
             } else if (prop.CaselessEq("purchaserank")) {
-                PurchaseRank = (LevelPermission)int.Parse(value);
+                PurchaseRank = (LevelPermission)NumberUtils.ParseInt32(value);
             } else {
                 Parse(prop, value);
             }

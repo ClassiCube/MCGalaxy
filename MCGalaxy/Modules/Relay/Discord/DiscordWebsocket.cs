@@ -161,7 +161,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             JsonObject obj = (JsonObject)ctx.Parse();
             if (obj == null) return;
             
-            int opcode = int.Parse((string)obj["op"]);
+            int opcode = NumberUtils.ParseInt32((string)obj["op"]);
             DispatchPacket(opcode, obj);
         }
         
@@ -187,7 +187,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         void HandleHello(JsonObject obj) {
             JsonObject data = (JsonObject)obj["d"];
             string interval = (string)data["heartbeat_interval"];            
-            int msInterval  = int.Parse(interval);
+            int msInterval  = NumberUtils.ParseInt32(interval);
             
             heartbeat = Server.Heartbeats.QueueRepeat(SendHeartbeat, null, 
                                           TimeSpan.FromMilliseconds(msInterval));
@@ -249,7 +249,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             obj["op"] = OPCODE_HEARTBEAT;
             
             if (Session.LastSeq != null) {
-                obj["d"] = int.Parse(Session.LastSeq);
+                obj["d"] = NumberUtils.ParseInt32(Session.LastSeq);
             } else {
                 obj["d"] = null;
             }
@@ -275,7 +275,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             {
                 { "token",      Token },
                 { "session_id", Session.ID },
-                { "seq",        int.Parse(Session.LastSeq) }
+                { "seq",        NumberUtils.ParseInt32(Session.LastSeq) }
             };
         }
         

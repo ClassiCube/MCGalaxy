@@ -234,8 +234,13 @@ namespace MCGalaxy.SQL
         
         internal static TimeSpan ParseOldDBTimeSpent(string value) {
             string[] parts = value.SplitSpaces();
-            return new TimeSpan(int.Parse(parts[0]), int.Parse(parts[1]),
-                                int.Parse(parts[2]), int.Parse(parts[3]));
+            
+            int days  = NumberUtils.ParseInt32(parts[0]);
+            int hours = NumberUtils.ParseInt32(parts[1]);
+            int mins  = NumberUtils.ParseInt32(parts[2]);
+            int secs  = NumberUtils.ParseInt32(parts[3]);
+            
+            return new TimeSpan(days, hours, mins, secs);
         }
         
         public static DateTime ParseDBDate(string value) {

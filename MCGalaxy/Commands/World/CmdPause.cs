@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.World {
             if (message.Length > 0) {
                 string[] parts = message.SplitSpaces();
                 if (parts.Length == 1) {
-                    if (!int.TryParse(parts[0], out seconds)) {
+                    if (!NumberUtils.TryParseInt32(parts[0], out seconds)) {
                         seconds = 30;
                         lvl = Matcher.FindLevels(p, parts[0]);
                         if (lvl == null) return;

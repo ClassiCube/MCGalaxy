@@ -34,7 +34,7 @@ namespace MCGalaxy.Commands.Building {
             if (tree == null) tree = new NormalTree();
             
             int size;            
-            if (args.Length > 1 && int.TryParse(args[1], out size)) {
+            if (args.Length > 1 && NumberUtils.TryParseInt32(args[1], out size)) {
                 Player p = dArgs.Player;
                 string opt = args[0] + " tree size";                
                 if (!CommandParser.GetInt(p, args[1], opt, ref size, tree.MinSize, tree.MaxSize)) return null;

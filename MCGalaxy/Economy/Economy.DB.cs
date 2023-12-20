@@ -60,7 +60,7 @@ namespace MCGalaxy.Eco
         
         public static string FindMatches(Player p, string name, out int money) {
             string[] match = PlayerDB.MatchValues(p, name, "Name,Money");
-            money = match == null ? 0    : int.Parse(match[1]);
+            money = match == null ? 0    : NumberUtils.ParseInt32(match[1]);
             return  match == null ? null : match[0];
         }
         

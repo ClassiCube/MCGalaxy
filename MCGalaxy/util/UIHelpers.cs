@@ -68,7 +68,8 @@ namespace MCGalaxy.UI
                 Logger.Log(LogType.CommandUsage, "(console): /{0} can only be used in-game.", cmd.name); return; 
             }
             
-            Thread thread = new Thread(
+            Thread thread;
+            Server.StartThread(out thread, "ConsoleCMD_" + name, 
                 () => {
                     try {
                         cmd.Use(Player.Console, args);
@@ -82,9 +83,6 @@ namespace MCGalaxy.UI
                         Logger.Log(LogType.CommandUsage, "(console): FAILED COMMAND");
                     }
                 });
-            thread.Name = "ConsoleCMD_" + name;
-            thread.IsBackground = true;
-            thread.Start();
         }
         
         public static string Format(string message) {

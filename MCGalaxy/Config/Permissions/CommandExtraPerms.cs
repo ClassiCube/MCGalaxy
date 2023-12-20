@@ -124,13 +124,13 @@ namespace MCGalaxy.Commands
                     
                     // Old format - Name:Num : Lowest : Description
                     if (IsDescription(args[3])) {
-                        min = (LevelPermission)int.Parse(args[2]);
+                        min = (LevelPermission)NumberUtils.ParseInt32(args[2]);
                         allowed = null; disallowed = null;
                     } else {
                         Deserialise(args, 2, out min, out allowed, out disallowed);
                     }
                     
-                    perms = GetOrAdd(args[0], int.Parse(args[1]), min);
+                    perms = GetOrAdd(args[0], NumberUtils.ParseInt32(args[1]), min);
                     perms.Init(min, allowed, disallowed);
                 } catch (Exception ex) {
                     Logger.Log(LogType.Warning, "Hit an error on the extra command perms " + line);

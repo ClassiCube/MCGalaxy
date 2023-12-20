@@ -51,7 +51,7 @@ namespace MCGalaxy
             } else if (modifier.CaselessEq("all")) {
                 OutputItems(p, items, 0, items.Count, formatter, printer);
                 p.Message("Showing {0} 1-{1} (out of {1})", type, items.Count);
-            } else if (!int.TryParse(modifier, out page)) {
+            } else if (!NumberUtils.TryParseInt32(modifier, out page)) {
                 p.Message("Input must be either \"all\" or an integer.");
             } else {
                 OutputPage(p, items, formatter, printer, cmd, type, page, perPage);
