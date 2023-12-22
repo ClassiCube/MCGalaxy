@@ -31,8 +31,9 @@ namespace MCGalaxy.Commands.Misc {
             int TotalTime = 0;
             try
             {
-                TotalTime = int.Parse(message.SplitSpaces()[0]);
-                message = message.Substring(message.IndexOf(' ') + 1);
+                string[] bits = message.SplitSpaces(2);
+                TotalTime = int.Parse(bits[0]);
+                message   = bits[1];
             }
             catch
             {
@@ -44,7 +45,7 @@ namespace MCGalaxy.Commands.Misc {
             TimerArgs args = new TimerArgs();
             args.Message = message;
             args.Repeats = (int)(TotalTime / 5) + 1;
-            args.Player = p;
+            args.Player  = p;
             
             p.cmdTimer = true;
             p.level.Message("Timer lasting for " + TotalTime + " seconds has started.");

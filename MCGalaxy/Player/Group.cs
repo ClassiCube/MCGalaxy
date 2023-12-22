@@ -147,7 +147,7 @@ namespace MCGalaxy
             if (value == null) return defPerm;
             
             sbyte perm;
-            if (sbyte.TryParse(value, out perm))
+            if (NumberUtils.TryParseInt8(value, out perm))
                 return (LevelPermission)perm;
             
             Group grp = Find(value);

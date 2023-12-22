@@ -52,9 +52,9 @@ namespace MCGalaxy.Commands.Info
                 int offset;
                 
                 if (args.Length <= 6) {
-                    delta = DateTime.UtcNow - long.Parse(args[2]).FromUnixTime();
+                    delta   = DateTime.UtcNow - long.Parse(args[2]).FromUnixTime();
                     newRank = args[3]; oldRank = args[4]; 
-                    offset = 5;
+                    offset  = 5;
                 } else {
                     // Backwards compatibility with old format
                     int min   = NumberUtils.ParseInt32(args[2]);
@@ -63,9 +63,9 @@ namespace MCGalaxy.Commands.Info
                     int month = NumberUtils.ParseInt32(args[5]);
                     int year  = NumberUtils.ParseInt32(args[6]);
                     
-                    delta = DateTime.Now - new DateTime(year, month, day, hour, min, 0);
+                    delta   = DateTime.Now - new DateTime(year, month, day, hour, min, 0);
                     newRank = args[7]; oldRank = args[8]; 
-                    offset = 9;
+                    offset  = 9;
                 }
                 string reason = args.Length <= offset ? "(no reason given)" : args[offset].Replace("%20", " ");
                

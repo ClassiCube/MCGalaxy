@@ -46,7 +46,7 @@ namespace MCGalaxy.SQL
         }
         
         public string FormatType() {
-            if (Type == ColumnType.Char) return "CHAR(" + MaxLength + ")";
+            if (Type == ColumnType.Char)    return "CHAR("    + MaxLength + ")";
             if (Type == ColumnType.VarChar) return "VARCHAR(" + MaxLength + ")";
             return colTypes[(int)Type];
         }

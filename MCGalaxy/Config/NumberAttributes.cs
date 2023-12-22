@@ -43,6 +43,12 @@ namespace MCGalaxy.Config
             }
             return value;
         }
+
+        public override string Serialise(object value) {
+            if (value is int) return NumberUtils.StringifyInt((int)value);
+            
+            return base.Serialise(value);
+        }
     }
     
     public sealed class ConfigIntAttribute : ConfigIntegerAttribute 
@@ -120,6 +126,7 @@ namespace MCGalaxy.Config
         public override string Serialise(object value) {
             if (value is float)  return NumberUtils.StringifyDouble((float)value);
             if (value is double) return NumberUtils.StringifyDouble((double)value);
+            
             return base.Serialise(value);
         }
     }

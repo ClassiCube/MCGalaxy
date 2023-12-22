@@ -49,7 +49,7 @@ namespace MCGalaxy
             if (num == -1) return "-1.0";
             
             if (num == EnvConfig.ENV_USE_DEFAULT) num = -1;
-            return num.ToString();
+            return NumberUtils.StringifyInt(num);
         }
     }
     

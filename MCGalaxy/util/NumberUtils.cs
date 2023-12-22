@@ -52,6 +52,10 @@ namespace MCGalaxy
             return value.ToString(CultureInfo.InvariantCulture);
         }
         
+        public static string StringifyInt(int value) {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+        
         
         // Some languages don't have - as the negative sign symbol
         public static bool TryParseInt32(string s, out int result) {
@@ -60,6 +64,10 @@ namespace MCGalaxy
         
         public static int ParseInt32(string s) {
             return int.Parse(s, INTEGER_STYLE, NumberFormatInfo.InvariantInfo);
+        }
+        
+        public static bool TryParseInt8(string s, out sbyte result) {
+            return sbyte.TryParse(s, INTEGER_STYLE, NumberFormatInfo.InvariantInfo, out result);
         }
     }
 }

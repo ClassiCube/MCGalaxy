@@ -256,11 +256,10 @@ namespace MCGalaxy.Commands.World {
             );
 
         static void HandleMapPhysics(Player p, string message) {
-            if (message == "0" || message == "1" || message == "2" || message == "3" || message == "4" || message == "5") {
-                CmdPhysics.SetPhysics(p.level, int.Parse(message));
-            } else {
-                p.Message("Accepted numbers are: 0, 1, 2, 3, 4 or 5");
-            }
+            int level = 0;
+            if (!CommandParser.GetInt(p, message, "Physics level", ref level, 0, 5)) return;
+        	
+            CmdPhysics.SetPhysics(p.level, level);
         }
         
         static void HandleMapAdd(Player p, string message) {
@@ -272,7 +271,7 @@ namespace MCGalaxy.Commands.World {
             if (level == null) return;
             string[] bits = message.SplitSpaces();
 
-            if (message.Length == 0) message = "128 128 128";
+            if (message.Length == 0)  message = "128 128 128";
             else if (bits.Length < 3) message = "128 128 128 " + message;
             string[] genArgs = (level + " " + message.TrimEnd()).SplitSpaces(6);
 

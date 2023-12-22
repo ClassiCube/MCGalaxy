@@ -125,8 +125,9 @@ namespace MCGalaxy.Eco
         public int Price = 100;
         
         public override void Parse(string prop, string value) {
-            if (prop.CaselessEq("price"))
-                Price = int.Parse(value);
+            if (prop.CaselessEq("price")) {
+                Price = NumberUtils.ParseInt32(value);
+            }
         }
         
         public override void Serialise(List<string> cfg) {

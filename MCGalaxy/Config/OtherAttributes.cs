@@ -42,7 +42,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigPermAttribute : ConfigAttribute {
+    public sealed class ConfigPermAttribute : ConfigAttribute 
+    {
         LevelPermission defPerm;
         
         public ConfigPermAttribute(string name, string section, LevelPermission def)
@@ -69,11 +70,12 @@ namespace MCGalaxy.Config {
         
         public override string Serialise(object value) {
             LevelPermission perm = (LevelPermission)value;
-            return ((sbyte)perm).ToString();
+            return NumberUtils.StringifyInt((sbyte)perm);
         }
     }
     
-    public sealed class ConfigEnumAttribute : ConfigAttribute {
+    public sealed class ConfigEnumAttribute : ConfigAttribute 
+    {
         object defValue;
         Type enumType;
         
@@ -93,7 +95,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigVec3Attribute : ConfigAttribute {
+    public sealed class ConfigVec3Attribute : ConfigAttribute 
+    {
         public ConfigVec3Attribute(string name, string section) : base(name, section) { }
         
         public override object Parse(string raw) {
@@ -109,7 +112,8 @@ namespace MCGalaxy.Config {
         }
     }
     
-    public sealed class ConfigBoolArrayAttribute : ConfigAttribute {
+    public sealed class ConfigBoolArrayAttribute : ConfigAttribute 
+    {
         bool defValue;
         int minCount;
         
