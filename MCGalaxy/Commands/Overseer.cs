@@ -258,7 +258,7 @@ namespace MCGalaxy.Commands.World {
         static void HandleMapPhysics(Player p, string message) {
             int level = 0;
             if (!CommandParser.GetInt(p, message, "Physics level", ref level, 0, 5)) return;
-        	
+            
             CmdPhysics.SetPhysics(p.level, level);
         }
         
@@ -382,7 +382,7 @@ namespace MCGalaxy.Commands.World {
 
         static void HandleZones(Player p, string raw) {
             string[] args = raw.SplitSpaces(2);
-        	
+            
             if (args.Length == 1) {
                 p.Message("Arguments required. See &T/Help zone");
             } else {

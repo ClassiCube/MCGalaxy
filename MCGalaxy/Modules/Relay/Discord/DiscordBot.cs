@@ -410,7 +410,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             fakeGuest.group     = Group.DefaultRank;
             List<Player> online = PlayerInfo.GetOnlineCanSee(fakeGuest, fakeGuest.Rank); 
 
-            string numOnline = online.Count.ToString();
+            string numOnline = NumberUtils.StringifyInt(online.Count);
             return Config.StatusMessage.Replace("{PLAYERS}", numOnline);
         }
         

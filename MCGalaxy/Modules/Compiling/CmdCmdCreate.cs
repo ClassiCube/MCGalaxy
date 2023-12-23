@@ -26,7 +26,7 @@ namespace MCGalaxy.Modules.Compiling
         public override string name { get { return "CmdCreate"; } }
         public override string shortcut { get { return ""; } }
         public override CommandAlias[] Aliases {
-        	get { return new[] { new CommandAlias("PCreate", "plugin") }; }
+            get { return new[] { new CommandAlias("PCreate", "plugin") }; }
         }
         
         protected override void CompileCommand(Player p, string[] paths, ICompiler compiler) {

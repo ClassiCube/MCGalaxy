@@ -174,7 +174,7 @@ namespace MCGalaxy.Commands.Info
             Dictionary<string, bool> categories = new Dictionary<string, bool>();
             foreach (Command cmd in Command.allCmds)
             {
-            	categories[MapCategory(cmd.type)] = true;
+                categories[MapCategory(cmd.type)] = true;
             }
             
             List<string> list = new List<string>(categories.Keys);

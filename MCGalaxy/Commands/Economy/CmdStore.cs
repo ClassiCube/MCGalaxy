@@ -34,8 +34,8 @@ namespace MCGalaxy.Commands.Eco
             if (!Economy.CheckIsEnabled(p, this)) return;
             
             if (message.Length == 0 || IsListModifier(message)) {
-        		Paginator.Output(p, Economy.GetEnabledItems(), 
-        		                 PrintItemOverview, "Store", "enabled Items", message);
+                Paginator.Output(p, Economy.GetEnabledItems(), 
+                                 PrintItemOverview, "Store", "enabled Items", message);
                 p.Message("&HUse &T/Store [item] &Hto see more information about that item.");
             } else {
                 Item item = Economy.GetItem(message);
@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Eco
         }
         
         static void PrintItemOverview(Player p, Item item) {
-        	item.OnStoreOverview(p);
+            item.OnStoreOverview(p);
         }
         
         public override void Help(Player p) {

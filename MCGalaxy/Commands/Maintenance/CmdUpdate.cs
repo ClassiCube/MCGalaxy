@@ -26,15 +26,15 @@ namespace MCGalaxy.Commands.Maintenance
         public override LevelPermission defaultRank { get { return LevelPermission.Owner; } }
 
         public override void Use(Player p, string message, CommandData data) {
-        	if (message.CaselessEq("check")) {
-        		p.Message("Checking for updates..");
-        		bool needsUpdating = Updater.NeedsUpdating();
-        		p.Message("Server {0}", needsUpdating ? "&cneeds updating" : "&ais up to date");
-        	} else if (message.Length == 0) {
-        		Updater.PerformUpdate();
-        	} else {
-        		Help(p);
-        	}
+            if (message.CaselessEq("check")) {
+                p.Message("Checking for updates..");
+                bool needsUpdating = Updater.NeedsUpdating();
+                p.Message("Server {0}", needsUpdating ? "&cneeds updating" : "&ais up to date");
+            } else if (message.Length == 0) {
+                Updater.PerformUpdate();
+            } else {
+                Help(p);
+            }
         }
 
         public override void Help(Player p) {

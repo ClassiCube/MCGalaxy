@@ -81,7 +81,7 @@ namespace MCGalaxy.Modules.Games.ZS
         
         protected override string WelcomeMessage {
             get { return "&2Zombie Survival &Sis running! Type &T/ZS go &Sto join"; }
-		}
+        }
         
         public DateTime RoundEnd;
         public VolatileArray<Player> Alive = new VolatileArray<Player>();

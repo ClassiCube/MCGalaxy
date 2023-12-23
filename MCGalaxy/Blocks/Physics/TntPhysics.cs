@@ -23,7 +23,7 @@ using BlockID = System.UInt16;
 namespace MCGalaxy.Blocks.Physics 
 {
     public delegate bool TNTImmuneFilter(ushort x, ushort y, ushort z);
-	
+    
     public static class TntPhysics 
     {      
         internal static void ToggleFuse(Level lvl, ushort x, ushort y, ushort z) {

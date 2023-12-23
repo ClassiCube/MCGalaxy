@@ -106,7 +106,7 @@ namespace MCGalaxy.DB
             string owner;
             name  = Server.ToRawUsername(name);
             owner = Server.ToRawUsername(Server.Config.OwnerName);
-        	
+            
             if (Server.Devs.CaselessContains(name))
                 p.Message("  Player is an &9{0} Developer", Server.SoftwareName);
             if (owner.CaselessEq(name))

@@ -51,8 +51,8 @@ namespace MCGalaxy
             this.blocks = blocks;
             Init(name, width, height, length);
         }
-    	internal Level() { }
-    	
+        internal Level() { }
+        
         internal void Init(string name, ushort width, ushort height, ushort length) {
             if (width  < 1) width  = 1;
             if (height < 1) height = 1;

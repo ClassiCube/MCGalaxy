@@ -46,21 +46,21 @@ namespace MCGalaxy.Modules.Compiling
             
             return CreateFile(p, name, path, "command &fCmd", source);
         }
-    	
-    	public static bool CreatePlugin(Player p, string name, ICompiler compiler) {
+        
+        public static bool CreatePlugin(Player p, string name, ICompiler compiler) {
             string path    = compiler.PluginPath(name);
             string creator = p.IsSuper ? Server.Config.Name : p.truename;
             string source  = compiler.GenExamplePlugin(name, creator);
             
             return CreateFile(p, name, path, "plugin &f", source);
         }
-    	
-    	static bool CreateFile(Player p, string name, string path, string type, string source) {
+        
+        static bool CreateFile(Player p, string name, string path, string type, string source) {
             if (File.Exists(path)) {
                 p.Message("File {0} already exists. Choose another name.", path); 
                 return false;
             }
-    		
+            
             File.WriteAllText(path, source);
             p.Message("Successfully saved example {2}{0} &Sto {1}", name, path, type);
             return true;

@@ -85,7 +85,7 @@ namespace MCGalaxy.Modules.Games.TW
         
         protected override string WelcomeMessage {
             get { return "&4TNT Wars &Sis running! Type &T/TW go &Sto join"; }
-		}
+        }
         
         TWTeam Red  = new TWTeam("Red", Colors.red);
         TWTeam Blue = new TWTeam("Blue", Colors.blue);

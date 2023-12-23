@@ -45,7 +45,7 @@ namespace MCGalaxy
         }
         
         void SendRawMessage(string message) {
-        	bool cancel = false;
+            bool cancel = false;
             OnMessageRecievedEvent.Call(this, ref message, ref cancel);
             if (cancel) return;
             

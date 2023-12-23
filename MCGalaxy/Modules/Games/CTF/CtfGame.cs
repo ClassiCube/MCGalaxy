@@ -65,7 +65,7 @@ namespace MCGalaxy.Modules.Games.CTF
         
         protected override string WelcomeMessage {
             get { return "&9Capture the Flag &Sis running! Type &T/CTF go &Sto join"; }
-		}
+        }
         
         const string ctfExtrasKey = "MCG_CTF_DATA";
         internal static CtfData Get(Player p) {

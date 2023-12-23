@@ -546,9 +546,9 @@ namespace MCGalaxy
                     messages.Add(args); commands.Add(command);
                 }
 
-            	Thread thread;
+                Thread thread;
                 Server.StartThread(out thread, "CMDS_", 
-            	                   () => UseCommands(commands, messages, data));
+                                   () => UseCommands(commands, messages, data));
             } catch (Exception e) {
                 Logger.LogError(e);
                 Message("&WCommand failed.");

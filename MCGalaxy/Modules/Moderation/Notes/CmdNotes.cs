@@ -57,10 +57,10 @@ namespace MCGalaxy.Modules.Moderation.Notes
             
             // special case "/Notes" to show latest notes by default
             if (modifier.Length == 0) {
-            	Paginator.Output(p, notes, PrintNote, cmd, "Notes", 
-            	                 (1 + (notes.Count - 8)).ToString());
-            	p.Message("To see all Notes, use &T/{0} all", cmd);
-            	return;
+                Paginator.Output(p, notes, PrintNote, cmd, "Notes", 
+                                 (1 + (notes.Count - 8)).ToString());
+                p.Message("To see all Notes, use &T/{0} all", cmd);
+                return;
             }
             
             Paginator.Output(p, notes, PrintNote,

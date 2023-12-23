@@ -92,9 +92,9 @@ namespace MCGalaxy
         }
         
         public string Describe() {
-            StringBuilder builder = new StringBuilder();
-            Describe(builder);
-            return builder.ToString();
+            StringBuilder sb = new StringBuilder();
+            Describe(sb);
+            return sb.ToString();
         }
         
         
@@ -116,13 +116,28 @@ namespace MCGalaxy
         }
         
         protected string Serialise() {
-            return ItemName + " : " + (int)MinRank + " : "
-                + JoinPerms(Disallowed) + " : " + JoinPerms(Allowed);
+            StringBuilder sb = new StringBuilder(); // TODO: cache stringbuilder across calls?            
+            sb.Append(ItemName);
+            sb.Append(" : ");
+            sb.Append(NumberUtils.StringifyInt((int)MinRank));
+            sb.Append(" : ");
+            AppendPerms(sb, Disallowed);
+            sb.Append(" : ");
+            AppendPerms(sb, Allowed);
+            
+            return sb.ToString();
         }
         
-        static string JoinPerms(List<LevelPermission> list) {
-            if (list == null || list.Count == 0) return "";
-            return list.Join(p => ((int)p).ToString(), ",");
+        static void AppendPerms(StringBuilder sb, List<LevelPermission> list) {
+            if (list == null || list.Count == 0) return;
+            string prefix = "";
+            
+            foreach (LevelPermission perm in list)
+            {
+                sb.Append(prefix);
+                sb.Append(NumberUtils.StringifyInt((int)perm));
+                prefix = ",";
+            }
         }
         
         protected static void Deserialise(string[] args, int idx, out LevelPermission min,

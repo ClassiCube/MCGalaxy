@@ -59,7 +59,7 @@ namespace MCGalaxy.Drawing.Brushes
                 int freq = 1;
                 if (sepIndex >= 0) {
                     arg = parts[i].Substring(sepIndex + 1);
-                    if (!CommandParser.GetInt(p, arg, "Frequency", ref freq, 1, 1000)) return false;
+                    if (!CommandParser.GetInt(p, arg, "Frequency", ref freq, 1, 2000)) return false;
                 }
                 
                 for (int j = 0; j < count; j++)

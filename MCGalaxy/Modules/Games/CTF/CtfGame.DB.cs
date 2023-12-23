@@ -56,8 +56,8 @@ namespace MCGalaxy.Modules.Games.CTF
             if (data == null || data.Points == 0 && data.Captures == 0 && data.Tags == 0) return;
             
             object[] args = new object[] {
-            	 data.Points, data.Captures, data.Tags, 
-            	 p.name
+                 data.Points, data.Captures, data.Tags, 
+                 p.name
             };
             
             int changed = Database.UpdateRows("CTF", "Points=@0, Captures=@1, tags=@2", 

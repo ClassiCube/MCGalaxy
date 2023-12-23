@@ -743,9 +743,9 @@ namespace MCGalaxy.SQL
             
             switch (tc) {
                 case TypeCode.DateTime:
-            	    return Bind_DateTime(i, (DateTime)obj);
+                    return Bind_DateTime(i, (DateTime)obj);
                 case TypeCode.Boolean:
-            	    return Bind_Int32(i, ((bool)obj) ? 1 : 0);
+                    return Bind_Int32(i, ((bool)obj) ? 1 : 0);
                 case TypeCode.Char: // TODO ushort instead?
                 case TypeCode.SByte:
                     return Bind_Int32(i, Convert.ToSByte(obj));

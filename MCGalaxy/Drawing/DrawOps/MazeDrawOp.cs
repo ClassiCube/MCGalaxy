@@ -112,7 +112,7 @@ namespace MCGalaxy.Drawing.Ops
         void MoveRandomDir(GridNode P, out GridNode P1, out GridNode P2) {        
             while (true) {
                 int dir = rng.Next(4);
-        		
+                
                 switch (dir) {
                     case 0: //go up
                         if (IsWall(P.X, P.Y + 2)) {

@@ -117,8 +117,8 @@ namespace MCGalaxy.Commands.World
         }
 
         public override void Help(Player p) {
-        	string action = IsVisit ? "visit" : "build on";
-        	string verb   = IsVisit ? "visit" : "build";
+            string action = IsVisit ? "visit" : "build on";
+            string verb   = IsVisit ? "visit" : "build";
 
             p.Message("&T/{0} [level] [rank]", name);
             p.Message("&HSets the lowest rank able to {0} the given level.", action);

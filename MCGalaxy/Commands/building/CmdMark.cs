@@ -85,7 +85,7 @@ namespace MCGalaxy.Commands.Building
 
             if (arg.Length == 1) {
                 // just 'X' changes input to coordinate of last click
-                arg   = last.ToString();
+                arg   = NumberUtils.StringifyInt(last);
             } else {
                 // assume wanting input relative to last click, e.g. 'X~3'
                 arg   = arg.Substring(1);

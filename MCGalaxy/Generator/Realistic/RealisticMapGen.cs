@@ -30,7 +30,7 @@ using MCGalaxy.Generator.Foliage;
 namespace MCGalaxy.Generator.Realistic 
 {
     public delegate void PreprocessGen(Level lvl, MapGenArgs args);
-	
+    
     public sealed class RealisticMapGen 
     {
         float[] terrain, overlay, overlayT;
@@ -378,7 +378,7 @@ namespace MCGalaxy.Generator.Realistic
                 for (int z = 0; z < length; ++z)
                     for (int x = 0; x < width; ++x)
             {
-            	if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == height - 1) {
+                if (x == 0 || x == width - 1 || z == 0 || z == length - 1 || y == height - 1) {
                     blocks[index] = biome.BeachRocky;
                 } else if (x == 1 || x == width - 2 || z == 1 || z == length - 2) {
                     if (rng.Next(1000) != 7) { index++; continue; }

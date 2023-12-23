@@ -34,7 +34,7 @@ namespace MCGalaxy {
         
         public void SetPhysics(int level) {
             if (IsMuseum) return;
-        	
+            
             if (physics == 0 && level != 0 && blocks != null) {
                 for (int i = 0; i < blocks.Length; i++)
                 {

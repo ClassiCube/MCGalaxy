@@ -42,8 +42,8 @@ namespace MCGalaxy.Games
                 OnBlockChangingEvent.Register(BlockChangingCallback, Priority.Low);
                 hookedEvents = true;
             }
-        	
-        	if (p.weaponBuffer == null) p.weaponBuffer = new BufferedBlockSender();
+            
+            if (p.weaponBuffer == null) p.weaponBuffer = new BufferedBlockSender();
             
             this.p   = p;
             p.ClearBlockchange();

@@ -39,8 +39,8 @@ namespace MCGalaxy.Modules.Games.TW
         void UpdateBlockHandlers() {
             Map.UpdateBlockHandlers(Block.TNT);
         }
-    	
-    	void HandleBlockHandlersUpdated(Level lvl, BlockID block) {
+        
+        void HandleBlockHandlersUpdated(Level lvl, BlockID block) {
             if (!Running || lvl != Map || block != Block.TNT) return;
             
             lvl.PlaceHandlers[Block.TNT]   = HandleTNTPlace;

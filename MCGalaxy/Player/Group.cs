@@ -126,7 +126,7 @@ namespace MCGalaxy
         public static string GetColoredName(LevelPermission perm) {
             Group grp = Find(perm);
             if (grp != null) return grp.ColoredName;
-            return "&f" + ((int)perm);
+            return "&f" + NumberUtils.StringifyInt((int)perm);
         }
         
         public static string GetColoredName(string rankName) {
@@ -234,7 +234,7 @@ namespace MCGalaxy
         
         
         void LoadPlayers() {
-            string desired = (int)Permission + "_rank";
+            string desired = NumberUtils.StringifyInt((int)Permission) + "_rank";
             // Try to use the auto filename format
             if (filename == null || !filename.StartsWith(desired))
                 MoveToDesired(desired);

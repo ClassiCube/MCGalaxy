@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Building
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
-        	dArgs.BrushName = ReplaceNot ? "ReplaceNotBrush" : "ReplaceBrush";
+            dArgs.BrushName = ReplaceNot ? "ReplaceNotBrush" : "ReplaceBrush";
             dArgs.BrushArgs = dArgs.Message;
         }
         

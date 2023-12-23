@@ -179,7 +179,7 @@ namespace MCGalaxy.Config
         
         public override object Parse(string raw) {
             if (string.IsNullOrEmpty(raw)) return null;
-        	
+            
             double value = ParseReal(raw, -1, -1, int.MaxValue);
             if (value < 0) return null;
             

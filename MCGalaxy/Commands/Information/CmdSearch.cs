@@ -121,9 +121,9 @@ namespace MCGalaxy.Commands.Info
         
         
         static void SearchPlayers(Player p, string keyword, string modifier) {
-        	List<string> names = new List<string>();
+            List<string> names = new List<string>();
             string suffix = Database.Backend.CaselessLikeSuffix;
-        	
+            
             // TODO supporting more than 100 matches somehow
             Database.ReadRows("Players", "Name", r => names.Add(r.GetText(0)),
                               "WHERE Name LIKE @0 ESCAPE '#' LIMIT 100" + suffix,

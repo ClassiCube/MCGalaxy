@@ -188,7 +188,7 @@ namespace MCGalaxy.Drawing.Ops
                     ushort y = (ushort)(Origin.Y + dx.Y * xx + dy.Y * yy);
                     ushort z = (ushort)(Origin.Z + dx.Z * xx + dy.Z * yy);
                     if (P.A < 20) { output(Place(x, y, z, Block.Air)); continue; }
-                	
+                    
                     Vec3F32 oldPixel = new Vec3F32(P.R, P.G, P.B) + errors[xx, yy];
                     // No Clamp for float?
                     if (oldPixel.X > 255) { oldPixel.X = 255; } if (oldPixel.X < 0) { oldPixel.X = 0; }

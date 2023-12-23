@@ -154,7 +154,7 @@ namespace MCGalaxy.SQL
         /// <summary> Executes an SQL command and returns the number of affected rows. </summary>
         public int Execute(string sql, object[] parameters, bool createDB) {
             int rows = 0;
-        	
+            
             using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (!createDB && MultipleSchema)
@@ -172,7 +172,7 @@ namespace MCGalaxy.SQL
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
         public int Iterate(string sql, object[] parameters, ReaderCallback callback) {
             int rows = 0;
-        	
+            
             using (ISqlConnection conn = CreateConnection()) {
                 conn.Open();
                 if (MultipleSchema)
