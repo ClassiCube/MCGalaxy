@@ -30,13 +30,14 @@ namespace MCGalaxy.Gui {
         
         // need to keep a list of changed block perms, because we don't want
         // to modify the server's live permissions if user clicks 'discard'
-        BlockPerms blockPermsOrig, blockPermsCopy;
-        List<BlockPerms> blockPermsChanged = new List<BlockPerms>();
+        BlockPerms placePermsOrig, placePermsCopy;
+        List<BlockPerms> placePermsChanged = new List<BlockPerms>();
         BlockProps[] blockPropsChanged = new BlockProps[Block.Props.Length];
+        // TODO delete permissions too
         
         void LoadBlocks() {
             blk_list.Items.Clear();
-            blockPermsChanged.Clear();
+            placePermsChanged.Clear();
             blockIDMap = new List<BlockID>();
             
             for (int b = 0; b < blockPropsChanged.Length; b++) 
@@ -59,7 +60,7 @@ namespace MCGalaxy.Gui {
         }
 
         void SaveBlocks() {
-            if (blockPermsChanged.Count > 0)
+            if (placePermsChanged.Count > 0)
                 SaveBlockPermissions();            
             if (AnyBlockPropsChanged())
                 SaveBlockProps();
@@ -68,9 +69,9 @@ namespace MCGalaxy.Gui {
         }
         
         void SaveBlockPermissions() {
-            foreach (BlockPerms changed in blockPermsChanged) 
+            foreach (BlockPerms changed in placePermsChanged) 
             {
-                BlockPerms orig = BlockPerms.Find(changed.ID);
+                BlockPerms orig = BlockPerms.GetPlace(changed.ID);
                 changed.CopyPermissionsTo(orig);
             }
             
@@ -101,8 +102,9 @@ namespace MCGalaxy.Gui {
         
         void blk_list_SelectedIndexChanged(object sender, EventArgs e) {
             curBlock = blockIDMap[blk_list.SelectedIndex];
-            blockPermsOrig = BlockPerms.Find(curBlock);
-            blockPermsCopy = blockPermsChanged.Find(p => p.ID == curBlock);
+            placePermsOrig = BlockPerms.GetPlace(curBlock);
+            placePermsCopy = placePermsChanged.Find(p => p.ID == curBlock);
+            
             BlockInitSpecificArrays();
             blockItems.SupressEvents = true;
             
@@ -119,7 +121,7 @@ namespace MCGalaxy.Gui {
             blk_cbLava.Checked = props.LavaKills;
             blk_cbWater.Checked = props.WaterKills;
             
-            BlockPerms perms = blockPermsCopy != null ? blockPermsCopy : blockPermsOrig;
+            BlockPerms perms = placePermsCopy != null ? placePermsCopy : placePermsOrig;
             blockItems.Update(perms);
         }
         
@@ -132,10 +134,10 @@ namespace MCGalaxy.Gui {
         }
         
         ItemPerms BlockGetOrAddPermsChanged() {
-            if (blockPermsCopy != null) return blockPermsCopy;
-            blockPermsCopy = blockPermsOrig.Copy();
-            blockPermsChanged.Add(blockPermsCopy);
-            return blockPermsCopy;
+            if (placePermsCopy != null) return placePermsCopy;
+            placePermsCopy = placePermsOrig.Copy();
+            placePermsChanged.Add(placePermsCopy);
+            return placePermsCopy;
         }
         
         

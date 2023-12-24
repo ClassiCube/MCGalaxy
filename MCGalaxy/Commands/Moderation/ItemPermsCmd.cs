@@ -24,10 +24,11 @@ namespace MCGalaxy.Commands.Moderation
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        protected void SetPerms(Player p, string[] args, CommandData data, ItemPerms perms, string type) {
+        protected void SetPerms(Player p, string[] args, CommandData data, ItemPerms perms, string type, 
+                                string actionNoun, string actionAdjective) {
             string grpName = args[1];          
             if (!perms.UsableBy(data.Rank)) {
-                p.Message("You rank cannot use this {0}.", type); return;
+                p.Message("You rank cannot {1} this {0}.", type, actionNoun); return;
             }
             
             if (grpName[0] == '+') {
@@ -35,23 +36,23 @@ namespace MCGalaxy.Commands.Moderation
                 if (grp == null) return;
 
                 perms.Allow(grp.Permission);
-                UpdatePerms(perms, p, " &Scan now be used by " + grp.ColoredName);
+                UpdatePerms(perms, p, " &Sis now " + actionAdjective + " by " + grp.ColoredName);
             } else if (grpName[0] == '-') {
                 Group grp = GetGroup(p, data, grpName.Substring(1));
                 if (grp == null) return;
 
                 if (data.Rank == grp.Permission) {
-                    p.Message("You cannot disallow your own rank from using a {0}.", type); return;
+                    p.Message("&WCannot deny permissions for your own rank"); return;
                 }
                 
                 perms.Disallow(grp.Permission);
-                UpdatePerms(perms, p, " &Sis no longer usable by " + grp.ColoredName);
+                UpdatePerms(perms, p, " &Sis no longer " + actionAdjective + " by " + grp.ColoredName);
             } else {
                 Group grp = GetGroup(p, data, grpName);
                 if (grp == null) return;
 
                 perms.MinRank = grp.Permission;
-                UpdatePerms(perms, p, " &Sis now usable by " + grp.ColoredName + "&S+");
+                UpdatePerms(perms, p, " &Sis now " + actionAdjective + " by " + grp.ColoredName + "&S+");
             }
         }
         

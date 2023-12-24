@@ -14,7 +14,7 @@
     BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
-*/
+ */
 using MCGalaxy.Blocks;
 using BlockID = System.UInt16;
 
@@ -23,22 +23,36 @@ namespace MCGalaxy.Commands.Moderation {
         public override string name { get { return "BlockSet"; } }
         
         public override void Use(Player p, string message, CommandData data) {
+            bool canPlace  = true; const string PLACE_PREFIX  = "place ";
+            bool canDelete = true; const string DELETE_PREFIX = "delete ";
+            
+            if (message.CaselessStarts(PLACE_PREFIX)) {
+                canDelete = false;
+                message   = message.Substring(PLACE_PREFIX.Length);
+            } else if (message.CaselessStarts(DELETE_PREFIX)) {
+                canPlace  = true;
+                message   = message.Substring(DELETE_PREFIX.Length);
+            }
+            
             string[] args = message.SplitSpaces(2);
             if (args.Length < 2) { Help(p); return; }
             
             BlockID block;
             if (!CommandParser.GetBlockIfAllowed(p, args[0], "change permissions of", out block)) return;
 
-            // TODO rethink messaging
-            BlockPerms perms = BlockPerms.GetPlace(block);
-            SetPerms(p, args, data, perms, "block");
+            // TODO avoid showing message twice
+            if (canPlace) {
+                BlockPerms perms = BlockPerms.GetPlace(block);
+                SetPerms(p, args, data, perms, "block", "use", "usable");
+            }
+            if (canDelete) {
+                BlockPerms perms = BlockPerms.GetDelete(block);
+                SetPerms(p, args, data, perms, "block", "delete", "deletable");                    
+            }
         }
         
-        protected override void UpdatePerms(ItemPerms perms, Player p, string msg) { 
+        protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {
             BlockID block = ((BlockPerms)perms).ID;
-            
-            // TODO better solution
-            perms.CopyPermissionsTo(BlockPerms.GetDelete(block));
             BlockPerms.Save();
             BlockPerms.ApplyChanges();
             
