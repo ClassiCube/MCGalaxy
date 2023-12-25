@@ -24,39 +24,37 @@ namespace MCGalaxy.Commands.Moderation
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         
-        protected void SetPerms(Player p, string[] args, CommandData data, ItemPerms perms, string type, 
+        protected string SetPerms(Player p, string[] args, CommandData data, ItemPerms perms, string type, 
                                 string actionNoun, string actionAdjective) {
             string grpName = args[1];          
             if (!perms.UsableBy(data.Rank)) {
-                p.Message("You rank cannot {1} this {0}.", type, actionNoun); return;
+                p.Message("You rank cannot {1} this {0}.", type, actionNoun); return null;
             }
             
             if (grpName[0] == '+') {
                 Group grp = GetGroup(p, data, grpName.Substring(1));
-                if (grp == null) return;
+                if (grp == null) return null;
 
                 perms.Allow(grp.Permission);
-                UpdatePerms(perms, p, " &Sis now " + actionAdjective + " by " + grp.ColoredName);
+                return " &Sis now " + actionAdjective + " by " + grp.ColoredName;
             } else if (grpName[0] == '-') {
                 Group grp = GetGroup(p, data, grpName.Substring(1));
-                if (grp == null) return;
+                if (grp == null) return null;
 
                 if (data.Rank == grp.Permission) {
-                    p.Message("&WCannot deny permissions for your own rank"); return;
+                    p.Message("&WCannot deny permissions for your own rank"); return null;
                 }
                 
                 perms.Disallow(grp.Permission);
-                UpdatePerms(perms, p, " &Sis no longer " + actionAdjective + " by " + grp.ColoredName);
+                return " &Sis no longer " + actionAdjective + " by " + grp.ColoredName;
             } else {
                 Group grp = GetGroup(p, data, grpName);
-                if (grp == null) return;
+                if (grp == null) return null;
 
                 perms.MinRank = grp.Permission;
-                UpdatePerms(perms, p, " &Sis now " + actionAdjective + " by " + grp.ColoredName + "&S+");
+                return " &Sis now " + actionAdjective + " by " + grp.ColoredName + "&S+";
             }
         }
-        
-        protected abstract void UpdatePerms(ItemPerms perms, Player p, string msg);
         
         protected static Group GetGroup(Player p, CommandData data, string grpName) {
             Group grp = Matcher.FindRanks(p, grpName);
