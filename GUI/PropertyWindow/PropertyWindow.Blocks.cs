@@ -71,8 +71,11 @@ namespace MCGalaxy.Gui {
         void SaveBlockPermissions() {
             foreach (BlockPerms changed in placePermsChanged) 
             {
-                BlockPerms orig = BlockPerms.GetPlace(changed.ID);
-                changed.CopyPermissionsTo(orig);
+                BlockPerms pOrig = BlockPerms.GetPlace(changed.ID);
+                changed.CopyPermissionsTo(pOrig);
+                
+                BlockPerms dOrig = BlockPerms.GetDelete(changed.ID);
+                changed.CopyPermissionsTo(dOrig);
             }
             
             BlockPerms.Save();

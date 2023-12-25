@@ -124,12 +124,15 @@ namespace MCGalaxy.Blocks
             if (File.Exists(Paths.BlockPermsFile)) {
                 LoadFile(Paths.BlockPermsFile, PlaceList);
                 
-                // TODO proper migration
                 for (int i = 0; i < Block.SUPPORTED_COUNT; i++)
                     PlaceList[i].CopyPermissionsTo(DeleteList[i]);
                 SetDefaultSpecialDeletePerms();
                 
-                File.Move(Paths.BlockPermsFile, Paths.BlockPermsFile + ".bak");
+                try { 
+                    File.Move(Paths.BlockPermsFile, Paths.BlockPermsFile + ".bak"); 
+                } catch (Exception ex) {
+                    Logger.LogError("Moving old block.properties file", ex);
+                }
             }
             Save();
         }
