@@ -15,15 +15,17 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
  */
-namespace MCGalaxy.Commands.Moderation {
-    public sealed class CmdCmdSet : ItemPermsCmd {
+namespace MCGalaxy.Commands.Moderation 
+{
+    public sealed class CmdCmdSet : ItemPermsCmd 
+    {
         public override string name { get { return "CmdSet"; } }
 
         public override void Use(Player p, string message, CommandData data) {
             string[] args = message.SplitSpaces(3);
             if (args.Length < 2) { Help(p); return; }
             
-            string cmdName = args[0], cmdArgs = "";
+            string cmdName = args[0], cmdArgs = "", msg;
             Command.Search(ref cmdName, ref cmdArgs);
             Command cmd = Command.Find(cmdName);
             
@@ -35,8 +37,11 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             if (args.Length == 2) {
-                SetPerms(p, args, data, cmd.Permissions, "command");
+                msg = SetPerms(p, args, data, cmd.Permissions, "command", "use", "usable");
+                if (msg != null) 
+                    UpdateCommandPerms(cmd.Permissions, p, msg);
             } else {
+                
                 int num = 0;
                 if (!CommandParser.GetInt(p, args[2], "Extra permission number", ref num)) return;
                 
@@ -44,33 +49,41 @@ namespace MCGalaxy.Commands.Moderation {
                 if (perms == null) {
                     p.Message("This command has no extra permission by that number."); return;
                 }
-                SetPerms(p, args, data, perms, "extra permission");
+                
+                msg = SetPerms(p, args, data, perms, "extra permission", "use", "usable");
+                if (msg != null) 
+                    UpdateExtraPerms(perms, p, msg);
             }
         }
         
-        protected override void UpdatePerms(ItemPerms perms, Player p, string msg) {
-            if (perms is CommandPerms) {
-                CommandPerms.Save();
-                CommandPerms.ApplyChanges();
-                Announce(p, perms.ItemName + msg);
-            } else {
-                CommandExtraPerms.Save();
-                CommandExtraPerms ex = (CommandExtraPerms)perms;
-                //Announce(p, cmd.name + "&S's extra permission " + idx + " was set to " + grp.ColoredName);
-                Announce(p, ex.CmdName + " extra permission #" + ex.Num + msg);
-            }
+        void UpdateCommandPerms(ItemPerms perms, Player p, string msg) {
+            CommandPerms.Save();
+            CommandPerms.ApplyChanges();
+            Announce(p, perms.ItemName + msg);
+        }
+        
+        void UpdateExtraPerms(CommandExtraPerms perms, Player p, string msg) {
+            CommandExtraPerms.Save();
+            //Announce(p, cmd.name + "&S's extra permission " + idx + " was set to " + grp.ColoredName);
+            Announce(p, perms.CmdName + " extra permission #" + perms.Num + msg);
         }
         
         public override void Help(Player p) {
             p.Message("&T/CmdSet [cmd] [rank]");
             p.Message("&HSets lowest rank that can use [cmd] to [rank]");
+            p.Message("&T/CmdSet [cmd] [rank] [extra permission number]");
+            p.Message("&HSet the lowest rank that has that extra permission for [cmd]");
+            p.Message("&H- For more advanced permissions, see &T/Help cmdset advanced");
+            p.Message("&H- To see available ranks, type &T/ViewRanks");
+        }
+        
+        public override void Help(Player p, string message) {
+            if (!message.CaselessEq("advanced")) { base.Help(p, message); return; }
+            
             p.Message("&T/CmdSet [cmd] +[rank]");
             p.Message("&HAllows a specific rank to use [cmd]");
             p.Message("&T/CmdSet [cmd] -[rank]");
             p.Message("&HPrevents a specific rank from using [cmd]");
-            p.Message("&T/CmdSet [cmd] [rank] [extra permission number]");
-            p.Message("&HSet the lowest rank that has that extra permission for [cmd]");
-            p.Message("&HTo see available ranks, type &T/ViewRanks");
         }
     }
 }

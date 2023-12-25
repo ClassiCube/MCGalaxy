@@ -139,7 +139,7 @@ namespace MCGalaxy.Commands.Building
                     for (ushort x = minX; x <= maxX; ++x)
             {
                 block = p.level.GetBlock(x, y, z);
-                if (!p.group.Blocks[block]) { index++; continue; }
+                if (!p.group.CanPlace[block]) { index++; continue; }
                 
                 if (block != Block.Air || cState.PasteAir) cState.UsedBlocks++;
                 cState.Set(block, index);

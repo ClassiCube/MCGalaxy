@@ -205,13 +205,14 @@ namespace MCGalaxy
             int size  = extBlocks ? 5 : 4;
             byte[] bulk = new byte[count * size];
             
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) 
+            {
                 BlockID block = Block.FromRaw((BlockID)i);
-                bool place  = group.Blocks[block] && level.CanPlace;
+                bool place  = group.CanPlace[block] && level.CanPlace;
                 // NOTE: If you can't delete air, then you're no longer able to place blocks
                 // (see ClassiCube client #815)
                 // TODO: Maybe better solution than this?
-                bool delete = group.Blocks[block] && (level.CanDelete || i == Block.Air);
+                bool delete = group.CanDelete[block] && (level.CanDelete || i == Block.Air);
                 
                 // Placing air is the same as deleting existing block at that position in the world
                 if (block == Block.Air) place &= delete;

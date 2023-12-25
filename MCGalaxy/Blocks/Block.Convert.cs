@@ -71,7 +71,7 @@ namespace MCGalaxy
         }
         
         public static string GetColoredName(Player p, BlockID block) {
-            BlockPerms perms = BlockPerms.Find(block);
+            BlockPerms perms = BlockPerms.GetPlace(block); // TODO check Delete perms too?
             return Group.GetColor(perms.MinRank) + Block.GetName(p, block);
         }
         

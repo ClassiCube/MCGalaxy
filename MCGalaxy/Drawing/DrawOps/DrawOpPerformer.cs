@@ -159,8 +159,12 @@ namespace MCGalaxy.Drawing.Ops
                 if (old == Block.custom_block) old = (BlockID)(Block.Extended | lvl.FastGetExtTile(b.X, b.Y, b.Z));
                 #endif
                 
-                // Check to make sure the block is actually different and that can be used
-                if (old == b.Block || !p.group.Blocks[old] || !p.group.Blocks[b.Block]) return;
+                // Check to make sure the block is actually different
+                if (old == b.Block) return;
+                
+                // And check that the block can be used
+                Group grp = p.group;
+                if (!grp.CanDelete[old] || !grp.CanPlace[b.Block]) return;
                 
                 // Check if player can affect block at coords in world
                 AccessController denier = lvl.CanAffect(p, b.X, b.Y, b.Z);

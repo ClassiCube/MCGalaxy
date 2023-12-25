@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.Info
                 Group grp = Group.Find(type);
                 p.Message("Blocks which {0} &Scan place: ", grp.ColoredName);
                 OutputBlocks(p, type, modifier,
-                             b => grp.Blocks[b]);
+                             b => grp.CanPlace[b]);
             } else if (args.Length > 1) {
                 Help(p);
             } else {

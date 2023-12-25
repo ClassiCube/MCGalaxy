@@ -69,7 +69,8 @@ namespace MCGalaxy
         internal string filename;
         
         public PlayerList Players;
-        public bool[] Blocks = new bool[Block.SUPPORTED_COUNT];
+        public bool[] CanPlace  = new bool[Block.SUPPORTED_COUNT];
+        public bool[] CanDelete = new bool[Block.SUPPORTED_COUNT];
 
         public Group() { }
         private Group(LevelPermission perm, int drawLimit, int undoMins, string name, string color, int volume, int realms) {
@@ -100,7 +101,8 @@ namespace MCGalaxy
         
         public static Group Find(string name) {
             MapName(ref name);
-            foreach (Group grp in GroupList) {
+            foreach (Group grp in GroupList) 
+            {
                 if (grp.Name.CaselessEq(name)) return grp;
             }
             return null;

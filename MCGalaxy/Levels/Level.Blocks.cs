@@ -220,13 +220,7 @@ namespace MCGalaxy {
                 blocks[index] = (BlockRaw)block;
             }
         }
-        
-  
-        internal bool BuildIn(BlockID block) {
-            if (block == Block.Op_Water || block == Block.Op_Lava || Props[block].IsPortal || Props[block].IsMessageBlock) return false;
-            block = Block.Convert(block);
-            return block >= Block.Water && block <= Block.StillLava;
-        }
+
         
         /// <summary> Returns the AccessController denying the player from changing blocks at the given coordinates. </summary>
         /// <remarks> If no AccessController denies the player, returns null. </remarks>
@@ -265,7 +259,7 @@ namespace MCGalaxy {
         }
         
         public bool CheckAffect(Player p, ushort x, ushort y, ushort z, BlockID old, BlockID block) {
-            if (!p.group.Blocks[old] || !p.group.Blocks[block]) return false;
+            if (!p.group.CanDelete[old] || !p.group.CanPlace[block]) return false;
             AccessController denier = CanAffect(p, x, y, z);
             if (denier == null) return true;
             

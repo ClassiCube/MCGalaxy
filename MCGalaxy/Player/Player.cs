@@ -331,7 +331,7 @@ namespace MCGalaxy {
 
         public const string USERNAME_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._";
         
-        internal byte UserType() { return group.Blocks[Block.Bedrock] ? (byte)100 : (byte)0; }
+        internal byte UserType() { return group.CanPlace[Block.Bedrock] ? (byte)100 : (byte)0; }
 
         #endregion
 
