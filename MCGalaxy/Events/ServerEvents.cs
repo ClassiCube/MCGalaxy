@@ -29,7 +29,8 @@ namespace MCGalaxy.Events.ServerEvents
         public static void Call(Heartbeat service, ref string name) {
             IEvent<OnSendingHeartbeat>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
-            for (int i = 0; i < items.Length; i++) {
+            for (int i = 0; i < items.Length; i++) 
+            {
                 try { items[i].method(service, ref name); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
@@ -63,50 +64,54 @@ namespace MCGalaxy.Events.ServerEvents
         public static void Call(Socket s, ref bool cancel, ref bool announce) {
             IEvent<OnConnectionReceived>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
-            for (int i = 0; i < items.Length; i++) {
+            for (int i = 0; i < items.Length; i++) 
+            {
                 try { items[i].method(s, ref cancel, ref announce); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
     }
     
-    public delegate void OnChatSys(ChatScope scope, string msg, object arg,
+    public delegate void OnChatSys(ChatScope scope, ref string msg, object arg,
                                    ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatSysEvent : IEvent<OnChatSys> 
     {      
-        public static void Call(ChatScope scope, string msg, object arg, 
+        public static void Call(ChatScope scope, ref string msg, object arg, 
                                 ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChatSys>[] items = handlers.Items;
-            for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(scope, msg, arg, ref filter, relay); } 
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try { items[i].method(scope, ref msg, arg, ref filter, relay); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
     }
     
-    public delegate void OnChatFrom(ChatScope scope, Player source, string msg, 
+    public delegate void OnChatFrom(ChatScope scope, Player source, ref string msg, 
                                     object arg, ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatFromEvent : IEvent<OnChatFrom> 
     {        
-        public static void Call(ChatScope scope,Player source, string msg, 
+        public static void Call(ChatScope scope,Player source, ref string msg, 
                                 object arg, ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChatFrom>[] items = handlers.Items;
-            for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(scope, source, msg, arg, ref filter, relay); } 
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try { items[i].method(scope, source, ref msg, arg, ref filter, relay); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }        
     }
     
-    public delegate void OnChat(ChatScope scope, Player source, string msg, 
+    public delegate void OnChat(ChatScope scope, Player source, ref string msg, 
                                 object arg, ref ChatMessageFilter filter, bool relay);
     public sealed class OnChatEvent : IEvent<OnChat> 
     {       
-        public static void Call(ChatScope scope, Player source, string msg, 
+        public static void Call(ChatScope scope, Player source, ref string msg, 
                                 object arg, ref ChatMessageFilter filter, bool relay) {
             IEvent<OnChat>[] items = handlers.Items;
-            for (int i = 0; i < items.Length; i++) {
-                try { items[i].method(scope, source, msg, arg, ref filter, relay); } 
+            for (int i = 0; i < items.Length; i++) 
+            {
+                try { items[i].method(scope, source, ref msg, arg, ref filter, relay); } 
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }

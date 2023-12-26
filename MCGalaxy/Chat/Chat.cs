@@ -124,8 +124,9 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
-            OnChatSysEvent.Call(scope, msg, arg, ref filter, relay);
-            foreach (Player pl in players) {
+            OnChatSysEvent.Call(scope, ref msg, arg, ref filter, relay);
+            foreach (Player pl in players) 
+            {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
                 pl.Message(msg);
@@ -160,8 +161,9 @@ namespace MCGalaxy {
             Player[] players = PlayerInfo.Online.Items;
             ChatMessageFilter scopeFilter = scopeFilters[(int)scope];
             
-            OnChatFromEvent.Call(scope, source, msg, arg, ref filter, relay);
-            foreach (Player pl in players) {
+            OnChatFromEvent.Call(scope, source, ref msg, arg, ref filter, relay);
+            foreach (Player pl in players)
+            {
                 if (!scopeFilter(pl, arg)) continue;
                 if (filter != null && !filter(pl, arg)) continue;
                 
@@ -195,8 +197,9 @@ namespace MCGalaxy {
             // Filter out bad words
             if (Server.Config.ProfanityFiltering) msg = ProfanityFilter.Parse(msg);
             
-            OnChatEvent.Call(scope, source, msg, arg, ref filter, relay);
-            foreach (Player pl in players) {
+            OnChatEvent.Call(scope, source, ref msg, arg, ref filter, relay);
+            foreach (Player pl in players) 
+            {
                 if (Ignoring(pl, source)) continue;
                 // Always show message to self too (unless ignoring self)
                 

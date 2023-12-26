@@ -321,7 +321,7 @@ namespace MCGalaxy.Modules.Relay
             }
         }
 
-        void OnChatSys(ChatScope scope, string msg, object arg,
+        void OnChatSys(ChatScope scope, ref string msg, object arg,
                            ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
@@ -329,7 +329,7 @@ namespace MCGalaxy.Modules.Relay
             MessageToRelay(scope, msg, arg, filter);
         }
         
-        void OnChatFrom(ChatScope scope, Player source, string msg,
+        void OnChatFrom(ChatScope scope, Player source, ref string msg,
                             object arg, ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
@@ -337,7 +337,7 @@ namespace MCGalaxy.Modules.Relay
             MessageToRelay(scope, Unescape(source, msg), arg, filter);
         }
         
-        void OnChat(ChatScope scope, Player source, string msg,
+        void OnChat(ChatScope scope, Player source, ref string msg,
                         object arg, ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             

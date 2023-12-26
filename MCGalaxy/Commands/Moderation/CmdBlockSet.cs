@@ -43,7 +43,6 @@ namespace MCGalaxy.Commands.Moderation
             BlockID block;
             if (!CommandParser.GetBlockIfAllowed(p, args[0], "change permissions of", out block)) return;
 
-            // TODO avoid showing message twice
             if (canPlace) {
                 BlockPerms perms = BlockPerms.GetPlace(block);
                 placeMsg  = SetPerms(p, args, data, perms, "block", "use", "usable");
