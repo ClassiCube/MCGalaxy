@@ -19,10 +19,10 @@ using System;
 using System.Threading;
 
 #if !NET_20
-namespace MCGalaxy.Util {
-
-    public sealed class IReaderWriterLock {
-        
+namespace MCGalaxy.Util 
+{
+    public sealed class IReaderWriterLock 
+    {        
         ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
         public IDisposable AccquireRead() { return AccquireRead(-1); }
@@ -37,9 +37,9 @@ namespace MCGalaxy.Util {
             if (!locker.TryEnterWriteLock(msTimeout)) return null;
             return new SlimLock(locker, true);
         }
-        
-        
-        class SlimLock : IDisposable {
+                
+        class SlimLock : IDisposable 
+        {
             ReaderWriterLockSlim locker;
             bool writeMode;
             

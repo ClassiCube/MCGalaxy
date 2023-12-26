@@ -24,7 +24,7 @@ namespace MCGalaxy.Core {
         
         internal static void HandleOnChat(ChatScope scope, Player source, ref string msg, 
                                           object arg, ref ChatMessageFilter filter, bool irc) {
-            msg = msg.Replace("λFULL", source.name).Replace("λNICK", source.name);
+            string text = msg.Replace("λFULL", source.name).Replace("λNICK", source.name);
             LogType logType = LogType.PlayerChat;
             
             if (scope == ChatScope.Perms) {
@@ -35,7 +35,7 @@ namespace MCGalaxy.Core {
                 logType = LogType.RankChat;
             }
             
-            if (scope != ChatScope.PM) Logger.Log(logType, msg);
+            if (scope != ChatScope.PM) Logger.Log(logType, text);
         }
         
         internal static void HandleCommand(Player p, string cmd, string args, CommandData data) {

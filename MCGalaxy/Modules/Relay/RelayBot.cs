@@ -325,24 +325,24 @@ namespace MCGalaxy.Modules.Relay
                            ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
-            msg = PrepareMessage(msg);
-            MessageToRelay(scope, msg, arg, filter);
+            string text = PrepareMessage(msg);
+            MessageToRelay(scope, text, arg, filter);
         }
         
         void OnChatFrom(ChatScope scope, Player source, ref string msg,
                             object arg, ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
-            msg = PrepareMessage(msg);
-            MessageToRelay(scope, Unescape(source, msg), arg, filter);
+            string text = PrepareMessage(msg);
+            MessageToRelay(scope, Unescape(source, text), arg, filter);
         }
         
         void OnChat(ChatScope scope, Player source, ref string msg,
                         object arg, ref ChatMessageFilter filter, bool relay) {
             if (!relay) return;
             
-            msg = PrepareMessage(msg);
-            MessageToRelay(scope, Unescape(source, msg), arg, filter);
+            string text = PrepareMessage(msg);
+            MessageToRelay(scope, Unescape(source, text), arg, filter);
         }
         
         void OnShutdown(bool restarting, string message) {

@@ -52,9 +52,9 @@ namespace MCGalaxy.SQL
         }
         
         static string[] colTypes = new string[] {
-            "TINYINT UNSIGNED", "SMALLINT UNSIGNED", "MEDIUMINT UNSIGNED", 
-            "INT UNSIGNED", "BIGINT UNSIGNED", "TINYINT", "SMALLINT", 
-            "MEDIUMINT", "INT", "BIGINT", "INTEGER", "DATETIME",
+            "TINYINT UNSIGNED", "SMALLINT UNSIGNED", "MEDIUMINT UNSIGNED", "INT UNSIGNED", "BIGINT UNSIGNED", 
+            "TINYINT", "SMALLINT", "MEDIUMINT", "INT", "BIGINT", 
+            "INTEGER", "DATETIME",
         };
     }
     

@@ -20,15 +20,16 @@ using System.Collections.Generic;
 using System.Threading;
 
 #if NET_20
-namespace System.Runtime.CompilerServices {
+namespace System.Runtime.CompilerServices 
+{
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
     public sealed class ExtensionAttribute : Attribute {}
 }
 
-namespace MCGalaxy.Util {
-
-    public sealed class IReaderWriterLock {
-        
+namespace MCGalaxy.Util 
+{
+    public sealed class IReaderWriterLock 
+    {        
         ReaderWriterLock locker = new ReaderWriterLock();
 
         public IDisposable AccquireRead() { return AccquireRead(int.MaxValue); }
@@ -53,7 +54,8 @@ namespace MCGalaxy.Util {
         }
         
         
-        class SlimLock : IDisposable {
+        class SlimLock : IDisposable 
+        {
             ReaderWriterLock locker;
             bool writeMode;
             

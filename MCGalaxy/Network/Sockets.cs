@@ -44,7 +44,7 @@ namespace MCGalaxy.Network
         /// <summary> Initialises state to begin asynchronously sending and receiving data </summary>
         public abstract void Init();        
         /// <summary> Sends a block of data </summary>
-        public abstract void Send(byte[] buffer, SendFlags flags);      
+        public abstract void Send(byte[] buffer, SendFlags flags);
         /// <summary> Closes this network socket </summary>
         public abstract void Close();
         
