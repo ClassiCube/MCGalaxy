@@ -123,7 +123,7 @@ namespace MCGalaxy.Commands.Info
             IGame game = GetAssociatedGame(data.MapName);
             if (game == null) return;
             
-            IGame.OutputMapSummary(p, cfg); // TODO: Always show this info?
+            game.OutputMapSummary(p, data.MapName, cfg); // TODO: Always show this info?
             game.OutputMapInfo(p, data.MapName, cfg);
         }
         

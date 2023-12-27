@@ -64,7 +64,7 @@ namespace MCGalaxy.Games
         /// that this game can be automatically played on </summary>
         public virtual bool ClaimsMap(string map) { return false; }
         
-        public static void OutputMapSummary(Player p, LevelConfig cfg) {
+        public virtual void OutputMapSummary(Player p, string map, LevelConfig cfg) {
             p.Message("This map has &a{0} likes &Sand &c{1} dislikes",
                        cfg.Likes, cfg.Dislikes);
             string[] authors = cfg.Authors.SplitComma();
@@ -166,6 +166,16 @@ namespace MCGalaxy.Games
             if (reward == 0) return;
             p.Message("&6You gained " + reward + " " + Server.Config.Currency);
             p.SetMoney(p.money + reward);
-        }                                       
+        }
+        
+        
+        public virtual void RateMap(Player p, bool like) {
+            if (like) Map.Config.Likes++;
+            else Map.Config.Dislikes++;
+            Map.SaveSettings();
+            
+            string prefix = like ? "&a" : "&cdis";
+            p.Message("You have {0}liked &Sthis map.", prefix);
+        }
     }
 }

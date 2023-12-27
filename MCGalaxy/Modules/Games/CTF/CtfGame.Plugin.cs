@@ -137,7 +137,7 @@ namespace MCGalaxy.Modules.Games.CTF
         
         void HandleSentMap(Player p, Level prevLevel, Level level) {
             if (level != Map) return;
-            OutputMapSummary(p, Map.Config);
+            OutputMapSummary(p, Map.name, Map.Config);
             if (TeamOf(p) == null) AutoAssignTeam(p);
         }
         

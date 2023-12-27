@@ -44,15 +44,9 @@ namespace MCGalaxy.Commands.Fun
                 p.Message("Cannot {0}like this map as you are an author of it.", prefix); return false;
             }
             
-            if (like) p.level.Config.Likes++;
-            else p.level.Config.Dislikes++;
-            
+            game.RateMap(p, like);
             p.Game.RatedMap = true;
             p.Game.LikedMap = like;
-            p.level.SaveSettings();
-            
-            prefix = like ? "&a" : "&cdis";
-            p.Message("You have {0}liked &Sthis map.", prefix);
             return true;
         }
         
