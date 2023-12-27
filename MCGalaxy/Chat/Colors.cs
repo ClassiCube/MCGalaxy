@@ -275,7 +275,8 @@ namespace MCGalaxy {
             string[] lines = File.ReadAllLines(Paths.CustomColorsFile);
             ColorDesc col = default(ColorDesc);
             
-            for (int i = 0; i < lines.Length; i++) {
+            for (int i = 0; i < lines.Length; i++) 
+            {
                 string[] parts = lines[i].SplitSpaces();
                 if (parts.Length != 7) continue;
                 col.Code = parts[0][0]; col.Fallback = parts[1][0]; col.Name = parts[2];

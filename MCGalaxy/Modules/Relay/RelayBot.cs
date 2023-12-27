@@ -264,7 +264,8 @@ namespace MCGalaxy.Modules.Relay
                                        "# Lines starting with \"#\" are ignored." });
             }
             
-            foreach (string line in File.ReadAllLines("text/irccmdblacklist.txt")) {
+            foreach (string line in Utils.ReadAllLinesList("text/irccmdblacklist.txt")) 
+            {
                 if (!line.IsCommentLine()) BannedCommands.Add(line);
             }
         }

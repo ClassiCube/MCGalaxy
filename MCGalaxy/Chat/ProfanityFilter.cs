@@ -38,9 +38,11 @@ namespace MCGalaxy {
             string[] reduced = Reduce(text).SplitSpaces();
 
             // Loop through each reduced word, looking for a bad word
-            for (int i = 0; i < reduced.Length; i++) {
+            for (int i = 0; i < reduced.Length; i++) 
+            {
                 bool isFiltered = false;
-                foreach (string filter in filters) {
+                foreach (string filter in filters) 
+                {
                     if (reduced[i].Contains(filter)) {
                         isFiltered = true; break;   
                     }
@@ -79,7 +81,8 @@ namespace MCGalaxy {
             string[] lines = filterFile.GetText();
             filters = new List<string>();
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
-            foreach (string line in lines) {
+            foreach (string line in lines) 
+            {
                 if (line.StartsWith("#") || line.Trim().Length == 0) continue;
                 
                 string word = Reduce(line);

@@ -40,8 +40,12 @@ namespace MCGalaxy.Games
         }
 
         public static bool CheckAllowed(Player p, string action) {
-            if (p.Game.Referee || GameOn(p.level) == null)
-                return true;
+            IGame game = GameOn(p.level);
+            return game == null || game.CheckRespawnAllowed(p, action);
+        }
+        
+        protected virtual bool CheckRespawnAllowed(Player p, string action) {
+            if (p.Game.Referee) return true;
 
             p.Message("&WYou cannot {0} &Wwhile a game is running", action);
             return false;
