@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.Misc {
                 p.Message("You still have a pending teleport request with this player."); return; 
             }
             if (p.level != target.level && target.level.IsMuseum) {
-                p.Message("Player \"{0}\" is in a museum.", p.FormatNick(target)); return;
+                p.Message("{0} &Sis in a museum.", p.FormatNick(target)); return;
             }
             if (target.Loading) {
                 p.Message("Waiting for {0} &Sto spawn...", p.FormatNick(target));
@@ -99,13 +99,8 @@ namespace MCGalaxy.Commands.Misc {
             p.Message("You have accepted {0}&S's teleportation request.", p.FormatNick(sender));
             sender.Message("{0} &Shas accepted your request. Teleporting now...", sender.FormatNick(p));
             sender.currentTpa = "";
-            Thread.Sleep(1000);
-            if (p.level != sender.level) {
-                PlayerActions.ChangeMap(sender, p.level);
-                Thread.Sleep(1000);
-            }
-
-            sender.SendPosition(p.Pos, p.Rot);
+            
+            PlayerOperations.TeleportToEntity(sender, p);
         }
         
         void DoDeny(Player p) {

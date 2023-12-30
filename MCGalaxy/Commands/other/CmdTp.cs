@@ -53,22 +53,8 @@ namespace MCGalaxy.Commands.Misc {
                 Help(p); return;
             }
             
-            SavePreTeleportState(p);
-            Level lvl = bot != null ? bot.level : target.level;
-
-            if (p.level != lvl) PlayerActions.ChangeMap(p, lvl.name);
-            if (target != null && target.Loading) {
-                p.Message("Waiting for {0} &Sto spawn..", p.FormatNick(target));
-                target.BlockUntilLoad(10);
-            }
-            
-            // Player wasn't able to join target map, so don't move
-            if (p.level != lvl) return;
-            
-            Position pos    = bot != null ? bot.Pos : target.Pos;
-            Orientation rot = bot != null ? bot.Rot : target.Rot;
-            p.BlockUntilLoad(10);  //Wait for player to spawn in new map
-            p.SendPosition(pos, rot);
+            Entity dst = bot != null ? (Entity)bot : (Entity)target;
+            PlayerOperations.TeleportToEntity(p, dst);
         }
         
         internal static bool GetTeleportCoords(Player p, Entity ori, string[] args, bool precise, 
@@ -104,14 +90,7 @@ namespace MCGalaxy.Commands.Misc {
             Position pos; byte yaw, pitch;
             if (!GetTeleportCoords(p, p, args, precise, out pos, out yaw, out pitch)) return;
 
-            SavePreTeleportState(p);
-            p.SendPosition(pos, new Orientation(yaw, pitch));
-        }
-        
-        static void SavePreTeleportState(Player p) {
-            p.PreTeleportMap = p.level.name;
-            p.PreTeleportPos = p.Pos;
-            p.PreTeleportRot = p.Rot;
+            PlayerOperations.TeleportToCoords(p, pos, new Orientation(yaw, pitch));
         }
         
         static bool CheckPlayer(Player p, Player target, CommandData data) {

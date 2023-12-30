@@ -170,5 +170,33 @@ namespace MCGalaxy
                 Chat.MessageAll(message);
             }
         }
+        
+        
+        public static void TeleportToCoords(Player p, Position pos, Orientation ori) {
+            SavePreTeleportState(p);
+            p.SendPosition(pos, ori);
+        }
+        
+        public static void TeleportToEntity(Player p, Entity dst) {
+            SavePreTeleportState(p);
+            Level lvl = dst.Level;
+
+            Player target = dst as Player;
+            if (target != null && target.Loading) {
+                p.Message("Waiting for {0} &Sto spawn..", p.FormatNick(target));
+                target.BlockUntilLoad(10);
+            }
+            
+            if (p.level != lvl && !PlayerActions.ChangeMap(p, lvl.name)) return;
+            
+            p.BlockUntilLoad(10); // Wait for player to spawn in new map
+            p.SendPosition(dst.Pos, dst.Rot);
+        }
+        
+        static void SavePreTeleportState(Player p) {
+            p.PreTeleportMap = p.level.name;
+            p.PreTeleportPos = p.Pos;
+            p.PreTeleportRot = p.Rot;
+        }
     }
 }
