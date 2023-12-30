@@ -14,15 +14,13 @@ jobs:
       - name: Compile MCGalaxy using mono
         shell: bash
         id: compile
-        env: 
-          BUILD_FILES: "bin/Debug/MCGalaxy.exe bin/Debug/MCGalaxy.pdb bin/Debug/MCGalaxyCLI.exe bin/Debug/MCGalaxyCLI.pdb bin/Debug/MCGalaxy_.dll  bin/Debug/MCGalaxy_.pdb"
+        env:
           CONFIGURATION: "Debug"
         run: |
           msbuild MCGalaxy.sln
-          zip MCGalaxy-net.zip ${{ env.BUILD_FILES }}
+          cp -R bin/Debug bin/Debug_normal
           rm bin/Debug/MCGalaxy_.dll bin/Debug/MCGalaxy_.pdb
           msbuild MCGalaxy/MCGalaxy_.csproj /t:Rebuild /p:DefineConstants="TEN_BIT_BLOCKS"
-          zip MCGalaxy-net-infid.zip ${{ env.BUILD_FILES }}
 
       - uses: ./.github/actions/notify_failure
         if: ${{ always() && steps.compile.outcome == 'failure' }}
@@ -33,14 +31,14 @@ jobs:
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'MCGalaxy-net.zip'
-          DEST_NAME: 'MCGalaxy.zip'
+          SOURCE_FILE: 'bin/Debug_normal'
+          DEST_NAME: 'MCGalaxy'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'MCGalaxy-net-infid.zip'
-          DEST_NAME: 'MCGalaxy-infid.zip'
+          SOURCE_FILE: 'bin/Debug'
+          DEST_NAME: 'MCGalaxy-infid'
           
 
   build-dotnet:
@@ -70,5 +68,5 @@ jobs:
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile_net.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'MCGalaxy-dotnet.zip'
-          DEST_NAME: 'MCGalaxy-dotnet.zip'
+          SOURCE_FILE: 'CLI/bin/Debug/net6.0'
+          DEST_NAME: 'MCGalaxy-dotnet6.0'
