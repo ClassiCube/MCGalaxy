@@ -1,0 +1,74 @@
+name: Build latest
+on: [push]
+
+concurrency:
+  group: ${{ github.ref }}-latest
+  cancel-in-progress: true
+
+jobs:
+  build-mono:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Compile MCGalaxy using mono
+        shell: bash
+        id: compile
+        env: 
+          BUILD_FILES: "bin/Debug/MCGalaxy.exe bin/Debug/MCGalaxy.pdb bin/Debug/MCGalaxyCLI.exe bin/Debug/MCGalaxyCLI.pdb bin/Debug/MCGalaxy_.dll  bin/Debug/MCGalaxy_.pdb"
+          CONFIGURATION: "Debug"
+        run: |
+          msbuild MCGalaxy.sln
+          zip MCGalaxy-net.zip ${{ env.BUILD_FILES }}
+          rm bin/Debug/MCGalaxy_.dll bin/Debug/MCGalaxy_.pdb
+          msbuild MCGalaxy/MCGalaxy_.csproj /t:Rebuild /p:DefineConstants="TEN_BIT_BLOCKS"
+          zip MCGalaxy-net-infid.zip ${{ env.BUILD_FILES }}
+
+      - uses: ./.github/actions/notify_failure
+        if: ${{ always() && steps.compile.outcome == 'failure' }}
+        with:
+          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy .NET build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'MCGalaxy-net.zip'
+          DEST_NAME: 'MCGalaxy.zip'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'MCGalaxy-net-infid.zip'
+          DEST_NAME: 'MCGalaxy-infid.zip'
+          
+
+  build-dotnet:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore CLI/MCGalaxyCLI_dotnet.csproj
+      - name: Build
+        id: compile_net
+        run: |
+          dotnet build CLI/MCGalaxyCLI_dotnet.csproj --no-restore
+          zip MCGalaxy-dotnet.zip CLI/bin/Debug/net6.0/MCGalaxyCLI_dotnet.dll CLI/bin/Debug/net6.0/MCGalaxy_dotnet.dll
+        
+      - uses: ./.github/actions/notify_failure
+        if: ${{ always() && steps.compile_net.outcome == 'failure' }}
+        with:
+          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy dotnet build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'MCGalaxy-dotnet.zip'
+          DEST_NAME: 'MCGalaxy-dotnet.zip'
