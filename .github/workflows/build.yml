@@ -14,13 +14,11 @@ jobs:
       - name: Compile MCGalaxy using mono
         shell: bash
         id: compile
-        env:
-          CONFIGURATION: "Debug"
         run: |
-          msbuild MCGalaxy.sln
-          cp -R bin/Debug bin/Debug_normal
-          rm bin/Debug/MCGalaxy_.dll bin/Debug/MCGalaxy_.pdb
-          msbuild MCGalaxy/MCGalaxy_.csproj /t:Rebuild /p:DefineConstants="TEN_BIT_BLOCKS"
+          msbuild MCGalaxy.sln /p:Configuration=Release
+          cp -R bin/Release bin/Release_normal
+          rm bin/Release/MCGalaxy_.dll bin/Release/MCGalaxy_.pdb
+          msbuild MCGalaxy/MCGalaxy_.csproj /p:Configuration=Release /t:Rebuild /p:DefineConstants="TEN_BIT_BLOCKS"
 
       - uses: ./.github/actions/notify_failure
         if: ${{ always() && steps.compile.outcome == 'failure' }}
@@ -31,13 +29,13 @@ jobs:
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'bin/Debug_normal'
+          SOURCE_FILE: 'bin/Release_normal'
           DEST_NAME: 'MCGalaxy'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'bin/Debug'
+          SOURCE_FILE: 'bin/Release'
           DEST_NAME: 'MCGalaxy-infid'
           
 
@@ -57,7 +55,6 @@ jobs:
         id: compile_net
         run: |
           dotnet build CLI/MCGalaxyCLI_dotnet.csproj --no-restore
-          zip MCGalaxy-dotnet.zip CLI/bin/Debug/net6.0/MCGalaxyCLI_dotnet.dll CLI/bin/Debug/net6.0/MCGalaxy_dotnet.dll
         
       - uses: ./.github/actions/notify_failure
         if: ${{ always() && steps.compile_net.outcome == 'failure' }}
@@ -70,3 +67,33 @@ jobs:
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0'
           DEST_NAME: 'MCGalaxy-dotnet6.0'
+          
+      # publish standalone windows binaries
+      - name: Publish-win64
+        run: dotnet publish CLI/MCGalaxyCLI_dotnet.csproj -r win-x64 --self-contained
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'CLI/bin/Debug/net6.0/win-x64/publish'
+          DEST_NAME: 'MCGalaxy-win64-standalone'
+          
+      # publish standalone linux binaries
+      - name: Publish-linux64
+        run: dotnet publish CLI/MCGalaxyCLI_dotnet.csproj -r linux-x64 --self-contained
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'CLI/bin/Debug/net6.0/linux-x64/publish'
+          DEST_NAME: 'MCGalaxy-linux64-standalone'
+          
+      # publish standalone macOS binaries
+      - name: Publish-mac64
+        run: dotnet publish CLI/MCGalaxyCLI_dotnet.csproj -r osx-x64 --self-contained
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'CLI/bin/Debug/net6.0/osx-x64/publish'
+          DEST_NAME: 'MCGalaxy-mac64-standalone'
