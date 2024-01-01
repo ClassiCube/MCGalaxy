@@ -43,7 +43,7 @@ namespace MCGalaxy.Modules.Compiling
         }
 #else
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
-            List<string> referenced = ProcessInput(srcPaths, "//");
+            List<string> referenced = RoslynCSharpCompiler.PrepareInput(srcPaths);
             return RoslynCSharpCompiler.Compile(srcPaths, dstPath, referenced);
         }
 #endif

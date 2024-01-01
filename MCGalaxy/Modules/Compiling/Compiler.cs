@@ -156,6 +156,10 @@ namespace MCGalaxy.Modules.Compiling
                     } else if (line.CaselessStarts(plgPrefix)) {
                         path = Path.Combine(IScripting.PLUGINS_DLL_DIR, GetDLL(line));
                         referenced.Add(Path.GetFullPath(path));
+#if NETSTANDARD
+                    } else if (line.CaselessStarts(commentPrefix + "dotnetref")) {
+                        referenced.Add(GetDLL(line));
+#endif
                     } else {
                         continue;
                     }

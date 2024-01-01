@@ -65,12 +65,16 @@ namespace MCGalaxy.Eco
         }
         
         public static void UpdateMoney(string name, int money) {
-            PlayerDB.Update(name, PlayerData.ColumnMoney, money.ToString());
+    	    PlayerDB.Update(name, PlayerData.ColumnMoney, 
+    		                NumberUtils.StringifyInt(money));
         }
         
 
-        public struct EcoStats {
-            public string Player, Purchase, Payment, Salary, Fine; public int TotalSpent, __unused;
+        public struct EcoStats 
+        {
+            public string Player;
+            public string Purchase, Payment, Salary, Fine;
+            public int TotalSpent, __unused;
         }
         
         public static void UpdateStats(EcoStats stats) {
@@ -81,7 +85,7 @@ namespace MCGalaxy.Eco
         
         static EcoStats ParseStats(ISqlRecord record) {
             EcoStats stats;
-            stats.Player = record.GetText("player");
+            stats.Player   = record.GetText("player");
             stats.Payment  = Parse(record.GetText("payment"));
             stats.Purchase = Parse(record.GetText("purchase"));
             stats.Salary   = Parse(record.GetText("salary"));

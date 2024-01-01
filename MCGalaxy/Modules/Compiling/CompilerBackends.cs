@@ -97,6 +97,10 @@ namespace MCGalaxy.Modules.Compiling
     {
         static Regex outputRegWithFileAndLine;
         static Regex outputRegSimple;
+        
+        public static List<string> PrepareInput(string[] srcPaths) {
+            return ICompiler.ProcessInput(srcPaths, "//");
+        }
 
         public static ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {         
             string args    = GetCommandLineArguments(srcPaths, dstPath, referenced);
