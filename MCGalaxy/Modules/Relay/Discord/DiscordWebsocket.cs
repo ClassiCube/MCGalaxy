@@ -64,6 +64,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         public Action<JsonObject> OnMessageCreate;
         /// <summary> Callback invoked when a channel created event has been received </summary>
         public Action<JsonObject> OnChannelCreate;
+        /// <summary> Callback invoked when a gateway event has been received </summary>
+        public Action<string, JsonObject> OnGatewayEvent;
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
@@ -200,23 +202,23 @@ namespace MCGalaxy.Modules.Relay.Discord
             if (obj.TryGetValue("s", out sequence)) 
                 Session.LastSeq = (string)sequence;
             
-            string eventName = (string)obj["t"];
-            JsonObject data;
+            string eventName = (string)obj["t"];            
+            object rawData;
+            
+            obj.TryGetValue("d", out rawData);
+            JsonObject data = (JsonObject)rawData;
             
             if (eventName == "READY") {
-                data = (JsonObject)obj["d"];
                 HandleReady(data);
                 OnReady(data);
             } else if (eventName == "RESUMED") {
-                data = (JsonObject)obj["d"];
                 OnResumed(data);
             } else if (eventName == "MESSAGE_CREATE") {
-                data = (JsonObject)obj["d"];
                 OnMessageCreate(data);
             } else if (eventName == "CHANNEL_CREATE") {
-                data = (JsonObject)obj["d"];
                 OnChannelCreate(data);
             }
+            OnGatewayEvent(eventName, data);
         }
         
         void HandleReady(JsonObject data) {

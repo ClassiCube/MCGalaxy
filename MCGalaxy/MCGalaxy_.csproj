@@ -595,6 +595,7 @@
     <Compile Include="Modules\Relay\BotControllersCmd.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordApiClient.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordBot.cs" />
+    <Compile Include="Modules\Relay\Discord\DiscordBotEvents.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordMessages.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordWebsocket.cs" />
@@ -602,6 +603,7 @@
     <Compile Include="Modules\Relay\IRC\IRCPlugin.cs" />
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
+    <Compile Include="Modules\Relay\RelayBotEvents.cs" />
     <Compile Include="Modules\Security\IPThrottler.cs" />
     <Compile Include="Modules\Warps\CmdWarp.cs" />
     <Compile Include="Modules\Warps\CmdWaypoint.cs" />
