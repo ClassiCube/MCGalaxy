@@ -31,7 +31,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     public sealed class DiscordSession 
     { 
         public string ID, LastSeq;
-        public int Intents = DiscordWebsocket.DEFAULT_INTENTS;
+        public int Intents;
     }
     public delegate string DiscordGetStatus();
     

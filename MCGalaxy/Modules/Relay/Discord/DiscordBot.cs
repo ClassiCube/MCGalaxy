@@ -403,9 +403,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         
         protected override void OnStart() {
-            session = new DiscordSession();
-            base.OnStart();
+            DiscordSession s = new DiscordSession();
+            s.Intents = DiscordWebsocket.DEFAULT_INTENTS | Config.ExtraIntents;
+            session   = s;
             
+            base.OnStart();            
             OnPlayerConnectEvent.Register(HandlePlayerConnect, Priority.Low);
             OnPlayerDisconnectEvent.Register(HandlePlayerDisconnect, Priority.Low);
             OnPlayerActionEvent.Register(HandlePlayerAction, Priority.Low);

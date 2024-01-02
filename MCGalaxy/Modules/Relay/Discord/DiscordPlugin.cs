@@ -59,6 +59,9 @@ namespace MCGalaxy.Modules.Relay.Discord
         [ConfigBool("embed-show-game-statuses", "Embeds", true)]
         public bool EmbedGameStatuses = true;
         
+        [ConfigInt("extra-intents", "Intents", 0)]
+        public int ExtraIntents;
+        
         public const string PROPS_PATH = "properties/discordbot.properties";
         static ConfigElement[] cfg;
         
