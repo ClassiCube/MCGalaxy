@@ -24,6 +24,8 @@ namespace MCGalaxy.Drawing.Transforms
 {
     public abstract class Transform 
     {
+        public static Transform DefaultTransform = NoTransform.Instance;
+    	
         public abstract string Name { get; }
         public virtual void Configure(DrawOp op, Player p) { }
         

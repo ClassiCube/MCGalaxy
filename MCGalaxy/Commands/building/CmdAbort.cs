@@ -15,6 +15,7 @@
     or implied. See the Licenses for the specific language governing
     permissions and limitations under the Licenses.
 */
+using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Drawing.Transforms;
 
 namespace MCGalaxy.Commands.Building 
@@ -36,9 +37,10 @@ namespace MCGalaxy.Commands.Building
             p.ModeBlock = Block.Invalid;
             p.onTrain   = false;
             p.isFlying  = false;
-            p.BrushName = "normal";
+            
+            p.BrushName = Brush.DefaultBrush;
+            p.Transform = Transform.DefaultTransform;
             p.DefaultBrushArgs = "";
-            p.Transform = NoTransform.Instance;
             
             if (p.weapon != null) p.weapon.Disable();
             p.Message("Every toggle or action was aborted.");

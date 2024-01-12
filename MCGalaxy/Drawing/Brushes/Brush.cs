@@ -23,6 +23,8 @@ namespace MCGalaxy.Drawing.Brushes
 {
     public abstract class Brush 
     {
+        public static string DefaultBrush = "Normal";
+    	
         public abstract string Name { get; }
         public virtual void Configure(DrawOp op, Player p) { }
         
