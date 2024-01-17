@@ -30,6 +30,7 @@ namespace MCGalaxy.Commands.Info
         public override CommandAlias[] Aliases {
             get { return new[] { new CommandAlias("Agree", "agree"), new CommandAlias("Disagree", "disagree") }; }
         }
+        public override bool UseableWhenFrozen { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
             TextFile rulesFile = TextFile.Files["Rules"];
