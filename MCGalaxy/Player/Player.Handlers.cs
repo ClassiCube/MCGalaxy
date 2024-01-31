@@ -404,6 +404,11 @@ namespace MCGalaxy
             
             // Put this after vote collection so that people can vote even when chat is moderated
             if (!CheckCanSpeak("speak")) return;
+            if (Ignores.All) {
+                Message("Your message wasn't sent because you're ignoring all chat.");
+                Message("Use &T/ignore all &Sagain to toggle chat back on.");
+                return;
+            }
 
             if (ChatModes.Handle(this, text)) return;
             text = HandleJoker(text);
