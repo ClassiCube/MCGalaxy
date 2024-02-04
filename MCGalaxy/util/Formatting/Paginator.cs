@@ -39,7 +39,7 @@ namespace MCGalaxy
             Output(p, items, null, printer, cmd, type, modifier, 8);
         }
         
-        static void Output<T>(Player p, IList<T> items,
+        public static void Output<T>(Player p, IList<T> items,
                               StringFormatter<T> formatter, ItemPrinter<T> printer,
                               string cmd, string type, string modifier, int perPage) {
             int page, total = items.Count;
