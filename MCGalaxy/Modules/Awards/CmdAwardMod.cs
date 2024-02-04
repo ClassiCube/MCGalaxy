@@ -40,6 +40,8 @@ namespace MCGalaxy.Modules.Awards
                 string award = args[0].Trim();
                 string desc  = args[1].Trim();
 
+                if (award.Contains(",")) { p.Message("&WAward names cannot contain commas."); return; }
+
                 if (!AwardsList.Add(award, desc)) {
                     p.Message("This award already exists."); return;
                 } else {
