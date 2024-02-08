@@ -70,7 +70,7 @@ namespace MCGalaxy
             return false;
         }
         
-        protected string CheckOwn(Player p, string name, string type) {
+        public string CheckOwn(Player p, string name, string type) {
             if (name.CaselessEq("-own")) {
                 if (p.IsSuper) { SuperRequiresArgs(p, type); return null; }
                 return p.name;
