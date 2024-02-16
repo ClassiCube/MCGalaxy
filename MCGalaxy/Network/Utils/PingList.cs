@@ -35,9 +35,17 @@ namespace MCGalaxy.Network
         // Pings are stored using a circular array 
         public PingEntry[] Entries = new PingEntry[10];
         int pingCounter, nextPingHead;
+
+        long ignorePositionData = -1;
+        public bool UnIgnorePosition(ushort data) {
+            if (Interlocked.Read(ref ignorePositionData) == data) {
+                Interlocked.Exchange(ref ignorePositionData, -1);
+                return true;
+            }
+            return false;
+        }
         
-        
-        public ushort NextTwoWayPingData() {
+        public ushort NextTwoWayPingData(bool waitingForMovementAcknowledged = false) {
             int pingValue = Interlocked.Increment(ref pingCounter);
             int pingHead  = (Interlocked.Increment(ref nextPingHead) - 1) % 10;
             
@@ -45,6 +53,7 @@ namespace MCGalaxy.Network
             Entries[pingHead].TimeRecv = default(DateTime);
             Entries[pingHead].TimeSent = DateTime.UtcNow;
 
+            if (waitingForMovementAcknowledged) Interlocked.Exchange(ref ignorePositionData, pingValue);
             return (ushort)pingValue;
         }
         

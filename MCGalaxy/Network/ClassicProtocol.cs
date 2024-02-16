@@ -259,10 +259,16 @@ namespace MCGalaxy.Network
             bool serverToClient = buffer[offset + 1] != 0;
             ushort data = NetUtils.ReadU16(buffer, offset + 2);
             
+            //player.Message("&bServerToClient? {0}, data {1}", serverToClient, data);
+
             if (!serverToClient) {
                 // Client-> server ping, immediately send reply.
                 Send(Packet.TwoWayPing(false, data));
             } else {
+                if (Ping.UnIgnorePosition(data)) {
+                    player.IgnorePosition = false;
+                    player.Message("Your position is no longer being ignored, received {0}", data);
+                }
                 // Server -> client ping, set time received for reply.
                 Ping.Update(data);
             }
@@ -358,6 +364,7 @@ namespace MCGalaxy.Network
             if (id == Entities.SelfID) pos.Y -= 22;
 
             Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
+            DoIgnorePositionPing(id);
         }
         public override bool SendTeleport(byte id, Position pos, Orientation rot,
                                           Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) {
@@ -368,7 +375,15 @@ namespace MCGalaxy.Network
                 { pos.Y -= 22; }
 
             Send(Packet.TeleportExt(id, usePos, moveMode, useOri, interpolateOri, pos, rot, player.hasExtPositions));
+            DoIgnorePositionPing(id);
             return true;
+        }
+        void DoIgnorePositionPing(byte id) {
+            if (!hasTwoWayPing || id != Entities.SelfID) { return; }
+            ushort data = Ping.NextTwoWayPingData(true);
+            SendTwoWayPing(data);
+            player.IgnorePosition = true;
+            player.Message("Now ignoring your position until {0}", data);
         }
 
         public override void SendRemoveEntity(byte id) {
@@ -521,10 +536,14 @@ namespace MCGalaxy.Network
 
         public override void SendPing() {
             if (hasTwoWayPing) {
-                Send(Packet.TwoWayPing(true, Ping.NextTwoWayPingData()));
+                SendTwoWayPing(Ping.NextTwoWayPingData());
             } else {
                 Send(Packet.Ping());
             }
+        }
+        void SendTwoWayPing(BlockID data) {
+            if (!hasTwoWayPing) { return; }
+            Send(Packet.TwoWayPing(true, data));
         }
 
         public override void SendSetSpawnpoint(Position pos, Orientation rot) {
@@ -559,6 +578,8 @@ namespace MCGalaxy.Network
             } else {
                 Send(Packet.AddEntity(id, name, pos, rot, player.hasCP437, player.hasExtPositions));
             }
+
+            DoIgnorePositionPing(id);
         }
 
         public override void SendLevel(Level prev, Level level) {
