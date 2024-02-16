@@ -135,8 +135,8 @@ namespace MCGalaxy
             if (!Session.SendTeleport(Entities.SelfID, pos, rot, Packet.TeleportMoveMode.AbsoluteInstant)) {
                 Session.SendTeleport(Entities.SelfID, pos, rot);
             }
-            // when frozen, position updates from the client are ignored
-            if (frozen) Pos = pos;
+            // Forcibly move the player since their position won't naturally update
+            if (frozen || IgnorePosition) Pos = pos;
         }
         
         public void SendBlockchange(ushort x, ushort y, ushort z, BlockID block) {
