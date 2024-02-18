@@ -17,6 +17,7 @@
  */
 using System;
 using System.IO;
+using MCGalaxy.Events.BlockDBEvents;
 using MCGalaxy.Util;
 using MCGalaxy.Maths;
 
@@ -56,8 +57,10 @@ namespace MCGalaxy.DB
         }
         
         void ReadDimensions() {
-            if (!File.Exists(FilePath)) return;
-            using (Stream s = OpenRead())
+            string path = FilePath;
+            if (!File.Exists(path)) return;
+            
+            using (Stream s = OpenRead(path))
                 BlockDBFile.ReadHeader(s, out Dims);
         }
 
@@ -66,8 +69,13 @@ namespace MCGalaxy.DB
         public void FlushCache() {
             if (Cache.Head == null) return;
             
-            BlockDBFile format = ValidateBackingFile();
-            using (Stream s = OpenWrite()) {
+            string path = FilePath;
+            bool cancel = false;
+            OnBlockDBSaveEvent.Call(this, ref path, ref cancel);
+            if (cancel) return;
+            
+            BlockDBFile format = ValidateBackingFile(path);
+            using (Stream s = OpenWrite(path)) {
                 // This truncates the lower 4 bits off - so e.g. if a power off occurred
                 // and 21 bytes were in the file, this sets the position to byte 16
                 s.Position = s.Length & ~0x0F;
@@ -90,10 +98,11 @@ namespace MCGalaxy.DB
         /// <summary> Outputs all block changes which affect the given coordinates. </summary>
         /// <remarks> You must lock using Locker.AccquireRead() **before** entering this method. </remarks>
         public void FindChangesAt(ushort x, ushort y, ushort z, Action<BlockDBEntry> output) {
-            if (!File.Exists(FilePath)) { FindInMemoryAt(x, y, z, output); return; }
+            string path = FilePath;
+            if (!File.Exists(path)) { FindInMemoryAt(x, y, z, output); return; }
             Vec3U16 dims;
             
-            using (Stream s = OpenRead()) {
+            using (Stream s = OpenRead(path)) {
                 BlockDBFile format = BlockDBFile.ReadHeader(s, out dims);
                 if (x >= dims.X || y >= dims.Y || z >= dims.Z) return;
                 
@@ -110,7 +119,8 @@ namespace MCGalaxy.DB
                 BlockDBCacheEntry[] entries = node.Entries;
                 int count = node.Count;
                 
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < count; i++) 
+                {
                     if (entries[i].Index != index) continue;
                     BlockDBEntry entry = node.Unpack(entries[i]);
                     output(entry);
@@ -125,13 +135,14 @@ namespace MCGalaxy.DB
         public bool FindChangesBy(int[] ids, DateTime start, DateTime end,
                                   out Vec3U16 dims, Action<BlockDBEntry> output) {
             int startDelta = ClampDelta(start.Subtract(Epoch));
-            int endDelta = ClampDelta(end.Subtract(Epoch));
+            int endDelta   = ClampDelta(end.Subtract(Epoch));
             
             dims = Dims;
             if (FindInMemoryBy(ids, startDelta, endDelta, output)) return true;
+            string path = FilePath;
             
-            if (!File.Exists(FilePath)) return false;
-            using (Stream s = OpenRead()) {
+            if (!File.Exists(path)) return false;
+            using (Stream s = OpenRead(path)) {
                 BlockDBFile format = BlockDBFile.ReadHeader(s, out dims);
                 return format.FindChangesBy(s, ids, startDelta, endDelta, output);
             }
@@ -143,12 +154,14 @@ namespace MCGalaxy.DB
                 int count = node.Count;
                 BlockDBCacheEntry[] entries = node.Entries;
                 
-                for (int i = count - 1; i >= 0; i--) {
+                for (int i = count - 1; i >= 0; i--) 
+                {
                     BlockDBEntry entry = node.Unpack(entries[i]);
                     if (entry.TimeDelta < startDelta) return true;
                     if (entry.TimeDelta > endDelta) continue;
                     
-                    for (int j = 0; j < ids.Length; j++) {
+                    for (int j = 0; j < ids.Length; j++) 
+                    {
                         if (entry.PlayerID != ids[j]) continue;
                         output(entry); break;
                     }
@@ -168,41 +181,43 @@ namespace MCGalaxy.DB
         
         /// <summary> Deletes the backing file on disc if it exists. </summary>
         public void DeleteBackingFile() {
+            string path = FilePath;
+            
             using (IDisposable writeLock = Locker.AccquireWrite()) {
-                if (!File.Exists(FilePath)) return;
-                File.Delete(FilePath);
+                if (!File.Exists(path)) return;
+                File.Delete(path);
             }
         }
 
         /// <summary> Checks if the backing file exists on disc, and if not, creates it.
         /// Also recreates the backing file if dimensions on disc are less than those in memory. </summary>
-        BlockDBFile ValidateBackingFile() {
+        BlockDBFile ValidateBackingFile(string path) {
+            BlockDBFile format = BlockDBFile.V1;
             Vec3U16 fileDims;
 
-            BlockDBFile format = BlockDBFile.V1;
-            if (!File.Exists(FilePath)) {
-                using (Stream s = OpenWrite()) {
+            if (!File.Exists(path)) {
+                using (Stream s = OpenWrite(path)) {
                     fileDims = Dims;
                     BlockDBFile.WriteHeader(s, fileDims);
                 }
             } else {
-                using (Stream s = OpenRead()) {
+                using (Stream s = OpenRead(path)) {
                     format = BlockDBFile.ReadHeader(s, out fileDims);
                 }
                 if (fileDims.X < Dims.X || fileDims.Y < Dims.Y || fileDims.Z < Dims.Z) {
-                    BlockDBFile.ResizeBackingFile(this);
+                    BlockDBFile.ResizeBackingFile(this, path);
                 }
             }
             return format;
         }
         
                 
-        FileStream OpenWrite() { 
-            return new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite); 
+        static FileStream OpenWrite(string path) { 
+            return new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite); 
         }
         
-        FileStream OpenRead() {
-            return new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite); 
+        static FileStream OpenRead(string path) {
+            return new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite); 
         }
     }
 }
