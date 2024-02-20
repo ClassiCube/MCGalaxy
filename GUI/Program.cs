@@ -101,7 +101,7 @@ namespace MCGalaxy.Gui
             //   ..
             // However, some X11 video drivers will cause XQueryBestCursor to return width/height 0,
             //  which will then cause the subsequent 'new Bitmap(width, height)' in XplatUIX11.DefineCursor to fail
-            // See https://github.com/UnknownShadow200/MCGalaxy/issues/658 for more details
+            // See https://github.com/ClassiCube/MCGalaxy/issues/658 for more details
             try {
                 Cursor c = Cursors.SizeNWSE;
             } catch (ArgumentException ex) {
