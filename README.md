@@ -2,7 +2,7 @@ MCGalaxy is a fully featured and customisable **ClassiCube Server Software** bas
 
 **Setup**
 -----------------
-Download the latest MCGalaxy release [from here](https://github.com/UnknownShadow200/MCGalaxy/releases)
+Download the latest MCGalaxy release [from here](https://github.com/ClassiCube/MCGalaxy/releases)
 * Windows: You need to install .NET framework 4.0. Windows 8/10/11 already have this included.
 * macOS:   You need to install the [Mono framework](https://www.mono-project.com).
 * Linux:   You need to install the [Mono framework](https://www.mono-project.com). (or just `apt install mono-complete` if on Ubuntu)
@@ -95,10 +95,10 @@ See LICENSE for MCGalaxy license, and license.txt for code used from other softw
 Docker support
 -----------------
 Some **unofficial** dockerfiles for running MCGalaxy in Docker:
-* [using Mono](https://github.com/UnknownShadow200/MCGalaxy/pull/577/files)
-* [using .NET core](https://github.com/UnknownShadow200/MCGalaxy/pull/629/files)
+* [using Mono](https://github.com/ClassiCube/MCGalaxy/pull/577/files)
+* [using .NET core](https://github.com/ClassiCube/MCGalaxy/pull/629/files)
 
 Documentation
 -----------------
-* [General documentation](https://github.com/UnknownShadow200/MCGalaxy/wiki)
+* [General documentation](https://github.com/ClassiCube/MCGalaxy/wiki)
 * [API documentation](https://github.com/ClassiCube/MCGalaxy-API-Documentation)

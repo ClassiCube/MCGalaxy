@@ -93,12 +93,11 @@ namespace MCGalaxy.DB
             File.Move(srcPath, dstPath);
         }
         
-        public static void ResizeBackingFile(BlockDB db) {
+        public static void ResizeBackingFile(BlockDB db, string path) {
             Logger.Log(LogType.BackgroundActivity, "Resizing BlockDB for " + db.MapName);
-            string filePath = FilePath(db.MapName);
             string tempPath = TempPath(db.MapName);
             
-            using (Stream src = File.OpenRead(filePath), dst = File.Create(tempPath)) {
+            using (Stream src = File.OpenRead(path), dst = File.Create(tempPath)) {
                 Vec3U16 dims;
                 ReadHeader(src, out dims);
                 WriteHeader(dst, db.Dims);
@@ -123,8 +122,8 @@ namespace MCGalaxy.DB
                 }
             }
             
-            File.Delete(filePath);
-            File.Move(tempPath, filePath);
+            File.Delete(path);
+            File.Move(tempPath, path);
         }
         
         
