@@ -224,7 +224,7 @@ namespace MCGalaxy
         public void ProcessMovement(int x, int y, int z, byte yaw, byte pitch, int held) {
             if (held >= 0) ClientHeldBlock = (BlockID)held;
 
-            if (IgnorePosition) { return; }
+            if (Session.Ping.IgnorePosition) { return; }
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             Position next = new Position(x, y, z);
             CheckBlocks(Pos, next);

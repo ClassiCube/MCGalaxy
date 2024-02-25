@@ -265,10 +265,13 @@ namespace MCGalaxy.Network
                 // Client-> server ping, immediately send reply.
                 Send(Packet.TwoWayPing(false, data));
             } else {
-                if (Ping.UnIgnorePosition(data)) {
-                    player.IgnorePosition = false;
-                    player.Message("Your position is no longer being ignored, received {0}", data);
+
+                bool debugIgnoredCached = Ping.IgnorePosition;
+                Ping.UnIgnorePosition(data);
+                if (debugIgnoredCached == true && !Ping.IgnorePosition) {
+                    player.Message("Position no longer being ignored, received {0}", data);
                 }
+
                 // Server -> client ping, set time received for reply.
                 Ping.Update(data);
             }
@@ -363,26 +366,27 @@ namespace MCGalaxy.Network
             // NOTE: Classic clients require offseting own entity by 22 units vertically
             if (id == Entities.SelfID) pos.Y -= 22;
 
-            Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
             DoIgnorePositionPing(id);
+            Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
         }
         public override bool SendTeleport(byte id, Position pos, Orientation rot,
                                           Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) {
             if (!Supports(CpeExt.ExtEntityTeleport)) { return false; }
 
+            DoIgnorePositionPing(id);
+
             // NOTE: Classic clients require offseting own entity by 22 units vertically when using absolute location updates
-            if ((moveMode == Packet.TeleportMoveMode.AbsoluteInstant || moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID)
+            if ((moveMode == Packet.TeleportMoveMode.AbsoluteInstant ||
+                moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID)
                 { pos.Y -= 22; }
 
             Send(Packet.TeleportExt(id, usePos, moveMode, useOri, interpolateOri, pos, rot, player.hasExtPositions));
-            DoIgnorePositionPing(id);
             return true;
         }
         void DoIgnorePositionPing(byte id) {
             if (!hasTwoWayPing || id != Entities.SelfID) { return; }
             ushort data = Ping.NextTwoWayPingData(true);
             SendTwoWayPing(data);
-            player.IgnorePosition = true;
             player.Message("Now ignoring your position until {0}", data);
         }
 
@@ -570,6 +574,8 @@ namespace MCGalaxy.Network
                 rot.RotY  = (byte)(256 - temp);
             }
 
+            DoIgnorePositionPing(id);
+
             if (Supports(CpeExt.ExtPlayerList, 2)) {
                 Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, player.hasCP437, player.hasExtPositions));
             } else if (player.hasExtList) {
@@ -578,8 +584,6 @@ namespace MCGalaxy.Network
             } else {
                 Send(Packet.AddEntity(id, name, pos, rot, player.hasCP437, player.hasExtPositions));
             }
-
-            DoIgnorePositionPing(id);
         }
 
         public override void SendLevel(Level prev, Level level) {

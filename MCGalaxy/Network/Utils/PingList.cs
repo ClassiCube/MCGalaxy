@@ -37,12 +37,12 @@ namespace MCGalaxy.Network
         int pingCounter, nextPingHead;
 
         long ignorePositionData = -1;
-        public bool UnIgnorePosition(ushort data) {
-            if (Interlocked.Read(ref ignorePositionData) == data) {
-                Interlocked.Exchange(ref ignorePositionData, -1);
-                return true;
-            }
-            return false;
+
+        internal bool IgnorePosition {
+            get { return Interlocked.Read(ref ignorePositionData) >= 0; }
+        }
+        public void UnIgnorePosition(ushort data) {
+            Interlocked.CompareExchange(ref ignorePositionData, -1, data);
         }
         
         public ushort NextTwoWayPingData(bool waitingForMovementAcknowledged = false) {

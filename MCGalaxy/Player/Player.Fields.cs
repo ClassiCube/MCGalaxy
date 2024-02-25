@@ -110,15 +110,6 @@ namespace MCGalaxy {
         public bool onTrain, trainInvincible;
         int mbRecursion;
 
-        private long _ignorePosition = 0;
-        internal bool IgnorePosition {
-            get { return Interlocked.Read(ref _ignorePosition) > 0; }
-            set {
-                if (value) Interlocked.Exchange(ref _ignorePosition, 1);
-                else Interlocked.Exchange(ref _ignorePosition, 0);
-            }
-        }
-
         public bool frozen;
         public string following = "";
         public string possess = "";
