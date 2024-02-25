@@ -224,7 +224,8 @@ namespace MCGalaxy
         public void ProcessMovement(int x, int y, int z, byte yaw, byte pitch, int held) {
             if (held >= 0) ClientHeldBlock = (BlockID)held;
 
-            if (Session.Ping.IgnorePosition) { return; }
+            if (Session.Ping.IgnorePosition || Loading) { return; }
+
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             Position next = new Position(x, y, z);
             CheckBlocks(Pos, next);
@@ -237,7 +238,7 @@ namespace MCGalaxy
             SetYawPitch(yaw, pitch);
             CheckZones(next);
             
-            if (!Moved() || Loading) return;
+            if (!Moved()) return;
             if (DateTime.UtcNow < AFKCooldown) return;
             
             LastAction = DateTime.UtcNow;
