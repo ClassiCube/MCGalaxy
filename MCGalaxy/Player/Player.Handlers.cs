@@ -225,24 +225,37 @@ namespace MCGalaxy
             if (held >= 0) ClientHeldBlock = (BlockID)held;
 
             if (Session.Ping.IgnorePosition || Loading) { return; }
+            if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; } // Doesn't check zones? Potential bug
 
-            if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; }
             Position next = new Position(x, y, z);
+            ProcessMovementCore(next, yaw, pitch, true);
+        }
+
+        /// <summary>
+        /// Called to update player's position and check blocks and zones.
+        /// If fromClient is true, calls OnPlayerMove event and updates AFK status.
+        /// </summary>
+        internal void ProcessMovementCore(Position next, byte yaw, byte pitch, bool fromClient) {
+
             CheckBlocks(Pos, next);
 
-            bool cancel = false;
-            OnPlayerMoveEvent.Call(this, next, yaw, pitch, ref cancel);
-            if (cancel) { cancel = false; return; }
-            
+            if (fromClient) {
+                bool cancel = false;
+                OnPlayerMoveEvent.Call(this, next, yaw, pitch, ref cancel);
+                if (cancel) { cancel = false; return; }
+            }
+
             Pos = next;
             SetYawPitch(yaw, pitch);
             CheckZones(next);
-            
-            if (!Moved()) return;
-            if (DateTime.UtcNow < AFKCooldown) return;
-            
-            LastAction = DateTime.UtcNow;
-            if (IsAfk) CmdAfk.ToggleAfk(this, "");
+
+            if (fromClient) {
+                if (!Moved()) return;
+                if (DateTime.UtcNow < AFKCooldown) return;
+
+                LastAction = DateTime.UtcNow;
+                if (IsAfk) CmdAfk.ToggleAfk(this, "");
+            }
         }
         
         void CheckZones(Position pos) {

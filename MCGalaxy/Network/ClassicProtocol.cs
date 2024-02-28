@@ -361,26 +361,31 @@ namespace MCGalaxy.Network
             if (id == Entities.SelfID) pos.Y -= 22;
 
             Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
-            DoIgnorePositionPing(id);
+            OnTeleported(id, pos, rot);
         }
         public override bool SendTeleport(byte id, Position pos, Orientation rot,
                                           Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) {
             if (!Supports(CpeExt.ExtEntityTeleport)) { return false; }
 
+            bool absoluteSelf = (moveMode == Packet.TeleportMoveMode.AbsoluteInstant ||
+                moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID;
 
             // NOTE: Classic clients require offseting own entity by 22 units vertically when using absolute location updates
-            if ((moveMode == Packet.TeleportMoveMode.AbsoluteInstant ||
-                moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID)
-                { pos.Y -= 22; }
+            if (absoluteSelf) pos.Y -= 22; 
 
             Send(Packet.TeleportExt(id, usePos, moveMode, useOri, interpolateOri, pos, rot, player.hasExtPositions));
-            DoIgnorePositionPing(id);
+            if (absoluteSelf) OnTeleported(id, pos, rot);
             return true;
         }
-        void DoIgnorePositionPing(byte id) {
-            if (!hasTwoWayPing || id != Entities.SelfID) { return; }
+
+        void OnTeleported(byte id, Position pos, Orientation rot) {
+            if (id != Entities.SelfID || !hasTwoWayPing) { return; }
+
             ushort data = Ping.NextTwoWayPingData(true);
             SendTwoWayPing(data);
+
+            //Update server-side position and check MB/portals/zones
+            player.ProcessMovementCore(pos, rot.RotY, rot.HeadX, false);
         }
 
         public override void SendRemoveEntity(byte id) {
@@ -576,7 +581,7 @@ namespace MCGalaxy.Network
             } else {
                 Send(Packet.AddEntity(id, name, pos, rot, player.hasCP437, player.hasExtPositions));
             }
-            DoIgnorePositionPing(id);
+            OnTeleported(id, pos, rot);
         }
 
         public override void SendLevel(Level prev, Level level) {
