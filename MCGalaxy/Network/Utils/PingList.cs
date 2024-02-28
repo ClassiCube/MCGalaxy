@@ -38,14 +38,14 @@ namespace MCGalaxy.Network
 
         long ignorePositionData = -1;
 
-        internal bool IgnorePosition {
+        public bool IgnorePosition {
             get { return Interlocked.Read(ref ignorePositionData) >= 0; }
         }
-        public void UnIgnorePosition(ushort data) {
+        internal void UnIgnorePosition(ushort data) {
             Interlocked.CompareExchange(ref ignorePositionData, -1, data);
         }
         
-        public ushort NextTwoWayPingData(bool waitingForMovementAcknowledged = false) {
+        public ushort NextTwoWayPingData(bool startIgnoringPosition = false) {
             int pingValue = Interlocked.Increment(ref pingCounter);
             int pingHead  = (Interlocked.Increment(ref nextPingHead) - 1) % 10;
             
@@ -53,7 +53,7 @@ namespace MCGalaxy.Network
             Entries[pingHead].TimeRecv = default(DateTime);
             Entries[pingHead].TimeSent = DateTime.UtcNow;
 
-            if (waitingForMovementAcknowledged) Interlocked.Exchange(ref ignorePositionData, pingValue);
+            if (startIgnoringPosition) Interlocked.Exchange(ref ignorePositionData, pingValue);
             return (ushort)pingValue;
         }
         

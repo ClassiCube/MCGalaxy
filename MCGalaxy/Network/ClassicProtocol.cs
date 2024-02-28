@@ -265,13 +265,7 @@ namespace MCGalaxy.Network
                 // Client-> server ping, immediately send reply.
                 Send(Packet.TwoWayPing(false, data));
             } else {
-
-                bool debugIgnoredCached = Ping.IgnorePosition;
                 Ping.UnIgnorePosition(data);
-                if (debugIgnoredCached == true && !Ping.IgnorePosition) {
-                    player.Message("Position no longer being ignored, received {0}", data);
-                }
-
                 // Server -> client ping, set time received for reply.
                 Ping.Update(data);
             }
@@ -387,7 +381,6 @@ namespace MCGalaxy.Network
             if (!hasTwoWayPing || id != Entities.SelfID) { return; }
             ushort data = Ping.NextTwoWayPingData(true);
             SendTwoWayPing(data);
-            player.Message("Now ignoring your position until {0}", data);
         }
 
         public override void SendRemoveEntity(byte id) {
