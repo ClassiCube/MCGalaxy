@@ -358,10 +358,10 @@ namespace MCGalaxy.Network
             }
 
             // NOTE: Classic clients require offseting own entity by 22 units vertically
-            if (id == Entities.SelfID) pos.Y -= 22;
+            bool self = id == Entities.SelfID;
+            if (self) pos.Y -= 22;
 
-            Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
-            OnTeleported(id, pos, rot);
+            SendTeleportCore(self, Packet.Teleport(id, pos, rot, player.hasExtPositions), id, pos, rot);
         }
         public override bool SendTeleport(byte id, Position pos, Orientation rot,
                                           Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) {
@@ -369,21 +369,26 @@ namespace MCGalaxy.Network
 
             bool absoluteSelf = (moveMode == Packet.TeleportMoveMode.AbsoluteInstant ||
                 moveMode == Packet.TeleportMoveMode.AbsoluteSmooth) && id == Entities.SelfID;
-
             // NOTE: Classic clients require offseting own entity by 22 units vertically when using absolute location updates
-            if (absoluteSelf) pos.Y -= 22; 
+            if (absoluteSelf) pos.Y -= 22;
 
-            Send(Packet.TeleportExt(id, usePos, moveMode, useOri, interpolateOri, pos, rot, player.hasExtPositions));
-            if (absoluteSelf) OnTeleported(id, pos, rot);
+            SendTeleportCore(absoluteSelf, Packet.TeleportExt(id, usePos, moveMode, useOri, interpolateOri, pos, rot, player.hasExtPositions), id, pos, rot);
             return true;
         }
 
-        void OnTeleported(byte id, Position pos, Orientation rot) {
-            if (id != Entities.SelfID || !hasTwoWayPing) { return; }
+        void SendTeleportCore(bool absoluteSelf, byte[] packet, byte id, Position pos, Orientation rot) {
+            if (!absoluteSelf || !hasTwoWayPing) {
+                Send(packet);
+                return;
+            }
 
-            ushort data = Ping.NextTwoWayPingData(true);
-            SendTwoWayPing(data);
+            byte[] pingPacket = Packet.TwoWayPing(true, Ping.NextTwoWayPingData(true));
 
+            byte[] merged = new byte[packet.Length + pingPacket.Length];
+            Buffer.BlockCopy(packet,     0, merged,             0, packet.Length);
+            Buffer.BlockCopy(pingPacket, 0, merged, packet.Length, pingPacket.Length);
+
+            Send(merged);
             //Update server-side position and check MB/portals/zones
             player.ProcessMovementCore(pos, rot.RotY, rot.HeadX, false);
         }
@@ -538,14 +543,10 @@ namespace MCGalaxy.Network
 
         public override void SendPing() {
             if (hasTwoWayPing) {
-                SendTwoWayPing(Ping.NextTwoWayPingData());
+                Send(Packet.TwoWayPing(true, Ping.NextTwoWayPingData()));
             } else {
                 Send(Packet.Ping());
             }
-        }
-        void SendTwoWayPing(BlockID data) {
-            if (!hasTwoWayPing) { return; }
-            Send(Packet.TwoWayPing(true, data));
         }
 
         public override void SendSetSpawnpoint(Position pos, Orientation rot) {
@@ -559,29 +560,33 @@ namespace MCGalaxy.Network
 
         public override void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot) {
             name = CleanupColors(name);
+            bool self = id == Entities.SelfID;
             // NOTE: Classic clients require offseting own entity by 22 units vertically
-            if (id == Entities.SelfID) pos.Y -= 22;
+            if (self) pos.Y -= 22;
 
             // SpawnEntity for self ID behaves differently in Classic 0.0.16a
             //  - yaw and pitch fields are swapped
             //  - pitch is inverted
             // (other entities do NOT require this adjustment however)
-            if (id == Entities.SelfID && ProtocolVersion <= Server.VERSION_0016) {
+            if (self && ProtocolVersion <= Server.VERSION_0016) {
                 byte temp = rot.HeadX;
                 rot.HeadX = rot.RotY;
                 rot.RotY  = (byte)(256 - temp);
             }
 
-
+            byte[] packet;
             if (Supports(CpeExt.ExtPlayerList, 2)) {
-                Send(Packet.ExtAddEntity2(id, skin, name, pos, rot, player.hasCP437, player.hasExtPositions));
+                packet = Packet.ExtAddEntity2(id, skin, name, pos, rot, player.hasCP437, player.hasExtPositions);
             } else if (player.hasExtList) {
-                Send(Packet.ExtAddEntity(id, skin, name, player.hasCP437));
-                Send(Packet.Teleport(id, pos, rot, player.hasExtPositions));
+                byte[] addEntity = Packet.ExtAddEntity(id, skin, name, player.hasCP437);
+                byte[] teleport  = Packet.Teleport(id, pos, rot, player.hasExtPositions);
+                packet = new byte[addEntity.Length + teleport.Length];
+                Buffer.BlockCopy(addEntity, 0, packet,                0, addEntity.Length);
+                Buffer.BlockCopy(teleport,  0, packet, addEntity.Length,  teleport.Length);
             } else {
-                Send(Packet.AddEntity(id, name, pos, rot, player.hasCP437, player.hasExtPositions));
+                packet = Packet.AddEntity(id, name, pos, rot, player.hasCP437, player.hasExtPositions);
             }
-            OnTeleported(id, pos, rot);
+            SendTeleportCore(self, packet, id, pos, rot);
         }
 
         public override void SendLevel(Level prev, Level level) {
