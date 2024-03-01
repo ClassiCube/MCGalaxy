@@ -389,8 +389,9 @@ namespace MCGalaxy.Network
             Buffer.BlockCopy(pingPacket, 0, merged, packet.Length, pingPacket.Length);
 
             Send(merged);
-            //Update server-side position and check MB/portals/zones
-            player.ProcessMovementCore(pos, rot.RotY, rot.HeadX, false);
+            // This shouldn't be called -- checking blocks can trigger other teleports leading to a stack overflow
+            // Update server-side position and check MB/portals/zones
+            // player.ProcessMovementCore(pos, rot.RotY, rot.HeadX, false);
         }
 
         public override void SendRemoveEntity(byte id) {
