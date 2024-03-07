@@ -77,14 +77,12 @@ Compiling - mono and .NET framework
 * Modern mono: Type `msbuild MCGalaxy.sln` into Terminal
 * Older mono: Type `xbuild MCGalaxy.sln` into Terminal
 
-Compiling - .NET 6 / .NET 5 / .NET Core
+Compiling - .NET 6 / .NET 7 / .NET 8
 -----------------
 
-* Compiling for .NET 6: No changes necessary
-* Compiling for .NET 5: Change `TargetFramework` in CLI/MCGalaxyCLI_dotnet.csproj to `net5.0`
-* Compiling for .NET Core: Change `TargetFramework` in CLI/MCGalaxyCLI_dotnet.csproj to `netcoreapp3.1`
-
-Then navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet.csproj`
+* Compiling for .NET 6: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet6.csproj`
+* Compiling for .NET 7: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet7.csproj`
+* Compiling for .NET 8: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet8.csproj`
 
 **You will also need to copy `libsqlite3.so.0` from system libraries to `libsqlite3.so` in the server folder**
 
