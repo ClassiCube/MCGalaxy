@@ -31,12 +31,19 @@ using System.IO;
 namespace MCGalaxy.Util 
 {
     public delegate Pixel PixelGet(int x, int y);
+    public delegate void  PixelSet(int x, int y, Pixel pixel);
     public struct Pixel { public byte A, R, G, B; }
 
+    /// <summary> Represents a 2D image </summary>
+    /// <remarks> Backing implementation depends on whether running on dotnet or .NET </remarks>
     public abstract class IBitmap2D : IDisposable
     {
         public int Width, Height;
         public PixelGet Get;
+        public PixelSet Set;
+        
+        /// <summary> Retrieves the raw underlying image representation </summary>
+        public abstract object RawImage { get; }
 
         public abstract void Decode(byte[] data);
 
@@ -95,6 +102,8 @@ namespace MCGalaxy.Util
         BitmapData data;
         byte* scan0;
         int stride;
+        
+        public override object RawImage { get { return bmp; } }
 
         public override void Decode(byte[] data) {
             Image tmp = Image.FromStream(new MemoryStream(data));
@@ -138,12 +147,15 @@ namespace MCGalaxy.Util
             bool fastPath = bmp.PixelFormat == PixelFormat.Format32bppRgb
                          || bmp.PixelFormat == PixelFormat.Format32bppArgb
                          || bmp.PixelFormat == PixelFormat.Format24bppRgb;
-            if (!fastPath) { Get = GetGenericPixel; return; }
+            
+            Get = GetGenericPixel;
+            Set = SetGenericPixel;
+            if (!fastPath) return;
             // We can only use the fast path for 24bpp or 32bpp bitmaps
             
             Rectangle r = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            data = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
-            scan0 = (byte*)data.Scan0;
+            data   = bmp.LockBits(r, ImageLockMode.ReadOnly, bmp.PixelFormat);
+            scan0  = (byte*)data.Scan0;
             stride = data.Stride;
             
             if (bmp.PixelFormat == PixelFormat.Format24bppRgb) {
@@ -152,45 +164,55 @@ namespace MCGalaxy.Util
                 Get = Get32BppPixel;
             }
         }
-        
-        Pixel GetGenericPixel(int x, int y) {
-            Pixel pixel;
-            int argb = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead            
-            pixel.A = (byte)(argb >> 24);
-            pixel.R = (byte)(argb >> 16);
-            pixel.G = (byte)(argb >> 8);
-            pixel.B = (byte)argb;
-            return pixel;
-        }
-        
-        Pixel Get24BppPixel(int x, int y) {
-            Pixel pixel;
-            byte* ptr = (scan0 + y * stride) + (x * 3);
-            pixel.B = ptr[0]; pixel.G = ptr[1]; pixel.R = ptr[2]; pixel.A = 255;
-            return pixel;
-        }
-        
-        Pixel Get32BppPixel(int x, int y) {
-            Pixel pixel;
-            byte* ptr = (scan0 + y * stride) + (x * 4);            
-            pixel.B = ptr[0]; pixel.G = ptr[1]; pixel.R = ptr[2]; pixel.A = ptr[3];
-            return pixel;
-        }
 
         public override void UnlockBits() {
             if (data != null) bmp.UnlockBits(data);
             data = null;
+        }
+        
+        
+        Pixel GetGenericPixel(int x, int y) {
+            Pixel p;
+            int argb = bmp.GetPixel(x, y).ToArgb(); // R/G/B properties incur overhead  
+            
+            p.A = (byte)(argb >> 24);
+            p.R = (byte)(argb >> 16);
+            p.G = (byte)(argb >> 8);
+            p.B = (byte)argb;
+            return p;
+        }
+        
+        void SetGenericPixel(int x, int y, Pixel p) {
+            bmp.SetPixel(x, y, Color.FromArgb(p.A, p.R, p.G, p.B));
+        }
+        
+        Pixel Get24BppPixel(int x, int y) {
+            Pixel p;
+            byte* ptr = (scan0 + y * stride) + (x * 3);
+            p.B = ptr[0]; p.G = ptr[1]; p.R = ptr[2]; p.A = 255;
+            return p;
+        }
+        
+        Pixel Get32BppPixel(int x, int y) {
+            Pixel p;
+            byte* ptr = (scan0 + y * stride) + (x * 4);            
+            p.B = ptr[0]; p.G = ptr[1]; p.R = ptr[2]; p.A = ptr[3];
+            return p;
         }
     }
 #else
     unsafe sealed class ImageSharpBitmap : IBitmap2D
     {
         Image<Rgba32> img;
+        
+        public override object RawImage { get { return img; } }
 
         public override void Decode(byte[] data) {
             img = Image.Load<Rgba32>(data);
             UpdateDimensions();
+            
             Get = GetPixel;
+            Set = SetPixel;
         }
 
         public override void Resize(int width, int height, bool hq) {
@@ -205,13 +227,24 @@ namespace MCGalaxy.Util
         }
 
         Pixel GetPixel(int x, int y) {
-            Pixel pixel;
+            Pixel p;
             Rgba32 src = img[x, y];
-            pixel.A = src.A;
-            pixel.R = src.R;
-            pixel.G = src.G;
-            pixel.B = src.B; // TODO avoid overhead by direct blit??
-            return pixel;
+            
+            p.A = src.A;
+            p.R = src.R;
+            p.G = src.G;
+            p.B = src.B; // TODO avoid overhead by direct blit??
+            return p;
+        }
+
+        void SetPixel(int x, int y, Pixel p) {
+            Rgba32 dst;
+            
+            dst.A = p.A;
+            dst.R = p.R;
+            dst.G = p.G;
+            dst.B = p.B; // TODO avoid overhead by direct blit??
+            img[x, y] = dst;
         }
 
         public override void Dispose() {
