@@ -36,7 +36,7 @@ namespace MCGalaxy
             bool didJoin   = false;
             
             try {
-                didJoin = name == null ? GotoLevel(p, lvl) : GotoMap(p, name);
+                didJoin = name == null ? GotoLevel(p, lvl, false) : GotoMap(p, name);
             } finally {
                 Interlocked.Exchange(ref p.UsingGoto, 0);
                 Server.DoGC();
@@ -50,14 +50,14 @@ namespace MCGalaxy
         
         static bool GotoMap(Player p, string name) {
             Level lvl = LevelInfo.FindExact(name);
-            if (lvl != null) return GotoLevel(p, lvl);
+            if (lvl != null) return GotoLevel(p, lvl, false);
             
             if (Server.Config.AutoLoadMaps) {
                 string map = Matcher.FindMaps(p, name);
                 if (map == null) return false;
                 
                 lvl = LevelInfo.FindExact(map);
-                if (lvl != null) return GotoLevel(p, lvl);
+                if (lvl != null) return GotoLevel(p, lvl, false);
                 return LoadOfflineLevel(p, map);
             } else {
                 lvl = Matcher.FindLevels(p, name);
@@ -66,7 +66,7 @@ namespace MCGalaxy
                     Command.Find("Search").Use(p, "levels " + name);
                     return false;
                 }
-                return GotoLevel(p, lvl);
+                return GotoLevel(p, lvl, false);
             }
         }
         
@@ -87,13 +87,13 @@ namespace MCGalaxy
             
             LevelActions.Load(p, map, false);
             Level lvl = LevelInfo.FindExact(map);
-            if (lvl != null) return GotoLevel(p, lvl);
+            if (lvl != null) return GotoLevel(p, lvl, true);
 
             p.Message("Level \"{0}\" failed to be auto-loaded.", map);
             return false;
         }
         
-        static bool GotoLevel(Player p, Level lvl) {
+        static bool GotoLevel(Player p, Level lvl, bool autoloaded) {
             if (p.level == lvl) { p.Message("You are already in {0}&S.", lvl.ColoredName); return false; }
             
             bool canJoin = lvl.CanJoin(p);

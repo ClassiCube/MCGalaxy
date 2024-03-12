@@ -46,5 +46,18 @@ namespace MCGalaxy
             TimeSpan oldestDelta = now - log[0];
             return oldestDelta > checkInterval;
         }
+        
+        
+        // Can't just use HH:mm:ss, as e.g. Finnish converts : to .
+        //   https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings#timeSeparator
+        const string INVARIANT_DATE_FORMAT = "yyyy-MM-dd HH':'mm':'ss";
+        
+        public static string ToInvariantDateString(this DateTime time) {
+            return time.ToString(INVARIANT_DATE_FORMAT);
+        }
+        
+        public static bool TryParseInvariantDateString(this string str, out DateTime dt) {
+            return DateTime.TryParseExact(str, INVARIANT_DATE_FORMAT, null, 0, out dt);
+        }
     }
 }

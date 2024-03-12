@@ -665,7 +665,7 @@ namespace MCGalaxy
             try { //opstats patch (since 5.5.11)
                 if (Server.Opstats.CaselessContains(cmd) || (cmd.CaselessEq("review") && args.CaselessEq("next") && Server.reviewlist.Count > 0)) {
                     Database.AddRow("Opstats", "Time, Name, Cmd, Cmdmsg",
-                                    DateTime.Now.ToString(Database.DateFormat), name, cmd, args);
+                                    DateTime.Now.ToInvariantDateString(), name, cmd, args);
                 }
             } catch { }
             

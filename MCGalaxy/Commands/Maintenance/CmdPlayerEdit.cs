@@ -146,13 +146,13 @@ namespace MCGalaxy.Commands.Maintenance {
                 return;
             }
             
-            DateTime date;
-            if (!DateTime.TryParseExact(args[2], Database.DateFormat, null, 0, out date)) {
+            DateTime dt;
+            if (!args[2].TryParseInvariantDateString(out dt)) {
                 p.Message("Invalid date. It must be in format: " + Database.DateFormat);
                 return;
             }
             
-            if (who != null) setter(date);
+            if (who != null) setter(dt);
             PlayerDB.Update(args[0], column, args[2]);
             MessageDataChanged(p, args[0], args[1], args[2]);
         }

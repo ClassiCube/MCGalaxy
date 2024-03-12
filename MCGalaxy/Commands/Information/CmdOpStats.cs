@@ -30,7 +30,7 @@ namespace MCGalaxy.Commands.Info
         public override bool UseableWhenFrozen { get { return true; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            string end = DateTime.Now.ToString(Database.DateFormat);
+            string end = DateTime.Now.ToInvariantDateString();
             string start = "thismonth", name = null;
             string[] args = message.SplitSpaces();
             

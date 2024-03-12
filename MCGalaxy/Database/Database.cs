@@ -27,7 +27,7 @@ namespace MCGalaxy.SQL
     public static class Database 
     {
         public static IDatabaseBackend Backend;
-        public const string DateFormat = "yyyy-MM-dd HH:mm:ss";        
+        public const string DateFormat = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary> Counts rows in the given table. </summary>
         /// <param name="modifier"> Optional SQL to filter which rows are counted. </param>
@@ -244,9 +244,10 @@ namespace MCGalaxy.SQL
         }
         
         public static DateTime ParseDBDate(string value) {
-            DateTime date;
+            DateTime dt;
             // prefer the exact format
-            if (DateTime.TryParseExact(value, DateFormat, null, 0, out date)) return date;
+            if (value.TryParseInvariantDateString(out dt)) return dt;
+            
             return DateTime.Parse(value);
         }
     }

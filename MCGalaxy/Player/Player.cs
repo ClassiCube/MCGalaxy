@@ -182,7 +182,7 @@ namespace MCGalaxy {
             long drawn  = PlayerData.Pack(TotalDeleted, TotalDrawn);
             Database.UpdateRows("Players", "IP=@0, LastLogin=@1, totalLogin=@2, totalDeaths=@3, Money=@4, " +
                                 "totalBlocks=@5, totalCuboided=@6, totalKicked=@7, TimeSpent=@8, Messages=@9", "WHERE Name=@10",
-                                ip, LastLogin.ToString(Database.DateFormat),
+                                ip, LastLogin.ToInvariantDateString(),
                                 TimesVisited, TimesDied, money, blocks,
                                 drawn, TimesBeenKicked, (long)TotalTime.TotalSeconds, TotalMessagesSent, name);
         }

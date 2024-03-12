@@ -202,11 +202,11 @@ namespace MCGalaxy.Modules.Relay.Discord
             if (obj.TryGetValue("s", out sequence)) 
                 Session.LastSeq = (string)sequence;
             
-            string eventName = (string)obj["t"];            
-            object rawData;
+            string eventName = (string)obj["t"];
             
+            object rawData;            
             obj.TryGetValue("d", out rawData);
-            JsonObject data = (JsonObject)rawData;
+            JsonObject data = rawData as JsonObject;
             
             if (eventName == "READY") {
                 HandleReady(data);

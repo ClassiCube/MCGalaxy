@@ -56,7 +56,7 @@ namespace MCGalaxy.DB
             p.FirstLogin = DateTime.Now;
             p.TimesVisited = 1;
             
-            string now = DateTime.Now.ToString(Database.DateFormat);
+            string now = DateTime.Now.ToInvariantDateString();
             Database.AddRow("Players", "Name, IP, FirstLogin, LastLogin, totalLogin, Title, " +
                             "totalDeaths, Money, totalBlocks, totalKicked, Messages, TimeSpent",
                             p.name, p.ip, now, now, 1, "", 0, 0, 0, 0, 0, (long)p.TotalTime.TotalSeconds);
@@ -155,17 +155,17 @@ namespace MCGalaxy.DB
         
         static DateTime ParseDateTime(ISqlRecord record, string name) {
             int i = record.GetOrdinal(name);
+            DateTime dt;
+            
             // dates are a major pain
+            string raw = record.GetStringValue(i);
+            if (raw.TryParseInvariantDateString(out dt)) return dt;
+            
             try {
-                string raw = record.GetStringValue(i);
-                return DateTime.ParseExact(raw, Database.DateFormat, null);
-            } catch {
-                try {
-                    return record.GetDateTime(i);
-                } catch (Exception ex) {
-                    Logger.LogError("Error parsing date", ex);
-                    return DateTime.MinValue;
-                }
+                return record.GetDateTime(i);
+            } catch (Exception ex) {
+                Logger.LogError("Error parsing date", ex);
+                return DateTime.MinValue;
             }
         }
         

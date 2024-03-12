@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Chatting
             }
             
             Database.AddRow("Inbox" + name, "PlayerFrom, TimeSent, Contents",
-                            p.name, DateTime.Now.ToString(Database.DateFormat), message);
+                            p.name, DateTime.Now.ToInvariantDateString(), message);
             p.CheckForMessageSpam();
 
             Player target = PlayerInfo.FindExact(name);

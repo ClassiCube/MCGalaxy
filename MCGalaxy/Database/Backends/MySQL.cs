@@ -241,7 +241,7 @@ namespace MCGalaxy.SQL
 
         string RawGetDateTime(int col) {
             DateTime date = GetDateTime(col);
-            return date.ToString(Database.DateFormat);
+            return date.ToInvariantDateString();
         }
 
         public override string GetStringValue(int col) {
