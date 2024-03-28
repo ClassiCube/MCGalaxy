@@ -213,5 +213,15 @@ namespace MCGalaxy.Network {
                 return null;
             }
         }
+        
+        
+        public static string LookupExternalIP() {
+           HttpWebRequest req = CreateRequest("http://classicube.net/api/myip/");
+           
+           using (WebResponse response = req.GetResponse())
+           {
+               return GetResponseText(response);
+           }
+        }
     }
 }

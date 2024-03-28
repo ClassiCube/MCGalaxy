@@ -126,12 +126,7 @@ namespace MCGalaxy.Authentication
             if (externalIP != null) return;
 
             try {
-                HttpWebRequest req = HttpUtil.CreateRequest("http://classicube.net/api/myip/");
-                
-                using (WebResponse response = req.GetResponse())
-                {
-                    externalIP = HttpUtil.GetResponseText(response);
-                }
+                externalIP = HttpUtil.LookupExternalIP();
             } catch (Exception ex) {
                 Logger.LogError("Retrieving external IP", ex);
             }
