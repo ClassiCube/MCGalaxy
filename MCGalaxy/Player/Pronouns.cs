@@ -55,7 +55,7 @@ namespace MCGalaxy {
                     w.WriteLine("# Below are the pronouns that players may choose from by using /pronouns");
                     w.WriteLine("# Lines starting with # are ignored");
                     w.WriteLine("# Each pronouns is on its own line, and is formatted like so:");
-                    w.WriteLine("# Name [subject form] [object form] [reflexive form] [singular or plural");
+                    w.WriteLine("# Name [subject form] [object form] [reflexive form] [singular or plural]");
                     w.WriteLine();
                     foreach (Pronouns p in Loaded) {
                         p.Write(w);
