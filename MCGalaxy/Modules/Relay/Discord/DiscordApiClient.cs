@@ -70,40 +70,10 @@ namespace MCGalaxy.Modules.Relay.Discord
                     msg.ProcessResponse(resp);
                     break;
                 } catch (WebException ex) {
-                    string err = HttpUtil.GetErrorResponse(ex);
+                    bool canRetry = HandleErrorResponse(ex, msg, retry);
                     HttpUtil.DisposeErrorResponse(ex);
-                    HttpStatusCode status = GetStatus(ex);
                     
-                    // 429 errors simply require retrying after sleeping for a bit
-                    if (status == (HttpStatusCode)429) {
-                        SleepForRetryPeriod(ex.Response);
-                        continue;
-                    }
-                    
-                    // 500 errors might be temporary Discord outage, so still retry a few times
-                    if (status >= (HttpStatusCode)500 && status <= (HttpStatusCode)504) {
-                        LogWarning(ex);
-                        LogResponse(err);
-                        if (retry >= 2) return;
-                        continue;
-                    }
-                    
-                    // If unable to reach Discord at all, immediately give up
-                    if (ex.Status == WebExceptionStatus.NameResolutionFailure) {
-                        LogWarning(ex);
-                        return;
-                    }
-                    
-                    // May be caused by connection dropout/reset, so still retry a few times
-                    if (ex.InnerException is IOException) {
-                        LogWarning(ex);
-                        if (retry >= 2) return;
-                        continue;
-                    }
-                    
-                    LogError(ex, msg);
-                    LogResponse(err);
-                    return;
+                    if (!canRetry) return;
                 } catch (Exception ex) {
                     LogError(ex, msg);
                     return;
@@ -113,6 +83,40 @@ namespace MCGalaxy.Modules.Relay.Discord
             // Avoid triggering HTTP 429 error if possible
             string remaining = res.Headers["X-RateLimit-Remaining"];
             if (remaining == "1") SleepForRetryPeriod(res);
+        }
+        
+        static bool HandleErrorResponse(WebException ex, DiscordApiMessage msg, int retry) {
+            string err = HttpUtil.GetErrorResponse(ex);
+            HttpStatusCode status = GetStatus(ex);
+            
+            // 429 errors simply require retrying after sleeping for a bit
+            if (status == (HttpStatusCode)429) {
+                SleepForRetryPeriod(ex.Response);
+                return true;
+            }
+            
+            // 500 errors might be temporary Discord outage, so still retry a few times
+            if (status >= (HttpStatusCode)500 && status <= (HttpStatusCode)504) {
+                LogWarning(ex);
+                LogResponse(err);
+                return retry < 2;
+            }
+            
+            // If unable to reach Discord at all, immediately give up
+            if (ex.Status == WebExceptionStatus.NameResolutionFailure) {
+                LogWarning(ex);
+                return false;
+            }
+            
+            // May be caused by connection dropout/reset, so still retry a few times
+            if (ex.InnerException is IOException) {
+                LogWarning(ex);
+                return retry < 2;
+            }
+            
+            LogError(ex, msg);
+            LogResponse(err);
+            return false;
         }
         
         
