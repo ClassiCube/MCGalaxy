@@ -160,7 +160,12 @@ namespace MCGalaxy
             
             try {
                 SocketException sockEx = ex as SocketException;
-                if (sockEx != null) LogSocketErrors(sockEx, sb);
+                if (sockEx != null) sb.AppendLine("Error: " + sockEx.SocketErrorCode);
+            } catch { }
+            
+            try {
+                TypeLoadException typeEx = ex as TypeLoadException;
+                if (typeEx != null) sb.AppendLine("Loading type: " + typeEx.TypeName);
             } catch { }
         }
         
@@ -173,10 +178,6 @@ namespace MCGalaxy
             foreach (Exception loadEx in ex.LoaderExceptions) {
                 DescribeError(loadEx, sb);
             }
-        }
-        
-        static void LogSocketErrors(SocketException ex, StringBuilder sb) {
-            sb.AppendLine("Error: " + ex.SocketErrorCode);
         }
     }
 }

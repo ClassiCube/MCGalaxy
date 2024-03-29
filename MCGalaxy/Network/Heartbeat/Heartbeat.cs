@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Sockets;
 using System.Text;
 using MCGalaxy.Authentication;
 using MCGalaxy.Tasks;
@@ -132,6 +133,29 @@ namespace MCGalaxy.Network
                 beat.Salt = service.Salt; // TODO: Just reference Service instead of copying salt?
                 Register(beat);
             }
+        }
+        
+
+        // e.g. classicube.net only supports ipv4 servers, so we need to make
+        // sure we are using its ipv4 address when POSTing heartbeats there
+        protected string EnsureIPv4Url(string hostUrl) {
+            bool hasIPv6 = false;
+            IPAddress firstIPv4 = null;
+            
+            // proxying doesn't work properly with https:// URLs
+            if (URL.CaselessStarts("https://")) return null;
+            IPAddress[] addresses = Dns.GetHostAddresses(hostUrl);
+            
+            foreach (IPAddress ip in addresses) {
+                AddressFamily family = ip.AddressFamily;
+                if (family == AddressFamily.InterNetworkV6)
+                    hasIPv6 = true;
+                if (family == AddressFamily.InterNetwork && firstIPv4 == null)
+                    firstIPv4 = ip;
+            }
+            
+            if (!hasIPv6 || firstIPv4 == null) return null;
+            return "http://"  + firstIPv4 + ":80";
         }
     }
 }
