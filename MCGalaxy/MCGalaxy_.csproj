@@ -147,6 +147,7 @@
     <Compile Include="Commands\building\CmdUndo.cs" />
     <Compile Include="Commands\building\CmdWrite.cs" />
     <Compile Include="Commands\building\DrawCmd.cs" />
+    <Compile Include="Commands\Chat\CmdPronouns.cs" />
     <Compile Include="Commands\Chat\Cmd8Ball.cs" />
     <Compile Include="Commands\Chat\CmdAdminChat.cs" />
     <Compile Include="Commands\Chat\CmdAfk.cs" />
@@ -640,6 +641,7 @@
     <Compile Include="Player\PlayerInfo.cs" />
     <Compile Include="Player\PlayerOperations.cs" />
     <Compile Include="Player\PlayerPhysics.cs" />
+    <Compile Include="Player\Pronouns.cs" />
     <Compile Include="Player\SpamChecker.cs" />
     <Compile Include="Database\Undo\UndoFormat.cs" />
     <Compile Include="Network\Player.Networking.cs" />
@@ -717,10 +719,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\Moderation\Review" />
-    <Folder Include="Modules\Warps" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

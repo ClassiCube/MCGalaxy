@@ -47,9 +47,10 @@ namespace MCGalaxy.Commands.Chatting
             
             int pending = Database.CountRows("Inbox" + name, "WHERE PlayerFrom=@0", p.name);
             if (pending >= 200) {
-                p.Message("{0} &calready has 200+ messages from you currently in their inbox. " +
-                          "Try again later after they have deleted some of their inbox messages",
-                          p.FormatNick(name));
+                Pronouns pronouns = Pronouns.GetFor(name);
+                p.Message("{0} &calready has 200+ messages from you currently in {1} inbox. " +
+                          "Try again later after {2} {3} deleted some of {4} inbox messages",
+                          p.FormatNick(name), pronouns.Object, pronouns.Subject, pronouns.PresentPerfectVerb, pronouns.Object);
                 return;
             }
             

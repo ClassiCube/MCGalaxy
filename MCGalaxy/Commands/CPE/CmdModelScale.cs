@@ -49,7 +49,7 @@ namespace MCGalaxy.Commands.CPE
             who.UpdateModel(who.Model);
 
             if (p != who) {
-                Chat.MessageFrom(who, "λNICK &Shad their " + axis + " scale changed");
+                Chat.MessageFrom(who, "λNICK &Shad "+who.pronouns.Object+" " + axis + " scale changed");
             } else {
                 who.Message("Changed your own {0} scale", axis);
             }
