@@ -183,7 +183,7 @@ namespace MCGalaxy.Modules.Games.ZS
             ZSData data = Get(p);
             if (!data.PledgeSurvive) return;
             data.PledgeSurvive = false;
-            Map.Message("&c" + p.DisplayName + " &Sbroke their pledge of not being infected.");
+            Map.Message("&c" + p.DisplayName + " &Sbroke "+p.pronouns.Object+" pledge of not being infected.");
             
             if (killer == null) {
                 p.Message("As this was an automatic infection, you have not lost any &3" + Server.Config.Currency);
@@ -220,8 +220,7 @@ namespace MCGalaxy.Modules.Games.ZS
                 text = infectMessages[random.Next(infectMessages.Count)];
             }
 
-            Map.Message(text.Replace("<zombie>", "&c" + pKiller.DisplayName + "&S")
-                            .Replace("<human>",          pAlive.ColoredName + "&S"));
+            Map.Message(ZSConfig.FormatInfectMessage(text, pKiller, pAlive));
         }
 
         internal static void RespawnPlayer(Player p) {

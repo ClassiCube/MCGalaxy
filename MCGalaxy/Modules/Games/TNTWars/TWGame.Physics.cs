@@ -214,7 +214,7 @@ namespace MCGalaxy.Modules.Games.TW
                 else if (data.KillStreak >= cfg.StreakTwoAmount && data.KillStreak < cfg.StreakThreeAmount && data.LastKillStreakAnnounced != cfg.StreakTwoAmount)
                 {
                     killer.Message("TNT Wars: Kill streak of " + data.KillStreak + " (Multiplier of " + cfg.StreakTwoMultiplier + " and a bigger explosion!)");
-                    Map.Message(killer.ColoredName + " &Shas a kill streak of " + data.KillStreak + " and now has a bigger explosion for their TNT!");
+                    Map.Message(killer.ColoredName + " &Shas a kill streak of " + data.KillStreak + " and now has a bigger explosion for " + killer.pronouns.Object + " TNT!");
                     data.ScoreMultiplier = cfg.StreakTwoMultiplier;
                     data.LastKillStreakAnnounced = cfg.StreakTwoAmount;
                 }

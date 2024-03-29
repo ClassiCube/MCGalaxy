@@ -57,9 +57,9 @@ namespace MCGalaxy.Commands.CPE
             who.UpdateModel(model);
             
             if (p != who) {
-                Chat.MessageFrom(who, "λNICK &Shad their model changed to a &c" + model);
+                Chat.MessageFrom(who, "λNICK &Shad " + who.pronouns.Object + " model changed to &c" + model);
             } else {
-                who.Message("Changed your own model to a &c" + model);
+                who.Message("Changed your own model to &c" + model);
             }
             
             if (!model.CaselessEq("humanoid")) {

@@ -43,19 +43,19 @@ namespace MCGalaxy {
                 Directory.CreateDirectory(PLAYER_PATH);
             }
 
-            Default = new Pronouns("they/them", "they", "their", "themselves");
+            Default = new Pronouns("they/them", "they", "their", "themselves", true);
 
             if (!File.Exists(CONFIG_FILE)) {
 
                 Loaded.Add(Default);
-                Loaded.Add(new Pronouns("he/him", "he", "his", "himself"));
-                Loaded.Add(new Pronouns("she/her", "she", "her", "herself"));
+                Loaded.Add(new Pronouns("he/him", "he", "his", "himself", false));
+                Loaded.Add(new Pronouns("she/her", "she", "her", "herself", false));
 
                 using (StreamWriter w = new StreamWriter(CONFIG_FILE)) {
                     w.WriteLine("# Below are the pronouns that players may choose from by using /pronouns");
                     w.WriteLine("# Lines starting with # are ignored");
                     w.WriteLine("# Each pronouns is on its own line, and is formatted like so:");
-                    w.WriteLine("# Name [subject form] [object form] [reflexive form]");
+                    w.WriteLine("# Name [subject form] [object form] [reflexive form] [singular or plural");
                     w.WriteLine();
                     foreach (Pronouns p in Loaded) {
                         p.Write(w);
@@ -95,11 +95,20 @@ namespace MCGalaxy {
         }
         static void LoadFrom(string line) {
             string[] words = line.ToLower().SplitSpaces();
-            if (words.Length != 4) {
-                Logger.Log(LogType.Warning, "Failed to load malformed pronouns \"{0}\" from config (expected four words, got {1}).", line, words.Length);
+            const int defWordCount = 5;
+            if (words.Length != defWordCount) {
+                Logger.Log(LogType.Warning, "Failed to load malformed pronouns \"{0}\" from config (expected {1} words, got {2}).", line, defWordCount, words.Length);
                 return;
             }
-            Loaded.Add(new Pronouns(words[0], words[1], words[2], words[3]));
+            bool plural;
+            if (words[4].CaselessEq("singular")) { plural = false; }
+            else if (words[4].CaselessEq("plural")) { plural = true; }
+            else {
+                Logger.Log(LogType.Warning, "Failed to load the pronoun \"{0}\" because the 5th argument was not \"singular\" or \"plural\"", words[0]);
+                return;
+            }
+
+            Loaded.Add(new Pronouns(words[0], words[1], words[2], words[3], plural));
         }
 
         static string PlayerPath(string playerName) { return PLAYER_PATH + playerName + ".txt"; }
@@ -109,8 +118,12 @@ namespace MCGalaxy {
         public static Pronouns GetFor(string playerName) {
             string myPath = PlayerPath(playerName);
             try {
-                if (!File.Exists(myPath)) { return Default; }
-                string[] lines = File.ReadAllLines(myPath);
+
+                string[] lines;
+                lock (locker) {
+                    if (!File.Exists(myPath)) { return Default; }
+                    lines = File.ReadAllLines(myPath);
+                }
                 if (lines.Length == 0 || string.IsNullOrWhiteSpace(lines[0])) { return Default; }
                 Pronouns p = FindExact(lines[0]);
                 if (p != null) return p;
@@ -159,27 +172,49 @@ namespace MCGalaxy {
 
         public readonly string Name;
         /// <summary>
-        /// He/She/They/It
+        /// They/He/She/It
         /// </summary>
         public readonly string Subject;
         /// <summary>
-        /// His/Her/Their/Its
+        /// Their/His/Her/Its
         /// </summary>
         public readonly string Object;
 
         /// <summary>
-        /// Himself/Herself/Themselves/Itself
+        /// Themselves/Himself/Herself/Itself
         /// </summary>
         public readonly string Reflexive;
 
-        private Pronouns(string name, string subject, string @object, string reflexive) {
+        /// <summary>
+        /// They/them uses "plural" style verbs, so this is required for grammar that sounds correct
+        /// </summary>
+        public readonly bool Plural;
+        /// <summary>
+        /// are, is
+        /// </summary>
+        public readonly string PresentVerb;
+        /// <summary>
+        /// were, was
+        /// </summary>
+        public readonly string PastVerb;
+        /// <summary>
+        /// have, has
+        /// </summary>
+        public readonly string PresentPerfectVerb;
+
+        private Pronouns(string name, string subject, string @object, string reflexive, bool plural) {
             Name = name;
             Subject = subject;
             Object = @object;
             Reflexive = reflexive;
+            Plural = plural;
+
+            PresentVerb = Plural ? "are" : "is";
+            PastVerb = Plural ? "were" : "was";
+            PresentPerfectVerb = Plural ? "have" : "has";
         }
         void Write(StreamWriter w) {
-            w.WriteLine(string.Format("{0} {1} {2} {3}", Name, Subject, Object, Reflexive));
+            w.WriteLine(string.Format("{0} {1} {2} {3} {4}", Name, Subject, Object, Reflexive, (Plural ? "plural" : "singular") ));
             w.WriteLine();
         }
         public void SaveFor(Player p) {

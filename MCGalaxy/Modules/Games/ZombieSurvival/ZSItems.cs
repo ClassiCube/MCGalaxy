@@ -94,9 +94,11 @@ namespace MCGalaxy.Modules.Games.ZS
         public override void OnPurchase(Player p, string msg) {
             if (msg.Length == 0) { OnStoreCommand(p); return; }
             
-            if (!msg.Contains("<human>") && !msg.Contains("<zombie>")) {
-                p.Message("You need to include a \"<zombie>\" (placeholder for zombie player) " +
-                               "and/or a \"<human>\" (placeholder for human player) in the infect message."); return;
+            if (!msg.Contains(ZSConfig.InfectZombiePlaceholder) && !msg.Contains(ZSConfig.InfectHumanPlaceholder)) {
+                p.Message("You need to include a \"{0}\" (placeholder for zombie player) " +
+                               "and/or a \"{1}\" (placeholder for human player) in the infect message.",
+                               ZSConfig.InfectZombiePlaceholder, ZSConfig.InfectHumanPlaceholder);
+                return;
             }
             
             if (!CheckPrice(p)) return;
@@ -111,7 +113,8 @@ namespace MCGalaxy.Modules.Games.ZS
 
         protected internal override void OnStoreCommand(Player p) {
             base.OnStoreCommand(p);
-            p.Message("&HInfect messages must include either \"<zombie>\" or \"<human>\" (placeholders for zombie and/or human player) in them");
+            p.Message("&HInfect messages must include either \"{0}\" or \"{1}\" (placeholders for zombie and/or human player) in them",
+                ZSConfig.InfectZombiePlaceholder, ZSConfig.InfectHumanPlaceholder);
         }
     }
     
