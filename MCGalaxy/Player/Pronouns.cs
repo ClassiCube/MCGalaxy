@@ -43,11 +43,11 @@ namespace MCGalaxy {
                 Directory.CreateDirectory(PLAYER_PATH);
             }
 
-            Default = new Pronouns("they/them", "they", "their", "themselves", true);
+            Default = new Pronouns("default", "they", "their", "themselves", true);
 
             if (!File.Exists(CONFIG_FILE)) {
 
-                Loaded.Add(Default);
+                Loaded.Add(new Pronouns("they/them", "they", "their", "themselves", true));
                 Loaded.Add(new Pronouns("he/him", "he", "his", "himself", false));
                 Loaded.Add(new Pronouns("she/her", "she", "her", "herself", false));
 
@@ -70,6 +70,8 @@ namespace MCGalaxy {
         static void OnConfigUpdated() {
             lock (locker) {
                 Loaded.Clear();
+                Loaded.Add(Default);
+
                 try {
                     using (StreamReader r = new StreamReader(CONFIG_FILE)) {
                         while (!r.EndOfStream) {
@@ -80,11 +82,6 @@ namespace MCGalaxy {
                     }
                 } catch (Exception e) {
                     Logger.LogError(e);
-                }
-
-                // Ensure the default is always in the loaded set (so it is visible/useable in user-side listings)
-                if (FindExact(Default.Name) == null) {
-                    Loaded.Add(Default);
                 }
             }
 
@@ -104,10 +101,13 @@ namespace MCGalaxy {
             if (words[4].CaselessEq("singular")) { plural = false; }
             else if (words[4].CaselessEq("plural")) { plural = true; }
             else {
-                Logger.Log(LogType.Warning, "Failed to load the pronoun \"{0}\" because the 5th argument was not \"singular\" or \"plural\"", words[0]);
+                Logger.Log(LogType.Warning, "Failed to load the pronouns \"{0}\" because the 5th argument was not \"singular\" or \"plural\"", words[0]);
                 return;
             }
-
+            if (FindExact(words[0]) != null) {
+                Logger.Log(LogType.Warning, "Cannot load pronouns \"{0}\" because it is already defined.", words[0]);
+                return;
+            }
             Loaded.Add(new Pronouns(words[0], words[1], words[2], words[3], plural));
         }
 

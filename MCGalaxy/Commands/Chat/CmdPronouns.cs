@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting {
             if (pro == null) { HelpList(p); return; }
 
             p.pronouns = pro;
-            p.Message("Your pronouns were changed to: &H{0}", pro.Name);
+            p.Message("Your pronouns were changed to: &T{0}", pro.Name);
             pro.SaveFor(p);
         }
 
