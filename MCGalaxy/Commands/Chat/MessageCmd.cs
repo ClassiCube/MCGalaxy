@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Chatting
             Player target = PlayerInfo.FindMatches(p, name);
             if (target == null) return false;
 
-            string reciever = p == target ? "themselves" : target.ColoredName;
+            string reciever = p == target ? p.pronouns.Reflexive : target.ColoredName;
             if (!TryMessage(p, msg.Replace("λTARGET", reciever))) return false;
 
             if (messageWho && p != target && !Chat.Ignoring(target, p)) {
