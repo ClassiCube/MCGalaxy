@@ -54,7 +54,7 @@ namespace MCGalaxy.Modules.Relay
 
         protected bool canReconnect;
         protected byte retries;
-        volatile Thread worker;
+        Thread worker;
         /// <summary> Whether this relay bot can automatically reconnect </summary>
         protected abstract bool CanReconnect { get; }
         

@@ -29,11 +29,12 @@ namespace MCGalaxy.Core {
             
             if (scope == ChatScope.Perms) {
                logType = LogType.StaffChat;
-            } else if (scope == ChatScope.Chatroom || scope == ChatScope.AllChatrooms) {
-                logType = LogType.ChatroomChat;
             } else if (scope == ChatScope.Rank) {
                 logType = LogType.RankChat;
             }
+            //else if (scope == ChatScope.Chatroom || scope == ChatScope.AllChatrooms) {
+            //    logType = LogType.ChatroomChat;
+            //} 
             
             if (scope != ChatScope.PM) Logger.Log(logType, text);
         }
