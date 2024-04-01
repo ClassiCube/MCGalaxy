@@ -20,7 +20,7 @@
 using System;
 
 namespace MCGalaxy.Commands.World {   
-    public class CmdCopyLVL : Command2 {        
+    public class CmdCopyLvl : Command2 {        
         public override string name { get { return "CopyLvl"; } }
         public override string type { get { return CommandTypes.World; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }

@@ -95,8 +95,13 @@ namespace MCGalaxy.Modules.Relay.Discord
         public static DiscordConfig Config = new DiscordConfig();
         public static DiscordBot Bot = new DiscordBot();
         
+        static Command cmdDiscordBot   = new CmdDiscordBot();
+        static Command cmdDiscordCtrls = new CmdDiscordControllers();
+        
         public override void Load(bool startup) {
             Server.EnsureDirectoryExists("text/discord");
+            Command.Register(cmdDiscordBot);
+            Command.Register(cmdDiscordCtrls);
 
             Bot.Config = Config;
             Bot.ReloadConfig();
@@ -105,6 +110,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         public override void Unload(bool shutdown) {
+            Command.Unregister(cmdDiscordBot, cmdDiscordCtrls);
+            
             OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
             Bot.Disconnect("Disconnecting Discord bot");
         }

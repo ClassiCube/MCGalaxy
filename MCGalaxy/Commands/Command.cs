@@ -19,6 +19,19 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using MCGalaxy.Commands;
+using MCGalaxy.Commands.Bots;
+using MCGalaxy.Commands.Building;
+using MCGalaxy.Commands.Chatting;
+using MCGalaxy.Commands.CPE;
+using MCGalaxy.Commands.Eco;
+using MCGalaxy.Commands.Fun;
+using MCGalaxy.Commands.Info;
+using MCGalaxy.Commands.Maintenance;
+using MCGalaxy.Commands.Misc;
+using MCGalaxy.Commands.Moderation;
+using MCGalaxy.Commands.Scripting;
+using MCGalaxy.Commands.World;
+using MCGalaxy.Modules.Awards;
 using MCGalaxy.Maths;
 using MCGalaxy.Scripting;
 
@@ -76,19 +89,97 @@ namespace MCGalaxy
         public static void InitAll() {
             allCmds.Clear();
             Alias.coreAliases.Clear();
+            
+            RegisterAllCore();
+            IScripting.AutoloadCommands();
+        }
+        
+        static void RegisterAllCore() {
+            RegisterCore(typeof(CmdBot),       typeof(CmdBotAI),      typeof(CmdBots),       typeof(CmdBotSet), 
+                         typeof(CmdBotSummon));
+            
+            RegisterCore(typeof(CmdAbort),     typeof(CmdBezier),     typeof(CmdBind),       typeof(CmdBrush), 
+                         typeof(CmdCalculate), typeof(CmdCenter),     typeof(CmdCopySlot),   typeof(CmdDoNotMark), 
+                         typeof(CmdMark),      typeof(CmdCmdBind),    typeof(CmdCopy),       typeof(CmdCuboid), 
+                         typeof(CmdDelete),    typeof(CmdDraw),       typeof(CmdDrill),      typeof(CmdFill), 
+                         typeof(CmdHollow),    typeof(CmdImageprint), typeof(CmdLine),       typeof(CmdMaze), 
+                         typeof(CmdMeasure),   typeof(CmdMessageBlock),typeof(CmdMirror),    typeof(CmdMode), 
+                         typeof(CmdOutline),   typeof(CmdPaint),      typeof(CmdPalette),    typeof(CmdPaste), 
+                         typeof(CmdPlace),     typeof(CmdPortal),     typeof(CmdPyramid),    typeof(CmdRainbow), 
+                         typeof(CmdRedo),      typeof(CmdReplaceAll), typeof(CmdReplaceBrush), 
+                         typeof(CmdReplaceNotBrush),typeof(CmdSphere),typeof(CmdTransform), 
+                         typeof(CmdTriangle),  typeof(CmdReplace),    typeof(CmdReplaceNot), 
+                         typeof(CmdRestartPhysics),typeof(CmdSpheroid),typeof(CmdSpin),      typeof(CmdSPlace), 
+                         typeof(CmdStatic),    typeof(CmdTorus),      typeof(CmdTree),       typeof(CmdUndo), 
+                         typeof(CmdWriteText), typeof(CmdWrite));
+            
+            RegisterCore(typeof(CmdPronouns),  typeof(Cmd8Ball),      typeof(CmdAdminChat),  typeof(CmdAfk), 
+                         typeof(CmdColor),     typeof(CmdEat),        typeof(CmdEmote),      typeof(CmdHug), 
+                         typeof(CmdIgnore),    typeof(CmdInbox),      typeof(CmdLoginMessage), 
+                         typeof(CmdLogoutMessage),typeof(CmdMe),      typeof(CmdNick),       typeof(CmdOpChat), 
+                         typeof(CmdClear),     typeof(CmdRankMsg),    typeof(CmdRoll),       typeof(CmdSay), 
+                         typeof(CmdSend),      typeof(CmdTColor),     typeof(CmdTitle),      typeof(CmdVote),
+                         typeof(CmdWhisper),   typeof(CmdHigh5));
 
-            Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-            for (int i = 0; i < types.Length; i++) 
+            RegisterCore(typeof(CmdCustomColors),typeof(CmdEntityRot),typeof(CmdEnvironment),typeof(CmdHold), 
+                         typeof(CmdModel),     typeof(CmdModelScale), typeof(CmdPing),       typeof(CmdReachDistance), 
+                         typeof(CmdSkin),      typeof(CmdTexture),    typeof(CmdGlobalBlock),typeof(CmdLevelBlock));
+
+            RegisterCore(typeof(CmdBuy),       typeof(CmdEconomy),    typeof(CmdGive),       typeof(CmdBalance), 
+                         typeof(CmdPay),       typeof(CmdStore),      typeof(CmdTake));
+
+            RegisterCore(typeof(CmdExplode),   typeof(CmdFlipHead),   typeof(CmdFlipHeads),  typeof(CmdGun), 
+                         typeof(CmdMissile),   typeof(CmdReferee),    typeof(CmdSlap),       typeof(CmdTeam), 
+                         typeof(CmdLike),      typeof(CmdDislike));
+
+            RegisterCore(typeof(CmdAbout),     typeof(CmdBanInfo),    typeof(CmdBlocks),     typeof(CmdClones), 
+                         typeof(CmdCommands),  typeof(CmdFaq),        typeof(CmdHasirc),     typeof(CmdHelp), 
+                         typeof(CmdRankInfo),  typeof(CmdServerInfo), typeof(CmdLastCmd),    typeof(CmdLoaded), 
+                         typeof(CmdMapInfo),   typeof(CmdNews),       typeof(CmdOpRules),    typeof(CmdOpStats), 
+                         typeof(CmdPClients),  typeof(CmdPlayers),    typeof(CmdRules),      typeof(CmdSearch), 
+                         typeof(CmdSeen),      typeof(CmdTime),       typeof(CmdTop),        typeof(CmdLevels), 
+                         typeof(CmdView),      typeof(CmdViewRanks),  typeof(CmdWhere),      typeof(CmdWhois), 
+                         typeof(CmdWhoNick));
+
+            RegisterCore(typeof(CmdBlockDB),   typeof(CmdBlockSpeed), typeof(CmdInfoSwap),   typeof(CmdLimit), 
+                         typeof(CmdLowlag),    typeof(CmdPlayerEdit), typeof(CmdRestart),    typeof(CmdServer), 
+                         typeof(CmdShutdown),  typeof(CmdUpdate),     typeof(CmdBan),        typeof(CmdBanEdit), 
+                         typeof(CmdBanip),     typeof(CmdBlockSet),   typeof(CmdCmdSet),     typeof(CmdFollow), 
+                         typeof(CmdFreeze),    typeof(CmdHide),       typeof(CmdHighlight),  typeof(CmdJoker), 
+                         typeof(CmdKick),      typeof(CmdLocation),   typeof(CmdModerate),   typeof(CmdMoveAll), 
+                         typeof(CmdMute),      typeof(CmdOHide),      typeof(CmdP2P),        typeof(CmdPatrol), 
+                         typeof(CmdPossess),   typeof(CmdReport),     typeof(CmdRestoreSelection),typeof(CmdSetRank), 
+                         typeof(CmdTempBan),   typeof(CmdTempRank),   typeof(CmdTrust),      typeof(CmdUnban), 
+                         typeof(CmdUnbanip),   typeof(CmdUndoPlayer), typeof(CmdVIP),        typeof(CmdVoice), 
+                         typeof(CmdWarn),      typeof(CmdWhitelist),  typeof(CmdXban),       typeof(CmdZone), 
+                         typeof(CmdZoneTest),  typeof(CmdZoneList),   typeof(CmdZoneMark));
+
+            RegisterCore(typeof(CmdAscend),    typeof(CmdBack),       typeof(CmdDelay),      typeof(CmdDescend), 
+                         typeof(CmdFakeRank),  typeof(CmdFly),        typeof(CmdHackRank),   typeof(CmdInvincible), 
+                         typeof(CmdKill),      typeof(CmdRide),       typeof(CmdSendCmd),    typeof(CmdSummon), 
+                         typeof(CmdTimer),     typeof(CmdTp),         typeof(CmdTpA),        typeof(CmdRagequit), 
+                         typeof(CmdQuit),      typeof(CmdCrashServer),typeof(CmdHacks));
+
+            RegisterCore(typeof(CmdCmdLoad),   typeof(CmdCmdUnload),  typeof(CmdPlugin));
+
+            RegisterCore(typeof(CmdBlockProperties),typeof(CmdCopyLvl),typeof(CmdDeleteLvl), typeof(CmdFixGrass), 
+                         typeof(CmdGoto),      typeof(CmdImport),     typeof(CmdLoad),       typeof(CmdLockdown), 
+                         typeof(CmdMain),      typeof(CmdMap),        typeof(CmdMuseum),     typeof(CmdNewLvl), 
+                         typeof(CmdOverseer),  typeof(CmdPause),      typeof(CmdPhysics),    typeof(CmdRenameLvl),
+                         typeof(CmdResizeLvl), typeof(CmdRestore),    typeof(CmdReload),     typeof(CmdSave), 
+                         typeof(CmdSetspawn),  typeof(CmdSpawn),      typeof(CmdUnflood),    typeof(CmdUnload), 
+                         typeof(CmdPermissionBuild),typeof(CmdPermissionVisit));
+
+            RegisterCore(typeof(CmdAward),     typeof(CmdAwardMod),   typeof(CmdAwards));            
+        }
+        
+        static void RegisterCore(params Type[] types) {
+            foreach (Type type in types)
             {
-                Type type = types[i];
-                if (!type.IsSubclassOf(typeof(Command)) || type.IsAbstract || !type.IsPublic) continue;
-                
                 Command cmd = (Command)Activator.CreateInstance(type);
                 if (Server.Config.DisabledCommands.CaselessContains(cmd.name)) continue;
                 Register(cmd);
             }
-            
-            IScripting.AutoloadCommands();
         }
         
         public static void Register(Command cmd) {
