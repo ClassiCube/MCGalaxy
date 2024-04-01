@@ -95,88 +95,87 @@ namespace MCGalaxy
         }
         
         static void RegisterAllCore() {
-            RegisterCore(typeof(CmdBot),       typeof(CmdBotAI),      typeof(CmdBots),       typeof(CmdBotSet), 
-                         typeof(CmdBotSummon));
+            RegisterCore(new CmdBot(),       new CmdBotAI(),      new CmdBots(),       new CmdBotSet(), 
+                         new CmdBotSummon());
             
-            RegisterCore(typeof(CmdAbort),     typeof(CmdBezier),     typeof(CmdBind),       typeof(CmdBrush), 
-                         typeof(CmdCalculate), typeof(CmdCenter),     typeof(CmdCopySlot),   typeof(CmdDoNotMark), 
-                         typeof(CmdMark),      typeof(CmdCmdBind),    typeof(CmdCopy),       typeof(CmdCuboid), 
-                         typeof(CmdDelete),    typeof(CmdDraw),       typeof(CmdDrill),      typeof(CmdFill), 
-                         typeof(CmdHollow),    typeof(CmdImageprint), typeof(CmdLine),       typeof(CmdMaze), 
-                         typeof(CmdMeasure),   typeof(CmdMessageBlock),typeof(CmdMirror),    typeof(CmdMode), 
-                         typeof(CmdOutline),   typeof(CmdPaint),      typeof(CmdPalette),    typeof(CmdPaste), 
-                         typeof(CmdPlace),     typeof(CmdPortal),     typeof(CmdPyramid),    typeof(CmdRainbow), 
-                         typeof(CmdRedo),      typeof(CmdReplaceAll), typeof(CmdReplaceBrush), 
-                         typeof(CmdReplaceNotBrush),typeof(CmdSphere),typeof(CmdTransform), 
-                         typeof(CmdTriangle),  typeof(CmdReplace),    typeof(CmdReplaceNot), 
-                         typeof(CmdRestartPhysics),typeof(CmdSpheroid),typeof(CmdSpin),      typeof(CmdSPlace), 
-                         typeof(CmdStatic),    typeof(CmdTorus),      typeof(CmdTree),       typeof(CmdUndo), 
-                         typeof(CmdWriteText), typeof(CmdWrite));
+            RegisterCore(new CmdAbort(),     new CmdBezier(),     new CmdBind(),       new CmdBrush(), 
+                         new CmdCalculate(), new CmdCenter(),     new CmdCopySlot(),   new CmdDoNotMark(), 
+                         new CmdMark(),      new CmdCmdBind(),    new CmdCopy(),       new CmdCuboid(), 
+                         new CmdDelete(),    new CmdDraw(),       new CmdDrill(),      new CmdFill(), 
+                         new CmdHollow(),    new CmdImageprint(), new CmdLine(),       new CmdMaze(), 
+                         new CmdMeasure(),   new CmdMessageBlock(),new CmdMirror(),    new CmdMode(), 
+                         new CmdOutline(),   new CmdPaint(),      new CmdPalette(),    new CmdPaste(), 
+                         new CmdPlace(),     new CmdPortal(),     new CmdPyramid(),    new CmdRainbow(), 
+                         new CmdRedo(),      new CmdReplaceAll(), new CmdReplaceBrush(), 
+                         new CmdReplaceNotBrush(),new CmdSphere(),new CmdTransform(), 
+                         new CmdTriangle(),  new CmdReplace(),    new CmdReplaceNot(), 
+                         new CmdRestartPhysics(),new CmdSpheroid(),new CmdSpin(),      new CmdSPlace(), 
+                         new CmdStatic(),    new CmdTorus(),      new CmdTree(),       new CmdUndo(), 
+                         new CmdWriteText(), new CmdWrite());
             
-            RegisterCore(typeof(CmdPronouns),  typeof(Cmd8Ball),      typeof(CmdAdminChat),  typeof(CmdAfk), 
-                         typeof(CmdColor),     typeof(CmdEat),        typeof(CmdEmote),      typeof(CmdHug), 
-                         typeof(CmdIgnore),    typeof(CmdInbox),      typeof(CmdLoginMessage), 
-                         typeof(CmdLogoutMessage),typeof(CmdMe),      typeof(CmdNick),       typeof(CmdOpChat), 
-                         typeof(CmdClear),     typeof(CmdRankMsg),    typeof(CmdRoll),       typeof(CmdSay), 
-                         typeof(CmdSend),      typeof(CmdTColor),     typeof(CmdTitle),      typeof(CmdVote),
-                         typeof(CmdWhisper),   typeof(CmdHigh5));
+            RegisterCore(new CmdPronouns(),  new Cmd8Ball(),      new CmdAdminChat(),  new CmdAfk(), 
+                         new CmdColor(),     new CmdEat(),        new CmdEmote(),      new CmdHug(), 
+                         new CmdIgnore(),    new CmdInbox(),      new CmdLoginMessage(), 
+                         new CmdLogoutMessage(),new CmdMe(),      new CmdNick(),       new CmdOpChat(), 
+                         new CmdClear(),     new CmdRankMsg(),    new CmdRoll(),       new CmdSay(), 
+                         new CmdSend(),      new CmdTColor(),     new CmdTitle(),      new CmdVote(),
+                         new CmdWhisper(),   new CmdHigh5());
 
-            RegisterCore(typeof(CmdCustomColors),typeof(CmdEntityRot),typeof(CmdEnvironment),typeof(CmdHold), 
-                         typeof(CmdModel),     typeof(CmdModelScale), typeof(CmdPing),       typeof(CmdReachDistance), 
-                         typeof(CmdSkin),      typeof(CmdTexture),    typeof(CmdGlobalBlock),typeof(CmdLevelBlock));
+            RegisterCore(new CmdCustomColors(),new CmdEntityRot(),new CmdEnvironment(),new CmdHold(), 
+                         new CmdModel(),     new CmdModelScale(), new CmdPing(),       new CmdReachDistance(), 
+                         new CmdSkin(),      new CmdTexture(),    new CmdGlobalBlock(),new CmdLevelBlock());
 
-            RegisterCore(typeof(CmdBuy),       typeof(CmdEconomy),    typeof(CmdGive),       typeof(CmdBalance), 
-                         typeof(CmdPay),       typeof(CmdStore),      typeof(CmdTake));
+            RegisterCore(new CmdBuy(),       new CmdEconomy(),    new CmdGive(),       new CmdBalance(), 
+                         new CmdPay(),       new CmdStore(),      new CmdTake());
 
-            RegisterCore(typeof(CmdExplode),   typeof(CmdFlipHead),   typeof(CmdFlipHeads),  typeof(CmdGun), 
-                         typeof(CmdMissile),   typeof(CmdReferee),    typeof(CmdSlap),       typeof(CmdTeam), 
-                         typeof(CmdLike),      typeof(CmdDislike));
+            RegisterCore(new CmdExplode(),   new CmdFlipHead(),   new CmdFlipHeads(),  new CmdGun(), 
+                         new CmdMissile(),   new CmdReferee(),    new CmdSlap(),       new CmdTeam(), 
+                         new CmdLike(),      new CmdDislike());
 
-            RegisterCore(typeof(CmdAbout),     typeof(CmdBanInfo),    typeof(CmdBlocks),     typeof(CmdClones), 
-                         typeof(CmdCommands),  typeof(CmdFaq),        typeof(CmdHasirc),     typeof(CmdHelp), 
-                         typeof(CmdRankInfo),  typeof(CmdServerInfo), typeof(CmdLastCmd),    typeof(CmdLoaded), 
-                         typeof(CmdMapInfo),   typeof(CmdNews),       typeof(CmdOpRules),    typeof(CmdOpStats), 
-                         typeof(CmdPClients),  typeof(CmdPlayers),    typeof(CmdRules),      typeof(CmdSearch), 
-                         typeof(CmdSeen),      typeof(CmdTime),       typeof(CmdTop),        typeof(CmdLevels), 
-                         typeof(CmdView),      typeof(CmdViewRanks),  typeof(CmdWhere),      typeof(CmdWhois), 
-                         typeof(CmdWhoNick));
+            RegisterCore(new CmdAbout(),     new CmdBanInfo(),    new CmdBlocks(),     new CmdClones(), 
+                         new CmdCommands(),  new CmdFaq(),        new CmdHasirc(),     new CmdHelp(), 
+                         new CmdRankInfo(),  new CmdServerInfo(), new CmdLastCmd(),    new CmdLoaded(), 
+                         new CmdMapInfo(),   new CmdNews(),       new CmdOpRules(),    new CmdOpStats(), 
+                         new CmdPClients(),  new CmdPlayers(),    new CmdRules(),      new CmdSearch(), 
+                         new CmdSeen(),      new CmdTime(),       new CmdTop(),        new CmdLevels(), 
+                         new CmdView(),      new CmdViewRanks(),  new CmdWhere(),      new CmdWhois(), 
+                         new CmdWhoNick());
 
-            RegisterCore(typeof(CmdBlockDB),   typeof(CmdBlockSpeed), typeof(CmdInfoSwap),   typeof(CmdLimit), 
-                         typeof(CmdLowlag),    typeof(CmdPlayerEdit), typeof(CmdRestart),    typeof(CmdServer), 
-                         typeof(CmdShutdown),  typeof(CmdUpdate),     typeof(CmdBan),        typeof(CmdBanEdit), 
-                         typeof(CmdBanip),     typeof(CmdBlockSet),   typeof(CmdCmdSet),     typeof(CmdFollow), 
-                         typeof(CmdFreeze),    typeof(CmdHide),       typeof(CmdHighlight),  typeof(CmdJoker), 
-                         typeof(CmdKick),      typeof(CmdLocation),   typeof(CmdModerate),   typeof(CmdMoveAll), 
-                         typeof(CmdMute),      typeof(CmdOHide),      typeof(CmdP2P),        typeof(CmdPatrol), 
-                         typeof(CmdPossess),   typeof(CmdReport),     typeof(CmdRestoreSelection),typeof(CmdSetRank), 
-                         typeof(CmdTempBan),   typeof(CmdTempRank),   typeof(CmdTrust),      typeof(CmdUnban), 
-                         typeof(CmdUnbanip),   typeof(CmdUndoPlayer), typeof(CmdVIP),        typeof(CmdVoice), 
-                         typeof(CmdWarn),      typeof(CmdWhitelist),  typeof(CmdXban),       typeof(CmdZone), 
-                         typeof(CmdZoneTest),  typeof(CmdZoneList),   typeof(CmdZoneMark));
+            RegisterCore(new CmdBlockDB(),   new CmdBlockSpeed(), new CmdInfoSwap(),   new CmdLimit(), 
+                         new CmdLowlag(),    new CmdPlayerEdit(), new CmdRestart(),    new CmdServer(), 
+                         new CmdShutdown(),  new CmdUpdate(),     new CmdBan(),        new CmdBanEdit(), 
+                         new CmdBanip(),     new CmdBlockSet(),   new CmdCmdSet(),     new CmdFollow(), 
+                         new CmdFreeze(),    new CmdHide(),       new CmdHighlight(),  new CmdJoker(), 
+                         new CmdKick(),      new CmdLocation(),   new CmdModerate(),   new CmdMoveAll(), 
+                         new CmdMute(),      new CmdOHide(),      new CmdP2P(),        new CmdPatrol(), 
+                         new CmdPossess(),   new CmdReport(),     new CmdRestoreSelection(),new CmdSetRank(), 
+                         new CmdTempBan(),   new CmdTempRank(),   new CmdTrust(),      new CmdUnban(), 
+                         new CmdUnbanip(),   new CmdUndoPlayer(), new CmdVIP(),        new CmdVoice(), 
+                         new CmdWarn(),      new CmdWhitelist(),  new CmdXban(),       new CmdZone(), 
+                         new CmdZoneTest(),  new CmdZoneList(),   new CmdZoneMark());
 
-            RegisterCore(typeof(CmdAscend),    typeof(CmdBack),       typeof(CmdDelay),      typeof(CmdDescend), 
-                         typeof(CmdFakeRank),  typeof(CmdFly),        typeof(CmdHackRank),   typeof(CmdInvincible), 
-                         typeof(CmdKill),      typeof(CmdRide),       typeof(CmdSendCmd),    typeof(CmdSummon), 
-                         typeof(CmdTimer),     typeof(CmdTp),         typeof(CmdTpA),        typeof(CmdRagequit), 
-                         typeof(CmdQuit),      typeof(CmdCrashServer),typeof(CmdHacks));
+            RegisterCore(new CmdAscend(),    new CmdBack(),       new CmdDelay(),      new CmdDescend(), 
+                         new CmdFakeRank(),  new CmdFly(),        new CmdHackRank(),   new CmdInvincible(), 
+                         new CmdKill(),      new CmdRide(),       new CmdSendCmd(),    new CmdSummon(), 
+                         new CmdTimer(),     new CmdTp(),         new CmdTpA(),        new CmdRagequit(), 
+                         new CmdQuit(),      new CmdCrashServer(),new CmdHacks());
 
-            RegisterCore(typeof(CmdCmdLoad),   typeof(CmdCmdUnload),  typeof(CmdPlugin));
+            RegisterCore(new CmdCmdLoad(),   new CmdCmdUnload(),  new CmdPlugin());
 
-            RegisterCore(typeof(CmdBlockProperties),typeof(CmdCopyLvl),typeof(CmdDeleteLvl), typeof(CmdFixGrass), 
-                         typeof(CmdGoto),      typeof(CmdImport),     typeof(CmdLoad),       typeof(CmdLockdown), 
-                         typeof(CmdMain),      typeof(CmdMap),        typeof(CmdMuseum),     typeof(CmdNewLvl), 
-                         typeof(CmdOverseer),  typeof(CmdPause),      typeof(CmdPhysics),    typeof(CmdRenameLvl),
-                         typeof(CmdResizeLvl), typeof(CmdRestore),    typeof(CmdReload),     typeof(CmdSave), 
-                         typeof(CmdSetspawn),  typeof(CmdSpawn),      typeof(CmdUnflood),    typeof(CmdUnload), 
-                         typeof(CmdPermissionBuild),typeof(CmdPermissionVisit));
+            RegisterCore(new CmdBlockProperties(),new CmdCopyLvl(),new CmdDeleteLvl(), new CmdFixGrass(), 
+                         new CmdGoto(),      new CmdImport(),     new CmdLoad(),       new CmdLockdown(), 
+                         new CmdMain(),      new CmdMap(),        new CmdMuseum(),     new CmdNewLvl(), 
+                         new CmdOverseer(),  new CmdPause(),      new CmdPhysics(),    new CmdRenameLvl(),
+                         new CmdResizeLvl(), new CmdRestore(),    new CmdReload(),     new CmdSave(), 
+                         new CmdSetspawn(),  new CmdSpawn(),      new CmdUnflood(),    new CmdUnload(), 
+                         new CmdPermissionBuild(),new CmdPermissionVisit());
 
-            RegisterCore(typeof(CmdAward),     typeof(CmdAwardMod),   typeof(CmdAwards));            
+            RegisterCore(new CmdAward(),     new CmdAwardMod(),   new CmdAwards());
         }
         
-        static void RegisterCore(params Type[] types) {
-            foreach (Type type in types)
+        static void RegisterCore(params Command[] cmds) {
+            foreach (Command cmd in cmds)
             {
-                Command cmd = (Command)Activator.CreateInstance(type);
                 if (Server.Config.DisabledCommands.CaselessContains(cmd.name)) continue;
                 Register(cmd);
             }

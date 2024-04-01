@@ -49,7 +49,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         void OnConfigUpdated() { Bot.ReloadConfig(); }
     }
     
-    public sealed class CmdIRCBot : RelayBotCmd 
+    sealed class CmdIRCBot : RelayBotCmd 
     {
         public override string name { get { return "IRCBot"; } }
         public override CommandAlias[] Aliases {
@@ -58,7 +58,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         protected override RelayBot Bot { get { return IRCPlugin.Bot; } }
     }
     
-    public sealed class CmdIrcControllers : BotControllersCmd 
+    sealed class CmdIrcControllers : BotControllersCmd 
     {
         public override string name { get { return "IRCControllers"; } }
         public override string shortcut { get { return "IRCCtrl"; } }

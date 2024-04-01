@@ -119,13 +119,13 @@ namespace MCGalaxy.Modules.Relay.Discord
         void OnConfigUpdated() { Bot.ReloadConfig(); }
     }
     
-    public sealed class CmdDiscordBot : RelayBotCmd 
+    sealed class CmdDiscordBot : RelayBotCmd 
     {
         public override string name { get { return "DiscordBot"; } }
         protected override RelayBot Bot { get { return DiscordPlugin.Bot; } }
     }
     
-    public sealed class CmdDiscordControllers : BotControllersCmd 
+    sealed class CmdDiscordControllers : BotControllersCmd 
     {
         public override string name { get { return "DiscordControllers"; } }
         protected override RelayBot Bot { get { return DiscordPlugin.Bot; } }
