@@ -24,7 +24,7 @@ using MySql.Data.MySqlClient;
 
 namespace MCGalaxy.SQL 
 {
-    public sealed class MySQLBackend : IDatabaseBackend 
+    public class MySQLBackend : IDatabaseBackend 
     {
         public static IDatabaseBackend Instance = new MySQLBackend();
         public MySQLBackend() {
@@ -33,10 +33,10 @@ namespace MCGalaxy.SQL
             CaselessLikeSuffix  = "";
         }
         
-        public override bool EnforcesTextLength { get { return true; } }
+        public override bool EnforcesTextLength    { get { return true; } }
         public override bool EnforcesIntegerLimits { get { return true; } }
         public override bool MultipleSchema { get { return true; } }
-        public override string EngineName { get { return "MySQL"; } }
+        public override string EngineName   { get { return "MySQL"; } }
         
         public override ISqlConnection CreateConnection() {
             const string format = "Data Source={0};Port={1};User ID={2};Password={3};Pooling={4};Treat Tiny As Boolean=false;";
@@ -164,20 +164,20 @@ namespace MCGalaxy.SQL
         public readonly MySqlConnection conn;        
         public MySQLConnection(MySqlConnection conn) { this.conn = conn; }
 
-        public override ISqlTransaction BeginTransaction() {
+        public ISqlTransaction BeginTransaction() {
             MySqlTransaction trn = conn.BeginTransaction();
             return new MySQLTransaction(trn);
         }
 
-        public override ISqlCommand CreateCommand(string sql) {
+        public ISqlCommand CreateCommand(string sql) {
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             return new MySQLCommand(cmd);
         }
 
-        public override void Open() { conn.Open(); }
-        public override void ChangeDatabase(string name) { conn.ChangeDatabase(name); }
-        public override void Close() { conn.Close(); }
-        public override void Dispose() { conn.Dispose(); }
+        public void Open() { conn.Open(); }
+        public void ChangeDatabase(string name) { conn.ChangeDatabase(name); }
+        public void Close() { conn.Close(); }
+        public void Dispose() { conn.Dispose(); }
     }
 
     sealed class MySQLCommand : ISqlCommand
@@ -185,18 +185,18 @@ namespace MCGalaxy.SQL
         readonly MySqlCommand cmd;
         public MySQLCommand(MySqlCommand cmd) { this.cmd = cmd; }
 
-        public override void ClearParameters() { 
+        public void ClearParameters() { 
             cmd.Parameters.Clear(); 
         }
-        public override void AddParameter(string name, object value) {
+        public void AddParameter(string name, object value) {
             cmd.Parameters.AddWithValue(name, value);
         }
 
-        public override void Dispose() { cmd.Dispose(); }
-        public override void Prepare() { cmd.Prepare(); }
-        public override int ExecuteNonQuery() { return cmd.ExecuteNonQuery(); }
+        public void Dispose() { cmd.Dispose(); }
+        public void Prepare() { cmd.Prepare(); }
+        public int ExecuteNonQuery() { return cmd.ExecuteNonQuery(); }
 
-        public override ISqlReader ExecuteReader() { 
+        public ISqlReader ExecuteReader() { 
             MySqlDataReader rdr = cmd.ExecuteReader();
             return new MySQLReader(rdr);
         }
@@ -207,9 +207,9 @@ namespace MCGalaxy.SQL
         readonly MySqlTransaction trn;
         public MySQLTransaction(MySqlTransaction trn) { this.trn = trn; }        
 
-        public override void Commit()   { trn.Commit(); }
-        public override void Rollback() { trn.Rollback(); }
-        public override void Dispose()  { trn.Dispose(); }
+        public void Commit()   { trn.Commit(); }
+        public void Rollback() { trn.Rollback(); }
+        public void Dispose()  { trn.Dispose(); }
     }
 
     sealed class MySQLReader : ISqlReader

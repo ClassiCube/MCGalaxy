@@ -105,13 +105,13 @@ namespace MCGalaxy.SQL
         protected abstract bool ConnectionPooling { get; }
         protected abstract string DBPath { get; }
 
-        public override ISqlTransaction BeginTransaction() {
+        public ISqlTransaction BeginTransaction() {
             return new SQLiteTransaction(this);
         }
 
-        public override void ChangeDatabase(string databaseName) { }
+        public void ChangeDatabase(string databaseName) { }
 
-        public override ISqlCommand CreateCommand(string sql) { return new SQLiteCommand(sql, this); }
+        public ISqlCommand CreateCommand(string sql) { return new SQLiteCommand(sql, this); }
 
         public long LastInsertRowId {
             get {
@@ -170,7 +170,7 @@ namespace MCGalaxy.SQL
             }
         }
         
-        public override void Open() {
+        public void Open() {
             if (handle != IntPtr.Zero) throw new InvalidOperationException();
 
             try {
@@ -226,8 +226,8 @@ namespace MCGalaxy.SQL
             return false;
         }
         
-        public override void Dispose() { Close(false); }
-        public override void Close() { Close(true); }
+        public void Dispose() { Close(false); }
+        public void Close() { Close(true); }
         
         void Close(bool canThrow) {
             if (handle == IntPtr.Zero) return;
@@ -291,7 +291,7 @@ namespace MCGalaxy.SQL
             stmt = null;
         }
         
-        public override void Dispose() {
+        public void Dispose() {
             conn = null;
             param_names.Clear();
             param_values.Clear();
@@ -316,19 +316,19 @@ namespace MCGalaxy.SQL
             return stmt;
         }
         
-        public override void Prepare() { }
+        public void Prepare() { }
 
-        public override void ClearParameters() {
+        public void ClearParameters() {
             param_names.Clear();
             param_values.Clear();
         }
         
-        public override void AddParameter(string name, object value) {
+        public void AddParameter(string name, object value) {
             param_names.Add(name);
             param_values.Add(value);
         }
 
-        public override ISqlReader ExecuteReader() {
+        public ISqlReader ExecuteReader() {
             SQLiteConnection.Check(conn);
 
             SQLiteDataReader reader = new SQLiteDataReader(this);
@@ -336,7 +336,7 @@ namespace MCGalaxy.SQL
             return reader;
         }
 
-        public override int ExecuteNonQuery() {
+        public int ExecuteNonQuery() {
             using (ISqlReader reader = ExecuteReader()) {
                 while (reader.Read()) { }
                 return reader.RowsAffected;
@@ -835,7 +835,7 @@ namespace MCGalaxy.SQL
         }
     }
 
-    public sealed class SQLiteTransaction : ISqlTransaction 
+    public class SQLiteTransaction : ISqlTransaction 
     {
         SQLiteConnection conn;
         
@@ -855,13 +855,13 @@ namespace MCGalaxy.SQL
         }
         
         bool disposed;
-        public override void Dispose() {
+        public void Dispose() {
             if (disposed) return;
             if (IsValid(false)) IssueRollback(false);
             disposed = true;
         }
         
-        public override void Commit() {
+        public void Commit() {
             SQLiteConnection.Check(conn);
             IsValid(true);
 
@@ -873,7 +873,7 @@ namespace MCGalaxy.SQL
             conn = null;
         }
 
-        public override void Rollback() {
+        public void Rollback() {
             SQLiteConnection.Check(conn);
             IsValid(true);
             IssueRollback(true);

@@ -20,36 +20,33 @@ using System;
 namespace MCGalaxy.SQL
 {
     /// <summary> Abstracts a connection to a SQL database </summary>
-    public abstract class ISqlConnection : IDisposable
+    public interface ISqlConnection : IDisposable
     {
-        public abstract ISqlTransaction BeginTransaction();
-        public abstract ISqlCommand CreateCommand(string sql);
+        ISqlTransaction BeginTransaction();
+        ISqlCommand CreateCommand(string sql);
 
-        public abstract void Open();
-        public abstract void ChangeDatabase(string name);
-        public abstract void Close();
-        public abstract void Dispose();
+        void Open();
+        void ChangeDatabase(string name);
+        void Close();
     }
 
     /// <summary> Abstracts a SQL command/statement </summary>
-    public abstract class ISqlCommand : IDisposable
+    public interface ISqlCommand : IDisposable
     {
-        public abstract void ClearParameters();
-        public abstract void AddParameter(string name, object value);
+        void ClearParameters();
+        void AddParameter(string name, object value);
 
-        public abstract void Prepare();
+        void Prepare();
         /// <summary> Executes this command and returns the number of rows affected </summary>
-        public abstract int ExecuteNonQuery();
+        int ExecuteNonQuery();
         /// <summary> Executes this command and returns an ISqlReader for reading the results </summary>
-        public abstract ISqlReader ExecuteReader();
-        public abstract void Dispose();
+        ISqlReader ExecuteReader();
     }
 
-    public abstract class ISqlTransaction : IDisposable
+    public interface ISqlTransaction : IDisposable
     {
-        public abstract void Commit();
-        public abstract void Rollback();
-        public abstract void Dispose();
+        void Commit();
+        void Rollback();
     }
 
     /// <summary> Abstracts iterating over the results from executing a SQL command </summary>

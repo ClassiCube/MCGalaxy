@@ -23,7 +23,7 @@ using MCGalaxy.Platform;
 
 namespace MCGalaxy.SQL 
 {
-    public sealed class SQLiteBackend : IDatabaseBackend 
+    public class SQLiteBackend : IDatabaseBackend 
     {
         public static IDatabaseBackend Instance = new SQLiteBackend();
         public SQLiteBackend() {
@@ -31,10 +31,10 @@ namespace MCGalaxy.SQL
             CaselessLikeSuffix  = " COLLATE NOCASE";
         }
         
-        public override bool EnforcesTextLength { get { return false; } }
+        public override bool EnforcesTextLength    { get { return false; } }
         public override bool EnforcesIntegerLimits { get { return false; } }
         public override bool MultipleSchema { get { return false; } }
-        public override string EngineName { get { return "SQLite"; } }
+        public override string EngineName   { get { return "SQLite"; } }
         
         public override ISqlConnection CreateConnection() {
             return new MCGSQLiteConnection();
