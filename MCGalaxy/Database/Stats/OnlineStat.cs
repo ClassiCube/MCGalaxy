@@ -53,6 +53,10 @@ namespace MCGalaxy.DB
         internal static void CommonCoreLine(Player p, string fullName, string name, Group grp, int messages) {
             p.Message("{0} &S({1}) has:", fullName, name);
             p.Message("  Rank of {0}&S, wrote &a{1} &Smessages", grp.ColoredName, messages);
+
+            Pronouns pro = Pronouns.GetFor(name);
+            if (pro == Pronouns.Default) { return; }
+            p.Message("  Pronouns: &a{0}", pro.Name);
         }
         
         public static void MiscLine(Player p, string name, int deaths, int money) {

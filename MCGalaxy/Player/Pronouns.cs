@@ -36,7 +36,6 @@ namespace MCGalaxy {
         /// <summary>
         /// Called once to initialize the defaults and write/read the config file as necessary.
         /// </summary>
-        /// <param name="task"></param>
         public static void Init(SchedulerTask task) {
 
             if (!Directory.Exists(PLAYER_PATH)) {
@@ -221,7 +220,7 @@ namespace MCGalaxy {
             string path = PlayerPath(p.name);
             try {
                 //Reduce clutter by simply erasing the file if it's default
-                if (this.Name == Default.Name) { File.Delete(path); return; }
+                if (this == Default) { File.Delete(path); return; }
 
                 File.WriteAllText(path, Name);
             } catch (Exception e) {
