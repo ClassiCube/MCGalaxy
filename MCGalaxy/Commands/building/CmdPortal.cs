@@ -124,6 +124,7 @@ namespace MCGalaxy.Commands.Building {
 
             p.Message("&3Exit &Sblock placed");
             if (!p.staticCommands) return;
+            p.Message("To delete a portals, toggle &T/delete &Smode.");
             args.Entries.Clear();
             p.blockchangeObject = args;
             p.Blockchange += EntryChange;
