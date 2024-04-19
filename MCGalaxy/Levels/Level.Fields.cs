@@ -121,6 +121,6 @@ namespace MCGalaxy {
             get { return Config.RoundsPlayed == 0 ? 100 : (Config.RoundsHumanWon * 100) / Config.RoundsPlayed; }
         }
         
-        internal bool hasPortals, hasMessageBlocks;
+        public bool hasPortals, hasMessageBlocks;
     }
 }
