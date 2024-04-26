@@ -35,7 +35,6 @@ namespace MCGalaxy.Commands {
 
         /// <summary>
         /// When mapOnly is true, the subcommand can only be used when the player is the realm owner.
-        /// Args passed to behavior through SubCommandGroup.Use are guaranteed to be the length specified by argCount
         /// </summary>
         public SubCommand(string name, Behavior behavior, string[] help, bool mapOnly = true, string[] aliases = null) {
             Name = name;
