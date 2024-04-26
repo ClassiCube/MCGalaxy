@@ -95,17 +95,6 @@ namespace MCGalaxy.Commands.World {
             }
         }
 
-        static string[] saveHelp = new string[] {
-            "&T/os save",
-            "&H  Creates a backup of your map.",
-            "&H  Your map is saved automatically, so this is only useful",
-            "&H  If you want to save a specific state to restore later.",
-        };
-        static string[] restoreHelp = new string[] {
-            "&T/os restore <number>",
-            "&H  Restores a backup of your map.",
-            "&H  Use without a number to see total backup count.",
-        };
         static string[] deleteHelp = new string[] {
             "&T/os map delete &H- Deletes your map.",
         };
@@ -273,7 +262,8 @@ namespace MCGalaxy.Commands.World {
         }
 
         static void Moved(Player p, string message, string name, string newName = null) {
-            p.Message("&WThe {0} command has been moved out of /os map.", name);
+            p.Message("&W---");
+            p.Message("The &T{0}&S command has been moved out of /{1} map.", name, commandShortcut);
             string args = message.Length == 0 ? "" : message + " ";
             if (newName == null) { newName = name; }
             p.Message("Use &T/{0} {1} {2}&Sinstead.", commandShortcut, newName, args);
@@ -388,19 +378,68 @@ namespace MCGalaxy.Commands.World {
         }
 
         static string[] zoneHelp = new string[] {
-            "&T/os zone [cmd] [args]",
-            "&HManages zones in your map. See &T/Help zone",
+            "&T/os zone",
+            "&H  This was used for managing permissions in your map.",
+            "&H  It has now been replaced by the following &T/"+commandShortcut+" &Hcommands:",
+            "&T  Allow, Disallow, Ban, Unban"
+        };
+        static string[] zoneHelpBody = new string[] {
+            zoneHelp[1],
+            zoneHelp[2],
+            zoneHelp[3],
         };
         static void HandleZone(Player p, string raw) {
+
+            string[] args = raw.SplitExact(2);
+            string cmd = args[0];
+            string name = args[1];
+            p.Message("&W---");
+            p.Message("&T/{0} zone &Shas been replaced.", commandShortcut);
+            cmd = cmd.ToUpper();
+            if (cmd == "LIST") {
+                p.Message("To see a list of zones in a level, use &T/zonelist");
+            } else if (cmd == "ADD") {
+                p.Message("To allow someone to build, use &T/{0} allow [name]", commandShortcut);
+            } else if (Command.IsDeleteAction(cmd)) {
+                p.Message("To disallow someone from building, use &T/{0} disallow [name]", commandShortcut);
+            } else if (cmd == "BLOCK") {
+                p.Message("To disallow visiting, use &T/{0} ban [name]", commandShortcut);
+            } else if (cmd == "UNBLOCK") {
+                p.Message("To allow visiting, use &T/{0} unban [name]", commandShortcut);
+            } else if (cmd == "BLACKLIST") {
+                p.Message("To see who is disallowed from visiting, use &T/mapinfo");
+            } else {
+                p.MessageLines(zoneHelpBody);
+            }
+        }
+
+        static string[] plotHelp = new string[] {
+            "&T/os plot [args]",
+            "&H  Plots are zones that can change permissions and environment." +
+            "&H  See &T/Help zone &Hto learn what args you can use.",
+        };
+        static void HandlePlot(Player p, string raw) {
             string[] args = raw.SplitSpaces(2);
-            
+
             if (args.Length == 1) {
-                p.Message("Arguments required. See &T/Help zone");
+                p.Message("This command is the &T/{0} &Sversion of &T/zone&S.", commandShortcut);
+                p.Message("To learn how to use it, read &T/help zone&S");
             } else {
                 UseCommand(p, "Zone", args[0] + " " + args[1]);
             }
         }
 
+        static string[] saveHelp = new string[] {
+            "&T/os save",
+            "&H  Creates a backup of your map.",
+            "&H  Your map is saved automatically, so this is only useful",
+            "&H  If you want to save a specific state to restore later.",
+        };
+        static string[] restoreHelp = new string[] {
+            "&T/os restore <number>",
+            "&H  Restores a backup of your map.",
+            "&H  Use without a number to see total backup count.",
+        };
         //Placed at the end so that the help arrays aren't null
         internal static SubCommandGroup subCommandGroup = new SubCommandGroup(commandShortcut,
                 new List<SubCommand>() {
@@ -410,18 +449,19 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Disallow",   HandleDisallow,   disallowHelp),
                     new SubCommand("Ban",        HandleBan,        banHelp),
                     new SubCommand("Unban",      HandleUnban,      unbanHelp),
-                    new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "Spawn" }),
+                    new SubCommand("SetSpawn",   HandleSpawn,      spawnHelp, true, new string[] { "spawn" }),
                     new SubCommand("Env",        HandleEnv,        envHelp),
                     new SubCommand("Preset",     HandlePreset,     presetHelp),
                     new SubCommand("Map",        HandleMap,        mapHelp, false),
 
+                    new SubCommand("Plot",       HandlePlot,       plotHelp, true, new string[] { "plots" }),
                     new SubCommand("PerBuild",   HandlePerbuild,   perbuildHelp),
                     new SubCommand("PerVisit",   HandlePervisit,   pervisitHelp),
                     new SubCommand("Physics",    HandlePhysics,    physicsHelp),
 
                     new SubCommand("LB",         HandleLevelBlock, levelBlockHelp, true, new string[] {"LevelBlock" }),
                     new SubCommand("BlockProps", HandleBlockProps, blockPropsHelp, true, new string[] { "BlockProperties" }),
-                    new SubCommand("Texture",    HandleTexture,    textureHelp, true, new string[] { "texturezip", "texturepack" }),
+                    new SubCommand("Texture",    HandleTexture,    textureHelp,    true, new string[] { "texturezip", "texturepack" }),
                     new SubCommand("Kick",       HandleKick,       kickHelp),
                     new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
                     new SubCommand("Zone",       HandleZone,       zoneHelp),
