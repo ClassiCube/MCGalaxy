@@ -6,7 +6,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-mono:
+  build-mono2:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile MCGalaxy using mono
+        shell: bash
+        id: compile
+        run: |
+          msbuild MCGalaxy.sln /p:Configuration=Release /p:TargetFrameworkVersion=v2.0 /p:DefineConstants="NET_20"
+
+      - uses: ./.github/actions/notify_failure
+        if: ${{ always() && steps.compile.outcome == 'failure' }}
+        with:
+          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy .NET 2.0 build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'bin/Release'
+          DEST_NAME: 'MCGalaxy_net2.0'
+          
+  build-mono4:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     steps:

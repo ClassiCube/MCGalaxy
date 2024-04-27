@@ -34,6 +34,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         public int Intents;
     }
     public delegate string DiscordGetStatus();
+    public delegate void GatewayEventCallback(string eventName, JsonObject data);
     
     /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
@@ -65,7 +66,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         /// <summary> Callback invoked when a channel created event has been received </summary>
         public Action<JsonObject> OnChannelCreate;
         /// <summary> Callback invoked when a gateway event has been received </summary>
-        public Action<string, JsonObject> OnGatewayEvent;
+        public GatewayEventCallback OnGatewayEvent;
         
         readonly object sendLock = new object();
         SchedulerTask heartbeat;
