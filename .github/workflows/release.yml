@@ -1,0 +1,134 @@
+name: Build release
+on: [workflow_dispatch]
+
+concurrency:
+  group: ${{ github.ref }}-release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Retrieve supporting files
+        run: |
+          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/sqlite3_x32.dll
+          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/sqlite3_x64.dll
+          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/MySql.Data.dll
+          
+      - name: Retrieve .NET 2.0 binaries
+        run: |
+          mkdir net20
+          wget https://cdn.classicube.net/client/mcg/latest/net20/MCGalaxy_.dll   -O net20/MCGalaxy_.dll
+          wget https://cdn.classicube.net/client/mcg/latest/net20/MCGalaxyCLI.exe -O net20/MCGalaxyCLI.exe
+          wget https://cdn.classicube.net/client/mcg/latest/net20/MCGalaxy.exe    -O net20/MCGalaxy.exe
+          
+      - name: Retrieve .NET 4.0 binaries
+        run: |
+          mkdir net40
+          wget https://cdn.classicube.net/client/mcg/latest/net40/MCGalaxy_.dll   -O net40/MCGalaxy_.dll
+          wget https://cdn.classicube.net/client/mcg/latest/net40/MCGalaxyCLI.exe -O net40/MCGalaxyCLI.exe
+          wget https://cdn.classicube.net/client/mcg/latest/net40/MCGalaxy.exe    -O net40/MCGalaxy.exe
+          
+          
+      - name: Retrieve .NET 4.0 (768 blocks) binaries
+        run: |
+          mkdir infid
+          wget https://cdn.classicube.net/client/mcg/latest/net40/MCGalaxy_infid.dll -O infid/MCGalaxy_.dll
+          wget https://cdn.classicube.net/client/mcg/latest/net40/MCGalaxyCLI.exe    -O infid/MCGalaxyCLI.exe
+          wget https://cdn.classicube.net/client/mcg/latest/net40/MCGalaxy.exe       -O infid/MCGalaxy.exe
+          
+      - name: Retrieve standalone binaries
+        run: |
+          wget https://cdn.classicube.net/client/mcg/latest/mcg-win64-standalone.exe -O mcg-win64
+          wget https://cdn.classicube.net/client/mcg/latest/mcg-mac64-standalone     -O mcg-mac64
+          wget https://cdn.classicube.net/client/mcg/latest/mcg-linux64-standalone   -O mcg-linux64
+          
+      - name: Generate builds
+        id: compile
+        shell: bash
+        run: |
+           
+          make_dotnet_zip() {
+            cp sqlite3_x32.dll $1/sqlite3_x32.dll
+            cp sqlite3_x64.dll $1/sqlite3_x64.dll
+            cp MySql.Data.dll  $1/MySql.Data.dll
+            zip -r $1.zip $1
+          }
+          
+          make_standalone_tar() {
+            cp $1 MCGalaxy
+            chmod +x MCGalaxy
+            tar -zcvf $1.tar.gz MCGalaxy
+          }
+           
+          make_standalone_zip() {
+            cp $1 MCGalaxy.exe
+            zip $1.zip MCGalaxy.exe sqlite3_x32.dll sqlite3_x64.dll
+          }
+          
+          make_dotnet_zip net20
+          make_dotnet_zip net40
+          make_dotnet_zip infid
+          
+          make_standalone_zip mcg-win64
+          make_standalone_tar mcg-mac64
+          make_standalone_tar mcg-linux64
+          
+          find .
+
+
+      - uses: ./.github/actions/notify_failure
+        if: ${{ always() && steps.compile.outcome == 'failure' }}
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce release'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
+          
+        
+      # Generate .NET release files
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'net20.zip'
+          DEST_NAME: 'mcg-net20.zip'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'net40.zip'
+          DEST_NAME: 'mcg-net40.zip'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'infid.zip'
+          DEST_NAME: 'mcg-infid.zip'
+          
+          
+      # Generate standalone release files
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'mcg-win64.zip'
+          DEST_NAME: 'mcg-win64.zip'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'mcg-mac64.tar.gz'
+          DEST_NAME: 'mcg-mac64.tar.gz'
+          
+      - uses: ./.github/actions/upload_build
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          SOURCE_FILE: 'mcg-linux64.tar.gz'
+          DEST_NAME: 'mcg-linux64.tar.gz'
+          
+          
+      - uses: ./.github/actions/notify_success
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
+          WORKFLOW_NAME: 'release'
