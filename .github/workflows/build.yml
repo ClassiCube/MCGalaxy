@@ -6,6 +6,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+#============================================
+# ============== .NET 2.0 BUILD =============
+# ===========================================
   build-mono2:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
@@ -27,8 +30,18 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release'
-          DEST_NAME: 'MCGalaxy_net2.0'
+          DEST_NAME: 'MCGalaxy_net2.0'          
           
+      - uses: ./.github/actions/notify_success
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
+          WORKFLOW_NAME: 'net20'
+   
+   
+#============================================
+# ============== .NET 4.0 BUILD =============
+# ===========================================
   build-mono4:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
@@ -59,9 +72,18 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release'
-          DEST_NAME: 'MCGalaxy-infid'
+          DEST_NAME: 'MCGalaxy-infid'          
+          
+      - uses: ./.github/actions/notify_success
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
+          WORKFLOW_NAME: 'net40'
           
 
+#============================================
+# ============== .NET 6.0 BUILD =============
+# ===========================================
   build-dotnet6:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
@@ -75,18 +97,18 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore CLI/MCGalaxyCLI_dotnet6.csproj
       - name: Build
-        id: compile_net
+        id: compile
         run: |
           dotnet build CLI/MCGalaxyCLI_dotnet6.csproj --no-restore
         
       - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile_net.outcome == 'failure' }}
+        if: ${{ always() && steps.compile.outcome == 'failure' }}
         with:
           NOTIFY_MESSAGE: 'Failed to compile MCGalaxy dotnet build'
           WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
       - uses: ./.github/actions/upload_build
-        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0'
           DEST_NAME: 'MCGalaxy-dotnet6.0'
@@ -96,7 +118,7 @@ jobs:
         run: dotnet publish CLI/MCGalaxyCLI_dotnet6.csproj -r win-x64 --self-contained
           
       - uses: ./.github/actions/upload_build
-        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0/win-x64/publish'
           DEST_NAME: 'MCGalaxy-win64-standalone'
@@ -106,7 +128,7 @@ jobs:
         run: dotnet publish CLI/MCGalaxyCLI_dotnet6.csproj -r linux-x64 --self-contained
           
       - uses: ./.github/actions/upload_build
-        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0/linux-x64/publish'
           DEST_NAME: 'MCGalaxy-linux64-standalone'
@@ -116,12 +138,22 @@ jobs:
         run: dotnet publish CLI/MCGalaxyCLI_dotnet6.csproj -r osx-x64 --self-contained
           
       - uses: ./.github/actions/upload_build
-        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0/osx-x64/publish'
-          DEST_NAME: 'MCGalaxy-mac64-standalone'
+          DEST_NAME: 'MCGalaxy-mac64-standalone'          
+          
+          
+      - uses: ./.github/actions/notify_success
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
+          WORKFLOW_NAME: 'net60'
           
 
+#============================================
+# ============== .NET 8.0 BUILD =============
+# ===========================================
   build-dotnet8:
     if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
@@ -135,18 +167,25 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore CLI/MCGalaxyCLI_dotnet8.csproj
       - name: Build
-        id: compile_net
+        id: compile
         run: |
           dotnet build CLI/MCGalaxyCLI_dotnet8.csproj --no-restore
         
       - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile_net.outcome == 'failure' }}
+        if: ${{ always() && steps.compile.outcome == 'failure' }}
         with:
           NOTIFY_MESSAGE: 'Failed to compile MCGalaxy dotnet build'
           WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
       - uses: ./.github/actions/upload_build
-        if: ${{ always() && steps.compile_net.outcome == 'success' }}
+        if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net8.0'
           DEST_NAME: 'MCGalaxy-dotnet8.0'
+          
+          
+      - uses: ./.github/actions/notify_success
+        if: ${{ always() && steps.compile.outcome == 'success' }}
+        with:
+          DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
+          WORKFLOW_NAME: 'net80'
