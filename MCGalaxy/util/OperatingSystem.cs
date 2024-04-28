@@ -106,11 +106,19 @@ namespace MCGalaxy.Platform
 
         [DllImport("libc")]
         unsafe static extern void uname(sbyte* uname_struct);
+
+        protected static string GetProcessExePath() {
+            return Process.GetCurrentProcess().MainModule.FileName;
+        }
     }
 
     class WindowsOS : IOperatingSystem
     {
         public override bool IsWindows { get { return true; } }
+
+        public override string StandaloneName { 
+            get { return IntPtr.Size == 8 ? "win64" : "win32"; } 
+        }
         
         
         public override CPUTime MeasureAllCPUTime() {
@@ -171,7 +179,7 @@ namespace MCGalaxy.Platform
 
             // try to exec using actual runtime path first
             //   e.g. /usr/bin/mono-sgen, /home/test/.dotnet/dotnet
-            string exe = GetProcessExePath();
+            string exe = Server.GetRuntimeProcessExePath();
             execvp(exe, new string[] { exe, Server.RestartPath, null });
             Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
 
@@ -184,10 +192,6 @@ namespace MCGalaxy.Platform
 
         [DllImport("libc", SetLastError = true)]
         protected static extern int execvp(string path, string[] argv);
-
-        protected static string GetProcessExePath() {
-            return Process.GetCurrentProcess().MainModule.FileName;
-        }
 
 
         public override CPUTime MeasureAllCPUTime() { return default(CPUTime); }
@@ -261,7 +265,7 @@ namespace MCGalaxy.Platform
             try {
                 // try to restart using process's original command line arguments so that they are preserved
                 // e.g. for "mono --debug MCGalaxyCLI.exe"
-                string exe    = GetProcessExePath();
+                string exe    = Server.GetRuntimeProcessExePath();
                 string[] args = GetProcessCommandLineArgs();
                 execvp(exe, args);
             } catch (Exception ex) {

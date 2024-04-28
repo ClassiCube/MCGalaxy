@@ -274,8 +274,19 @@ namespace MCGalaxy
             //   as the actual executable which must be started is the non .dll file
             string path = RestartPath;
             if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
+
+            #if MCG_STANDALONE
+            // Server.RestartPath is empty in self contained builds
+            // TODO maybe move this elsewhere?
+            if (string.IsNullOrEmpty(path) path = GetRuntimeProcessExePath();
+            #endif
+
             return path;
 #endif
+        }
+
+        public static string GetRuntimeProcessExePath() {
+            return Process.GetCurrentProcess().MainModule.FileName;
         }
 
         static bool checkedOnMono, runningOnMono;
