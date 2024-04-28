@@ -58,7 +58,9 @@ namespace MCGalaxy.Blocks.Extended {
         public static bool Validate(Player p, string message, bool allCmds) {
             string text;
             List<string> cmds = MessageBlock.GetParts(message, out text);
-            foreach (string cmd in cmds) {
+            
+            foreach (string cmd in cmds) 
+            {
                 if (!CheckCommand(p, cmd, allCmds)) return false;
             }
             return true;
@@ -70,7 +72,10 @@ namespace MCGalaxy.Blocks.Extended {
             Command.Search(ref cmdName, ref cmdArgs);
             
             Command cmd = Command.Find(cmdName);
-            if (cmd == null) return true;
+            if (cmd == null) {
+                p.Message("Unknown command &T/{0} &Scannot be used in a messageblock", cmdName);
+                return false;	
+            }
             
             if (p.CanUse(cmd) && (allCmds || !cmd.MessageBlockRestricted)) return true;
             p.Message("You cannot use &T/{0} &Sin a messageblock.", cmd.name);
