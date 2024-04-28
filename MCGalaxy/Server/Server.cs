@@ -278,7 +278,7 @@ namespace MCGalaxy
             #if MCG_STANDALONE
             // Server.RestartPath is empty in self contained builds
             // TODO maybe move this elsewhere?
-            if (string.IsNullOrEmpty(path) path = GetRuntimeProcessExePath();
+            if (string.IsNullOrEmpty(path)) path = GetRuntimeProcessExePath();
             #endif
 
             return path;
