@@ -42,9 +42,9 @@ jobs:
           
       - name: Retrieve standalone binaries
         run: |
-          wget https://cdn.classicube.net/client/mcg/latest/mcg-win64-standalone.exe -O mcg-win64
-          wget https://cdn.classicube.net/client/mcg/latest/mcg-mac64-standalone     -O mcg-mac64
-          wget https://cdn.classicube.net/client/mcg/latest/mcg-linux64-standalone   -O mcg-linux64
+          wget https://cdn.classicube.net/client/mcg/latest/win64   -O mcg-win64
+          wget https://cdn.classicube.net/client/mcg/latest/mac64   -O mcg-mac64
+          wget https://cdn.classicube.net/client/mcg/latest/linux64 -O mcg-linux64
           
       - name: Generate builds
         id: compile

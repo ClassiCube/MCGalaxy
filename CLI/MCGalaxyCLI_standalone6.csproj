@@ -3,9 +3,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <DefineConstants>$(DefineConstants);MCG_STANDALONE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MCGalaxy\MCGalaxy_dotnet.csproj" />
+    <ProjectReference Include="..\MCGalaxy\MCGalaxy_standalone.csproj" />
   </ItemGroup>
 </Project>

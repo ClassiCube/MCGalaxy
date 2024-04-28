@@ -115,7 +115,7 @@ jobs:
           
       # publish standalone windows binaries
       - name: Publish-win64
-        run: dotnet publish CLI/MCGalaxyCLI_dotnet6.csproj -r win-x64 --self-contained -p:DefineConstants=MCG_STANDALONE
+        run: dotnet publish CLI/MCGalaxyCLI_standalone6.csproj -r win-x64 --self-contained
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -125,7 +125,7 @@ jobs:
           
       # publish standalone linux binaries
       - name: Publish-linux64
-        run: dotnet publish CLI/MCGalaxyCLI_dotnet6.csproj -r linux-x64 --self-contained -p:DefineConstants=MCG_STANDALONE
+        run: dotnet publish CLI/MCGalaxyCLI_standalone6.csproj -r linux-x64 --self-contained
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -135,7 +135,7 @@ jobs:
           
       # publish standalone macOS binaries
       - name: Publish-mac64
-        run: dotnet publish CLI/MCGalaxyCLI_dotnet6.csproj -r osx-x64 --self-contained -p:DefineConstants=MCG_STANDALONE
+        run: dotnet publish CLI/MCGalaxyCLI_standalone6.csproj -r osx-x64 --self-contained
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}

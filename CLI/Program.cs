@@ -44,6 +44,7 @@ namespace MCGalaxy.Cli {
         }
         
         static void SetCurrentDirectory() {
+#if !MCG_STANDALONE
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             try {
                 Environment.CurrentDirectory = path;
@@ -55,6 +56,7 @@ namespace MCGalaxy.Cli {
                 //  (since most users will not be trying to run .exe from a different folder anyways)
                 Console.WriteLine("Failed to set working directory to '{0}', running in current directory..", path);
             }
+#endif
         }
         
         static void EnableCLIMode() {
