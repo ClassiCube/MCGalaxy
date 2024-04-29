@@ -32,7 +32,7 @@ namespace MCGalaxy.Commands.Info
                 string botName = message.SplitSpaces(2)[1];
                 target = Matcher.FindBots(p, botName);
                 if (target == null) return;
-                targetName = "Bot " + ((PlayerBot)target).DisplayName;
+                targetName = "Bot " + ((PlayerBot)target).ColoredName;
             } else {
                 if (message.Length == 0) message = p.name;
                 target = PlayerInfo.FindMatches(p, message);
