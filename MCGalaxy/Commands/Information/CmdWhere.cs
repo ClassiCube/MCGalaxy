@@ -26,27 +26,31 @@ namespace MCGalaxy.Commands.Info
         public override string type { get { return CommandTypes.Information; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            if (message.Length == 0) message = p.name;
-            Player target = PlayerInfo.FindMatches(p, message);
-            if (target == null) return;
-            
-            if (IGame.GameOn(target.level) != null && !(p.IsSuper || p.Game.Referee)) {
-                p.Message("You can only use /where on people in games when you are in referee mode."); return;
+            Entity target;
+            string targetName;
+            if (message.CaselessStarts("bot ")) {
+                string botName = message.SplitSpaces(2)[1];
+                target = Matcher.FindBots(p, botName);
+                if (target == null) return;
+                targetName = "Bot " + ((PlayerBot)target).DisplayName;
+            } else {
+                if (message.Length == 0) message = p.name;
+                target = PlayerInfo.FindMatches(p, message);
+                if (target == null) return;
+                if (IGame.GameOn(target.Level) != null && !(p.IsSuper || p.Game.Referee)) {
+                    p.Message("You can only use /where on people in games when you are in referee mode."); return;
+                }
+                targetName = p.FormatNick((Player)target);
             }
-            
-            int x = target.Pos.X, y = target.Pos.Y - Entities.CharacterHeight, z = target.Pos.Z;
-            p.Message("{0} &Sis on {1}", p.FormatNick(target), target.level.ColoredName);
-            p.Message("   X: &b{0:F5} &SY: &b{1:F5} &SZ: &b{2:F5}",
-                      x / 32.0, y / 32.0, z / 32.0);
-            
-            p.Message("   Yaw: &b{0} &Sdegrees, Pitch: &b{1} &Sdegrees",
-                      Orientation.PackedToDegrees(target.Rot.RotY),
-                      Orientation.PackedToDegrees(target.Rot.HeadX));
-        }      
+
+            target.DisplayPosition(p, p.FormatNick(targetName));
+        }
 
         public override void Help(Player p) {
             p.Message("&T/Where [name]");
             p.Message("&HDisplays level, position, and orientation of that player.");
+            p.Message("&T/Where bot [name]");
+            p.Message("&HDisplays level, position, and orientation of that bot.");
         }
     }
 }
