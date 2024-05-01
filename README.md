@@ -84,6 +84,7 @@ Compiling - .NET 6 / .NET 7 / .NET 8
 * Compiling for .NET 7: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet7.csproj`
 * Compiling for .NET 8: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet8.csproj`
 
+Linux notes:
 **You will also need to copy `libsqlite3.so.0` from system libraries to `libsqlite3.so` in the server folder**
 
 Copyright/License
