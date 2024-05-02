@@ -12,12 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Retrieve supporting files
-        run: |
-          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/sqlite3_x32.dll
-          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/sqlite3_x64.dll
-          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/MySql.Data.dll
-          
+#      - name: Retrieve supporting files
+#        run: |
+#          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/sqlite3_x32.dll
+#          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/sqlite3_x64.dll
+#          wget https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/MySql.Data.dll
+#          
       - name: Retrieve .NET 2.0 binaries
         run: |
           mkdir net20
@@ -72,6 +72,7 @@ jobs:
           make_dotnet_zip net40
           make_dotnet_zip infid
           
+          mv MCGalaxy mcg_source
           make_standalone_zip mcg-win64
           make_standalone_tar mcg-mac64
           make_standalone_tar mcg-linux64
