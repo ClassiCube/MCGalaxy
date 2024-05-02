@@ -28,19 +28,26 @@ namespace MCGalaxy
     {    
         public static string SourceURL = "https://github.com/ClassiCube/MCGalaxy";
         public const string BaseURL    = "https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/";
-        public const string UploadsURL = "https://github.com/ClassiCube/MCGalaxy/tree/master/Uploads";
-        
+        public const string UploadsURL = "https://github.com/ClassiCube/MCGalaxy/tree/master/Uploads";        
         const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
-#if MCG_STANDALONE
-        static string dllURL = "https://cs.classicube.net/mcgalaxy/" + IOperatingSystem.DetectOS().StandaloneName;
-#elif TEN_BIT_BLOCKS
-        const string dllURL = BaseURL + "Uploads/MCGalaxy_infid.dll";
+        const string changelogURL      = BaseURL + "Changelog.txt";
+        
+        const string CRN_URL  = "https://cs.classicube.net/c_client/mcg/release/";
+#if NET_20
+        const string CDN_BASE = CRN_URL + "net20/";
 #else
-        const string dllURL = BaseURL + "Uploads/MCGalaxy_.dll";
+        const string CDN_BASE = CRN_URL + "net40/";
 #endif
-        const string changelogURL = BaseURL + "Changelog.txt";
-        const string guiURL = BaseURL + "Uploads/MCGalaxy.exe";
-        const string cliURL = BaseURL + "Uploads/MCGalaxyCLI.exe";
+        
+#if MCG_STANDALONE
+        static string DLL_URL = CRN_URL + IOperatingSystem.DetectOS().StandaloneName;
+#elif TEN_BIT_BLOCKS
+        const string DLL_URL  = CDN_BASE + "MCGalaxy_infid.dll";
+#else
+        const string DLL_URL  = CDN_BASE + "MCGalaxy_.dll";
+#endif
+        const string GUI_URL  = CDN_BASE + "MCGalaxy.exe";
+        const string CLI_URL  = CDN_BASE + "MCGalaxyCLI.exe";
 
         public static event EventHandler NewerVersionDetected;
         
@@ -79,10 +86,10 @@ namespace MCGalaxy
                 }
                 
                 WebClient client = HttpUtil.CreateWebClient();
-                client.DownloadFile(dllURL, "MCGalaxy_.update");
+                client.DownloadFile(DLL_URL, "MCGalaxy_.update");
 #if !MCG_STANDALONE
-                client.DownloadFile(guiURL, "MCGalaxy.update");
-                client.DownloadFile(cliURL, "MCGalaxyCLI.update");
+                client.DownloadFile(GUI_URL, "MCGalaxy.update");
+                client.DownloadFile(CLI_URL, "MCGalaxyCLI.update");
 #endif
                 client.DownloadFile(changelogURL, "Changelog.txt");
 

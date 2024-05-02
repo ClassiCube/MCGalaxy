@@ -42,7 +42,7 @@ namespace MCGalaxy.SQL
 
 
         public override void LoadDependencies() {
-            // on macOS/Linux, use the system provided sqlite3 native library
+            // on macOS/Linux, system provided sqlite3 native library is used
             if (!IOperatingSystem.DetectOS().IsWindows) return;
 
             Server.CheckFile("sqlite3_x32.dll");

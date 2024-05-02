@@ -203,7 +203,7 @@ namespace MCGalaxy.Platform
     class LinuxOS : UnixOS
     {
         public override string StandaloneName {
-            get { return IntPtr.Size == 8 ? "nix64" : "nix32"; }
+            get { return IntPtr.Size == 8 ? "linux64" : "linux32"; }
         }
 
         public override void Init() {

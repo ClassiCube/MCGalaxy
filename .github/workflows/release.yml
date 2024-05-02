@@ -50,7 +50,6 @@ jobs:
         id: compile
         shell: bash
         run: |
-           
           make_dotnet_zip() {
             cp sqlite3_x32.dll $1/sqlite3_x32.dll
             cp sqlite3_x64.dll $1/sqlite3_x64.dll

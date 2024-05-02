@@ -72,7 +72,7 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release'
-          DEST_NAME: 'MCGalaxy-infid'          
+          DEST_NAME: 'MCGalaxy-infid'
           
       - uses: ./.github/actions/notify_success
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -141,7 +141,7 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0/osx-x64/publish'
-          DEST_NAME: 'MCGalaxy-mac64-standalone'          
+          DEST_NAME: 'MCGalaxy-mac64-standalone'
           
           
       - uses: ./.github/actions/notify_success
