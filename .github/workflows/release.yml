@@ -68,9 +68,9 @@ jobs:
             zip $1.zip MCGalaxy.exe sqlite3_x32.dll sqlite3_x64.dll
           }
           
-          make_dotnet_zip net20
-          make_dotnet_zip net40
-          make_dotnet_zip infid
+          make_dotnet_zip mcg-net20
+          make_dotnet_zip mcg-net40
+          make_dotnet_zip mcg-infid
           
           mv MCGalaxy mcg_source
           make_standalone_zip mcg-win64
@@ -91,19 +91,19 @@ jobs:
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'net20.zip'
+          SOURCE_FILE: 'mcg-net20.zip'
           DEST_NAME: 'mcg-net20.zip'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'net40.zip'
+          SOURCE_FILE: 'mcg-net40.zip'
           DEST_NAME: 'mcg-net40.zip'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
-          SOURCE_FILE: 'infid.zip'
+          SOURCE_FILE: 'mcg-infid.zip'
           DEST_NAME: 'mcg-infid.zip'
           
           

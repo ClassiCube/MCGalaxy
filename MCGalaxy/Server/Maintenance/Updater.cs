@@ -32,15 +32,15 @@ namespace MCGalaxy
         const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
         const string changelogURL      = BaseURL + "Changelog.txt";
         
-        const string CRN_URL  = "https://cs.classicube.net/c_client/mcg/release/";
+        const string CDN_URL  = "https://cs.classicube.net/c_client/mcg/release/";
 #if NET_20
-        const string CDN_BASE = CRN_URL + "net20/";
+        const string CDN_BASE = CDN_URL + "net20/";
 #else
-        const string CDN_BASE = CRN_URL + "net40/";
+        const string CDN_BASE = CDN_URL + "net40/";
 #endif
         
 #if MCG_STANDALONE
-        static string DLL_URL = CRN_URL + IOperatingSystem.DetectOS().StandaloneName;
+        static string DLL_URL = CDN_URL  + IOperatingSystem.DetectOS().StandaloneName;
 #elif TEN_BIT_BLOCKS
         const string DLL_URL  = CDN_BASE + "MCGalaxy_infid.dll";
 #else
