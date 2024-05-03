@@ -32,7 +32,7 @@ namespace MCGalaxy
         const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
         const string changelogURL      = BaseURL + "Changelog.txt";
         
-        const string CDN_URL  = "https://cs.classicube.net/c_client/mcg/release/";
+        const string CDN_URL  = "https://cdn.classicube.net/client/mcg/release/";
 #if NET_20
         const string CDN_BASE = CDN_URL + "net20/";
 #else
