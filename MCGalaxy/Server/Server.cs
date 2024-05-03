@@ -260,11 +260,17 @@ namespace MCGalaxy
 
 
         public static string GetServerDLLPath() {
+#if MCG_STANDALONE
+            return GetRuntimeProcessExePath();
+#else
             return Assembly.GetExecutingAssembly().Location;
+#endif
         }
 
         public static string GetRestartPath() {
-#if !NETSTANDARD
+#if MCG_STANDALONE
+            return GetRuntimeProcessExePath();
+#elif !NETSTANDARD
             return RestartPath;
 #else
             // NET core/5/6 executables tend to use the following structure:
@@ -274,13 +280,6 @@ namespace MCGalaxy
             //   as the actual executable which must be started is the non .dll file
             string path = RestartPath;
             if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
-
-            #if MCG_STANDALONE
-            // Server.RestartPath is empty in self contained builds
-            // TODO maybe move this elsewhere?
-            if (string.IsNullOrEmpty(path)) path = GetRuntimeProcessExePath();
-            #endif
-
             return path;
 #endif
         }
