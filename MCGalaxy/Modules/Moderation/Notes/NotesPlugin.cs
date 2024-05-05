@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Events;
 using MCGalaxy.Events.ServerEvents;
 
@@ -32,6 +33,7 @@ namespace MCGalaxy.Modules.Moderation.Notes
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
             Command.Register(cmdNotes);
             Command.Register(cmdMyNotes);
+            NoteAcronym.Init();
         }
         
         public override void Unload(bool shutdown) {
@@ -41,21 +43,12 @@ namespace MCGalaxy.Modules.Moderation.Notes
 
 
         static void HandleModerationAction(ModAction action) {
-            switch (action.Type) {
-                case ModActionType.Frozen:
-                    AddNote(action, "F"); break;
-                case ModActionType.Kicked:
-                    AddNote(action, "K"); break;
-                case ModActionType.Muted:
-                    AddNote(action, "M"); break; 
-                case ModActionType.Warned:
-                    AddNote(action, "W"); break;
-                case ModActionType.Ban:
-                    string banType = action.Duration.Ticks != 0 ? "T" : "B";
-                    AddNote(action, banType); break;
-            }
+            string acronym = NoteAcronym.GetAcronym(action);
+            if (acronym == null) return;
+
+            AddNote(action, acronym);
         }
-        
+
         static void AddNote(ModAction e, string type) {
              if (!Server.Config.LogNotes) return;
              string src = e.Actor.name;
@@ -64,6 +57,58 @@ namespace MCGalaxy.Modules.Moderation.Notes
              string data = e.Target + " " + type + " " + src + " " + time + " " + 
                            e.Reason.Replace(" ", "%20") + " " + e.Duration.Ticks;
              Server.Notes.Append(data);
+        }
+    }
+
+    /// <summary>
+    /// Moderation note actions are logged to disk using single-letter acronyms. This class handles translating these to and from human-readable actions.
+    /// </summary>
+    public class NoteAcronym
+    {
+        readonly static NoteAcronym Warned     = new NoteAcronym("W", "Warned");
+        readonly static NoteAcronym Kicked     = new NoteAcronym("K", "Kicked");
+        readonly static NoteAcronym Muted      = new NoteAcronym("M", "Muted");
+        readonly static NoteAcronym Banned     = new NoteAcronym("B", "Banned");
+        readonly static NoteAcronym Jailed     = new NoteAcronym("J", "Jailed"); //Jailing was removed, but still appears in notes for historical reasons
+        readonly static NoteAcronym Frozen     = new NoteAcronym("F", "Frozen");
+        readonly static NoteAcronym TempBanned = new NoteAcronym("T", "Temp-Banned");
+
+        static NoteAcronym[] All;
+
+        internal static void Init() {
+            All = new NoteAcronym[] { Warned, Kicked, Muted, Banned, Jailed, Frozen, TempBanned };
+        }
+
+        /// <summary>
+        /// Returns the appropriate Acronym to log when a mod action occurs.
+        /// </summary>
+        public static string GetAcronym(ModAction action) {
+            if (action.Type == ModActionType.Ban) {
+                return action.Duration.Ticks != 0 ? TempBanned.Acronym : Banned.Acronym;
+            }
+
+            string modActionString = action.Type.ToString();
+            foreach (var na in All) {
+                if (na.Action == modActionString) { return na.Acronym; }
+            }
+            return null;
+        }
+        /// <summary>
+        /// Returns the appropriate Action from a mod note acronym. If none are found, returns the original argument.
+        /// </summary>
+        public static string GetAction(string acronym) {
+            foreach (var na in All) {
+                if (na.Acronym == acronym) { return na.Action; }
+            }
+            return acronym;
+        }
+
+        readonly string Acronym;
+        readonly string Action;
+
+        private NoteAcronym(string acronym, string action) {
+            Acronym = acronym;
+            Action = action;
         }
     }
 }

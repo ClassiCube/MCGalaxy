@@ -76,20 +76,9 @@ namespace MCGalaxy.Modules.Moderation.Notes
             if (args.Length > 5) long.TryParse(args[5], out duration);
             
             p.Message("{0} by {1} &Son {2}{3}{4}",
-                      Action(args[1]), p.FormatNick(args[2]), args[3],
+                      NoteAcronym.GetAction(args[1]), p.FormatNick(args[2]), args[3],
                       duration      == 0 ? "" : " for " + TimeSpan.FromTicks(duration).Shorten(true),
                       reason.Length == 0 ? "" : " - "   + reason.Replace("%20", " "));
-        }
-        
-        static string Action(string arg) {
-            if (arg.CaselessEq("W")) return "Warned";
-            if (arg.CaselessEq("K")) return "Kicked";
-            if (arg.CaselessEq("M")) return "Muted";
-            if (arg.CaselessEq("B")) return "Banned";
-            if (arg.CaselessEq("J")) return "Jailed";
-            if (arg.CaselessEq("F")) return "Frozen";
-            if (arg.CaselessEq("T")) return "Temp-Banned";
-            return arg;
         }
 
         public override void Help(Player p) {
