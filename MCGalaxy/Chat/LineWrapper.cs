@@ -57,7 +57,7 @@ namespace MCGalaxy {
             // For e.g. "item1/item2/item3", want to wordwrap on the '/'
             // However for "item1 /command", want to wordwrap BEFORE '/'
             // TODO: This probably needs to account for colour codes
-            return (c == '-' || c == '/' || c == '\\') && line[i - 1] != ' ';
+            return (c == '-' || c == '\\') && line[i - 1] != ' ';
         }
 
         static bool StartsWithColor(char[] message, int messageLen, int offset) {
