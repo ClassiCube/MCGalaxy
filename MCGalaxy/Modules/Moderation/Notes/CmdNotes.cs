@@ -46,10 +46,24 @@ namespace MCGalaxy.Modules.Moderation.Notes
                 p.Message("The server does not have notes logging enabled."); return;
             }
             
-            List<string> notes = Server.Notes.FindAllExact(name);
+            List<string> allNotes = Server.Notes.FindAllExact(name);
+            List<string> visibleNotes;
+            if (p.group.Permission >= Chat.OpchatPerms.MinRank) {
+                visibleNotes = allNotes;
+            } else {
+                visibleNotes = new List<string>();
+
+                foreach (string note in allNotes) {
+                    string[] sections = note.SplitSpaces();
+                    if (sections.Length <= 3) continue; // Malformed note, don't include
+                    if (sections[1] == NoteAcronym.OpNoted.Acronym) continue; // Only Ops may see this note, don't include
+                    visibleNotes.Add(note);
+                }
+            }
+
             string nick = p.FormatNick(name);
             
-            if (notes.Count == 0) {
+            if (visibleNotes.Count == 0) {
                 p.Message("{0} &Shas no notes.", nick); return;
             } else {
                 p.Message("  Notes for {0}:", nick);
@@ -57,13 +71,13 @@ namespace MCGalaxy.Modules.Moderation.Notes
             
             // special case "/Notes" to show latest notes by default
             if (modifier.Length == 0) {
-                Paginator.Output(p, notes, PrintNote, cmd, "Notes", 
-                                 (1 + (notes.Count - 8)).ToString());
+                Paginator.Output(p, visibleNotes, PrintNote, cmd, "Notes", 
+                                 (1 + (visibleNotes.Count - 8)).ToString());
                 p.Message("To see all Notes, use &T/{0} all", cmd);
                 return;
             }
             
-            Paginator.Output(p, notes, PrintNote,
+            Paginator.Output(p, visibleNotes, PrintNote,
                              cmd, "Notes", modifier);
         }
         

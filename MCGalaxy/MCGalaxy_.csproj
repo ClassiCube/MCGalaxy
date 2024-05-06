@@ -590,6 +590,7 @@
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.Plugin.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSGame.Round.cs" />
     <Compile Include="Modules\Games\ZombieSurvival\ZSPlugin.cs" />
+    <Compile Include="Modules\Moderation\Notes\CmdNote.cs" />
     <Compile Include="Modules\Moderation\Notes\CmdNotes.cs" />
     <Compile Include="Modules\Moderation\Notes\NotesPlugin.cs" />
     <Compile Include="Modules\Moderation\Review\CmdReview.cs" />

@@ -16,9 +16,7 @@
     permissions and limitations under the Licenses.
 */
 using System;
-using System.Collections.Generic;
 using MCGalaxy.Events;
-using MCGalaxy.Events.ServerEvents;
 
 namespace MCGalaxy.Modules.Moderation.Notes 
 {
@@ -26,19 +24,18 @@ namespace MCGalaxy.Modules.Moderation.Notes
     {
         public override string name { get { return "Notes"; } }
 
-        Command cmdNotes   = new CmdNotes();
-        Command cmdMyNotes = new CmdMyNotes();
+
+        static Command[] cmds = new Command[] { new CmdNotes(), new CmdMyNotes(), new CmdNote(), new CmdOpNote(), };
 
         public override void Load(bool startup) {
             OnModActionEvent.Register(HandleModerationAction, Priority.Low);
-            Command.Register(cmdNotes);
-            Command.Register(cmdMyNotes);
+            foreach (Command cmd in cmds) { Command.Register(cmd); }
             NoteAcronym.Init();
         }
         
         public override void Unload(bool shutdown) {
             OnModActionEvent.Unregister(HandleModerationAction);
-            Command.Unregister(cmdNotes, cmdMyNotes);
+            Command.Unregister(cmds);
         }
 
 
@@ -65,18 +62,20 @@ namespace MCGalaxy.Modules.Moderation.Notes
     /// </summary>
     public class NoteAcronym
     {
-        readonly static NoteAcronym Warned     = new NoteAcronym("W", "Warned");
-        readonly static NoteAcronym Kicked     = new NoteAcronym("K", "Kicked");
-        readonly static NoteAcronym Muted      = new NoteAcronym("M", "Muted");
-        readonly static NoteAcronym Banned     = new NoteAcronym("B", "Banned");
-        readonly static NoteAcronym Jailed     = new NoteAcronym("J", "Jailed"); //Jailing was removed, but still appears in notes for historical reasons
-        readonly static NoteAcronym Frozen     = new NoteAcronym("F", "Frozen");
-        readonly static NoteAcronym TempBanned = new NoteAcronym("T", "Temp-Banned");
+        private readonly static NoteAcronym Warned     = new NoteAcronym("W", "Warned");
+        private readonly static NoteAcronym Kicked     = new NoteAcronym("K", "Kicked");
+        private readonly static NoteAcronym Muted      = new NoteAcronym("M", "Muted");
+        private readonly static NoteAcronym Banned     = new NoteAcronym("B", "Banned");
+        private readonly static NoteAcronym Jailed     = new NoteAcronym("J", "Jailed"); // Jailing was removed, but still appears in notes for historical reasons
+        private readonly static NoteAcronym Frozen     = new NoteAcronym("F", "Frozen");
+        private readonly static NoteAcronym TempBanned = new NoteAcronym("T", "Temp-Banned");
+        private readonly static NoteAcronym Noted      = new NoteAcronym("N", "Noted");
+        public  readonly static NoteAcronym OpNoted    = new NoteAcronym("O", "OpNoted");
 
         static NoteAcronym[] All;
 
         internal static void Init() {
-            All = new NoteAcronym[] { Warned, Kicked, Muted, Banned, Jailed, Frozen, TempBanned };
+            All = new NoteAcronym[] { Warned, Kicked, Muted, Banned, Jailed, Frozen, TempBanned, Noted, OpNoted };
         }
 
         /// <summary>
@@ -103,8 +102,8 @@ namespace MCGalaxy.Modules.Moderation.Notes
             return acronym;
         }
 
-        readonly string Acronym;
-        readonly string Action;
+        public readonly string Acronym;
+        public readonly string Action;
 
         private NoteAcronym(string acronym, string action) {
             Acronym = acronym;

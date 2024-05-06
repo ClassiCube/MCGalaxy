@@ -84,8 +84,8 @@ namespace MCGalaxy.Events
     }
     
     public delegate void OnModAction(ModAction action);
-    
-    /// <summary> Types of moderation actions that can occur. </summary>
+
+    /// <summary> Types of moderation actions that can occur. To make a mod action logged to /notes, add a new NoteAcronym in NotesPlugin NoteAcronym. </summary>
     public enum ModActionType 
     {
         /// <summary> Player was banned. </summary>
@@ -119,6 +119,10 @@ namespace MCGalaxy.Events
         Kicked,
         /// <summary> Player was reported </summary>
         Reported,
+        /// <summary> Player was given a note </summary>
+        Noted,
+        /// <summary> Player was given a note that only operators may read </summary>
+        OpNoted,
     }
     
     /// <summary> Raised when a moderation action occurs. </summary>

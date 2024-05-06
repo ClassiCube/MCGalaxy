@@ -38,6 +38,8 @@ namespace MCGalaxy.Core {
                     case ModActionType.UnbanIP: DoUnbanIP(action); break;
                     case ModActionType.Warned: DoWarn(action); break;
                     case ModActionType.Rank: DoRank(action); break;
+                    case ModActionType.Noted: DoNote(action); break;
+                    case ModActionType.OpNoted: DoNote(action); break;
             }
         }
         
@@ -52,7 +54,7 @@ namespace MCGalaxy.Core {
                 Chat.Message(ChatScope.Global, e.FormatMessage(targetNick, action),
                              null, null, true);
             } else {
-                Chat.MessageOps(e.FormatMessage(targetNick, action));
+                Chat.MessageOps("To Ops: " + e.FormatMessage(targetNick, action));
             }
             
             action = Colors.StripUsed(action);
@@ -254,6 +256,16 @@ namespace MCGalaxy.Core {
             long expiry = end.ToUnixTime();
             string assigner = e.Actor.name;
             return assigner + " " + assign + " " + expiry;
+        }
+
+        static void DoNote(ModAction e) {
+            if (!Server.Config.LogNotes) {
+                e.Actor.Message("Notes logging must be enabled to note players."); return;
+            }
+
+            // No null checking because LogAction who parameter isn't used
+            Player who = PlayerInfo.FindExact(e.Target);
+            LogAction(e, who, "&egiven a note");
         }
     }
 }
