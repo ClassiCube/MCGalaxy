@@ -99,7 +99,7 @@ namespace MCGalaxy.Commands
                                   int min = int.MinValue, int max = int.MaxValue) {
             int value;
             if (!NumberUtils.TryParseInt32(input, out value)) {
-                p.Message("&W\"{0}\" is not a valid integer.", input); return false;
+                p.Message("&W\"{0}\" is not a valid integer for {1}.", input, argName.ToLowerInvariant()); return false;
             }
             
             if (!CheckRange(p, value, argName, min, max)) return false;
@@ -111,7 +111,7 @@ namespace MCGalaxy.Commands
                                    float min = float.NegativeInfinity, float max = float.MaxValue) {
             float value;
             if (!NumberUtils.TryParseSingle(input, out value)) {
-                p.Message("&W\"{0}\" is not a valid number.", input); return false;
+                p.Message("&W\"{0}\" is not a valid number for {1}.", input, argName.ToLowerInvariant()); return false;
             }
             
             if (value < min || value > max) {
