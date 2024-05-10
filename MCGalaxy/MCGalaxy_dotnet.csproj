@@ -5,7 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="6.7.9" />
+    <PackageReference Include="MySql.Data" Version="8.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
   </ItemGroup>
 </Project>
