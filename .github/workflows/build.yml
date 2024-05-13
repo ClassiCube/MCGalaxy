@@ -1,5 +1,11 @@
 name: Build latest
-on: [push, workflow_dispatch]
+# trigger via either push to selected branches or on manual run
+on:
+  push:
+    branches:
+      - master
+      - ModernLighting
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}-latest
@@ -10,7 +16,6 @@ jobs:
 # ============== .NET 2.0 BUILD =============
 # ===========================================
   build-mono2:
-    if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +48,6 @@ jobs:
 # ============== .NET 4.0 BUILD =============
 # ===========================================
   build-mono4:
-    if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -85,7 +89,6 @@ jobs:
 # ============== .NET 6.0 BUILD =============
 # ===========================================
   build-dotnet6:
-    if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     
     steps:
@@ -155,7 +158,6 @@ jobs:
 # ============== .NET 8.0 BUILD =============
 # ===========================================
   build-dotnet8:
-    if: github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     
     steps:
