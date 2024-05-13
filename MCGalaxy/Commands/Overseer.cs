@@ -96,11 +96,11 @@ namespace MCGalaxy.Commands.World {
         }
 
         static string[] deleteHelp = new string[] {
-            "&T/os map delete &H- Deletes your map.",
+            "&T/os delete &H- Deletes your map.",
         };
         static void HandleDelete(Player p, string message) {
             if (message.Length > 0) {
-                p.Message("To delete your current map, type &T/{0} map delete", commandShortcut);
+                p.Message("To delete your current map, type &T/{0} delete", commandShortcut);
                 return;
             }
             UseCommand(p, "DeleteLvl", p.level.name);
