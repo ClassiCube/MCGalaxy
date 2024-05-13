@@ -84,6 +84,7 @@ namespace MCGalaxy
                                 "prev_MCGalaxy_.dll", "prev_MCGalaxy.exe", "prev_MCGalaxyCLI.exe");
                 } catch {
                 }
+                Logger.Log(LogType.SystemActivity, "Downloading update files");
                 
                 WebClient client = HttpUtil.CreateWebClient();
                 client.DownloadFile(DLL_URL, "MCGalaxy_.update");
