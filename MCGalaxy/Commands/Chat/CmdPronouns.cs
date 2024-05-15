@@ -16,6 +16,8 @@
     permissions and limitations under the Licenses.
  */
 
+using System.Collections.Generic;
+
 namespace MCGalaxy.Commands.Chatting {
     public class CmdPronouns : Command2 {
         public override string name { get { return "Pronouns"; } }
@@ -23,17 +25,34 @@ namespace MCGalaxy.Commands.Chatting {
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
 
-            Pronouns pro = Pronouns.FindMatch(p, message);
-            if (pro == null) { HelpList(p); return; }
+            string[] names = message.SplitSpaces();
+            Dictionary<string, Pronouns> pros = new Dictionary<string, Pronouns>();
 
-            p.pronouns = pro;
-            p.Message("Your pronouns were changed to: &T{0}", pro.Name);
-            pro.SaveFor(p);
+            foreach (string name in names) {
+                Pronouns pro = Pronouns.FindMatch(p, name);
+                if (pro == null) { HelpList(p); return; }
+                pros[pro.Name] = pro;
+            }
+            
+            // Disallow using default pronouns along with other pronouns (it's weird..?)
+            if (pros.Count > 1 && pros.ContainsKey(Pronouns.Default.Name)) {
+                pros.Remove(Pronouns.Default.Name);
+            }
+
+            List<Pronouns> final = new List<Pronouns>();
+            foreach (var pair in pros) {
+                final.Add(pair.Value);
+            }
+
+            p.pronounsList = final;
+            p.Message("Your pronouns were changed to: &T{0}", Pronouns.ListFor(p, ", "));
+            Pronouns.SaveFor(p);
         }
 
         public override void Help(Player p) {
-            p.Message("&T/Pronouns [pronouns]");
-            p.Message("&HChanges the pronouns used to refer to you in server messages.");
+            p.Message("&T/Pronouns [pronouns1] <pronouns2> <etc>");
+            p.Message("&H[pronouns1] will be used to refer to you in server messages.");
+            p.Message("&HThe list of pronouns you select will appear in &T/whois");
             HelpList(p);
             p.Message("&HYour pronouns are currently: &T{0}", p.pronouns.Name);
         }

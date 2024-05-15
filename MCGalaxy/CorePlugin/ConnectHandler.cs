@@ -25,7 +25,7 @@ namespace MCGalaxy.Core {
             if (p.CanUse("ReachDistance")) LoadReach(p);
             
             p.Ignores.Load(p);
-            p.pronouns = Pronouns.GetFor(p.name);
+            p.pronounsList = Pronouns.GetFor(p.name);
         }
         
         static void LoadReach(Player p) {

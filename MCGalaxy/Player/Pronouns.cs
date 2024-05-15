@@ -85,7 +85,7 @@ namespace MCGalaxy {
 
             //In case any were deleted or changed
             foreach (Player p in PlayerInfo.Online.Items) {
-                p.pronouns = GetFor(p.name);
+                p.pronounsList = GetFor(p.name);
             }
         }
         static void LoadFrom(string line) {
@@ -113,25 +113,32 @@ namespace MCGalaxy {
         /// <summary>
         /// Find the pronouns associated with the playerName. Returns Default pronouns if none were specified.
         /// </summary>
-        public static Pronouns GetFor(string playerName) {
+        public static List<Pronouns> GetFor(string playerName) {
             string myPath = PlayerPath(playerName);
             try {
 
                 string data;
                 lock (locker) {
-                    if (!File.Exists(myPath)) { return Default; }
+                    if (!File.Exists(myPath)) { return new List<Pronouns> { Default }; }
                     data = File.ReadAllText(myPath);
                 }				
                 data = data.Trim();		
-				
-                if (data.Length == 0) return Default;
-                Pronouns p = FindExact(data);
-                if (p != null) return p;
-                return Default;
+                if (data.Length == 0) return new List<Pronouns> { Default };
+
+                List<Pronouns> pros = new List<Pronouns>();
+                string[] names = data.SplitSpaces();
+                foreach (string name in names) {
+                    Pronouns p = FindExact(name);
+                    if (p == null) continue;
+                    pros.Add(p);
+                }
+                if (pros.Count != 0) return pros;
+
+                return new List<Pronouns> { Default };
 
             } catch (Exception e) {
                 Logger.LogError(e);
-                return Default;
+                return new List<Pronouns> { Default };
             }
         }
 
@@ -167,6 +174,9 @@ namespace MCGalaxy {
                 }
             }
             return names;
+        }
+        public static string ListFor(Player p, string separator) {
+            return p.pronounsList.Join((pro) => pro.Name, separator);
         }
 
 
@@ -217,13 +227,14 @@ namespace MCGalaxy {
             w.WriteLine(string.Format("{0} {1} {2} {3} {4}", Name, Subject, Object, Reflexive, (Plural ? "plural" : "singular") ));
             w.WriteLine();
         }
-        public void SaveFor(Player p) {
+        public static void SaveFor(Player p) {
             string path = PlayerPath(p.name);
             try {
                 //Reduce clutter by simply erasing the file if it's default
-                if (this == Default) { File.Delete(path); return; }
+                if (p.pronounsList.Count == 1 && p.pronounsList[0] == Default) { File.Delete(path); return; }
 
-                File.WriteAllText(path, Name);
+                File.WriteAllText(path, ListFor(p, " "));
+
             } catch (Exception e) {
                 Logger.LogError(e);
                 p.Message("&WThere was an error when saving your pronouns: &S{0}", e.Message);

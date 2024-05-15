@@ -63,7 +63,9 @@ namespace MCGalaxy {
         /// <remarks> Use 'truename' for displaying/logging, use 'name' for storing data </remarks>
         public string name;
         public string DisplayName;
-        public Pronouns pronouns = Pronouns.Default;
+        public Pronouns pronouns { get { return pronounsList[0]; } }
+        internal List<Pronouns> pronounsList = new List<Pronouns> { Pronouns.Default };
+
         public int warn;
         public byte id;
         public IPAddress IP;
