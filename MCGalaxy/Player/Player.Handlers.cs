@@ -299,7 +299,7 @@ namespace MCGalaxy
         public void SendCurrentEnv() {
             Zone zone = ZoneIn;
             
-            for (int i = 0; i <= 5; i++) {
+            for (int i = 0; i <= EnvConfig.ENV_COLOR_COUNT; i++) {
                 string col = Server.Config.GetColor(i);
                 if (level.Config.GetColor(i) != "") {
                     col = level.Config.GetColor(i);

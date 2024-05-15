@@ -61,6 +61,17 @@ namespace MCGalaxy {
         
         [ConfigInt(null, null, -1, -1)]
         public int InventoryOrder = -1;
+
+
+        /// <summary>
+        /// 0-15 value for how far this block casts light (for fancy lighting option).
+        /// -1 means this property has not been set by the user before
+        /// </summary>
+        [ConfigInt(null, null, -1, -1, 15)] public int Brightness;
+        /// <summary>
+        /// Does this block use the sun environment color for light casting? (for fancy lighting option)
+        /// </summary>
+        [ConfigBool] public bool UseSunBrightness;
         
         public BlockID GetBlock() { return Block.FromRaw(RawID); }
         public void SetBlock(BlockID b) { RawID = Block.ToRaw(b); }
@@ -87,9 +98,18 @@ namespace MCGalaxy {
             def.LeftTex = LeftTex; def.RightTex = RightTex;
             def.FrontTex = FrontTex; def.BackTex = BackTex;
             def.InventoryOrder = InventoryOrder;
+            def.Brightness = Brightness; def.UseSunBrightness = UseSunBrightness;
             return def;
         }
         
+        /// <summary>
+        /// Called on this instance after it has been parsed from its json file
+        /// </summary>
+        void OnParsed() {
+            //Sync Brightness setting logically to max brightness if it has not been set before but this block is fullbright
+            if (Brightness == -1 && FullBright) Brightness = 15;
+        }
+
         static ConfigElement[] elems;
         public static BlockDefinition[] Load(string path) {
             BlockDefinition[] defs = new BlockDefinition[Block.SUPPORTED_COUNT];
@@ -103,6 +123,7 @@ namespace MCGalaxy {
                 reader.OnMember   = (obj, key, value) => {
                     if (obj.Meta == null) obj.Meta = new BlockDefinition();
                     ConfigElement.Parse(elems, obj.Meta, key, (string)value);
+                    ((BlockDefinition)obj.Meta).OnParsed();
                 };
                 
                 JsonArray array = (JsonArray)reader.Parse();
@@ -265,6 +286,17 @@ namespace MCGalaxy {
             LeftTex = id; RightTex = id; FrontTex = id; BackTex = id;
         }
         
+        public void SetFullBright(bool fullBright) {
+            SetBrightness(fullBright ? 15 : 0, false);
+        }
+        /// <summary>
+        /// Does not validate that the range falls within 0-15
+        /// </summary>
+        public void SetBrightness(int brightness, bool sun) {
+            Brightness = brightness;
+            UseSunBrightness = sun;
+            if (Brightness > 0) { FullBright = true; } else { FullBright = false; }
+        }
         
         internal static void SendLevelCustomBlocks(Player pl) {
             BlockDefinition[] defs = pl.level.CustomBlockDefs;

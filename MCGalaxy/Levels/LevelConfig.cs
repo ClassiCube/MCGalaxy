@@ -130,7 +130,10 @@ namespace MCGalaxy
         /// <summary> Color of the skybox (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("SkyboxColor", "Env", "", true)]
         public string SkyboxColor = "";
-        
+        /// <summary> Color emitted by bright blocks (Hex RGB color). Set to "" to use client defaults. </summary>
+        [ConfigString("BlockLightColor", "Env", "", true)]
+        public string BlockLightColor = "";
+
         public void ResetEnv() {
             // TODO: Rewrite using ConfigElement somehow
             Weather      = ENV_USE_DEFAULT;
@@ -149,14 +152,16 @@ namespace MCGalaxy
             EdgeBlock    = Block.Invalid;
             ExpFog       = ENV_USE_DEFAULT;
             
-            CloudColor  = "";
-            FogColor    = "";
-            SkyColor    = "";
-            ShadowColor = "";
-            LightColor  = "";
-            SkyboxColor = "";
+            CloudColor      = "";
+            FogColor        = "";
+            SkyColor        = "";
+            ShadowColor     = "";
+            LightColor      = "";
+            SkyboxColor     = "";
+            BlockLightColor = "";
         }
-        
+
+        internal const int ENV_COLOR_COUNT = 6;
         public string GetColor(int i) {
             if (i == 0) return SkyColor;
             if (i == 1) return CloudColor;
@@ -164,6 +169,7 @@ namespace MCGalaxy
             if (i == 3) return ShadowColor;
             if (i == 4) return LightColor;
             if (i == 5) return SkyboxColor;
+            if (i == 6) return BlockLightColor;
             
             return null;
         }

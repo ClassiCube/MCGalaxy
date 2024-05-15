@@ -259,8 +259,11 @@ namespace MCGalaxy.Commands.CPE
             } else {
                 p.Message("  Block is a cube from ({0}, {1}, {2}) to ({3}, {4}, {5})",
                                def.MinX, def.MinZ, def.MinY, def.MaxX, def.MaxZ, def.MaxY);
-                p.Message("  Texture IDs (left: {0}, right: {1}, front: {2}, back: {3}, top: {4}, bottom: {5})",
-                               def.LeftTex, def.RightTex, def.FrontTex, def.BackTex, def.TopTex, def.BottomTex);
+                p.Message("  Texture IDs:");
+                p.Message("    left: {0}, right: {1}, front: {2}, back: {3}",
+                               def.LeftTex, def.RightTex, def.FrontTex, def.BackTex);
+                p.Message("    top: {0}, bottom: {1}",
+                               def.TopTex, def.BottomTex);
             }
             
             if (def.InventoryOrder < 0) {
@@ -269,6 +272,10 @@ namespace MCGalaxy.Commands.CPE
                 p.Message("  Order: Hidden from inventory");
             } else {
                 p.Message("  Order: " + def.InventoryOrder);
+            }
+            if (def.Brightness > 0) {
+                string word = def.UseSunBrightness ? "SunBrightness" : "Brightness";
+                p.Message("  {0}: {1}", word, def.Brightness);
             }
         }
 
@@ -384,8 +391,10 @@ namespace MCGalaxy.Commands.CPE
                 if (CommandParser.GetByte(p, value, "Walk sound", ref def.WalkSound, 0, 11))
                     step++;
             } else if (step == 13) {
-                if (CommandParser.GetBool(p, value, ref def.FullBright))
+                if (CommandParser.GetBool(p, value, ref temp)) {
+                    def.SetFullBright(temp);
                     step++;
+                }
             } else if (step == 14) {
                 if (CommandParser.GetByte(p, value, "Block draw", ref def.BlockDraw, 0, 4))
                     step++;
@@ -416,6 +425,9 @@ namespace MCGalaxy.Commands.CPE
             SendStepHelp(p, args);
         }
         
+        /// <summary>
+        /// Returns true if an edit actually occured
+        /// </summary>
         static bool DoEdit(Player p, string[] parts, BlockDefinitionsArgs args, BlockID block) {
             BlockDefinition def = args.defs[block], globalDef = BlockDefinition.GlobalDefs[block];
             
@@ -483,7 +495,7 @@ namespace MCGalaxy.Commands.CPE
                     if (!CommandParser.GetBool(p, value, ref temp)) {
                         SendEditHelp(p, arg); return false;
                     }
-                    def.FullBright = temp;
+                    def.SetFullBright(temp);
                     break;
                     
                 case "shape":
@@ -543,6 +555,22 @@ namespace MCGalaxy.Commands.CPE
                     p.Message("Set inventory order for {0} to {1}", blockName,
                                    order == def.RawID ? "default" : order.ToString());
                     return true;
+
+                case "brightness":
+                    int brightness = 0;
+                    if (!CommandParser.GetInt(p, value, "brightness", ref brightness, 0, 15)) {
+                        SendEditHelp(p, arg); return false;
+                    }
+                    def.SetBrightness(brightness, false);
+                    break;
+
+                case "sunbrightness":
+                    int sunBrightness = 0;
+                    if (!CommandParser.GetInt(p, value, "sunbrightness", ref sunBrightness, 0, 15)) {
+                        SendEditHelp(p, arg); return false;
+                    }
+                    def.SetBrightness(sunBrightness, true);
+                    break;
                 default:
                     p.Message("Unrecognised property: " + arg); return false;
             }
@@ -854,6 +882,14 @@ namespace MCGalaxy.Commands.CPE
             { "order", new string[] { "Enter the position/order of this block in the inventory.",
                     "The default position of a block is its ID.",
                     "A position of 0 hides the block from the inventory." }
+            },
+            { "brightness", new string[] { "Type a number (0-15) for the brightness of the block.",
+                    "You need Fancy Lighting to see differences between 1 and 15.",
+                    "The block will glow using the \"blocklight\" env color" }
+            },
+            { "sunbrightness", new string[] { "Type a number (0-15) for the sun-brightness of the block.",
+                    "You need Fancy Lighting to see differences between 1 and 15.",
+                    "The block will glow using the \"sun\" env color" }
             },
         };
         
