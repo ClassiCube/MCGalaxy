@@ -21,10 +21,13 @@ using System.Collections.Generic;
 namespace MCGalaxy {
     internal sealed class EnvPreset {
         public string Fog, Sky, Clouds, Sun, Shadow;
+        public string LavaLight = "", LampLight = "";
         
         public EnvPreset(string raw) {
             string[] args = raw.SplitSpaces();
             Fog = args[0]; Sky = args[1]; Clouds = args[2]; Sun = args[3]; Shadow = args[4];
+            LavaLight = args.Length > 5 ? args[5] : "";
+            LampLight = args.Length > 6 ? args[6] : "";
         }
             
         public static Dictionary<string, string> Presets = new Dictionary<string, string>() {

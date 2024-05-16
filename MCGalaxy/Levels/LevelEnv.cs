@@ -42,13 +42,14 @@ namespace MCGalaxy {
              new EnvOption("EdgeLevel",    SetEdgeLevel,    "&HSets the water height of the map"),
              new EnvOption("SidesOffset",  SetSidesOffset,  "&HSets offset of bedrock from water (default -2)"),
              new EnvOption("MaxFog",       SetMaxFog,       "&HSets maximum fog distance in the map (e.g. 16 for a horror map)"),
-             new EnvOption("Sky",        SetSky,        "&HSets color of the sky (default 99CCFF)"),
-             new EnvOption("Clouds",     SetClouds,     "&HSets color of the clouds (default FFFFFF)"),
-             new EnvOption("Fog",        SetFog,        "&HSets color of the fog (default FFFFFF)"),
-             new EnvOption("Sun",        SetSun,        "&HSets color of blocks in sunlight (default FFFFFF)"),
-             new EnvOption("Shadow",     SetShadow,     "&HSets color of blocks in darkness (default 9B9B9B)"),      
-             new EnvOption("Skybox",     SetSkybox,     "&HSets color of the skybox (default FFFFFF)"),
-             new EnvOption("BlockLight", SetBlockLight, "&HSets color cast by bright blocks (default FFEBC6)"),
+             new EnvOption("Sky",       SetSky,       "&HSets color of the sky (default 99CCFF)"),
+             new EnvOption("Clouds",    SetClouds,    "&HSets color of the clouds (default FFFFFF)"),
+             new EnvOption("Fog",       SetFog,       "&HSets color of the fog (default FFFFFF)"),
+             new EnvOption("Sun",       SetSun,       "&HSets color of blocks in sunlight (default FFFFFF)"),
+             new EnvOption("Shadow",    SetShadow,    "&HSets color of blocks in darkness (default 9B9B9B)"),      
+             new EnvOption("Skybox",    SetSkybox,    "&HSets color of the skybox (default FFFFFF)"),
+             new EnvOption("LavaLight", SetLavaLight, "&HSets color cast by bright natural blocks when fancy lighting is enabled (default FFEBC6)"),
+             new EnvOption("LampLight", SetLampLight, "&HSets color cast by bright artificial blocks when fancy lighting is enabled (default FFFFFF)"),
              new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "&HSets how fast clouds move (negative moves in opposite direction)"),
              new EnvOption("WeatherSpeed", SetWeatherSpeed, "&HSets how fast rain/snow falls (negative falls upwards)"),
              new EnvOption("WeatherFade",  SetWeatherFade,  "&HSets how quickly rain/snow fades out over distance"),
@@ -72,7 +73,9 @@ namespace MCGalaxy {
             if (opt.CaselessEq("CloudSpeed"))  opt = "CloudsSpeed";
             if (opt.CaselessEq("SkyboxHor"))   opt = "SkyboxHorSpeed";
             if (opt.CaselessEq("SkyboxVer"))   opt = "SkyboxVerSpeed";
-  
+            if (opt.CaselessEq("lavacolor")) opt = "LavaLight";
+            if (opt.CaselessEq("lampcolor")) opt = "LampLight";
+
             foreach (EnvOption option in Options) {
                 if (option.Name.CaselessEq(opt)) return option;
             }
@@ -118,8 +121,11 @@ namespace MCGalaxy {
         static void SetSkybox(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "skybox color", ref cfg.SkyboxColor);
         }
-        static void SetBlockLight(Player p, string area, EnvConfig cfg, string value) {
-            SetColor(p, value, area, "block light color", ref cfg.BlockLightColor);
+        static void SetLavaLight(Player p, string area, EnvConfig cfg, string value) {
+            SetColor(p, value, area, "block lava light color", ref cfg.LavaLightColor);
+        }
+        static void SetLampLight(Player p, string area, EnvConfig cfg, string value) {
+            SetColor(p, value, area, "block lamp light color", ref cfg.LampLightColor);
         }
 
         static void SetCloudsSpeed(Player p, string area, EnvConfig cfg, string value) {

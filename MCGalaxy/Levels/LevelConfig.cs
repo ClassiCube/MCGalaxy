@@ -130,9 +130,12 @@ namespace MCGalaxy
         /// <summary> Color of the skybox (Hex RGB color). Set to "" to use client defaults. </summary>
         [ConfigString("SkyboxColor", "Env", "", true)]
         public string SkyboxColor = "";
-        /// <summary> Color emitted by bright blocks (Hex RGB color). Set to "" to use client defaults. </summary>
-        [ConfigString("BlockLightColor", "Env", "", true)]
-        public string BlockLightColor = "";
+        /// <summary> Color emitted by bright natural blocks (Hex RGB color). Set to "" to use client defaults. </summary>
+        [ConfigString("LavaLightColor", "Env", "", true)]
+        public string LavaLightColor = "";
+        /// <summary> Color emitted by bright artificial blocks (Hex RGB color). Set to "" to use client defaults. </summary>
+        [ConfigString("LampLightColor", "Env", "", true)]
+        public string LampLightColor = "";
 
         public void ResetEnv() {
             // TODO: Rewrite using ConfigElement somehow
@@ -152,16 +155,17 @@ namespace MCGalaxy
             EdgeBlock    = Block.Invalid;
             ExpFog       = ENV_USE_DEFAULT;
             
-            CloudColor      = "";
-            FogColor        = "";
-            SkyColor        = "";
-            ShadowColor     = "";
-            LightColor      = "";
-            SkyboxColor     = "";
-            BlockLightColor = "";
+            CloudColor     = "";
+            FogColor       = "";
+            SkyColor       = "";
+            ShadowColor    = "";
+            LightColor     = "";
+            SkyboxColor    = "";
+            LavaLightColor = "";
+            LampLightColor = "";
         }
 
-        internal const int ENV_COLOR_COUNT = 6;
+        internal const int ENV_COLOR_COUNT = 7;
         public string GetColor(int i) {
             if (i == 0) return SkyColor;
             if (i == 1) return CloudColor;
@@ -169,8 +173,9 @@ namespace MCGalaxy
             if (i == 3) return ShadowColor;
             if (i == 4) return LightColor;
             if (i == 5) return SkyboxColor;
-            if (i == 6) return BlockLightColor;
-            
+            if (i == 6) return LavaLightColor;
+            if (i == 7) return LampLightColor;
+
             return null;
         }
         

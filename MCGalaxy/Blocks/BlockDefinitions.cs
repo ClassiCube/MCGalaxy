@@ -69,9 +69,10 @@ namespace MCGalaxy {
         /// </summary>
         [ConfigInt(null, null, -1, -1, 15)] public int Brightness;
         /// <summary>
-        /// Does this block use the sun environment color for light casting? (for fancy lighting option)
+        /// Does this block use the lamplight environment color for light casting? (for fancy lighting option)
+        /// If false, uses the lavalight environment color
         /// </summary>
-        [ConfigBool] public bool UseSunBrightness;
+        [ConfigBool] public bool UseLampBrightness;
         
         public BlockID GetBlock() { return Block.FromRaw(RawID); }
         public void SetBlock(BlockID b) { RawID = Block.ToRaw(b); }
@@ -98,7 +99,7 @@ namespace MCGalaxy {
             def.LeftTex = LeftTex; def.RightTex = RightTex;
             def.FrontTex = FrontTex; def.BackTex = BackTex;
             def.InventoryOrder = InventoryOrder;
-            def.Brightness = Brightness; def.UseSunBrightness = UseSunBrightness;
+            def.Brightness = Brightness; def.UseLampBrightness = UseLampBrightness;
             return def;
         }
         
@@ -292,9 +293,9 @@ namespace MCGalaxy {
         /// <summary>
         /// Does not validate that the range falls within 0-15
         /// </summary>
-        public void SetBrightness(int brightness, bool sun) {
+        public void SetBrightness(int brightness, bool lamp) {
             Brightness = brightness;
-            UseSunBrightness = sun;
+            UseLampBrightness = lamp;
             if (Brightness > 0) { FullBright = true; } else { FullBright = false; }
         }
         
