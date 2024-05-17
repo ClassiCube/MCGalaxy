@@ -748,12 +748,17 @@ namespace MCGalaxy.Network
             buffer[i++] = (byte)(def.BlocksLight ? 0 : 1);
             buffer[i++] = def.WalkSound;
 
-            // 0b_US--_LLLL where U = uses modern brightness, S = uses lamplight color, and L = brightness */
-            byte brightness = (byte)Math.Max(0, Math.Min(def.Brightness, 15));
-            brightness |= 1 << 7; // Insert "use modern brightness" flag (otherwise client will interpret it as either 0 or 15 lava brightness)
-            if (def.UseLampBrightness) brightness |= 1 << 6; // Insert "use lamplight color" flag
+            // Less than zero shouldn't happen, but just in case
+            if (def.Brightness <= 0) {
+                buffer[i++] = 0;
+            } else {
+                // 0b_US--_LLLL where U = uses modern brightness, S = uses lamplight color, and L = brightness */
+                byte brightness = (byte)Math.Max(0, Math.Min(def.Brightness, 15));
+                brightness |= 1 << 7; // Insert "use modern brightness" flag (otherwise client will interpret it as either 0 or 15 lava brightness)
+                if (def.UseLampBrightness) brightness |= 1 << 6; // Insert "use lamplight color" flag
 
-            buffer[i++] = brightness;
+                buffer[i++] = brightness;
+            }
         }
         
         static void MakeDefineBlockEnd(BlockDefinition def, ref int i, byte[] buffer) {

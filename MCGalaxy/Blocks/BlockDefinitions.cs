@@ -67,7 +67,7 @@ namespace MCGalaxy {
         /// 0-15 value for how far this block casts light (for fancy lighting option).
         /// -1 means this property has not been set by the user before
         /// </summary>
-        [ConfigInt(null, null, -1, -1, 15)] public int Brightness;
+        [ConfigInt(null, null, -1, -1, 15)] public int Brightness = -1;
         /// <summary>
         /// Does this block use the lamplight environment color for light casting? (for fancy lighting option)
         /// If false, uses the lavalight environment color
@@ -102,14 +102,6 @@ namespace MCGalaxy {
             def.Brightness = Brightness; def.UseLampBrightness = UseLampBrightness;
             return def;
         }
-        
-        /// <summary>
-        /// Called on this instance after it has been parsed from its json file
-        /// </summary>
-        void OnParsed() {
-            //Sync Brightness setting logically to max brightness if it has not been set before but this block is fullbright
-            if (Brightness == -1 && FullBright) Brightness = 15;
-        }
 
         static ConfigElement[] elems;
         public static BlockDefinition[] Load(string path) {
@@ -124,7 +116,6 @@ namespace MCGalaxy {
                 reader.OnMember   = (obj, key, value) => {
                     if (obj.Meta == null) obj.Meta = new BlockDefinition();
                     ConfigElement.Parse(elems, obj.Meta, key, (string)value);
-                    ((BlockDefinition)obj.Meta).OnParsed();
                 };
                 
                 JsonArray array = (JsonArray)reader.Parse();
@@ -146,6 +137,11 @@ namespace MCGalaxy {
                     
                     // In case user manually edited fallback in the json file
                     def.FallBack = Math.Min(def.FallBack, Block.CPE_MAX_BLOCK);
+
+                    // Sync Brightness setting it has not been set before
+                    if (def.Brightness == -1) {
+                        if (def.FullBright) { def.Brightness = 15; } else { def.Brightness = 0; }
+                    }
                 }
             } catch (Exception ex) {
                 Logger.LogError("Error Loading block defs from " + path, ex);
