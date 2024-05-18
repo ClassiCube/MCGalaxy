@@ -154,7 +154,11 @@ namespace MCGalaxy.Commands.Info
             
             p.Message("Colors: &eFog {0}, &eSky {1}, &eClouds {2}, &eSunlight {3}, &eShadowlight {4}", 
                       Color(cfg.FogColor), Color(cfg.SkyColor),
-                      Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));           
+                      Color(cfg.CloudColor), Color(cfg.LightColor), Color(cfg.ShadowColor));     
+            if (cfg.LavaLightColor != "" || cfg.LampLightColor != "") {
+                p.Message("Fancy colors: &eLavaLight {0}, &eLampLight {1}",
+                          Color(cfg.LavaLightColor), Color(cfg.LampLightColor));
+            }
             p.Message("Water level: &b{0}&S, Bedrock offset: &b{1}&S, Clouds height: &b{2}&S, Max fog distance: &b{3}",
                       data.Get(EnvProp.EdgeLevel),   data.Get(EnvProp.SidesOffset), 
                       data.Get(EnvProp.CloudsLevel), data.Get(EnvProp.MaxFog));

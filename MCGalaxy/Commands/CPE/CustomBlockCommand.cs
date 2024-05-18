@@ -274,7 +274,7 @@ namespace MCGalaxy.Commands.CPE
                 p.Message("  Order: " + def.InventoryOrder);
             }
             if (def.Brightness > 0) {
-                string word = def.UseLampBrightness ? "LampBrightness" : "LavaBrightness";
+                string word = def.UseLampBrightness ? "LampLight" : "LavaLight";
                 p.Message("  {0}: {1}", word, def.Brightness);
             }
         }
@@ -556,17 +556,17 @@ namespace MCGalaxy.Commands.CPE
                                    order == def.RawID ? "default" : order.ToString());
                     return true;
 
-                case "lavabrightness":
+                case "lavalight":
                     int brightness = 0;
-                    if (!CommandParser.GetInt(p, value, "lavabrightness", ref brightness, 0, 15)) {
+                    if (!CommandParser.GetInt(p, value, "lava light", ref brightness, 0, 15)) {
                         SendEditHelp(p, arg); return false;
                     }
                     def.SetBrightness(brightness, false);
                     break;
 
-                case "lampbrightness":
+                case "lamplight":
                     int sunBrightness = 0;
-                    if (!CommandParser.GetInt(p, value, "lampbrightness", ref sunBrightness, 0, 15)) {
+                    if (!CommandParser.GetInt(p, value, "lamp light", ref sunBrightness, 0, 15)) {
                         SendEditHelp(p, arg); return false;
                     }
                     def.SetBrightness(sunBrightness, true);
@@ -883,11 +883,11 @@ namespace MCGalaxy.Commands.CPE
                     "The default position of a block is its ID.",
                     "A position of 0 hides the block from the inventory." }
             },
-            { "lavabrightness", new string[] { "Type a number (0-15) for the lava brightness of the block.",
+            { "lavalight", new string[] { "Type a number (0-15) for the lava brightness of the block.",
                     "You need Fancy Lighting to see differences between 1 and 15.",
                     "The block will glow using the \"lavalight\" env color" }
             },
-            { "lampbrightness", new string[] { "Type a number (0-15) for the lamp brightness of the block.",
+            { "lamplight", new string[] { "Type a number (0-15) for the lamp brightness of the block.",
                     "You need Fancy Lighting to see differences between 1 and 15.",
                     "The block will glow using the \"lamplight\" env color" }
             },
