@@ -30,8 +30,10 @@ namespace MCGalaxy.Commands.Maintenance
                 p.Message("Checking for updates..");
                 bool needsUpdating = Updater.NeedsUpdating();
                 p.Message("Server {0}", needsUpdating ? "&cneeds updating" : "&ais up to date");
-            } else if (message.Length == 0) {
-                Updater.PerformUpdate();
+            } else if (message.CaselessEq("latest")) {
+                Updater.PerformUpdate(false);
+            }  else if (message.Length == 0) {
+                Updater.PerformUpdate(true);
             } else {
                 Help(p);
             }
@@ -40,8 +42,11 @@ namespace MCGalaxy.Commands.Maintenance
         public override void Help(Player p) {
             p.Message("&T/Update check");
             p.Message("&HChecks whether the server needs updating");
+            p.Message("&T/Update latest");
+            p.Message("&HUpdates the server to the latest unstable build");
+            p.Message("&WNote unstable builds may have more bugs or issues");
             p.Message("&T/Update");
-            p.Message("&HForce updates the server");
+            p.Message("&HUpdates the server to the latest release");
         }
     }
 }

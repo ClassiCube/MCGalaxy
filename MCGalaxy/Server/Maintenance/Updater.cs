@@ -32,7 +32,7 @@ namespace MCGalaxy
         const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
         const string changelogURL      = BaseURL + "Changelog.txt";
         
-        const string CDN_URL  = "https://cdn.classicube.net/client/mcg/release/";
+        const string CDN_URL  = "https://cdn.classicube.net/client/mcg/{0}/";
 #if NET_20
         const string CDN_BASE = CDN_URL + "net20/";
 #else
@@ -76,21 +76,27 @@ namespace MCGalaxy
                 return new Version(latest) > new Version(Server.Version);
             }
         }
+        
 
-        public static void PerformUpdate() {
+        // Backwards compatibility
+        public static void PerformUpdate() { PerformUpdate(true); }
+        
+        public static void PerformUpdate(bool release) {
             try {
                 try {
                     DeleteFiles("Changelog.txt", "MCGalaxy_.update", "MCGalaxy.update", "MCGalaxyCLI.update",
                                 "prev_MCGalaxy_.dll", "prev_MCGalaxy.exe", "prev_MCGalaxyCLI.exe");
                 } catch {
                 }
-                Logger.Log(LogType.SystemActivity, "Downloading update files");
+        		
+                string mode = release ? "release" : "latest";
+                Logger.Log(LogType.SystemActivity, "Downloading {0} update files", mode);
                 
                 WebClient client = HttpUtil.CreateWebClient();
-                client.DownloadFile(DLL_URL, "MCGalaxy_.update");
+                client.DownloadFile(DLL_URL.Replace("{0}", mode), "MCGalaxy_.update");
 #if !MCG_STANDALONE
-                client.DownloadFile(GUI_URL, "MCGalaxy.update");
-                client.DownloadFile(CLI_URL, "MCGalaxyCLI.update");
+                client.DownloadFile(GUI_URL.Replace("{0}", mode), "MCGalaxy.update");
+                client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
 #endif
                 client.DownloadFile(changelogURL, "Changelog.txt");
 
