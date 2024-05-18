@@ -160,6 +160,8 @@ namespace MCGalaxy
         public List<string> DisabledModules = new List<string>();
         [ConfigTimespan("death-invulnerability-cooldown", "Other", 2, false)]
         public TimeSpan DeathCooldown = TimeSpan.FromSeconds(2);
+        [ConfigBool("verify-lan-ips", "Other", false)]
+        public bool VerifyLanIPs = false;
 
         [ConfigBool("irc", "IRC bot", false)]
         public bool UseIRC = false;

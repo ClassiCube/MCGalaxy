@@ -43,7 +43,7 @@ namespace MCGalaxy.Authentication
                 if (auth.Verify(p, mppass)) return true;
             }
             
-            return !Server.Config.VerifyNames || IPUtil.IsPrivate(p.IP);
+            return !Server.Config.VerifyNames || (IPUtil.IsPrivate(p.IP) && !Server.Config.VerifyLanIPs);
         }
     }
     
