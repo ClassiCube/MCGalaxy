@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Commands;
+using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy {    
@@ -50,6 +51,8 @@ namespace MCGalaxy {
              new EnvOption("Skybox",    SetSkybox,    "&HSets color of the skybox (default FFFFFF)"),
              new EnvOption("LavaLight", SetLavaLight, "&HSets color cast by bright natural blocks when fancy lighting is enabled (default FFEBC6)"),
              new EnvOption("LampLight", SetLampLight, "&HSets color cast by bright artificial blocks when fancy lighting is enabled (default FFFFFF)"),
+             new EnvOption("LightingMode", SetLightingMode, "&HSets the lighting mode, which can be Classic or Fancy. " +
+                 "Add \"locked\" on the end to lock the mode. For example: &Tlightingmode classic locked"),
              new EnvOption("CloudsSpeed",  SetCloudsSpeed,  "&HSets how fast clouds move (negative moves in opposite direction)"),
              new EnvOption("WeatherSpeed", SetWeatherSpeed, "&HSets how fast rain/snow falls (negative falls upwards)"),
              new EnvOption("WeatherFade",  SetWeatherFade,  "&HSets how quickly rain/snow fades out over distance"),
@@ -75,6 +78,7 @@ namespace MCGalaxy {
             if (opt.CaselessEq("SkyboxVer"))   opt = "SkyboxVerSpeed";
             if (opt.CaselessEq("lavacolor")) opt = "LavaLight";
             if (opt.CaselessEq("lampcolor")) opt = "LampLight";
+            if (opt.CaselessEq("lighting"))  opt = "LightingMode";
 
             foreach (EnvOption option in Options) {
                 if (option.Name.CaselessEq(opt)) return option;
@@ -126,6 +130,16 @@ namespace MCGalaxy {
         }
         static void SetLampLight(Player p, string area, EnvConfig cfg, string value) {
             SetColor(p, value, area, "block lamp light color", ref cfg.LampLightColor);
+        }
+        static void SetLightingMode(Player p, string area, EnvConfig cfg, string value) {
+            string[] args = value.SplitSpaces(2);
+            string lightingMode = args[0];
+            bool locked = args.Length > 1 && args[1].CaselessEq("locked");
+
+            if (!SetEnum(p, lightingMode, area, "lighting mode", Packet.LightingMode.None, ref cfg.LightingMode)) return;
+            cfg.LightingModeLocked = locked;
+            if (locked) p.Message("Lighting mode for {0}&S was %clocked%S. Players will not be able to change lighting mode while inside.", area);
+            if (!p.Supports(CpeExt.LightingMode)) p.Message("&WNote: Your client does not support lighting modes, so you will see no changes.");
         }
 
         static void SetCloudsSpeed(Player p, string area, EnvConfig cfg, string value) {
@@ -238,6 +252,18 @@ namespace MCGalaxy {
                 
                 p.Message("Set {0} for {1} &Sto #{2}", variable, area, input);
                 target = Utils.Hex(rgb.R, rgb.G, rgb.B);
+            }
+        }
+
+        static bool SetEnum<T>(Player p, string input, string area, string variable, T resetValue, ref T target) where T : struct {
+            if (IsResetString(input)) {
+                p.Message("Reset {0} for {1} &Sto normal", variable, area);
+                target = resetValue;
+                return true;
+            } else {
+                if (!CommandParser.GetEnum(p, input, variable, ref target)) return false;
+                p.Message("Set {0} for {1} &Sto {2}", variable, area, target.ToString());
+                return true;
             }
         }
     }

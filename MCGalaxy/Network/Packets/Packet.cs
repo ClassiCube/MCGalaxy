@@ -681,6 +681,15 @@ namespace MCGalaxy.Network
             buffer[4 + offset] = rot.HeadX;
             return buffer;
         }
+
+        public enum LightingMode { None, Classic, Fancy }
+        public static byte[] SetLightingMode(LightingMode mode, bool locked) {
+            byte[] buffer = new byte[3];
+            buffer[0] = Opcode.CpeLightingMode;
+            buffer[1] = (byte)mode;
+            buffer[2] = (byte)(locked ? 1 : 0);
+            return buffer;
+        }
         #endregion
 
 

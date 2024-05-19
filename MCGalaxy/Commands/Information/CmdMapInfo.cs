@@ -23,6 +23,7 @@ using MCGalaxy.DB;
 using MCGalaxy.Games;
 using MCGalaxy.Levels.IO;
 using MCGalaxy.Maths;
+using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Info 
@@ -158,6 +159,9 @@ namespace MCGalaxy.Commands.Info
             if (cfg.LavaLightColor != "" || cfg.LampLightColor != "") {
                 p.Message("Fancy colors: &eLavaLight {0}, &eLampLight {1}",
                           Color(cfg.LavaLightColor), Color(cfg.LampLightColor));
+            }
+            if (cfg.LightingMode != Packet.LightingMode.None) {
+                p.Message("Lighting Mode: &b{0}{1}", cfg.LightingMode, cfg.LightingModeLocked ? "&c locked" : "");
             }
             p.Message("Water level: &b{0}&S, Bedrock offset: &b{1}&S, Clouds height: &b{2}&S, Max fog distance: &b{3}",
                       data.Get(EnvProp.EdgeLevel),   data.Get(EnvProp.SidesOffset), 

@@ -21,6 +21,7 @@ using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Games;
 using MCGalaxy.Modules.Games.ZS;
+using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy 
@@ -137,6 +138,11 @@ namespace MCGalaxy
         [ConfigString("LampLightColor", "Env", "", true)]
         public string LampLightColor = "";
 
+        [ConfigEnum("LightingMode", "Env", Packet.LightingMode.None, typeof(Packet.LightingMode))]
+        public Packet.LightingMode LightingMode;
+        [ConfigBool("LightingModeLocked", "Env", false)]
+        public bool LightingModeLocked = false;
+
         public void ResetEnv() {
             // TODO: Rewrite using ConfigElement somehow
             Weather      = ENV_USE_DEFAULT;
@@ -163,6 +169,9 @@ namespace MCGalaxy
             SkyboxColor    = "";
             LavaLightColor = "";
             LampLightColor = "";
+
+            LightingMode = Packet.LightingMode.None;
+            LightingModeLocked = false;
         }
 
         internal const int ENV_COLOR_COUNT = 7;

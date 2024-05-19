@@ -316,6 +316,21 @@ namespace MCGalaxy
                     Send(Packet.EnvMapProperty(i, value));
                 }
             }
+            if (Supports(CpeExt.LightingMode)) {
+                EnvConfig cfg;
+                if (zone != null && zone.Config.LightingMode != Packet.LightingMode.None) {
+                    // Zone takes most precedence if it has a setting
+                    cfg = zone.Config;
+                } else {
+                    if (level.Config.LightingMode == Packet.LightingMode.None) {
+                        // If level has no setting, use global
+                        cfg = Server.Config;
+                    } else {
+                        cfg = level.Config;
+                    }
+                }
+                Send(Packet.SetLightingMode(cfg.LightingMode, cfg.LightingModeLocked));
+            }
             
             int weather = CurrentEnvProp(EnvProp.Weather, zone);
             Session.SendSetWeather((byte)weather);

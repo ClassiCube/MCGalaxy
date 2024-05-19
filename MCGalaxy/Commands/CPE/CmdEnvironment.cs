@@ -52,7 +52,7 @@ namespace MCGalaxy.Commands.CPE
                 if (!LevelInfo.Check(p, data.Rank, lvl, "set env settings of this level")) return;
             }
             
-            string[] args = message.SplitSpaces();
+            string[] args = message.SplitSpaces(2);
             string opt = args[0], value = args.Length > 1 ? args[1] : "";
             if (!Handle(p, lvl, opt, value, cfg, area)) { Help(p); }
         }
