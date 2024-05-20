@@ -54,7 +54,7 @@ namespace MCGalaxy.Commands.Chatting {
             p.Message("&H[pronouns1] will be used to refer to you in server messages.");
             p.Message("&HThe list of pronouns you select will appear in &T/whois");
             HelpList(p);
-            p.Message("&HYour pronouns are currently: &T{0}", p.pronouns.Name);
+            p.Message("&HYour pronouns are currently: &T{0}", Pronouns.ListFor(p, ", "));
         }
         static void HelpList(Player p) {
             p.Message("&HThe following pronouns are currently available:");
