@@ -199,6 +199,12 @@ namespace MCGalaxy.Cli {
                     } else {
                         UIHelpers.HandleChat(msg);
                     }
+                } catch (UnauthorizedAccessException) {
+                    // UnauthorizedAccessException can get thrown when stdin is unreadable
+                    // See https://github.com/dotnet/runtime/issues/21913 for instance
+                     Write("&e** Access denied to stdin, console no longer accepts input **"); 
+                     Write("&e** If nohup is being used, remove that to avoid this issue **"); 
+                     break;
                 } catch (Exception ex) {
                     // ArgumentException is raised on Mono when you:
                     //  1) Type a message into a large CLI window
