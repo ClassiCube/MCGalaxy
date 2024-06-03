@@ -18,13 +18,16 @@
 using MCGalaxy.Commands.Moderation;
 using MCGalaxy.Events;
 
-namespace MCGalaxy.Modules.Moderation.Notes {
-    public class CmdNote : Command2 {
+namespace MCGalaxy.Modules.Moderation.Notes 
+{
+    public class CmdNote : Command2 
+    {
         public override string name { get { return "Note"; } }
         public override string type { get { return CommandTypes.Moderation; } }
         public override LevelPermission defaultRank { get { return LevelPermission.AdvBuilder; } }
         protected virtual bool announce { get { return true; } }
         protected virtual ModActionType modActionType { get { return ModActionType.Noted; } }
+        
         public override void Use(Player p, string message, CommandData data) {
             if (!Server.Config.LogNotes) {
                 p.Message("Notes logging must be enabled to note players."); return;
@@ -44,7 +47,7 @@ namespace MCGalaxy.Modules.Moderation.Notes {
             if (group == null) return;
 
             ModAction action = new ModAction(target, p, modActionType, note);
-            action.Announce = announce;
+            action.Announce  = announce;
             OnModActionEvent.Call(action);
         }
 
@@ -54,12 +57,14 @@ namespace MCGalaxy.Modules.Moderation.Notes {
             p.Message("&HFor [text], @number can be used as a shortcut for that rule.");
         }
     }
-    public class CmdOpNote : CmdNote {
+    
+    public class CmdOpNote : CmdNote 
+    {
         public override string name { get { return "OpNote"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
-
         protected override bool announce { get { return false; } }
         protected override ModActionType modActionType { get { return ModActionType.OpNoted; } }
+        
         public override void Help(Player p) {
             p.Message("&T/OpNote [player] [text]");
             p.Message("&HAdds a note to [player]'s /notes that only ops may see.");

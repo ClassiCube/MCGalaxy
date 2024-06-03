@@ -62,6 +62,15 @@ namespace MCGalaxy.Modules.Moderation.Notes
     /// </summary>
     public class NoteAcronym
     {
+        public readonly string Acronym;
+        public readonly string Action;
+
+        private NoteAcronym(string acronym, string action) {
+            Acronym = acronym;
+            Action = action;
+        }
+        
+        
         private readonly static NoteAcronym Warned     = new NoteAcronym("W", "Warned");
         private readonly static NoteAcronym Kicked     = new NoteAcronym("K", "Kicked");
         private readonly static NoteAcronym Muted      = new NoteAcronym("M", "Muted");
@@ -100,14 +109,6 @@ namespace MCGalaxy.Modules.Moderation.Notes
                 if (na.Acronym == acronym) { return na.Action; }
             }
             return acronym;
-        }
-
-        public readonly string Acronym;
-        public readonly string Action;
-
-        private NoteAcronym(string acronym, string action) {
-            Acronym = acronym;
-            Action = action;
         }
     }
 }

@@ -54,7 +54,8 @@ namespace MCGalaxy.Core {
                 Chat.Message(ChatScope.Global, e.FormatMessage(targetNick, action),
                              null, null, true);
             } else {
-                Chat.MessageOps("To Ops: " + e.FormatMessage(targetNick, action));
+                Chat.Message(ChatScope.Perms, "To Ops: " + e.FormatMessage(targetNick, action),
+            	             Chat.OpchatPerms, null, true);
             }
             
             action = Colors.StripUsed(action);
