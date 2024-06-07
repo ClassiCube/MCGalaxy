@@ -63,7 +63,7 @@ namespace MCGalaxy.Generator.fCraft {
             args.AddTrees = biome.TreeType != null;
             
             // TODO: temp hack, need a better solution
-            if (args.Biome == MapGenBiomeName.Arctic) groundThickness = 1;
+            if (args.Biome == MapGenBiome.ARCTIC) groundThickness = 1;
             
             tree = biome.GetTreeGen("fCraft");
         }
@@ -369,9 +369,10 @@ namespace MCGalaxy.Generator.fCraft {
             
         
         public static void RegisterGenerators() {
-            string[] names = Enum.GetNames(typeof(MapGenBiomeName));
-            string desc = "&HSeed specifies biome of the map. " +
-                 "It must be one of the following: &f" + names.Join();
+            // TODO this doesn't support later dynamically added themes
+            string names = MapGenBiome.Biomes.Join(b => b.Key);
+            string desc  = "&HSeed specifies biome of the map. " +
+                 "It must be one of the following: &f" + names;
                                                                                    
             for (MapGenTemplate type = 0; type < MapGenTemplate.Count; type++) 
             {

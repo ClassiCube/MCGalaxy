@@ -16,15 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Generator.Foliage;
 
 namespace MCGalaxy.Generator
 {
-    public enum MapGenBiomeName
-    {
-        Forest, Arctic, Desert, Hell, Swamp, Mine, Sandy, Plains, Space
-    }
-    
     /// <summary> Contains environment settings and the types of blocks that are used to generate a map </summary>
     public struct MapGenBiome
     {
@@ -44,27 +40,22 @@ namespace MCGalaxy.Generator
         public byte Border;
         public string TreeType;
         
+        public const string FOREST = "Forest";
+        public const string ARCTIC = "Arctic";
+        public const string DESERT = "Desert";
+        public const string HELL   = "Hell";
+        public const string SWAMP  = "Swamp";
+        public const string MINE   = "Mine";
+        public const string SANDY  = "Sandy";
+        public const string PLAINS = "Plains";
+        public const string SPACE  = "Space";
+        
         public void ApplyEnv(EnvConfig env) {
             if (CloudColor != null) env.CloudColor = CloudColor;
             if (SkyColor != null)   env.SkyColor   = SkyColor;
             if (FogColor != null)   env.FogColor   = FogColor;
             if (Horizon != 0)       env.HorizonBlock = Horizon;
             if (Border  != 0)       env.EdgeBlock    = Border;
-        }
-        
-        public static MapGenBiome Get(MapGenBiomeName theme) {
-            switch (theme)
-            {
-                case MapGenBiomeName.Arctic: return Arctic;
-                case MapGenBiomeName.Desert: return Desert;
-                case MapGenBiomeName.Hell:   return Hell;
-                case MapGenBiomeName.Swamp:  return Swamp;
-                case MapGenBiomeName.Mine:   return Mine;
-                case MapGenBiomeName.Sandy:  return Sandy;
-                case MapGenBiomeName.Plains: return Plains;
-                case MapGenBiomeName.Space:  return Space;
-            }
-            return Forest;
         }
         
         public Tree GetTreeGen(string defaultType) {
@@ -76,7 +67,7 @@ namespace MCGalaxy.Generator
         }
         
                 
-        public static MapGenBiome Forest = new MapGenBiome()
+        static MapGenBiome forest = new MapGenBiome()
         {
             Surface    = Block.Grass,
             Ground     = Block.Dirt,
@@ -88,7 +79,7 @@ namespace MCGalaxy.Generator
             TreeType   = "", // "use default for generator"
         };
         
-        public static MapGenBiome Arctic = new MapGenBiome()
+        static MapGenBiome arctic = new MapGenBiome()
         {
             Surface    = Block.White,
             Ground     = Block.White,
@@ -102,7 +93,7 @@ namespace MCGalaxy.Generator
             FogColor   = "#AFAFAF",
         };
         
-        public static MapGenBiome Desert = new MapGenBiome()
+        static MapGenBiome desert = new MapGenBiome()
         {
             Surface    = Block.Sand,
             Ground     = Block.Sand,
@@ -119,7 +110,7 @@ namespace MCGalaxy.Generator
             TreeType   = "Cactus",
         };
         
-        public static MapGenBiome Hell = new MapGenBiome()
+        static MapGenBiome hell = new MapGenBiome()
         {
             Surface    = Block.Obsidian,
             Ground     = Block.Stone,
@@ -134,7 +125,7 @@ namespace MCGalaxy.Generator
             Horizon    = Block.StillLava,
         };
         
-        public static MapGenBiome Swamp = new MapGenBiome()
+        static MapGenBiome swamp = new MapGenBiome()
         {
             Surface    = Block.Dirt,
             Ground     = Block.Dirt,
@@ -145,7 +136,7 @@ namespace MCGalaxy.Generator
             BeachRocky = Block.Dirt,
         };
         
-        public static MapGenBiome Mine = new MapGenBiome()
+        static MapGenBiome mine = new MapGenBiome()
         {
             Surface    = Block.Gravel,
             Ground     = Block.Cobblestone,
@@ -159,7 +150,7 @@ namespace MCGalaxy.Generator
             FogColor   = "#777777",
         };
         
-        public static MapGenBiome Sandy = new MapGenBiome()
+        static MapGenBiome sandy = new MapGenBiome()
         {
             Surface    = Block.Sand,
             Ground     = Block.Sand,
@@ -173,7 +164,7 @@ namespace MCGalaxy.Generator
             TreeType   = "Palm",
         };
                 
-        public static MapGenBiome Plains = new MapGenBiome()
+        static MapGenBiome plains = new MapGenBiome()
         {
             Surface    = Block.Grass,
             Ground     = Block.Dirt,
@@ -186,7 +177,7 @@ namespace MCGalaxy.Generator
             Horizon    = Block.Grass,
         };
         
-        public static MapGenBiome Space = new MapGenBiome()
+        static MapGenBiome space = new MapGenBiome()
         {
             Surface    = Block.Obsidian,
             Ground     = Block.Iron,
@@ -199,6 +190,35 @@ namespace MCGalaxy.Generator
             FogColor   = "#000000",
             Horizon    = Block.Obsidian,
             Border     = Block.Obsidian,
+        };
+        
+        
+        public static MapGenBiome Get(string biome) {
+            foreach (var kvp in Biomes)
+            {
+                if (kvp.Key.CaselessEq(biome)) return kvp.Value;
+            }
+            return forest;
+        }
+        
+        public static string FindMatch(Player p, string biome) {
+            int matches = 0;
+            var match = Matcher.Find(p, biome, out matches, Biomes, 
+                                        null, b => b.Key, "biomes");
+            
+            if (match.Key == null && matches == 0) ListBiomes(p);
+            return match.Key;
+        }
+        
+        public static void ListBiomes(Player p) {
+            p.Message("&HAvailable biomes: &f" + Biomes.Join(b => b.Key));
+        }
+        
+        public static Dictionary<string, MapGenBiome> Biomes = new Dictionary<string, MapGenBiome>()
+        {
+            { FOREST, forest }, { ARCTIC, arctic }, { DESERT, desert }, 
+            { HELL,   hell },   { SWAMP,  swamp },  { MINE,   mine },   
+            { PLAINS, plains }, { SANDY,  sandy },  { SPACE,  space },
         };
     }
 }

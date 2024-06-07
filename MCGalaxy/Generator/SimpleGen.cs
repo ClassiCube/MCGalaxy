@@ -88,7 +88,7 @@ namespace MCGalaxy.Generator
         }
         
         static bool GenSpace(Player p, Level lvl, MapGenArgs args) {
-            args.Biome        = MapGenBiomeName.Space;
+            args.Biome        = MapGenBiome.SPACE;
             if (!args.ParseArgs(p)) return false;
             MapGenBiome biome = MapGenBiome.Get(args.Biome);
             

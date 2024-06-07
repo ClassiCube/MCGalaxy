@@ -268,8 +268,8 @@ namespace MCGalaxy
 
         [ConfigString("default-mapgen-theme", "Mapgen", "flat")]
         public string DefaultMapGenTheme = "flat";
-        [ConfigEnum("default-mapgen-biome", "Mapgen", MapGenBiomeName.Forest, typeof(MapGenBiomeName))]
-        public MapGenBiomeName DefaultMapGenBiome = MapGenBiomeName.Forest;
+        [ConfigString("default-mapgen-biome", "Mapgen", MapGenBiome.FOREST)]
+        public string DefaultMapGenBiome = MapGenBiome.FOREST;
 
         static readonly bool[] defLogLevels = new bool[] { 
             true,true,true,true,true,true, true,true,true, 

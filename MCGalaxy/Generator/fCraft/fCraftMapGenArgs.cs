@@ -8,7 +8,7 @@ namespace MCGalaxy.Generator.fCraft
     public sealed class fCraftMapGenArgs 
     {
         public string MapName;
-        public MapGenBiomeName Biome = MapGenBiomeName.Forest;
+        public string Biome = MapGenBiome.FOREST;
         
         public int   Seed; // 0
         public int   MaxHeight = 20;
@@ -67,7 +67,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Atoll:
                     return new fCraftMapGenArgs {
-                        //Biome = MapGenBiomeName.Sandy, TODO maybe?
+                        //Biome = MapGenBiome.SANDY, TODO maybe?
                         MaxHeight = 2,
                         MaxDepth = 39,
                         UseBias = true,
@@ -99,7 +99,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Dunes:
                     return new fCraftMapGenArgs {
-                        Biome = MapGenBiomeName.Desert,
+                        Biome = MapGenBiome.DESERT,
                         MaxHeight = 12,
                         MaxDepth = 7,
                         FeatureScale = 2,
@@ -111,7 +111,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Hills:
                     return new fCraftMapGenArgs {
-                        Biome = MapGenBiomeName.Plains,
+                        Biome = MapGenBiome.PLAINS,
                         MaxHeight = 8,
                         MaxDepth = 8,
                         FeatureScale = 2,
@@ -121,7 +121,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Ice:
                     return new fCraftMapGenArgs {
-                        Biome = MapGenBiomeName.Arctic,
+                        Biome = MapGenBiome.ARCTIC,
                         MaxHeight = 2,
                         MaxDepth = 2032,
                         FeatureScale = 2,
@@ -165,7 +165,7 @@ namespace MCGalaxy.Generator.fCraft
 
                 case MapGenTemplate.Mountains2:
                     return new fCraftMapGenArgs {
-                        Biome = MapGenBiomeName.Plains,
+                        Biome = MapGenBiome.PLAINS,
                         MaxHeight = 40,
                         MaxDepth = 10,
                         FeatureScale = 1,

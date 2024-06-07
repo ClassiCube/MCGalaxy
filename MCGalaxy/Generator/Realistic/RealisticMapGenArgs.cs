@@ -23,7 +23,7 @@ namespace MCGalaxy.Generator.Realistic
     
     public sealed class RealisticMapGenArgs
     {
-        public MapGenBiomeName Biome = MapGenBiomeName.Forest;
+        public string Biome = MapGenBiome.FOREST;
         public float RangeLow  = 0.2f;
         public float RangeHigh = 0.8f;
         public bool SimpleColumns = false, IslandColumns = false;
@@ -50,7 +50,7 @@ namespace MCGalaxy.Generator.Realistic
             GenFlowers      = false,
             UseLavaLiquid   = true,
             GetLiquidLevel  = (height) => 5,
-            Biome = MapGenBiomeName.Hell,
+            Biome = MapGenBiome.HELL,
         };
         
         internal static RealisticMapGenArgs Island = new RealisticMapGenArgs() {
@@ -91,7 +91,7 @@ namespace MCGalaxy.Generator.Realistic
             GenOverlay2 = false,
             SimpleColumns  = true,
             GetLiquidLevel = (height) => 0,
-            Biome = MapGenBiomeName.Desert,
+            Biome = MapGenBiome.DESERT,
         };
     }
 }

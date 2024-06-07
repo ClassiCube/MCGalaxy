@@ -33,7 +33,7 @@ namespace MCGalaxy.Generator
     {
         public string Args;
         public int Seed;
-        public MapGenBiomeName Biome = Server.Config.DefaultMapGenBiome;
+        public string Biome = Server.Config.DefaultMapGenBiome;
         public bool RandomDefault    = true;
         
         public MapGenArgSelector ArgFilter = (Args) => false;
@@ -50,7 +50,8 @@ namespace MCGalaxy.Generator
                 } else if (NumberUtils.TryParseInt32(arg, out Seed)) { 
                     gotSeed = true;
                 } else {
-                    if (!CommandParser.GetEnum(p, arg, "Seed", ref Biome)) return false;
+                    Biome = MapGenBiome.FindMatch(p, arg);
+                    if (Biome == null) return false;
                 }
             }
             
