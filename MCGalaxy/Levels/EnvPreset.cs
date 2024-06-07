@@ -17,11 +17,16 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MCGalaxy {
-    internal sealed class EnvPreset {
-        public string Fog, Sky, Clouds, Sun, Shadow;
-        public string LavaLight = "", LampLight = "";
+    public sealed class EnvPreset {
+
+        const string FOLDER = "presets";
+        const string FILE_EXTENSION = ".env";
+
+        public readonly string Fog, Sky, Clouds, Sun, Shadow;
+        public readonly string LavaLight = "", LampLight = "";
         
         public EnvPreset(string raw) {
             string[] args = raw.SplitSpaces();
@@ -30,7 +35,7 @@ namespace MCGalaxy {
             LampLight = args.Length > 6 ? args[6] : "";
         }
             
-        public static Dictionary<string, string> Presets = new Dictionary<string, string>() {
+        static Dictionary<string, string> Presets = new Dictionary<string, string>() {
                         //   fog   sky   clouds   sun   shadow
             { "Cartoon",  "00FFFF 1E90FF 00BFFF F5DEB3 F4A460" },
             { "Noir",     "000000 1F1F1F 000000 696969 1F1F1F" },
@@ -43,12 +48,33 @@ namespace MCGalaxy {
             { "Midnight", "131947 070A23 1E223A 181828 0F0F19" },
             { "Normal",   "    " },
         };
-        
-        public static EnvPreset Find(string name) {
+
+        public static EnvPreset Find(string value) {
+            EnvPreset preset = FindDefault(value);
+            if (preset != null) return preset;
+
+            if (File.Exists(FOLDER + "/" + value.ToLower() + FILE_EXTENSION)) {
+                string text = File.ReadAllText(FOLDER + "/" + value.ToLower() + FILE_EXTENSION);
+                return new EnvPreset(text);
+            }
+            return null;
+        }
+
+        static EnvPreset FindDefault(string name) {
             foreach (var kvp in Presets) {
                 if (kvp.Key.CaselessEq(name)) return new EnvPreset(kvp.Value);
             }
             return null;
+        }
+
+        public static void ListFor(Player p) {
+            p.Message("&HPresets: &f{0}", Presets.Join(pr => pr.Key));
+
+            string[] files = AtomicIO.TryGetFiles(FOLDER, "*" + FILE_EXTENSION);
+            if (files == null) return;
+
+            string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
+            if (all.Length > 0) p.Message("&HCustom presets: &f" + all);
         }
     }
 }

@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 
 namespace MCGalaxy.Commands.CPE 
 {
@@ -29,7 +28,7 @@ namespace MCGalaxy.Commands.CPE
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.CaselessEq("preset")) {
-                MessagePresets(p); return;
+                ExplainPresets(p); return;
             }
             
             Level lvl     = null;
@@ -59,8 +58,8 @@ namespace MCGalaxy.Commands.CPE
         
         internal static bool Handle(Player p, Level lvl, string type, string value, EnvConfig cfg, string area) {
             if (type.CaselessEq("preset")) {
-                EnvPreset preset = FindPreset(value);
-                if (preset == null) { MessagePresets(p); return false; }
+                EnvPreset preset = EnvPreset.Find(value);
+                if (preset == null) { ExplainPresets(p); return false; }
                 
                 cfg.SkyColor    = preset.Sky;
                 cfg.CloudColor  = preset.Clouds;
@@ -96,27 +95,10 @@ namespace MCGalaxy.Commands.CPE
                 pl.SendCurrentEnv();
             }
         }
-        
-        static EnvPreset FindPreset(string value) {
-            EnvPreset preset = EnvPreset.Find(value);
-            if (preset != null) return preset;
-            
-            if (File.Exists("presets/" + value.ToLower() + ".env")) {
-                string text = File.ReadAllText("presets/" + value.ToLower() + ".env");
-                return new EnvPreset(text);
-            }
-            return null;
-        }
 
-        static void MessagePresets(Player p) {
+        static void ExplainPresets(Player p) {
             p.Message("&T/Env preset [type] &H- Applies an env preset on the map");
-            p.Message("&HPresets: &f{0}", EnvPreset.Presets.Join(pr => pr.Key));
-            
-            string[] files = AtomicIO.TryGetFiles("presets", "*.env");
-            if (files == null) return;
-            
-            string all = files.Join(f => Path.GetFileNameWithoutExtension(f));
-            if (all.Length > 0) p.Message("&HCustom presets: &f" + all);
+            EnvPreset.ListFor(p);
         }
         
         public override void Help(Player p) {
@@ -133,7 +115,7 @@ namespace MCGalaxy.Commands.CPE
                 p.Message("&HUse &T/Help env [variable] &Hto see details for that variable");
                 return;
             } else if (message.CaselessEq("presets")) {
-                MessagePresets(p); return;
+                ExplainPresets(p); return;
             }
             
             EnvOption opt = EnvOptions.Find(message);
