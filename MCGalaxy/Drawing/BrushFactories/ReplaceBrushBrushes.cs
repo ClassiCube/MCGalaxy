@@ -48,11 +48,8 @@ namespace MCGalaxy.Drawing.Brushes
             if (parts.Length < 2) { p.MessageLines(Help); return null; }
             if (!CommandParser.GetBlockIfAllowed(p, parts[0], "replace", out target)) return null;
             
-            BrushFactory factory = BrushFactory.Find(parts[1]);
-            if (factory == null) {
-                p.Message("No brush found with name \"{0}\".", parts[1]);
-                BrushFactory.List(p); return null;
-            }
+            BrushFactory factory = BrushFactory.FindMatch(p, parts[1]);
+            if (factory == null) return null;
             
             args.Message = parts.Length > 2 ? parts[2] : "";
             return factory.Construct(args);

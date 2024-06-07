@@ -43,12 +43,22 @@ namespace MCGalaxy.Drawing.Brushes
             new ReplaceNotBrushBrushFactory(), new GridBrushFactory(),
         };
         
+        
         public static BrushFactory Find(string name) {
             foreach (BrushFactory entry in Brushes) 
             {
                 if (entry.Name.CaselessEq(name)) return entry;
             }
             return null;
+        }
+        
+        public static BrushFactory FindMatch(Player p, string name) {
+            int matches;
+            BrushFactory match = Matcher.Find(p, name, out matches, Brushes,
+                                              null, b => b.Name, "brushes");
+            
+            if (match == null && matches == 0) List(p);
+            return match;
         }
         
         public static void List(Player p) {

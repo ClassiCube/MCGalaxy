@@ -36,19 +36,18 @@ namespace MCGalaxy.Commands.Building
             if (message.Length == 0) {
                 p.Message("Your current brush is: " + p.BrushName); return;
             }
+        	
             string[] args = message.SplitSpaces(2);
-            BrushFactory brush = BrushFactory.Find(args[0]);
-            
             if (IsListAction(args[0])) {
-                BrushFactory.List(p);
-            } else if (brush == null) {
-                p.Message("No brush found with name \"{0}\".", args[0]);
-                BrushFactory.List(p);
-            } else {
-                p.Message("Set your brush to: " + brush.Name);
-                p.BrushName = brush.Name;
-                p.DefaultBrushArgs = args.Length > 1 ? args[1] : "";
+                BrushFactory.List(p); return;
             }
+            
+            BrushFactory brush = BrushFactory.FindMatch(p, args[0]);
+            if (brush == null) return;
+            
+            p.Message("Set your brush to: " + brush.Name);
+            p.BrushName = brush.Name;
+            p.DefaultBrushArgs = args.Length > 1 ? args[1] : "";
         }
         
         public override void Help(Player p) {
@@ -62,13 +61,10 @@ namespace MCGalaxy.Commands.Building
         }
 
         public override void Help(Player p, string message) {
-            BrushFactory brush = BrushFactory.Find(message);
-            if (brush == null) {
-                p.Message("No brush found with name \"{0}\".", message);
-                BrushFactory.List(p);
-            } else {
-                p.MessageLines(brush.Help);
-            }
+            BrushFactory brush = BrushFactory.FindMatch(p, message);
+            if (brush == null) return;
+            
+            p.MessageLines(brush.Help);
         }
     }
 }

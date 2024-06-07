@@ -33,24 +33,20 @@ namespace MCGalaxy.Commands.Building {
             if (message.Length == 0) {
                 p.Message("Your current transform is: " + p.Transform.Name); return;
             }
+        	
             string[] args = message.SplitSpaces(2);
-            TransformFactory transform = TransformFactory.Find(args[0]);
-            
             if (IsListAction(args[0])) {
-                List(p);
-            } else if (transform == null) {
-                p.Message("No transform found with name \"{0}\".", args[0]);
-                List(p);
-            } else {
-                p.Message("Set your transform to: " + transform.Name);
-                Transform instance = transform.Construct(p, args.Length == 1 ? "" : args[1]);
-                if (instance == null) return;
-                p.Transform = instance;
+                TransformFactory.List(p); return;
             }
-        }
-        
-        static void List(Player p) {
-            p.Message("&HAvailable transforms: &f" + TransformFactory.Transforms.Join(t => t.Name));
+            
+            TransformFactory transform = TransformFactory.FindMatch(p, args[0]);
+            if (transform == null) return;
+
+            Transform instance = transform.Construct(p, args.Length == 1 ? "" : args[1]);
+            if (instance == null) return;
+            
+            p.Message("Set your transform to: " + transform.Name);
+            p.Transform = instance;
         }
         
         public override void Help(Player p) {
@@ -58,17 +54,14 @@ namespace MCGalaxy.Commands.Building {
             p.Message("&HSets your current transform to the transform with that name.");
             p.Message("&T/Help Transform [name]");
             p.Message("&HOutputs the help for the transform with that name.");
-            List(p);
+            TransformFactory.List(p);
         }
         
         public override void Help(Player p, string message) {
-            TransformFactory transform = TransformFactory.Find(message);
-            if (transform == null) {
-                p.Message("No transform found with name \"{0}\".", message);
-                List(p);
-            } else {
-                p.MessageLines(transform.Help);
-            }
+            TransformFactory transform = TransformFactory.FindMatch(p, message);
+            if (transform == null) return;
+            
+            p.MessageLines(transform.Help);
         }
     }
 }
