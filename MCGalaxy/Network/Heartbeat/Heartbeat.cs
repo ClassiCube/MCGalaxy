@@ -38,8 +38,9 @@ namespace MCGalaxy.Network
         
         /// <summary> The URL this heartbeat is sent to </summary
         public string URL;
-        /// <summary> Salt used for verifying player names </summary>
-        public string Salt = "";
+        /// <summary> Authentication service potentially associated with the heartbeat </summary>
+        /// <example> ClassiCube beats use the Salt of the service for name authentication </example>
+        public AuthService Auth;
 
         public string GetHost() {
             try {
@@ -130,7 +131,7 @@ namespace MCGalaxy.Network
                 AuthService service = AuthService.GetOrCreate(url);
                 
                 Heartbeat beat = new ClassiCubeBeat() { URL = url };
-                beat.Salt = service.Salt; // TODO: Just reference Service instead of copying salt?
+                beat.Auth = service;
                 Register(beat);
             }
         }

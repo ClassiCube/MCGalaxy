@@ -60,7 +60,7 @@ namespace MCGalaxy.Network
                 "&name="     + Uri.EscapeDataString(name) +
                 "&public="   + Server.Config.Public +
                 "&version=7" +
-                "&salt="     + Salt +
+                "&salt="     + Auth.Salt +
                 "&users="    + PlayerInfo.NonHiddenUniqueIPCount() +
                 "&software=" + Uri.EscapeDataString(Server.SoftwareNameVersioned) +
                 "&web="      + Server.Config.WebClient;
