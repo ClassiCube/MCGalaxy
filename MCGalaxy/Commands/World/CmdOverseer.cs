@@ -32,6 +32,8 @@ namespace MCGalaxy.Commands.World {
         
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
+            if (Overseer.deprecatedSubCommandGroup.Use(p, message, false) != SubCommandGroup.UsageResult.NoneFound) return;
+
             Overseer.subCommandGroup.Use(p, message);
         }
         

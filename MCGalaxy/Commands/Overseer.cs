@@ -377,42 +377,6 @@ namespace MCGalaxy.Commands.World {
             UseCommand(p, "SetSpawn", "");
         }
 
-        static string[] zoneHelp = new string[] {
-            "&T/os zone",
-            "&H  This was used for managing permissions in your map.",
-            "&H  It has now been replaced by the following &T/"+commandShortcut+" &Hcommands:",
-            "&T  Allow, Disallow, Ban, Unban"
-        };
-        static string[] zoneHelpBody = new string[] {
-            zoneHelp[1],
-            zoneHelp[2],
-            zoneHelp[3],
-        };
-        static void HandleZone(Player p, string raw) {
-
-            string[] args = raw.SplitExact(2);
-            string cmd = args[0];
-            string name = args[1];
-            p.Message("&W---");
-            p.Message("&T/{0} zone &Shas been replaced.", commandShortcut);
-            cmd = cmd.ToUpper();
-            if (cmd == "LIST") {
-                p.Message("To see a list of zones in a level, use &T/zonelist");
-            } else if (cmd == "ADD") {
-                p.Message("To allow someone to build, use &T/{0} allow [name]", commandShortcut);
-            } else if (Command.IsDeleteAction(cmd)) {
-                p.Message("To disallow someone from building, use &T/{0} disallow [name]", commandShortcut);
-            } else if (cmd == "BLOCK") {
-                p.Message("To disallow visiting, use &T/{0} ban [name]", commandShortcut);
-            } else if (cmd == "UNBLOCK") {
-                p.Message("To allow visiting, use &T/{0} unban [name]", commandShortcut);
-            } else if (cmd == "BLACKLIST") {
-                p.Message("To see who is disallowed from visiting, use &T/mapinfo");
-            } else {
-                p.MessageLines(zoneHelpBody);
-            }
-        }
-
         static string[] plotHelp = new string[] {
             "&T/os plot [args]",
             "&H  Plots are zones that can change permissions and environment." +
@@ -464,12 +428,52 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Texture",    HandleTexture,    textureHelp,    true, new string[] { "texturezip", "texturepack" }),
                     new SubCommand("Kick",       HandleKick,       kickHelp),
                     new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
-                    new SubCommand("Zone",       HandleZone,       zoneHelp),
 
                     new SubCommand("Resize",     HandleResize,     resizeHelp),
                     new SubCommand("Save",       (p, unused) => { UseCommand(p, "Save", ""); },     saveHelp),
                     new SubCommand("Delete",     HandleDelete,     deleteHelp, true, new string[] { "del", "remove" } ),
                     new SubCommand("Restore",    (p, arg   ) => { UseCommand(p, "Restore", arg); }, restoreHelp),
+                }
+            );
+
+
+        static void HandleZone(Player p, string raw) {
+            string[] args = raw.SplitExact(2);
+            string cmd = args[0];
+            string name = args[1];
+            p.Message("&W---");
+            p.Message("&T/{0} zone &Shas been replaced.", commandShortcut);
+            cmd = cmd.ToUpper();
+            if (cmd == "LIST") {
+                p.Message("To see a list of zones in a level, use &T/zonelist");
+            } else if (cmd == "ADD") {
+                p.Message("To allow someone to build, use &T/{0} allow [name]", commandShortcut);
+            } else if (Command.IsDeleteAction(cmd)) {
+                p.Message("To disallow someone from building, use &T/{0} disallow [name]", commandShortcut);
+            } else if (cmd == "BLOCK") {
+                p.Message("To disallow visiting, use &T/{0} ban [name]", commandShortcut);
+            } else if (cmd == "UNBLOCK") {
+                p.Message("To allow visiting, use &T/{0} unban [name]", commandShortcut);
+            } else if (cmd == "BLACKLIST") {
+                p.Message("To see who is disallowed from visiting, use &T/mapinfo");
+            } else {
+                p.Message("&H  This was used for managing permissions in your map.");
+                p.Message("&H  It has now been replaced by the following &T/" + commandShortcut + " &Hcommands:");
+                p.Message("&T  Allow, Disallow, Ban, Unban");
+                p.Message("&H  To manage zoned areas in your map, use &T/" + commandShortcut + " plot");
+            }
+        }
+        static void HandleZones(Player p, string raw) {
+            p.Message("&W---");
+            p.Message("&T/{0} zones &Shas been renamed.", commandShortcut);
+            string args = raw.Length == 0 ? "" : raw + " ";
+            p.Message("Use &T/{0} {1} {2}&Sinstead.", commandShortcut, "plot", args);
+        }
+
+        internal static SubCommandGroup deprecatedSubCommandGroup = new SubCommandGroup(commandShortcut,
+                new List<SubCommand>() {
+                    new SubCommand("Zone",  HandleZone,  null),
+                    new SubCommand("Zones", HandleZones, null),
                 }
             );
     }
