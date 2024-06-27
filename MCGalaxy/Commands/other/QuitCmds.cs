@@ -24,7 +24,6 @@ namespace MCGalaxy.Commands.Misc
     public sealed class CmdRagequit : Command2 
     {
         public override string name { get { return "RageQuit"; } }
-        public override string shortcut { get { return "rq"; } }
         public override string type { get { return CommandTypes.Other; } }
         public override bool MessageBlockRestricted { get { return true; } }
         public override bool SuperUseable { get { return false; } }
