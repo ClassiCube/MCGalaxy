@@ -126,7 +126,7 @@ namespace MCGalaxy.Modules.Compiling
 
         /// <summary> Converts source file paths to full paths, 
         /// then returns list of parsed referenced assemblies </summary>
-        public static List<string> ProcessInput(string[] srcPaths, string commentPrefix) {
+        protected List<string> ProcessInput(string[] srcPaths, string commentPrefix) {
             List<string> referenced = new List<string>();
             
             for (int i = 0; i < srcPaths.Length; i++) 
@@ -142,9 +142,9 @@ namespace MCGalaxy.Modules.Compiling
             return referenced;
         }
 
-        static void AddReferences(string path, string commentPrefix, List<string> referenced) {
+        void AddReferences(string path, string commentPrefix, List<string> referenced) {
             // Allow referencing other assemblies using '//reference [assembly name]' at top of the file
-            using (StreamReader r = new StreamReader(path)) {               
+            using (StreamReader r = new StreamReader(path)) {
                 string refPrefix = commentPrefix + "reference ";
                 string plgPrefix = commentPrefix + "pluginref ";
                 string line;
@@ -156,18 +156,16 @@ namespace MCGalaxy.Modules.Compiling
                     } else if (line.CaselessStarts(plgPrefix)) {
                         path = Path.Combine(IScripting.PLUGINS_DLL_DIR, GetDLL(line));
                         referenced.Add(Path.GetFullPath(path));
-#if NETSTANDARD
-                    } else if (line.CaselessStarts(commentPrefix + "dotnetref")) {
-                        referenced.Add(GetDLL(line));
-#endif
                     } else {
-                        continue;
+                        ProcessInputLine(line, referenced);
                     }
                 }
             }
         }
 
-        static string GetDLL(string line) {
+        protected virtual void ProcessInputLine(string line, List<string> referenced) { }
+
+        protected static string GetDLL(string line) {
             int index = line.IndexOf(' ') + 1;
             // For consistency with C#, treat '//reference X.dll;' as '//reference X.dll'
             return line.Substring(index).Replace(";", "");

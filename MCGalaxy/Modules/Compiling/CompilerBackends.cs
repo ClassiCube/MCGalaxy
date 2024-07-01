@@ -46,13 +46,12 @@ namespace MCGalaxy.Modules.Compiling
     /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
     public static class ICodeDomCompiler
     {   
-        public static CompilerParameters PrepareInput(string[] srcPaths, string dstPath, string commentPrefix) {
+        public static CompilerParameters PrepareInput(string[] srcPaths, string dstPath, List<string> referenced) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable      = false;
             args.IncludeDebugInformation = true;
             args.OutputAssembly          = dstPath;
 
-            List<string> referenced = ICompiler.ProcessInput(srcPaths, commentPrefix);
             foreach (string assembly in referenced)
             {
                 args.ReferencedAssemblies.Add(assembly);
@@ -97,12 +96,8 @@ namespace MCGalaxy.Modules.Compiling
     {
         static Regex outputRegWithFileAndLine;
         static Regex outputRegSimple;
-        
-        public static List<string> PrepareInput(string[] srcPaths) {
-            return ICompiler.ProcessInput(srcPaths, "//");
-        }
 
-        public static ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {         
+        public static ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {
             string args    = GetCommandLineArguments(srcPaths, dstPath, referenced);
             string netPath = GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
             string cscPath = GetBinaryFile("MCG_COMPILER_PATH", "'csc.dll' file - e.g. /home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll");

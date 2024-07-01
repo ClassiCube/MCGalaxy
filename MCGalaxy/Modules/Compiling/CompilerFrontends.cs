@@ -34,7 +34,8 @@ namespace MCGalaxy.Modules.Compiling
         CodeDomProvider compiler;
 
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
-            CompilerParameters args = ICodeDomCompiler.PrepareInput(srcPaths, dstPath, "//");
+            List<string> referenced = ProcessInput(srcPaths, "//");
+            CompilerParameters args = ICodeDomCompiler.PrepareInput(srcPaths, dstPath, referenced);
             args.CompilerOptions   += " /unsafe";
             // NOTE: Make sure to keep CompilerOptions in sync with RoslynCSharpCompiler
 
@@ -43,8 +44,14 @@ namespace MCGalaxy.Modules.Compiling
         }
 #else
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
-            List<string> referenced = RoslynCSharpCompiler.PrepareInput(srcPaths);
+            List<string> referenced = ProcessInput(srcPaths, "//");
             return RoslynCSharpCompiler.Compile(srcPaths, dstPath, referenced);
+        }
+
+        protected override void ProcessInputLine(string line, List<string> referenced) {
+            if (!line.CaselessStarts("//dotnetref")) return;
+
+            referenced.Add(GetDLL(line));
         }
 #endif
 
