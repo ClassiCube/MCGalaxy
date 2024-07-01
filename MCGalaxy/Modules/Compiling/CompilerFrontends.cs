@@ -45,6 +45,10 @@ namespace MCGalaxy.Modules.Compiling
 #else
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
             List<string> referenced = ProcessInput(srcPaths, "//");
+            referenced.Add("System.Collections.dll");    // needed for List<> etc
+            referenced.Add("System.IO.Compression.dll"); // needed for GZip compression
+            referenced.Add("System.Net.Primitives.dll"); // needed for IPAddress etc
+
             return RoslynCSharpCompiler.Compile(srcPaths, dstPath, referenced);
         }
 
