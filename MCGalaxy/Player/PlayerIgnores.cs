@@ -23,7 +23,7 @@ namespace MCGalaxy {
     
     public class PlayerIgnores {
         public List<string> Names = new List<string>(), IRCNicks = new List<string>();
-        public bool All, IRC, Titles, Nicks, EightBall, DrawOutput, WorldChanges;
+        public bool All, IRC, Titles, Nicks, EightBall, DrawOutput, WorldChanges, AltLogins;
         
         public void Load(Player p) {
             string path = "ranks/ignore/" + p.name + ".txt";
@@ -42,6 +42,7 @@ namespace MCGalaxy {
                     if (line == "&8ball") { EightBall = true; continue; }
                     if (line == "&drawoutput") { DrawOutput = true; continue; }
                     if (line == "&worldchanges") { WorldChanges = true; continue; }
+                    if (line == "&altlogins") { AltLogins = true; continue; }
                     
                     if (line.StartsWith("&irc_")) {
                         IRCNicks.Add(line.Substring("&irc_".Length));
@@ -53,7 +54,7 @@ namespace MCGalaxy {
                 Logger.LogError("Error loading ignores for " + p.name, ex);
             }
             
-            bool special = All || IRC || Titles || Nicks || EightBall || DrawOutput || WorldChanges;
+            bool special = All || IRC || Titles || Nicks || EightBall || DrawOutput || WorldChanges || AltLogins;
             if (special || Names.Count > 0 || IRCNicks.Count > 0) {
                 p.Message("&cType &a/ignore list &cto see who you are still ignoring");
             }
@@ -75,6 +76,7 @@ namespace MCGalaxy {
                     if (EightBall) w.WriteLine("&8ball");                    
                     if (DrawOutput) w.WriteLine("&drawoutput");
                     if (WorldChanges) w.WriteLine("&worldchanges");
+                    if (AltLogins) w.WriteLine("&altlogins");
                     
                     foreach (string nick in IRCNicks) { w.WriteLine("&irc_" + nick); }
                     foreach (string name in Names) { w.WriteLine(name); }
@@ -103,6 +105,7 @@ namespace MCGalaxy {
             if (EightBall) p.Message("&cIgnoring &T/8ball");            
             if (DrawOutput) p.Message("&cIgnoring draw command output");           
             if (WorldChanges) p.Message("&cIgnoring world change messages");
+            if (AltLogins) p.Message("&cPlayer alt accounts do not show when they join");
         }
     }
 }
