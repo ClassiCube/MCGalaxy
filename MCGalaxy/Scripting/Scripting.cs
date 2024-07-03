@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using MCGalaxy.Platform;
 
 namespace MCGalaxy.Scripting
 {
@@ -51,12 +52,10 @@ namespace MCGalaxy.Scripting
 
         // only used for resolving plugin DLLs depending on other plugin DLLs
         static Assembly ResolvePluginAssembly(object sender, ResolveEventArgs args) {
-            Assembly requestingAssembly = null;
-            // This property only exists in .NET framework 4.0 and later
 #if !NET_20
-            requestingAssembly = args.RequestingAssembly;
-#endif
-
+            // This property only exists in .NET framework 4.0 and later
+            Assembly requestingAssembly = args.RequestingAssembly;
+            
             if (requestingAssembly == null)       return null;
             if (!IsPluginDLL(requestingAssembly)) return null;
 
@@ -68,21 +67,12 @@ namespace MCGalaxy.Scripting
                 if (args.Name == assem.FullName) return assem;
             }
 
-#if NETSTANDARD
-            // When there is a .deps.json, dotnet won't automatically always try looking in application's directory to resolve references
-            // https://learn.microsoft.com/en-us/dotnet/core/dependency-loading/default-probing?source=recommendations#how-are-the-properties-populated
-
-            try {
-                AssemblyName name = new AssemblyName(args.Name);
-                string path = name.Name + ".dll";
-                if (File.Exists(path)) return Assembly.LoadFrom(path);
-            } catch (Exception ex) {
-                Logger.LogError("Resolving plugin DLL reference", ex);
-            }
-#endif
+            Assembly coreRef = DotNetBackend.ResolvePluginReference(args.Name);
+            if (coreRef != null) return coreRef;
 
             Logger.Log(LogType.Warning, "Custom command/plugin [{0}] tried to load [{1}], but it could not be found",
                        requestingAssembly.FullName, args.Name);
+#endif
             return null;
         }
 

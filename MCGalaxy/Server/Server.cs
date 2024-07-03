@@ -270,17 +270,8 @@ namespace MCGalaxy
         public static string GetRestartPath() {
 #if MCG_STANDALONE
             return GetRuntimeProcessExePath();
-#elif !NETSTANDARD
-            return RestartPath;
 #else
-            // NET core/5/6 executables tend to use the following structure:
-            //   MCGalaxyCLI_core --> MCGalaxyCLI_core.dll
-            // in this case, 'RestartPath' will include '.dll' since this file
-            //  is actually the managed assembly, but we need to remove '.dll'
-            //   as the actual executable which must be started is the non .dll file
-            string path = RestartPath;
-            if (path.CaselessEnds(".dll")) path = path.Substring(0, path.Length - 4);
-            return path;
+            return DotNetBackend.GetExePath(RestartPath);
 #endif
         }
 
