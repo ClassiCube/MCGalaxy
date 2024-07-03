@@ -168,7 +168,10 @@ namespace MCGalaxy.Cli {
 
         static void CheckNameVerification() {
             if (Server.Config.VerifyNames) return;
+            Write("&e==============================================");
             Write("&eWARNING: Name verification is disabled! This means players can login as anyone, including YOU");
+            Write("&eUnless you know EXACTLY what you are doing, you should change verify-names to true in server.properties");
+            Write("&e==============================================");
         }
 
         static void LogNewerVersionDetected(object sender, EventArgs e) {
