@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 
 namespace MCGalaxy.Platform
 {
-#if !NETSTANDARD
+#if !MCG_DOTNET
     public static class DotNetBackend
     {
         public static void Init() { }
@@ -44,7 +44,13 @@ namespace MCGalaxy.Platform
         }
 
         static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath) {
-            return IntPtr.Zero;
+            IntPtr libHandle = IntPtr.Zero;
+            
+            // Since otherwise it's not always found on Linux
+            if (libraryName == "sqlite3") {
+                NativeLibrary.TryLoad("libsqlite3.so.0", assembly, DllImportSearchPath.System32, out libHandle);
+            }
+            return libHandle;
         }
 
         
@@ -63,8 +69,8 @@ namespace MCGalaxy.Platform
             // https://learn.microsoft.com/en-us/dotnet/core/dependency-loading/default-probing?source=recommendations#how-are-the-properties-populated
 
             try {
-                AssemblyName name = new AssemblyName(name);
-                string path = name.Name + ".dll";
+                AssemblyName assemName = new AssemblyName(name);
+                string path = assemName.Name + ".dll";
                 if (File.Exists(path)) return Assembly.LoadFrom(path);
             } catch (Exception ex) {
                 Logger.LogError("Resolving plugin DLL reference", ex);

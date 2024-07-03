@@ -42,7 +42,7 @@ using System.Text.RegularExpressions;
 
 namespace MCGalaxy.Modules.Compiling
 {
-#if !NETSTANDARD
+#if !MCG_DOTNET
     /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
     public static class ICodeDomCompiler
     {   

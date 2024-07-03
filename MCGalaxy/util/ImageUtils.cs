@@ -16,7 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
-#if !NETSTANDARD
+#if !MCG_DOTNET
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -55,7 +55,7 @@ namespace MCGalaxy.Util
 
         public abstract void Dispose();
 
-#if !NETSTANDARD
+#if !MCG_DOTNET
         public static IBitmap2D Create() { return new GDIPlusBitmap(); }
 #else
         public static IBitmap2D Create() { return new ImageSharpBitmap(); }
@@ -94,7 +94,7 @@ namespace MCGalaxy.Util
     }
 
 
-#if !NETSTANDARD
+#if !MCG_DOTNET
     unsafe sealed class GDIPlusBitmap : IBitmap2D
     {
         Image img;

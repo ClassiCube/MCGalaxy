@@ -84,6 +84,7 @@ namespace MCGalaxy
             levelConfig  = ConfigElement.GetAll(typeof(LevelConfig));
             zoneConfig   = ConfigElement.GetAll(typeof(ZoneConfig));
 
+            DotNetBackend.Init();
             IOperatingSystem.DetectOS().Init();
             
             StartTime = DateTime.UtcNow;

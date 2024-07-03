@@ -183,7 +183,7 @@ namespace MCGalaxy.Platform
             execvp(exe, new string[] { exe, Server.RestartPath, null });
             Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
 
-#if !NETSTANDARD
+#if !MCG_DOTNET
             // .. and fallback to mono if that doesn't work for some reason
             execvp("mono", new string[] { "mono", Server.RestartPath, null });
             Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());

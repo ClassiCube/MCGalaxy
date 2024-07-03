@@ -30,7 +30,7 @@ namespace MCGalaxy.Modules.Compiling
         public override string ShortName     { get { return "C#"; } }  
         public override string FullName      { get { return "CSharp"; } }
 
-#if !NETSTANDARD
+#if !MCG_DOTNET
         CodeDomProvider compiler;
 
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
