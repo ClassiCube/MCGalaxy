@@ -57,7 +57,7 @@ namespace MCGalaxy.Platform
         /// <remarks> Does not return if the restart is performed in-place
         /// (since the current process image is replaced) </remarks>
         public virtual void RestartProcess() { 
-            Process.Start(Server.GetRestartPath()); 
+            Process.Start(Server.GetServerExePath()); 
         }
         
         

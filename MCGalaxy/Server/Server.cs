@@ -260,6 +260,7 @@ namespace MCGalaxy
         }
 
 
+        /// <summary> Returns the full path to the server core DLL </summary>
         public static string GetServerDLLPath() {
 #if MCG_STANDALONE
             return GetRuntimeProcessExePath();
@@ -268,7 +269,8 @@ namespace MCGalaxy
 #endif
         }
 
-        public static string GetRestartPath() {
+        /// <summary> Returns the full path to the server executable </summary>
+        public static string GetServerExePath() {
 #if MCG_STANDALONE
             return GetRuntimeProcessExePath();
 #else
@@ -276,6 +278,7 @@ namespace MCGalaxy
 #endif
         }
 
+        /// <summary> Returns the full path to the runtime executable path </summary>
         public static string GetRuntimeProcessExePath() {
             return Process.GetCurrentProcess().MainModule.FileName;
         }

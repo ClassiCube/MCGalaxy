@@ -30,7 +30,7 @@ namespace MCGalaxy
         public const string BaseURL    = "https://raw.githubusercontent.com/ClassiCube/MCGalaxy/master/";
         public const string UploadsURL = "https://github.com/ClassiCube/MCGalaxy/tree/master/Uploads";        
         const string CurrentVersionURL = BaseURL + "Uploads/current_version.txt";
-        const string changelogURL      = BaseURL + "Changelog.txt";
+        const string CHANGELOG_URL     = BaseURL + "Changelog.txt";
         
         const string CDN_URL  = "https://cdn.classicube.net/client/mcg/{0}/";
 #if NET8_0
@@ -98,13 +98,15 @@ namespace MCGalaxy
                 WebClient client = HttpUtil.CreateWebClient();
                 
                 client.DownloadFile(DLL_URL.Replace("{0}", mode), "MCGalaxy_.update");
-#if MCG_DOTNET
+#if MCG_STANDALONE
+                // Self contained executable, no separate CLI or GUI to download
+#elif MCG_DOTNET
                 client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
-#elif !MCG_STANDALONE
+#else
                 client.DownloadFile(GUI_URL.Replace("{0}", mode), "MCGalaxy.update");
                 client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
 #endif
-                client.DownloadFile(changelogURL, "Changelog.txt");
+                client.DownloadFile(CHANGELOG_URL, "Changelog.txt");
 
                 Server.SaveAllLevels();
                 Player[] players = PlayerInfo.Online.Items;

@@ -45,7 +45,7 @@ namespace MCGalaxy.Modules.Compiling
 #if !MCG_DOTNET
     /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
     public static class ICodeDomCompiler
-    {   
+    {
         public static CompilerParameters PrepareInput(string[] srcPaths, string dstPath, List<string> referenced) {
             CompilerParameters args = new CompilerParameters();
             args.GenerateExecutable      = false;
@@ -64,11 +64,11 @@ namespace MCGalaxy.Modules.Compiling
             if (compiler != null) return;
             compiler = CodeDomProvider.CreateProvider(language);
             if (compiler != null) return;
-                
+            
             Logger.Log(LogType.Warning,
                        "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
                        c.FullName, c.FileExtension);
-                // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
+            // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
         }
 
         public static ICompilerErrors Compile(CompilerParameters args, string[] srcPaths, CodeDomProvider compiler) {
@@ -92,15 +92,15 @@ namespace MCGalaxy.Modules.Compiling
     }
 #else
     /// <summary> Compiles C# source code files, using Roslyn for the compiler </summary>
-    public static class RoslynCSharpCompiler 
+    public static class RoslynCSharpCompiler
     {
         static Regex outputRegWithFileAndLine;
         static Regex outputRegSimple;
 
         public static ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {
             string args    = GetCommandLineArguments(srcPaths, dstPath, referenced);
-            string netPath = GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
-            string cscPath = GetBinaryFile("MCG_COMPILER_PATH", "'csc.dll' file - e.g. /home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll");
+            string netPath = GetDotnetPath();
+            string cscPath = GetCompilerPath(netPath);
 
             ICompilerErrors errors = new ICompilerErrors();
             List<string> output    = new List<string>();
@@ -109,7 +109,7 @@ namespace MCGalaxy.Modules.Compiling
             // Only look for errors/warnings if the compile failed
             // TODO still log warnings anyways error when success?
             if (retValue != 0) {
-                foreach (string line in output) 
+                foreach (string line in output)
                 {
                     ProcessCompilerOutputLine(errors, line);
                 }
@@ -118,6 +118,13 @@ namespace MCGalaxy.Modules.Compiling
         }
 
         static string Quote(string value) { return "\"" + value + "\""; }
+        
+        static string GetDotnetPath() {
+            string path = Server.GetRuntimeProcessExePath();
+            if (path.EndsWith("dotnet")) return path;
+            
+            return GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
+        }
 
         static string GetBinaryFile(string varName, string desc) {
             string path = Environment.GetEnvironmentVariable(varName);
@@ -128,18 +135,39 @@ namespace MCGalaxy.Modules.Compiling
             using (Stream tmp = File.OpenRead(path)) { }
             return path;
         }
+        
+        static string GetCompilerPath(string dotnetPath) {
+            ProcessStartInfo psi = CreateStartInfo(dotnetPath, "--list-sdks");
+            string rootFolder    = Path.GetDirectoryName(dotnetPath);
+            
+            using (Process p = new Process())
+            {
+                p.StartInfo = psi;
+                p.Start();
 
-        static int Compile(string path, string exeArgs, string args, List<string> output) {
-            // e.g. /home/test/.dotnet/dotnet exec "/home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll" [COMPILER ARGS]
-            args = "exec " + Quote(exeArgs) + " " + args;
-
-            // https://stackoverflow.com/questions/285760/how-to-spawn-a-process-and-capture-its-stdout-in-net
+                string sdk = p.StandardOutput.ReadLine();
+                p.WaitForExit();
+                return Path.Combine(rootFolder, "sdk", sdk, "Roslyn", "bincore", "csc.dll");
+            }
+        }
+        
+        
+        static ProcessStartInfo CreateStartInfo(string path, string args) {
             ProcessStartInfo psi = new ProcessStartInfo(path, args);
             psi.WorkingDirectory       = Environment.CurrentDirectory;
             psi.UseShellExecute        = false;
             psi.CreateNoWindow         = true;
             psi.RedirectStandardOutput = true;
             psi.RedirectStandardError  = true;
+            return psi;
+        }
+
+        static int Compile(string path, string exeArgs, string args, List<string> output) {
+            // e.g. /home/test/.dotnet/dotnet exec "/home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll" [COMPILER ARGS]
+            args = "exec " + Quote(exeArgs) + " " + args;
+
+            // https://stackoverflow.com/questions/285760/how-to-spawn-a-process-and-capture-its-stdout-in-net
+            ProcessStartInfo psi = CreateStartInfo(path, args);
 
             using (Process p = new Process())
             {
@@ -218,7 +246,7 @@ namespace MCGalaxy.Modules.Compiling
             AddReferencedAssembly(sb, sysAssemblyPaths, "System.Runtime.dll");
             AddReferencedAssembly(sb, sysAssemblyPaths, "netstandard.dll");
 
-            foreach (string path in referencedAssemblies) 
+            foreach (string path in referencedAssemblies)
             {
                 AddReferencedAssembly(sb, sysAssemblyPaths, path);
             }
@@ -232,7 +260,7 @@ namespace MCGalaxy.Modules.Compiling
             sb.Append("/warnaserror- ");
             sb.Append("/unsafe ");
 
-            foreach (string path in srcPaths) 
+            foreach (string path in srcPaths)
             {
                 sb.AppendFormat("{0} ", Quote(path));
             }
