@@ -31,8 +31,9 @@ namespace MCGalaxy.Cli {
             // If MCGalaxy_.dll is missing, a FileNotFoundException will get thrown for MCGalaxy dll
             try {
                 EnableCLIMode();
-            } catch (FileNotFoundException) {
-                Console.WriteLine("Cannot start server as MCGalaxy_.dll is missing from " + Environment.CurrentDirectory);
+            } catch (FileNotFoundException ex) {
+                Console.WriteLine("Cannot start server as {0} is missing from {1}",
+                                  GetFilename(ex.FileName), Environment.CurrentDirectory);
                 Console.WriteLine("Download from " + Updater.UploadsURL);
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey(true);
@@ -41,6 +42,14 @@ namespace MCGalaxy.Cli {
             
             // separate method, in case MCGalaxy_.dll is missing
             StartCLI();
+        }
+        
+        static string GetFilename(string rawName) {
+            try {
+                return new AssemblyName(rawName).Name + ".dll";
+            } catch {
+                return rawName;
+            }
         }
         
         static void SetCurrentDirectory() {

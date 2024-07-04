@@ -33,7 +33,11 @@ namespace MCGalaxy
         const string changelogURL      = BaseURL + "Changelog.txt";
         
         const string CDN_URL  = "https://cdn.classicube.net/client/mcg/{0}/";
-#if NET_20
+#if NET8_0
+        const string CDN_BASE = CDN_URL + "net80/";
+#elif NET6_0
+        const string CDN_BASE = CDN_URL + "net60/";
+#elif NET_20
         const string CDN_BASE = CDN_URL + "net20/";
 #else
         const string CDN_BASE = CDN_URL + "net40/";
@@ -90,11 +94,13 @@ namespace MCGalaxy
                 }
         		
                 string mode = release ? "release" : "latest";
-                Logger.Log(LogType.SystemActivity, "Downloading {0} update files", mode);
-                
+                Logger.Log(LogType.SystemActivity, "Downloading {0} update files", mode);               
                 WebClient client = HttpUtil.CreateWebClient();
+                
                 client.DownloadFile(DLL_URL.Replace("{0}", mode), "MCGalaxy_.update");
-#if !MCG_STANDALONE
+#if MCG_DOTNET
+                client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
+#elif !MCG_STANDALONE
                 client.DownloadFile(GUI_URL.Replace("{0}", mode), "MCGalaxy.update");
                 client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
 #endif
