@@ -56,8 +56,11 @@ namespace MCGalaxy.Platform
         /// <summary> Attempts to restart the current process </summary>
         /// <remarks> Does not return if the restart is performed in-place
         /// (since the current process image is replaced) </remarks>
-        public virtual void RestartProcess() { 
-            Process.Start(Server.GetServerExePath()); 
+        public virtual void RestartProcess() {
+            string path = Server.GetServerExePath();
+            string exe  = DotNetBackend.GetExePath(path);
+            
+            Process.Start(exe); 
         }
         
         
@@ -179,13 +182,15 @@ namespace MCGalaxy.Platform
 
             // try to exec using actual runtime path first
             //   e.g. /usr/bin/mono-sgen, /home/test/.dotnet/dotnet
-            string exe = Server.GetRuntimeProcessExePath();
-            execvp(exe, new string[] { exe, Server.RestartPath, null });
-            Console.WriteLine("execvp {0} failed: {1}", exe, Marshal.GetLastWin32Error());
+            string runtime = Server.GetRuntimeExePath();
+            string exePath = Server.GetServerExePath();
+            
+            execvp(runtime, new string[] { runtime, exePath, null });
+            Console.WriteLine("execvp {0} failed: {1}", runtime, Marshal.GetLastWin32Error());
 
 #if !MCG_DOTNET
             // .. and fallback to mono if that doesn't work for some reason
-            execvp("mono", new string[] { "mono", Server.RestartPath, null });
+            execvp("mono", new string[] { "mono", exePath, null });
             Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
 #endif
         }
@@ -265,7 +270,7 @@ namespace MCGalaxy.Platform
             try {
                 // try to restart using process's original command line arguments so that they are preserved
                 // e.g. for "mono --debug MCGalaxyCLI.exe"
-                string exe    = Server.GetRuntimeProcessExePath();
+                string exe    = Server.GetRuntimeExePath();
                 string[] args = GetProcessCommandLineArgs();
                 execvp(exe, args);
             } catch (Exception ex) {

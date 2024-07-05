@@ -56,7 +56,7 @@ namespace MCGalaxy.Platform
         
         public static string GetExePath(string path) {
             // NET core/5/6 executables tend to use the following structure:
-            //   MCGalaxyCLI_core --> MCGalaxyCLI_core.dll
+            //   MCGalaxyCLI --> MCGalaxyCLI.dll
             // in this case, 'RestartPath' will include '.dll' since this file
             //  is actually the managed assembly, but we need to remove '.dll'
             //   as the actual executable which must be started is the non .dll file

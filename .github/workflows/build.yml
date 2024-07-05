@@ -35,7 +35,7 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release'
-          DEST_NAME: 'MCGalaxy_net2.0'          
+          DEST_NAME: 'MCGalaxy-net2.0'
           
       - uses: ./.github/actions/notify_success
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -70,13 +70,13 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release_normal'
-          DEST_NAME: 'MCGalaxy'
+          DEST_NAME: 'MCGalaxy-net40'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release'
-          DEST_NAME: 'MCGalaxy-infid'
+          DEST_NAME: 'MCGalaxy-net40-infid'
           
       - uses: ./.github/actions/notify_success
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -114,7 +114,7 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net6.0'
-          DEST_NAME: 'MCGalaxy-dotnet6.0'
+          DEST_NAME: 'MCGalaxy-net6.0'
           
       # publish standalone windows binaries
       - name: Publish-win64
@@ -183,7 +183,7 @@ jobs:
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'CLI/bin/Debug/net8.0'
-          DEST_NAME: 'MCGalaxy-dotnet8.0'
+          DEST_NAME: 'MCGalaxy-net8.0'
           
           
       - uses: ./.github/actions/notify_success

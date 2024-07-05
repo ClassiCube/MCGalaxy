@@ -113,17 +113,23 @@ namespace MCGalaxy
                 foreach (Player pl in players) pl.SaveStats();
                 
                 string serverDLL = Server.GetServerDLLPath();
+                string serverGUI = "MCGalaxy.exe";
+#if !MCG_DOTNET
+                string serverCLI = "MCGalaxyCLI.exe";
+#else
+                string serverCLI = Server.GetServerExePath();
+#endif
                 
                 // Move current files to previous files (by moving instead of copying, 
                 //  can overwrite original the files without breaking the server)
-                AtomicIO.TryMove(serverDLL,         "prev_MCGalaxy_.dll");
-                AtomicIO.TryMove("MCGalaxy.exe",    "prev_MCGalaxy.exe");
-                AtomicIO.TryMove("MCGalaxyCLI.exe", "prev_MCGalaxyCLI.exe");
+                AtomicIO.TryMove(serverDLL, "prev_MCGalaxy_.dll");
+                AtomicIO.TryMove(serverGUI, "prev_MCGalaxy.exe");
+                AtomicIO.TryMove(serverCLI, "prev_MCGalaxyCLI.exe");
 
                 // Move update files to current files
                 AtomicIO.TryMove("MCGalaxy_.update",   serverDLL);
-                AtomicIO.TryMove("MCGalaxy.update",    "MCGalaxy.exe");
-                AtomicIO.TryMove("MCGalaxyCLI.update", "MCGalaxyCLI.exe");                             
+                AtomicIO.TryMove("MCGalaxy.update",    serverGUI);
+                AtomicIO.TryMove("MCGalaxyCLI.update", serverCLI);                             
 
                 Server.Stop(true, "Updating server.");
             } catch (Exception ex) {

@@ -120,7 +120,7 @@ namespace MCGalaxy.Modules.Compiling
         static string Quote(string value) { return "\"" + value + "\""; }
         
         static string GetDotnetPath() {
-            string path = Server.GetRuntimeProcessExePath();
+            string path = Server.GetRuntimeExePath();
             if (path.EndsWith("dotnet")) return path;
             
             return GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
