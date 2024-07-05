@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
 using System.Net;
 using MCGalaxy.Network;
 using MCGalaxy.Platform;
@@ -97,16 +98,16 @@ namespace MCGalaxy
                 Logger.Log(LogType.SystemActivity, "Downloading {0} update files", mode);               
                 WebClient client = HttpUtil.CreateWebClient();
                 
-                client.DownloadFile(DLL_URL.Replace("{0}", mode), "MCGalaxy_.update");
+                DownloadFile(client, DLL_URL.Replace("{0}", mode), "MCGalaxy_.update");
 #if MCG_STANDALONE
                 // Self contained executable, no separate CLI or GUI to download
 #elif MCG_DOTNET
-                client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
+                DownloadFile(client, CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
 #else
-                client.DownloadFile(GUI_URL.Replace("{0}", mode), "MCGalaxy.update");
-                client.DownloadFile(CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
+                DownloadFile(client, GUI_URL.Replace("{0}", mode), "MCGalaxy.update");
+                DownloadFile(client, CLI_URL.Replace("{0}", mode), "MCGalaxyCLI.update");
 #endif
-                client.DownloadFile(CHANGELOG_URL, "Changelog.txt");
+                DownloadFile(client, CHANGELOG_URL, "Changelog.txt");
 
                 Server.SaveAllLevels();
                 Player[] players = PlayerInfo.Online.Items;
@@ -135,6 +136,12 @@ namespace MCGalaxy
             } catch (Exception ex) {
                 Logger.LogError("Error performing update", ex);
             }
+        }
+        
+        static void DownloadFile(WebClient client, string url, string dst) {
+            Logger.Log(LogType.SystemActivity, "Downloading {0} to {1}", 
+                       url, Path.GetFileName(dst));
+            client.DownloadFile(url, dst);
         }
         
         static void DeleteFiles(params string[] paths) {
