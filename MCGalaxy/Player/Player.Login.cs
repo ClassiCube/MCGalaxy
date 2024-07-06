@@ -264,7 +264,7 @@ namespace MCGalaxy
             string altsMsg = "λNICK &Sis lately known as: " + alts.Join();
 
             Chat.MessageFrom(p, altsMsg,
-                             (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl));
+                             (pl, obj) => pl.CanSee(p) && opchat.UsableBy(pl) && !pl.Ignores.AltLogins);
                          
             //IRCBot.Say(temp, true); //Tells people in op channel on IRC
             altsMsg = altsMsg.Replace("λNICK", name);

@@ -53,6 +53,8 @@ namespace MCGalaxy.Commands.Chatting
                 Toggle(p, ref p.Ignores.DrawOutput, "{0} ignoring draw command output"); return;
             } else if (action == "worldchanges") {
                 Toggle(p, ref p.Ignores.WorldChanges, "{0} ignoring world changes"); return;
+            } else if (action == "altlogins") {
+                Toggle(p, ref p.Ignores.AltLogins, "{0} ignoring alt accounts messages when a player joins"); return;
             } else if (IsListAction(action)) {
                 p.Ignores.Output(p); return;
             }
@@ -115,6 +117,7 @@ namespace MCGalaxy.Commands.Chatting
             p.Message("&H 8ball - &T/8ball &His ignored.");
             p.Message("&H drawoutput - drawing command output is ignored.");
             p.Message("&H worldchanges - world change messages are ignored.");  
+            p.Message("&H altlogins - login messages showing alt accounts are ignored.");
         }
     }
 }
