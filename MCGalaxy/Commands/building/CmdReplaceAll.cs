@@ -31,7 +31,7 @@ namespace MCGalaxy.Commands.Building {
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
         
         public override void Use(Player p, string message, CommandData data) {
-            BrushArgs args = new BrushArgs(p, message, Block.Air);
+            BrushArgs args = new BrushArgs(p, message, p.GetHeldBlock());
             Brush brush = BrushFactory.Find("Replace").Construct(args);
             if (brush == null) return;
             
