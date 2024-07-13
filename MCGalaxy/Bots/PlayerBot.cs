@@ -47,7 +47,9 @@ namespace MCGalaxy {
         public bool movement = false;
         public int movementSpeed = 3;
         internal int curJump = 0;
-        
+
+        public long CreationDate = 0;
+
         public PlayerBot(string n, Level lvl) {
             name = n; DisplayName = n; SkinName = n;
             color = "&1";      
@@ -296,6 +298,7 @@ namespace MCGalaxy {
         public void DisplayInfo(Player p) {
             p.Message("Bot {0} &S({1}) has:", ColoredName, name);
             p.Message("  Owner: &f{0}", string.IsNullOrEmpty(Owner) ? "no one" : p.FormatNick(Owner));
+            if (CreationDate != 0)             { p.Message("  Created: &f{0}", CreationDate.FromUnixTime().ToString("yyyy-MM-dd")); }
             if (!String.IsNullOrEmpty(AIName)) { p.Message("  AI: &f{0}", AIName); }
             if (hunt || kill)                  { p.Message("  Hunt: &f{0}&S, Kill: %f{1}", hunt, kill); }
             if (SkinName != name)              { p.Message("  Skin: &f{0}", SkinName); }

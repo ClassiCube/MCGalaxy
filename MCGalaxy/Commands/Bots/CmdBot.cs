@@ -17,6 +17,7 @@
  */
 using MCGalaxy.Blocks.Extended;
 using MCGalaxy.Bots;
+using System;
 
 namespace MCGalaxy.Commands.Bots 
 {
@@ -70,6 +71,7 @@ namespace MCGalaxy.Commands.Bots
             botName = botName.Replace(' ', '_');
             PlayerBot bot = new PlayerBot(botName, p.level);
             bot.Owner = p.name;
+            bot.CreationDate = DateTime.UtcNow.ToUnixTime();
             TryAddBot(p, bot);
         }
         
@@ -207,6 +209,7 @@ namespace MCGalaxy.Commands.Bots
             props.ApplyTo(clone);
             clone.Owner = p.name;
             clone.SetModel(clone.Model);
+            clone.CreationDate = DateTime.UtcNow.ToUnixTime();
             BotsFile.LoadAi(props, clone);
             // Preserve custom name tag
             if (bot.DisplayName == bot.name) clone.DisplayName = newName;

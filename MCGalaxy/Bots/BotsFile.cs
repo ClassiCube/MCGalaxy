@@ -141,6 +141,7 @@ namespace MCGalaxy.Bots {
         [ConfigFloat] public float ScaleX;
         [ConfigFloat] public float ScaleY;
         [ConfigFloat] public float ScaleZ;
+        [ConfigString] public string CreationDate;
         
         public void FromBot(PlayerBot bot) {
             Owner = bot.Owner;
@@ -156,6 +157,8 @@ namespace MCGalaxy.Bots {
             RotX = bot.Rot.RotY; RotY = bot.Rot.HeadX;
             BodyX = bot.Rot.RotX; BodyZ = bot.Rot.RotZ;
             ScaleX = bot.ScaleX; ScaleY = bot.ScaleY; ScaleZ = bot.ScaleZ;
+
+            CreationDate = bot.CreationDate.ToString();
         }
         
         public void ApplyTo(PlayerBot bot) {
@@ -175,6 +178,9 @@ namespace MCGalaxy.Bots {
             if (CurSpeed != 0) bot.movementSpeed = CurSpeed;
             bot.ClickedOnText = ClickedOnText; bot.DeathMessage = DeathMessage;
             bot.ScaleX = ScaleX; bot.ScaleY = ScaleY; bot.ScaleZ = ScaleZ;
+
+            long longCreationDate;
+            if (!String.IsNullOrEmpty(CreationDate) && long.TryParse(CreationDate, out longCreationDate)) bot.CreationDate = longCreationDate;
         }
     }
 }
