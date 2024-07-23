@@ -102,6 +102,7 @@ namespace MCGalaxy.Commands.Chatting
             p.Message("&HSee &T/Help ignore special &Hfor special names when ignoring.");
             p.Message("&HOtherwise, all chat from the player with [name] is ignored.");
             p.Message("&HUsing the same [name] again will unignore.");
+            p.Message("&T/Ignore list &H- display what you're currently ignoring.");
         }
         
         public override void Help(Player p, string message) {

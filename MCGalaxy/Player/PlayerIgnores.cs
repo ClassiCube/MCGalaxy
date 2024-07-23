@@ -85,24 +85,27 @@ namespace MCGalaxy {
         }
         
         public void Output(Player p) {
+            bool any = false;
             if (Names.Count > 0) {
+                any = true;
                 p.Message("&cCurrently ignoring the following players:");
                 p.Message(Names.Join(n => p.FormatNick(n)));
             }
             if (IRCNicks.Count > 0) {
+                any = true;
                 p.Message("&cCurrently ignoring the following IRC nicks:");
                 p.Message(IRCNicks.Join());
             }
             
-            if (All) p.Message("&cIgnoring all chat");
-            if (IRC) p.Message("&cIgnoring IRC chat");
-            
-            if (Titles) p.Message("&cPlayer titles do not show before names in chat");
-            if (Nicks) p.Message("&cCustom player nicks do not show in chat");
-            
-            if (EightBall) p.Message("&cIgnoring &T/8ball");            
-            if (DrawOutput) p.Message("&cIgnoring draw command output");           
-            if (WorldChanges) p.Message("&cIgnoring world change messages");
+            if (All)          { any = true; p.Message("&cIgnoring all chat"); }
+            if (IRC)          { any = true; p.Message("&cIgnoring IRC chat"); }
+            if (Titles)       { any = true; p.Message("&cPlayer titles do not show before names in chat"); }
+            if (Nicks)        { any = true; p.Message("&cCustom player nicks do not show in chat"); }
+            if (EightBall)    { any = true; p.Message("&cIgnoring &T/8ball"); }
+            if (DrawOutput)   { any = true; p.Message("&cIgnoring draw command output"); }
+            if (WorldChanges) { any = true; p.Message("&cIgnoring world change messages"); }
+
+            if (!any) p.Message("You are not ignoring anything.");
         }
     }
 }
