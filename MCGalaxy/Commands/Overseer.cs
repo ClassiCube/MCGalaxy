@@ -61,10 +61,10 @@ namespace MCGalaxy.Commands.World {
         }
 
         static string[] addHelp = new string[] {
-            "&T/os map add &H- Creates a flat map (128x128x128).",
-            "&T/os map add [theme] &H- Creates a map with [theme] terrain.",
+            "&T/os add &H- Creates a flat map (128x128x128).",
+            "&T/os add [theme] &H- Creates a map with [theme] terrain.",
             "&H  Use &T/Help newlvl themes &Hfor a list of map themes.",
-            "&T/os map add [width] [height] [length] [theme]",
+            "&T/os add [width] [height] [length] [theme]",
             "&H  Creates a map with custom size and theme.",
         };
         static void HandleAdd(Player p, string message) {
