@@ -28,7 +28,7 @@ using MCGalaxy.Tasks;
 
 namespace MCGalaxy.Modules.Relay.Discord 
 {    
-    public sealed class DiscordSession 
+    public class DiscordSession 
     { 
         public string ID, LastSeq;
         public int Intents;
@@ -39,7 +39,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     /// <summary> Implements a basic websocket for communicating with Discord's gateway </summary>
     /// <remarks> https://discord.com/developers/docs/topics/gateway </remarks>
     /// <remarks> https://i.imgur.com/Lwc5Wde.png </remarks>
-    public sealed class DiscordWebsocket : ClientWebSocket 
+    public class DiscordWebsocket : ClientWebSocket 
     {       
         /// <summary> Authorisation token for the bot account </summary>
         public string Token;

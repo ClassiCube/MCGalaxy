@@ -188,11 +188,11 @@ namespace MCGalaxy.Platform
             execvp(runtime, new string[] { runtime, exePath, null });
             Console.WriteLine("execvp {0} failed: {1}", runtime, Marshal.GetLastWin32Error());
 
-#if !MCG_DOTNET
-            // .. and fallback to mono if that doesn't work for some reason
-            execvp("mono", new string[] { "mono", exePath, null });
-            Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
-#endif
+            if (Server.RunningOnMono()) {
+                // .. and fallback to mono if that doesn't work for some reason
+                execvp("mono", new string[] { "mono", exePath, null });
+                Console.WriteLine("execvp mono failed: {0}", Marshal.GetLastWin32Error());
+            }
         }
 
         [DllImport("libc", SetLastError = true)]

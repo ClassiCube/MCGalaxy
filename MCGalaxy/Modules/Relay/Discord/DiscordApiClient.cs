@@ -28,7 +28,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     /// <summary> Implements a basic web client for sending messages to the Discord API </summary>
     /// <remarks> https://discord.com/developers/docs/reference </remarks>
     /// <remarks> https://discord.com/developers/docs/resources/channel#create-message </remarks>
-    public sealed class DiscordApiClient : AsyncWorker<DiscordApiMessage>
+    public class DiscordApiClient : AsyncWorker<DiscordApiMessage>
     {
         public string Token;
         public string Host;

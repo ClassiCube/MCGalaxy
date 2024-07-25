@@ -38,7 +38,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
     }
     
-    public sealed class DiscordBot : RelayBot 
+    public class DiscordBot : RelayBot 
     {
         DiscordApiClient api;
         DiscordWebsocket socket;

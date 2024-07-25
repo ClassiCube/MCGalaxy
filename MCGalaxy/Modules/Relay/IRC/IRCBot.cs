@@ -26,7 +26,7 @@ namespace MCGalaxy.Modules.Relay.IRC
     public enum IRCControllerVerify { None, HalfOp, OpChannel };
     
     /// <summary> Manages a connection to an IRC server, and handles associated events. </summary>
-    public sealed class IRCBot : RelayBot 
+    public class IRCBot : RelayBot 
     {
         internal Connection conn;
         string botNick;
