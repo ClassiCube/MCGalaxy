@@ -69,7 +69,7 @@ namespace MCGalaxy.Games {
             if (!p.IsLikelyInsideBlock() || log.AddSpamEntry(5, interval)) return false;
             
             Warn("noclip");
-            return false;
+            return true;
         }
     }
 }
