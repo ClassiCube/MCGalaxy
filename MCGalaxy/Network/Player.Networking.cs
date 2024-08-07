@@ -26,11 +26,15 @@ namespace MCGalaxy
         public bool hasChangeModel, hasExtList, hasCP437;
 
         public void Send(byte[] buffer)  { Socket.Send(buffer, SendFlags.None); }
-        
+
         public void MessageLines(IEnumerable<string> lines) {
-            foreach (string line in lines) { Message(line); }
+            lock (messageLocker) {
+                foreach (string line in lines) { Message(line); }
+            }
         }
-        
+
+        // Put a lock on sending messages so that MessageLines is not interrupted by other messages
+        readonly object messageLocker = new object();
         public void Message(string message, object a0) { Message(string.Format(message, a0)); }  
         public void Message(string message, object a0, object a1) { Message(string.Format(message, a0, a1)); }       
         public void Message(string message, object a0, object a1, object a2) { Message(string.Format(message, a0, a1, a2)); }       
@@ -40,8 +44,9 @@ namespace MCGalaxy
             // Message should start with server color if no initial color
             if (message.Length > 0 && !(message[0] == '&' || message[0] == '%')) message = "&S" + message;
             message = Chat.Format(message, this);
-            
-            SendRawMessage(message);
+            lock (messageLocker) {
+                SendRawMessage(message);
+            }
         }
         
         void SendRawMessage(string message) {
