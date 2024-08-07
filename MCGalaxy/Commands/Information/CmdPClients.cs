@@ -45,7 +45,8 @@ namespace MCGalaxy.Commands.Info
                 usingClient.Add(pl);
             }
             
-            p.Message("Players using:");
+            List<string> lines = new List<string>();
+            lines.Add("Players using:");
             foreach (var kvp in clients) 
             {
                 StringBuilder builder = new StringBuilder();
@@ -57,8 +58,10 @@ namespace MCGalaxy.Commands.Info
                     builder.Append(nick);
                     if (i < players.Count - 1) builder.Append(", ");
                 }
-                p.Message("  {0}: &f{1}", kvp.Key, builder.ToString());
+                lines.Add(string.Format("  {0}: &f{1}", kvp.Key, builder.ToString()));
             }
+            lines.Add(string.Format("Displayed {0} unique client name{1}.", clients.Count, clients.Count == 1 ? "" : "s"));
+            p.MessageLines(lines);
         }
 
         public override void Help(Player p) {
