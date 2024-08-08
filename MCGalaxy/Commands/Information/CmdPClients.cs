@@ -60,7 +60,7 @@ namespace MCGalaxy.Commands.Info
                 }
                 lines.Add(string.Format("  {0}: &f{1}", kvp.Key, builder.ToString()));
             }
-            lines.Add(string.Format("Displayed {0} unique client name{1}.", clients.Count, clients.Count == 1 ? "" : "s"));
+            //lines.Add(string.Format("Displayed {0} unique client name{1}.", clients.Count, clients.Count == 1 ? "" : "s"));
             p.MessageLines(lines);
         }
 
