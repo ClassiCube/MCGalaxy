@@ -34,16 +34,17 @@ namespace MCGalaxy.Modules.Relay.Discord
         public override string GetMessagePrefix() {
             if (string.IsNullOrEmpty(ReferencedUser))
                 return "";
+            
             return "@" + ReferencedUser + " ";
         }
     }
     
-    public class DiscordBot : RelayBot 
+    public class DiscordBot : RelayBot
     {
-        DiscordApiClient api;
-        DiscordWebsocket socket;
-        DiscordSession session;
-        string botUserID;
+        protected DiscordApiClient api;
+        protected DiscordWebsocket socket;
+        protected DiscordSession session;
+        protected string botUserID;
         
         Dictionary<string, byte> channelTypes = new Dictionary<string, byte>();
         const byte CHANNEL_DIRECT = 0;
@@ -461,7 +462,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         /// <summary> Formats a message for displaying on Discord </summary>
         /// <example> Escapes markdown characters such as _ and * </example>
-        string ConvertMessage(string message) {
+        protected string ConvertMessage(string message) {
             message = ConvertMessageCommon(message);
             message = Colors.StripUsed(message);
             message = EscapeMarkdown(message);
