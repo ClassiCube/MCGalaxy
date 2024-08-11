@@ -169,7 +169,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             ChatTokens.LoadTokens(lines, (phrase, replacement) => 
                                   {
                                       filter_triggers.Add(phrase);
-                                      filter_replacements.Add(MarkdownToSpecial(replacement));
+                                      filter_replacements.Add(DiscordUtils.MarkdownToSpecial(replacement));
                                   });
         }
         
@@ -465,19 +465,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         protected string ConvertMessage(string message) {
             message = ConvertMessageCommon(message);
             message = Colors.StripUsed(message);
-            message = EscapeMarkdown(message);
-            message = SpecialToMarkdown(message);
-            return message;
-        }
-        
-        static readonly string[] markdown_special = {  @"\",  @"*",  @"_",  @"~",  @"`",  @"|",  @"-",  @"#" };
-        static readonly string[] markdown_escaped = { @"\\", @"\*", @"\_", @"\~", @"\`", @"\|", @"\-", @"\#" };
-        static string EscapeMarkdown(string message) {
-            // don't let user use bold/italic etc markdown
-            for (int i = 0; i < markdown_special.Length; i++) 
-            {
-                message = message.Replace(markdown_special[i], markdown_escaped[i]);
-            }
+            message = DiscordUtils.EscapeMarkdown(message);
+            message = DiscordUtils.SpecialToMarkdown(message);
             return message;
         }
         
@@ -546,7 +535,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             return string.Format(format, p.FormatNick(pl), 
                                  // level name must not have _ escaped as the level name is in a code block -
                                  //  otherwise the escaped "\_" actually shows as "\_" instead of "_" 
-                                 pl.level.name.Replace('_', UNDERSCORE),
+                                 pl.level.name.Replace('_', DiscordUtils.UNDERSCORE),
                                  flags);
         }
         
@@ -568,38 +557,11 @@ namespace MCGalaxy.Modules.Relay.Discord
         }
         
         
-        // these characters are chosen specifically to lie within the unspecified unicode range,
-        //  as those characters are "application defined" (EDCX = Escaped Discord Character #X)
-        //  https://en.wikipedia.org/wiki/Private_Use_Areas
-        const char UNDERSCORE = '\uEDC1'; // _
-        const char TILDE      = '\uEDC2'; // ~
-        const char STAR       = '\uEDC3'; // *
-        const char GRAVE      = '\uEDC4'; // `
-        const char BAR        = '\uEDC5'; // |
-        
-        public const string UNDERLINE     = "\uEDC1\uEDC1"; // __
-        public const string BOLD          = "\uEDC3\uEDC3"; // **
-        public const string ITALIC        = "\uEDC1"; // _
-        public const string CODE          = "\uEDC4"; // `
-        public const string SPOILER       = "\uEDC5\uEDC5"; // ||
-        public const string STRIKETHROUGH = "\uEDC2\uEDC2"; // ~~
-        
-        static string MarkdownToSpecial(string input) {
-            return input
-                .Replace('_', UNDERSCORE)
-                .Replace('~', TILDE)
-                .Replace('*', STAR)
-                .Replace('`', GRAVE)
-                .Replace('|', BAR);
-        }
-        
-        static string SpecialToMarkdown(string input) {
-            return input
-                .Replace(UNDERSCORE, '_')
-                .Replace(TILDE,      '~')
-                .Replace(STAR,       '*')
-                .Replace(GRAVE,      '`')
-                .Replace(BAR,        '|');
-        }
+        public const string UNDERLINE     = DiscordUtils.UNDERLINE;
+        public const string BOLD          = DiscordUtils.BOLD;
+        public const string ITALIC        = DiscordUtils.ITALIC;
+        public const string CODE          = DiscordUtils.CODE;
+        public const string SPOILER       = DiscordUtils.SPOILER;
+        public const string STRIKETHROUGH = DiscordUtils.STRIKETHROUGH;
     }
 }
