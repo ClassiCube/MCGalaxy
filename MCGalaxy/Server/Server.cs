@@ -166,7 +166,6 @@ namespace MCGalaxy
             }
         }
         public static void LoadAllSettings() { LoadAllSettings(false); }
-        
         // TODO rethink this
         static void LoadAllSettings(bool commands) {
             Colors.Load();
