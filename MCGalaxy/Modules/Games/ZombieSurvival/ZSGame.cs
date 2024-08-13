@@ -350,5 +350,10 @@ namespace MCGalaxy.Modules.Games.ZS
             if (Map != null) Map.Message(map + " was queued as the next map.");
             return true;
         }
+        
+        public override void ReloadConfig() {
+            base.ReloadConfig();
+            infectMessages = ZSConfig.LoadInfectMessages();
+        }
     }
 }

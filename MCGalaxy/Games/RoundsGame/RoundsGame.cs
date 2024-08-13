@@ -17,6 +17,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using MCGalaxy.Events.GameEvents;
 
@@ -88,6 +89,7 @@ namespace MCGalaxy.Games
         /// <summary> Attempts to auto start this game with infinite rounds. </summary>
         public void AutoStart() {
             if (!GetConfig().StartImmediately) return;
+            
             try {
                 Start(Player.Console, "", int.MaxValue);
             } catch (Exception ex) { 
@@ -291,6 +293,13 @@ namespace MCGalaxy.Games
             foreach (Player p in players) {
                 if (p.Supports(CpeExt.InstantMOTD)) p.SendMapMotd();
             }
+        }
+        
+        public virtual void ReloadConfig() {
+            GetConfig().Load();
+            
+            if (File.Exists(GetConfig().Path)) return;          
+            GetConfig().Save();
         }
     }
 }

@@ -19,8 +19,6 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
-using MCGalaxy.Modules.Games.Countdown;
-using MCGalaxy.Modules.Games.ZS;
 
 namespace MCGalaxy.Modules.Games.TW
 {
@@ -30,23 +28,20 @@ namespace MCGalaxy.Modules.Games.TW
         static Command cmdTW = new CmdTntWars();
         
         public override void Load(bool startup) {
-            OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdTW);
             
-            TWGame.Instance.Config.Path = "properties/tntwars.properties";
-            TWGame.Instance.Config.Load();
-            TWGame.Instance.Config.Save();
-            OnConfigUpdated();
-            TWGame.Instance.AutoStart();
+            TWGame game      = TWGame.Instance;
+            game.Config.Path = "properties/tntwars.properties";
+            game.ReloadConfig();
+            game.AutoStart();
+            
+            OnConfigUpdatedEvent.Register(game.ReloadConfig, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
+            TWGame game = TWGame.Instance;
+            OnConfigUpdatedEvent.Unregister(game.ReloadConfig);
             Command.Unregister(cmdTW);
-        }
-        
-        void OnConfigUpdated() { 
-            TWGame.Instance.Config.Load();
         }
     }
 }

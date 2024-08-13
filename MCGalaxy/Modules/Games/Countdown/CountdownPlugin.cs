@@ -28,23 +28,20 @@ namespace MCGalaxy.Modules.Games.Countdown
         static Command cmdCD = new CmdCountdown();
         
         public override void Load(bool startup) {
-            OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdCD);
             
-            CountdownGame.Instance.Config.Path = "properties/countdown.properties";
-            CountdownGame.Instance.Config.Load();
-            CountdownGame.Instance.Config.Save();
-            OnConfigUpdated();
-            CountdownGame.Instance.AutoStart();
+            CountdownGame game = CountdownGame.Instance;
+            game.Config.Path   = "properties/countdown.properties";
+            game.ReloadConfig();
+            game.AutoStart();
+            
+            OnConfigUpdatedEvent.Register(game.ReloadConfig, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
+            CountdownGame game = CountdownGame.Instance;
+            OnConfigUpdatedEvent.Unregister(game.ReloadConfig);
             Command.Unregister(cmdCD);
-        }
-        
-        void OnConfigUpdated() { 
-            CountdownGame.Instance.Config.Load();
         }
     }
 }
