@@ -12,23 +12,23 @@ Run **MCGalaxy.exe** for a graphical interface, or run **MCGalaxyCLI.exe** for c
 Joining your server
 -----------------
 Run MCGalaxy.exe or MCGalaxyCLI.exe firstly. You'll see something like:
-![opt3](https://github.com/user-attachments/assets/168afb90-af14-4263-8cda-f80792ffd40c)
+![opt3](https://github.com/user-attachments/assets/e46128bd-6a3f-422a-8076-fbd9d86fa28e)
 
 If you are signed in to classicube.net, you can copy this URL straight into your web browser and start playing.
 
 #### Joining from the ClassiCube client
 Click **Direct connect** at the main menu.
-![opt1](https://github.com/user-attachments/assets/f418b51e-ded3-4894-908e-c2d5a95ea9fb)
+![opt1](https://github.com/user-attachments/assets/46ad28c2-ac42-418b-a1c8-88d161503cd5)
 
 Type your username into *Username*, ```127.0.0.1:25565``` into *IP:Port*, and leave *Mppass* blank. Then click **Connect**.
-![opt2](https://github.com/user-attachments/assets/7f2c25df-52e5-4461-a912-25a5f1f2ec08)
+![opt2](https://github.com/user-attachments/assets/8f57d45d-ef2f-4573-95d7-bf0eb22f21af)
 
 #### Make yourself owner
 After joining, you will want to rank yourself owner so you can use all commands.
 
 Type ```/rank [your account] owner``` into the bottom text box, then press Enter.
 
-![opt4](https://github.com/user-attachments/assets/973745dc-990d-4815-8418-5327e7eb73ae)
+![opt4](https://github.com/user-attachments/assets/7d8fc147-2183-4a96-88cb-47658051eace)
 
 
 Letting others join your server
