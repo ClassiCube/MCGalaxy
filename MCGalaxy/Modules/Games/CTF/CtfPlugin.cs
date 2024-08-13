@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Modules.Games.TW;
 
 namespace MCGalaxy.Modules.Games.CTF
 {
@@ -32,6 +33,8 @@ namespace MCGalaxy.Modules.Games.CTF
             Command.Register(cmdCTF);
             
             CTFGame.Instance.Config.Path = "properties/ctf.properties";
+            CTFGame.Instance.Config.Load();
+            CTFGame.Instance.Config.Save();
             OnConfigUpdated();
             CTFGame.Instance.AutoStart();
         }

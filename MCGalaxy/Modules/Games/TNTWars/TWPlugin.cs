@@ -19,6 +19,8 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Modules.Games.Countdown;
+using MCGalaxy.Modules.Games.ZS;
 
 namespace MCGalaxy.Modules.Games.TW
 {
@@ -32,6 +34,8 @@ namespace MCGalaxy.Modules.Games.TW
             Command.Register(cmdTW);
             
             TWGame.Instance.Config.Path = "properties/tntwars.properties";
+            TWGame.Instance.Config.Load();
+            TWGame.Instance.Config.Save();
             OnConfigUpdated();
             TWGame.Instance.AutoStart();
         }

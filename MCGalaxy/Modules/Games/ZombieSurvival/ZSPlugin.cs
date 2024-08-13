@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Modules.Games.Countdown;
 
 namespace MCGalaxy.Modules.Games.ZS
 {
@@ -32,6 +33,8 @@ namespace MCGalaxy.Modules.Games.ZS
             Command.Register(cmdZS);
             
             ZSGame.Instance.Config.Path = "properties/zombiesurvival.properties";
+            ZSGame.Instance.Config.Load();
+            ZSGame.Instance.Config.Save();
             OnConfigUpdated();
             ZSGame.Instance.AutoStart();
         }
