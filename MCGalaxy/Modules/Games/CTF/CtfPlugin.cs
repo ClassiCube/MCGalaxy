@@ -34,6 +34,8 @@ namespace MCGalaxy.Modules.Games.CTF
             CTFGame.Instance.Config.Path = "properties/ctf.properties";
             OnConfigUpdated();
             CTFGame.Instance.AutoStart();
+            CTFGame.Instance.Config.Load();
+            CTFGame.Instance.Config.Save();
         }
         
         public override void Unload(bool shutdown) {
