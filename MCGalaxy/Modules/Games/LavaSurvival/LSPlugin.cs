@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using MCGalaxy.Config;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Modules.Games.Countdown;
 
 namespace MCGalaxy.Modules.Games.LS
 {
@@ -34,6 +35,8 @@ namespace MCGalaxy.Modules.Games.LS
             LSGame.Instance.Config.Path = "properties/lavasurvival.properties";
             OnConfigUpdated();
             LSGame.Instance.AutoStart();
+            LSGame.Instance.Config.Load();
+            LSGame.Instance.Config.Save();
         }
         
         public override void Unload(bool shutdown) {

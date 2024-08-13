@@ -34,6 +34,8 @@ namespace MCGalaxy.Modules.Games.TW
             TWGame.Instance.Config.Path = "properties/tntwars.properties";
             OnConfigUpdated();
             TWGame.Instance.AutoStart();
+            TWGame.Instance.Config.Load();
+            TWGame.Instance.Config.Save();
         }
         
         public override void Unload(bool shutdown) {

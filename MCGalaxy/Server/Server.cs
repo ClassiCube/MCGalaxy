@@ -39,6 +39,11 @@ using MCGalaxy.SQL;
 using MCGalaxy.Tasks;
 using MCGalaxy.Util;
 using MCGalaxy.Modules.Awards;
+using MCGalaxy.Modules.Games.ZS;
+using MCGalaxy.Modules.Games.CTF;
+using MCGalaxy.Modules.Games.Countdown;
+using MCGalaxy.Modules.Games.TW;
+using MCGalaxy.Modules.Games.LS;
 
 namespace MCGalaxy 
 {
@@ -100,7 +105,6 @@ namespace MCGalaxy
 
             EnsureFilesExist();
             IScripting.Init();
-
             LoadAllSettings(true);
             InitDatabase();
             Economy.LoadDatabase();
@@ -117,7 +121,6 @@ namespace MCGalaxy
             Background.QueueOnce(InitTimers);
             Background.QueueOnce(InitRest);
             Background.QueueOnce(InitHeartbeat);
-
             ServerTasks.QueueTasks();
             Background.QueueRepeat(ThreadSafeCache.DBCache.CleanupTask,
                                    null, TimeSpan.FromMinutes(5));
@@ -138,7 +141,6 @@ namespace MCGalaxy
             RankInfo.EnsureExists();
             Ban.EnsureExists();
             PlayerDB.EnsureDirectoriesExist();
-
             EnsureDirectoryExists("extra");
             EnsureDirectoryExists("extra/bots");
             EnsureDirectoryExists(Paths.ImportsDir);
@@ -151,17 +153,25 @@ namespace MCGalaxy
             } catch (Exception ex) {
                 Logger.LogError("Creating directory " + dir, ex);
             }
-        }     
-        
+        }
+        public static void EnsureFileExists(string file)
+        {
+            try
+            {
+                if (!File.Exists(file)) File.Create(file);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("Creating file " + file, ex);
+            }
+        }
         public static void LoadAllSettings() { LoadAllSettings(false); }
-        
         // TODO rethink this
         static void LoadAllSettings(bool commands) {
             Colors.Load();
             Alias.LoadCustom();
             BlockDefinition.LoadGlobal();
             ImagePalette.Load();
-            
             SrvProperties.Load();
             if (commands) Command.InitAll();
             AuthService.UpdateList();
@@ -179,15 +189,11 @@ namespace MCGalaxy
             ChatTokens.LoadCustom();
             SrvProperties.FixupOldPerms();
             CpeExtension.LoadDisabledList();
-            
             TextFile announcementsFile = TextFile.Files["Announcements"];
             announcementsFile.EnsureExists();
             announcements = announcementsFile.GetText();
-            
             OnConfigUpdatedEvent.Call();
         }
-        
-
         static readonly object stopLock = new object();
         static volatile Thread stopThread;
         public static Thread Stop(bool restart, string msg) {

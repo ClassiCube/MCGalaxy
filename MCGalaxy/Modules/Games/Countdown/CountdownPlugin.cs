@@ -34,6 +34,8 @@ namespace MCGalaxy.Modules.Games.Countdown
             CountdownGame.Instance.Config.Path = "properties/countdown.properties";
             OnConfigUpdated();
             CountdownGame.Instance.AutoStart();
+            CountdownGame.Instance.Config.Load();
+            CountdownGame.Instance.Config.Save();
         }
         
         public override void Unload(bool shutdown) {

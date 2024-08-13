@@ -34,6 +34,9 @@ namespace MCGalaxy.Modules.Games.ZS
             ZSGame.Instance.Config.Path = "properties/zombiesurvival.properties";
             OnConfigUpdated();
             ZSGame.Instance.AutoStart();
+            ZSGame.Instance.Config.Load();
+            ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
+            ZSGame.Instance.Config.Save();
         }
         
         public override void Unload(bool shutdown) {
