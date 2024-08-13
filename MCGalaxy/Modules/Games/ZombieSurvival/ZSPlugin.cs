@@ -28,22 +28,20 @@ namespace MCGalaxy.Modules.Games.ZS
         static Command cmdZS = new CmdZombieSurvival();
         
         public override void Load(bool startup) {
-            OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdZS);
             
-            ZSGame.Instance.Config.Path = "properties/zombiesurvival.properties";
-            OnConfigUpdated();
-            ZSGame.Instance.AutoStart();
+            ZSGame game      = ZSGame.Instance;
+            game.Config.Path = "properties/zombiesurvival.properties";
+            game.ReloadConfig();
+            game.AutoStart();
+            
+            OnConfigUpdatedEvent.Register(game.ReloadConfig, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
+            ZSGame game = ZSGame.Instance;
+            OnConfigUpdatedEvent.Unregister(game.ReloadConfig);
             Command.Unregister(cmdZS);
-        }
-        
-        void OnConfigUpdated() { 
-            ZSGame.Instance.Config.Load();
-            ZSGame.Instance.infectMessages = ZSConfig.LoadInfectMessages();
         }
     }
 }

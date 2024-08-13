@@ -28,21 +28,20 @@ namespace MCGalaxy.Modules.Games.CTF
         static Command cmdCTF = new CmdCTF();
         
         public override void Load(bool startup) {
-            OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdCTF);
+
+            CTFGame game     = CTFGame.Instance;
+            game.Config.Path = "properties/ctf.properties";
+            game.ReloadConfig();
+            game.AutoStart();
             
-            CTFGame.Instance.Config.Path = "properties/ctf.properties";
-            OnConfigUpdated();
-            CTFGame.Instance.AutoStart();
+            OnConfigUpdatedEvent.Register(game.ReloadConfig, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
+            CTFGame game = CTFGame.Instance;
+            OnConfigUpdatedEvent.Unregister(game.ReloadConfig);
             Command.Unregister(cmdCTF);
-        }
-        
-        void OnConfigUpdated() { 
-            CTFGame.Instance.Config.Load();
         }
     }
 }

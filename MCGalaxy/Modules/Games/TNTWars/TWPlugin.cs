@@ -28,21 +28,20 @@ namespace MCGalaxy.Modules.Games.TW
         static Command cmdTW = new CmdTntWars();
         
         public override void Load(bool startup) {
-            OnConfigUpdatedEvent.Register(OnConfigUpdated, Priority.Low);
             Command.Register(cmdTW);
             
-            TWGame.Instance.Config.Path = "properties/tntwars.properties";
-            OnConfigUpdated();
-            TWGame.Instance.AutoStart();
+            TWGame game      = TWGame.Instance;
+            game.Config.Path = "properties/tntwars.properties";
+            game.ReloadConfig();
+            game.AutoStart();
+            
+            OnConfigUpdatedEvent.Register(game.ReloadConfig, Priority.Low);
         }
         
         public override void Unload(bool shutdown) {
-            OnConfigUpdatedEvent.Unregister(OnConfigUpdated);
+            TWGame game = TWGame.Instance;
+            OnConfigUpdatedEvent.Unregister(game.ReloadConfig);
             Command.Unregister(cmdTW);
-        }
-        
-        void OnConfigUpdated() { 
-            TWGame.Instance.Config.Load();
         }
     }
 }
