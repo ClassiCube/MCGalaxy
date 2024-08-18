@@ -38,7 +38,6 @@ namespace MCGalaxy.Commands.World {
         }
         
         public override void Help(Player p, string message) {
-            message = message.SplitSpaces()[0]; // only first argument
             Overseer.subCommandGroup.DisplayHelpFor(p, message);
         }
         

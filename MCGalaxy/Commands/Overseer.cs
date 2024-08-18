@@ -270,15 +270,15 @@ namespace MCGalaxy.Commands.World {
         }
         static SubCommandGroup mapSubCommandGroup = new SubCommandGroup(commandShortcut + " map",
                 new List<SubCommand>() {
-                    new SubCommand("Physics",  (p, arg) => { Moved(p, arg, "physics");  }, null),
-                    new SubCommand("Add",      (p, arg) => { Moved(p, arg, "add");      }, null, false, new string[] { "create", "new" } ),
-                    new SubCommand("Delete",   (p, arg) => { Moved(p, arg, "delete");   }, null, false , new string[] { "del", "remove" } ),
-                    new SubCommand("Save",     (p, arg) => { Moved(p, arg, "save");     }, null),
-                    new SubCommand("Restore",  (p, arg) => { Moved(p, arg, "restore");  }, null),
-                    new SubCommand("Resize",   (p, arg) => { Moved(p, arg, "resize");   }, null),
-                    new SubCommand("PerVisit", (p, arg) => { Moved(p, arg, "pervisit"); }, null),
-                    new SubCommand("PerBuild", (p, arg) => { Moved(p, arg, "perbuild"); }, null),
-                    new SubCommand("Texture",  (p, arg) => { Moved(p, arg, "texture");  }, null, false, new string[] { "texturezip", "texturepack" } ),
+                    new SubCommand("Physics",  (p, arg) => { Moved(p, arg, "physics");  }),
+                    new SubCommand("Add",      (p, arg) => { Moved(p, arg, "add");      }, false, new string[] { "create", "new" } ),
+                    new SubCommand("Delete",   (p, arg) => { Moved(p, arg, "delete");   }, false, new string[] { "del", "remove" } ),
+                    new SubCommand("Save",     (p, arg) => { Moved(p, arg, "save");     }),
+                    new SubCommand("Restore",  (p, arg) => { Moved(p, arg, "restore");  }),
+                    new SubCommand("Resize",   (p, arg) => { Moved(p, arg, "resize");   }),
+                    new SubCommand("PerVisit", (p, arg) => { Moved(p, arg, "pervisit"); }),
+                    new SubCommand("PerBuild", (p, arg) => { Moved(p, arg, "perbuild"); }),
+                    new SubCommand("Texture",  (p, arg) => { Moved(p, arg, "texture");  }, false, new string[] { "texturezip", "texturepack" } ),
                 }
             );
 
@@ -472,8 +472,8 @@ namespace MCGalaxy.Commands.World {
 
         internal static SubCommandGroup deprecatedSubCommandGroup = new SubCommandGroup(commandShortcut,
                 new List<SubCommand>() {
-                    new SubCommand("Zone",  HandleZone,  null),
-                    new SubCommand("Zones", HandleZones, null),
+                    new SubCommand("Zone",  HandleZone , false),
+                    new SubCommand("Zones", HandleZones, false),
                 }
             );
     }

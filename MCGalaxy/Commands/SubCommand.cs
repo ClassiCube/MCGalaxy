@@ -21,25 +21,44 @@ using System.Collections.Generic;
 namespace MCGalaxy.Commands {
 
     /// <summary>
-    /// Represents the name, behavior, and help text for a subcommand. Used with SubCommandGroup to offer a variety of subcommands to run based on user input.
+    /// Represents the name, behavior, and help for a subcommand. Used with SubCommandGroup to offer a variety of subcommands to run based on user input.
     /// </summary>
     public class SubCommand 
     {
         public delegate void Behavior(Player p, string arg);
+        public delegate void HelpBehavior(Player p, string message);
         
         public readonly string Name;
         public readonly Behavior behavior;
-        string[] Help;
+        readonly HelpBehavior helpBehavior = null;
         readonly bool MapOnly;
         string[] Aliases;
 
         /// <summary>
+        /// Construct a SubCommand with simple style help.
         /// When mapOnly is true, the subcommand can only be used when the player is the realm owner.
         /// </summary>
-        public SubCommand(string name, Behavior behavior, string[] help, bool mapOnly = true, string[] aliases = null) {
+        public SubCommand(string name, Behavior behavior, string[] help, bool mapOnly = true, string[] aliases = null)
+                            : this (name, behavior, mapOnly, aliases)
+        {
+            if (help != null && help.Length > 0) helpBehavior = (p, arg) => { p.MessageLines(help); };
+        }
+
+        /// <summary>
+        /// Construct a SubCommand with custom help behavior (e.g. this subcommand needs help that changes based on help args)
+        /// </summary>
+        public SubCommand(string name, Behavior behavior, HelpBehavior helpBehavior, bool mapOnly = true, string[] aliases = null)
+                            : this(name, behavior, mapOnly, aliases)
+        {
+            this.helpBehavior = helpBehavior;
+        }
+
+        /// <summary>
+        /// Construct a SubCommand without help
+        /// </summary>
+        public SubCommand(string name, Behavior behavior, bool mapOnly = true, string[] aliases = null) {
             Name = name;
             this.behavior = behavior;
-            Help = help;
             MapOnly = mapOnly;
             Aliases = aliases;
         }
@@ -72,12 +91,12 @@ namespace MCGalaxy.Commands {
             return true;
         }
         
-        public void DisplayHelp(Player p) {
-            if (Help == null || Help.Length == 0) {
+        public void DisplayHelp(Player p, string message) {
+            if (helpBehavior == null) {
                 p.Message("No help is available for {0}", Name);
                 return;
             }
-            p.MessageLines(Help);
+            helpBehavior(p, message);
         }
     }
 
@@ -137,14 +156,18 @@ namespace MCGalaxy.Commands {
             p.Message("&HUse &T/Help {0} [command] &Hfor more details", parentCommandName);
         }
 
-        public void DisplayHelpFor(Player p, string subCmdName) {
+        public void DisplayHelpFor(Player p, string message) {
+            string[] words = message.SplitSpaces(2);
+            string subCmdName = words[0];
+            string helpArgs = words.Length == 2 ? words[1] : "";
+
             foreach (SubCommand subCmd in subCommands) 
             {
                 if (!subCmd.Match(subCmdName)) { continue; }
-                subCmd.DisplayHelp(p);
+                subCmd.DisplayHelp(p, helpArgs);
                 return;
             }
-            p.Message("There is no {0} command {1} to display help for.", parentCommandName, subCmdName);
+            p.Message("There is no {0} command \"{1}\".", parentCommandName, subCmdName);
         }
     }
 }
