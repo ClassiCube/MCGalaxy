@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using MCGalaxy.Events.PlayerEvents;
+using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using BlockID = System.UInt16;
 
@@ -112,6 +113,7 @@ namespace MCGalaxy
                 AllowBuild  = level.BuildAccess.CheckAllowed(this);
 
                 SendMapMotd();
+                selections.Clear();
                 Session.SendLevel(prev, level);
                 Loading = false;
                 
@@ -224,6 +226,55 @@ namespace MCGalaxy
                 Packet.WriteBlockPermission((BlockID)i, place, delete, extBlocks, bulk, i * size);
             }
             Send(bulk);
+        }
+        
+        
+        class VisibleSelection { public object data; public byte ID; }
+        VolatileArray<VisibleSelection> selections = new VolatileArray<VisibleSelection>();
+        
+        public bool AddVisibleSelection(string label, Vec3U16 min, Vec3U16 max, ColorDesc color, object instance) {
+            VisibleSelection sel = new VisibleSelection();
+            sel.data = instance;
+            
+            lock (selections.locker) {
+                sel.ID = GetSelectionID(selections.Items, instance);
+                selections.Add(sel);
+                return Session.SendAddSelection(sel.ID, label, min, max, color);
+            }
+        }
+        
+        public bool RemoveVisibleSelection(object instance) {
+            lock (selections.locker) {
+                VisibleSelection[] items = selections.Items;
+                for (int i = 0; i < items.Length; i++)
+                {
+                    if (items[i].data != instance) continue;
+                    
+                    selections.Remove(items[i]);
+                    return Session.SendRemoveSelection(items[i].ID);
+                }
+            }
+            
+            return false;
+        }
+        
+        static unsafe byte GetSelectionID(VisibleSelection[] items, object instance) {
+            byte* used = stackalloc byte[256];
+            for (int i = 0; i < 256; i++) used[i] = 0;
+
+            for (int i = 0; i < items.Length; i++) 
+            {
+                byte id = items[i].ID;
+                if (instance == items[i].data) return id;
+                
+                used[id] = 1;
+            }
+            
+            for (byte i = 0; i < 255; i++) 
+            {
+                if (used[i] == 0) return i;
+            }
+            return 255;
         }
     }
 }

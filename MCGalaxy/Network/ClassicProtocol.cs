@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Events.ServerEvents;
+using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network
@@ -528,6 +529,21 @@ namespace MCGalaxy.Network
             if (!hasBlockDefs || def.RawID > MaxRawBlock) return false;
 
             Send(Packet.UndefineBlock(def, hasExtBlocks));
+            return true;
+        }
+        
+        public override bool SendAddSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2, ColorDesc color) {
+            if (!Supports(CpeExt.SelectionCuboid)) return false;
+            
+            Send(Packet.MakeSelection(id, label, p1, p2, 
+                                      color.R, color.G, color.B, color.A, player.hasCP437));
+            return true;
+        }
+        
+        public override bool SendRemoveSelection(byte id) {
+            if (!Supports(CpeExt.SelectionCuboid)) return false;
+            
+            Send(Packet.DeleteSelection(id));
             return true;
         }
 #endregion

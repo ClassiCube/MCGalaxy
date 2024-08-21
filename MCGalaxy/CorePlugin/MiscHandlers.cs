@@ -49,10 +49,8 @@ namespace MCGalaxy.Core {
             p.SendCurrentBlockPermissions();
             
             // TODO: unshow old zones here??
-            if (p.Supports(CpeExt.SelectionCuboid)) {
-                Zone[] zones = level.Zones.Items;
-                foreach (Zone zn in zones) { zn.Show(p); }
-            }
+            Zone[] zones = level.Zones.Items;
+            foreach (Zone zn in zones) { zn.Show(p); }
 
             if (p.weapon != null && !level.Config.Guns) p.weapon.Disable();
             if (!level.Config.UseBlockDB) {

@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Maths;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Network
@@ -109,6 +110,8 @@ namespace MCGalaxy.Network
         public abstract bool SendDefineBlock(BlockDefinition def);
         /// <summary> Sends an undefine custom block packet to the client </summary>
         public abstract bool SendUndefineBlock(BlockDefinition def);
+        public abstract bool SendAddSelection(byte id, string label, Vec3U16 p1, Vec3U16 p2, ColorDesc color);
+        public abstract bool SendRemoveSelection(byte id);
 
         /// <summary> Sends a level to the client </summary>
         public abstract void SendLevel(Level prev, Level level);

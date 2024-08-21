@@ -71,10 +71,10 @@ namespace MCGalaxy {
         }
     }
     
-    public class Zone {
+    public class Zone 
+    {
         public ushort MinX, MinY, MinZ;
         public ushort MaxX, MaxY, MaxZ;
-        public byte ID;
         
         public ZoneConfig Config;
         public ZoneAccessController Access;
@@ -97,39 +97,39 @@ namespace MCGalaxy {
         
         public bool Shows { get { return Config.ShowAlpha != 0 && Config.ShowColor.Length > 0; } }
         public void Show(Player p) {
-            if (!p.Supports(CpeExt.SelectionCuboid) || !Shows) return;
+            if (!Shows) return;
             
-            ColorDesc col; Colors.TryParseHex(Config.ShowColor, out col);
+            ColorDesc color; 
+            Colors.TryParseHex(Config.ShowColor, out color);
+            color.A = (byte)Config.ShowAlpha;
+            
             Vec3U16 min = new Vec3U16(MinX, MinY, MinZ);
             Vec3U16 max = new Vec3U16((ushort)(MaxX + 1), (ushort)(MaxY + 1), (ushort)(MaxZ + 1));
-            p.Send(Packet.MakeSelection(ID, Config.Name, min, max,
-                col.R, col.G, col.B, (byte)Config.ShowAlpha, p.hasCP437));
+            p.AddVisibleSelection(Config.Name, min, max, color, this);
         }
         
         public void ShowAll(Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (p.level == lvl) Show(p);
             }
         }
         
         public void Unshow(Player p) {
-            if (!p.Supports(CpeExt.SelectionCuboid) || !Shows) return;
-            p.Send(Packet.DeleteSelection(ID));
+            if (Shows) p.RemoveVisibleSelection(this);
         }
         
         public void UnshowAll(Level lvl) {
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
+            foreach (Player p in players) 
+            {
                 if (p.level == lvl) Unshow(p);
             }
         }
         
         public void AddTo(Level level) {
-            lock (level.Zones.locker) {
-                ID = NextFreeZoneId(level);
-                level.Zones.Add(this);
-            }
+            level.Zones.Add(this);
         }
         
         public void RemoveFrom(Level level) {
@@ -139,27 +139,12 @@ namespace MCGalaxy {
             }
             
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player pl in players) {
+            foreach (Player pl in players)
+            {
                 if (pl.ZoneIn != this) continue;
                 pl.ZoneIn = null;
                 OnChangedZoneEvent.Call(pl);
             }
-        }
-        
-        unsafe byte NextFreeZoneId(Level level) {
-            byte* used = stackalloc byte[256];
-            for (int i = 0; i < 256; i++) used[i] = 0;
-
-            Zone[] zones = level.Zones.Items;
-            for (int i = 0; i < zones.Length; i++) {
-                byte id = zones[i].ID;
-                used[id] = 1;
-            }
-            
-            for (byte i = 0; i < 255; i++ ) {
-                if (used[i] == 0) return i;
-            }
-            return 255;
         }
     }
 }
