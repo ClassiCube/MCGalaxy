@@ -93,6 +93,7 @@ namespace MCGalaxy
         public const string PluginMessages = "PluginMessages";
         public const string ExtEntityTeleport = "ExtEntityTeleport";
         public const string LightingMode = "LightingMode";
+        public const string CinematicGui = "CinematicGui";
     }
     
     public sealed class CpeExtension 
@@ -153,6 +154,7 @@ namespace MCGalaxy
             new CpeExtension(CpeExt.PluginMessages,      "Allows sending and receiving plugin messages from clients"),
             new CpeExtension(CpeExt.ExtEntityTeleport,   "Allows sending more precisely controlled teleports"),
             new CpeExtension(CpeExt.LightingMode,        "Allows changing how the client lights worlds"),
+            new CpeExtension(CpeExt.CinematicGui,        "Allows changing the visibility of some GUI components"),
             #if TEN_BIT_BLOCKS
             new CpeExtension(CpeExt.ExtBlocks,           "Allows using block IDs over 255 in block definitions"),
             #endif
