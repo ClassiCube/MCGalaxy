@@ -691,9 +691,9 @@ namespace MCGalaxy.Network
             return buffer;
         }
 
-        public static byte[] SetCinematicGui(bool hideHand, bool hideHotbar, byte r, byte g, byte b, byte opacity, byte apertureSize)
+        public static byte[] SetCinematicGui(bool hideHand, bool hideHotbar, byte r, byte g, byte b, byte opacity, ushort barSize)
         {
-            byte[] buffer = new byte[8];
+            byte[] buffer = new byte[9];
             buffer[0] = Opcode.CpeCinematicGui;
             buffer[1] = (byte)(hideHand ? 1 : 0);
             buffer[2] = (byte)(hideHotbar ? 1 : 0);
@@ -703,7 +703,7 @@ namespace MCGalaxy.Network
             buffer[5] = b;
             buffer[6] = opacity;
 
-            buffer[7] = apertureSize;
+            NetUtils.WriteU16(barSize, buffer, 7);
             return buffer;
         }
         #endregion

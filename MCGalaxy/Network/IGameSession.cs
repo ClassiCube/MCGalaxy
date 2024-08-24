@@ -148,5 +148,7 @@ namespace MCGalaxy.Network
             if (!hasCustomBlocks) raw = fallback[(byte)raw];
             return raw;
         }
+
+        public abstract void SendCinematicGui(CinematicGui gui);
     }
 }
