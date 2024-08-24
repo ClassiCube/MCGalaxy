@@ -26,7 +26,7 @@ namespace MCGalaxy {
         public bool hideHotbar;
 
         public void SetBarColor(Player p, ColorDesc color) { barColor = color; p.Session.SendCinematicGui(this); }
-        public ColorDesc barColor;
+        public ColorDesc barColor = new ColorDesc(0, 0, 0);
 
         /// <summary>
         /// From 0 to 1 where 0 is not visible and 1 is screen fully covered
