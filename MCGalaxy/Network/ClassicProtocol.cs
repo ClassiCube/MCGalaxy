@@ -552,7 +552,8 @@ namespace MCGalaxy.Network
             float barSize = gui.barSize;
             barSize = Math.Max(0, Math.Min(1, barSize));
             Send(Packet.SetCinematicGui(
-                gui.hideHand, gui.hideHotbar, gui.barColor.R, gui.barColor.G, gui.barColor.B, gui.barColor.A,
+                gui.hideCrosshair, gui.hideHand, gui.hideHotbar,
+                gui.barColor.R, gui.barColor.G, gui.barColor.B, gui.barColor.A,
                 (ushort)(barSize * ushort.MaxValue)));
             return true;
         }

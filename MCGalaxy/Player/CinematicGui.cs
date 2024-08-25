@@ -24,6 +24,7 @@ namespace MCGalaxy {
     /// </summary>
     public class CinematicGui {
 
+        public bool hideCrosshair;
         public bool hideHand;
         public bool hideHotbar;
         /// <summary>
