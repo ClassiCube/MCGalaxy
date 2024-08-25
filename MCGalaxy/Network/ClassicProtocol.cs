@@ -546,6 +546,16 @@ namespace MCGalaxy.Network
             Send(Packet.DeleteSelection(id));
             return true;
         }
+
+        public override bool SendCinematicGui(CinematicGui gui) {
+            if (!Supports(CpeExt.CinematicGui)) return false;
+            float barSize = gui.barSize;
+            barSize = Math.Max(0, Math.Min(1, barSize));
+            Send(Packet.SetCinematicGui(
+                gui.hideHand, gui.hideHotbar, gui.barColor.R, gui.barColor.G, gui.barColor.B, gui.barColor.A,
+                (ushort)(barSize * ushort.MaxValue)));
+            return true;
+        }
 #endregion
 
 
@@ -726,14 +736,6 @@ namespace MCGalaxy.Network
         static byte FlippedPitch(byte pitch) {
              if (pitch > 64 && pitch < 192) return pitch;
              else return 128;
-        }
-
-        public override void SendCinematicGui(CinematicGui gui) {
-            float barSize = gui.barSize;
-            barSize = Math.Max(0, Math.Min(1, barSize));
-            Send(Packet.SetCinematicGui(
-                gui.hideHand, gui.hideHotbar, gui.barColor.R, gui.barColor.G, gui.barColor.B, gui.barColor.A,
-                (ushort)(barSize * ushort.MaxValue)));
         }
     }
 }
