@@ -101,6 +101,8 @@ namespace MCGalaxy.Modules.Compiling
             string args    = GetCommandLineArguments(srcPaths, dstPath, referenced);
             string netPath = GetDotnetPath();
             string cscPath = GetCompilerPath(netPath);
+            EnsureFile(netPath);
+            EnsureFile(cscPath);
 
             ICompilerErrors errors = new ICompilerErrors();
             List<string> output    = new List<string>();
@@ -117,6 +119,11 @@ namespace MCGalaxy.Modules.Compiling
             return errors;
         }
 
+        static void EnsureFile(string path) {
+            // make sure file exists and can be opened
+            using (Stream tmp = File.OpenRead(path)) { }
+        }
+
         static string Quote(string value) { return "\"" + value + "\""; }
         
         static string GetDotnetPath() {
@@ -131,8 +138,6 @@ namespace MCGalaxy.Modules.Compiling
             if (string.IsNullOrEmpty(path))
                 throw new InvalidOperationException("Env variable '" + varName + " must specify the path to " + desc);
 
-            // make sure file exists
-            using (Stream tmp = File.OpenRead(path)) { }
             return path;
         }
         
@@ -146,8 +151,10 @@ namespace MCGalaxy.Modules.Compiling
                 p.Start();
 
                 string sdk = p.StandardOutput.ReadLine();
+                string sdkVer, sdkPath;
+                sdk.Separate(' ', out sdkVer, out sdkPath);
                 p.WaitForExit();
-                return Path.Combine(rootFolder, "sdk", sdk, "Roslyn", "bincore", "csc.dll");
+                return Path.Combine(rootFolder, "sdk", sdkVer, "Roslyn", "bincore", "csc.dll");
             }
         }
         
