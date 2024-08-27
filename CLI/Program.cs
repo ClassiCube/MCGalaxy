@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Collections.Generic;
 using MCGalaxy.UI;
 
 namespace MCGalaxy.Cli {
@@ -186,12 +187,110 @@ namespace MCGalaxy.Cli {
         static void LogNewerVersionDetected(object sender, EventArgs e) {
             Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
-        
+
+        static void RedrawLine(string buffer, int position, int trailingSpaces) {
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write($"{buffer}{new string(' ', Math.Max(trailingSpaces, 0))}");
+            Console.SetCursorPosition(position, Console.CursorTop);
+        }
+
+        static void MoveCursor(int direction) {
+            Console.SetCursorPosition(Console.CursorLeft + direction, Console.CursorTop);
+        }
+
+        // [current input] [history]
+        static List<string> commandHistory = new List<string>();
+        static int maxHistory = 50;
+        static int historyPosition = 0;
+
+        static string ReadLine() {
+            if(commandHistory.Count == 0) {
+                commandHistory.Add("");
+            } else {
+                commandHistory[0] = "";
+            }
+
+            int position = 0;
+            ConsoleKeyInfo keyInfo;
+
+            while (true) {
+                keyInfo = Console.ReadKey(true);
+
+                switch(keyInfo.Key) {
+                    case ConsoleKey.Enter:
+                        Console.WriteLine();
+                        if(commandHistory[0].Trim().Length != 0) {
+                            string buffer = commandHistory[0];
+                            commandHistory[0] = "";
+                            commandHistory.Remove(buffer);
+                            commandHistory.Insert(1, buffer);
+                            if(commandHistory.Count > maxHistory){
+                                commandHistory.RemoveAt(commandHistory.Count - 1);
+                            }
+                            return buffer;
+                        }
+                        return commandHistory[0];
+                    case ConsoleKey.Backspace:
+                        if(historyPosition != 0) {
+                            commandHistory[0] = commandHistory[historyPosition];
+                            historyPosition = 0;
+                        }
+                        if (position > 0) {
+                            commandHistory[0] = commandHistory[0].Remove(position - 1, 1);
+                            position--;
+                            RedrawLine(commandHistory[0], position, 1);
+                        }
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        if (position > 0) {
+                            position--;
+                            Console.SetCursorPosition(position, Console.CursorTop);
+                        }
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (position < commandHistory[0].Length) {
+                            position++;
+                            Console.SetCursorPosition(position, Console.CursorTop);
+                        }
+                        break;
+                    case ConsoleKey.UpArrow:
+                        if (historyPosition < commandHistory.Count - 1) {
+                            int oldLength = commandHistory[historyPosition].Length;
+                            historyPosition++;
+                            position = commandHistory[historyPosition].Length;
+                            RedrawLine(commandHistory[historyPosition], position, oldLength - position);
+                        }
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (historyPosition > 0) {
+                            int oldLength = commandHistory[historyPosition].Length;
+                            historyPosition--;
+                            position = commandHistory[historyPosition].Length;
+                            RedrawLine(commandHistory[historyPosition], position, oldLength - position);
+                        }
+                        break;
+                    default:
+                        if(historyPosition != 0) {
+                            commandHistory[0] = commandHistory[historyPosition];
+                            historyPosition = 0;
+                        }
+                        if(position++ == commandHistory[0].Length) {
+                            commandHistory[0] += keyInfo.KeyChar;
+                            Console.Write(keyInfo.KeyChar);
+                        } else {
+                            commandHistory[0] = commandHistory[0].Insert(position - 1, keyInfo.KeyChar.ToString());
+                            RedrawLine(commandHistory[0], position, 0);
+                        }
+                        break;
+                }
+            }
+        }
+
         static void ConsoleLoop() {
             int eofs = 0;
             while (true) {
                 try {
-                    string msg = Console.ReadLine();
+                    string msg = ReadLine();
                     // null msg is triggered in two cases:
                     //   a) when pressing Ctrl+C to shutdown CLI on Windows
                     //   b) underlying terminal provides a bogus EOF
