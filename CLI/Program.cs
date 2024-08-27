@@ -18,15 +18,19 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
 using MCGalaxy.UI;
 
 namespace MCGalaxy.Cli {
     public static class Program {
+        static bool interactive;
 
         [STAThread]
         public static void Main(string[] args) {
+            interactive = args.Contains("--interactive");
+
             SetCurrentDirectory();
 
             // If MCGalaxy_.dll is missing, a FileNotFoundException will get thrown for MCGalaxy dll
@@ -188,6 +192,8 @@ namespace MCGalaxy.Cli {
             Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
 
+        static int cursortY = 0;
+
         static void RedrawLine(string buffer, int position, int trailingSpaces) {
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write($"{buffer}{new string(' ', Math.Max(trailingSpaces, 0))}");
@@ -290,7 +296,13 @@ namespace MCGalaxy.Cli {
             int eofs = 0;
             while (true) {
                 try {
-                    string msg = ReadLine();
+                    string msg;
+
+                    if(interactive) {
+                        msg = ReadLine();
+                    } else {
+                        msg = Console.ReadLine();
+                    }
                     // null msg is triggered in two cases:
                     //   a) when pressing Ctrl+C to shutdown CLI on Windows
                     //   b) underlying terminal provides a bogus EOF
