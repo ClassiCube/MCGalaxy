@@ -192,8 +192,6 @@ namespace MCGalaxy.Cli {
             Write("&cMCGalaxy update available! Update by replacing with the files from " + Updater.UploadsURL);
         }
 
-        static int cursortY = 0;
-
         static void RedrawLine(string buffer, int position, int trailingSpaces) {
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write($"{buffer}{new string(' ', Math.Max(trailingSpaces, 0))}");
@@ -217,6 +215,7 @@ namespace MCGalaxy.Cli {
             }
 
             int position = 0;
+            historyPosition = 0;
             ConsoleKeyInfo keyInfo;
 
             while (true) {
@@ -225,8 +224,8 @@ namespace MCGalaxy.Cli {
                 switch(keyInfo.Key) {
                     case ConsoleKey.Enter:
                         Console.WriteLine();
-                        if(commandHistory[0].Trim().Length != 0) {
-                            string buffer = commandHistory[0];
+                        if(commandHistory[historyPosition].Trim().Length != 0) {
+                            string buffer = commandHistory[historyPosition];
                             commandHistory[0] = "";
                             commandHistory.Remove(buffer);
                             commandHistory.Insert(1, buffer);
