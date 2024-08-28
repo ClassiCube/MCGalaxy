@@ -79,9 +79,10 @@ namespace MCGalaxy.Cli {
             Server.RestartPath = Assembly.GetEntryAssembly().Location;
 #endif
         }
-        
-        
+               
+        static ConsoleDriver driver;
         static void StartCLI() {
+            driver = ConsoleDriver.Create();
             FileLogger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             
@@ -91,8 +92,8 @@ namespace MCGalaxy.Cli {
                 
                 EnableCLIMode();
                 Server.Start();
-                Console.Title = Server.Config.Name + " - " + Server.SoftwareNameVersioned;
-                Console.CancelKeyPress += OnCancelKeyPress;
+                driver.SetTitle(Server.Config.Name + " - " + Server.SoftwareNameVersioned);
+                driver.OnSpecialInput = OnCancelKeyPress;
 
                 CheckNameVerification();
                 ConsoleLoop();
@@ -102,7 +103,7 @@ namespace MCGalaxy.Cli {
             }
         }
         
-        static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e) {
+        static void OnCancelKeyPress(ConsoleCancelEventArgs e) {
             switch (e.SpecialKey) {
                 case ConsoleSpecialKey.ControlBreak:
                     // Cannot set e.Cancel for this one
@@ -227,58 +228,8 @@ namespace MCGalaxy.Cli {
             }
         }
         
-        static void Write(string message) {
-            int index = 0;
-            char col = 'S';
-            message = UIHelpers.Format(message);
-            
-            while (index < message.Length) 
-            {
-                char curCol = col;
-                string part = UIHelpers.OutputPart(ref col, ref index, message);
-
-                if (part.Length == 0) continue;
-                ConsoleColor color = GetConsoleColor(curCol);
-
-                if (color == ConsoleColor.White) {
-                    // show in user's preferred console text color
-                    Console.ResetColor(); 
-                } else { 
-                    Console.ForegroundColor = color; 
-                }
-                Console.Write(part);
-            }
-
-            Console.ResetColor();
-            Console.WriteLine();
-        }
-
-        static ConsoleColor GetConsoleColor(char c) {
-            if (c == 'S') return ConsoleColor.White;
-            Colors.Map(ref c);
-            
-            switch (c) {
-                    case '0': return ConsoleColor.DarkGray; // black text on black background is unreadable
-                    case '1': return ConsoleColor.DarkBlue;
-                    case '2': return ConsoleColor.DarkGreen;
-                    case '3': return ConsoleColor.DarkCyan;
-                    case '4': return ConsoleColor.DarkRed;
-                    case '5': return ConsoleColor.DarkMagenta;
-                    case '6': return ConsoleColor.DarkYellow;
-                    case '7': return ConsoleColor.Gray;
-                    case '8': return ConsoleColor.DarkGray;
-                    case '9': return ConsoleColor.Blue;
-                    case 'a': return ConsoleColor.Green;
-                    case 'b': return ConsoleColor.Cyan;
-                    case 'c': return ConsoleColor.Red;
-                    case 'd': return ConsoleColor.Magenta;
-                    case 'e': return ConsoleColor.Yellow;
-                    case 'f': return ConsoleColor.White;
-                    
-                default:
-                    if (!Colors.IsDefined(c)) return ConsoleColor.White;
-                    return GetConsoleColor(Colors.Get(c).Fallback);
-            }
+        static void Write(string msg) {
+            driver.WriteColored(msg);
         }
     }
 }
