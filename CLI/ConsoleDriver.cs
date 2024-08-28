@@ -131,27 +131,19 @@ namespace MCGalaxy.Cli
         }
         
         public override void SetTitle(string title) {
-            string msg  = string.Format("\x1b]0;{0}\x7", title);
+            string msg = "\x1b]0;" + title + "\x7";
             WriteString(msg);
-        }
-        
-        void WriteString(string msg) {
-            byte[] data = encoding.GetBytes(msg);
-            write(0, data, data.Length);
-        }
-        
-        [DllImport("libc", SetLastError = true)]
-        static extern int write(int fd, byte[] data, int len);
-        
+        }      
         
         public override string ReadLine() {
             return Console.ReadLine();
         }
         
         public override void WriteColored(string message) {
+            StringBuilder sb = new StringBuilder();
             int index = 0;
-            char col = 'S';
-            message = UIHelpers.Format(message);
+            char col  = 'S';
+            message   = UIHelpers.Format(message);
             
             while (index < message.Length)
             {
@@ -163,16 +155,17 @@ namespace MCGalaxy.Cli
 
                 if (color == ConsoleColor.White) {
                     // show in user's preferred console text color
-                    WriteString("\x1b[0m"); // reset all attributes
+                    sb.Append("\x1b[0m"); // reset all attributes
                 } else {
                     int code = MapColorCode(color);
-                    WriteString("\x1b[" + code + "m"); // reset all attributes
+                    sb.Append("\x1b[").Append(code).Append("m");
                 }
-                WriteString(part);
+                sb.Append(part);
             }
 
-            WriteString("\x1b[0m"); // reset all attributes
-            WriteString("\n");
+            sb.Append("\x1b[0m"); // reset all attributes
+            sb.Append("\n");
+            WriteColored(sb.ToString());
         }
         
         static int MapColorCode(ConsoleColor color) {
@@ -198,5 +191,13 @@ namespace MCGalaxy.Cli
             }
             return 97;
         }
+        
+        void WriteString(string msg) {
+            byte[] data = encoding.GetBytes(msg);
+            write(1, data, data.Length);
+        }
+        
+        [DllImport("libc", SetLastError = true)]
+        static extern int write(int fd, byte[] data, int len);
     }
 }

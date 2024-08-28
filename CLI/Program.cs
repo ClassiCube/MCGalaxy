@@ -83,6 +83,7 @@ namespace MCGalaxy.Cli {
         static ConsoleDriver driver;
         static void StartCLI() {
             driver = ConsoleDriver.Create();
+            driver.Init();
             FileLogger.Init();
             AppDomain.CurrentDomain.UnhandledException += GlobalExHandler;
             
