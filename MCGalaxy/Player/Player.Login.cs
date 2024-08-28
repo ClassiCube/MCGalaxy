@@ -117,12 +117,12 @@ namespace MCGalaxy
 
             Server.Background.QueueOnce(ShowAltsTask, name, TimeSpan.Zero);
 
-            string joinMsg = "&a+ λFULL &S" + PlayerInfo.GetLoginMessage(this);
-            if (hidden) joinMsg = "&8(hidden)" + joinMsg;
+            /* string joinMsg = "&a+ λFULL &S" + PlayerInfo.GetLoginMessage(this); */
+            /* if (hidden) joinMsg = "&8(hidden)" + joinMsg; */
             
-            if (Server.Config.GuestJoinsNotify || Rank > LevelPermission.Guest) {
-                Chat.MessageFrom(ChatScope.All, this, joinMsg, null, Chat.FilterVisible(this), !hidden);
-            }
+            /* if (Server.Config.GuestJoinsNotify || Rank > LevelPermission.Guest) { */
+                /* Chat.MessageFrom(ChatScope.All, this, joinMsg, null, Chat.FilterVisible(this), !hidden); */
+            /* } */
 
             if (Server.Config.AgreeToRulesOnEntry && Rank == LevelPermission.Guest && !Server.agreed.Contains(name)) {
                 Message("&9You must read the &c/Rules &9and &c/Agree &9to them before you can build and use commands!");
@@ -226,11 +226,11 @@ namespace MCGalaxy
             
             if (data == null) {
                 PlayerData.Create(this);
-                Chat.MessageFrom(this, "λNICK &Shas connected for the first time!");
-                Message("Welcome " + ColoredName + "&S! This is your first visit.");
+                /* Chat.MessageFrom(this, "λNICK &Shas connected for the first time!"); */
+                /* Message("Welcome " + ColoredName + "&S! This is your first visit."); */
             } else {
                 data.ApplyTo(this);
-                Message("Welcome back " + FullName + "&S! You've been here " + TimesVisited + " times!");
+                /* Message("Welcome back " + FullName + "&S! You've been here " + TimesVisited + " times!"); */
             }
             gotSQLData = true;
         }

@@ -58,8 +58,8 @@ namespace MCGalaxy.Commands.Moderation {
                 AnnounceOps(p, "To Ops -λNICK&S- is now &finvisible");               
                 
                 if (!silent) {
-                    string leaveMsg = "&c- λFULL &S" + PlayerInfo.GetLogoutMessage(p);
-                    Chat.MessageFrom(ChatScope.All, p, leaveMsg, null, null, true);
+                    /* string leaveMsg = "&c- λFULL &S" + PlayerInfo.GetLogoutMessage(p); */
+                    /* Chat.MessageFrom(ChatScope.All, p, leaveMsg, null, null, true); */
                 }
                 
                 if (!p.opchat) opchat.Use(p, "", data);
