@@ -126,14 +126,23 @@ namespace MCGalaxy.Cli
     sealed class UnixConsoleDriver : ConsoleDriver
     {
         Encoding encoding;
+        bool ttyOutput;
+        
+        const string ESC = "\x1b";
+        const string CSI = ESC + "[";
+        const string OSC = ESC + "]";
+        const string BEL = "\x7";
+        
+        const string RESET = CSI + "0m";
         
         public override void Init() {
-            encoding = new UTF8Encoding(false);
+            encoding  = new UTF8Encoding(false);
+            ttyOutput = IsTerminalOutput();
         }
         
         public override void SetTitle(string title) {
-            string msg = "\x1b]0;" + title + "\x7";
-            WriteString(msg);
+            string msg = OSC + "0;" + title + BEL;
+            if (ttyOutput) WriteString(msg);
         }      
         
         public override string ReadLine() {
@@ -165,17 +174,19 @@ namespace MCGalaxy.Cli
                 if (part.Length == 0) continue;
                 ConsoleColor color = GetConsoleColor(curCol);
 
-                if (color == ConsoleColor.White) {
+                if (!ttyOutput) {
+                    // Don't add colours
+                } else if (color == ConsoleColor.White) {
                     // show in user's preferred console text color
-                    sb.Append("\x1b[0m"); // reset all attributes
+                    sb.Append(RESET);
                 } else {
                     int code = MapColorCode(color);
-                    sb.Append("\x1b[").Append(code).Append("m");
+                    sb.Append(CSI).Append(code).Append("m");
                 }
                 sb.Append(part);
             }
 
-            sb.Append("\x1b[0m"); // reset all attributes
+            if (ttyOutput) sb.Append(RESET);
             sb.Append("\n");
             WriteString(sb.ToString());
         }
@@ -201,13 +212,24 @@ namespace MCGalaxy.Cli
                 case ConsoleColor.Cyan:     return 96;
                 case ConsoleColor.White:    return 97;
             }
-            return 97;
+            return 0; // reset all attributes
         }
+        
         
         void WriteString(string msg) {
             byte[] data = encoding.GetBytes(msg);
             write(1, data, data.Length);
+        }     
+
+        bool IsTerminalOutput() {
+            try {
+                return isatty(1) != 0;
+            } catch { }
+            return true;
         }
+        
+        [DllImport("libc", SetLastError = true)]
+        static extern int isatty(int fd);
         
         [DllImport("libc", SetLastError = true)]
         static extern int read(int fd, byte[] data, int len);
