@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -136,7 +137,18 @@ namespace MCGalaxy.Cli
         }      
         
         public override string ReadLine() {
-            return Console.ReadLine();
+            List<byte> buffer = new List<byte>();
+            byte[] data = new byte[1];
+            
+            for (;;)
+            {
+                int ret = read(0, data, 1);
+                if (ret == -1) return null;
+                if (data[0] == '\n') break;
+                
+                buffer.Add(data[0]);
+            }
+            return encoding.GetString(buffer.ToArray());
         }
         
         public override void WriteColored(string message) {
@@ -165,7 +177,7 @@ namespace MCGalaxy.Cli
 
             sb.Append("\x1b[0m"); // reset all attributes
             sb.Append("\n");
-            WriteColored(sb.ToString());
+            WriteString(sb.ToString());
         }
         
         static int MapColorCode(ConsoleColor color) {
@@ -196,6 +208,9 @@ namespace MCGalaxy.Cli
             byte[] data = encoding.GetBytes(msg);
             write(1, data, data.Length);
         }
+        
+        [DllImport("libc", SetLastError = true)]
+        static extern int read(int fd, byte[] data, int len);
         
         [DllImport("libc", SetLastError = true)]
         static extern int write(int fd, byte[] data, int len);
