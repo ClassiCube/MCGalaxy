@@ -233,13 +233,9 @@ namespace MCGalaxy
         VolatileArray<VisibleSelection> selections = new VolatileArray<VisibleSelection>();
         
         public bool AddVisibleSelection(string label, Vec3U16 min, Vec3U16 max, ColorDesc color, object instance) {
-            VisibleSelection sel = new VisibleSelection();
-            sel.data = instance;
-            
             lock (selections.locker) {
-                sel.ID = GetSelectionID(selections.Items, instance);
-                selections.Add(sel);
-                return Session.SendAddSelection(sel.ID, label, min, max, color);
+                byte id = FindOrAddSelection(selections.Items, instance);
+                return Session.SendAddSelection(id, label, min, max, color);
             }
         }
         
@@ -258,23 +254,31 @@ namespace MCGalaxy
             return false;
         }
         
-        static unsafe byte GetSelectionID(VisibleSelection[] items, object instance) {
+        unsafe byte FindOrAddSelection(VisibleSelection[] items, object instance) {
             byte* used = stackalloc byte[256];
             for (int i = 0; i < 256; i++) used[i] = 0;
+            byte id;
 
             for (int i = 0; i < items.Length; i++) 
             {
-                byte id = items[i].ID;
+                id = items[i].ID;
                 if (instance == items[i].data) return id;
                 
                 used[id] = 1;
             }
             
-            for (byte i = 0; i < 255; i++) 
+            // find unused ID, or 255 if none unused
+            for (id = 0; id < 255; id++) 
             {
-                if (used[i] == 0) return i;
+                if (used[id] == 0) break;
             }
-            return 255;
+            
+            VisibleSelection sel = new VisibleSelection();
+            sel.data = instance;
+            sel.ID   = id;
+            
+            selections.Add(sel);
+            return id;
         }
     }
 }
