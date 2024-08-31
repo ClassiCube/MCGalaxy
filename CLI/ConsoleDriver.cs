@@ -30,7 +30,14 @@ namespace MCGalaxy.Cli
     {
         public Action<ConsoleCancelEventArgs> OnSpecialInput;
         
-        public abstract void Init();
+        public virtual void Init() {
+            Console.CancelKeyPress += OnCancelKeyPress;
+        }
+
+        void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e) {
+            OnSpecialInput(e);
+        }
+        
         
         public abstract void SetTitle(string title);
         
@@ -80,14 +87,6 @@ namespace MCGalaxy.Cli
     
     sealed class DefaultConsoleDriver : ConsoleDriver
     {
-        public override void Init() {
-            Console.CancelKeyPress += OnCancelKeyPress;
-        }
-
-        void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e) {
-            OnSpecialInput(e);
-        }
-        
         public override void SetTitle(string title) {
             Console.Title = title;
         }
@@ -98,8 +97,8 @@ namespace MCGalaxy.Cli
         
         public override void WriteColored(string message) {
             int index = 0;
-            char col = 'S';
-            message = UIHelpers.Format(message);
+            char col  = 'S';
+            message   = UIHelpers.Format(message);
             
             while (index < message.Length)
             {
@@ -136,6 +135,7 @@ namespace MCGalaxy.Cli
         const string RESET = CSI + "0m";
         
         public override void Init() {
+            base.Init();
             encoding  = new UTF8Encoding(false);
             ttyOutput = IsTerminalOutput();
         }
@@ -161,7 +161,7 @@ namespace MCGalaxy.Cli
         }
         
         public override void WriteColored(string message) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(message.Length + 10);
             int index = 0;
             char col  = 'S';
             message   = UIHelpers.Format(message);
@@ -218,7 +218,7 @@ namespace MCGalaxy.Cli
         
         void WriteString(string msg) {
             byte[] data = encoding.GetBytes(msg);
-            write(1, data, data.Length);
+            try { write(1, data, data.Length); } catch { }
         }     
 
         bool IsTerminalOutput() {
