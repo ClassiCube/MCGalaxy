@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (!CodesToNames.ContainsKey(twoLetterCode)) { return null; }
             return CodesToNames[twoLetterCode];
         }
-        public static Dictionary<string, string> CodesToNames = new Dictionary<string, string>() {
+        static Dictionary<string, string> CodesToNames = new Dictionary<string, string>() {
             { "AF", "Afghanistan" },
             { "AL", "Albania" },
             { "DZ", "Algeria" },
@@ -226,7 +226,7 @@ namespace MCGalaxy.Commands.Moderation {
             { "YT", "Mayotte" },
             { "MX", "Mexico" },
             { "FM", "Federated States of Micronesia" },
-            { "MD", "The Republic of Moldova)" },
+            { "MD", "The Republic of Moldova" },
             { "MC", "Monaco" },
             { "MN", "Mongolia" },
             { "ME", "Montenegro" },
