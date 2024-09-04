@@ -1,4 +1,65 @@
-﻿v 1.9.4.9
+﻿v 1.9.5.0
+Improved: Most brushes now support block ID ranges for arguments
+Added: Support for new lighting CPE extension
+Added: Support for CinematicGui CPE extension (Thanks Venk)
+Fixed: Discord relay bot not displaying user chosen display names
+Improved: Separate block place and delete permissions
+Improved: In GUI, darken very bright colours and slightly lighten very dark colours in main log window
+Improved: For Discord messages in reply to another message, display '(at)original user' prefix
+Improved: /os map redesigned to use sub commands
+Improved: /measure now supports block ID ranges for arguments
+Improved: Striped brush default to 'skip' instead of 'air' when only 0 or 1 argument provided
+Improved: Add creation date timestamp to bots
+Improved: Create game config files if they don't exist
+Improved: Allow adding notes to players without warning them
+Improved: Non-public mod action logs is now relayed to non-public channels on Discord/IRC
+Added: /update latest to allow updating to latest commit
+Added: Allow changing default map generator theme and biome
+Added: Support for 128 character texture pack URLs
+Added: Move bot AI instruction (same as walk, but doesn't adjust yaw/pitch)
+Improved: In dotnet build, try to autodetect compiler location
+Improved: In dotnet build, added auto references for common DLLs when compiling
+Improved: In dotnet build, adding dotnet specific assembly references when compiling
+Improved: In dotnet build, support resolving assembly references from server folder for plugins
+Improved: Allow /where bot to see bot positions
+Improved: Display full country names in /location
+Improved: For stare bot AI instruction, reduce default search distance to 1000 blocks
+Improved: Display your current out/in message in /help log[out/in]message
+Improved: /replaceall uses held block if no replace block provided
+Improved: /inbox del all now says how many messages were deleted
+Improved: /search players now supports searching offline players
+Improved: Disallow chatting when ignoring all
+Improved: Walking bots now face in direction of their target position
+Improved: Allow /rules to be used when frozen
+Improved: Allow disabling auto name verification for LAN IPs
+Improved: /brush and /transform support partial name matching
+Improved: Allow texture URLs that contain .zip/.png (not just ending with)
+Improved: Make /countdown stop error much less frequently
+Improved: Obsidian appears as Black wool instead of Cobblestone to 0.0.23 classic clients
+Improved: Document /ignore list and give feedback if ignoring nothing
+Improved: Provide feedback when trying to use old /os zones
+Improved: Update Readme images (Thanks RandomStrangers)
+Improved: Remove slash from line wrappable characters
+Improved: Make name verify disabled warning louder in CLI mode
+Improved: Allow dynamically adding map gen biomes
+Fixed: CTF/Countdown/TNT wars being in command list twice
+Fixed: /where always displaying your own orientation
+Fixed: Being unable to use new dropbox url format
+Fixed: Executing commands from Discord/IRC didn't strip leading whitespace
+Fixed: LS physics level not being updated when a new level is loaded
+Fixed: LS physics level stuck at 5 when continuing on the same level
+Fixed: /back not working with /tpa
+Fixed: Prevent creating MBs with non-existent commands
+Fixed: /restart not working in standalone build on Windows
+Fixed: Negative integer parsing issues with some non-english languages
+Fixed: Date saving to Database issues with some non-english languages
+Fixed: Discord bot not handling errors properly on modern dotnet versions
+Fixed: Constant error spam reading from stdin if being run in nohup mode
+Removed: Being able to set LoadOnGoto and Unload options via /os map
+Removed: Kicking clients that try sending a message with a '&' in it
+Removed: /rq as an alias for /ragequit
+
+v 1.9.4.9
 Improved: Allow using block names in /lb and /gb commands (e.g. /lb edit, /gb copy, etc)
 Improved: Try to preserve process's raw command line arguments when restarting on Linux
 Improved: Change /compload to also unload the command/plugin first
