@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2015 MCGalaxy
+    Copyright 2015-2024 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -85,7 +85,7 @@ namespace MCGalaxy.Authentication
             // if a player from an IP is spamming login attempts,
             //  prevent that from spamming Mojang's authentication servers too
             lock (locker) {
-                if (!HasJoined(p.truename)) return false;
+                if (!HasJoined(p)) return false;
             }
                 
             auth.AcceptPlayer(p);
@@ -94,8 +94,8 @@ namespace MCGalaxy.Authentication
         
         
         const string HAS_JOINED_URL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username={0}&serverId={1}";
-        public static bool HasJoined(string username) {
-            string url = string.Format(HAS_JOINED_URL, username, GetServerID());
+        public static bool HasJoined(Player p) {
+            string url = string.Format(HAS_JOINED_URL, p.truename, GetServerID(p));
             try
             {
                 HttpWebRequest req   = HttpUtil.CreateRequest(url);
@@ -108,28 +108,16 @@ namespace MCGalaxy.Authentication
                 }
             } catch (Exception ex) {
                 HttpUtil.DisposeErrorResponse(ex);
-                Logger.LogError("Verifying Mojang session for " + username, ex);
+                Logger.LogError("Verifying Mojang session for " + p.truename, ex);
             }
 
             return false;
         }
         
-        static string GetServerID() {
-            UpdateExternalIP();
-            byte[] data = Encoding.UTF8.GetBytes(externalIP + ":" + Server.Config.Port);
+        static string GetServerID(Player p) {
+            byte[] data = Encoding.UTF8.GetBytes(p.ip);
             byte[] hash = new SHA1Managed().ComputeHash(data);
             return Utils.ToHexString(hash);
-        }
-        
-        static string externalIP;
-        static void UpdateExternalIP() {
-            if (externalIP != null) return;
-
-            try {
-                externalIP = HttpUtil.LookupExternalIP();
-            } catch (Exception ex) {
-                Logger.LogError("Retrieving external IP", ex);
-            }
         }
     }
 }

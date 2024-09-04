@@ -3,7 +3,7 @@
     Original at http://peripheralarbor.com/minecraft/Forester.py
     From the website: "The scripts are all available to download for free. If you'd like to make your own based on the code, go right ahead."
     
-    Copyright 2015 MCGalaxy
+    Copyright 2015-2024 MCGalaxy
     
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
