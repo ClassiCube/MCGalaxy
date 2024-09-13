@@ -344,7 +344,6 @@ namespace MCGalaxy
         public static void StartThread(out Thread thread, string name, ThreadStart threadFunc) {
             thread = new Thread(threadFunc);
             
-            thread.IsBackground = true;
             try { thread.Name = name; } catch { }
             thread.Start();
         }

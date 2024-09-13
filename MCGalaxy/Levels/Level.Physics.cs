@@ -58,6 +58,7 @@ namespace MCGalaxy {
                                 
                 Server.StartThread(out physThread, "Physics_" + name, 
                                    PhysicsLoop);
+                physThread.IsBackground = true;
                 physThreadStarted = true;
             }
         }

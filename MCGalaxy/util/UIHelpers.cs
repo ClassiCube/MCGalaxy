@@ -83,6 +83,7 @@ namespace MCGalaxy.UI
                         Logger.Log(LogType.CommandUsage, "(console): FAILED COMMAND");
                     }
                 });
+            thread.IsBackground = true;
         }
         
         public static string Format(string message) {
