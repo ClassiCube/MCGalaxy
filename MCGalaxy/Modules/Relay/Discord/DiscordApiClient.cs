@@ -64,6 +64,7 @@ namespace MCGalaxy.Modules.Relay.Discord
                     
                     string data = Json.SerialiseObject(msg.ToJson());
                     HttpUtil.SetRequestData(req, Encoding.UTF8.GetBytes(data));
+                    msg.OnRequest(req);
                     res = req.GetResponse();
                     
                     string resp = HttpUtil.GetResponseText(res);
