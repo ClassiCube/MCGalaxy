@@ -2,7 +2,7 @@ MCGalaxy is a fully featured and customisable **ClassiCube Server Software** bas
 
 **Setup**
 -----------------
-Download the latest MCGalaxy release [from here](https://github.com/ClassiCube/MCGalaxy/releases)
+Download the latest MCGalaxy release [from here](https://www.classicube.net/mcg/download/)
 * Windows: You need to install .NET framework 4.0. Windows 8/10/11 already have this included.
 * macOS:   You need to install the [Mono framework](https://www.mono-project.com).
 * Linux:   You need to install the [Mono framework](https://www.mono-project.com). (or just `apt install mono-complete` if on Ubuntu)
