@@ -25,6 +25,7 @@ namespace MCGalaxy.Events.PlayerEvents
     public enum MouseButton { Left, Right, Middle }  
     public enum MouseAction { Pressed, Released }
     public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }
+    public enum NotifyActionType { SavedLevel, SetSpawn, Respawned, ToggledBlockList, AcceptedTextures, ChangedTexturePack, SelectedBlock }
     
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player sends chat to the server </summary>
@@ -203,6 +204,21 @@ namespace MCGalaxy.Events.PlayerEvents
             for (int i = 0; i < items.Length; i++) 
             {
                 try { items[i].method(p, btn, action, yaw, pitch, entityID, x, y, z, face); } 
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+
+    public delegate void OnNotifyAction(Player p, NotifyActionType action, int value);
+    /// <summary> Called whenever a player triggers a certain client event </summary>
+    public sealed class OnNotifyActionEvent : IEvent<OnNotifyAction>
+    {
+        public static void Call(Player p, NotifyActionType action, int value)
+        {
+            IEvent<OnNotifyAction>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++)
+            {
+                try { items[i].method(p, action, value); }
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
