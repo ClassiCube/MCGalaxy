@@ -193,9 +193,12 @@ namespace MCGalaxy.Modules.Compiling
             string root = RuntimeEnvironment.GetRuntimeDirectory();
             
             string[] paths = new string[] {
-                Path.Combine(root, "csc.exe"),     // C# compiler
-                Path.Combine(root, @"../bin/mcs"), // old Mono C# compiler
-                Path.Combine(root, "mcs.exe"),     // old Mono C# compiler
+                // First try new C# compiler
+                Path.Combine(root, "csc.exe"),
+                // Then fallback to old Mono C# compiler
+                Path.Combine(root, @"../../../bin/mcs"), 
+                Path.Combine(root, "mcs.exe"),
+                "/usr/bin/mcs",
             };
             
             foreach (string path in paths)
