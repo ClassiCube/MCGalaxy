@@ -31,17 +31,157 @@
 
 #if !MCG_STANDALONE
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+#if !MCG_DOTNET
+using System.CodeDom.Compiler;
+#endif
 
 namespace MCGalaxy.Modules.Compiling
-{
+{  
+    /// <summary> Compiles C# source by invoking a compiler executable directly </summary>
+    public abstract class CommandLineCompiler
+    {
+        public ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {
+            string args = GetCommandLineArguments(srcPaths, dstPath, referenced);
+            string exe  = GetExecutable();
+
+            ICompilerErrors errors = new ICompilerErrors();
+            List<string> output    = new List<string>();
+            int retValue = Compile(exe, GetCompilerArgs(exe, args), output);
+
+            // Only look for errors/warnings if the compile failed
+            // TODO still log warnings anyways error when success?
+            if (retValue != 0) {
+                foreach (string line in output)
+                {
+                    ProcessCompilerOutputLine(errors, line);
+                }
+            }
+            return errors;
+        }
+        
+        
+        protected virtual string GetCommandLineArguments(string[] srcPaths, string dstPath,
+                                                         List<string> referencedAssemblies) {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("/t:library ");
+
+            sb.Append("/utf8output ");
+            sb.Append("/noconfig ");
+            sb.Append("/fullpaths ");
+            
+            AddCoreAssembly(sb);
+            AddReferencedAssemblies(sb, referencedAssemblies);
+            sb.AppendFormat("/out:{0} ", Quote(dstPath));
+
+            sb.Append("/D:DEBUG ");
+            sb.Append("/debug+ ");
+            sb.Append("/optimize- ");
+
+            sb.Append("/warnaserror- ");
+            sb.Append("/unsafe ");
+
+            foreach (string path in srcPaths)
+            {
+                sb.AppendFormat("{0} ", Quote(path));
+            }
+            return sb.ToString();
+        }
+        
+        protected virtual void AddCoreAssembly(StringBuilder sb) {
+            string coreAssemblyFileName = typeof(object).Assembly.Location;
+
+            if (!string.IsNullOrEmpty(coreAssemblyFileName)) {
+                sb.Append("/nostdlib+ ");
+                sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName));
+            }
+        }
+        
+        protected abstract void AddReferencedAssemblies(StringBuilder sb, List<string> referenced);
+
+        protected static string Quote(string value) { return "\"" + value.Trim() + "\""; }
+        
+        protected abstract string GetExecutable();
+        protected abstract string GetCompilerArgs(string exe, string args);
+        
+
+        static int Compile(string path, string args, List<string> output) {
+            // https://stackoverflow.com/questions/285760/how-to-spawn-a-process-and-capture-its-stdout-in-net
+            ProcessStartInfo psi = CreateStartInfo(path, args);
+
+            using (Process p = new Process())
+            {
+                p.OutputDataReceived += (s, e) => { if (e.Data != null) output.Add(e.Data); };
+                p.ErrorDataReceived  += (s, e) => { }; // swallow stderr output
+
+                p.StartInfo = psi;
+                p.Start();
+
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+
+                if (!p.WaitForExit(120 * 1000))
+                    throw new InvalidOperationException("C# compiler ran for over two minutes! Giving up..");
+
+                return p.ExitCode;
+            }
+        }
+        
+        protected static ProcessStartInfo CreateStartInfo(string path, string args) {
+            ProcessStartInfo psi = new ProcessStartInfo(path, args);
+            psi.WorkingDirectory       = Environment.CurrentDirectory;
+            psi.UseShellExecute        = false;
+            psi.CreateNoWindow         = true;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError  = true;
+            return psi;
+        }
+        
+        
+        static Regex outputRegWithFileAndLine;
+        static Regex outputRegSimple;
+        
+        static void ProcessCompilerOutputLine(ICompilerErrors errors, string line) {
+            if (outputRegSimple == null) {
+                outputRegWithFileAndLine =
+                    new Regex(@"(^(.*)(\(([0-9]+),([0-9]+)\)): )(error|warning) ([A-Z]+[0-9]+) ?: (.*)");
+                outputRegSimple =
+                    new Regex(@"(error|warning) ([A-Z]+[0-9]+) ?: (.*)");
+            }
+
+            //First look for full file info
+            Match m = outputRegWithFileAndLine.Match(line);
+            bool full;
+            if (m.Success) {
+                full = true;
+            } else {
+                m = outputRegSimple.Match(line);
+                full = false;
+            }
+
+            if (!m.Success) return;
+            ICompilerError ce = new ICompilerError();
+
+            if (full) {
+                ce.FileName = m.Groups[2].Value;
+                ce.Line     = NumberUtils.ParseInt32(m.Groups[4].Value);
+                ce.Column   = NumberUtils.ParseInt32(m.Groups[5].Value);
+            }
+
+            ce.IsWarning   = m.Groups[full ? 6 : 1].Value.CaselessEq("warning");
+            ce.ErrorNumber = m.Groups[full ? 7 : 2].Value;
+            ce.ErrorText   = m.Groups[full ? 8 : 3].Value;
+            errors.Add(ce);
+        }
+    }
+
 #if !MCG_DOTNET
     /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
     public static class ICodeDomCompiler
@@ -90,58 +230,56 @@ namespace MCGalaxy.Modules.Compiling
             return errors;
         }
     }
+    
+    internal class ClassicCSharpCompiler : CommandLineCompiler
+    {
+		protected override void AddCoreAssembly(StringBuilder sb) {
+			string coreAssemblyFileName = typeof(object).Assembly.Location;
+
+            if (!string.IsNullOrEmpty(coreAssemblyFileName)) {
+                sb.Append("/nostdlib+ ");
+                sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName));
+            }
+		}
+        
+		protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {
+            foreach (string path in referenced)
+            {
+                sb.AppendFormat("/R:{0} ", Quote(path));
+            }
+        }
+        
+        
+        protected override string GetExecutable() {
+            string path = RuntimeEnvironment.GetRuntimeDirectory();
+            
+            Console.WriteLine(path);
+            return Path.Combine(path, "csc.exe");
+        }
+        
+        protected override string GetCompilerArgs(string exe, string args) {
+            return args;
+        }
+    }
 #else
     /// <summary> Compiles C# source code files, using Roslyn for the compiler </summary>
-    public static class RoslynCSharpCompiler
+    public class RoslynCSharpCompiler : CommandLineCompiler
     {
-        static Regex outputRegWithFileAndLine;
-        static Regex outputRegSimple;
-
-        public static ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {
-            string args    = GetCommandLineArguments(srcPaths, dstPath, referenced);
-            string netPath = GetDotnetPath();
-            string cscPath = GetCompilerPath(netPath);
-            EnsureFile(netPath);
-            EnsureFile(cscPath);
-
-            ICompilerErrors errors = new ICompilerErrors();
-            List<string> output    = new List<string>();
-            int retValue = Compile(netPath, cscPath, args, output);
-
-            // Only look for errors/warnings if the compile failed
-            // TODO still log warnings anyways error when success?
-            if (retValue != 0) {
-                foreach (string line in output)
-                {
-                    ProcessCompilerOutputLine(errors, line);
-                }
-            }
-            return errors;
-        }
-
-        static void EnsureFile(string path) {
-            // make sure file exists and can be opened
-            using (Stream tmp = File.OpenRead(path)) { }
-        }
-
-        static string Quote(string value) { return "\"" + value + "\""; }
-        
-        static string GetDotnetPath() {
+        protected override string GetExecutable() {
             string path = Server.GetRuntimeExePath();
             if (path.EndsWith("dotnet")) return path;
             
-            return GetBinaryFile("MCG_DOTNET_PATH", "'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
-        }
-
-        static string GetBinaryFile(string varName, string desc) {
-            string path = Environment.GetEnvironmentVariable(varName);
-            if (string.IsNullOrEmpty(path))
-                throw new InvalidOperationException("Env variable '" + varName + " must specify the path to " + desc);
-
+            path = Environment.GetEnvironmentVariable("MCG_DOTNET_PATH");
+            if (string.IsNullOrEmpty(path)) {
+                throw new InvalidOperationException("Env variable 'MCG_DOTNET_PATH' must specify the path to 'dotnet' executable - e.g. /home/test/.dotnet/dotnet");
+            }
+            
+            // make sure file exists
+            using (Stream tmp = File.OpenRead(path)) { }
             return path;
         }
         
-        static string GetCompilerPath(string dotnetPath) {
+        protected override string GetCompilerArgs(string dotnetPath, string args) {
             ProcessStartInfo psi = CreateStartInfo(dotnetPath, "--list-sdks");
             string rootFolder    = Path.GetDirectoryName(dotnetPath);
             
@@ -151,127 +289,35 @@ namespace MCGalaxy.Modules.Compiling
                 p.Start();
 
                 string sdk = p.StandardOutput.ReadLine();
-                string sdkVer, sdkPath;
-                sdk.Separate(' ', out sdkVer, out sdkPath);
                 p.WaitForExit();
-                return Path.Combine(rootFolder, "sdk", sdkVer, "Roslyn", "bincore", "csc.dll");
+                
+                string compileArgs = Path.Combine(rootFolder, "sdk", sdk, "Roslyn", "bincore", "csc.dll");
+                // e.g. /home/test/.dotnet/dotnet exec "/home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll" [COMPILER ARGS]
+                return "exec " + Quote(compileArgs) + " " + args;
             }
         }
         
         
-        static ProcessStartInfo CreateStartInfo(string path, string args) {
-            ProcessStartInfo psi = new ProcessStartInfo(path, args);
-            psi.WorkingDirectory       = Environment.CurrentDirectory;
-            psi.UseShellExecute        = false;
-            psi.CreateNoWindow         = true;
-            psi.RedirectStandardOutput = true;
-            psi.RedirectStandardError  = true;
-            return psi;
-        }
-
-        static int Compile(string path, string exeArgs, string args, List<string> output) {
-            // e.g. /home/test/.dotnet/dotnet exec "/home/test/.dotnet/sdk/6.0.300/Roslyn/bincore/csc.dll" [COMPILER ARGS]
-            args = "exec " + Quote(exeArgs) + " " + args;
-
-            // https://stackoverflow.com/questions/285760/how-to-spawn-a-process-and-capture-its-stdout-in-net
-            ProcessStartInfo psi = CreateStartInfo(path, args);
-
-            using (Process p = new Process())
-            {
-                p.OutputDataReceived += (s, e) => { if (e.Data != null) output.Add(e.Data); };
-                p.ErrorDataReceived  += (s, e) => { }; // swallow stderr output
-
-                p.StartInfo = psi;
-                p.Start();
-
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-
-                if (!p.WaitForExit(120 * 1000))
-                    throw new InvalidOperationException("C# compiler ran for over two minutes! Giving up..");
-
-                return p.ExitCode;
-            }
-        }
-
-        static void ProcessCompilerOutputLine(ICompilerErrors errors, string line) {
-            if (outputRegSimple == null) {
-                outputRegWithFileAndLine =
-                    new Regex(@"(^(.*)(\(([0-9]+),([0-9]+)\)): )(error|warning) ([A-Z]+[0-9]+) ?: (.*)");
-                outputRegSimple =
-                    new Regex(@"(error|warning) ([A-Z]+[0-9]+) ?: (.*)");
-            }
-
-            //First look for full file info
-            Match m = outputRegWithFileAndLine.Match(line);
-            bool full;
-            if (m.Success) {
-                full = true;
-            } else {
-                m = outputRegSimple.Match(line);
-                full = false;
-            }
-
-            if (!m.Success) return;
-            ICompilerError ce = new ICompilerError();
-
-            if (full) {
-                ce.FileName = m.Groups[2].Value;
-                ce.Line     = NumberUtils.ParseInt32(m.Groups[4].Value);
-                ce.Column   = NumberUtils.ParseInt32(m.Groups[5].Value);
-            }
-
-            ce.IsWarning   = m.Groups[full ? 6 : 1].Value.CaselessEq("warning");
-            ce.ErrorNumber = m.Groups[full ? 7 : 2].Value;
-            ce.ErrorText   = m.Groups[full ? 8 : 3].Value;
-            errors.Add(ce);
-        }
-
-        static string GetCommandLineArguments(string[] srcPaths, string dstPath, List<string> referencedAssemblies) {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("/t:library ");
-
-            sb.Append("/utf8output ");
-            sb.Append("/noconfig ");
-            sb.Append("/fullpaths ");
-
+		protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {
+            string[] sysAssemblyPaths = GetSystemAssemblyPaths();
+            
             // If we don't reference netstandard, System.Runtime, and System.Private.CoreLib, get an error when compiling
             //  "The type 'Object' is defined in an assembly that is not referenced. You must add a reference to assembly 'netstandard, Version=..."
             // https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/cross-platform-targeting
             // https://stackoverflow.com/questions/58840995/roslyn-compilation-how-to-reference-a-net-standard-2-0-class-library
             // https://luisfsgoncalves.wordpress.com/2017/03/20/referencing-system-assemblies-in-roslyn-compilations/
-            // https://github.com/dotnet/roslyn/issues/34111
+            // https://github.com/dotnet/roslyn/issues/34111			
+            referenced.Add("System.Runtime.dll");
+            referenced.Add("netstandard.dll");
+                      
+            referenced.Add("System.Collections.dll");    // needed for List<> etc
+            referenced.Add("System.IO.Compression.dll"); // needed for GZip compression
+            referenced.Add("System.Net.Primitives.dll"); // needed for IPAddress etc
 
-            string coreAssemblyFileName = typeof(object).Assembly.Location;
-            string[] sysAssemblyPaths   = GetSystemAssemblyPaths();
-
-            if (!string.IsNullOrWhiteSpace(coreAssemblyFileName)) {
-                sb.Append("/nostdlib+ ");
-                sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName.Trim()));
-            }
-
-            AddReferencedAssembly(sb, sysAssemblyPaths, "System.Runtime.dll");
-            AddReferencedAssembly(sb, sysAssemblyPaths, "netstandard.dll");
-
-            foreach (string path in referencedAssemblies)
+            foreach (string path in referenced)
             {
                 AddReferencedAssembly(sb, sysAssemblyPaths, path);
             }
-            sb.AppendFormat("/out:{0} ", Quote(dstPath));
-
-            // debug information
-            sb.Append("/D:DEBUG ");
-            sb.Append("/debug+ ");
-            sb.Append("/optimize- ");
-
-            sb.Append("/warnaserror- ");
-            sb.Append("/unsafe ");
-
-            foreach (string path in srcPaths)
-            {
-                sb.AppendFormat("{0} ", Quote(path));
-            }
-            return sb.ToString();
         }
 
         static string[] GetSystemAssemblyPaths() {
@@ -293,8 +339,7 @@ namespace MCGalaxy.Modules.Compiling
                 if (file == Path.GetFileName(sysPath)) return sysPath;
             }
             return file;
-        }
-        
+        }      
     }
 #endif
 }
