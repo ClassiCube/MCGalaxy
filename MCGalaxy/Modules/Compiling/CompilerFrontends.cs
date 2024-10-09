@@ -31,16 +31,11 @@ namespace MCGalaxy.Modules.Compiling
         public override string FullName      { get { return "CSharp"; } }
 
 #if !MCG_DOTNET
-        CodeDomProvider compiler;
-
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
             List<string> referenced = ProcessInput(srcPaths, "//");
-            CompilerParameters args = ICodeDomCompiler.PrepareInput(srcPaths, dstPath, referenced);
-            args.CompilerOptions   += " /unsafe";
-            // NOTE: Make sure to keep CompilerOptions in sync with RoslynCSharpCompiler
-
-            ICodeDomCompiler.InitCompiler(this, "CSharp", ref compiler);
-            return ICodeDomCompiler.Compile(args, srcPaths, compiler);
+            
+            CommandLineCompiler compiler = new ClassicCSharpCompiler();
+            return compiler.Compile(srcPaths, dstPath, referenced);
         }
 #else
         protected override ICompilerErrors DoCompile(string[] srcPaths, string dstPath) {
@@ -49,7 +44,8 @@ namespace MCGalaxy.Modules.Compiling
             referenced.Add("System.IO.Compression.dll"); // needed for GZip compression
             referenced.Add("System.Net.Primitives.dll"); // needed for IPAddress etc
 
-            return RoslynCSharpCompiler.Compile(srcPaths, dstPath, referenced);
+            CommandLineCompiler compiler = new RoslynCSharpCompiler();
+            return compiler.Compile(srcPaths, dstPath, referenced);
         }
 
         protected override void ProcessInputLine(string line, List<string> referenced) {

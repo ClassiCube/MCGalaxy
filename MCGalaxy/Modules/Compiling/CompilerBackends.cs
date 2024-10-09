@@ -1,7 +1,5 @@
 ﻿/*
-    Copyright 2010 MCLawl Team - Written by Valek (Modified by MCGalaxy)
-
-    Edited for use with MCGalaxy
+    Copyright 2015 MCGalaxy
  
     Dual-licensed under the Educational Community License, Version 2.0 and
     the GNU General Public License, Version 3 (the "Licenses"); you may
@@ -33,19 +31,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-#if !MCG_DOTNET
-using System.CodeDom.Compiler;
-#endif
 
 namespace MCGalaxy.Modules.Compiling
-{  
-    /// <summary> Compiles C# source by invoking a compiler executable directly </summary>
+{
+    /// <summary> Compiles C# source files into a .dll by invoking a compiler executable directly </summary>
     public abstract class CommandLineCompiler
     {
         public ICompilerErrors Compile(string[] srcPaths, string dstPath, List<string> referenced) {
@@ -73,20 +66,14 @@ namespace MCGalaxy.Modules.Compiling
             StringBuilder sb = new StringBuilder();
             sb.Append("/t:library ");
 
-            sb.Append("/utf8output ");
-            sb.Append("/noconfig ");
-            sb.Append("/fullpaths ");
+            sb.Append("/utf8output /noconfig /fullpaths ");
             
             AddCoreAssembly(sb);
             AddReferencedAssemblies(sb, referencedAssemblies);
             sb.AppendFormat("/out:{0} ", Quote(dstPath));
 
-            sb.Append("/D:DEBUG ");
-            sb.Append("/debug+ ");
-            sb.Append("/optimize- ");
-
-            sb.Append("/warnaserror- ");
-            sb.Append("/unsafe ");
+            sb.Append("/D:DEBUG /debug+ /optimize- ");
+            sb.Append("/warnaserror- /unsafe ");
 
             foreach (string path in srcPaths)
             {
@@ -183,66 +170,18 @@ namespace MCGalaxy.Modules.Compiling
     }
 
 #if !MCG_DOTNET
-    /// <summary> Compiles source code files from a particular language, using a CodeDomProvider for the compiler </summary>
-    public static class ICodeDomCompiler
-    {
-        public static CompilerParameters PrepareInput(string[] srcPaths, string dstPath, List<string> referenced) {
-            CompilerParameters args = new CompilerParameters();
-            args.GenerateExecutable      = false;
-            args.IncludeDebugInformation = true;
-            args.OutputAssembly          = dstPath;
-
-            foreach (string assembly in referenced)
-            {
-                args.ReferencedAssemblies.Add(assembly);
-            }
-            return args;
-        }
-
-        // Lazy init compiler when it's actually needed
-        public static void InitCompiler(ICompiler c, string language, ref CodeDomProvider compiler) {
-            if (compiler != null) return;
-            compiler = CodeDomProvider.CreateProvider(language);
-            if (compiler != null) return;
-            
-            Logger.Log(LogType.Warning,
-                       "WARNING: {0} compiler is missing, you will be unable to compile {1} files.",
-                       c.FullName, c.FileExtension);
-            // TODO: Should we log "You must have .net developer tools. (You need a visual studio)" ?
-        }
-
-        public static ICompilerErrors Compile(CompilerParameters args, string[] srcPaths, CodeDomProvider compiler) {
-            CompilerResults results = compiler.CompileAssemblyFromFile(args, srcPaths);
-            ICompilerErrors errors  = new ICompilerErrors();
-
-            foreach (CompilerError error in results.Errors)
-            {
-                ICompilerError ce = new ICompilerError();
-                ce.Line        = error.Line;
-                ce.Column      = error.Column;
-                ce.ErrorNumber = error.ErrorNumber;
-                ce.ErrorText   = error.ErrorText;
-                ce.IsWarning   = error.IsWarning;
-                ce.FileName    = error.FileName;
-
-                errors.Add(ce);
-            }
-            return errors;
-        }
-    }
-    
     internal class ClassicCSharpCompiler : CommandLineCompiler
     {
-		protected override void AddCoreAssembly(StringBuilder sb) {
-			string coreAssemblyFileName = typeof(object).Assembly.Location;
+        protected override void AddCoreAssembly(StringBuilder sb) {
+            string coreAssemblyFileName = typeof(object).Assembly.Location;
 
             if (!string.IsNullOrEmpty(coreAssemblyFileName)) {
                 sb.Append("/nostdlib+ ");
                 sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName));
             }
-		}
+        }
         
-		protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {
+        protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {
             foreach (string path in referenced)
             {
                 sb.AppendFormat("/R:{0} ", Quote(path));
@@ -251,10 +190,19 @@ namespace MCGalaxy.Modules.Compiling
         
         
         protected override string GetExecutable() {
-            string path = RuntimeEnvironment.GetRuntimeDirectory();
+            string root = RuntimeEnvironment.GetRuntimeDirectory();
             
-            Console.WriteLine(path);
-            return Path.Combine(path, "csc.exe");
+            string[] paths = new string[] {
+                Path.Combine(root, "csc.exe"), // C# compiler
+                Path.Combine(root, "mcs.exe"), // old Mono C# compiler
+                Path.Combine(root, "mcs"),     // old Mono C# compiler
+            };
+            
+            foreach (string path in paths)
+            {
+                if (File.Exists(path)) return path;
+            }
+            return paths[0];
         }
         
         protected override string GetCompilerArgs(string exe, string args) {
@@ -298,7 +246,7 @@ namespace MCGalaxy.Modules.Compiling
         }
         
         
-		protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {
+        protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {
             string[] sysAssemblyPaths = GetSystemAssemblyPaths();
             
             // If we don't reference netstandard, System.Runtime, and System.Private.CoreLib, get an error when compiling
@@ -306,10 +254,10 @@ namespace MCGalaxy.Modules.Compiling
             // https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/cross-platform-targeting
             // https://stackoverflow.com/questions/58840995/roslyn-compilation-how-to-reference-a-net-standard-2-0-class-library
             // https://luisfsgoncalves.wordpress.com/2017/03/20/referencing-system-assemblies-in-roslyn-compilations/
-            // https://github.com/dotnet/roslyn/issues/34111			
+            // https://github.com/dotnet/roslyn/issues/34111
             referenced.Add("System.Runtime.dll");
             referenced.Add("netstandard.dll");
-                      
+            
             referenced.Add("System.Collections.dll");    // needed for List<> etc
             referenced.Add("System.IO.Compression.dll"); // needed for GZip compression
             referenced.Add("System.Net.Primitives.dll"); // needed for IPAddress etc
@@ -339,7 +287,7 @@ namespace MCGalaxy.Modules.Compiling
                 if (file == Path.GetFileName(sysPath)) return sysPath;
             }
             return file;
-        }      
+        }
     }
 #endif
 }
