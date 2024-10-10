@@ -84,7 +84,7 @@ namespace MCGalaxy.Games
             
             Thread thread;
             Server.StartThread(out thread, "Game_ " + GameName, RunGame);
-            thread.IsBackground = true;
+            Utils.SetBackgroundMode(thread);
         }
 
         /// <summary> Attempts to auto start this game with infinite rounds. </summary>

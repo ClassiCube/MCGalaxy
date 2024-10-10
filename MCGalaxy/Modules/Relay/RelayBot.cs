@@ -203,7 +203,7 @@ namespace MCGalaxy.Modules.Relay
         void RunAsync() {
             Server.StartThread(out worker, RelayName + "_RelayBot", 
                                IOThread);
-            worker.IsBackground = true;
+            Utils.SetBackgroundMode(worker);
         }
         
         protected abstract void DoConnect();
