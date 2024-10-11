@@ -1,100 +1,132 @@
-MCGalaxy is a fully featured and customisable **ClassiCube Server Software** based on MCForge/MCLawl.
 
-**Setup**
------------------
-Download the latest MCGalaxy release [from here](https://www.classicube.net/mcg/download/)
-* Windows: You need to install .NET framework 4.0. Windows 8/10/11 already have this included.
-* macOS:   You need to install the [Mono framework](https://www.mono-project.com).
-* Linux:   You need to install the [Mono framework](https://www.mono-project.com). (or just `apt install mono-complete` if on Ubuntu)
+# MCGalaxy: **ClassiCube Server Software** 🖥️
 
-Run **MCGalaxy.exe** for a graphical interface, or run **MCGalaxyCLI.exe** for command line only.
+MCGalaxy is a fully featured and customizable **ClassiCube Server Software**, originally based on MCForge/MCLawl.
 
-Joining your server
------------------
-Run MCGalaxy.exe or MCGalaxyCLI.exe firstly. You'll see something like:
-![opt3](https://github.com/user-attachments/assets/e46128bd-6a3f-422a-8076-fbd9d86fa28e)
+---
 
-If you are signed in to classicube.net, you can copy this URL straight into your web browser and start playing.
+## 🚀 Setup
 
-#### Joining from the ClassiCube client
-Click **Direct connect** at the main menu.
-![opt1](https://github.com/user-attachments/assets/46ad28c2-ac42-418b-a1c8-88d161503cd5)
+Download the latest release of MCGalaxy [here](https://www.classicube.net/mcg/download/).
 
-Type your username into *Username*, ```127.0.0.1:25565``` into *IP:Port*, and leave *Mppass* blank. Then click **Connect**.
-![opt2](https://github.com/user-attachments/assets/8f57d45d-ef2f-4573-95d7-bf0eb22f21af)
+- **Windows**: Ensure that .NET Framework 4.0 is installed (Windows 8/10/11 already include this).
+- **macOS**: Install the [Mono framework](https://www.mono-project.com).
+- **Linux**: Install the [Mono framework](https://www.mono-project.com) (or use `apt install mono-complete` on Ubuntu).
 
-#### Make yourself owner
-After joining, you will want to rank yourself owner so you can use all commands.
+To start:
+- Run **MCGalaxy.exe** for a graphical interface.
+- Run **MCGalaxyCLI.exe** for a command-line interface.
 
-Type ```/rank [your account] owner``` into the bottom text box, then press Enter.
+---
 
-![opt4](https://github.com/user-attachments/assets/7d8fc147-2183-4a96-88cb-47658051eace)
+## 🌐 Joining Your Server
 
+After running `MCGalaxy.exe` or `MCGalaxyCLI.exe`, you will see the following output:
 
-Letting others join your server
------------------
-### LAN players
-You need to find out your LAN/local IP address.
-*  Windows: Type ```ipconfig``` into **Command Prompt**. Look for ```IPv4 address``` in the output
-*  macOS: Type ```ipconfig getifaddr en0``` or ```ipconfig getifaddr en1``` into **Terminal**
-*  Linux: Type ```hostname -I``` into **Terminal**. Lan IP is usually the first address in the output
+![Server Output](https://github.com/user-attachments/assets/e46128bd-6a3f-422a-8076-fbd9d86fa28e)
 
-#### Joining from a web browser
-Enter the server URL followed by ```?ip=[lan ip]``` into the web browser.<br>
-(e.g. http://www.classicube.net/server/play/d1362e7fee1a54365514712d007c8799?ip=192.168.1.30)
+If you're logged into classicube.net, you can directly copy the server URL into your browser to join and start playing.
 
-#### Joining from the ClassiCube client
-* Click **Direct connect** at the main menu
-* Type your username into *Username* textbox
-* Type ```[lan ip]:25565``` into *IP:Port* textbox (e.g. ```192.168.1.30:25565```)
-* Click **Connect**
+### 🖱️ Joining from ClassiCube Client
 
-### Across the internet
-You usually need to port forward in your router before other players can join.
+1. Click **Direct Connect** from the main menu:
+   ![Direct Connect](https://github.com/user-attachments/assets/46ad28c2-ac42-418b-a1c8-88d161503cd5)
 
-#### Joining from a web browser
-Enter the server URL into the web browser
+2. Enter your username into the *Username* field and `127.0.0.1:25565` into the *IP:Port* field. Leave *Mppass* blank.
+   ![Connect](https://github.com/user-attachments/assets/8f57d45d-ef2f-4573-95d7-bf0eb22f21af)
 
-#### Joining from the ClassiCube client
-* Click **Sign in**
-* Type/paste the hash (e.g. ```d1362e7fee1a54365514712d007c8799```) into the *classicube.net/server/play* text box
-* Click **Connect**
+3. Click **Connect**.
 
+### 🛠️ Make Yourself Owner
 
-### Show on classicube.net server list
-Click **Settings** in the MCGalaxy window, then tick the **Public** checkbox. Then click **Save**.
+After joining, you may want to promote yourself to owner to access all server commands.  
+Simply type `/rank [your username] owner` into the chat box and press Enter.
 
-This makes your server appear in the server list on classicube.net and in the ClassiCube client.
+![Rank Owner](https://github.com/user-attachments/assets/7d8fc147-2183-4a96-88cb-47658051eace)
 
-Compiling - mono and .NET framework
------------------
-**With an IDE:**
-* Visual Studio : Open `MCGalaxy.sln`, click `Build` in the menubar, then click `Build Solution`. (Or press F6)
-* SharpDevelop: Open `MCGalaxy.sln`, click `Build` in the menubar, then click `Build Solution`. (Or press F8)
+---
 
-**Command line:**
-* For Windows: Run `MSBuild command prompt for VS`, then type `msbuild MCGalaxy.sln` into command prompt
-* Modern mono: Type `msbuild MCGalaxy.sln` into Terminal
-* Older mono: Type `xbuild MCGalaxy.sln` into Terminal
+## 🌍 Letting Others Join Your Server
 
-Compiling - .NET 6 / .NET 7 / .NET 8
------------------
+### 👥 LAN Players
 
-* Compiling for .NET 6: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet6.csproj`
-* Compiling for .NET 7: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet7.csproj`
-* Compiling for .NET 8: Navigate into `CLI` directory, and then run `dotnet build MCGalaxyCLI_dotnet8.csproj`
+To allow LAN players to join, you'll need to find your local IP address:
 
-Copyright/License
------------------
-See LICENSE for MCGalaxy license, and license.txt for code used from other software.
+- **Windows**: Type `ipconfig` into **Command Prompt** and locate the `IPv4 Address`.
+- **macOS**: Use the commands `ipconfig getifaddr en0` or `ipconfig getifaddr en1` in **Terminal**.
+- **Linux**: Type `hostname -I` in **Terminal**. The LAN IP is usually the first address in the output.
 
-Docker support
------------------
-Some **unofficial** dockerfiles for running MCGalaxy in Docker:
-* [using Mono](https://github.com/ClassiCube/MCGalaxy/pull/577/files)
-* [using .NET core](https://github.com/ClassiCube/MCGalaxy/pull/629/files)
+#### 🌐 Joining from a Web Browser
 
-Documentation
------------------
-* [General documentation](https://github.com/ClassiCube/MCGalaxy/wiki)
-* [API documentation](https://github.com/ClassiCube/MCGalaxy-API-Documentation)
+Instruct others to enter the following URL format into their web browser:  
+`http://www.classicube.net/server/play/d1362e7fee1a54365514712d007c8799?ip=[your LAN IP]`.
+
+#### 🎮 Joining from ClassiCube Client
+
+1. Click **Direct Connect**.
+2. Enter your username in the *Username* field.
+3. Input `[your LAN IP]:25565` into the *IP:Port* field (e.g., `192.168.1.30:25565`).
+4. Click **Connect**.
+
+### 🌐 Across the Internet
+
+To allow players from the internet to join, you'll need to set up port forwarding on your router.
+
+#### 🌍 Joining from a Web Browser
+
+Simply share the server URL with others, and they can enter it in their browser.
+
+#### 🎮 Joining from ClassiCube Client
+
+1. Click **Sign In**.
+2. Enter or paste the server hash (e.g., `d1362e7fee1a54365514712d007c8799`) into the *classicube.net/server/play* field.
+3. Click **Connect**.
+
+### 🌟 Show on Classicube.net Server List
+
+To make your server public and visible on classicube.net, click **Settings** in the MCGalaxy window, tick the **Public** checkbox, and click **Save**.
+
+---
+
+## 🛠️ Compiling MCGalaxy
+
+### Mono and .NET Framework
+
+#### **With an IDE:**
+
+- **Visual Studio**: Open `MCGalaxy.sln`, then click **Build** > **Build Solution** (or press `F6`).
+- **SharpDevelop**: Open `MCGalaxy.sln`, then click **Build** > **Build Solution** (or press `F8`).
+
+#### **Command Line:**
+
+- **Windows**: Open `MSBuild command prompt for VS` and type `msbuild MCGalaxy.sln`.
+- **Modern Mono**: Run `msbuild MCGalaxy.sln` in Terminal.
+- **Older Mono**: Run `xbuild MCGalaxy.sln` in Terminal.
+
+### .NET 6 / 7 / 8
+
+- **.NET 6**: Navigate to the `CLI` directory and run `dotnet build MCGalaxyCLI_dotnet6.csproj`.
+- **.NET 7**: Navigate to the `CLI` directory and run `dotnet build MCGalaxyCLI_dotnet7.csproj`.
+- **.NET 8**: Navigate to the `CLI` directory and run `dotnet build MCGalaxyCLI_dotnet8.csproj`.
+
+---
+
+## 📄 License
+
+See the [LICENSE](./LICENSE) file for the MCGalaxy license, and `license.txt` for licenses of code used from other software.
+
+---
+
+## 🐳 Docker Support
+
+There are **unofficial** Docker files for running MCGalaxy in Docker:
+
+- [Using Mono](https://github.com/ClassiCube/MCGalaxy/pull/577/files)
+- [Using .NET Core](https://github.com/ClassiCube/MCGalaxy/pull/629/files)
+
+---
+
+## 📚 Documentation
+
+- [General Documentation](https://github.com/ClassiCube/MCGalaxy/wiki)
+- [API Documentation](https://github.com/ClassiCube/MCGalaxy-API-Documentation)
