@@ -70,18 +70,23 @@ namespace MCGalaxy {
             }
             return false;
         }
+		
+		public static void MessageStaff(Player p, string message) {
+            if (!MessageCmd.CanSpeak(p, "Staff")) return;
+            MessageGroup(p, message, Chat.StaffPerms, "Staff");
+        }
         
         public static void MessageOps(Player p, string message) {
             if (!MessageCmd.CanSpeak(p, "OpChat")) return;
-            MessageStaff(p, message, Chat.OpchatPerms, "Ops");
+            MessageGroup(p, message, Chat.OpchatPerms, "Ops");
         }
-
+		
         public static void MessageAdmins(Player p, string message) {
             if (!MessageCmd.CanSpeak(p, "AdminChat")) return;
-            MessageStaff(p, message, Chat.AdminchatPerms, "Admins");
+            MessageGroup(p, message, Chat.AdminchatPerms, "Admins");
         }
         
-        public static void MessageStaff(Player p, string message,
+        public static void MessageGroup(Player p, string message,
                                         ItemPerms perms, string group) {
             if (message.Length == 0) { p.Message("No message to send."); return; }
             
