@@ -261,24 +261,23 @@ namespace MCGalaxy.Commands.World {
                 opt == LevelOptions.Goto  || opt == LevelOptions.Unload;
         }
 
-        static void Moved(Player p, string message, string name, string newName = null) {
-            p.Message("&W---");
-            p.Message("The &T{0}&S command has been moved out of /{1} map.", name, commandShortcut);
-            string args = message.Length == 0 ? "" : message + " ";
-            if (newName == null) { newName = name; }
-            p.Message("Use &T/{0} {1} {2}&Sinstead.", commandShortcut, newName, args);
+        static void MapMoved(Player p, string message, string name, SubCommand.Behavior behaviour) {
+            p.Message("Note that &T/{0} map {1}&S has been renamed to &T/{0} {1}", 
+                      commandShortcut, name);
+            behaviour(p, message);
         }
+        
         static SubCommandGroup mapSubCommandGroup = new SubCommandGroup(commandShortcut + " map",
                 new List<SubCommand>() {
-                    new SubCommand("Physics",  (p, arg) => { Moved(p, arg, "physics");  }),
-                    new SubCommand("Add",      (p, arg) => { Moved(p, arg, "add");      }, false, new string[] { "create", "new" } ),
-                    new SubCommand("Delete",   (p, arg) => { Moved(p, arg, "delete");   }, false, new string[] { "del", "remove" } ),
-                    new SubCommand("Save",     (p, arg) => { Moved(p, arg, "save");     }),
-                    new SubCommand("Restore",  (p, arg) => { Moved(p, arg, "restore");  }),
-                    new SubCommand("Resize",   (p, arg) => { Moved(p, arg, "resize");   }),
-                    new SubCommand("PerVisit", (p, arg) => { Moved(p, arg, "pervisit"); }),
-                    new SubCommand("PerBuild", (p, arg) => { Moved(p, arg, "perbuild"); }),
-                    new SubCommand("Texture",  (p, arg) => { Moved(p, arg, "texture");  }, false, new string[] { "texturezip", "texturepack" } ),
+                    new SubCommand("Physics",  (p, arg) => { MapMoved(p, arg, "physics",  HandlePhysics);  }),
+                    new SubCommand("Add",      (p, arg) => { MapMoved(p, arg, "add",      HandleAdd);      }, false, new string[] { "create", "new" } ),
+                    new SubCommand("Delete",   (p, arg) => { MapMoved(p, arg, "delete",   HandleDelete);   }, false, new string[] { "del", "remove" } ),
+                    new SubCommand("Save",     (p, arg) => { MapMoved(p, arg, "save",     HandleSave);     }),
+                    new SubCommand("Restore",  (p, arg) => { MapMoved(p, arg, "restore",  HandleRestore);  }),
+                    new SubCommand("Resize",   (p, arg) => { MapMoved(p, arg, "resize",   HandleResize);   }),
+                    new SubCommand("PerVisit", (p, arg) => { MapMoved(p, arg, "pervisit", HandlePervisit); }),
+                    new SubCommand("PerBuild", (p, arg) => { MapMoved(p, arg, "perbuild", HandlePerbuild); }),
+                    new SubCommand("Texture",  (p, arg) => { MapMoved(p, arg, "texture",  HandleTexture);  }, false, new string[] { "texturezip", "texturepack" } ),
                 }
             );
 
@@ -399,11 +398,19 @@ namespace MCGalaxy.Commands.World {
             "&H  Your map is saved automatically, so this is only useful",
             "&H  If you want to save a specific state to restore later.",
         };
+        static void HandleSave(Player p, string unused) {
+            UseCommand(p, "Save", "");
+        }
+        
         static string[] restoreHelp = new string[] {
             "&T/os restore <number>",
             "&H  Restores a backup of your map.",
             "&H  Use without a number to see total backup count.",
         };
+        static void HandleRestore(Player p, string args) {
+            UseCommand(p, "Restore", args);
+        }
+        
         //Placed at the end so that the help arrays aren't null
         internal static SubCommandGroup subCommandGroup = new SubCommandGroup(commandShortcut,
                 new List<SubCommand>() {
@@ -430,9 +437,9 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("KickAll",    HandleKickAll,    kickAllHelp),
 
                     new SubCommand("Resize",     HandleResize,     resizeHelp),
-                    new SubCommand("Save",       (p, unused) => { UseCommand(p, "Save", ""); },     saveHelp),
+                    new SubCommand("Save",       HandleSave,       saveHelp),
                     new SubCommand("Delete",     HandleDelete,     deleteHelp, true, new string[] { "del", "remove" } ),
-                    new SubCommand("Restore",    (p, arg   ) => { UseCommand(p, "Restore", arg); }, restoreHelp),
+                    new SubCommand("Restore",    HandleRestore,    restoreHelp),
                 }
             );
 
@@ -463,17 +470,17 @@ namespace MCGalaxy.Commands.World {
                 p.Message("&H  To manage zoned areas in your map, use &T/" + commandShortcut + " plot");
             }
         }
-        static void HandleZones(Player p, string raw) {
-            p.Message("&W---");
-            p.Message("&T/{0} zones &Shas been renamed.", commandShortcut);
-            string args = raw.Length == 0 ? "" : raw + " ";
-            p.Message("Use &T/{0} {1} {2}&Sinstead.", commandShortcut, "plot", args);
+        
+        static void ZonesMoved(Player p, string raw) {
+            p.Message("Note that &T/{0} zones &Shas been renamed to &T/{0} plot", 
+                      commandShortcut);
+            HandlePlot(p, raw);
         }
 
         internal static SubCommandGroup deprecatedSubCommandGroup = new SubCommandGroup(commandShortcut,
                 new List<SubCommand>() {
-                    new SubCommand("Zone",  HandleZone , false),
-                    new SubCommand("Zones", HandleZones, false),
+                    new SubCommand("Zone",  HandleZone, false),
+                    new SubCommand("Zones", ZonesMoved, false),
                 }
             );
     }
