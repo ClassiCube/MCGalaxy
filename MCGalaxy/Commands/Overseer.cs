@@ -41,6 +41,12 @@ namespace MCGalaxy.Commands.World {
             data.Rank = LevelPermission.Owner;
             Command.Find(cmd).Use(p, args, data);
         }
+        
+        static void AnnounceRenamed(Player p, string oldName, string newName) {
+            p.Message("Note that &T/{0} {1}&S has been renamed to &T/{0} {2}", 
+                      commandShortcut, oldName, newName);
+        }
+        
 
         static string GetLevelName(Player p, int i) {
             string name = p.name.ToLower();
@@ -262,8 +268,7 @@ namespace MCGalaxy.Commands.World {
         }
 
         static void MapMoved(Player p, string message, string name, SubCommand.Behavior behaviour) {
-            p.Message("Note that &T/{0} map {1}&S has been renamed to &T/{0} {1}", 
-                      commandShortcut, name);
+            AnnounceRenamed(p, "map " + name, name);
             behaviour(p, message);
         }
         
@@ -446,34 +451,38 @@ namespace MCGalaxy.Commands.World {
 
         static void HandleZone(Player p, string raw) {
             string[] args = raw.SplitExact(2);
-            string cmd = args[0];
+            string cmd  = args[0];
             string name = args[1];
-            p.Message("&W---");
-            p.Message("&T/{0} zone &Shas been replaced.", commandShortcut);
+            string old  = "zone " + cmd;
             cmd = cmd.ToUpper();
-            if (cmd == "LIST") {
-                p.Message("To see a list of zones in a level, use &T/zonelist");
-            } else if (cmd == "ADD") {
-                p.Message("To allow someone to build, use &T/{0} allow [name]", commandShortcut);
+            
+            if (cmd == "ADD") {
+                AnnounceRenamed(p, old, "allow");
+                HandleAllow(p, name);
             } else if (Command.IsDeleteAction(cmd)) {
-                p.Message("To disallow someone from building, use &T/{0} disallow [name]", commandShortcut);
+                AnnounceRenamed(p, old, "disallow");
+                HandleDisallow(p, name);
             } else if (cmd == "BLOCK") {
-                p.Message("To disallow visiting, use &T/{0} ban [name]", commandShortcut);
+                AnnounceRenamed(p, old, "ban");
+                HandleBan(p, name);
             } else if (cmd == "UNBLOCK") {
-                p.Message("To allow visiting, use &T/{0} unban [name]", commandShortcut);
+                AnnounceRenamed(p, old, "unban");
+                HandleUnban(p, name);
+            } else if (cmd == "LIST") {
+                p.Message("To see a list of zones in a level, use &T/zonelist");
+                UseCommand(p, "ZoneList", name);
             } else if (cmd == "BLACKLIST") {
                 p.Message("To see who is disallowed from visiting, use &T/mapinfo");
             } else {
-                p.Message("&H  This was used for managing permissions in your map.");
-                p.Message("&H  It has now been replaced by the following &T/" + commandShortcut + " &Hcommands:");
+                p.Message("&T  /{0} zone &Hwas used for managing permissions in your map.", commandShortcut);
+                p.Message("&H  It has now been replaced by the following &T/{0} &Hcommands:", commandShortcut);
                 p.Message("&T  Allow, Disallow, Ban, Unban");
-                p.Message("&H  To manage zoned areas in your map, use &T/" + commandShortcut + " plot");
+                p.Message("&H  To manage zoned areas in your map, use &T/{0} plot", commandShortcut);
             }
         }
         
         static void ZonesMoved(Player p, string raw) {
-            p.Message("Note that &T/{0} zones &Shas been renamed to &T/{0} plot", 
-                      commandShortcut);
+            AnnounceRenamed(p, "zones", "plot");
             HandlePlot(p, raw);
         }
 
