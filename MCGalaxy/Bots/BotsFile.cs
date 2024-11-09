@@ -80,14 +80,19 @@ namespace MCGalaxy.Bots {
             if (!File.Exists(path) && bots.Length == 0) return;
             
             List<BotProperties> props = new List<BotProperties>(bots.Length);
-            for (int i = 0; i < bots.Length; i++) {
+            for (int i = 0; i < bots.Length; i++)
+            {
                 BotProperties data = new BotProperties();
                 data.FromBot(bots[i]);
                 props.Add(data);
             }
             
+            string tmpPath = path + ".tmp";
             try {
-                using (StreamWriter w = new StreamWriter(path)) { WriteAll(w, props); }
+                using (StreamWriter w = new StreamWriter(tmpPath)) { WriteAll(w, props); }
+                
+                AtomicIO.TryDelete(path);
+                File.Move(tmpPath, path);
             } catch (Exception ex) {
                 Logger.LogError("Error saving bots to " + path, ex);
             }
