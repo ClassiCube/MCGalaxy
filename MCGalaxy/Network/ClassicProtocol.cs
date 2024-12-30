@@ -49,7 +49,7 @@ namespace MCGalaxy.Network
                 case Opcode.CpePlayerClick:    return HandlePlayerClicked(buffer, offset, left);
                 case Opcode.CpeTwoWayPing:     return HandleTwoWayPing(buffer, offset, left);   
                 case Opcode.CpePluginMessage:  return HandlePluginMessage(buffer, offset, left);
-                case Opcode.CpeNotifyAction:    return HandleNotifyAction(buffer, offset, left);
+                case Opcode.CpeNotifyAction:   return HandleNotifyAction(buffer, offset, left);
 
                 case Opcode.CpeCustomBlockSupportLevel:
                     return left < 2 ? 0 : 2; // only ever one level anyways
@@ -256,11 +256,11 @@ namespace MCGalaxy.Network
 
         int HandleNotifyAction(byte[] buffer, int offset, int left)
         {
-            const int size = 1 + 1;
+            const int size = 1 + 2 + 5;
             if (left < size) return 0;
 
             NotifyActionType action = (NotifyActionType)buffer[offset + 1];
-            int value = NetUtils.ReadI32(buffer, offset + 2);
+            int value = NetUtils.ReadI32(buffer, offset + 3);
 
             OnNotifyActionEvent.Call(player, action, value);
             return size;
