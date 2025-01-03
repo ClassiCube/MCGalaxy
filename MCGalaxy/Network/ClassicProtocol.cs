@@ -50,6 +50,7 @@ namespace MCGalaxy.Network
                 case Opcode.CpeTwoWayPing:     return HandleTwoWayPing(buffer, offset, left);   
                 case Opcode.CpePluginMessage:  return HandlePluginMessage(buffer, offset, left);
                 case Opcode.CpeNotifyAction:   return HandleNotifyAction(buffer, offset, left);
+                case Opcode.CpeNotifyPositionAction:   return HandleNotifyPositionAction(buffer, offset, left);
 
                 case Opcode.CpeCustomBlockSupportLevel:
                     return left < 2 ? 0 : 2; // only ever one level anyways
@@ -256,13 +257,27 @@ namespace MCGalaxy.Network
 
         int HandleNotifyAction(byte[] buffer, int offset, int left)
         {
-            const int size = 1 + 2 + 5;
+            const int size = 1 + 2 + 2;
             if (left < size) return 0;
 
-            NotifyActionType action = (NotifyActionType)buffer[offset + 1];
-            int value = NetUtils.ReadI32(buffer, offset + 3);
+            NotifyActionType action = (NotifyActionType)buffer[offset + 2];
+            short value = NetUtils.ReadI16(buffer, offset + 3);
 
             OnNotifyActionEvent.Call(player, action, value);
+            return size;
+        }
+
+        int HandleNotifyPositionAction(byte[] buffer, int offset, int left)
+        {
+            const int size = 1 + 2 + 2 + 2 + 2;
+            if (left < size) return 0;
+
+            NotifyActionType action = (NotifyActionType)buffer[offset + 2];
+            ushort x = NetUtils.ReadU16(buffer, offset + 3);
+            ushort y = NetUtils.ReadU16(buffer, offset + 5);
+            ushort z = NetUtils.ReadU16(buffer, offset + 7);
+
+            OnNotifyPositionActionEvent.Call(player, action, x, y, z);
             return size;
         }
 

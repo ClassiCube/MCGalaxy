@@ -209,16 +209,31 @@ namespace MCGalaxy.Events.PlayerEvents
         }
     }
 
-    public delegate void OnNotifyAction(Player p, NotifyActionType action, int value);
+    public delegate void OnNotifyAction(Player p, NotifyActionType action, short value);
     /// <summary> Called whenever a player triggers a certain client event </summary>
     public sealed class OnNotifyActionEvent : IEvent<OnNotifyAction>
     {
-        public static void Call(Player p, NotifyActionType action, int value)
+        public static void Call(Player p, NotifyActionType action, short value)
         {
             IEvent<OnNotifyAction>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++)
             {
                 try { items[i].method(p, action, value); }
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+
+    public delegate void OnNotifyPositionAction(Player p, NotifyActionType action, ushort x, ushort y, ushort z);
+    /// <summary> Called whenever a player triggers a respawn/setspawn client event </summary>
+    public sealed class OnNotifyPositionActionEvent : IEvent<OnNotifyPositionAction>
+    {
+        public static void Call(Player p, NotifyActionType action, ushort x, ushort y, ushort z)
+        {
+            IEvent<OnNotifyPositionAction>[] items = handlers.Items;
+            for (int i = 0; i < items.Length; i++)
+            {
+                try { items[i].method(p, action, x, y, z); }
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }
