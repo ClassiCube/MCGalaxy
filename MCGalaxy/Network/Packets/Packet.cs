@@ -718,7 +718,7 @@ namespace MCGalaxy.Network
             int i = 0;
             buffer[i++] = Opcode.CpeDefineBlock;
             MakeDefineBlockStart(def, buffer, ref i, false, hasCP437, extBlocks, extTexs);
-            buffer[i++] = def.Shape;
+            buffer[i++] = def.Shape == 0 ? 0 : def.MaxY;
             MakeDefineBlockEnd(def, ref i, buffer);
             return buffer;
         }
