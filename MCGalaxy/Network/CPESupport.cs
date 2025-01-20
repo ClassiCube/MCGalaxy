@@ -95,7 +95,6 @@ namespace MCGalaxy
         public const string LightingMode = "LightingMode";
         public const string CinematicGui = "CinematicGui";
         public const string NotifyAction = "NotifyAction";
-        public const string NotifyPositionAction = "NotifyPositionAction";
     }
     
     public sealed class CpeExtension 
@@ -158,7 +157,6 @@ namespace MCGalaxy
             new CpeExtension(CpeExt.LightingMode,        "Allows changing how the client lights worlds"),
             new CpeExtension(CpeExt.CinematicGui,        "Allows changing the visibility of some GUI components"),
             new CpeExtension(CpeExt.NotifyAction,        "Allows server to be notified of certain client events"),
-            new CpeExtension(CpeExt.NotifyPositionAction,        "Allows server to be notified of certain client events (respawn/setspawn)"),
             #if TEN_BIT_BLOCKS
             new CpeExtension(CpeExt.ExtBlocks,           "Allows using block IDs over 255 in block definitions"),
             #endif
