@@ -16,7 +16,7 @@ jobs:
 # ============== .NET 2.0 BUILD =============
 # ===========================================
   build-mono2:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Compile MCGalaxy using mono
@@ -48,7 +48,7 @@ jobs:
 # ============== .NET 4.0 BUILD =============
 # ===========================================
   build-mono4:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Compile MCGalaxy using mono
