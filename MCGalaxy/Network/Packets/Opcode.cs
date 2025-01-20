@@ -80,5 +80,7 @@ namespace MCGalaxy.Network {
         public const byte CpeEntityTeleportExt = 54;
         public const byte CpeLightingMode = 55;
         public const byte CpeCinematicGui = 56;
+        public const byte CpeNotifyAction = 57;
+        public const byte CpeNotifyPositionAction = 58;
     }
 }
