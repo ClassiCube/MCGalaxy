@@ -83,6 +83,7 @@ namespace MCGalaxy {
             if (!hookedFilter) {
                 hookedFilter = true;
                 badWordsFile.OnTextChanged += LoadBadWords;
+                goodWordsFile.OnTextChanged += LoadBadWords;
             }
 
             goodWords = goodWordsFile.GetTextWithoutComments();
