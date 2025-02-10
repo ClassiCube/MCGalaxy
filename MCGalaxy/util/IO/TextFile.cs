@@ -51,6 +51,19 @@ namespace MCGalaxy.Util
         public string[] GetText() {
             return File.ReadAllLines(Filename);
         }
+        /// <summary>
+        /// Returns all text lines in the file that do not begin with # and are not empty.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetTextWithoutComments() {
+            string[] lines = GetText();
+            List<string> text = new List<string>();
+            foreach (string line in lines) {
+                if (line.StartsWith("#") || line.Trim().Length == 0) continue;
+                text.Add(line);
+            }
+            return text;
+        }
         
         public void SetText(string[] text) {
             File.WriteAllLines(Filename, text);
@@ -75,6 +88,12 @@ namespace MCGalaxy.Util
             { "Profanity filter", new TextFile(Paths.BadWordsFile,
                                                "# This file is a list of words to remove via the profanity filter",
                                                "# Each word to remove must be on an individual line") },
+            { "Profanity filter exceptions", new TextFile(Paths.BadWordsExceptionsFile,
+                                               "# This file is a list of words that the profanity filter will not filter,",
+                                               "# even when part of the word has been added to "+Paths.BadWordsFile,
+                                               "# This allows mitigation of the \"Scunthorpe problem\" on a case-by-case basis.",
+                                               "# For instance, one may want to block the word \"Thor\", but allow the word \"Scunthorpe\".",
+                                               "# Each word to allow must be on an individual line") },
             { "Announcements", new TextFile(Paths.AnnouncementsFile, null) },
             { "Joker", new TextFile(Paths.JokerFile, null) },
             { "8ball", new TextFile(Paths.EightBallFile, 

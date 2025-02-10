@@ -27,6 +27,7 @@ namespace MCGalaxy
         public const string TempBansFile = "text/tempbans.txt";
         public const string CustomTokensFile = "text/custom$s.txt";
         public const string BadWordsFile = "text/badwords.txt";
+        public const string BadWordsExceptionsFile = "text/badwords_exceptions.txt";
         public const string EatMessagesFile = "text/eatmessages.txt";
         public const string RulesFile = "text/rules.txt";
         public const string OprulesFile = "text/oprules.txt";
