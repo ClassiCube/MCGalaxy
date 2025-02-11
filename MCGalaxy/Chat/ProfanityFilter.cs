@@ -39,26 +39,31 @@ namespace MCGalaxy {
             string[] reduced = Reduce(text).SplitSpaces();
 
             for (int i = 0; i < reduced.Length; i++)  {
-
-                foreach (string goodWord in goodWords) {
-                    // If the word is a good word, skip bad word check
-                    if (Colors.Strip(words[i].ToLower()) == goodWord) {
-                        goto nextWord;
-                    }
-                }
-                foreach (string badWord in badWords)  {
-                    if (reduced[i].Contains(badWord)) {
-                        // If a bad word is found anywhere in the word, replace the word            
-                        words[i] = Censor(Colors.Strip(words[i]).Length);
-                        goto nextWord;
-                    }
-                }
-                // This is more readable than the previous implementation. Don't @ me
-                nextWord:;
+                if (IsGoodWord(words[i])) continue;
+                FilterBadWord(i, words, reduced);
             }          
             return String.Join(" ", words);
         }
-        
+
+        static bool IsGoodWord(string word) {
+            foreach (string goodWord in goodWords) {
+                if (Colors.Strip(word).CaselessEq(goodWord)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static void FilterBadWord(int i, string[] words, string[] reduced) {
+            foreach (string badWord in badWords)  {
+                if (reduced[i].Contains(badWord)) {
+                    // If a bad word is found anywhere in the word, replace the word            
+                    words[i] = Censor(Colors.Strip(words[i]).Length);
+                    return;
+                }
+            }
+        }
+
         static string Censor(int badWordLength) {
             string replacement = Server.Config.ProfanityReplacement;
             // for * repeat to ****
@@ -88,11 +93,6 @@ namespace MCGalaxy {
 
             goodWords = goodWordsFile.GetTextWithoutComments();
             badWords  =  badWordsFile.GetTextWithoutComments();
-
-            // Convert all goodwords to lowercase to make later comparisons simpler
-            for (int i = 0; i < goodWords.Count; i++) {
-                goodWords[i] = goodWords[i].ToLower();
-            }
             // Run the badwords through the reducer to ensure things like Ls become Is and everything is lowercase
             for (int i = 0; i < badWords.Count; i++)  {
                 badWords[i] = Reduce(badWords[i]);
