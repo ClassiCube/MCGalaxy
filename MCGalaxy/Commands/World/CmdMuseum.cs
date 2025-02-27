@@ -26,9 +26,8 @@ namespace MCGalaxy.Commands.World {
         public override string type { get { return CommandTypes.World; } }
         public override bool SuperUseable { get { return false; } }
 
-        const string currentFlag = "*current";
-        const string latestFlag = "*latest";
-        
+        const string CURRENT_FLAG = "*current";
+
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { LevelOperations.OutputBackups(p, p.level); return; }
 
@@ -37,7 +36,7 @@ namespace MCGalaxy.Commands.World {
             string backupArg = args.Length > 1 ? args[1] : args[0];
 
             string path;
-            if (backupArg == currentFlag) {
+            if (backupArg == CURRENT_FLAG) {
                 path = LevelInfo.MapPath(mapArg);
                 if (!LevelInfo.MapExists(mapArg)) {
                     if (Directory.Exists(LevelInfo.BackupBasePath(mapArg))) {
@@ -49,26 +48,11 @@ namespace MCGalaxy.Commands.World {
                     return;
                 }
             } else {
-                if (!Directory.Exists(LevelInfo.BackupBasePath(mapArg))) {
-                    p.Message("Level \"{0}\" has no backups.", mapArg); return;
-                }
-                if (backupArg == latestFlag) {
-                    int latest = LevelInfo.LatestBackup(mapArg);
-                    if (latest == 0) {
-                        p.Message("&WLevel \"{0}\" does not have any numbered backups, " +
-                            "so the latest backup could not be determined.", mapArg);
-                        return;
-                    }
-                    backupArg = latest.ToString();
-                }
-                path = LevelInfo.BackupFilePath(mapArg, backupArg);
-            }
-            if (!File.Exists(path)) {
-                p.Message("Backup \"{0}\" for {1} could not be found.", backupArg, mapArg); return;
+                if (!LevelInfo.GetBackupPath(p, mapArg, backupArg, out path)) return;
             }
 
             string formattedMuseumName;
-            if (backupArg == currentFlag) {
+            if (backupArg == CURRENT_FLAG) {
                 formattedMuseumName = "&cMuseum &S(" + mapArg + ")";
             } else {
                 formattedMuseumName = "&cMuseum &S(" + mapArg + " " + backupArg + ")";
@@ -92,9 +76,9 @@ namespace MCGalaxy.Commands.World {
         public override void Help(Player p) {
             p.Message("&T/Museum <level> [backup]");
             p.Message("&HVisits the [backup] of <level>");
-            p.Message("&T/Museum <level> *latest");
+            p.Message("&T/Museum <level> {0}", LevelInfo.LATEST_MUSEUM_FLAG);
             p.Message("&HVisits the latest backup of <level>");
-            p.Message("&T/Museum <level> *current");
+            p.Message("&T/Museum <level> {0}", CURRENT_FLAG);
             p.Message("&HVisits <level> as it is currently stored on disk.");
             p.Message("&HIf <level> is not given, the current level is used.");
         }

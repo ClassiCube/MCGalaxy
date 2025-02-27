@@ -103,8 +103,22 @@ namespace MCGalaxy.Commands.World {
 
         static string[] deleteHelp = new string[] {
             "&T/os delete &H- Deletes your map.",
+            "&T/os delete "+CmdDeleteLvl.BACKUP_FLAG+" [backup]",
+            "&H  -Permanently- deletes [backup] from your map.",
         };
         static void HandleDelete(Player p, string message) {
+            if (message.CaselessStarts(CmdDeleteLvl.BACKUP_FLAG)) {
+                string[] args = message.SplitSpaces(2); //"flag", "other args"
+                if (args.Length == 1) {
+                    p.Message("You must provide a backup to delete.");
+                    p.Message("A backup is usually a number, but may also be named.");
+                    p.Message("See &T/{0} restore &7to display backups.", commandShortcut);
+                    return;
+                }
+                CmdDeleteLvl.UseBackup(p, p.level.name +" "+ args[1], true);
+                return;
+            }
+
             if (message.Length > 0) {
                 p.Message("To delete your current map, type &T/{0} delete", commandShortcut);
                 return;

@@ -173,6 +173,31 @@ namespace MCGalaxy
             OnLevelDeletedEvent.Call(map);
             return true;
         }
+
+        /// <summary>
+        /// Deletes the backup of the given map, if found. 
+        /// Supports Commands.World.CmdMuseum.LATEST_FLAG as backup number to return latest backup path.
+        /// </summary>
+        public static void DeleteBackup(Player p, string map, string backup) {
+            string discard;
+            if (!LevelInfo.GetBackupPath(p, map, backup, out discard)) return;
+            
+            foreach (Player pl in PlayerInfo.Online.Items) {
+                //Find if any player is in a museum of the level backup being deleted
+                if (pl.level.MapName.CaselessEq(map) && pl.level.IsMuseum) {
+                    //Move everyone out of that museum.
+                    //Since Unload does not move players if it's a museum, call it manually
+                    pl.level.MovePlayersToMain();
+                    pl.level.Unload(true, false);
+                    //TODO: Only move players out of the museum if the backup being deleted actually matches their museum
+                    //It really doesn't look like the code was designed to be able to do this
+                    break;
+                }
+            }
+
+            Directory.Delete(LevelInfo.BackupDirPath(map, backup), true);
+            p.Message("Deleted backup {0}.", backup);
+        }
         
         static void DeleteDatabaseTables(string map) {
             Database.DeleteTable("Block" + map);

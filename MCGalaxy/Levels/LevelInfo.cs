@@ -116,6 +116,38 @@ namespace MCGalaxy {
             return (LatestBackup(map) + 1).ToString();
         }
 
+        public const string LATEST_MUSEUM_FLAG = "*latest";
+        /// <summary>
+        /// Returns true if a file was found for the given map with the given backup number.
+        /// Supports LATEST_FLAG as backup number to return latest backup path.
+        /// </summary>
+        public static bool GetBackupPath(Player p, string map, string backupNumber, out string path) {
+            if (!Directory.Exists(BackupBasePath(map))) {
+                p.Message("Level \"{0}\" has no backups.", map);
+                path = null;
+                return false;
+            }
+            if (backupNumber == LATEST_MUSEUM_FLAG) {
+                int latest = LatestBackup(map);
+                if (latest == 0) {
+                    p.Message("&WLevel \"{0}\" does not have any numbered backups, " +
+                        "so the latest backup could not be determined.", map);
+                    path = null;
+                    return false;
+                }
+                backupNumber = latest.ToString();
+            }
+
+            path = BackupFilePath(map, backupNumber);
+
+            if (!File.Exists(path)) {
+                p.Message("Backup \"{0}\" for {1} could not be found.", backupNumber, map);
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary> Relative path of a level's property file </summary>
         public static string PropsPath(string name) {
             return "levels/level properties/" + name + ".properties";

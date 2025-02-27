@@ -195,6 +195,8 @@ namespace MCGalaxy {
         /// </summary>
         public readonly string Reflexive;
 
+        //TODO: Third Person Singular Objective (Them/Him/Her)
+
         /// <summary>
         /// They/them uses "plural" style verbs, so this is required for grammar that sounds correct
         /// </summary>

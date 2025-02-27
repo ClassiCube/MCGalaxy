@@ -185,7 +185,7 @@ namespace MCGalaxy
             return true;
         }
 
-        void MovePlayersToMain() {
+        internal void MovePlayersToMain() {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player p in players) {
                 if (p.level == this) {
