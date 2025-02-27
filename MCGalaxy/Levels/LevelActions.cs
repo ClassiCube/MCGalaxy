@@ -191,7 +191,6 @@ namespace MCGalaxy
                     pl.level.Unload(true, false);
                     //TODO: Only move players out of the museum if the backup being deleted actually matches their museum
                     //It really doesn't look like the code was designed to be able to do this
-                    break;
                 }
             }
 
