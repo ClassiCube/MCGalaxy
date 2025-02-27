@@ -176,7 +176,7 @@ namespace MCGalaxy
 
         /// <summary>
         /// Deletes the backup of the given map, if found. 
-        /// Supports Commands.World.CmdMuseum.LATEST_FLAG as backup number to return latest backup path.
+        /// Supports LevelInfo.LATEST_MUSEUM_FLAG as backup to return latest backup path.
         /// </summary>
         public static void DeleteBackup(Player p, string map, string backup) {
             string discard;
