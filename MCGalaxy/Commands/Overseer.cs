@@ -115,7 +115,7 @@ namespace MCGalaxy.Commands.World {
                     p.Message("See &T/{0} restore &7to display backups.", commandShortcut);
                     return;
                 }
-                CmdDeleteLvl.UseBackup(p, p.level.name +" "+ args[1], true);
+                CmdDeleteLvl.UseBackup(p, p.level.MapName +" "+ args[1], true);
                 return;
             }
 
