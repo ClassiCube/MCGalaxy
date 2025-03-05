@@ -591,7 +591,24 @@ namespace MCGalaxy
                 Message("&WCommand failed.");
             }
         }
-        
+
+        bool UseCommands(List<Command> commands, List<string> messages, CommandData data) {
+            Level startingLevel = level;
+            for (int i = 0; i < messages.Count; i++) {
+                if (level != startingLevel) {
+                    int remaining = messages.Count - i;
+                    Message("&WCancelled {0} queued command{1} because you switched levels.", remaining, remaining == 1 ? "" : "s");
+                    return false;
+                }
+
+                if (!UseCommand(commands[i], messages[i], data)) return false;
+
+                // No point running commands after disconnected
+                if (leftServer) return false;
+            }
+            return true;
+        }
+
         bool CheckMBRecursion(CommandData data) {
             if (data.Context == CommandContext.MessageBlock) {
                 mbRecursion++;
@@ -697,17 +714,6 @@ namespace MCGalaxy
             if (spamChecker != null && spamChecker.CheckCommandSpam()) return false;
             return true;
         }
-        
-        bool UseCommands(List<Command> commands, List<string> messages, CommandData data) {
-            for (int i = 0; i < messages.Count; i++) {
-                if (!UseCommand(commands[i], messages[i], data)) return false;
-                
-                // No point running commands after disconnected
-                if (leftServer) return false;
-            }
-            return true;
-        }
-        
         
         bool EnqueueSerialCommand(Command cmd, string args, CommandData data) {
             SerialCommand head = default(SerialCommand);

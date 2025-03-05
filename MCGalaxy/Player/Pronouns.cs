@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -41,19 +40,24 @@ namespace MCGalaxy {
                 Directory.CreateDirectory(PLAYER_PATH);
             }
 
-            Default = new Pronouns("default", "they", "their", "themselves", true);
+            Default = new Pronouns("default", "they", "their", "themselves", true, "them");
 
             if (!File.Exists(CONFIG_FILE)) {
 
-                Loaded.Add(new Pronouns("they/them", "they", "their", "themselves", true));
-                Loaded.Add(new Pronouns("he/him", "he", "his", "himself", false));
-                Loaded.Add(new Pronouns("she/her", "she", "her", "herself", false));
+                Loaded.Add(new Pronouns("they/them", "they", "their", "themselves", true, "them"));
+                Loaded.Add(new Pronouns("he/him", "he", "his", "himself", false, "him"));
+                Loaded.Add(new Pronouns("she/her", "she", "her", "herself", false, "her"));
 
                 using (StreamWriter w = new StreamWriter(CONFIG_FILE)) {
                     w.WriteLine("# Below are the pronouns that players may choose from by using /pronouns");
                     w.WriteLine("# Lines starting with # are ignored");
                     w.WriteLine("# Each pronouns is on its own line, and is formatted like so:");
-                    w.WriteLine("# Name [subject form] [object form] [reflexive form] [singular or plural]");
+                    w.WriteLine("# Name [subject form] [object form] [reflexive form] [singular or plural] [third person objective singular]");
+                    w.WriteLine("# -");
+                    w.WriteLine("# [singular or plural] is for grammar's sake and will");
+                    w.WriteLine("# determine which word is used in cases such as are/is, were/was, and have/has.");
+                    w.WriteLine("# For instance, \"and he has captured the flag\" vs \"and they have captured the flag\".");
+
                     w.WriteLine();
                     foreach (Pronouns p in Loaded) {
                         p.Write(w);
@@ -90,23 +94,44 @@ namespace MCGalaxy {
         }
         static void LoadFrom(string line) {
             string[] words = line.ToLower().SplitSpaces();
-            const int defWordCount = 5;
-            if (words.Length != defWordCount) {
-                Logger.Log(LogType.Warning, "Failed to load malformed pronouns \"{0}\" from config (expected {1} words, got {2}).", line, defWordCount, words.Length);
+            const int minWordCount = 5;
+            if (words.Length < minWordCount) {
+                Logger.Log(LogType.Warning,
+                    "Failed to load malformed pronouns \"{0}\" from config (expected at least {1} arguments, got {2}).",
+                    line, minWordCount, words.Length);
+
                 return;
             }
+
+            string name = words[0];
+
             bool plural;
             if (words[4].CaselessEq("singular")) { plural = false; }
             else if (words[4].CaselessEq("plural")) { plural = true; }
             else {
-                Logger.Log(LogType.Warning, "Failed to load the pronouns \"{0}\" because the 5th argument was not \"singular\" or \"plural\"", words[0]);
+                Logger.Log(LogType.Warning, "Failed to load the pronouns \"{0}\" because the 5th argument was not \"singular\" or \"plural\"", name);
                 return;
             }
-            if (FindExact(words[0]) != null) {
-                Logger.Log(LogType.Warning, "Cannot load pronouns \"{0}\" because it is already defined.", words[0]);
+
+            if (FindExact(name) != null) {
+                Logger.Log(LogType.Warning, "Cannot load pronouns \"{0}\" because it is already defined.", name);
                 return;
             }
-            Loaded.Add(new Pronouns(words[0], words[1], words[2], words[3], plural));
+
+            string tpos; //ThirdPersonObjectiveSingular
+
+            //Older config files do not contain this argument, thus we need to guess or provide a fallback
+            if (words.Length > minWordCount) {
+                tpos = words[5];
+            } else if (name.CaselessContains("him")) {
+                tpos = "him";
+            } else if (name.CaselessContains("her")) {
+                tpos = "her";
+            } else {
+                tpos = Default.ThirdPersonObjectiveSingular;
+            }
+
+            Loaded.Add(new Pronouns(name, words[1], words[2], words[3], plural, tpos));
         }
 
         static string PlayerPath(string playerName) { return PLAYER_PATH + playerName + ".txt"; }
@@ -195,7 +220,10 @@ namespace MCGalaxy {
         /// </summary>
         public readonly string Reflexive;
 
-        //TODO: Third Person Singular Objective (Them/Him/Her)
+        /// <summary>
+        /// Them/Him/Her/It
+        /// </summary>
+        public readonly string ThirdPersonObjectiveSingular;
 
         /// <summary>
         /// They/them uses "plural" style verbs, so this is required for grammar that sounds correct
@@ -214,19 +242,21 @@ namespace MCGalaxy {
         /// </summary>
         public readonly string PresentPerfectVerb;
 
-        private Pronouns(string name, string subject, string @object, string reflexive, bool plural) {
+        private Pronouns(string name, string subject, string @object, string reflexive, bool plural, string thirdPersonObjectiveSingular) {
             Name = name;
             Subject = subject;
             Object = @object;
             Reflexive = reflexive;
             Plural = plural;
+            ThirdPersonObjectiveSingular = thirdPersonObjectiveSingular;
 
             PresentVerb = Plural ? "are" : "is";
             PastVerb = Plural ? "were" : "was";
             PresentPerfectVerb = Plural ? "have" : "has";
         }
         void Write(StreamWriter w) {
-            w.WriteLine(string.Format("{0} {1} {2} {3} {4}", Name, Subject, Object, Reflexive, (Plural ? "plural" : "singular") ));
+            w.WriteLine(string.Format("{0} {1} {2} {3} {4} {5}",
+                Name, Subject, Object, Reflexive, (Plural ? "plural" : "singular"), ThirdPersonObjectiveSingular));
             w.WriteLine();
         }
         public static void SaveFor(Player p) {
