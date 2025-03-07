@@ -70,7 +70,7 @@ namespace MCGalaxy {
         public static void ListFor(Player p) {
             p.Message("&HPresets: &f{0}", Presets.Join(pr => pr.Key));
 
-            string[] files = AtomicIO.TryGetFiles(FOLDER, "*" + FILE_EXTENSION);
+            string[] files = FileIO.TryGetFiles(FOLDER, "*" + FILE_EXTENSION);
             if (files == null) return;
 
             string all = files.Join(f => Path.GetFileNameWithoutExtension(f));

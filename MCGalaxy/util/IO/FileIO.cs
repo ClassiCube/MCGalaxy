@@ -20,8 +20,8 @@ using System.IO;
 
 namespace MCGalaxy 
 {   
-    /// <summary> Provides utility methods for atomic File I/O operations. </summary>
-    public static class AtomicIO 
+    /// <summary> Provides utility methods for File I/O operations. </summary>
+    public static class FileIO 
     {        
         /// <summary> Attempts to delete a file from disc, if it exists </summary>
         /// <returns> true if file was successfully deleted, false if file did not exist to begin with </returns>
@@ -55,6 +55,13 @@ namespace MCGalaxy
             } catch (DirectoryNotFoundException) {
                 return null;
             }
+        }
+        
+        public static void Replace(string src, string dst) {
+            TryDelete(dst + ".old");
+            
+            File.Move(dst, dst + ".old");
+            File.Move(src, dst);
         }
     }
 }

@@ -181,7 +181,7 @@ namespace MCGalaxy.Commands.Moderation {
         
         static void DeleteReport(string user) {
             string backup = "extra/reportedbackups/" + user + ".txt";
-            AtomicIO.TryDelete(backup);           
+            FileIO.TryDelete(backup);           
             File.Move(ReportPath(user), backup);
         }
         

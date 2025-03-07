@@ -91,8 +91,7 @@ namespace MCGalaxy.Bots {
             try {
                 using (StreamWriter w = new StreamWriter(tmpPath)) { WriteAll(w, props); }
                 
-                AtomicIO.TryDelete(path);
-                File.Move(tmpPath, path);
+                FileIO.Replace(tmpPath, path);
             } catch (Exception ex) {
                 Logger.LogError("Error saving bots to " + path, ex);
             }

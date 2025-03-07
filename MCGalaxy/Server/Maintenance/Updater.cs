@@ -123,14 +123,14 @@ namespace MCGalaxy
                 
                 // Move current files to previous files (by moving instead of copying, 
                 //  can overwrite original the files without breaking the server)
-                AtomicIO.TryMove(serverDLL, "prev_MCGalaxy_.dll");
-                AtomicIO.TryMove(serverGUI, "prev_MCGalaxy.exe");
-                AtomicIO.TryMove(serverCLI, "prev_MCGalaxyCLI.exe");
+                FileIO.TryMove(serverDLL, "prev_MCGalaxy_.dll");
+                FileIO.TryMove(serverGUI, "prev_MCGalaxy.exe");
+                FileIO.TryMove(serverCLI, "prev_MCGalaxyCLI.exe");
 
                 // Move update files to current files
-                AtomicIO.TryMove("MCGalaxy_.update",   serverDLL);
-                AtomicIO.TryMove("MCGalaxy.update",    serverGUI);
-                AtomicIO.TryMove("MCGalaxyCLI.update", serverCLI);                             
+                FileIO.TryMove("MCGalaxy_.update",   serverDLL);
+                FileIO.TryMove("MCGalaxy.update",    serverGUI);
+                FileIO.TryMove("MCGalaxyCLI.update", serverCLI);                             
 
                 Server.Stop(true, "Updating server.");
             } catch (Exception ex) {
@@ -145,7 +145,7 @@ namespace MCGalaxy
         }
         
         static void DeleteFiles(params string[] paths) {
-            foreach (string path in paths) { AtomicIO.TryDelete(path); }
+            foreach (string path in paths) { FileIO.TryDelete(path); }
         }
     }
 }

@@ -125,7 +125,7 @@ namespace MCGalaxy.Scripting
         
         
         public static void AutoloadCommands() {
-            string[] files = AtomicIO.TryGetFiles(COMMANDS_DLL_DIR, "*.dll");
+            string[] files = FileIO.TryGetFiles(COMMANDS_DLL_DIR, "*.dll");
             if (files == null) return;
             
             foreach (string path in files) { AutoloadCommands(path); }
@@ -178,7 +178,7 @@ namespace MCGalaxy.Scripting
         
         
         public static void AutoloadPlugins() {
-            string[] files = AtomicIO.TryGetFiles(PLUGINS_DLL_DIR, "*.dll");
+            string[] files = FileIO.TryGetFiles(PLUGINS_DLL_DIR, "*.dll");
             if (files == null) return;
             
             // Ensure that plugin files are loaded in a consistent order,
