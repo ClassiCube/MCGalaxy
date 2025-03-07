@@ -57,11 +57,34 @@ namespace MCGalaxy
             }
         }
         
-        public static void Replace(string src, string dst) {
-            TryDelete(dst + ".old");
+        /// <summary> Returns a StreamWriter that writes data to a temp file path first,
+        /// and only overwrites the real file when .Dispose() is called </summary>
+        /// <remarks> Reduces the chance of data corruption in full disks </remarks>
+        public static StreamWriter CreateGuarded(string path) {
+            return new GuardedWriter(path);
+        }
+        
+        
+        class GuardedWriter : StreamWriter
+        {
+            readonly string realPath;
+            public GuardedWriter(string path) : base(path + ".tmp") {
+                realPath = path;
+            }
             
-            File.Move(dst, dst + ".old");
-            File.Move(src, dst);
+            protected override void Dispose(bool disposing) {
+                base.Dispose(disposing);
+                string src = realPath + ".tmp";
+                string dst = realPath;
+                string old = realPath + ".old";
+                
+                FileIO.TryDelete(old);
+                bool didExist = FileIO.TryMove(dst, old);
+                File.Move(src, dst);
+                
+                // Only delete old 'good' file if everything worked
+                if (didExist) FileIO.TryDelete(old);
+            }
         }
     }
 }
