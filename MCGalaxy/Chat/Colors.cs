@@ -255,7 +255,8 @@ namespace MCGalaxy {
         }
         
         static void SaveCore() {
-            using (StreamWriter w = new StreamWriter(Paths.CustomColorsFile)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.CustomColorsFile)) 
+            {
                 foreach (ColorDesc col in List) {
                     if (!col.IsModified()) continue;
                     

@@ -93,7 +93,8 @@ namespace MCGalaxy.Authentication
         }
         
         static void SaveServices() {
-            using (StreamWriter w = new StreamWriter(Paths.AuthServicesFile)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.AuthServicesFile)) 
+            {
                 w.WriteLine("# Authentication services configuration");
                 w.WriteLine("#   There is no reason to modify these configuration settings, unless the server has been configured");
                 w.WriteLine("#    to send heartbeats to multiple authentication services (e.g. both ClassiCube.net and BetaCraft.uk)");

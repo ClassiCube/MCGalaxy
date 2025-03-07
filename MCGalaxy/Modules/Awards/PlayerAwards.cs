@@ -79,7 +79,7 @@ namespace MCGalaxy.Modules.Awards
         static readonly object saveLock = new object();
         public static void Save() {
             lock (saveLock)
-                using (StreamWriter w = new StreamWriter("text/playerAwards.txt"))
+                using (StreamWriter w = FileIO.CreateGuarded("text/playerAwards.txt"))
             {
                 foreach (PlayerAward a in Awards)
                     w.WriteLine(a.Player + " : " + a.Awards.Join(","));

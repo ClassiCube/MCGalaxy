@@ -70,7 +70,7 @@ namespace MCGalaxy.Modules.Awards
         static readonly object saveLock = new object();
         public static void Save() {
             lock (saveLock)
-                using (StreamWriter w = new StreamWriter("text/awardsList.txt"))
+                using (StreamWriter w = FileIO.CreateGuarded("text/awardsList.txt"))
             {
                 WriteHeader(w);
                 foreach (Award a in Awards) {
@@ -81,7 +81,8 @@ namespace MCGalaxy.Modules.Awards
         
         public static void Load() {
             if (!File.Exists("text/awardsList.txt")) {
-                using (StreamWriter w = new StreamWriter("text/awardsList.txt")) {
+                using (StreamWriter w = FileIO.CreateGuarded("text/awardsList.txt")) 
+                {
                     WriteHeader(w);
                     w.WriteLine("Gotta start somewhere : Built your first house");
                     w.WriteLine("Climbing the ladder : Earned a rank advancement");

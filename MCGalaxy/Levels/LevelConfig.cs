@@ -359,7 +359,8 @@ namespace MCGalaxy
         public void Save(string path, string map) {
             try {
                 lock (saveLock) {
-                    using (StreamWriter w = new StreamWriter(path)) {
+                    using (StreamWriter w = FileIO.CreateGuarded(path)) 
+                    {
                         w.WriteLine("#Level properties for " + map);
                         w.WriteLine("#Drown-time is in tenths of a second");
                         ConfigElement.Serialise(Server.levelConfig, w, this);

@@ -90,7 +90,8 @@ namespace MCGalaxy.Eco
         }
         
         static void SaveCore() {
-            using (StreamWriter w = new StreamWriter(Paths.EconomyPropsFile, false)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.EconomyPropsFile)) 
+            {
                 w.WriteLine("enabled:" + Enabled);
                 
                 foreach (Item item in Items) 

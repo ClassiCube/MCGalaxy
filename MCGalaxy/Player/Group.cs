@@ -326,7 +326,8 @@ namespace MCGalaxy
         static void SaveGroups(List<Group> givenList) {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(Group));
             
-            using (StreamWriter w = new StreamWriter(Paths.RankPropsFile)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.RankPropsFile)) 
+            {
                 w.WriteLine("#Version 3");
                 w.WriteLine("#RankName = string");
                 w.WriteLine("#\tThe name of the rank (e.g. Guest)");

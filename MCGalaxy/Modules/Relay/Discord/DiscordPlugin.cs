@@ -76,7 +76,8 @@ namespace MCGalaxy.Modules.Relay.Discord
         public void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(DiscordConfig));
             
-            using (StreamWriter w = new StreamWriter(PROPS_PATH)) {
+            using (StreamWriter w = FileIO.CreateGuarded(PROPS_PATH)) 
+            {
                 w.WriteLine("# Discord relay bot configuration");
                 w.WriteLine("# See " + Updater.SourceURL + "/wiki/Discord-relay-bot/");
                 w.WriteLine();

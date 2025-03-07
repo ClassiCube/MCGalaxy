@@ -125,7 +125,8 @@ namespace MCGalaxy.Modules.Warps
         }
 
         public void Save() {
-            using (StreamWriter w = new StreamWriter(Filename)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Filename)) 
+            {
                 foreach (Warp warp in Items) 
                 {
                     w.WriteLine(warp.Name  + ":" + warp.Level + ":" + warp.Pos.X + ":" + 

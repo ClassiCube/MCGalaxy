@@ -100,7 +100,8 @@ namespace MCGalaxy.Modules.Games.ZS
         public override void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(typeof(ZSConfig));
             
-            using (StreamWriter w = new StreamWriter(Path)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Path)) 
+            {
                 w.WriteLine("#   no-pillaring-during-zombie    = Disables pillaring while Zombie Survival is activated.");
                 w.WriteLine("#   zombie-name-while-infected    = Sets the zombies name while actived if there is a value.");
                 w.WriteLine();

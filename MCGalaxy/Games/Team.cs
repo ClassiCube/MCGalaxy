@@ -93,7 +93,7 @@ namespace MCGalaxy.Games {
         
         public static void SaveList() {
             lock (ioLock)
-                using (StreamWriter w = new StreamWriter("extra/teams.txt"))
+                using (StreamWriter w = FileIO.CreateGuarded("extra/teams.txt"))
                     foreach (Team team in Teams)
             {
                 w.WriteLine("Name=" + team.Name);

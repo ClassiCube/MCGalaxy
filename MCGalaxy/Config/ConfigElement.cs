@@ -94,7 +94,8 @@ namespace MCGalaxy
         }
         
         public static void SerialiseSimple(ConfigElement[] elements, string path, object instance) {
-            using (StreamWriter w = new StreamWriter(path)) {
+            using (StreamWriter w = FileIO.CreateGuarded(path)) 
+            {
                 w.WriteLine("#Settings file");
                 SerialiseElements(elements, w, instance);
             }

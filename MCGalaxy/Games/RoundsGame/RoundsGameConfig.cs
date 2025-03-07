@@ -72,7 +72,8 @@ namespace MCGalaxy.Games
         public virtual void Save() {
             if (cfg == null) cfg = ConfigElement.GetAll(GetType());
             
-            using (StreamWriter w = new StreamWriter(Path)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Path)) 
+            {
                 w.WriteLine("#" + GameName + " configuration");
                 ConfigElement.Serialise(cfg, w, this);
             }

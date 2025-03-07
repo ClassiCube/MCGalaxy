@@ -164,7 +164,7 @@ namespace MCGalaxy {
         static void SaveCore(bool global, BlockDefinition[] defs, string path) {
             string separator = null;
 
-            using (StreamWriter w = new StreamWriter(path)) {
+            using (StreamWriter w = FileIO.CreateGuarded(path)) {
                 w.WriteLine("[");
                 var ser = new JsonConfigWriter(w, elems);
 

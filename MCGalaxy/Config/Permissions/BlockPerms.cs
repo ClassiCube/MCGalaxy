@@ -73,7 +73,8 @@ namespace MCGalaxy.Blocks
         }
         
         static void SaveList(string path, BlockPerms[] list, string action) {
-            using (StreamWriter w = new StreamWriter(path)) {
+            using (StreamWriter w = FileIO.CreateGuarded(path)) 
+            {
                 WriteHeader(w, "block", "each block", "Block ID", "lava", action);
 
                 foreach (BlockPerms perms in list) 

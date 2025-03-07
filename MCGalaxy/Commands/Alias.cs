@@ -56,7 +56,8 @@ namespace MCGalaxy.Commands
         }
 
         public static void SaveCustom() {
-            using (StreamWriter sw = new StreamWriter(Paths.AliasesFile)) {
+            using (StreamWriter sw = FileIO.CreateGuarded(Paths.AliasesFile)) 
+            {
                 sw.WriteLine("# Aliases can be in one of three formats:");
                 sw.WriteLine("# trigger : command");
                 sw.WriteLine("#    e.g. \"xyz : help\" means /xyz is treated as /help <args given by user>");

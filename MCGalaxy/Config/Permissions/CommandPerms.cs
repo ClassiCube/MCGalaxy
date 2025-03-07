@@ -76,7 +76,7 @@ namespace MCGalaxy.Commands
         }
         
         static void SaveCore() {
-            using (StreamWriter w = new StreamWriter(Paths.CmdPermsFile)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.CmdPermsFile)) {
                 WriteHeader(w, "command", "each command", "CommandName", "gun", "use");
 
                 foreach (CommandPerms perms in List) 

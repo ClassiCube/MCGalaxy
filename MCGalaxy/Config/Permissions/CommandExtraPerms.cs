@@ -86,7 +86,7 @@ namespace MCGalaxy.Commands
         }        
         
         static void SaveCore() {
-            using (StreamWriter w = new StreamWriter(Paths.CmdExtraPermsFile)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.CmdExtraPermsFile)) {
                 WriteHeader(w, "extra command permissions", "extra permissions in some commands",
                             "CommandName:ExtraPermissionNumber", "countdown:1", "use");
                 

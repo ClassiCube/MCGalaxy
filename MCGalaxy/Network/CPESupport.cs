@@ -208,7 +208,8 @@ namespace MCGalaxy
         }
 
         static void SaveDisabledList() {
-            using (StreamWriter w = new StreamWriter(Paths.CPEDisabledFile)) {
+            using (StreamWriter w = FileIO.CreateGuarded(Paths.CPEDisabledFile)) 
+            {
                 w.WriteLine("# CPE configuration");
                 w.WriteLine("#   This file allows disabling non-classic (CPE) extensions ");
                 w.WriteLine("#   To disable an extension, just change '= True' to '= False'");

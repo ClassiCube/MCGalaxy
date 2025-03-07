@@ -101,7 +101,8 @@ namespace MCGalaxy.Blocks {
         }
         
         static void SaveCore(string group, BlockProps[] list, byte scope) {
-            using (StreamWriter w = new StreamWriter("blockprops/" + group + ".txt")) {
+            using (StreamWriter w = FileIO.CreateGuarded("blockprops/" + group + ".txt")) 
+            {
                 w.WriteLine("# This represents the physics properties for blocks, in the format of:");
                 w.WriteLine("# id : Is rails : Is tdoor : Is door : Is message block : Is portal : " +
                             "Killed by water : Killed by lava : Kills players : death message : " +
