@@ -38,7 +38,12 @@ namespace MCGalaxy.Games
         protected void SaveTo(ConfigElement[] cfg, string propsDir, string map) {
             string path = propsDir + map + ".properties";
             if (!Directory.Exists(propsDir)) Directory.CreateDirectory(propsDir);
-            ConfigElement.SerialiseSimple(cfg, path, this);
+            
+            using (StreamWriter w = FileIO.CreateGuarded(path)) 
+            {
+                w.WriteLine("#Game settings file");
+                ConfigElement.SerialiseElements(cfg, w, this);
+            }
         }
         
         /// <summary> Saves this configuration to disc. </summary>

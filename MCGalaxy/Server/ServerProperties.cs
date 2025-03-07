@@ -121,7 +121,7 @@ namespace MCGalaxy
         public static void Save() {
             try {
                 lock (saveLock) {
-                    using (StreamWriter w = new StreamWriter(Paths.ServerPropsFile))
+                    using (StreamWriter w = FileIO.CreateGuarded(Paths.ServerPropsFile))
                         SaveProps(w);
                 }
             } catch (Exception ex) {
