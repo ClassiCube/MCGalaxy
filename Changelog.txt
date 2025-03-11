@@ -1,4 +1,18 @@
-﻿v 1.9.5.0
+﻿v 1.9.5.2
+Added: NotifyAction CPE.
+Added: Badwords exceptions
+Added: /DeleteLvl *backup [level] [backup] - Allows you to delete a backup of a level. This is restricted to the Owner rank by default.
+Added: /os delete *backup [backup] - Allows the owner of an os realm to delete a backup.
+Improved: Deleted portals and message blocks now appear as black wool in `/mb show` and `/portal show`
+Improved: Old syntax for /os sub-commands works again with an added notice about the new syntax
+Fixed: unfollowing a player not respawning their entity
+Fixed: rarely throwing error due to trying to set IsBackground on a dead thread
+Fixed: many cases where config files could be corrupted if the system is out of disk space
+
+v 1.9.5.1
+Fixed: Not working properly when run with empty standard input
+
+v 1.9.5.0
 Improved: Most brushes now support block ID ranges for arguments
 Added: Support for new lighting CPE extension
 Added: Support for CinematicGui CPE extension (Thanks Venk)
