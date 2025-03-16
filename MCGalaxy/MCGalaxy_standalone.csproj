@@ -3,7 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DefineConstants>$(DefineConstants);MCG_DOTNET;MCG_STANDALONE</DefineConstants>
+    <DefineConstants>$(DefineConstants);MCG_DOTNET;MCG_STANDALONE;TEN_BIT_BLOCKS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
