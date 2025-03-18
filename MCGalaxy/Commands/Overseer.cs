@@ -281,22 +281,26 @@ namespace MCGalaxy.Commands.World {
                 opt == LevelOptions.Goto  || opt == LevelOptions.Unload;
         }
 
-        static void MapMoved(Player p, string message, string name, SubCommand.Behavior behaviour) {
+        static void MapMoved(Player p, string message, string name, SubCommand.Behavior behaviour, bool mapOnly = true) {
             AnnounceRenamed(p, "map " + name, name);
+            if (mapOnly && !LevelInfo.IsRealmOwner(p.level, p.name)) {
+                p.Message("You may only use &T/{0} {1}&S after you join your map.", commandShortcut, name);
+                return;
+            }
             behaviour(p, message);
         }
         
         static SubCommandGroup mapSubCommandGroup = new SubCommandGroup(commandShortcut + " map",
                 new List<SubCommand>() {
-                    new SubCommand("Physics",  (p, arg) => { MapMoved(p, arg, "physics",  HandlePhysics);  }),
-                    new SubCommand("Add",      (p, arg) => { MapMoved(p, arg, "add",      HandleAdd);      }, false, new string[] { "create", "new" } ),
-                    new SubCommand("Delete",   (p, arg) => { MapMoved(p, arg, "delete",   HandleDelete);   }, false, new string[] { "del", "remove" } ),
-                    new SubCommand("Save",     (p, arg) => { MapMoved(p, arg, "save",     HandleSave);     }),
-                    new SubCommand("Restore",  (p, arg) => { MapMoved(p, arg, "restore",  HandleRestore);  }),
-                    new SubCommand("Resize",   (p, arg) => { MapMoved(p, arg, "resize",   HandleResize);   }),
-                    new SubCommand("PerVisit", (p, arg) => { MapMoved(p, arg, "pervisit", HandlePervisit); }),
-                    new SubCommand("PerBuild", (p, arg) => { MapMoved(p, arg, "perbuild", HandlePerbuild); }),
-                    new SubCommand("Texture",  (p, arg) => { MapMoved(p, arg, "texture",  HandleTexture);  }, false, new string[] { "texturezip", "texturepack" } ),
+                    new SubCommand("Physics",  (p, arg) => { MapMoved(p, arg, "physics",  HandlePhysics);   }),
+                    new SubCommand("Add",      (p, arg) => { MapMoved(p, arg, "add",      HandleAdd, false);}, false, new string[] { "create", "new" } ),
+                    new SubCommand("Delete",   (p, arg) => { MapMoved(p, arg, "delete",   HandleDelete);    }, false, new string[] { "del", "remove" } ),
+                    new SubCommand("Save",     (p, arg) => { MapMoved(p, arg, "save",     HandleSave);      }),
+                    new SubCommand("Restore",  (p, arg) => { MapMoved(p, arg, "restore",  HandleRestore);   }),
+                    new SubCommand("Resize",   (p, arg) => { MapMoved(p, arg, "resize",   HandleResize);    }),
+                    new SubCommand("PerVisit", (p, arg) => { MapMoved(p, arg, "pervisit", HandlePervisit);  }),
+                    new SubCommand("PerBuild", (p, arg) => { MapMoved(p, arg, "perbuild", HandlePerbuild);  }),
+                    new SubCommand("Texture",  (p, arg) => { MapMoved(p, arg, "texture",  HandleTexture);   }, false, new string[] { "texturezip", "texturepack" } ),
                 }
             );
 

@@ -23,7 +23,7 @@ namespace MCGalaxy.Commands.Eco {
     public sealed class CmdTake : MoneyCmd {
         public override string name { get { return "Take"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }     
-
+        public override bool MessageBlockRestricted { get { return true; } }
         public override void Use(Player p, string message, CommandData data) {
             EcoTransaction trans;
             bool all = true;
