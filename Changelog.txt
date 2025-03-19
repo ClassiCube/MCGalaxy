@@ -1,4 +1,6 @@
-﻿v 1.9.5.2
+﻿v 1.9.5.3
+Fixed: some commands being usable in cases they shouldn't have been
+v 1.9.5.2
 Added: NotifyAction CPE.
 Added: Badwords exceptions
 Added: /DeleteLvl *backup [level] [backup] - Allows you to delete a backup of a level. This is restricted to the Owner rank by default.

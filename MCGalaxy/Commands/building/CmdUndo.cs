@@ -30,6 +30,8 @@ namespace MCGalaxy.Commands.Building {
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can undo physics") }; }
         }
+        public override bool MessageBlockRestricted { get { return true; } }
+
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { UndoLastDrawOp(p); return; }

@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Eco {
         public override string name { get { return "Give"; } }
         public override string shortcut { get { return "Gib"; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Admin; } }
+        public override bool MessageBlockRestricted { get { return true; } }
 
         public override void Use(Player p, string message, CommandData data) {
             EcoTransaction trans;
