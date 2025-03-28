@@ -3,7 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DefineConstants>$(DefineConstants);MCG_DOTNET;TEN_BIT_BLOCKS</DefineConstants>
+    <DefineConstants>$(DefineConstants);MCG_DOTNET</DefineConstants>
     <AssemblyName>MCGalaxy_</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
