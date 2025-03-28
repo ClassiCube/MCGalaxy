@@ -6,7 +6,9 @@ on:
       - master
       - ConsoleDriver
   workflow_dispatch:
-
+  schedule:
+    # Every 90 days at 12am
+    - cron: '0 0 */90 * *'
 concurrency:
   group: ${{ github.ref }}-latest
   cancel-in-progress: true
