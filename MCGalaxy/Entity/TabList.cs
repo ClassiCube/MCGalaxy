@@ -74,7 +74,7 @@ namespace MCGalaxy
         
         /// <summary> Updates the tab list entry for this player to all other players 
         /// (whose clients support it) who can see the player in the tab list. </summary>
-        internal static void Update(Player p, bool self) {
+        public static void Update(Player p, bool self) {
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
                 if (p == other) {
