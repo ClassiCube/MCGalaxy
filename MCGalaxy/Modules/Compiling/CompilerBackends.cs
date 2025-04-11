@@ -105,8 +105,8 @@ namespace MCGalaxy.Modules.Compiling
 
             using (Process p = new Process())
             {
-                p.OutputDataReceived += (s, e) => { if (e.Data != null) output.Add(e.Data); };
-                p.ErrorDataReceived  += (s, e) => { }; // swallow stderr output
+                p.OutputDataReceived += (s, e) => { if (e.Data != null) output.Add(e.Data); }; // csc errors
+                p.ErrorDataReceived  += (s, e) => { if (e.Data != null) output.Add(e.Data); }; // mcs errors
 
                 p.StartInfo = psi;
                 p.Start();
