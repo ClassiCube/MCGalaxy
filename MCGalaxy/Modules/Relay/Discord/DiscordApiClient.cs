@@ -59,11 +59,15 @@ namespace MCGalaxy.Modules.Relay.Discord
                 try {
                     HttpWebRequest req = HttpUtil.CreateRequest(Host + msg.Path);
                     req.Method         = msg.Method;
-                    req.ContentType    = "application/json";
                     req.Headers[HttpRequestHeader.Authorization] = "Bot " + Token;
                     
-                    string data = Json.SerialiseObject(msg.ToJson());
-                    HttpUtil.SetRequestData(req, Encoding.UTF8.GetBytes(data));
+                    JsonObject obj = msg.ToJson();
+                    if (obj != null) {
+                        req.ContentType = "application/json";
+                        string data = Json.SerialiseObject(obj);
+                        HttpUtil.SetRequestData(req, Encoding.UTF8.GetBytes(data));
+                    }
+                    
                     msg.OnRequest(req);
                     res = req.GetResponse();
                     
