@@ -91,7 +91,7 @@ namespace MCGalaxy.Core {
         static bool CheckBanned(Player p) {
             string ipban = Server.bannedIP.Get(p.ip);
             if (ipban != null) {
-                ipban = ipban.Length > 0 ? ipban : Server.Config.DefaultBanMessage;
+                ipban = "IP-Banned: " + ipban.Length > 0 ? ipban : Server.Config.DefaultBanMessage;
                 p.Kick(null, ipban, true);
                 return false;
             }
