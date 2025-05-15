@@ -585,10 +585,18 @@ namespace MCGalaxy.Network
                 (ushort)(barSize * ushort.MaxValue)));
             return true;
         }
-#endregion
+
+        public override bool SendToggleBlockList(bool toggle)
+        {
+            if (!Supports(CpeExt.ToggleBlockList)) return false;
+
+            Send(Packet.ToggleBlockList(toggle));
+            return true;
+        }
+        #endregion
 
 
-#region Higher level sending
+        #region Higher level sending
         public override void SendMotd(string motd) {
             motd = CleanupColors(motd);
             Send(Packet.Motd(player, motd));

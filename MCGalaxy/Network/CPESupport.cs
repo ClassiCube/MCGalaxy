@@ -95,6 +95,7 @@ namespace MCGalaxy
         public const string LightingMode = "LightingMode";
         public const string CinematicGui = "CinematicGui";
         public const string NotifyAction = "NotifyAction";
+        public const string ToggleBlockList = "ToggleBlockList";
     }
     
     public sealed class CpeExtension 

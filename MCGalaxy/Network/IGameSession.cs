@@ -114,6 +114,8 @@ namespace MCGalaxy.Network
         public abstract bool SendRemoveSelection(byte id);
         /// <summary> Sends a cinematic gui definition to the client </summary>
         public abstract bool SendCinematicGui(CinematicGui gui);
+        /// <summary> Sends a toggle block list packet to the client </summary>
+        public abstract bool SendToggleBlockList(bool toggle);
 
         /// <summary> Sends a level to the client </summary>
         public abstract void SendLevel(Level prev, Level level);

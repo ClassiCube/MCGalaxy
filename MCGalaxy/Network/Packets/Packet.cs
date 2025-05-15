@@ -707,8 +707,16 @@ namespace MCGalaxy.Network
             NetUtils.WriteU16(barSize, buffer, 8);
             return buffer;
         }
-        #endregion
 
+        public static byte[] ToggleBlockList(bool toggle)
+        {
+            byte[] buffer = new byte[2];
+            buffer[0] = Opcode.CpeToggleBlockList;
+            buffer[1] = (byte)(toggle ? 1 : 0);
+            return buffer;
+        }
+
+        #endregion
 
         #region Block definitions
 
