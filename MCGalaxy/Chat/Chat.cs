@@ -141,14 +141,15 @@ namespace MCGalaxy {
         public static void MessageFromOps(Player source, string msg) { 
             MessageFrom(ChatScope.Perms, source, msg, OpchatPerms, null);  
         }
-        
+
+        public const string LocalPrefix = "<Local>";
         public static void MessageFrom(Player source, string msg,
                                        ChatMessageFilter filter = null, bool relay = false) {
             // super players don't have a level
             if (source.level == null || source.level.SeesServerWideChat) {
                 MessageFrom(ChatScope.Global, source, msg, null, filter, relay);
             } else {
-                string prefix = Server.Config.ServerWideChat ? "<Local>" : "";
+                string prefix = Server.Config.ServerWideChat ? LocalPrefix : "";
                 MessageFrom(ChatScope.Level, source, prefix + msg, source.level, filter);
             }
         }
@@ -179,7 +180,7 @@ namespace MCGalaxy {
             if (source.level == null || source.level.SeesServerWideChat) {
                 MessageChat(ChatScope.Global, source, msg, null, filter, relay);
             } else {
-                string prefix = Server.Config.ServerWideChat ? "<Local>" : "";
+                string prefix = Server.Config.ServerWideChat ? LocalPrefix : "";
                 MessageChat(ChatScope.Level, source, prefix + msg, source.level, filter);
             }
         }

@@ -66,8 +66,8 @@ namespace MCGalaxy {
             msg += " &Sin " + ColoredName;
             Logger.Log(LogType.UserActivity, "{0} &Son {1}", msg, lvl.name);
             
-            lvl.Message(msg);           
-            if (p.level != lvl) p.Message("{0} &Son {1}", msg, lvl.ColoredName);
+            lvl.Message(Chat.LocalPrefix+msg);           
+            if (p.level != lvl) p.Message("{0} &Son {1} &Sby you", msg, lvl.ColoredName);
         }
     }
     
