@@ -17,11 +17,41 @@
  */
 using System;
 using MCGalaxy.DB;
+using MCGalaxy.Network;
 
 namespace MCGalaxy 
 {
+    /// <summary>
+    /// Higher level operations that send feedback messages and may fail on invalid input.
+    /// </summary>
+    /// <remarks> See PlayerActions.cs for lower level operations. (TODO: Actually respect this distinction across both classes) </remarks>
     public static class PlayerOperations 
-    {        
+    {
+        /// <summary>
+        /// Attempts to set the skin for the given target, which will be saved across play sessions.
+        /// </summary>
+        public static void SetSkin(Player p, string target, string skin) {
+            string rawName = target.RemoveLastPlus();
+            skin = HttpUtil.FilterSkin(p, skin, rawName);
+            if (skin == null) return;
+
+            Player who = PlayerInfo.FindExact(target);
+            if (p == who) {
+                p.Message("Changed your own skin to &c" + skin);
+            } else {
+                MessageAction(p, target, who, "λACTOR &Schanged λTARGET skin to &c" + skin);
+            }
+
+            if (who != null) PlayerActions.SetSkin(p, skin);
+
+            if (skin == rawName) {
+                Server.skins.Remove(target);
+            } else {
+                Server.skins.Update(target, skin);
+            }
+            Server.skins.Save();
+        }
+
         /// <summary> Attempts to change the login message of the target player </summary>
         /// <remarks> Not allowed when players who cannot speak (e.g. muted) </remarks>
         public static bool SetLoginMessage(Player p, string target, string message) {
@@ -148,8 +178,8 @@ namespace MCGalaxy
         }
         
         
-        /// <remarks> λACTOR is replaced with nick of player performing the action </remarks>
-        /// <remarks> λTARGET is replaced with either "their" or "[target nick]'s", depending 
+        /// <remarks> λACTOR is replaced with nick of player performing the action.
+        /// λTARGET is replaced with either "their" or "[target nick]'s", depending 
         /// on whether the actor is the same player as the target or not </remarks>
         internal static void MessageAction(Player actor, string target, Player who, string message) {
             // TODO: this needs to be compoletely rethought

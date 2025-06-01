@@ -40,7 +40,7 @@ namespace MCGalaxy.Commands.CPE
         }
 
         protected override void SetBotData(Player p, PlayerBot bot, string skin) {
-            skin = ParseSkin(p, skin, bot.name);
+            skin = HttpUtil.FilterSkin(p, skin, bot.name);
             if (skin == null) return;
             
             bot.SkinName = skin;
@@ -52,42 +52,7 @@ namespace MCGalaxy.Commands.CPE
         }
         
         protected override void SetPlayerData(Player p, string target, string skin) {
-            string rawName = target.RemoveLastPlus();
-            skin = ParseSkin(p, skin, rawName);    
-            if (skin == null) return;
-            
-            Player who = PlayerInfo.FindExact(target);
-            if (p == who) {
-                p.Message("Changed your own skin to &c" + skin);
-            } else {
-                PlayerOperations.MessageAction(p, target, who, "λACTOR &Schanged λTARGET skin to &c" + skin);
-            }
-            
-            if (who != null) who.SkinName = skin;
-            if (who != null) Entities.GlobalRespawn(who);
-            
-            if (skin == rawName) {
-                Server.skins.Remove(target);
-            } else {
-                Server.skins.Update(target, skin);
-            }
-            Server.skins.Save();
-        }
-        
-        static string ParseSkin(Player p, string skin, string defSkin) {
-            if (skin.Length == 0) skin = defSkin;
-            if (skin[0] == '+')
-                skin = "https://minotar.net/skin/" + skin.Substring(1) + ".png";
-            
-            if (skin.CaselessStarts("http://") || skin.CaselessStarts("https")) {
-                HttpUtil.FilterURL(ref skin);
-            }
-            
-            if (skin.Length > NetUtils.StringSize) {
-                p.Message("&WThe skin must be " + NetUtils.StringSize + " characters or less."); 
-                return null;
-            }
-            return skin;
+            PlayerOperations.SetSkin(p, target, skin);
         }
 
         public override void Help(Player p) {

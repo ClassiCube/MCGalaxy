@@ -102,7 +102,28 @@ namespace MCGalaxy.Network {
         
         const string DROPBOX_HTTP_PREFIX  = "http://www.dropbox";
         const string DROPBOX_HTTPS_PREFIX = "https://www.dropbox";
-        
+
+
+        /// <summary>
+        /// Performs Modern MC skin conversion and filters the url as needed (dropbox, add http://)
+        /// </summary>
+        /// <remarks> Returns null if the filtered skin is too long for the network protocol. </remarks>
+        public static string FilterSkin(Player p, string skin, string defSkin) {
+            if (skin.Length == 0) skin = defSkin;
+            if (skin[0] == '+')
+                skin = "https://minotar.net/skin/" + skin.Substring(1) + ".png";
+
+            if (skin.CaselessStarts("http://") || skin.CaselessStarts("https")) {
+                FilterURL(ref skin);
+            }
+
+            if (skin.Length > NetUtils.StringSize) {
+                p.Message("&WThe skin must be " + NetUtils.StringSize + " characters or less.");
+                return null;
+            }
+            return skin;
+        }
+
         /// <summary> Prefixes a URL by http:// if needed, and converts dropbox webpages to direct links. </summary>
         public static void FilterURL(ref string url) {
             if (!url.CaselessStarts("http://") && !url.CaselessStarts("https://"))
