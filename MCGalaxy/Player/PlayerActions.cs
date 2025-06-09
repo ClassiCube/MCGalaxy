@@ -25,13 +25,23 @@ namespace MCGalaxy
 {
     public static class PlayerActions 
     {
-        /// <summary>
-        /// Changes the skin of this player. Does not save the skin change for future logins -- see PlayerOperations.SetSkin for that.
-        /// </summary>
-        public static void SetSkin(Player p, string skin) {
-            p.SkinName = skin;
-            Entities.GlobalRespawn(p);
+        public static void SetSkin(string target, string skin) {
+            string rawName = Server.ToRawUsername(target);
+            
+            if (skin == rawName) {
+                Server.skins.Remove(target);
+            } else {
+                Server.skins.Update(target, skin);
+            }          
+            Server.skins.Save();
+            
+            Player who = PlayerInfo.FindExact(target);
+            if (who == null) return;
+            
+            who.SkinName = skin;
+            Entities.GlobalRespawn(who);
         }
+        
 
         public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
         public static bool ChangeMap(Player p, Level lvl)   { return ChangeMap(p, lvl, null); }

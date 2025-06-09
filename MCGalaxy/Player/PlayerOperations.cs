@@ -31,7 +31,7 @@ namespace MCGalaxy
         /// Attempts to set the skin for the given target, which will be saved across play sessions.
         /// </summary>
         public static void SetSkin(Player p, string target, string skin) {
-            string rawName = target.RemoveLastPlus();
+            string rawName = Server.ToRawUsername(target);
             skin = HttpUtil.FilterSkin(p, skin, rawName);
             if (skin == null) return;
 
@@ -42,14 +42,7 @@ namespace MCGalaxy
                 MessageAction(p, target, who, "λACTOR &Schanged λTARGET skin to &c" + skin);
             }
 
-            if (who != null) PlayerActions.SetSkin(p, skin);
-
-            if (skin == rawName) {
-                Server.skins.Remove(target);
-            } else {
-                Server.skins.Update(target, skin);
-            }
-            Server.skins.Save();
+            PlayerActions.SetSkin(target, skin);
         }
 
         /// <summary> Attempts to change the login message of the target player </summary>
