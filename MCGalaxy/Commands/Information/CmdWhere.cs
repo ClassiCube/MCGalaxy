@@ -43,7 +43,7 @@ namespace MCGalaxy.Commands.Info
                 targetName = p.FormatNick((Player)target);
             }
 
-            target.DisplayPosition(p, targetName);
+            Entities.DisplayPosition(p, target, targetName);
         }
 
         public override void Help(Player p) {

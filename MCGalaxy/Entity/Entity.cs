@@ -81,18 +81,5 @@ namespace MCGalaxy
             SetModel(model);
             Entities.BroadcastModel(this, model);
         }
-        public void DisplayPosition(Player p, string displayName) {
-            Vec3S32 feet = Pos.FeetBlockCoords;
-            int x = Pos.X, y = Pos.Y - Entities.CharacterHeight, z = Pos.Z;
-            p.Message("{0} &Sis on {1}", displayName, Level.ColoredName);
-            p.Message("     Block coords: &b{0} {1} {2}",
-                      feet.X, feet.Y, feet.Z);
-            p.Message(" Precise coords: &b{0} {1} {2}",
-                      x, y, z);
-
-            p.Message("Yaw pitch degrees: &b{0} {1}",
-                      Orientation.PackedToDegrees(Rot.RotY),
-                      Orientation.PackedToDegrees(Rot.HeadX));
-        }
     }
 }

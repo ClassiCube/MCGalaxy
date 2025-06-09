@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using MCGalaxy.Events.EntityEvents;
 using MCGalaxy.Network;
+using MCGalaxy.Maths;
 
 namespace MCGalaxy 
 {
@@ -161,16 +162,19 @@ namespace MCGalaxy
 
         #endregion
         
-        
-        [Obsolete("Use p.CanSee")]
-        public static bool CanSee(Player p, Player target) { return p.CanSee(target); }
-        [Obsolete("Use p.CanSee")]
-        public static bool CanSee(CommandData data, Player p, Player target) {       
-            return p == target || target == null || !target.hidden || data.Rank >= target.hideRank;
-        }
+        public static void DisplayPosition(Player p, Entity src, string displayName) {
+            Vec3S32 feet = src.Pos.FeetBlockCoords;
+            int x = src.Pos.X, y = src.Pos.Y - Entities.CharacterHeight, z = src.Pos.Z;
+            p.Message("{0} &Sis on {1}", displayName, src.Level.ColoredName);
+            p.Message("     Block coords: &b{0} {1} {2}",
+                      feet.X, feet.Y, feet.Z);
+            p.Message(" Precise coords: &b{0} {1} {2}",
+                      x, y, z);
 
-        [Obsolete("Use entity.UpdateModel")]
-        public static void UpdateModel(Entity e, string model) { e.UpdateModel(model); }
+            p.Message("Yaw pitch degrees: &b{0} {1}",
+                      Orientation.PackedToDegrees(src.Rot.RotY),
+                      Orientation.PackedToDegrees(src.Rot.HeadX));
+        }
 
         internal static void BroadcastModel(Entity e, string m) {
             Player[] players = PlayerInfo.Online.Items;
