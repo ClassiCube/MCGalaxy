@@ -28,7 +28,7 @@ namespace MCGalaxy
         const LevelPermission offset = LevelPermission.Console;
         
         /// <summary> Adds the given player to that player's tab list (if their client supports it). </summary>
-        public static void Add(Player dst, Player p, byte id) {
+        public static void Add(Player dst, Player p) {
             if (!dst.hasExtList) return;
             byte grpPerm = (byte)(offset - p.Rank);
             if (!Server.Config.TablistRankSorted) grpPerm = 1;
@@ -37,7 +37,7 @@ namespace MCGalaxy
             GetEntry(p, dst, out name, out group);
             
             name = Colors.Escape(name); // for nicks
-            dst.Session.SendAddTabEntry(id, p.truename, name, group, grpPerm);
+            //dst.Session.SendAddTabEntry(id, p.truename, name, group, grpPerm);
         }
         
         static void GetEntry(Player p, Player dst, out string name, out string group) {
@@ -59,7 +59,7 @@ namespace MCGalaxy
             
             string name = b.color + b.name, group = "Bots";
             OnTabListEntryAddedEvent.Call(b, ref name, ref group, dst);
-            dst.Session.SendAddTabEntry(b.id, b.name, name, group, 0);
+            //dst.Session.SendAddTabEntry(id, b.name, name, group, 0);
         }
         
         /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
@@ -67,8 +67,7 @@ namespace MCGalaxy
             if (!dst.hasExtList) return;
             
             OnTabListEntryRemovedEvent.Call(entity, dst);
-            byte id = dst == entity ? Entities.SelfID : entity.EntityID;
-            dst.Session.SendRemoveTabEntry(id);
+            //dst.Session.SendRemoveTabEntry(id);
         }
         
         
@@ -78,13 +77,13 @@ namespace MCGalaxy
             Player[] players = PlayerInfo.Online.Items;
             foreach (Player other in players) {
                 if (p == other) {
-                    if (self) Add(other, p, Entities.SelfID);
+                    if (self) Add(other, p);
                     continue;
                 }
                 if (!Server.Config.TablistGlobal && p.level != other.level) continue;
                 
-                if (other.CanSee(p)) Add(other, p, p.id);
-                if (p.CanSee(other)) Add(p, other, other.id);
+                if (other.CanSee(p)) Add(other, p);
+                if (p.CanSee(other)) Add(p, other);
             }
         }
         

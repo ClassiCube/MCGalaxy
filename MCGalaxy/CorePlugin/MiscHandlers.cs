@@ -69,9 +69,9 @@ namespace MCGalaxy.Core {
         }
         
         internal static void HandlePlayerClick(Player p, MouseButton button, MouseAction action, ushort yaw, ushort pitch,
-                                               byte entity, ushort x, ushort y, ushort z, TargetBlockFace face) {
+                                               byte id, ushort x, ushort y, ushort z, TargetBlockFace face) {
             if (action != MouseAction.Pressed) return;           
-            if (entity != Entities.SelfID && ClickOnBot(p, entity)) return;
+            if (id != Entities.SelfID && ClickOnBot(p, id)) return;
             
             // if Deletable is enabled, handle MBs/Portals in SetBlock instead
             if (p.level.Config.Deletable || !p.level.IsValidPos(x, y, z)) return;
@@ -83,10 +83,14 @@ namespace MCGalaxy.Core {
             if (isPortal) { Portal.Handle(p, x, y, z); }
         }
         
-        static bool ClickOnBot(Player p, byte entity) {
+        static bool ClickOnBot(Player p, byte id) {
             PlayerBot[] bots = p.level.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
-                if (bots[i].EntityID != entity) continue;
+
+                byte botID;
+                if (!p.EntityMap.GetID(bots[i], out botID)) continue;
+                if (botID != id) continue;
+
                 if (bots[i].ClickedOnText == null && !p.checkingBotInfo) return false;
                 
                 Vec3F32 delta = p.Pos.ToVec3F32() - bots[i].Pos.ToVec3F32();

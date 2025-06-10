@@ -36,7 +36,6 @@ namespace MCGalaxy {
         public string Owner;
         public string ColoredName { get { return color + DisplayName; } }
         
-        public byte id;
         public Level level;
         public int cur = 0;
         public int countdown = 0;
@@ -60,7 +59,6 @@ namespace MCGalaxy {
         }
         
         public override bool CanSeeEntity(Entity other) { return true; }
-        public override byte EntityID { get { return id; } }
         public override Level Level { get { return level; } }
         public override bool RestrictsScale { get { return false; } }
         
@@ -82,7 +80,6 @@ namespace MCGalaxy {
         public static void Add(PlayerBot bot, bool save = true) {
             // Lock to ensure that no two bots can end up with the same playerid
             lock (bot.level.Bots.locker) {
-                bot.id = NextFreeId(bot);
                 bot.level.Bots.Add(bot);
             }
             bot.GlobalSpawn();
@@ -131,29 +128,29 @@ namespace MCGalaxy {
             }
         }
         
-        unsafe static byte NextFreeId(PlayerBot bot) {
-            byte* used = stackalloc byte[256];
-            for (int i = 0; i < 256; i++) used[i] = 0;
-
-            PlayerBot[] bots = bot.level.Bots.Items;
-            for (int i = 0; i < bots.Length; i++) {
-                byte id = bots[i].id;
-                used[id] = 1;
-            }
-            
-            for (byte i = 127; i >= 64; i--) {
-                if (used[i] == 0) return i;
-            }
-            // NOTE: For some clients these IDs mean self ID
-            for (byte i = 254; i > 127; i--) {
-                if (used[i] == 0) return i;
-            }
-            // NOTE: These IDs may conflict with player IDs, so use as a last resort
-            for (byte i = 63; i > 0; i--) {
-                if (used[i] == 0) return i;
-            }
-            return Entities.SelfID;
-        }
+        //unsafe static byte NextFreeId(PlayerBot bot) {
+        //    byte* used = stackalloc byte[256];
+        //    for (int i = 0; i < 256; i++) used[i] = 0;
+        //
+        //    PlayerBot[] bots = bot.level.Bots.Items;
+        //    for (int i = 0; i < bots.Length; i++) {
+        //        byte id = bots[i].id;
+        //        used[id] = 1;
+        //    }
+        //    
+        //    for (byte i = 127; i >= 64; i--) {
+        //        if (used[i] == 0) return i;
+        //    }
+        //    // NOTE: For some clients these IDs mean self ID
+        //    for (byte i = 254; i > 127; i--) {
+        //        if (used[i] == 0) return i;
+        //    }
+        //    // NOTE: These IDs may conflict with player IDs, so use as a last resort
+        //    for (byte i = 63; i > 0; i--) {
+        //        if (used[i] == 0) return i;
+        //    }
+        //    return Entities.SelfID;
+        //}
         
         
         public void NextInstruction() {
@@ -181,39 +178,29 @@ namespace MCGalaxy {
                 UpdatePositions(levels[i]);
             }
         }
-        
-        unsafe static void UpdatePositions(Level lvl) {
-            byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
-            byte* ext = stackalloc byte[16 * 256];
-            byte* ptrSrc = src, ptrExt = ext;
-            
+        public static void GlobalPostBroadcastPosition() {
+            Level[] levels = LevelInfo.Loaded.Items;
+            for (int i = 0; i < levels.Length; i++) {
+                PostBroadcastPosition(levels[i]);
+            }
+        }
+
+        static void UpdatePositions(Level lvl) {
             PlayerBot[] bots = lvl.Bots.Items;
             for (int i = 0; i < bots.Length; i++) {
                 PlayerBot bot = bots[i];
-                if (bot.movement) bot.PerformMovement();
-                Position pos = bot.Pos; Orientation rot = bot.Rot;
-                
-                Entities.GetPositionPacket(ref ptrSrc, bot.id, true, false,
-                                           pos, bot._lastPos, rot, bot._lastRot);
-                Entities.GetPositionPacket(ref ptrExt, bot.id, true, true,
-                                           pos, bot._lastPos, rot, bot._lastRot);
-                bot._lastPos = pos; bot._lastRot = rot;
-            }
-            
-            int countSrc = (int)(ptrSrc - src);
-            if (countSrc == 0) return;
-            int countExt = (int)(ptrExt - ext);
-            
-            byte[] srcPacket = new byte[countSrc];
-            byte[] extPacket = new byte[countExt];
-            for (int i = 0; i < srcPacket.Length; i++) { srcPacket[i] = src[i]; }
-            for (int i = 0; i < extPacket.Length; i++) { extPacket[i] = ext[i]; }
 
-            Player[] players = PlayerInfo.Online.Items;
-            foreach (Player p in players) {
-                if (p.level != lvl) continue;
-                byte[] packet = p.hasExtPositions ? extPacket : srcPacket;
-                p.Send(packet);
+                if (bot.movement) bot.PerformMovement();
+                bot._positionUpdatePos = bot.Pos;
+            }
+        }
+        static void PostBroadcastPosition(Level lvl) {
+            PlayerBot[] bots = lvl.Bots.Items;
+            for (int i = 0; i < bots.Length; i++) {
+                PlayerBot bot = bots[i];
+
+                bot._lastPos = bot._positionUpdatePos;
+                bot._lastRot = bot.Rot;
             }
         }
         

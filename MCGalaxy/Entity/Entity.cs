@@ -30,6 +30,11 @@ namespace MCGalaxy
         // Last sent orientation/position, for delta calculation
         public Orientation _lastRot;
         public Position _lastPos;
+
+        /// <summary>
+        /// Pos, but cached directly before this Entity's position is sent to all players. Prevents the position from changing during the position broadcast process.
+        /// </summary>
+        internal Position _positionUpdatePos;
         internal bool hasExtPositions;
         
         public string Model = "humanoid";
@@ -59,7 +64,6 @@ namespace MCGalaxy
 
         /// <summary> Whether this player can see the given entity as an entity in the level. </summary>
         public abstract bool CanSeeEntity(Entity other); 
-        public abstract byte EntityID { get; }
         /// <summary> The level this entity is currently on. </summary>
         public abstract Level Level { get; }
         /// <summary> Whether maximum model scale is limited. </summary>

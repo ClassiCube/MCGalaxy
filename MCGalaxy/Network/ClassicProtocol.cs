@@ -37,6 +37,9 @@ namespace MCGalaxy.Network
             player = new Player(s, this);
         }
 
+
+        public override int MaxVisibleEntities { get { return 254; } }
+
         protected override int HandlePacket(byte[] buffer, int offset, int left) {
             switch (buffer[offset]) {
                 case Opcode.Ping:              return 1;
@@ -473,6 +476,8 @@ namespace MCGalaxy.Network
 
 
 #region CPE packet sending
+
+        //We need a distinct list of available tab IDs, these should be independent from Entity IDs
         public override void SendAddTabEntry(byte id, string name, string nick, string group, byte groupRank) {
             nick  = CleanupColors(nick);
             group = CleanupColors(group);
@@ -521,6 +526,10 @@ namespace MCGalaxy.Network
                 }                
             }
             Send(Packet.ChangeModel(id, model, player.hasCP437));
+        }
+        public override void SendEntityProperty(byte id, EntityProp prop, int value) {
+
+            Send(Packet.EntityProperty(id, prop, value));
         }
 
         public override bool SendSetWeather(byte weather) {
@@ -740,39 +749,57 @@ namespace MCGalaxy.Network
             return "Classic 0.28-0.30";
         }
 
-        // TODO modularise and move common code back into Entities.cs
-        public unsafe override void UpdatePlayerPositions() {
-            Player[] players = PlayerInfo.Online.Items;
-            byte* src  = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
-            byte* ptr  = src;
-            Player dst = player;
+        public override unsafe void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos,
+                                                    Position pos, Position oldPos, Orientation rot, Orientation oldRot) {
+            Position delta = GetDelta(pos, oldPos, srcExtPos);
+            bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
+            bool oriChanged = rot.RotY != oldRot.RotY || rot.HeadX != oldRot.HeadX;
+            bool absPosUpdate = Math.Abs(delta.X) > 32 || Math.Abs(delta.Y) > 32 || Math.Abs(delta.Z) > 32;
 
-            foreach (Player p in players) {
-                if (dst == p || dst.level != p.level || !dst.CanSeeEntity(p)) continue;
-                
-                Orientation rot = p.Rot; byte pitch = rot.HeadX;
-                if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
-                
-                // flip head when infected in ZS, but doesn't support model
-                if (!dst.hasChangeModel && p.infected)
-                   pitch = FlippedPitch(pitch);
-            
-                rot.HeadX = pitch;
-                Entities.GetPositionPacket(ref ptr, p.id, p.hasExtPositions, dst.hasExtPositions,
-                                           p._tempPos, p._lastPos, rot, p._lastRot);
+            if (absPosUpdate) {
+                *ptr = Opcode.EntityTeleport; ptr++;
+                *ptr = id; ptr++;
+
+                if (extPos) {
+                    WriteI32(ref ptr, pos.X); WriteI32(ref ptr, pos.Y); WriteI32(ref ptr, pos.Z);
+                } else {
+                    WriteI16(ref ptr, (short)pos.X); WriteI16(ref ptr, (short)pos.Y); WriteI16(ref ptr, (short)pos.Z);
+                }
+            } else if (posChanged) {
+                byte opcode = oriChanged ? Opcode.RelPosAndOrientationUpdate : Opcode.RelPosUpdate;
+                *ptr = opcode; ptr++;
+                *ptr = id; ptr++;
+
+                *ptr = (byte)(delta.X); ptr++;
+                *ptr = (byte)(delta.Y); ptr++;
+                *ptr = (byte)(delta.Z); ptr++;
+            } else if (oriChanged) {
+                *ptr = Opcode.OrientationUpdate; ptr++;
+                *ptr = id; ptr++;
             }
-            
-            int count = (int)(ptr - src);
-            if (count == 0) return;
-            
-            byte[] packet = new byte[count];
-            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
-            dst.Send(packet);
+
+            if (absPosUpdate || oriChanged) {
+                *ptr = rot.RotY; ptr++;
+                *ptr = rot.HeadX; ptr++;
+            }
         }
 
-        static byte FlippedPitch(byte pitch) {
-             if (pitch > 64 && pitch < 192) return pitch;
-             else return 128;
+        unsafe static void WriteI32(ref byte* ptr, int value) {
+            *ptr = (byte)(value >> 24); ptr++; *ptr = (byte)(value >> 16); ptr++;
+            *ptr = (byte)(value >> 8); ptr++; *ptr = (byte)value; ptr++;
         }
+
+        unsafe static void WriteI16(ref byte* ptr, short value) {
+            *ptr = (byte)(value >> 8); ptr++; *ptr = (byte)value; ptr++;
+        }
+
+        static Position GetDelta(Position pos, Position old, bool extPositions) {
+            Position delta = new Position(pos.X - old.X, pos.Y - old.Y, pos.Z - old.Z);
+            if (extPositions) return delta;
+
+            delta.X = (short)delta.X; delta.Y = (short)delta.Y; delta.Z = (short)delta.Z;
+            return delta;
+        }
+
     }
 }

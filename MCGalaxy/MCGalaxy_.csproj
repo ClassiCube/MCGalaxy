@@ -430,6 +430,7 @@
     <Compile Include="Entity\CustomModel.cs" />
     <Compile Include="Entity\Entities.cs" />
     <Compile Include="Entity\Entity.cs" />
+    <Compile Include="Entity\EntityMap.cs" />
     <Compile Include="Entity\ModelInfo.cs" />
     <Compile Include="Entity\Structs.cs" />
     <Compile Include="Entity\TabList.cs" />
