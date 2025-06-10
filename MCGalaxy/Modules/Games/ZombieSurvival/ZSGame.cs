@@ -120,7 +120,7 @@ namespace MCGalaxy.Modules.Games.ZS
             
             foreach (Player pl in players) 
             {
-                if (pl.level != Map || pl.Game.Referee) continue;
+                if (pl.level != Map || pl.Game.Referee || pl.IsAfk) continue;
                 playing.Add(pl);
             }
             return playing;

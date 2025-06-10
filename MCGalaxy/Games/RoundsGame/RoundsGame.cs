@@ -172,7 +172,7 @@ namespace MCGalaxy.Games
                 
                 List<Player> players = GetPlayers();
                 if (players.Count >= 2) return players;
-                Map.Message("&WNeed 2 or more non-ref players to start a round.");
+                Map.Message("&WNeed 2 or more non-ref and non-AFK players to start a round.");
             }
         }
         
