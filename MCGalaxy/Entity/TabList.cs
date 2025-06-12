@@ -37,7 +37,7 @@ namespace MCGalaxy
             GetEntry(p, dst, out name, out group);
             
             name = Colors.Escape(name); // for nicks
-            //dst.Session.SendAddTabEntry(id, p.truename, name, group, grpPerm);
+            dst.EntityMap.SendAddTabEntry(p, p.truename, name, group, grpPerm);
         }
         
         static void GetEntry(Player p, Player dst, out string name, out string group) {
@@ -59,15 +59,15 @@ namespace MCGalaxy
             
             string name = b.color + b.name, group = "Bots";
             OnTabListEntryAddedEvent.Call(b, ref name, ref group, dst);
-            //dst.Session.SendAddTabEntry(id, b.name, name, group, 0);
+            dst.EntityMap.SendAddTabEntry(b, b.name, name, group, 0);
         }
         
-        /// <summary> Removes the given player from player's tab list (if their client supports it). </summary>
+        /// <summary> Removes the given entity from player's tab list (if their client supports it). </summary>
         public static void Remove(Player dst, Entity entity) {
             if (!dst.hasExtList) return;
             
             OnTabListEntryRemovedEvent.Call(entity, dst);
-            //dst.Session.SendRemoveTabEntry(id);
+            dst.EntityMap.SendRemoveTabEntry(entity);
         }
         
         

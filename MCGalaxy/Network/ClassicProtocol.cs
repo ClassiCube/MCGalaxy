@@ -38,7 +38,7 @@ namespace MCGalaxy.Network
         }
 
 
-        public override int MaxVisibleEntities { get { return 254; } }
+        public override int MaxEntityID { get { return 254; } }
 
         protected override int HandlePacket(byte[] buffer, int offset, int left) {
             switch (buffer[offset]) {

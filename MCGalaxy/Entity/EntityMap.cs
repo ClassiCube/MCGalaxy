@@ -41,6 +41,23 @@ namespace MCGalaxy {
             this.displayName = displayName;
         }
     }
+    public class TabEntity {
+        public readonly Entity e;
+        public readonly byte id;
+        public readonly string name;
+        public readonly string nick;
+        public readonly string group;
+        public readonly byte groupRank;
+
+        public TabEntity(Entity e, byte id, string name, string nick, string group, byte groupRank) {
+            this.e = e;
+            this.id = id;
+            this.name = name;
+            this.nick = nick;
+            this.group = group;
+            this.groupRank = groupRank;
+        }
+    }
 
     /// <summary>
     /// Manages a collection of entities that a player is intended to see.
@@ -52,22 +69,97 @@ namespace MCGalaxy {
 
         //List<Entity> invisible = new List<Entity>();
         ConcurrentDictionary<Entity, VisibleEntity> visible = new ConcurrentDictionary<Entity, VisibleEntity>();
-        readonly object locker = new object();
-
         //Thanks fCraft
         Stack<byte> freeIDs;
+        readonly object locker = new object();
 
-        readonly byte maxVisible;
 
-        public EntityMap(Player p, byte maxVisible) {
+        #region TabList
+        Dictionary<Entity, TabEntity> tabEntities = new Dictionary<Entity, TabEntity>();
+        bool[] usedTabIDs;
+        readonly object tabLocker = new object();
+
+        public void SendAddTabEntry(Entity e, string name, string nick, string group, byte groupRank) {
+            if (!p.hasExtList) return;
+
+            bool self = e == p;
+            lock (tabLocker) {
+
+                int tentativeID = -1;
+
+                VisibleEntity vis;
+                //We need to match the tablist ID to the matching entity in the level if possible,
+                //because a few popular plugins (chatsounds, CEF) rely on this
+                if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
+                    //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
+                    tentativeID = vis.id;
+                } else {
+                    if (self) { tentativeID = Entities.SelfID; }
+                    else {
+                        //In this case, it's an entry for an Entity not on your level (or one that hasn't spawned yet)
+                        //Since visible entities are assigned starting from 0 and going up,
+                        //we'll find tab list IDs going from 254 down so there's less chance of
+                        //an entity from another level sharing an ID with an entity on your level
+                        for (int i = maxEntityID; i >= 0; i--) {
+                            if (usedTabIDs[i] == false) {
+                                tentativeID = i;
+                                usedTabIDs[i] = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (tentativeID == -1) return; //No IDs left :(
+
+
+                TabEntity tabby;
+                if (!tabEntities.TryGetValue(e, out tabby)) {
+                    byte ID = (byte)tentativeID;
+                    //p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
+                    tabby = new TabEntity(e, ID, name, nick, group, groupRank);
+                    tabEntities[e] = tabby;
+                } else {
+                    p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
+                }
+
+                p.Session.SendAddTabEntry(tabby.id, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
+            }
+        }
+
+        public void SendRemoveTabEntry(Entity e) {
+            if (!p.hasExtList) return;
+
+            lock (tabLocker) {
+                TabEntity tabby;
+                if (tabEntities.TryGetValue(e, out tabby)) {
+                    tabby = tabEntities[e];
+                    if (e != p) usedTabIDs[tabby.id] = false;
+                    //p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
+                    tabEntities.Remove(e);
+                    p.Session.SendRemoveTabEntry(tabby.id);
+                } else {
+                    //Seems to happen when reconnecting
+                    //Logger.Log(LogType.Warning, "{0}'s entitymap: Tried removing Tablist ({0}) that wasn't in the collection...", p.name, e.SkinName);
+                }
+            }
+        }
+        #endregion
+
+        readonly byte maxEntityID;
+
+        public EntityMap(Player p, byte maxEntityID) {
             this.p = p;
-            this.maxVisible = maxVisible;
+            this.maxEntityID = maxEntityID;
 
             lock (locker) {
-                freeIDs = new Stack<byte>(maxVisible);
-                for (int i = maxVisible; i >= 0; i--) {
+                freeIDs = new Stack<byte>(maxEntityID);
+                for (int i = maxEntityID; i >= 0; i--) {
                     freeIDs.Push((byte)i);
                 }
+            }
+
+            lock (tabLocker) {
+                usedTabIDs = new bool[maxEntityID+1];
             }
         }
 
@@ -82,14 +174,25 @@ namespace MCGalaxy {
                     VisibleEntity vis;
                     if (!visible.TryGetValue(e, out vis)) {
                         byte ID = self ? Entities.SelfID : freeIDs.Pop();
-                        p.Message("| &a+ &S{0}&S with ID {1}", name, ID);
+                        //p.Message("| &a+ &S{0}&S with ID {1}", name, ID);
 
                         vis = new VisibleEntity(e, ID, name);
                         visible[e] = vis;
                     } else {
-                        p.Message("RESPAWNING {0}&S with ID {1}", name, vis.id);
+                        //p.Message("RESPAWNING {0}&S with ID {1}", name, vis.id);
                     }
                     Spawn(vis, pos, rot, skin, name, model);
+
+                    //If this entity has a matching tab entry, we need to make sure the IDs get synced
+                    //because a few popular plugins (chatsounds, CEF) rely on this
+                    lock (tabLocker) {
+                        TabEntity tabby;
+                        if (tabEntities.TryGetValue(vis.e, out tabby) && tabby.id != vis.id) {
+                            //p.Message("%bReadding tab {0} :)", tabby.nick);
+                            SendRemoveTabEntry(vis.e);
+                            SendAddTabEntry(vis.e, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
+                        }
+                    }
                 }
             }
         }
