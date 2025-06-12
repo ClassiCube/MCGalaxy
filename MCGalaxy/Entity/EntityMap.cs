@@ -19,6 +19,7 @@
 using MCGalaxy.Events.EntityEvents;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 
@@ -49,10 +50,9 @@ namespace MCGalaxy {
 
         Player p;
 
-        List<Entity> invisible = new List<Entity>();
-
-        //Dictionary<byte, Entity> visible = new Dictionary<byte, Entity>();
-        Dictionary<Entity, VisibleEntity> visible = new Dictionary<Entity, VisibleEntity>();
+        //List<Entity> invisible = new List<Entity>();
+        ConcurrentDictionary<Entity, VisibleEntity> visible = new ConcurrentDictionary<Entity, VisibleEntity>();
+        readonly object locker = new object();
 
         //Thanks fCraft
         Stack<byte> freeIDs;
@@ -63,9 +63,11 @@ namespace MCGalaxy {
             this.p = p;
             this.maxVisible = maxVisible;
 
-            freeIDs = new Stack<byte>(maxVisible);
-            for (int i = 0; i <= maxVisible; i++) {
-                freeIDs.Push((byte)i);
+            lock (locker) {
+                freeIDs = new Stack<byte>(maxVisible);
+                for (int i = 0; i <= maxVisible; i++) {
+                    freeIDs.Push((byte)i);
+                }
             }
         }
 
@@ -73,18 +75,20 @@ namespace MCGalaxy {
         /// Adds the given entity to the collection. If possible, immediately spawns the entity with the given parameters.
         /// </summary>
         public void Add(Entity e, Position pos, Orientation rot, string skin, string name, string model) {
-            //Maybe it Just Works if we add multiple of the same
-            //if (theoreticalCollection.Contains(e)) throw new InvalidOperationException(string.Format("Entity {0} was already added to {1}'s EntityMap.", name, p.name));
             bool self = e == p;
 
-            if (freeIDs.Count > 0 || self) {
-                byte ID = self ? Entities.SelfID : freeIDs.Pop();
-                p.Message("Adding {0}&S with ID {1}", name, ID);
-                VisibleEntity vis = new VisibleEntity(e, ID, name);
-                visible.Add(e, vis);
-                Spawn(vis, pos, rot, skin, name, model);
-            } else {
-                invisible.Add(e);
+            lock (locker) {
+                if (freeIDs.Count > 0 || self) {
+                    VisibleEntity vis;
+                    if (!visible.TryGetValue(e, out vis)) {
+                        byte ID = self ? Entities.SelfID : freeIDs.Pop();
+                        p.Message("Adding {0}&S with ID {1}", name, ID);
+
+                        vis = new VisibleEntity(e, ID, name);
+                        visible[e] = vis;
+                    }
+                    Spawn(vis, pos, rot, skin, name, model);
+                }
             }
         }
 
@@ -92,13 +96,13 @@ namespace MCGalaxy {
         /// Remove the given entity from the collection and despawns it for this player if possible.
         /// </summary>
         public void Remove(Entity e) {
-            invisible.Remove(e);
-            if (visible.ContainsKey(e)) {
-                VisibleEntity vis = visible[e];
-                if (e != p) freeIDs.Push(vis.id);
-                visible.Remove(e);
+            lock (locker) {
+                VisibleEntity vis;
+                if (!visible.TryGetValue(e, out vis)) {
+                    vis = visible[e];
+                    if (e != p) freeIDs.Push(vis.id);
+                }
                 Despawn(vis);
-                //TODO: Bring another entity back if there were any invisible
             }
         }
 
@@ -177,14 +181,24 @@ namespace MCGalaxy {
             return visible.ContainsKey(e);
         }
 
-
+        readonly Dictionary<Entity, VisibleEntity> cachedVisible = new Dictionary<Entity, VisibleEntity>(32);
         public unsafe void BroadcastEntityPositions() {
 
             byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
             byte* ptr = src;
             Player dst = p;
 
-            foreach (var pair in visible) {
+
+            lock (locker) {
+                cachedVisible.Clear();
+                //We want to avoid locking during the entire enumeration of position sending
+                //We need a cached collection to prevent the collection from changing while being enumerated over
+                foreach (KeyValuePair<Entity, VisibleEntity> pair in visible) {
+                    cachedVisible[pair.Key] = pair.Value;
+                }
+            }
+
+            foreach (KeyValuePair<Entity, VisibleEntity> pair in cachedVisible) {
                 Entity e = pair.Key;
                 byte id = pair.Value.id;
 
@@ -217,21 +231,5 @@ namespace MCGalaxy {
             else return 128;
         }
 
-
-        //unsafe byte NextFreeId() {
-        //    byte* used = stackalloc byte[256];
-        //    for (int i = 0; i < 256; i++) used[i] = 0;
-        //
-        //    Player[] players = PlayerInfo.Online.Items;
-        //    for (int i = 0; i < players.Length; i++) {
-        //        byte id = players[i].id;
-        //        used[id] = 1;
-        //    }
-        //
-        //    for (byte i = 0; i < 255; i++) {
-        //        if (used[i] == 0) return i;
-        //    }
-        //    return 1;
-        //}
     }
 }
