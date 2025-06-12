@@ -65,7 +65,7 @@ namespace MCGalaxy {
 
             lock (locker) {
                 freeIDs = new Stack<byte>(maxVisible);
-                for (int i = 0; i <= maxVisible; i++) {
+                for (int i = maxVisible; i >= 0; i--) {
                     freeIDs.Push((byte)i);
                 }
             }
@@ -82,10 +82,12 @@ namespace MCGalaxy {
                     VisibleEntity vis;
                     if (!visible.TryGetValue(e, out vis)) {
                         byte ID = self ? Entities.SelfID : freeIDs.Pop();
-                        p.Message("Adding {0}&S with ID {1}", name, ID);
+                        p.Message("| &a+ &S{0}&S with ID {1}", name, ID);
 
                         vis = new VisibleEntity(e, ID, name);
                         visible[e] = vis;
+                    } else {
+                        p.Message("RESPAWNING {0}&S with ID {1}", name, vis.id);
                     }
                     Spawn(vis, pos, rot, skin, name, model);
                 }
@@ -98,11 +100,16 @@ namespace MCGalaxy {
         public void Remove(Entity e) {
             lock (locker) {
                 VisibleEntity vis;
-                if (!visible.TryGetValue(e, out vis)) {
+                if (visible.TryGetValue(e, out vis)) {
                     vis = visible[e];
                     if (e != p) freeIDs.Push(vis.id);
+                    p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
+                    visible.TryRemove(e, out vis);
+                    Despawn(vis);
+                } else {
+                    //Seems to happen when reconnecting
+                    //Logger.Log(LogType.Warning, "{0}'s entitymap: Tried removing an entity ({0}) that wasn't in the collection...", p.name, e.SkinName);
                 }
-                Despawn(vis);
             }
         }
 

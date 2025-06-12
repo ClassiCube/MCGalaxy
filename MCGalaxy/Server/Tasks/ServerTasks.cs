@@ -76,7 +76,7 @@ namespace MCGalaxy.Tasks {
         }
         
         internal static void UpdateEntityPositions(SchedulerTask task) {
-            Entities.GlobalUpdate(); //Now the position of all entities (Players, bots) is sent to all players who can see them
+            Entities.GlobalUpdate();
             task.Delay = TimeSpan.FromMilliseconds(Server.Config.PositionUpdateInterval);
         }
         
