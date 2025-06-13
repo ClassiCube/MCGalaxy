@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
+using MCGalaxy.Network;
 
 namespace MCGalaxy {
 
@@ -30,9 +31,6 @@ namespace MCGalaxy {
     public class VisibleEntity {
         public readonly Entity e;
         public readonly byte id;
-        /// <summary>
-        /// The name actually displayed to this player. May include a suffix for a player currently possessing this entity, for instance
-        /// </summary>
         public readonly string displayName;
 
         public VisibleEntity(Entity e, byte id, string displayName) {
@@ -119,7 +117,7 @@ namespace MCGalaxy {
                     tabby = new TabEntity(e, ID, name, nick, group, groupRank);
                     tabEntities[e] = tabby;
                 } else {
-                    p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
+                    //p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
                 }
 
                 p.Session.SendAddTabEntry(tabby.id, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
@@ -164,7 +162,7 @@ namespace MCGalaxy {
         }
 
         /// <summary>
-        /// Adds the given entity to the collection. If possible, immediately spawns the entity with the given parameters.
+        /// Adds the given entity. If possible, immediately spawns the entity with the given parameters.
         /// </summary>
         public void Add(Entity e, Position pos, Orientation rot, string skin, string name, string model) {
             bool self = e == p;
@@ -198,7 +196,7 @@ namespace MCGalaxy {
         }
 
         /// <summary>
-        /// Remove the given entity from the collection and despawns it for this player if possible.
+        /// Remove the given entity and despawns it for this player.
         /// </summary>
         public void Remove(Entity e) {
             lock (locker) {
@@ -206,7 +204,7 @@ namespace MCGalaxy {
                 if (visible.TryGetValue(e, out vis)) {
                     vis = visible[e];
                     if (e != p) freeIDs.Push(vis.id);
-                    p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
+                    //p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
                     visible.TryRemove(e, out vis);
                     Despawn(vis);
                 } else {
@@ -269,11 +267,9 @@ namespace MCGalaxy {
 
 
         public void SendProp(Entity e, EntityProp prop, int value) {
+            if (!p.Supports(CpeExt.EntityProperty)) return;
             VisibleEntity vis;
             if (!visible.TryGetValue(e, out vis)) return;
-            _SendProp(vis, prop, value);
-        }
-        void _SendProp(VisibleEntity vis, EntityProp prop, int value) {
             p.Session.SendEntityProperty(vis.id, prop, value);
         }
 
@@ -287,12 +283,28 @@ namespace MCGalaxy {
             id = 0;
             return false;
         }
-        public bool Contains(Entity e) {
-            return visible.ContainsKey(e);
+
+        /// <summary>
+        /// For plugins. Unused in base MCGalaxy.
+        /// </summary>
+        public void SendTeleport(Entity e, Position pos, Orientation rot, Packet.TeleportMoveMode mode) {
+            VisibleEntity vis;
+            if (!visible.TryGetValue(e, out vis)) return;
+            if (!p.Session.SendTeleport(vis.id, pos, rot, mode)) {
+                p.Session.SendTeleport(vis.id, pos, rot);
+            }
+        }
+        /// <summary>
+        /// For plugins. Unused in base MCGalaxy.
+        /// </summary>
+        public void SendTeleport(Entity e, Position pos, Orientation rot) {
+            VisibleEntity vis;
+            if (!visible.TryGetValue(e, out vis)) return;
+            p.Session.SendTeleport(vis.id, pos, rot);
         }
 
         readonly Dictionary<Entity, VisibleEntity> cachedVisible = new Dictionary<Entity, VisibleEntity>(32);
-        public unsafe void BroadcastEntityPositions() {
+        internal unsafe void BroadcastEntityPositions() {
 
             byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
             byte* ptr = src;
@@ -302,9 +314,15 @@ namespace MCGalaxy {
             lock (locker) {
                 cachedVisible.Clear();
                 //We want to avoid locking during the entire enumeration of position sending
-                //We need a cached collection to prevent the collection from changing while being enumerated over
+                //We need a cached collection to prevent the collection from changing while being enumerated over.
+                //Also, ignore entities that we don't want to automatically update the position of.
                 foreach (KeyValuePair<Entity, VisibleEntity> pair in visible) {
+                    if (!pair.Key.autoBroadcastPosition) continue;
+
                     cachedVisible[pair.Key] = pair.Value;
+                    if (pair.Key.untracked) {
+                        pair.Key._positionUpdatePos = pair.Key.Pos;
+                    }
                 }
             }
 
@@ -327,6 +345,11 @@ namespace MCGalaxy {
                 rot.HeadX = pitch;
                 p.Session.GetPositionPacket(ref ptr, id, e.hasExtPositions, dst.hasExtPositions,
                                            e._positionUpdatePos, e._lastPos, rot, e._lastRot);
+
+                //bool rotChanged = rot.RotY != e._lastRot.RotY || rot.HeadX != e._lastRot.HeadX;
+                //if (pair.Value.displayName.CaselessContains("temp") && (e._lastPos != e._positionUpdatePos || rotChanged)) {
+                //    p.Message("Moving {0} to {1}", pair.Value.displayName, e._positionUpdatePos.ToVec3F32().ToString());
+                //}
             }
 
             int count = (int)(ptr - src);
@@ -335,6 +358,12 @@ namespace MCGalaxy {
             byte[] packet = new byte[count];
             for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
             dst.Send(packet);
+
+            foreach (KeyValuePair<Entity, VisibleEntity> pair in cachedVisible) {
+                if (pair.Key.untracked) {
+                    pair.Key._lastPos = pair.Key._positionUpdatePos; pair.Key._lastRot = pair.Key.Rot;
+                }
+            }
         }
         static byte FlippedPitch(byte pitch) {
             if (pitch > 64 && pitch < 192) return pitch;

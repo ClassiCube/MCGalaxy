@@ -139,8 +139,7 @@ namespace MCGalaxy
         static void SpawnRaw(Player p, Entity e, Position pos, Orientation rot,
                              string skin, string name, string model) {
 
-            p.EntityMap.Add(e, pos, rot,
-                             skin, name, model);
+            p.EntityMap.Add(e, pos, rot, skin, name, model);
         }
         
         /// <summary>
