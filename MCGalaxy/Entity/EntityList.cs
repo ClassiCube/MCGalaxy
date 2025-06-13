@@ -303,11 +303,11 @@ namespace MCGalaxy {
         }
 
         public void SendModel(Entity e, string model) {
-            VisibleEntity vis;
             lock (visLocker) {
+                VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
+                _SendModel(vis, model);
             }
-            _SendModel(vis, model);
         }
         void _SendModel(VisibleEntity vis, string model) {
             if (p.hasChangeModel) {
@@ -324,11 +324,11 @@ namespace MCGalaxy {
 
 
         public void SendScales(Entity e) {
-            VisibleEntity vis;
             lock (visLocker) {
+                VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
+                _SendScales(vis);
             }
-            _SendScales(vis);
         }
         void _SendScales(VisibleEntity vis) {
             if (!p.Supports(CpeExt.EntityProperty)) return;
@@ -349,16 +349,16 @@ namespace MCGalaxy {
 
         public void SendProp(Entity e, EntityProp prop, int value) {
             if (!p.Supports(CpeExt.EntityProperty)) return;
-            VisibleEntity vis;
             lock (visLocker) {
+                VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
+                p.Session.SendEntityProperty(vis.id, prop, value);
             }
-            p.Session.SendEntityProperty(vis.id, prop, value);
         }
 
         public bool GetID(Entity e, out byte id) {
-            VisibleEntity vis;
             lock (visLocker) {
+                VisibleEntity vis;
                 if (visible.TryGetValue(e, out vis)) {
                     id = vis.id;
                     return true;
@@ -372,23 +372,23 @@ namespace MCGalaxy {
         /// For plugins. Unused in base MCGalaxy.
         /// </summary>
         public void SendTeleport(Entity e, Position pos, Orientation rot, Packet.TeleportMoveMode mode) {
-            VisibleEntity vis;
             lock (visLocker) {
+                VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
-            }
-            if (!p.Session.SendTeleport(vis.id, pos, rot, mode)) {
-                p.Session.SendTeleport(vis.id, pos, rot);
+                if (!p.Session.SendTeleport(vis.id, pos, rot, mode)) {
+                    p.Session.SendTeleport(vis.id, pos, rot);
+                }
             }
         }
         /// <summary>
         /// For plugins. Unused in base MCGalaxy.
         /// </summary>
         public void SendTeleport(Entity e, Position pos, Orientation rot) {
-            VisibleEntity vis;
             lock (visLocker) {
+                VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
+                p.Session.SendTeleport(vis.id, pos, rot);
             }
-            p.Session.SendTeleport(vis.id, pos, rot);
         }
 
         readonly Dictionary<Entity, VisibleEntity> cachedVisible = new Dictionary<Entity, VisibleEntity>(32);
