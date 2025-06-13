@@ -476,8 +476,6 @@ namespace MCGalaxy.Network
 
 
 #region CPE packet sending
-
-        //We need a distinct list of available tab IDs, these should be independent from Entity IDs
         public override void SendAddTabEntry(byte id, string name, string nick, string group, byte groupRank) {
             nick  = CleanupColors(nick);
             group = CleanupColors(group);

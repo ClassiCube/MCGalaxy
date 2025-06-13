@@ -146,14 +146,14 @@ namespace MCGalaxy {
         }
 
         
-        public static void GlobalUpdatePosition() {
+        internal static void GlobalUpdatePosition() {
             Level[] levels = LevelInfo.Loaded.Items;
             for (int i = 0; i < levels.Length; i++) 
             {
                 UpdatePositions(levels[i]);
             }
         }
-        public static void GlobalPostBroadcastPosition() {
+        internal static void GlobalPostBroadcastPosition() {
             Level[] levels = LevelInfo.Loaded.Items;
             for (int i = 0; i < levels.Length; i++) {
                 PostBroadcastPosition(levels[i]);

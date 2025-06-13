@@ -76,7 +76,7 @@ namespace MCGalaxy {
 
         Player p;
 
-        ConcurrentDictionary<Entity, VisibleEntity> visible = new ConcurrentDictionary<Entity, VisibleEntity>();
+        Dictionary<Entity, VisibleEntity> visible = new Dictionary<Entity, VisibleEntity>();
         List<WaitingEntity> invisible = new List<WaitingEntity>();
         WaitingEntity IsWaitingToSpawn(Entity e) {
             foreach (var vis in invisible) {
@@ -87,7 +87,7 @@ namespace MCGalaxy {
 
         //Thanks fCraft
         Stack<byte> freeIDs;
-        readonly object locker = new object();
+        readonly object visLocker = new object();
 
 
         #region TabList
@@ -118,32 +118,38 @@ namespace MCGalaxy {
 
                 int tentativeID = -1;
 
-                VisibleEntity vis;
+                
                 if (self) {
                     tentativeID = Entities.SelfID;
-                }
-                else if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
+                } else {
 
-                    //We need to match the tablist ID to the matching entity in the level if possible,
-                    //because a few popular plugins (chatsounds, CEF) rely on this
+                    lock (visLocker) {
+                        VisibleEntity vis;
+                        if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
+                            //We need to match the tablist ID to the matching entity in the level if possible,
+                            //because a few popular plugins (chatsounds, CEF) rely on this
 
-                    //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
-                    tentativeID = vis.id;
-                    usedTabIDs[vis.id] = true;
-                }
-                else {
-                    //In this case, it's an entry for an Entity not on your level (or one that hasn't spawned yet)
-                    //Since visible entities are assigned starting from 0 and going up,
-                    //we'll find tab list IDs going from 254 down so there's less chance of
-                    //an entity from another level sharing an ID with an entity on your level
-                    for (int i = maxEntityID; i >= 0; i--) {
-                        if (usedTabIDs[i] == false) {
-                            tentativeID = i;
-                            usedTabIDs[i] = true;
-                            break;
+                            //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
+                            tentativeID = vis.id;
+                            usedTabIDs[vis.id] = true;
+                        }
+                    }
+
+                    if (tentativeID == -1) {
+                        //In this case, it's an entry for an Entity not on your level (or one that hasn't spawned yet)
+                        //Since visible entities are assigned starting from 0 and going up,
+                        //we'll find tab list IDs going from 254 down so there's less chance of
+                        //an entity from another level sharing an ID with an entity on your level
+                        for (int i = maxEntityID; i >= 0; i--) {
+                            if (usedTabIDs[i] == false) {
+                                tentativeID = i;
+                                usedTabIDs[i] = true;
+                                break;
+                            }
                         }
                     }
                 }
+
                 if (tentativeID == -1) return; //No IDs left :(
 
 
@@ -186,7 +192,7 @@ namespace MCGalaxy {
             this.p = p;
             this.maxEntityID = maxEntityID;
 
-            lock (locker) {
+            lock (visLocker) {
                 freeIDs = new Stack<byte>(maxEntityID);
                 for (int i = maxEntityID; i >= 0; i--) {
                     freeIDs.Push((byte)i);
@@ -205,7 +211,7 @@ namespace MCGalaxy {
         public bool Add(Entity e, Position pos, Orientation rot, string skin, string name, string model, bool tabList) {
             bool self = e == p;
 
-            lock (locker) {
+            lock (visLocker) {
                 if (freeIDs.Count > 0 || self) {
                     VisibleEntity vis;
                     if (!visible.TryGetValue(e, out vis)) {
@@ -249,7 +255,7 @@ namespace MCGalaxy {
         /// </summary>
         public bool Remove(Entity e, bool tabList) {
             bool self = e == p;
-            lock (locker) {
+            lock (visLocker) {
 
                 //If we're removing a currently invisible entity...
                 WaitingEntity waiting = IsWaitingToSpawn(e);
@@ -265,7 +271,7 @@ namespace MCGalaxy {
                     if (!self) freeIDs.Push(vis.id);
                     //p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
 
-                    visible.TryRemove(e, out vis);
+                    visible.Remove(e);
                     if (tabList) RemoveTab(e);
                     Despawn(vis);
 
@@ -298,7 +304,9 @@ namespace MCGalaxy {
 
         public void SendModel(Entity e, string model) {
             VisibleEntity vis;
-            if (!visible.TryGetValue(e, out vis)) return;
+            lock (visLocker) {
+                if (!visible.TryGetValue(e, out vis)) return;
+            }
             _SendModel(vis, model);
         }
         void _SendModel(VisibleEntity vis, string model) {
@@ -317,7 +325,9 @@ namespace MCGalaxy {
 
         public void SendScales(Entity e) {
             VisibleEntity vis;
-            if (!visible.TryGetValue(e, out vis)) return;
+            lock (visLocker) {
+                if (!visible.TryGetValue(e, out vis)) return;
+            }
             _SendScales(vis);
         }
         void _SendScales(VisibleEntity vis) {
@@ -340,15 +350,19 @@ namespace MCGalaxy {
         public void SendProp(Entity e, EntityProp prop, int value) {
             if (!p.Supports(CpeExt.EntityProperty)) return;
             VisibleEntity vis;
-            if (!visible.TryGetValue(e, out vis)) return;
+            lock (visLocker) {
+                if (!visible.TryGetValue(e, out vis)) return;
+            }
             p.Session.SendEntityProperty(vis.id, prop, value);
         }
 
         public bool GetID(Entity e, out byte id) {
             VisibleEntity vis;
-            if (visible.TryGetValue(e, out vis)) {
-                id = vis.id;
-                return true;
+            lock (visLocker) {
+                if (visible.TryGetValue(e, out vis)) {
+                    id = vis.id;
+                    return true;
+                }
             }
             id = 0;
             return false;
@@ -359,7 +373,9 @@ namespace MCGalaxy {
         /// </summary>
         public void SendTeleport(Entity e, Position pos, Orientation rot, Packet.TeleportMoveMode mode) {
             VisibleEntity vis;
-            if (!visible.TryGetValue(e, out vis)) return;
+            lock (visLocker) {
+                if (!visible.TryGetValue(e, out vis)) return;
+            }
             if (!p.Session.SendTeleport(vis.id, pos, rot, mode)) {
                 p.Session.SendTeleport(vis.id, pos, rot);
             }
@@ -369,7 +385,9 @@ namespace MCGalaxy {
         /// </summary>
         public void SendTeleport(Entity e, Position pos, Orientation rot) {
             VisibleEntity vis;
-            if (!visible.TryGetValue(e, out vis)) return;
+            lock (visLocker) {
+                if (!visible.TryGetValue(e, out vis)) return;
+            }
             p.Session.SendTeleport(vis.id, pos, rot);
         }
 
@@ -381,7 +399,7 @@ namespace MCGalaxy {
             Player dst = p;
 
 
-            lock (locker) {
+            lock (visLocker) {
                 cachedVisible.Clear();
                 //We want to avoid locking during the entire enumeration of position sending
                 //We need a cached collection to prevent the collection from changing while being enumerated over.
