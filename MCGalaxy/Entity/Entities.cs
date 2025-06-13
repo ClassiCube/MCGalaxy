@@ -92,7 +92,6 @@ namespace MCGalaxy
             OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);
 
             SpawnRaw(dst, p, pos, rot, skin, name, model);
-            if (!Server.Config.TablistGlobal) TabList.Add(dst, p);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
@@ -133,13 +132,15 @@ namespace MCGalaxy
             
             OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
             SpawnRaw(dst, b, b.Pos, b.Rot, skin, name, model);
-            if (Server.Config.TablistBots) TabList.Add(dst, b);
         }
         
+        /// <summary>
+        /// Attempts to spawn and add an entity to p's tab list.
+        /// </summary>
         static void SpawnRaw(Player p, Entity e, Position pos, Orientation rot,
                              string skin, string name, string model) {
 
-            p.EntityMap.Add(e, pos, rot, skin, name, model);
+            p.EntityList.Add(e, pos, rot, skin, name, model, true);
         }
         
         /// <summary>
@@ -147,18 +148,12 @@ namespace MCGalaxy
         /// </summary>
         public static void Despawn(Player dst, Player other) {
             OnEntityDespawnedEvent.Call(other, dst);
-
-            dst.EntityMap.Remove(other);
-
-            if (!Server.Config.TablistGlobal) TabList.Remove(dst, other);
+            dst.EntityList.Remove(other, true);
         }
         
         public static void Despawn(Player dst, PlayerBot b) {
             OnEntityDespawnedEvent.Call(b, dst);
-
-            dst.EntityMap.Remove(b);
-
-            if (Server.Config.TablistBots) TabList.Remove(dst, b);
+            dst.EntityList.Remove(b, true);
         }
 
         #endregion
@@ -188,8 +183,8 @@ namespace MCGalaxy
                 string model = Chat.Format(m, pl, true, false);
 
                 OnSendingModelEvent.Call(e, ref model, pl);
-                pl.EntityMap.SendModel(e, model);
-                pl.EntityMap.SendScales(e);
+                pl.EntityList.SendModel(e, model);
+                pl.EntityList.SendScales(e);
             }
         }
 
@@ -209,7 +204,7 @@ namespace MCGalaxy
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.Supports(CpeExt.EntityProperty)) continue;
                 if (!pl.CanSeeEntity(e)) continue;
-                pl.EntityMap.SendProp(e, prop, Orientation.PackedToDegrees(angle));
+                pl.EntityList.SendProp(e, prop, Orientation.PackedToDegrees(angle));
             }
         }
         
@@ -229,7 +224,7 @@ namespace MCGalaxy
             }
             foreach (Player p in players) {
                 //TODO: Maytbe set _lastPos in here
-                p.EntityMap.BroadcastEntityPositions();
+                p.EntityList.BroadcastEntityPositions();
             }
             foreach (Player p in players) {
                 p._lastPos = p._positionUpdatePos; p._lastRot = p.Rot;

@@ -88,7 +88,7 @@ namespace MCGalaxy.Core {
             for (int i = 0; i < bots.Length; i++) {
 
                 byte botID;
-                if (!p.EntityMap.GetID(bots[i], out botID)) continue;
+                if (!p.EntityList.GetID(bots[i], out botID)) continue;
                 if (botID != id) continue;
 
                 if (bots[i].ClickedOnText == null && !p.checkingBotInfo) return false;

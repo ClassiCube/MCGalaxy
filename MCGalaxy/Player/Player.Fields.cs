@@ -48,7 +48,7 @@ namespace MCGalaxy {
         /// <summary> The underlying socket for sending/receiving raw data </summary>
         public INetSocket Socket;
         public IGameSession Session;
-        public EntityMap EntityMap;
+        public EntityMap EntityList;
         
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk, AutoAfk;
