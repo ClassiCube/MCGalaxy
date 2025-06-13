@@ -128,31 +128,6 @@ namespace MCGalaxy {
             }
         }
         
-        //unsafe static byte NextFreeId(PlayerBot bot) {
-        //    byte* used = stackalloc byte[256];
-        //    for (int i = 0; i < 256; i++) used[i] = 0;
-        //
-        //    PlayerBot[] bots = bot.level.Bots.Items;
-        //    for (int i = 0; i < bots.Length; i++) {
-        //        byte id = bots[i].id;
-        //        used[id] = 1;
-        //    }
-        //    
-        //    for (byte i = 127; i >= 64; i--) {
-        //        if (used[i] == 0) return i;
-        //    }
-        //    // NOTE: For some clients these IDs mean self ID
-        //    for (byte i = 254; i > 127; i--) {
-        //        if (used[i] == 0) return i;
-        //    }
-        //    // NOTE: These IDs may conflict with player IDs, so use as a last resort
-        //    for (byte i = 63; i > 0; i--) {
-        //        if (used[i] == 0) return i;
-        //    }
-        //    return Entities.SelfID;
-        //}
-        
-        
         public void NextInstruction() {
             cur++;
             if (cur == Instructions.Count) cur = 0;
