@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands.Moderation {
             }
             
             Entities.GlobalSpawn(p, false);
-            TabList.Add(p, p, Entities.SelfID);
+            TabList.Add(p, p);
             Server.hidden.Save(false);
         }
 

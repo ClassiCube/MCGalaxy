@@ -77,7 +77,6 @@ namespace MCGalaxy.Tasks {
         
         internal static void UpdateEntityPositions(SchedulerTask task) {
             Entities.GlobalUpdate();
-            PlayerBot.GlobalUpdatePosition();
             task.Delay = TimeSpan.FromMilliseconds(Server.Config.PositionUpdateInterval);
         }
         

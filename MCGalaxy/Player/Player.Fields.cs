@@ -48,6 +48,7 @@ namespace MCGalaxy {
         /// <summary> The underlying socket for sending/receiving raw data </summary>
         public INetSocket Socket;
         public IGameSession Session;
+        public EntityList EntityList;
         
         public DateTime LastAction, AFKCooldown;
         public bool IsAfk, AutoAfk;
@@ -68,7 +69,6 @@ namespace MCGalaxy {
         internal List<Pronouns> pronounsList = new List<Pronouns> { Pronouns.Default };
 
         public int warn;
-        public byte id;
         public IPAddress IP;
         public string ip;
         public string color;
@@ -220,7 +220,6 @@ namespace MCGalaxy {
         public string PreTeleportMap;
         
         public string summonedMap;
-        public Position _tempPos;
 
         // Extra storage for custom commands
         public ExtrasCollection Extras = new ExtrasCollection();

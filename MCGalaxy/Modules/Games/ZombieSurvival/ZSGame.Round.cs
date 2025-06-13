@@ -225,7 +225,7 @@ namespace MCGalaxy.Modules.Games.ZS
 
         internal static void RespawnPlayer(Player p) {
             Entities.GlobalRespawn(p, false);
-            TabList.Add(p, p, Entities.SelfID);
+            TabList.Add(p, p);
         }
 
         public override void EndRound() {
