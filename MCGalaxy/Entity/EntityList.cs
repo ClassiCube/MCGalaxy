@@ -28,7 +28,7 @@ namespace MCGalaxy {
     /// <summary>
     /// Manages a collection of entities that a player is intended to see.
     /// </summary>
-    public sealed class EntityMap {
+    public sealed class EntityList {
 
         //Thanks fCraft
         class VisibleEntity {
@@ -182,7 +182,7 @@ namespace MCGalaxy {
 
         readonly byte maxEntityID;
 
-        public EntityMap(Player p, byte maxEntityID) {
+        public EntityList(Player p, byte maxEntityID) {
             this.p = p;
             this.maxEntityID = maxEntityID;
 

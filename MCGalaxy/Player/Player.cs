@@ -67,7 +67,7 @@ namespace MCGalaxy {
         public Player(INetSocket socket, IGameSession session) {
             Socket  = socket;
             Session = session;
-            EntityList = new EntityMap(this, (byte)Session.MaxEntityID);
+            EntityList = new EntityList(this, (byte)Session.MaxEntityID);
             SetIP(Socket.IP);
             
             CriticalTasks = new VolatileArray<SchedulerTask>();
