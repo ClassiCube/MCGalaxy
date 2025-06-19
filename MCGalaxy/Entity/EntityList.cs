@@ -119,13 +119,13 @@ namespace MCGalaxy {
 
                 if (tabObjects.TryGetValue(o, out tabby)) {
                     tabby.UpdateFields(name, nick, group, groupRank); //Refresh every field other than entity and ID
-                    p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
+                    //p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
                 } else {
                     int tentativeID = FindFreeTabID(o, self);
                     if (tentativeID == -1) return;
 
                     byte ID = (byte)tentativeID;
-                    p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
+                    //p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
                     tabby = new TabObject(o, ID, name, nick, group, groupRank);
                     tabObjects[o] = tabby;
                 }
@@ -175,7 +175,7 @@ namespace MCGalaxy {
                 if (tabObjects.TryGetValue(o, out tabby)) {
                     tabby = tabObjects[o];
                     if (o != p) usedTabIDs[tabby.id] = false;
-                    p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
+                    //p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
                     tabObjects.Remove(o);
                     p.Session.SendRemoveTabEntry(tabby.id);
                 } else {
