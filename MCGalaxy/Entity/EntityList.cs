@@ -42,16 +42,16 @@ namespace MCGalaxy {
                 this.displayName = displayName;
             }
         }
-        class TabEntity {
-            public readonly Entity e;
+        class TabObject {
+            public readonly object o;
             public readonly byte id;
             public string name;
             public string nick;
             public string group;
             public byte groupRank;
 
-            public TabEntity(Entity e, byte id, string name, string nick, string group, byte groupRank) {
-                this.e = e;
+            public TabObject(object o, byte id, string name, string nick, string group, byte groupRank) {
+                this.o = o;
                 this.id = id;
                 this.name = name;
                 this.nick = nick;
@@ -91,7 +91,7 @@ namespace MCGalaxy {
 
 
         #region TabList
-        Dictionary<Entity, TabEntity> tabEntities = new Dictionary<Entity, TabEntity>();
+        Dictionary<object, TabObject> tabObjects = new Dictionary<object, TabObject>();
         bool[] usedTabIDs;
         readonly object tabLocker = new object();
 
@@ -110,9 +110,9 @@ namespace MCGalaxy {
             }
         }
 
-        public void SendAddTabEntry(Entity e, string name, string nick, string group, byte groupRank) {
+        public void SendAddTabEntry(object o, string name, string nick, string group, byte groupRank) {
             if (!p.hasExtList) return;
-            bool self = e == p;
+            bool self = o == p;
 
             lock (tabLocker) {
 
@@ -123,15 +123,18 @@ namespace MCGalaxy {
                     tentativeID = Entities.SelfID;
                 } else {
 
-                    lock (visLocker) {
-                        VisibleEntity vis;
-                        if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
-                            //We need to match the tablist ID to the matching entity in the level if possible,
-                            //because a few popular plugins (chatsounds, CEF) rely on this
+                    if (o is Entity) {
+                        lock (visLocker) {
+                            VisibleEntity vis;
+                            Entity e = (Entity)o;
+                            if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
+                                //We need to match the tablist ID to the matching entity in the level if possible,
+                                //because a few popular plugins (chatsounds, CEF) rely on this
 
-                            //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
-                            tentativeID = vis.id;
-                            usedTabIDs[vis.id] = true;
+                                //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
+                                tentativeID = vis.id;
+                                usedTabIDs[vis.id] = true;
+                            }
                         }
                     }
 
@@ -153,12 +156,12 @@ namespace MCGalaxy {
                 if (tentativeID == -1) return; //No IDs left :(
 
 
-                TabEntity tabby;
-                if (!tabEntities.TryGetValue(e, out tabby)) {
+                TabObject tabby;
+                if (!tabObjects.TryGetValue(o, out tabby)) {
                     byte ID = (byte)tentativeID;
                     //p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
-                    tabby = new TabEntity(e, ID, name, nick, group, groupRank);
-                    tabEntities[e] = tabby;
+                    tabby = new TabObject(o, ID, name, nick, group, groupRank);
+                    tabObjects[o] = tabby;
                 } else {
                     tabby.UpdateFields(name, nick, group, groupRank); //Refresh every field other than entity and ID
                     //p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
@@ -171,12 +174,12 @@ namespace MCGalaxy {
             if (!p.hasExtList) return;
 
             lock (tabLocker) {
-                TabEntity tabby;
-                if (tabEntities.TryGetValue(e, out tabby)) {
-                    tabby = tabEntities[e];
+                TabObject tabby;
+                if (tabObjects.TryGetValue(e, out tabby)) {
+                    tabby = tabObjects[e];
                     if (e != p) usedTabIDs[tabby.id] = false;
                     //p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
-                    tabEntities.Remove(e);
+                    tabObjects.Remove(e);
                     p.Session.SendRemoveTabEntry(tabby.id);
                 } else {
                     //Seems to happen when reconnecting
@@ -229,8 +232,8 @@ namespace MCGalaxy {
                     //If this entity has a matching tab entry, we need to make sure the IDs get synced
                     //because a few popular plugins (chatsounds, CEF) rely on this
                     lock (tabLocker) {
-                        TabEntity tabby;
-                        if (tabEntities.TryGetValue(vis.e, out tabby) && tabby.id != vis.id) {
+                        TabObject tabby;
+                        if (tabObjects.TryGetValue(vis.e, out tabby) && tabby.id != vis.id) {
                             //p.Message("%bReadding tab {0} :)", tabby.nick);
                             SendRemoveTabEntry(vis.e);
                             SendAddTabEntry(vis.e, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
