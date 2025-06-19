@@ -115,71 +115,68 @@ namespace MCGalaxy {
             bool self = o == p;
 
             lock (tabLocker) {
-
-                int tentativeID = -1;
-
-                
-                if (self) {
-                    tentativeID = Entities.SelfID;
-                } else {
-
-                    if (o is Entity) {
-                        lock (visLocker) {
-                            VisibleEntity vis;
-                            Entity e = (Entity)o;
-                            if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
-                                //We need to match the tablist ID to the matching entity in the level if possible,
-                                //because a few popular plugins (chatsounds, CEF) rely on this
-
-                                //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
-                                tentativeID = vis.id;
-                                usedTabIDs[vis.id] = true;
-                            }
-                        }
-                    }
-
-                    if (tentativeID == -1) {
-                        //In this case, it's an entry for an Entity not on your level (or one that hasn't spawned yet)
-                        //Since visible entities are assigned starting from 0 and going up,
-                        //we'll find tab list IDs going from 254 down so there's less chance of
-                        //an entity from another level sharing an ID with an entity on your level
-                        for (int i = maxEntityID; i >= 0; i--) {
-                            if (usedTabIDs[i] == false) {
-                                tentativeID = i;
-                                usedTabIDs[i] = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (tentativeID == -1) return; //No IDs left :(
-
-
                 TabObject tabby;
-                if (!tabObjects.TryGetValue(o, out tabby)) {
+
+                if (tabObjects.TryGetValue(o, out tabby)) {
+                    tabby.UpdateFields(name, nick, group, groupRank); //Refresh every field other than entity and ID
+                    p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
+                } else {
+                    int tentativeID = FindFreeTabID(o, self);
+                    if (tentativeID == -1) return;
+
                     byte ID = (byte)tentativeID;
-                    //p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
+                    p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
                     tabby = new TabObject(o, ID, name, nick, group, groupRank);
                     tabObjects[o] = tabby;
-                } else {
-                    tabby.UpdateFields(name, nick, group, groupRank); //Refresh every field other than entity and ID
-                    //p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
                 }
 
                 p.Session.SendAddTabEntry(tabby.id, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
             }
         }
-        public void SendRemoveTabEntry(Entity e) {
+        int FindFreeTabID(object o, bool self) {
+            if (self) return Entities.SelfID;
+
+            //Try finding a matching visible entity for the ID
+            if (o is Entity) {
+                lock (visLocker) {
+                    VisibleEntity vis;
+                    Entity e = (Entity)o;
+                    if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
+                        //We need to match the tablist ID to the matching entity in the level if possible,
+                        //because a few popular plugins (chatsounds, CEF) rely on this
+
+                        //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
+                        usedTabIDs[vis.id] = true;
+                        return vis.id;
+                    }
+                }
+            }
+
+            //In this case, it's an entry for an Entity not on your level (or one that hasn't spawned yet)
+            //Since visible entities are assigned starting from 0 and going up,
+            //we'll find tab list IDs going from 254 down so there's less chance of
+            //an entity from another level sharing an ID with an entity on your level
+            for (int i = maxEntityID; i >= 0; i--) {
+                if (usedTabIDs[i] == false) {
+                    usedTabIDs[i] = true;
+                    //p.Message("Tab ID {0} is now used.", i);
+                    return i;
+                }
+            }
+
+            //p.Message("No IDS left :(");
+            return -1; //No IDs left :(
+        }
+        public void SendRemoveTabEntry(object o) {
             if (!p.hasExtList) return;
 
             lock (tabLocker) {
                 TabObject tabby;
-                if (tabObjects.TryGetValue(e, out tabby)) {
-                    tabby = tabObjects[e];
-                    if (e != p) usedTabIDs[tabby.id] = false;
-                    //p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
-                    tabObjects.Remove(e);
+                if (tabObjects.TryGetValue(o, out tabby)) {
+                    tabby = tabObjects[o];
+                    if (o != p) usedTabIDs[tabby.id] = false;
+                    p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
+                    tabObjects.Remove(o);
                     p.Session.SendRemoveTabEntry(tabby.id);
                 } else {
                     //Seems to happen when reconnecting
