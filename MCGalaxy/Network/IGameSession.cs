@@ -58,9 +58,11 @@ namespace MCGalaxy.Network
             return read;
         }
         
+        
+        public virtual int MaxEntityID { get; }
+
         public void Disconnect() { player.Disconnect(); }
-        
-        
+
         /// <summary> Sends raw data to the client </summary>
         public void Send(byte[] data) { socket.Send(data, SendFlags.None); }
         /// <summary> Whether the client supports the given CPE extension </summary>
@@ -102,6 +104,8 @@ namespace MCGalaxy.Network
         /// <summary> Sends an update environment color packet to the client </summary>
         public abstract bool SendSetEnvColor(byte type, string hex);
         public abstract void SendChangeModel(byte id, string model);
+
+        public abstract void SendEntityProperty(byte id, EntityProp prop, int value);
         /// <summary> Sends an update weather packet </summary>
         public abstract bool SendSetWeather(byte weather);
         /// <summary> Sends an update text color code packet to the client </summary>
@@ -126,8 +130,9 @@ namespace MCGalaxy.Network
         /// <summary> Gets the name of the software the client is using </summary>
         /// <example> ClassiCube, Classic 0.0.16, etc </example>
         public abstract string ClientName();
-        public abstract void UpdatePlayerPositions();
-        
+        public abstract unsafe void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos,
+                                                            Position pos, Position oldPos, Orientation rot, Orientation oldRot);
+
         /// <summary> Converts the given block ID into a raw block ID that the client supports </summary>
         public virtual BlockID ConvertBlock(BlockID block) {
             BlockID raw;
