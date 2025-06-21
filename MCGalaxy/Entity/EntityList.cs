@@ -19,7 +19,6 @@
 using MCGalaxy.Events.EntityEvents;
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
