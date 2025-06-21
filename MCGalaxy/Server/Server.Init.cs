@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using MCGalaxy.DB;
+using MCGalaxy.Events.ServerEvents;
 using MCGalaxy.Generator;
 using MCGalaxy.Network;
 using MCGalaxy.Tasks;
@@ -46,7 +47,11 @@ namespace MCGalaxy
             LevelInfo.Add(mainLevel);
         }
 
-        static void LoadAllPlugins(SchedulerTask task) { Plugin.LoadAll(); }
+        static void LoadAllPlugins(SchedulerTask task)
+        {
+            Plugin.LoadAll();
+            OnPluginsLoadedEvent.Call();
+        }
         
         static void InitPlayerLists(SchedulerTask task) {
             try {
