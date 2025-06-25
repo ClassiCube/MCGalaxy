@@ -193,6 +193,9 @@ namespace MCGalaxy.Modules.Compiling
             string root = RuntimeEnvironment.GetRuntimeDirectory();
             
             string[] paths = new string[] {
+                // Modern Visual Studio compilers
+                @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\Roslyn\csc.exe",
+                @"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\Roslyn\csc.exe",
                 // First try new C# compiler
                 Path.Combine(root, "csc.exe"),
                 // Then fallback to old Mono C# compiler

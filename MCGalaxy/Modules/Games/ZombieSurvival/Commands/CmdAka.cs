@@ -37,7 +37,7 @@ namespace MCGalaxy.Modules.Games.ZS
                 Entities.Despawn(p, other);
                 Entities.Spawn(p, other);
             }
-            TabList.Add(p, p, Entities.SelfID);
+            TabList.Add(p, p);
         }
         
         public override void Help(Player p) {

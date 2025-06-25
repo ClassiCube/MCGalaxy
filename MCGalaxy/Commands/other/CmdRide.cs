@@ -68,7 +68,7 @@ namespace MCGalaxy.Commands.Misc {
                 
                 if (dx != 0 || dy != 0 || dz != 0) {
                     Position pos = Position.FromFeetBlockCoords(P.X + dx, P.Y + dy, P.Z + dz);
-                    p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
+                    p.SendAndSetPos(pos, new Orientation(yaw, pitch));
                 }
                 return;
             }

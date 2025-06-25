@@ -67,6 +67,7 @@ namespace MCGalaxy {
         public Player(INetSocket socket, IGameSession session) {
             Socket  = socket;
             Session = session;
+            EntityList = new EntityList(this, (byte)Session.MaxEntityID);
             SetIP(Socket.IP);
             
             CriticalTasks = new VolatileArray<SchedulerTask>();
@@ -80,8 +81,7 @@ namespace MCGalaxy {
                 BlockBindings[b] = (BlockID)b;
             }
         }
-        
-        public override byte EntityID { get { return id; } }
+
         public override Level Level { get { return level; } }
         public override bool RestrictsScale { get { return true; } }
         

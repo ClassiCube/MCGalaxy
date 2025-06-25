@@ -48,8 +48,8 @@ namespace MCGalaxy {
             Chat.MessageFromOps(p, "λNICK &Wwas kicked from " + p.level.name + " for suspected griefing.");
 
             Logger.Log(LogType.SuspiciousActivity, 
-                       "{0} was kicked for block spam ({1} blocks in {2} seconds)",
-                       p.name, blockLog.Count, oldestDelta);
+                       "{0} was kicked from {1} for block spam ({2} blocks in {3} seconds)",
+                       p.name, p.level.name, blockLog.Count, oldestDelta);
             p.Kick("You were kicked by antigrief system. Slow down.");
             return true;            
         }

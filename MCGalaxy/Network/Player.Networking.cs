@@ -129,12 +129,11 @@ namespace MCGalaxy
             return success;
         }
         
-        /// <summary> Sends a packet indicating an absolute position + orientation change for an enity. </summary>
-        public void SendPos(byte id, Position pos, Orientation rot) {
-            if (id == Entities.SelfID) {
-                Pos = pos; SetYawPitch(rot.RotY, rot.HeadX);
-            }
-            Session.SendTeleport(id, pos, rot);
+        /// <summary> Like SendPosition, but immediately updates the player's server-side position and orientation. </summary>
+        public void SendAndSetPos(Position pos, Orientation rot) {
+            Pos = pos;
+            SetYawPitch(rot.RotY, rot.HeadX);
+            Session.SendTeleport(Entities.SelfID, pos, rot);
         }
 
         /// <summary> Sends a packet indicating an absolute position + orientation change for this player. </summary>

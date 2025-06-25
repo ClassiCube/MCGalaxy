@@ -24,7 +24,25 @@ using MCGalaxy.Commands.World;
 namespace MCGalaxy 
 {
     public static class PlayerActions 
-    {      
+    {
+        public static void SetSkin(string target, string skin) {
+            string rawName = Server.ToRawUsername(target);
+            
+            if (skin == rawName) {
+                Server.skins.Remove(target);
+            } else {
+                Server.skins.Update(target, skin);
+            }          
+            Server.skins.Save();
+            
+            Player who = PlayerInfo.FindExact(target);
+            if (who == null) return;
+            
+            who.SkinName = skin;
+            Entities.GlobalRespawn(who);
+        }
+        
+
         public static bool ChangeMap(Player p, string name) { return ChangeMap(p, null, name); }
         public static bool ChangeMap(Player p, Level lvl)   { return ChangeMap(p, lvl, null); }
         
@@ -163,7 +181,7 @@ namespace MCGalaxy
 
         public static void RespawnAt(Player p, Position pos, byte yaw, byte pitch) {
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
-            p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
+            p.SendAndSetPos(pos, new Orientation(yaw, pitch));
         }
     }
 }
