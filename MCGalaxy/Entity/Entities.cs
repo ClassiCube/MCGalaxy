@@ -182,7 +182,6 @@ namespace MCGalaxy
 
                 string model = Chat.Format(m, pl, true, false);
 
-                OnSendingModelEvent.Call(e, ref model, pl);
                 pl.EntityList.SendModel(e, model);
                 pl.EntityList.SendScales(e);
             }
