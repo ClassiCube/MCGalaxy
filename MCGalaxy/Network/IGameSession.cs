@@ -59,7 +59,7 @@ namespace MCGalaxy.Network
         }
         
         
-        public virtual int MaxEntityID { get; }
+        public abstract int MaxEntityID { get; }
 
         public void Disconnect() { player.Disconnect(); }
 

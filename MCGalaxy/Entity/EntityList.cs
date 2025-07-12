@@ -420,10 +420,10 @@ namespace MCGalaxy {
                 Orientation rot = e.Rot; byte pitch = rot.HeadX;
                 //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
                 if (e is Player) {
-                    Player p = (Player)e; //No pattern matching because we're ancient C#
-                    if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
+                    Player pl = (Player)e; //No pattern matching because we're ancient C#
+                    if (Server.flipHead || pl.flipHead) pitch = FlippedPitch(pitch);
                     // flip head when infected in ZS, but doesn't support model
-                    if (!dst.hasChangeModel && p.infected)
+                    if (!dst.hasChangeModel && pl.infected)
                         pitch = FlippedPitch(pitch);
                 }
 

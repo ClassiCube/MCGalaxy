@@ -491,6 +491,7 @@
     <Compile Include="Levels\IO\Importers\CwImporter.cs" />
     <Compile Include="Levels\IO\Importers\DatImporter.cs" />
     <Compile Include="Levels\IO\Importers\FcmImporter.cs" />
+    <Compile Include="Levels\IO\Importers\JavaDeserialiser.cs" />
     <Compile Include="Levels\IO\Importers\LvlImporter.cs" />
     <Compile Include="Levels\IO\Importers\McfImporter.cs" />
     <Compile Include="Levels\IO\Importers\McLevelImporter.cs" />

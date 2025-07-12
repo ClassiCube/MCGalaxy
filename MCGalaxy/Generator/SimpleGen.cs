@@ -16,9 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Generator.Realistic;
 
-namespace MCGalaxy.Generator 
+namespace MCGalaxy.Generator
 {
     public static class SimpleGen 
     {
