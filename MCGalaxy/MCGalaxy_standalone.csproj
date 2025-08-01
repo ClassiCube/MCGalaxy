@@ -6,6 +6,6 @@
     <DefineConstants>$(DefineConstants);MCG_DOTNET;MCG_STANDALONE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.10" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" />
   </ItemGroup>
 </Project>
