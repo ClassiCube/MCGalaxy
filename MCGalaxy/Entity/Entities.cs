@@ -190,26 +190,32 @@ namespace MCGalaxy
         public static void UpdateEntityProp(Entity e, EntityProp prop, int value) {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = e.Level;
-            
-            Orientation rot = e.Rot;
-            byte angle = Orientation.DegreesToPacked(value);
-            if (prop == EntityProp.RotX) rot.RotX = angle;
-            if (prop == EntityProp.RotY) rot.RotY = angle;
-            if (prop == EntityProp.RotZ) rot.RotZ = angle;
-            
-            e.Rot = rot;
-            if (prop == EntityProp.RotY) e.SetYawPitch(rot.RotY, rot.HeadX);
+            int sendValue = value;
+
+            if (prop == EntityProp.RotX || prop == EntityProp.RotY || prop == EntityProp.RotZ) {
+                Orientation rot = e.Rot;
+                byte angle = Orientation.DegreesToPacked(value);
+
+                if (prop == EntityProp.RotX) rot.RotX = angle;
+                if (prop == EntityProp.RotY) rot.RotY = angle;
+                if (prop == EntityProp.RotZ) rot.RotZ = angle;
+
+                e.Rot = rot;
+                if (prop == EntityProp.RotY) e.SetYawPitch(rot.RotY, rot.HeadX);
+
+                sendValue = Orientation.PackedToDegrees(angle);
+            }
 
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.Supports(CpeExt.EntityProperty)) continue;
                 if (!pl.CanSeeEntity(e)) continue;
-                pl.EntityList.SendProp(e, prop, Orientation.PackedToDegrees(angle));
+                pl.EntityList.SendProp(e, prop, sendValue);
             }
         }
-        
+
         #region Position updates
-        
-        
+
+
         public static void GlobalUpdate() {
             Player[] players = PlayerInfo.Online.Items;
 
