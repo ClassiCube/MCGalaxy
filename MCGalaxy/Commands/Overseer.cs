@@ -207,9 +207,26 @@ namespace MCGalaxy.Commands.World {
             "&T/os go &H- Teleports you to your first map.",
             "&T/os go [num] &H- Teleports you to your nth map.",
         };
-        static void HandleGoto(Player p, string map) {
-            map = GetLevelName(p, map);
+        static void HandleGoto(Player p, string message) {
+            string map = GetLevelName(p, message);
 
+            if (message.Length == 0) {
+                GotoExact(p, map); return;
+            }
+
+            int mapNumber;
+            if (NumberUtils.TryParseInt32(message, out mapNumber)) {
+                //If it's a number, use exact goto logic like before
+                GotoExact(p, map); return;
+            }
+
+            if (Formatter.ValidMapName(p, map)) {
+                //Allow partial match for going to renamed os map
+                //Works funky with level auto load off...? TOO BAD! No one should ever use that setting
+                PlayerActions.ChangeMap(p, map);
+            }
+        }
+        static void GotoExact(Player p, string map) {
             if (LevelInfo.FindExact(map) == null)
                 LevelActions.Load(p, map, !Server.Config.AutoLoadMaps);
             if (LevelInfo.FindExact(map) != null)
