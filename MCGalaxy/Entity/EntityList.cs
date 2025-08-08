@@ -288,7 +288,7 @@ namespace MCGalaxy {
 
         void Spawn(VisibleEntity vis, Position pos, Orientation rot, string skin, string name, string model) {
             p.Session.SendSpawnEntity(vis.id, name, skin, pos, rot);
-            _SendModel(vis, model, true);
+            _SendModel(vis, model);
             _SendRot(vis, rot);
             _SendScales(vis);
         }
@@ -304,12 +304,12 @@ namespace MCGalaxy {
             lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
-                _SendModel(vis, model, false);
+                _SendModel(vis, model);
             }
         }
-        void _SendModel(VisibleEntity vis, string model, bool spawning) {
+        void _SendModel(VisibleEntity vis, string model) {
             if (p.hasChangeModel) {
-                if (!(spawning && model.CaselessEq("humanoid"))) p.Session.SendChangeModel(vis.id, model);
+                p.Session.SendChangeModel(vis.id, model);
             }
         }
         void _SendRot(VisibleEntity vis, Orientation rot) {
