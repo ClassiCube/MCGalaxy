@@ -66,10 +66,14 @@ namespace MCGalaxy.Modules.Compiling
             StringBuilder sb = new StringBuilder();
             sb.Append("/t:library ");
 
+            // /noconfig disables compiler adding a list of default additional system libraries
+            // TODO: should this be left enabled?
             sb.Append("/utf8output /noconfig /fullpaths ");
             
             AddCoreAssembly(sb);
             AddReferencedAssemblies(sb, referencedAssemblies);
+            
+            dstPath = Path.GetFullPath(dstPath);
             sb.AppendFormat("/out:{0} ", Quote(dstPath));
 
             sb.Append("/D:DEBUG /debug+ /optimize- ");
@@ -173,12 +177,13 @@ namespace MCGalaxy.Modules.Compiling
     internal class ClassicCSharpCompiler : CommandLineCompiler
     {
         protected override void AddCoreAssembly(StringBuilder sb) {
-            string coreAssemblyFileName = typeof(object).Assembly.Location;
-
-            if (!string.IsNullOrEmpty(coreAssemblyFileName)) {
-                sb.Append("/nostdlib+ ");
-                sb.AppendFormat("/R:{0} ", Quote(coreAssemblyFileName));
-            }
+            // When running under mono, disabling referencing the standard library results
+            //  in the compiler failing to find system referenced libraries (e.g. System.dll)
+            // Not a huge deal, since AFAIK mono only supports running on one runtime anyways
+            // TODO: Investigate why this used to previously work fine with CodeDomProvider
+            if (Server.RunningOnMono()) return;
+            
+            base.AddCoreAssembly(sb);
         }
         
         protected override void AddReferencedAssemblies(StringBuilder sb, List<string> referenced) {

@@ -48,22 +48,38 @@ namespace MCGalaxy.Commands.World {
         }
         
 
-        static string GetLevelName(Player p, int i) {
-            string name = p.name.ToLower();
-            return i == 1 ? name : name + i;
+        static string GetLevelName(Player p, string mapSubName) {
+            return p.name.ToLower() + mapSubName;
         }
 
         static string NextLevel(Player p) {
-            int realms = p.group.OverseerMaps;
+            string[] allLevelNames = LevelInfo.AllMapNames();
+            List<string> levelNames = Wildcard.Filter(allLevelNames, p.name.ToLower() + "*", levelName => levelName);
 
-            for (int i = 1; realms > 0; i++) 
-            {
-                string map = GetLevelName(p, i);
-                if (!LevelInfo.MapExists(map)) return map;
+            int realmsOwned = 0;
+            for (int i = 0; i < levelNames.Count; i++) {
+                string levelName = levelNames[i];
 
-                if (LevelInfo.IsRealmOwner(p.name, map)) realms--;
+                if (LevelInfo.IsRealmOwner(p.name, levelName)) {
+                    realmsOwned += 1;
+                    if (realmsOwned >= p.group.OverseerMaps) {
+                        break;
+                    }
+                }
             }
-            p.Message("You have reached the limit for your overseer maps."); return null;
+
+            if (realmsOwned < p.group.OverseerMaps) {
+                for (int i = 1; ; i++) {
+                    string levelName = GetLevelName(p, i == 1 ? "" : "" + i);
+
+                    if (!LevelInfo.MapExists(levelName)) {
+                        return levelName;
+                    }
+                }
+            }
+
+            p.Message("You have reached the limit for your overseer maps.");
+            return null;
         }
 
         static string[] addHelp = new string[] {
@@ -192,13 +208,7 @@ namespace MCGalaxy.Commands.World {
             "&T/os go [num] &H- Teleports you to your nth map.",
         };
         static void HandleGoto(Player p, string map) {
-            byte mapNum = 0;
-            if (map.Length == 0) map = "1";
-
-            if (!byte.TryParse(map, out mapNum)) {
-                p.MessageLines(gotoHelp); return;
-            }
-            map = GetLevelName(p, mapNum);
+            map = GetLevelName(p, map);
 
             if (LevelInfo.FindExact(map) == null)
                 LevelActions.Load(p, map, !Server.Config.AutoLoadMaps);
@@ -296,6 +306,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Add",      (p, arg) => { MapMoved(p, arg, "add",      HandleAdd, false);}, false, new string[] { "create", "new" } ),
                     new SubCommand("Delete",   (p, arg) => { MapMoved(p, arg, "delete",   HandleDelete);    }, false, new string[] { "del", "remove" } ),
                     new SubCommand("Save",     (p, arg) => { MapMoved(p, arg, "save",     HandleSave);      }),
+                    new SubCommand("Rename",   (p, arg) => { MapMoved(p, arg, "rename",   HandleRename);    }),
                     new SubCommand("Restore",  (p, arg) => { MapMoved(p, arg, "restore",  HandleRestore);   }),
                     new SubCommand("Resize",   (p, arg) => { MapMoved(p, arg, "resize",   HandleResize);    }),
                     new SubCommand("PerVisit", (p, arg) => { MapMoved(p, arg, "pervisit", HandlePervisit);  }),
@@ -424,6 +435,19 @@ namespace MCGalaxy.Commands.World {
         static void HandleSave(Player p, string unused) {
             UseCommand(p, "Save", "");
         }
+
+        static string[] renameHelp = new string[] {
+            "&T/os rename <name>",
+            "&H  Renames your current map. Your player name is always kept as prefix.",
+            "&H  Without <name>, renames to just your player name.",
+            "&H  With <name>, renames to 'yourname[name]'.",
+        };
+        static void HandleRename(Player p, string args) {
+            if (args.Length > 0 && !Formatter.IsValidName(p, args, "os name", Player.USERNAME_ALPHABET)) {
+                return;
+            }
+            UseCommand(p, "RenameLvl", p.level.name + " " + GetLevelName(p, args));
+        }
         
         static string[] restoreHelp = new string[] {
             "&T/os restore <number>",
@@ -462,6 +486,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Resize",     HandleResize,     resizeHelp),
                     new SubCommand("Save",       HandleSave,       saveHelp),
                     new SubCommand("Delete",     HandleDelete,     deleteHelp, true, new string[] { "del", "remove" } ),
+                    new SubCommand("Rename",     HandleRename,     renameHelp),
                     new SubCommand("Restore",    HandleRestore,    restoreHelp),
                 }
             );

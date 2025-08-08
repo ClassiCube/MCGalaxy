@@ -181,7 +181,7 @@ namespace MCGalaxy
 
         public static void RespawnAt(Player p, Position pos, byte yaw, byte pitch) {
             OnPlayerSpawningEvent.Call(p, ref pos, ref yaw, ref pitch, true);
-            p.SendPos(Entities.SelfID, pos, new Orientation(yaw, pitch));
+            p.SendAndSetPos(pos, new Orientation(yaw, pitch));
         }
     }
 }

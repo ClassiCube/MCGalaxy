@@ -90,7 +90,7 @@ namespace MCGalaxy
             return IsValidName(p, name, "player", alphabet);
         }
         
-        static bool IsValidName(Player p, string name, string type, string alphabet) {
+        public static bool IsValidName(Player p, string name, string type, string alphabet) {
             if (name.Length > 0 && name.ContainsAllIn(alphabet)) return true;
             p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;

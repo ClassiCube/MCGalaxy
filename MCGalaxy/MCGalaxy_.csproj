@@ -430,6 +430,7 @@
     <Compile Include="Entity\CustomModel.cs" />
     <Compile Include="Entity\Entities.cs" />
     <Compile Include="Entity\Entity.cs" />
+    <Compile Include="Entity\EntityList.cs" />
     <Compile Include="Entity\ModelInfo.cs" />
     <Compile Include="Entity\Structs.cs" />
     <Compile Include="Entity\TabList.cs" />
@@ -490,6 +491,7 @@
     <Compile Include="Levels\IO\Importers\CwImporter.cs" />
     <Compile Include="Levels\IO\Importers\DatImporter.cs" />
     <Compile Include="Levels\IO\Importers\FcmImporter.cs" />
+    <Compile Include="Levels\IO\Importers\JavaDeserialiser.cs" />
     <Compile Include="Levels\IO\Importers\LvlImporter.cs" />
     <Compile Include="Levels\IO\Importers\McfImporter.cs" />
     <Compile Include="Levels\IO\Importers\McLevelImporter.cs" />
