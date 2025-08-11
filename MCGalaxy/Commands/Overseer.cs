@@ -53,14 +53,14 @@ namespace MCGalaxy.Commands.World {
         }
 
         static string NextLevel(Player p) {
-            string[] allLevelNames = LevelInfo.AllMapNames();
-            List<string> levelNames = Wildcard.Filter(allLevelNames, p.name.ToLower() + "*", levelName => levelName);
+            string[] allMaps = LevelInfo.AllMapNames();
 
             int realmsOwned = 0;
-            for (int i = 0; i < levelNames.Count; i++) {
-                string levelName = levelNames[i];
+            foreach (string lvlName in allMaps)
+            {
+                if (!lvlName.CaselessStarts(p.name)) continue;
 
-                if (LevelInfo.IsRealmOwner(p.name, levelName)) {
+                if (LevelInfo.IsRealmOwner(p.name, lvlName)) {
                     realmsOwned += 1;
                     if (realmsOwned >= p.group.OverseerMaps) {
                         break;
