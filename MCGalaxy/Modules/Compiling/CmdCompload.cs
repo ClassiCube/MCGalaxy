@@ -28,9 +28,10 @@ namespace MCGalaxy.Modules.Compiling
         public override CommandAlias[] Aliases { get { return null; } }
 
         protected override void CompilePlugin(Player p, string[] paths, ICompiler compiler) {
-            string dst = IScripting.PluginPath(paths[0]);
+            string pln = paths[0];
+            string dst = IScripting.PluginPath(pln);
             
-            UnloadPlugin(p, paths[0]);
+            UnloadPlugin(p, pln);
             base.CompilePlugin(p, paths, compiler);
             ScriptingOperations.LoadPlugins(p, dst);
         }
