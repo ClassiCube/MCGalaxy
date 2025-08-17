@@ -463,6 +463,11 @@ namespace MCGalaxy.Commands.World {
             if (args.Length > 0 && !Formatter.IsValidName(p, args, "os name", Player.USERNAME_ALPHABET)) {
                 return;
             }
+            const int MAX_LENGTH = 16;
+            if (args.Length > MAX_LENGTH) {
+                p.Message("Your os name must be {0} characters or fewer.", MAX_LENGTH);
+                return;
+            }
             UseCommand(p, "RenameLvl", p.level.name + " " + GetLevelName(p, args));
         }
         
