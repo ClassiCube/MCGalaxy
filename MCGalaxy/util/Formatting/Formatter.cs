@@ -130,4 +130,46 @@ namespace MCGalaxy
             return true;
         }
     }
+
+    /// <summary>
+    /// Sorts a list of strings such that a1 a2 a3 comes before a10 a11 a12 and so on.
+    /// </summary>
+    public class AlphanumComparator : IComparer<string> {
+
+        // Simplified but based off of https://www.dotnetperls.com/alphanumeric-sorting
+        public int Compare(string a, string b) {
+            int result;
+            int aLen, bLen;
+            int aDigit = GetDigits(a, out aLen);
+            int bDigit = GetDigits(b, out bLen);
+            if (aDigit != -1 && bDigit != -1) {
+                result = aDigit.CompareTo(bDigit);
+            } else {
+                result = a.Substring(0, aLen).CompareTo(b.Substring(0, bLen));
+            }
+            if (result != 0) return result;
+            return a.Length - b.Length;
+        }
+
+        /// <summary>
+        /// Returns the digits on the end of the string. -1 if no integer found.
+        /// </summary>
+        static int GetDigits(string name, out int nameLength) {
+            nameLength = name.Length;
+            if (!Char.IsDigit(name[name.Length - 1])) return -1;
+
+            int decimalShift = 1;
+            int number = 0;
+            for (int i = name.Length - 1; i >= 0; i--) {
+                if (!Char.IsDigit(name[i])) return number;
+
+                nameLength--;
+                int digit = name[i] - '0'; //Paige Ruten: here's the most insane way to convert a digit char to an integer 
+                number += digit * decimalShift;
+                decimalShift *= 10;
+            }
+
+            return number;
+        }
+    }
 }

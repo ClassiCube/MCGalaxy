@@ -56,11 +56,8 @@ namespace MCGalaxy.Commands.World {
             string[] allMaps = LevelInfo.AllMapNames();
 
             int realmsOwned = 0;
-            foreach (string lvlName in allMaps)
-            {
-                if (!lvlName.CaselessStarts(p.name)) continue;
-
-                if (LevelInfo.IsRealmOwner(p.name, lvlName)) {
+            foreach (string lvlName in allMaps) {
+                if (IsOwnedBy(p.name, lvlName)) {
                     realmsOwned += 1;
                     if (realmsOwned >= p.group.OverseerMaps) {
                         break;
@@ -80,6 +77,22 @@ namespace MCGalaxy.Commands.World {
 
             p.Message("You have reached the limit for your overseer maps.");
             return null;
+        }
+        /// <summary>
+        /// Returns all the os maps owned by p, sorted alphabetically.
+        /// </summary>
+        static List<string> AllOwnedBy(string playerName) {
+            string[] allMaps = LevelInfo.AllMapNames();
+            List<string> owned = new List<string>();
+            foreach (string lvlName in allMaps) {
+                if (IsOwnedBy(playerName, lvlName)) owned.Add(lvlName); 
+            }
+            owned.Sort(new AlphanumComparator());
+            return owned;
+        }
+
+        static bool IsOwnedBy(string playerName, string levelName) {
+            return levelName.CaselessStarts(playerName) && LevelInfo.IsRealmOwner(playerName, levelName);
         }
 
         static string[] addHelp = new string[] {
@@ -479,6 +492,22 @@ namespace MCGalaxy.Commands.World {
         static void HandleRestore(Player p, string args) {
             UseCommand(p, "Restore", args);
         }
+
+        static string[] listHelp = new string[] {
+            "&T/os list <player>",
+            "&H  Lists all the os realms for <player>",
+            "&H  By default, lists your own realms.",
+        };
+        static void HandleList(Player p, string args) {
+            string[] words = args.SplitSpaces(2);
+            string word0 = words[0];
+            string word1 = words.Length > 1 ? words[1] : ""; //How many times have I typed a variant of this
+
+            string playerName = word0.Length == 0 ? p.name : PlayerInfo.FindMatchesPreferOnline(p, word0);
+            if (playerName == null) return;
+            string page = word1;
+            LevelInfo.ListMaps(p, AllOwnedBy(playerName), "OS realms", "os list "+playerName, "OS realms", page, playerName != p.name);
+        }
         
         //Placed at the end so that the help arrays aren't null
         internal static SubCommandGroup subCommandGroup = new SubCommandGroup(commandShortcut,
@@ -510,6 +539,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Delete",     HandleDelete,     deleteHelp, true, new string[] { "del", "remove" } ),
                     new SubCommand("Rename",     HandleRename,     renameHelp),
                     new SubCommand("Restore",    HandleRestore,    restoreHelp),
+                    new SubCommand("List",       HandleList,       listHelp, false),
                 }
             );
 
