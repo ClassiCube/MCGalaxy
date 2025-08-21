@@ -473,6 +473,11 @@ namespace MCGalaxy.Commands.World {
             "&H  With <name>, renames to 'yourname[name]'.",
         };
         static void HandleRename(Player p, string args) {
+            if (!Server.Config.OSRenameAllowed) {
+                p.Message("This server does not allow renaming os realms.");
+                return;
+            }
+
             if (args.Length > 0 && !Formatter.IsValidName(p, args, "os name", Player.USERNAME_ALPHABET)) {
                 return;
             }

@@ -145,7 +145,9 @@ namespace MCGalaxy
         [ConfigBool("allow-tp-to-higher-ranks", "Other", true)]
         public bool HigherRankTP = true;        
         [ConfigPerm("os-perbuild-default", "Other", LevelPermission.Owner)]
-        public LevelPermission OSPerbuildDefault = LevelPermission.Owner; 
+        public LevelPermission OSPerbuildDefault = LevelPermission.Owner;
+        [ConfigBool("os-rename-allowed", "Other", true)]
+        public bool OSRenameAllowed = true;
         [ConfigBool("protect-staff-ips", "Other", true)]
         public bool ProtectStaffIPs = true;
         [ConfigBool("classicube-account-plus", "Other", false)]
