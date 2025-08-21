@@ -102,9 +102,23 @@ namespace MCGalaxy {
         }
         
         static void SetOwner(Player p, Level lvl, string value) {
-            lvl.Config.RealmOwner = value.Replace(", ", ",").Replace(" ", ",");
-            if (value.Length == 0) p.Message("Removed realm owner for this level.");
-            else p.Message("Set realm owner/owners of this level to {0}.", value);
+            if (value.Length == 0) {
+                lvl.Config.RealmOwner = "";
+                p.Message("Removed realm owner for this level.");
+                return;
+            }
+
+            value = value.Replace(", ", ",");
+            value = value.Replace(",", " ");
+
+            string[] names = value.SplitSpaces();
+            for (int i = 0; i < names.Length; i++) {
+                names[i] = PlayerInfo.FindMatchesPreferOnline(p, names[i]);
+                if (names[i] == null) return;
+            }
+
+            lvl.Config.RealmOwner = names.Join(","); ;
+            p.Message("Set realm owner/owners of this level to {0}.", names.Join((n) => p.FormatNick(n)));
         }
         
         static void SetTree(Player p, Level lvl, string value) {
