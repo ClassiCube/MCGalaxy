@@ -502,11 +502,55 @@ namespace MCGalaxy.Commands.World {
             string[] words = args.SplitSpaces(2);
             string word0 = words[0];
             string word1 = words.Length > 1 ? words[1] : ""; //How many times have I typed a variant of this
-
             string playerName = word0.Length == 0 ? p.name : PlayerInfo.FindMatchesPreferOnline(p, word0);
             if (playerName == null) return;
             string page = word1;
             LevelInfo.ListMaps(p, AllOwnedBy(playerName), "OS realms", "os list "+playerName, "OS realms", page, playerName != p.name);
+        }
+        static string[] nextHelp = new string[] {
+            "&T/os next",
+            "&H  Determines who owns the realm you're in,",
+            "&H  then takes you to that player's next realm.",
+        };
+        static void HandleNext(Player p, string unused) {
+            Level curLevel = p.level; //Cache in case another thread changes it
+
+            string[] owners = curLevel.Config.RealmOwner.SplitComma();
+            string curLevelOwner = null;
+            foreach (string owner in owners) {
+                if (curLevel.name.CaselessStarts(owner)) { curLevelOwner = owner; break; }
+            }
+            if (curLevelOwner == null) {
+                p.Message("This level is not an OS realm.");
+                p.Message("Therefore, you cannot go to the next one.");
+                p.Message("If you're looking for more levels to visit, try &T/levels");
+                return;
+            }
+
+            List<string> realms = AllOwnedBy(curLevelOwner);
+            int curIndex = -1;
+            for (int i = 0; i < realms.Count; i++) {
+                if (curLevel.name == realms[i]) { curIndex = i; break; }
+            }
+            if (curIndex == -1) {
+                throw new System.InvalidOperationException(
+                    String.Format("Guessed \"{0}\" as the realm owner of \"{1}\", but \"{2}\" does not actually own the level \"{3}\"",
+                    curLevelOwner, curLevel.name, curLevelOwner, curLevel.name));
+            }
+
+            bool blockedFromJoining = false;
+        next:
+            curIndex++;
+            if (realms.Count <= curIndex) {
+                string who = curLevelOwner == p.name ? "your" : p.FormatNick(curLevelOwner) + "&S's";
+                p.Message("You are in {0} last {1}realm.", who, blockedFromJoining ? "accessible " : "");
+                return;
+            }
+            if (!PlayerActions.ChangeMap(p, realms[curIndex])) {
+                blockedFromJoining = true;
+                // Try going to the next one until you get to one that can actually be visited
+                goto next;
+            }
         }
         
         //Placed at the end so that the help arrays aren't null
@@ -540,6 +584,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Rename",     HandleRename,     renameHelp),
                     new SubCommand("Restore",    HandleRestore,    restoreHelp),
                     new SubCommand("List",       HandleList,       listHelp, false),
+                    new SubCommand("Next",       HandleNext,       nextHelp, false),
                 }
             );
 
