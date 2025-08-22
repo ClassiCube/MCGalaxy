@@ -135,24 +135,23 @@ namespace MCGalaxy
     /// Sorts a list of strings such that a1 a2 a3 comes before a10 a11 a12 and so on.
     /// </summary>
     public class AlphanumComparator : IComparer<string> {
-
-        // Simplified but based off of https://www.dotnetperls.com/alphanumeric-sorting
         public int Compare(string a, string b) {
-            int result;
             int aLen, bLen;
             int aDigit = GetDigits(a, out aLen);
             int bDigit = GetDigits(b, out bLen);
-            if (aDigit != -1 && bDigit != -1) {
-                result = aDigit.CompareTo(bDigit);
-            } else {
-                result = a.Substring(0, aLen).CompareTo(b.Substring(0, bLen));
+
+            string aName = a.Substring(0, aLen);
+            string bName = b.Substring(0, bLen);
+
+            if (aName.Length != bName.Length || (aDigit == -1 && bDigit == -1)) {
+                return aName.CompareTo(bName);
             }
-            if (result != 0) return result;
-            return a.Length - b.Length;
+
+            return aDigit.CompareTo(bDigit);
         }
 
         /// <summary>
-        /// Returns the digits on the end of the string. -1 if no integer found.
+        /// Returns the digits on the end of the string or -1 if no integer found.
         /// </summary>
         static int GetDigits(string name, out int nameLength) {
             nameLength = name.Length;

@@ -516,19 +516,34 @@ namespace MCGalaxy.Commands.World {
             "&T/os next",
             "&H  Determines who owns the realm you're in,",
             "&H  then takes you to that player's next realm.",
+            "&T/os next prev",
+            "&H  takes you to that player's previous realm.",
         };
-        static void HandleNext(Player p, string unused) {
-            Level curLevel = p.level; //Cache in case another thread changes it
+        static void HandleNext(Player p, string arg) {
+            int direction = 1;
 
+            // Allow "/os next next" to work for consistency's sake
+            if (arg.Length > 0 && !arg.CaselessEq("next")) {
+                if (arg.CaselessEq("prev") || arg.CaselessEq("previous") || arg.CaselessEq("back")) {
+                    direction = -1;
+                } else {
+                    p.Message("To go to the next os map, use &T/os next");
+                    p.Message("To go backwards, use &T/os next prev");
+                    return;
+                }
+            }
+
+            Level curLevel = p.level; // Cache in case another thread changes it
             string[] owners = curLevel.Config.RealmOwner.SplitComma();
             string curLevelOwner = null;
             foreach (string owner in owners) {
                 if (curLevel.name.CaselessStarts(owner)) { curLevelOwner = owner; break; }
             }
             if (curLevelOwner == null) {
-                p.Message("This level is not an OS realm.");
-                p.Message("Therefore, you cannot go to the next one.");
+                p.Message("This level is not an os realm.");
+                p.Message("Therefore, you cannot go to the {0} one.", direction == 1 ? "next" : "previous");
                 p.Message("If you're looking for more levels to visit, try &T/levels");
+                p.Message("To go to one of your os realms, use &T/os go");
                 return;
             }
 
@@ -544,17 +559,21 @@ namespace MCGalaxy.Commands.World {
             }
 
             bool blockedFromJoining = false;
-        next:
-            curIndex++;
-            if (realms.Count <= curIndex) {
+        tryAgain:
+            curIndex += 1 * direction;
+            if (curIndex >= realms.Count || curIndex < 0) {
                 string who = curLevelOwner == p.name ? "your" : p.FormatNick(curLevelOwner) + "&S's";
-                p.Message("You are in {0} last {1}realm.", who, blockedFromJoining ? "accessible " : "");
+
+                p.Message("You are in {0} {1} {2}realm.",
+                    who,
+                    direction == 1 ? "last" : "first",
+                    blockedFromJoining ? "accessible " : "");
                 return;
             }
             if (!PlayerActions.ChangeMap(p, realms[curIndex])) {
                 blockedFromJoining = true;
                 // Try going to the next one until you get to one that can actually be visited
-                goto next;
+                goto tryAgain;
             }
         }
         
