@@ -200,8 +200,8 @@ namespace MCGalaxy {
             }
             return true;
         }
-        
-        
+
+        //TODO: Move Realm methods into Realm class
         public static bool IsRealmOwner(string name, string map) {
             LevelConfig cfg = GetConfig(map); 
             return IsRealmOwner(map, cfg, name);
@@ -240,6 +240,27 @@ namespace MCGalaxy {
             
             // Match the backwards compatibilty case of IsRealmOwner
             return PlayerDB.FindName(map);
+        }
+
+        /// <summary>
+        /// If playerName owns levelName and levelName begins with playerName.
+        /// </summary>
+        internal static bool IsPersonalRealmOwner(string playerName, string levelName) {
+            //TODO public after refactor into new class
+            return levelName.CaselessStarts(playerName) && LevelInfo.IsRealmOwner(playerName, levelName);
+        }
+        /// <summary>
+        /// Returns all the os maps personally(level name begins with player name) owned by p, sorted alphabetically.
+        /// </summary>
+        internal static List<string> AllPersonalRealms(string playerName) {
+            //TODO public after refactor into new class
+            string[] allMaps = LevelInfo.AllMapNames();
+            List<string> owned = new List<string>();
+            foreach (string lvlName in allMaps) {
+                if (LevelInfo.IsPersonalRealmOwner(playerName, lvlName)) owned.Add(lvlName);
+            }
+            owned.Sort(new AlphanumComparator());
+            return owned;
         }
 
         public static void ListMaps(Player p, IList<string> maps, string levelsTitle, string listCmd, string itemName, string page, bool showVisitable = true) {

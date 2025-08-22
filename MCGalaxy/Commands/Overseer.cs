@@ -57,7 +57,7 @@ namespace MCGalaxy.Commands.World {
 
             int realmsOwned = 0;
             foreach (string lvlName in allMaps) {
-                if (IsOwnedBy(p.name, lvlName)) {
+                if (LevelInfo.IsPersonalRealmOwner(p.name, lvlName)) {
                     realmsOwned += 1;
                     if (realmsOwned >= p.group.OverseerMaps) {
                         break;
@@ -77,22 +77,6 @@ namespace MCGalaxy.Commands.World {
 
             p.Message("You have reached the limit for your overseer maps.");
             return null;
-        }
-        /// <summary>
-        /// Returns all the os maps owned by p, sorted alphabetically.
-        /// </summary>
-        static List<string> AllOwnedBy(string playerName) {
-            string[] allMaps = LevelInfo.AllMapNames();
-            List<string> owned = new List<string>();
-            foreach (string lvlName in allMaps) {
-                if (IsOwnedBy(playerName, lvlName)) owned.Add(lvlName); 
-            }
-            owned.Sort(new AlphanumComparator());
-            return owned;
-        }
-
-        static bool IsOwnedBy(string playerName, string levelName) {
-            return levelName.CaselessStarts(playerName) && LevelInfo.IsRealmOwner(playerName, levelName);
         }
 
         static string[] addHelp = new string[] {
@@ -510,24 +494,25 @@ namespace MCGalaxy.Commands.World {
             string playerName = word0.Length == 0 ? p.name : PlayerInfo.FindMatchesPreferOnline(p, word0);
             if (playerName == null) return;
             string page = word1;
-            LevelInfo.ListMaps(p, AllOwnedBy(playerName), "OS realms", "os list "+playerName, "OS realms", page, playerName != p.name);
+            LevelInfo.ListMaps(p, LevelInfo.AllPersonalRealms(playerName), "OS realms", "os list "+playerName, "OS realms", page, playerName != p.name);
         }
-        static string[] nextHelp = new string[] {
-            "&T/os next",
+
+        static string[] tourHelp = new string[] {
+            "&T/os tour",
             "&H  Determines who owns the realm you're in,",
             "&H  then takes you to that player's next realm.",
-            "&T/os next prev",
+            "&T/os tour prev",
             "&H  takes you to that player's previous realm.",
         };
-        static void HandleNext(Player p, string arg) {
+        static void HandleTour(Player p, string arg) {
             int direction = 1;
 
-            // Allow "/os next next" to work for consistency's sake
+            // Allow "/os visit next" to work for consistency's sake
             if (arg.Length > 0 && !arg.CaselessEq("next")) {
                 if (arg.CaselessEq("prev") || arg.CaselessEq("previous") || arg.CaselessEq("back")) {
                     direction = -1;
                 } else {
-                    p.Message("To go to the next os map, use &T/os next");
+                    p.Message("To visit the next os map, use &T/os next");
                     p.Message("To go backwards, use &T/os next prev");
                     return;
                 }
@@ -540,20 +525,20 @@ namespace MCGalaxy.Commands.World {
                 if (curLevel.name.CaselessStarts(owner)) { curLevelOwner = owner; break; }
             }
             if (curLevelOwner == null) {
-                p.Message("This level is not an os realm.");
-                p.Message("Therefore, you cannot go to the {0} one.", direction == 1 ? "next" : "previous");
-                p.Message("If you're looking for more levels to visit, try &T/levels");
-                p.Message("To go to one of your os realms, use &T/os go");
+                p.Message("&HTo use &T/os tour&H, first join any player's personal realm.");
+                p.Message("&S(to join your own, use &T/os go&S)");
+                p.Message("&HOnce you are in someone's realm, use &T/os tour <prev/next>");
+                p.Message("&Hto easily join other realms owned by that player.");
                 return;
             }
 
-            List<string> realms = AllOwnedBy(curLevelOwner);
+            List<string> realms = LevelInfo.AllPersonalRealms(curLevelOwner);
             int curIndex = -1;
             for (int i = 0; i < realms.Count; i++) {
                 if (curLevel.name == realms[i]) { curIndex = i; break; }
             }
             if (curIndex == -1) {
-                throw new System.InvalidOperationException(
+                throw new InvalidOperationException(
                     String.Format("Guessed \"{0}\" as the realm owner of \"{1}\", but \"{2}\" does not actually own the level \"{3}\"",
                     curLevelOwner, curLevel.name, curLevelOwner, curLevel.name));
             }
@@ -608,7 +593,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Rename",     HandleRename,     renameHelp),
                     new SubCommand("Restore",    HandleRestore,    restoreHelp),
                     new SubCommand("List",       HandleList,       listHelp, false),
-                    new SubCommand("Next",       HandleNext,       nextHelp, false),
+                    new SubCommand("Tour",       HandleTour,       tourHelp, false),
                 }
             );
 
