@@ -34,6 +34,12 @@ namespace MCGalaxy.Commands.Building
                 OutputCopySlots(p);
             } else if (message.CaselessEq("random")) {
                 SetRandomCopySlot(p);
+            } else if (message.CaselessStarts("clear")) {
+                string numStr = message.Substring(5).Trim();
+                int i = 0;
+                if (!CommandParser.GetInt(p, numStr, "Slot number", ref i, 1, p.group.CopySlots)) return;
+
+                ClearCopySlot(p, i);
             } else {
                 int i = 0;
                 if (!CommandParser.GetInt(p, message, "Slot number", ref i, 1, p.group.CopySlots)) return;
@@ -84,6 +90,17 @@ namespace MCGalaxy.Commands.Building
                 p.Message("Selected copy slot {0}: {1}", i, p.CurrentCopy.Summary);
             }
         }
+
+        static void ClearCopySlot(Player p, int i) {
+            int idx = i - 1;
+            List<CopyState> copySlots = p.CopySlots;
+            if (copySlots[idx] == null) {
+                p.Message("Copy slot {0} is already empty.", i);
+                return;
+            }
+            copySlots[idx] = null;
+            p.Message("Cleared copy slot {0}.", i);
+        }
         
         public override void Help(Player p) {
             p.Message("&T/CopySlot random");
@@ -91,6 +108,8 @@ namespace MCGalaxy.Commands.Building
             p.Message("&T/CopySlot [number]");
             p.Message("&HSelects the slot to &T/copy &Hand &T/paste &Hfrom");
             p.Message("&HMaxmimum number of copy slots is determined by your rank");
+            p.Message("&T/CopySlot clear [number]");
+            p.Message("&HRemoves the copy data from the given slot, making it empty");
             p.Message("&T/CopySlot");
             p.Message("&HLists details about any copies stored in any slots");
         }
