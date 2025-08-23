@@ -35,11 +35,15 @@ namespace MCGalaxy.Commands.Building
             } else if (message.CaselessEq("random")) {
                 SetRandomCopySlot(p);
             } else if (message.CaselessStarts("clear")) {
-                string numStr = message.Substring(5).Trim();
-                int i = 0;
-                if (!CommandParser.GetInt(p, numStr, "Slot number", ref i, 1, p.group.CopySlots)) return;
+                string[] words = message.SplitSpaces();
+                if (words.Length < 2) {
+                    p.Message("You must provide a slot number to clear.");
+                    return;
+                }
+                int num = 0;
+                if (!CommandParser.GetInt(p, words[1], "Slot number", ref num, 1, p.group.CopySlots)) return;
 
-                ClearCopySlot(p, i);
+                ClearCopySlot(p, num);
             } else {
                 int i = 0;
                 if (!CommandParser.GetInt(p, message, "Slot number", ref i, 1, p.group.CopySlots)) return;
@@ -91,15 +95,15 @@ namespace MCGalaxy.Commands.Building
             }
         }
 
-        static void ClearCopySlot(Player p, int i) {
-            int idx = i - 1;
+        static void ClearCopySlot(Player p, int num) {
+            int i = num - 1; //We know that i is 0 at min bc num passed to this is 1 at min
             List<CopyState> copySlots = p.CopySlots;
-            if (copySlots[idx] == null) {
-                p.Message("Copy slot {0} is already empty.", i);
+            if (i >= copySlots.Count || copySlots[i] == null) {
+                p.Message("Copy slot {0} is already empty.", num);
                 return;
             }
-            copySlots[idx] = null;
-            p.Message("Cleared copy slot {0}.", i);
+            copySlots[i] = null;
+            p.Message("Cleared copy slot {0}.", num);
         }
         
         public override void Help(Player p) {
