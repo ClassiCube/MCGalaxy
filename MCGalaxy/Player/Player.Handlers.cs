@@ -665,9 +665,11 @@ namespace MCGalaxy
             
             Command command = Command.Find(cmdName);
             if (command == null) {
-                if (Block.Parse(this, cmdName) != Block.Invalid) {
+                Command modeCmd = Command.Find("Mode");
+                
+                if (modeCmd != null && Block.Parse(this, cmdName) != Block.Invalid) {
                     cmdArgs = cmdName; cmdName = "mode";
-                    command = Command.Find("Mode");
+                    command = modeCmd;
                 } else {
                     Logger.Log(LogType.CommandUsage, "{0} tried to use unknown command: /{1} {2}", name, cmdName, cmdArgs);
                     Message("Unknown command \"{0}\".", cmdName); return null;
