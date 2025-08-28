@@ -106,21 +106,27 @@ namespace MCGalaxy.Scripting
         }
         
         static byte[] GetDebugData(string path) {
-            if (Server.RunningOnMono()) {
-                // Cmdtest.dll -> Cmdtest.dll.mdb
-                path += ".mdb";
-            } else {
-                // Cmdtest.dll -> Cmdtest.pdb
-                path = Path.ChangeExtension(path, ".pdb");
-            }
-            
-            if (!File.Exists(path)) return null;
+            // Cmdtest.dll -> Cmdtest.pdb
+			string pdb_path = Path.ChangeExtension(path, ".pdb");
             try {
-                return File.ReadAllBytes(path);
+                return File.ReadAllBytes(pdb_path);
+            } catch (FileNotFoundException) {
             } catch (Exception ex) {
-                Logger.LogError("Error loading .pdb " + path, ex);
+                Logger.LogError("Error loading .pdb " + pdb_path, ex);
                 return null;
             }
+
+            if (!Server.RunningOnMono()) return null;
+
+            // Cmdtest.dll -> Cmdtest.dll.mdb
+            string mdb_path = path + ".mdb";
+            try {
+                return File.ReadAllBytes(mdb_path);
+            } catch (FileNotFoundException) {
+            } catch (Exception ex) {
+                Logger.LogError("Error loading .mdb " + mdb_path, ex);
+            }
+            return null;
         }
         
         
