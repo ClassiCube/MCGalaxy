@@ -38,7 +38,7 @@ namespace MCGalaxy {
         public const string Edge = "Edge", Grass = "Grass", Death = "Death", Killer = "Killer", Unload = "Unload";
         public const string Goto = "LoadOnGoto", Decay = "LeafDecay", Flow = "RandomFlow", Trees = "GrowTrees";
         public const string Chat = "Chat", Guns = "Guns", Buildable = "Buildable", Deletable = "Deletable";
-        public const string LoadDelay = "LoadDelay", Drawing = "Drawing", Authors = "Authors";
+        public const string AllowBots = "AllowBots", LoadDelay = "LoadDelay", Drawing = "Drawing", Authors = "Authors";
         
         public static List<LevelOption> Options = new List<LevelOption>() {
              new LevelOption(MOTD,       SetMotd,  "&HSets the motd for this map. (leave blank to use default motd)"),
@@ -65,6 +65,7 @@ namespace MCGalaxy {
              new LevelOption(Guns,   SetGuns,   "&HWhether guns and missiles can be used"),
              new LevelOption(Buildable, SetBuildable, "&HWhether any blocks can be placed by players."),
              new LevelOption(Deletable, SetDeletable, "&HWhether any blocks can be deleted by players."),
+             new LevelOption(AllowBots, SetAllowBots, "&HWhether bots can be created."),
              new LevelOption(Drawing,   SetDrawing,   "&HWhether drawing commands (e.g /z) can be used on this map."),
              new LevelOption(LoadDelay, SetLoadDelay, "&HSets the delay before the end of the map is sent. " +
                              "Only useful for forcing players to see the map's MOTD at the loading screen."),
@@ -152,6 +153,7 @@ namespace MCGalaxy {
         static void SetTrees(Player p,  Level l, string v) { Toggle(p, l, ref l.Config.GrowTrees, "Tree growing"); }
         static void SetBuildable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Buildable, "Buildable"); }
         static void SetDeletable(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.Deletable, "Deletable"); }
+        static void SetAllowBots(Player p, Level l, string v) { TogglePerms(p, l, ref l.Config.AllowBots, "Bot creation"); }
         
         static void SetChat(Player p, Level l, string v) {
             Toggle(p, l, ref l.Config.ServerWideChat, "Local level only chat", true);
