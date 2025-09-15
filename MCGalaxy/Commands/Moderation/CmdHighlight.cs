@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (parts.Length >= 2) {
                 if (!CommandParser.GetTimespan(p, parts[1], ref delta, "highlight the past", "s")) return;
             } else {
-                delta = TimeSpan.FromMinutes(30);
+                delta = TimeSpan.FromDays(100);
             }
             
             parts[0] = PlayerDB.MatchNames(p, parts[0]);
