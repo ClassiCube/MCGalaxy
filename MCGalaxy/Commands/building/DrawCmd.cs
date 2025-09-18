@@ -42,7 +42,7 @@ namespace MCGalaxy.Commands.Building {
             BrushArgs bArgs = new BrushArgs(p, dArgs.BrushArgs, dArgs.Block);
             if (!factory.Validate(bArgs)) return;
             
-            p.Message(PlaceMessage);
+            DrawMessage(p, PlaceMessage);
             p.MakeSelection(MarksCount, "Selecting " + SelectionType + " for &S" + dArgs.Op.Name, dArgs, DoDraw);
         }
         
@@ -93,6 +93,15 @@ namespace MCGalaxy.Commands.Building {
             dArgs.BrushArgs = dArgs.Message.Splice(dArgs.ModeArgsCount, 0);
         }
         
+        /// <summary>
+        /// Sends a draw-command-feedback related message to the player.
+        /// If the player ignores draw output and supports MessageTypes, the message will not be sent.
+        /// Serves the purpose of minimising chat spam while ensuring the player can tell a draw op is happening even if output is ignored
+        /// </summary>
+        public static void DrawMessage(Player p, string message, params object[]  args) {
+            if (p.Ignores.DrawOutput && p.Supports(CpeExt.MessageTypes)) return;
+            p.Message(message, args);
+        }
         protected class DrawArgs {
             public DrawMode Mode;
             public BlockID Block;

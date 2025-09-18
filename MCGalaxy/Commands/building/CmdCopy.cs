@@ -94,7 +94,7 @@ namespace MCGalaxy.Commands.Building
                 }
             }
 
-            p.Message("Place or break two blocks to determine the edges.");
+            DrawCmd.DrawMessage(p, "Place or break two blocks to determine the edges.");
             int marks = cArgs.offsetIndex != -1 ? 3 : 2;
             p.MakeSelection(marks, "Selecting region for &SCopy", cArgs, DoCopy, DoCopyMark);
         }
@@ -117,7 +117,7 @@ namespace MCGalaxy.Commands.Building
                 copy.Offset.Y = copy.OriginY - m[i].Y;
                 copy.Offset.Z = copy.OriginZ - m[i].Z;
                 
-                p.Message("Set offset of where to paste from.");
+                DrawCmd.DrawMessage(p, "Set offset of where to paste from.");
                 CompleteCopy(p, m, cArgs);
                 return;
             }
@@ -157,14 +157,14 @@ namespace MCGalaxy.Commands.Building
             cState.CopySource = "level " + p.level.name;
             p.CurrentCopy = cState;
 
-            p.Message("Copied &a{0} &Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
+            DrawCmd.DrawMessage(p, "Copied &a{0} &Sblocks, origin at ({1}, {2}, {3}) corner", cState.UsedBlocks,
                       cState.OriginX == cState.X ? "Min" : "Max",
                       cState.OriginY == cState.Y ? "Min" : "Max",
                       cState.OriginZ == cState.Z ? "Min" : "Max");
-            if (!cState.PasteAir) p.Message("To also copy air blocks, use &T/Copy Air");
+            if (!cState.PasteAir) DrawCmd.DrawMessage(p, "To also copy air blocks, use &T/Copy Air");
             
             if (cArgs.offsetIndex != -1) {
-                p.Message("Place a block to determine where to paste from");
+                DrawCmd.DrawMessage(p, "Place a block to determine where to paste from");
             } else {
                 CompleteCopy(p, m, cArgs);
             }
