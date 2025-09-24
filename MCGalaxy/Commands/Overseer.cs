@@ -512,8 +512,8 @@ namespace MCGalaxy.Commands.World {
                 if (arg.CaselessEq("prev") || arg.CaselessEq("previous") || arg.CaselessEq("back")) {
                     direction = -1;
                 } else {
-                    p.Message("To visit the next os map, use &T/os next");
-                    p.Message("To go backwards, use &T/os next prev");
+                    p.Message("To visit the next os map, use &T/os tour");
+                    p.Message("To go backwards, use &T/os tour prev");
                     return;
                 }
             }
