@@ -71,7 +71,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.frozen = true;
             LogAction(e, who, "&bfrozen");
-
+            if (who != null) who.Message("You have been frozen for the following reason: {0}", e.Reason);
             Server.frozen.Update(e.Target, FormatModTaskData(e));
             ModerationTasks.FreezeCalcNextRun();
             Server.frozen.Save();
@@ -92,7 +92,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) who.muted = true;
             LogAction(e, who, "&8muted");
-            
+            if (who != null) who.Message("You have been muted for the following reason: {0}", e.Reason);
             Server.muted.Update(e.Target, FormatModTaskData(e));
             ModerationTasks.MuteCalcNextRun();
             Server.muted.Save();
@@ -112,7 +112,7 @@ namespace MCGalaxy.Core {
         static void DoBan(ModAction e) {
             Player who = PlayerInfo.FindExact(e.Target);
             LogAction(e, who, "&8banned");
-            
+            if (who != null) who.Message("You have been banned for the following reason: {0}", e.Reason);
             if (e.Duration.Ticks != 0) {
                 DateTime end = DateTime.UtcNow.Add(e.Duration);
                 string data  = Ban.PackTempBanData(e.Reason, e.Actor.name, end);
@@ -187,6 +187,7 @@ namespace MCGalaxy.Core {
             Player who = PlayerInfo.FindExact(e.Target);
             if (who != null) {
                 LogAction(e, who, "&ewarned");
+                who.Message("You have been warned for the following reason: {0}", e.Reason);
                 if (who.warn == 0) {
                     who.Message("Do it again twice and you will get kicked!");
                 } else if (who.warn == 1) {
