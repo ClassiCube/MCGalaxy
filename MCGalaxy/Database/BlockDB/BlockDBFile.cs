@@ -48,7 +48,7 @@ namespace MCGalaxy.DB
         public static BlockDBFile ReadHeader(Stream s, out Vec3U16 dims) {
             dims = default(Vec3U16);
             byte[] header = new byte[EntrySize * HeaderEntries];
-            ReadFully(s, header, 0, header.Length);
+            StreamUtils.ReadFully(s, header, 0, header.Length);
             
             // Check constants are expected
             // TODO: check 8 byte string identifier
@@ -191,15 +191,6 @@ namespace MCGalaxy.DB
         static void WriteU16(ushort value, byte[] array, int index) {
             array[index++] = (byte)(value);
             array[index++] = (byte)(value >> 8);
-        }
-        
-        internal static void ReadFully(Stream stream, byte[] dst, int offset, int count) {
-            int total = 0;
-            do {
-                int read = stream.Read(dst, offset + total, count - total);
-                if (read == 0) throw new EndOfStreamException();
-                total += read;
-            } while (total < count);
         }
     }
 }

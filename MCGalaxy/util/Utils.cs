@@ -100,4 +100,18 @@ namespace MCGalaxy
             try { thread.IsBackground = true; } catch { }
         }
     }
+    
+    public static class StreamUtils
+    {
+        /// <summary> Reads the given number of bytes from the given stream </summary>
+        /// <remarks> Throws EndOfStreamException if unable to read sufficient bytes </remarks>
+        public static void ReadFully(Stream s, byte[] data, int offset, int count) {
+            while (count > 0) {
+                int read = s.Read(data, offset, count);
+                
+                if (read == 0) throw new EndOfStreamException("End of stream reading data");
+                offset += read; count -= read;
+            }
+        }
+    }
 }
