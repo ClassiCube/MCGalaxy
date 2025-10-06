@@ -32,7 +32,16 @@ namespace MCGalaxy.Util
 {
     public delegate Pixel PixelGet(int x, int y);
     public delegate void  PixelSet(int x, int y, Pixel pixel);
-    public struct Pixel { public byte A, R, G, B; }
+    
+    public struct Pixel 
+    { 
+        public byte A, R, G, B;
+        
+        public Pixel(byte r, byte g, byte b, byte a)
+        {
+            R = r; G = g; B = b; A = a;
+        }
+    }
 
     /// <summary> Represents a 2D image </summary>
     /// <remarks> Backing implementation depends on whether running on dotnet or .NET </remarks>
