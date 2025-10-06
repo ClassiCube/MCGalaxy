@@ -670,8 +670,9 @@
     <Compile Include="Server\Maintenance\ZipWriter.cs" />
     <Compile Include="util\CountryUtils.cs" />
     <Compile Include="util\Formatting\Wildcard.cs" />
-    <Compile Include="util\ImageUtils.cs" />
     <Compile Include="util\DotnetBackend.cs" />
+    <Compile Include="util\Imaging\Bitmap2D.cs" />
+    <Compile Include="util\Imaging\ImageUtils.cs" />
     <Compile Include="util\NumberUtils.cs" />
     <Compile Include="util\OperatingSystem.cs" />
     <Compile Include="Server\Server.cs" />
@@ -726,7 +727,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="util\Imaging" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

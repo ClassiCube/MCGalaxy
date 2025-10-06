@@ -38,7 +38,8 @@ namespace MCGalaxy.Util
     /// <remarks> Backing implementation depends on whether running on dotnet or .NET </remarks>
     public abstract class IBitmap2D : IDisposable
     {
-        public int Width, Height;
+        public int Width;
+        public int Height;
         public PixelGet Get;
         public PixelSet Set;
         
@@ -61,38 +62,6 @@ namespace MCGalaxy.Util
         public static IBitmap2D Create() { return new ImageSharpBitmap(); }
 #endif
     }
-
-    public static class ImageUtils 
-    {       
-        public static IBitmap2D DecodeImage(byte[] data, Player p) {
-            IBitmap2D bmp = null;
-            try {
-                bmp = IBitmap2D.Create();
-                bmp.Decode(data);
-                return bmp;
-            } catch (ArgumentException ex) {
-                // GDI+ throws ArgumentException when data is not an image
-                // This is a fairly expected error - e.g. when a user tries to /imgprint
-                //   the webpage an image is hosted on, instead of the actual image itself. 
-                // So don't bother logging a full error for this case
-                Logger.Log(LogType.Warning, "Error decoding image: " + ex.Message);
-                OnDecodeError(p, bmp);
-                return null;
-            } catch (Exception ex) {
-                Logger.LogError("Error decoding image", ex);
-                OnDecodeError(p, bmp);
-                return null;
-            }
-        }
-
-        static void OnDecodeError(Player p, IBitmap2D bmp) {
-            if (bmp != null) bmp.Dispose();
-            // TODO failed to decode the image. make sure you are using the URL of the image directly, not just the webpage it is hosted on              
-            p.Message("&WThere was an error reading the downloaded image.");
-            p.Message("&WThe url may need to end with its extension (such as .jpg).");
-        }
-    }
-
 
 #if !MCG_DOTNET
     unsafe sealed class GDIPlusBitmap : IBitmap2D

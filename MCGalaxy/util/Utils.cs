@@ -29,6 +29,22 @@ namespace MCGalaxy
         public static string Hex(byte r, byte g, byte b) {
             return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
         }
+        
+        public static string ToHexString(byte[] data) {
+            char[] hex = new char[data.Length * 2];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                int value = data[i];
+                hex[i * 2 + 0] = HexEncode(value >> 4);
+                hex[i * 2 + 1] = HexEncode(value & 0x0F);
+            }
+            return new string(hex);
+        }
+
+        static char HexEncode(int i) {
+            return i < 10 ? (char)(i + '0') : (char)((i - 10) + 'a');
+        }
 
 
         public static int Clamp(int value, int lo, int hi) {
@@ -49,22 +65,6 @@ namespace MCGalaxy
         }
 
  
-        public static string ToHexString(byte[] data) {            
-            char[] hex = new char[data.Length * 2];
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                int value = data[i];
-                hex[i * 2 + 0] = HexEncode(value >> 4);
-                hex[i * 2 + 1] = HexEncode(value & 0x0F);
-            }
-            return new string(hex);
-        }
-
-        static char HexEncode(int i) {
-            return i < 10 ? (char)(i + '0') : (char)((i - 10) + 'a');
-        }
-        
         public static void SetBackgroundMode(Thread thread) {
             // Throws an exception when called on a dead thread,
             //  which can very rarely happen
