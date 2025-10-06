@@ -56,7 +56,7 @@ namespace MCGalaxy.Generator
                                   int yBeg, int yEnd, byte block) {
             int beg = (yBeg * length) * width;
             int end = (yEnd * length + (length - 1)) * width + (width - 1);
-            Utils.memset((IntPtr)ptr, block, beg, end - beg + 1);
+            MemUtils.memset((IntPtr)ptr, block, beg, end - beg + 1);
         }
         
 

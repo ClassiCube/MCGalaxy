@@ -67,7 +67,7 @@ namespace MCGalaxy.Network
         BlockID ReadBlock(byte[] buffer, int offset) {
             BlockID block;
             if (hasExtBlocks) {
-                block = NetUtils.ReadU16(buffer, offset);
+                block = MemUtils.ReadU16_BE(buffer, offset);
             } else {
                 block = buffer[offset];
             }
@@ -118,9 +118,9 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
             if (!player.loggedIn) return size;
 
-            ushort x = NetUtils.ReadU16(buffer, offset + 1);
-            ushort y = NetUtils.ReadU16(buffer, offset + 3);
-            ushort z = NetUtils.ReadU16(buffer, offset + 5);
+            ushort x = MemUtils.ReadU16_BE(buffer, offset + 1);
+            ushort y = MemUtils.ReadU16_BE(buffer, offset + 3);
+            ushort z = MemUtils.ReadU16_BE(buffer, offset + 5);
 
             byte action = buffer[offset + 7];
             if (action > 1) {
@@ -145,14 +145,14 @@ namespace MCGalaxy.Network
             
             int x, y, z;
             if (player.hasExtPositions) {
-                x = NetUtils.ReadI32(buffer, offset + 2);
-                y = NetUtils.ReadI32(buffer, offset + 6);
-                z = NetUtils.ReadI32(buffer, offset + 10);
+                x = MemUtils.ReadI32_BE(buffer, offset + 2);
+                y = MemUtils.ReadI32_BE(buffer, offset + 6);
+                z = MemUtils.ReadI32_BE(buffer, offset + 10);
                 offset += 6; // for yaw/pitch offset below
             } else {
-                x = NetUtils.ReadI16(buffer, offset + 2);
-                y = NetUtils.ReadI16(buffer, offset + 4);
-                z = NetUtils.ReadI16(buffer, offset + 6);
+                x = MemUtils.ReadI16_BE(buffer, offset + 2);
+                y = MemUtils.ReadI16_BE(buffer, offset + 4);
+                z = MemUtils.ReadI16_BE(buffer, offset + 6);
             }
 
             byte yaw   = buffer[offset + 8];
@@ -225,7 +225,7 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
             
             string extName = NetUtils.ReadString(buffer, offset + 1);
-            int extVersion = NetUtils.ReadI32(buffer,    offset + 65);
+            int extVersion = MemUtils.ReadI32_BE(buffer, offset + 65);
 
             // TODO: Classic+ client seems to use a custom protocol
             if (extVersion == 0x03110003) {
@@ -245,12 +245,12 @@ namespace MCGalaxy.Network
             
             MouseButton Button = (MouseButton)buffer[offset + 1];
             MouseAction Action = (MouseAction)buffer[offset + 2];
-            ushort yaw    = NetUtils.ReadU16(buffer, offset + 3);
-            ushort pitch  = NetUtils.ReadU16(buffer, offset + 5);
+            ushort yaw    = MemUtils.ReadU16_BE(buffer, offset + 3);
+            ushort pitch  = MemUtils.ReadU16_BE(buffer, offset + 5);
             byte entityID = buffer[offset + 7];
-            ushort x = NetUtils.ReadU16(buffer, offset + 8);
-            ushort y = NetUtils.ReadU16(buffer, offset + 10);
-            ushort z = NetUtils.ReadU16(buffer, offset + 12);
+            ushort x = MemUtils.ReadU16_BE(buffer, offset + 8);
+            ushort y = MemUtils.ReadU16_BE(buffer, offset + 10);
+            ushort z = MemUtils.ReadU16_BE(buffer, offset + 12);
             
             TargetBlockFace face = (TargetBlockFace)buffer[offset + 14];
             if (face > TargetBlockFace.None) face = TargetBlockFace.None;
@@ -264,7 +264,7 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
 
             NotifyActionType action = (NotifyActionType)buffer[offset + 2];
-            short value = NetUtils.ReadI16(buffer, offset + 3);
+            short value = MemUtils.ReadI16_BE(buffer, offset + 3);
 
             OnNotifyActionEvent.Call(player, action, value);
             return size;
@@ -276,9 +276,9 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
 
             NotifyActionType action = (NotifyActionType)buffer[offset + 2];
-            ushort x = NetUtils.ReadU16(buffer, offset + 3);
-            ushort y = NetUtils.ReadU16(buffer, offset + 5);
-            ushort z = NetUtils.ReadU16(buffer, offset + 7);
+            ushort x = MemUtils.ReadU16_BE(buffer, offset + 3);
+            ushort y = MemUtils.ReadU16_BE(buffer, offset + 5);
+            ushort z = MemUtils.ReadU16_BE(buffer, offset + 7);
 
             OnNotifyPositionActionEvent.Call(player, action, x, y, z);
             return size;
@@ -289,7 +289,7 @@ namespace MCGalaxy.Network
             if (left < size) return 0;
             
             bool serverToClient = buffer[offset + 1] != 0;
-            ushort data = NetUtils.ReadU16(buffer, offset + 2);
+            ushort data = MemUtils.ReadU16_BE(buffer, offset + 2);
             
             //player.Message("&bServerToClient? {0}, data {1}", serverToClient, data);
 

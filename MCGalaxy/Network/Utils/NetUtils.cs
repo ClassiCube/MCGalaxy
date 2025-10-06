@@ -25,20 +25,19 @@ namespace MCGalaxy
     {
         public const int StringSize = 64;        
 
-        /// <summary> Reads a signed 16 bit big endian integer. </summary>
+        [Obsolete("Use MemUtils method instead")]
         public static short ReadI16(byte[] array, int offset) {
-            return (short)(array[offset] << 8 | array[offset + 1]);
+            return MemUtils.ReadI16_BE(array, offset);
         }
 
-        /// <summary> Reads an unsigned 16 bit big endian integer. </summary>
+        [Obsolete("Use MemUtils method instead")]
         public static ushort ReadU16(byte[] array, int offset) {
-            return (ushort)(array[offset] << 8 | array[offset + 1]);
+            return MemUtils.ReadU16_BE(array, offset);
         }
 
-        /// <summary> Reads a signed 32 bit big endian integer. </summary>
+        [Obsolete("Use MemUtils method instead")]
         public static int ReadI32(byte[] array, int offset) {
-            return array[offset] << 24 | array[offset + 1] << 16
-                | array[offset + 2] << 8 | array[offset + 3];
+            return MemUtils.ReadI32_BE(array, offset);
         }
         
 
