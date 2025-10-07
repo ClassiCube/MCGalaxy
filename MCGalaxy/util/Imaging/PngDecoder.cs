@@ -36,14 +36,12 @@ namespace MCGalaxy
         static byte[] pngSig = new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 };
 
         /* 5.2 PNG signature */
-        static bool Png_Detect(byte[] data, int len) {
-            return len >= PNG_SIG_SIZE && Mem_Equal(data, pngSig, PNG_SIG_SIZE);
-        }
-        
-        static bool Mem_Equal(byte[] a, byte[] b, int numBytes) {
-            for (int i = 0; i < numBytes; i++)
+        static bool Png_Detect(byte[] data) {
+            if (data.Length < PNG_SIG_SIZE) return false;
+  
+            for (int i = 0; i < PNG_SIG_SIZE; i++)
             {
-                if (a[i] != b[i]) return false;
+                if (data[i] != pngSig[i]) return false;
             }
             return true;
         }
@@ -107,7 +105,7 @@ namespace MCGalaxy
             buf_offset = 0;
             buf_length = src.Length;
 
-            if (!Png_Detect(src, PNG_SIG_SIZE)) Fail("sig invalid");
+            if (!Png_Detect(src)) Fail("sig invalid");
             AdvanceOffset(PNG_SIG_SIZE);
 
             trnsColor = BLACK;
@@ -226,9 +224,10 @@ namespace MCGalaxy
                 AdvanceOffset(4); // Skip CRC32
             }
             
-            using (GZipStream gs = new GZipStream(tmp, CompressionMode.Decompress))
+            tmp.Position = 0;
+            using (DeflateStream comp = new DeflateStream(tmp, CompressionMode.Decompress))
             {
-                DecompressImage(tmp, bmp, palette, trnsColor);
+                DecompressImage(comp, bmp, palette, trnsColor);
             }
         }
         
