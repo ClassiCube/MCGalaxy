@@ -16,6 +16,10 @@ namespace MCGalaxy
         byte[] buf_data;
         int buf_offset, buf_length;
         
+        int bytesPerPixel;
+        RowExpander rowExpander;
+        int scanline_size, scanline_bytes;
+        
         /*########################################################################################################################*
          *------------------------------------------------------PNG common---------------------------------------------------------*
          *#########################################################################################################################*/
@@ -23,10 +27,6 @@ namespace MCGalaxy
         const int PNG_PALETTE   = 256;
         const int PNG_SIG_SIZE  =  8;
         const int PNG_MAX_DIMS  = 32768;
-        
-        static int PNG_FourCC(char a, char b, char c, char d) {
-            return ((int)a << 24) | ((int)b << 16) | ((int)c << 8) | (int)d;
-        }
         
         static void Fail(string reason) {
             throw new InvalidDataException(reason);
@@ -60,34 +60,255 @@ namespace MCGalaxy
         const int PNG_FILTER_UP      = 2;
         const int PNG_FILTER_AVERAGE = 3;
         const int PNG_FILTER_PAETH   = 4;
-        
-        
-        delegate void Png_RowExpander(int width, Pixel[] palette, byte[] src, Pixel* dst);
 
-        // 9 Filtering
-        // 13.9 Filtering
-        static void Png_Reconstruct(byte type, byte bytesPerPixel, byte[] line, byte[] prior, int lineLen) {
+        // Sets alpha to 0 for any pixels in the bitmap whose RGB is same as color
+        static void MakeTransparent(Pixel[] img, Pixel color)
+        {
+            for (int i = 0; i < img.Length; i++)
+            {
+                if (img[i].R != color.R) continue;
+                if (img[i].G != color.G) continue;
+                if (img[i].B != color.B) continue;
+                
+                img[i].A = 0;
+            }
+        }
+
+        static Pixel ExpandRGB(byte bitsPerSample, int r, int g, int b) {
+            switch (bitsPerSample) {
+                case 1:
+                    r *= SCALE_1BPP; g *= SCALE_1BPP; b *= SCALE_1BPP; break;
+                case 2:
+                    r *= SCALE_2BPP; g *= SCALE_2BPP; b *= SCALE_2BPP; break;
+                case 4:
+                    r *= SCALE_4BPP; g *= SCALE_4BPP; b *= SCALE_4BPP; break;
+            }
+            return new Pixel((byte)r, (byte)g, (byte)b, 0);
+        }
+
+        static byte[] samplesPerPixel = new byte [] { 1, 0, 3, 1, 2, 0, 4 };
+        static Pixel BLACK = new Pixel(0, 0, 0, 255);
+        
+        public void Decode(SimpleBitmap bmp, byte[] src) {
+            int dataSize, fourCC;
+
+            /* header variables */
+            byte colorspace = 0xFF;
+            byte bitsPerSample = 0;
+
+            /* palette data */
+            Pixel trnsColor;
+            Pixel[] palette = new Pixel[PNG_PALETTE];
+
+            int offset;
+            MemoryStream tmp = new MemoryStream();
+            
+            buf_data   = src;
+            buf_offset = 0;
+            buf_length = src.Length;
+
+            if (!Png_Detect(src, PNG_SIG_SIZE)) Fail("sig invalid");
+            AdvanceOffset(PNG_SIG_SIZE);
+
+            trnsColor = BLACK;
+            for (int i = 0; i < PNG_PALETTE; i++) { palette[i] = BLACK; }
+            bool reachedEnd = false;
+            
+            while (!reachedEnd)
+            {
+                offset   = AdvanceOffset(4 + 4);
+                dataSize = MemUtils.ReadI32_BE(src, offset + 0);
+                fourCC   = MemUtils.ReadI32_BE(src, offset + 4);
+
+                switch (fourCC) {
+                        /* 11.2.2 IHDR Image header */
+                    case ('I'<<24)|('H'<<16)|('D'<<8)|'R':
+                        {
+                            if (dataSize != PNG_IHDR_SIZE) Fail("Header size");
+                            offset = AdvanceOffset(PNG_IHDR_SIZE);
+
+                            bmp.Width  = MemUtils.ReadI32_BE(src, offset + 0);
+                            bmp.Height = MemUtils.ReadI32_BE(src, offset + 4);
+                            if (bmp.Width  < 0 || bmp.Width  > PNG_MAX_DIMS) Fail("too wide");
+                            if (bmp.Height < 0 || bmp.Height > PNG_MAX_DIMS) Fail("too tall");
+
+                            bitsPerSample = src[offset + 8];
+                            colorspace    = src[offset + 9];
+                            if (bitsPerSample == 16) Fail("16 bpp");
+
+                            rowExpander = Png_GetExpander(colorspace, bitsPerSample);
+                            if (rowExpander == null) Fail("Colorspace/bpp combination");
+
+                            if (src[offset + 10] != 0) Fail("Compression method");
+                            if (src[offset + 11] != 0) Fail("Filter");
+                            if (src[offset + 12] != 0) Fail("Interlaced unsupported");
+
+                            bytesPerPixel  = ((samplesPerPixel[colorspace] * bitsPerSample) + 7) >> 3;
+                            scanline_size  = ((samplesPerPixel[colorspace] * bitsPerSample * bmp.Width) + 7) >> 3;
+                            scanline_bytes = scanline_size + 1; // Add 1 byte for filter byte of each scanline
+
+                            bmp.pixels = new Pixel[bmp.Width * bmp.Height];
+                        } break;
+
+                        /* 11.2.3 PLTE Palette */
+                    case ('P'<<24)|('L'<<16)|('T'<<8)|'E':
+                        {
+                            if (dataSize > PNG_PALETTE * 3) Fail("Palette size");
+                            if ((dataSize % 3) != 0)        Fail("Palette align");
+
+                            offset = AdvanceOffset(dataSize);
+
+                            for (int i = 0; i < dataSize; i += 3)
+                            {
+                                palette[i / 3].R = src[offset + i    ];
+                                palette[i / 3].G = src[offset + i + 1];
+                                palette[i / 3].B = src[offset + i + 2];
+                            }
+                        } break;
+
+                        /* 11.3.2.1 tRNS Transparency */
+                    case ('t'<<24)|('R'<<16)|('N'<<8)|'S':
+                        {
+                            if (colorspace == PNG_COLOR_GRAYSCALE) {
+                                if (dataSize != 2) Fail("tRNS size");
+
+                                offset = AdvanceOffset(dataSize);
+
+                                // RGB is always two bytes
+                                byte rgb  = src[offset + 1];
+                                trnsColor = ExpandRGB(bitsPerSample, rgb, rgb, rgb);
+                            } else if (colorspace == PNG_COLOR_INDEXED) {
+                                if (dataSize > PNG_PALETTE) Fail("tRNS size");
+
+                                offset = AdvanceOffset(dataSize);
+
+                                // Set alpha component of palette
+                                for (int i = 0; i < dataSize; i++)
+                                {
+                                    palette[i].A = src[offset + i];
+                                }
+                            } else if (colorspace == PNG_COLOR_RGB) {
+                                if (dataSize != 6) Fail("tRNS size");
+
+                                offset = AdvanceOffset(dataSize);
+
+                                // R,G,B are always two bytes
+                                byte r = src[offset + 1];
+                                byte g = src[offset + 3];
+                                byte b = src[offset + 5];
+                                trnsColor = ExpandRGB(bitsPerSample, r, g, b);
+                            } else {
+                                Fail("tRNS/colorspace combination");
+                            }
+                        } break;
+
+                        /* 11.2.4 IDAT Image data */
+                    case ('I'<<24)|('D'<<16)|('A'<<8)|'T':
+                        {
+                            if (!read_zlib_header) {
+                                SkipZLibHeader(src);
+                                dataSize -= 2;
+                            }
+                            
+                            offset = AdvanceOffset(dataSize);
+                            tmp.Write(src, offset, dataSize);
+                        } break;
+
+                    case ('I'<<24)|('E'<<16)|('N'<<8)|'D':
+                        reachedEnd = true;
+                        break;
+
+                    default:
+                        AdvanceOffset(dataSize);
+                        break;
+                }
+
+                AdvanceOffset(4); // Skip CRC32
+            }
+            
+            using (GZipStream gs = new GZipStream(tmp, CompressionMode.Decompress))
+            {
+                DecompressImage(tmp, bmp, palette, trnsColor);
+            }
+        }
+        
+        void DecompressImage(Stream src, SimpleBitmap bmp, Pixel[] palette, Pixel trnsColor) {
+            if (bmp.pixels == null) Fail("no data");
+            
+            // TODO offset by 1 so one less read call
+            byte[] line  = new byte[scanline_size];
+            byte[] prior = new byte[scanline_size];
+
+            fixed (Pixel* dst = bmp.pixels) 
+            {
+                for (int i = 0; i < bmp.Height; i++)
+                {
+                    byte method = (byte)src.ReadByte();
+                    if (method > PNG_FILTER_PAETH) Fail("Scanline");
+                    StreamUtils.ReadFully(src, line, 0, scanline_size);
+
+                    Png_Reconstruct(method, bytesPerPixel, line, prior, scanline_size);
+                    rowExpander(bmp.Width, palette, line, dst + i * bmp.Width);
+                    
+                    // Swap current and prior line
+                    byte[] tmp = line; line = prior; prior = tmp;
+                }
+            }
+
+            if (trnsColor.A == 0) MakeTransparent(bmp.pixels, trnsColor);
+            return;
+        }
+        
+        
+        int AdvanceOffset(int amount) {
+            int offset = buf_offset;
+            
+            buf_offset += amount;
+            if (buf_offset > buf_length)
+                throw new EndOfStreamException("End of stream reading data");
+            return offset;
+        }
+        
+        bool read_zlib_header;
+        void SkipZLibHeader(byte[] src) {
+            int offset = AdvanceOffset(2);
+            
+            byte method = src[offset + 0];
+            if ((method & 0x0F) != 0x08) Fail("Zlib method");
+            // Upper 4 bits are window size
+            
+            byte flags = src[offset + 1];
+            if ((flags & 0x20) != 0) Fail("Zlip flags");
+            
+            read_zlib_header = true;
+        }
+        
+        
+        #region Row filtering
+        static void Png_Reconstruct(byte type, int bytesPerPixel, byte[] line, byte[] prior, int lineLen) {
+            int i, j;
+            
             switch (type) {
                 case PNG_FILTER_SUB:
-                    for (int i = bytesPerPixel, j = 0; i < lineLen; i++, j++)
+                    for (i = bytesPerPixel, j = 0; i < lineLen; i++, j++)
                     {
                         line[i] += line[j];
                     }
                     return;
 
                 case PNG_FILTER_UP:
-                    for (int i = 0; i < lineLen; i++)
+                    for (i = 0; i < lineLen; i++)
                     {
                         line[i] += prior[i];
                     }
                     return;
 
                 case PNG_FILTER_AVERAGE:
-                    for (int i = 0; i < bytesPerPixel; i++)
+                    for (i = 0; i < bytesPerPixel; i++)
                     {
                         line[i] += (byte)(prior[i] >> 1);
                     }
-                    for (int j = 0, i = bytesPerPixel; i < lineLen; i++, j++)
+                    for (j = 0; i < lineLen; i++, j++)
                     {
                         line[i] += (byte)((prior[i] + line[j]) >> 1);
                     }
@@ -95,11 +316,11 @@ namespace MCGalaxy
 
                 case PNG_FILTER_PAETH:
                     /* TODO: verify this is right */
-                    for (int i = 0; i < bytesPerPixel; i++)
+                    for (i = 0; i < bytesPerPixel; i++)
                     {
                         line[i] += prior[i];
                     }
-                    for (int j = 0, i = bytesPerPixel; i < lineLen; i++, j++)
+                    for (j = 0; i < lineLen; i++, j++)
                     {
                         byte a = line[j], b = prior[i], c = prior[j];
                         int p  = a + b - c;
@@ -115,8 +336,12 @@ namespace MCGalaxy
                     return;
             }
         }
+        #endregion
+        
 
-        /* 7.2 Scanlines */
+        #region Row expansion
+        delegate void RowExpander(int width, Pixel[] palette, byte[] src, Pixel* dst);
+
         static int Get_1BPP(byte[] src, int i) {
             int j = 7 - (i & 7);
             return (src[i >> 3] >> j) & 0x01;
@@ -213,8 +438,9 @@ namespace MCGalaxy
                 dst[i] = new Pixel(r, g, b, a);
             }
         }
+        
 
-        static Png_RowExpander Png_GetExpander(byte col, byte bitsPerSample) {
+        static RowExpander Png_GetExpander(byte col, byte bitsPerSample) {
             switch (col) {
                 case PNG_COLOR_GRAYSCALE:
                     switch (bitsPerSample) {
@@ -254,249 +480,6 @@ namespace MCGalaxy
             }
             return null;
         }
-
-        /* Sets alpha to 0 for any pixels in the bitmap whose RGB is same as colorspace */
-        static void ComputeTransparency(SimpleBitmap bmp, Pixel col)
-        {
-            int width = bmp.Width, height = bmp.Height;
-
-            for (int y = 0; y < height; y++)
-            {
-                Pixel* row = Bitmap_GetRow(bmp, y);
-                for (int x = 0; x < width; x++)
-                {
-                    if (row[x].R != col.R) continue;
-                    if (row[x].G != col.G) continue;
-                    if (row[x].B != col.B) continue;
-                    
-                    row[x].A = 0;
-                }
-            }
-        }
-
-        static Pixel ExpandRGB(byte bitsPerSample, int r, int g, int b) {
-            switch (bitsPerSample) {
-                case 1:
-                    r *= SCALE_1BPP; g *= SCALE_1BPP; b *= SCALE_1BPP; break;
-                case 2:
-                    r *= SCALE_2BPP; g *= SCALE_2BPP; b *= SCALE_2BPP; break;
-                case 4:
-                    r *= SCALE_4BPP; g *= SCALE_4BPP; b *= SCALE_4BPP; break;
-            }
-            return new Pixel((byte)r, (byte)g, (byte)b, 0);
-        }
-
-        static byte[] samplesPerPixel = new byte [] { 1, 0, 3, 1, 2, 0, 4 };
-        static Pixel BLACK = new Pixel(0, 0, 0, 255);
-        
-        public void Decode(SimpleBitmap bmp, byte[] src) {
-            byte[] tmp = new byte[64];
-            int dataSize, fourCC;
-
-            /* header variables */
-            byte colorspace = 0xFF;
-            byte bitsPerSample;
-            byte bytesPerPixel = 0;
-            Png_RowExpander rowExpander = null;
-            int scanlineSize = 0;
-            int scanlineBytes = 0;
-
-            /* palette data */
-            Pixel trnsColor;
-            Pixel[] palette = new Pixel[PNG_PALETTE];
-
-            /* idat state */
-            int available = 0, rowY = 0;
-            byte[] buffer = new byte[PNG_PALETTE * 3];
-            int read, bufferIdx = 0;
-            int left, bufferLen = 0;
-            int curY, offset;
-
-            /* idat decompressor */
-            Stream compStream, datStream;
-            byte* data = null;
-            
-            buf_data   = src;
-            buf_offset = 0;
-            buf_length = src.Length;
-
-            if (!Png_Detect(src, PNG_SIG_SIZE)) Fail("sig invalid");
-            AdvanceOffset(PNG_SIG_SIZE);
-
-            trnsColor = BLACK;
-            for (int i = 0; i < PNG_PALETTE; i++) { palette[i] = BLACK; }
-            
-            for (;;) 
-            {
-                offset   = AdvanceOffset(4 + 4);                
-                dataSize = MemUtils.ReadI32_BE(src, offset + 0);
-                fourCC   = MemUtils.ReadI32_BE(src, offset + 4);
-
-                switch (fourCC) {
-                        /* 11.2.2 IHDR Image header */
-                        case ('I'<<24)|('H'<<16)|('D'<<8)|'R': 
-                        {
-                            if (dataSize != PNG_IHDR_SIZE) Fail("Header size");
-                            offset = AdvanceOffset(PNG_IHDR_SIZE);
-
-                            bmp.Width  = MemUtils.ReadI32_BE(src, offset + 0);
-                            bmp.Height = MemUtils.ReadI32_BE(src, offset + 4);
-                            if (bmp.Width  < 0 || bmp.Width  > PNG_MAX_DIMS) Fail("too wide");
-                            if (bmp.Height < 0 || bmp.Height > PNG_MAX_DIMS) Fail("too tall");
-
-                            bitsPerSample = src[offset + 8];
-                            colorspace    = src[offset + 9];
-                            if (bitsPerSample == 16) Fail("16 bpp");
-
-                            rowExpander = Png_GetExpander(colorspace, bitsPerSample);
-                            if (rowExpander == null) Fail("Colorspace/bpp combination");
-
-                            if (src[offset + 10] != 0) Fail("Compression method");
-                            if (src[offset + 11] != 0) Fail("Filter");
-                            if (src[offset + 12] != 0) Fail("Interlaced unsupported");
-
-                            bytesPerPixel = ((samplesPerPixel[colorspace] * bitsPerSample) + 7) >> 3;
-                            scanlineSize  = ((samplesPerPixel[colorspace] * bitsPerSample * bmp.Width) + 7) >> 3;
-                            scanlineBytes = scanlineSize + 1; /* Add 1 byte for filter byte of each scanline */
-
-                            bmp.pixels = new Pixel[bmp.Width * bmp.Height];
-
-                            bufferLen = bmp.Height * scanlineBytes;
-                        } break;
-
-                        /* 11.2.3 PLTE Palette */
-                        case ('P'<<24)|('L'<<16)|('T'<<8)|'E': 
-                        {
-                            if (dataSize > PNG_PALETTE * 3) Fail("Palette size");
-                            if ((dataSize % 3) != 0)        Fail("Palette align");
-
-                            offset = AdvanceOffset(dataSize);
-
-                            for (int i = 0; i < dataSize; i += 3)
-                            {
-                                palette[i / 3].R = src[offset + i    ];
-                                palette[i / 3].G = src[offset + i + 1];
-                                palette[i / 3].B = src[offset + i + 2];
-                            }
-                        } break;
-
-                        /* 11.3.2.1 tRNS Transparency */
-                        case ('t'<<24)|('R'<<16)|('N'<<8)|'S': 
-                        {
-                            if (colorspace == PNG_COLOR_GRAYSCALE) {
-                                if (dataSize != 2) Fail("tRNS size");
-
-                                offset = AdvanceOffset(dataSize);
-
-                                // RGB is always two bytes
-                                byte rgb  = src[offset + 1];
-                                trnsColor = ExpandRGB(bitsPerSample, rgb, rgb, rgb);
-                            } else if (colorspace == PNG_COLOR_INDEXED) {
-                                if (dataSize > PNG_PALETTE) Fail("tRNS size");
-
-                                offset = AdvanceOffset(dataSize);
-
-                                // Set alpha component of palette
-                                for (int i = 0; i < dataSize; i++) 
-                                {
-                                    palette[i].A = src[offset + i];
-                                }
-                            } else if (colorspace == PNG_COLOR_RGB) {
-                                if (dataSize != 6) Fail("tRNS size");
-
-                                offset = AdvanceOffset(dataSize);
-
-                                // R,G,B are always two bytes
-                                byte r = src[offset + 1];
-                                byte g = src[offset + 3];
-                                byte b = src[offset + 5];
-                                trnsColor = ExpandRGB(bitsPerSample, r, g, b);
-                            } else {
-                                Fail("tRNS/colorspace combination");
-                            }
-                        } break;
-
-                        /* 11.2.4 IDAT Image data */
-                        case ('I'<<24)|('D'<<16)|('A'<<8)|'T': 
-                        {
-                            Stream_ReadonlyPortion(&datStream, stream, dataSize);
-                            inflate->Source = &datStream;
-
-                            if (!read_zlib_header) SkipZLibHeader(src);
-
-                            if (bmp.pixels == null) Fail("no data");
-                            if (rowY >= bmp.Height) break;
-                            left = bufferLen - bufferIdx;
-
-                            res  = compStream.Read(&compStream, &data[bufferIdx], left, &read);
-                            if (res) return res;
-                            if (read == 0) break;
-
-                            available += read;
-                            bufferIdx += read;
-
-                            /* Process all of the scanline(s) that have been fully decompressed */
-                            /* NOTE: Need to check height too, in case IDAT is corrupted and has extra data */
-                            for (; available >= scanlineBytes && rowY < bmp->height; rowY++, available -= scanlineBytes) {
-                                byte* scanline = &data[rowY * scanlineBytes];
-                                if (scanline[0] > PNG_FILTER_PAETH) Fail("Scanline");
-
-                                if (rowY == 0) {
-                                    /* First row, prior is assumed as 0 */
-                                    Png_ReconstructFirst(scanline[0], bytesPerPixel, &scanline[1], scanlineSize);
-                                } else {
-                                    byte* prior = &data[(rowY - 1) * scanlineBytes];
-                                    Png_Reconstruct(scanline[0], bytesPerPixel, &scanline[1], &prior[1], scanlineSize);
-                                }
-
-                                rowExpander(bmp->width, palette, &scanline[1], Bitmap_GetRow(bmp, rowY));
-                            }
-
-                            /* Check if image fully decoded or not */
-                            if (bufferIdx != bufferLen) break;
-
-                            if (trnsColor.A == 0) ComputeTransparency(bmp, trnsColor);
-                            return;
-                        } break;
-
-                        /* 11.2.5 IEND Image trailer */
-                    case ('I'<<24)|('E'<<16)|('N'<<8)|'D':
-                        /* Reading all image data should be handled by above if in the IDAT chunk */
-                        /* If we reached here, it means not all of the image data was read */
-                        Fail("IEND");
-                        break;
-
-                    default:
-                        AdvanceOffset(dataSize);
-                        break;
-                }
-
-                AdvanceOffset(4); // Skip CRC32
-            }
-        }
-        
-        
-        int AdvanceOffset(int amount) {
-            int offset = buf_offset;
-            
-            buf_offset += amount;
-            if (buf_offset > buf_length)
-                throw new EndOfStreamException("End of stream reading data");
-            return offset;
-        }
-        
-        bool read_zlib_header;
-        void SkipZLibHeader(byte[] src) {
-            int offset = AdvanceOffset(2);
-            
-            byte method = src[offset + 0];
-            if ((method & 0x0F) != 0x08) Fail("Zlib method");
-            // Upper 4 bits are window size
-                    
-            byte flags = src[offset + 1];
-            if ((flags & 0x20) != 0) Fail("Zlip flags");
-            
-            read_zlib_header = true;
-        }
+        #endregion
     }
 }
