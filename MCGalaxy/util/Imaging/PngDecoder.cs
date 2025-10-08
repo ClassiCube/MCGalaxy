@@ -18,19 +18,15 @@ namespace MCGalaxy
         
         int bytesPerPixel;
         RowExpander rowExpander;
-        int scanline_size, scanline_bytes;
+        int scanline_size;
         
         /*########################################################################################################################*
          *------------------------------------------------------PNG common---------------------------------------------------------*
          *#########################################################################################################################*/
-        const int PNG_IHDR_SIZE = 13;
-        const int PNG_PALETTE   = 256;
-        const int PNG_SIG_SIZE  =  8;
-        const int PNG_MAX_DIMS  = 32768;
-        
-        static void Fail(string reason) {
-            throw new InvalidDataException(reason);
-        }
+        const int IHDR_SIZE    = 13;
+        const int MAX_PALETTE  = 256;
+        const int PNG_SIG_SIZE =  8;
+        const int MAX_PNG_DIMS = 32768;
         
 
         static byte[] pngSig = new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 };
@@ -38,7 +34,7 @@ namespace MCGalaxy
         /* 5.2 PNG signature */
         static bool Png_Detect(byte[] data) {
             if (data.Length < PNG_SIG_SIZE) return false;
-  
+            
             for (int i = 0; i < PNG_SIG_SIZE; i++)
             {
                 if (data[i] != pngSig[i]) return false;
@@ -52,25 +48,6 @@ namespace MCGalaxy
         const int PNG_COLOR_INDEXED     = 3;
         const int PNG_COLOR_GRAYSCALE_A = 4;
         const int PNG_COLOR_RGB_A       = 6;
-        
-        const int PNG_FILTER_NONE    = 0;
-        const int PNG_FILTER_SUB     = 1;
-        const int PNG_FILTER_UP      = 2;
-        const int PNG_FILTER_AVERAGE = 3;
-        const int PNG_FILTER_PAETH   = 4;
-
-        // Sets alpha to 0 for any pixels in the bitmap whose RGB is same as color
-        static void MakeTransparent(Pixel[] img, Pixel color)
-        {
-            for (int i = 0; i < img.Length; i++)
-            {
-                if (img[i].R != color.R) continue;
-                if (img[i].G != color.G) continue;
-                if (img[i].B != color.B) continue;
-                
-                img[i].A = 0;
-            }
-        }
 
         static Pixel ExpandRGB(byte bitsPerSample, int r, int g, int b) {
             switch (bitsPerSample) {
@@ -88,18 +65,13 @@ namespace MCGalaxy
         static Pixel BLACK = new Pixel(0, 0, 0, 255);
         
         public void Decode(SimpleBitmap bmp, byte[] src) {
-            int dataSize, fourCC;
-
-            /* header variables */
             byte colorspace = 0xFF;
             byte bitsPerSample = 0;
 
-            /* palette data */
-            Pixel trnsColor;
-            Pixel[] palette = new Pixel[PNG_PALETTE];
+            Pixel trnsColor = BLACK;
+            Pixel[] palette = null;
 
-            int offset;
-            MemoryStream tmp = new MemoryStream();
+            MemoryStream all_idat = new MemoryStream();
             
             buf_data   = src;
             buf_offset = 0;
@@ -107,28 +79,25 @@ namespace MCGalaxy
 
             if (!Png_Detect(src)) Fail("sig invalid");
             AdvanceOffset(PNG_SIG_SIZE);
-
-            trnsColor = BLACK;
-            for (int i = 0; i < PNG_PALETTE; i++) { palette[i] = BLACK; }
             bool reachedEnd = false;
             
             while (!reachedEnd)
             {
-                offset   = AdvanceOffset(4 + 4);
-                dataSize = MemUtils.ReadI32_BE(src, offset + 0);
-                fourCC   = MemUtils.ReadI32_BE(src, offset + 4);
+                int offset   = AdvanceOffset(4 + 4);
+                int dataSize = MemUtils.ReadI32_BE(src, offset + 0);
+                int fourCC   = MemUtils.ReadI32_BE(src, offset + 4);
 
                 switch (fourCC) {
-                        /* 11.2.2 IHDR Image header */
+                        // 11.2.2 IHDR Image header
                     case ('I'<<24)|('H'<<16)|('D'<<8)|'R':
                         {
-                            if (dataSize != PNG_IHDR_SIZE) Fail("Header size");
-                            offset = AdvanceOffset(PNG_IHDR_SIZE);
+                            if (dataSize != IHDR_SIZE) Fail("Header size");
+                            offset = AdvanceOffset(IHDR_SIZE);
 
                             bmp.Width  = MemUtils.ReadI32_BE(src, offset + 0);
                             bmp.Height = MemUtils.ReadI32_BE(src, offset + 4);
-                            if (bmp.Width  < 0 || bmp.Width  > PNG_MAX_DIMS) Fail("too wide");
-                            if (bmp.Height < 0 || bmp.Height > PNG_MAX_DIMS) Fail("too tall");
+                            if (bmp.Width  < 0 || bmp.Width  > MAX_PNG_DIMS) Fail("too wide");
+                            if (bmp.Height < 0 || bmp.Height > MAX_PNG_DIMS) Fail("too tall");
 
                             bitsPerSample = src[offset + 8];
                             colorspace    = src[offset + 9];
@@ -143,18 +112,18 @@ namespace MCGalaxy
 
                             bytesPerPixel  = ((samplesPerPixel[colorspace] * bitsPerSample) + 7) >> 3;
                             scanline_size  = ((samplesPerPixel[colorspace] * bitsPerSample * bmp.Width) + 7) >> 3;
-                            scanline_bytes = scanline_size + 1; // Add 1 byte for filter byte of each scanline
 
                             bmp.pixels = new Pixel[bmp.Width * bmp.Height];
                         } break;
 
-                        /* 11.2.3 PLTE Palette */
+                        // 11.2.3 PLTE Palette
                     case ('P'<<24)|('L'<<16)|('T'<<8)|'E':
                         {
-                            if (dataSize > PNG_PALETTE * 3) Fail("Palette size");
+                            if (dataSize > MAX_PALETTE * 3) Fail("Palette size");
                             if ((dataSize % 3) != 0)        Fail("Palette align");
 
-                            offset = AdvanceOffset(dataSize);
+                            offset  = AdvanceOffset(dataSize);
+                            palette = palette ?? CreatePalette();
 
                             for (int i = 0; i < dataSize; i += 3)
                             {
@@ -164,7 +133,7 @@ namespace MCGalaxy
                             }
                         } break;
 
-                        /* 11.3.2.1 tRNS Transparency */
+                        // 11.3.2.1 tRNS Transparency
                     case ('t'<<24)|('R'<<16)|('N'<<8)|'S':
                         {
                             if (colorspace == PNG_COLOR_GRAYSCALE) {
@@ -176,9 +145,10 @@ namespace MCGalaxy
                                 byte rgb  = src[offset + 1];
                                 trnsColor = ExpandRGB(bitsPerSample, rgb, rgb, rgb);
                             } else if (colorspace == PNG_COLOR_INDEXED) {
-                                if (dataSize > PNG_PALETTE) Fail("tRNS size");
+                                if (dataSize > MAX_PALETTE) Fail("tRNS size");
 
-                                offset = AdvanceOffset(dataSize);
+                                offset  = AdvanceOffset(dataSize);
+                                palette = palette ?? CreatePalette();
 
                                 // Set alpha component of palette
                                 for (int i = 0; i < dataSize; i++)
@@ -200,7 +170,7 @@ namespace MCGalaxy
                             }
                         } break;
 
-                        /* 11.2.4 IDAT Image data */
+                        // 11.2.4 IDAT Image data
                     case ('I'<<24)|('D'<<16)|('A'<<8)|'T':
                         {
                             if (!read_zlib_header) {
@@ -209,7 +179,7 @@ namespace MCGalaxy
                             }
                             
                             offset = AdvanceOffset(dataSize);
-                            tmp.Write(src, offset, dataSize);
+                            all_idat.Write(src, offset, dataSize);
                         } break;
 
                     case ('I'<<24)|('E'<<16)|('N'<<8)|'D':
@@ -224,11 +194,18 @@ namespace MCGalaxy
                 AdvanceOffset(4); // Skip CRC32
             }
             
-            tmp.Position = 0;
-            using (DeflateStream comp = new DeflateStream(tmp, CompressionMode.Decompress))
+            all_idat.Position = 0;
+            using (DeflateStream comp = new DeflateStream(all_idat, CompressionMode.Decompress))
             {
                 DecompressImage(comp, bmp, palette, trnsColor);
             }
+        }
+        
+        static Pixel[] CreatePalette() {
+            Pixel[] pal = new Pixel[MAX_PALETTE];
+            
+            for (int i = 0; i < pal.Length; i++) pal[i] = BLACK;
+            return pal;
         }
         
         void DecompressImage(Stream src, SimpleBitmap bmp, Pixel[] palette, Pixel trnsColor) {
@@ -237,17 +214,21 @@ namespace MCGalaxy
             // TODO offset by 1 so one less read call
             byte[] line  = new byte[scanline_size];
             byte[] prior = new byte[scanline_size];
+            byte[] one   = new byte[1]; // stream.ReadByte() allocates one byte array each time called
 
-            fixed (Pixel* dst = bmp.pixels) 
+            fixed (Pixel* dst = bmp.pixels)
             {
-                for (int i = 0; i < bmp.Height; i++)
+                for (int y = 0; y < bmp.Height; y++)
                 {
-                    byte method = (byte)src.ReadByte();
+                    int read = src.Read(one, 0, 1);
+                    if (read == 0) Fail("scanline");
+                    
+                    byte method = one[0];
                     if (method > PNG_FILTER_PAETH) Fail("Scanline");
                     StreamUtils.ReadFully(src, line, 0, scanline_size);
 
                     Png_Reconstruct(method, bytesPerPixel, line, prior, scanline_size);
-                    rowExpander(bmp.Width, palette, line, dst + i * bmp.Width);
+                    rowExpander(bmp.Width, palette, line, dst + y * bmp.Width);
                     
                     // Swap current and prior line
                     byte[] tmp = line; line = prior; prior = tmp;
@@ -256,6 +237,19 @@ namespace MCGalaxy
 
             if (trnsColor.A == 0) MakeTransparent(bmp.pixels, trnsColor);
             return;
+        }
+
+        // Sets alpha to 0 for any pixels in the bitmap whose RGB is same as color
+        static void MakeTransparent(Pixel[] img, Pixel color)
+        {
+            for (int i = 0; i < img.Length; i++)
+            {
+                if (img[i].R != color.R) continue;
+                if (img[i].G != color.G) continue;
+                if (img[i].B != color.B) continue;
+                
+                img[i].A = 0;
+            }
         }
         
         
@@ -266,6 +260,10 @@ namespace MCGalaxy
             if (buf_offset > buf_length)
                 throw new EndOfStreamException("End of stream reading data");
             return offset;
+        }
+        
+        static void Fail(string reason) {
+            throw new InvalidDataException(reason);
         }
         
         bool read_zlib_header;
@@ -283,7 +281,13 @@ namespace MCGalaxy
         }
         
         
-        #region Row filtering
+        #region Row filtering        
+        const int PNG_FILTER_NONE    = 0;
+        const int PNG_FILTER_SUB     = 1;
+        const int PNG_FILTER_UP      = 2;
+        const int PNG_FILTER_AVERAGE = 3;
+        const int PNG_FILTER_PAETH   = 4;
+        
         static void Png_Reconstruct(byte type, int bytesPerPixel, byte[] line, byte[] prior, int lineLen) {
             int i, j;
             
