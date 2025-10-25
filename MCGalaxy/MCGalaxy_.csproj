@@ -672,6 +672,7 @@
     <Compile Include="util\Formatting\Wildcard.cs" />
     <Compile Include="util\DotnetBackend.cs" />
     <Compile Include="util\Imaging\Bitmap2D.cs" />
+    <Compile Include="util\Imaging\ImageDecoder.cs" />
     <Compile Include="util\Imaging\ImageUtils.cs" />
     <Compile Include="util\Imaging\PngDecoder.cs" />
     <Compile Include="util\NumberUtils.cs" />

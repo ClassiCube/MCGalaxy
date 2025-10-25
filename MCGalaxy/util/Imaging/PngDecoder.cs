@@ -5,17 +5,8 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy
 {
-    public sealed class SimpleBitmap //: IBitmap2D
+    public unsafe class PngDecoder : ImageDecoder
     {
-        public int Width, Height;
-        public Pixel[] pixels;
-    }
-    
-    public unsafe class PngDecoder
-    {
-        byte[] buf_data;
-        int buf_offset, buf_length;
-        
         int bytesPerPixel;
         RowExpander rowExpander;
         int scanline_size;
@@ -27,19 +18,13 @@ namespace MCGalaxy
         const int MAX_PALETTE  = 256;
         const int PNG_SIG_SIZE =  8;
         const int MAX_PNG_DIMS = 32768;
-        
+       
 
         static byte[] pngSig = new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 };
 
         /* 5.2 PNG signature */
-        static bool Png_Detect(byte[] data) {
-            if (data.Length < PNG_SIG_SIZE) return false;
-            
-            for (int i = 0; i < PNG_SIG_SIZE; i++)
-            {
-                if (data[i] != pngSig[i]) return false;
-            }
-            return true;
+        public static bool DetectHeader(byte[] data) {
+            return MatchesSignature(data, pngSig);
         }
         
         
@@ -64,20 +49,21 @@ namespace MCGalaxy
         static byte[] samplesPerPixel = new byte [] { 1, 0, 3, 1, 2, 0, 4 };
         static Pixel BLACK = new Pixel(0, 0, 0, 255);
         
-        public void Decode(SimpleBitmap bmp, byte[] src) {
+        public SimpleBitmap Decode(byte[] src) {
             byte colorspace = 0xFF;
             byte bitsPerSample = 0;
 
             Pixel trnsColor = BLACK;
             Pixel[] palette = null;
 
-            MemoryStream all_idat = new MemoryStream();
+            SimpleBitmap bmp = new SimpleBitmap();
+            MemoryStream all_idats = new MemoryStream();
             
             buf_data   = src;
             buf_offset = 0;
             buf_length = src.Length;
 
-            if (!Png_Detect(src)) Fail("sig invalid");
+            if (!DetectHeader(src)) Fail("sig invalid");
             AdvanceOffset(PNG_SIG_SIZE);
             bool reachedEnd = false;
             
@@ -179,7 +165,7 @@ namespace MCGalaxy
                             }
                             
                             offset = AdvanceOffset(dataSize);
-                            all_idat.Write(src, offset, dataSize);
+                            all_idats.Write(src, offset, dataSize);
                         } break;
 
                     case ('I'<<24)|('E'<<16)|('N'<<8)|'D':
@@ -194,11 +180,12 @@ namespace MCGalaxy
                 AdvanceOffset(4); // Skip CRC32
             }
             
-            all_idat.Position = 0;
-            using (DeflateStream comp = new DeflateStream(all_idat, CompressionMode.Decompress))
+            all_idats.Position = 0;
+            using (DeflateStream comp = new DeflateStream(all_idats, CompressionMode.Decompress))
             {
                 DecompressImage(comp, bmp, palette, trnsColor);
             }
+            return bmp;
         }
         
         static Pixel[] CreatePalette() {
@@ -252,19 +239,6 @@ namespace MCGalaxy
             }
         }
         
-        
-        int AdvanceOffset(int amount) {
-            int offset = buf_offset;
-            
-            buf_offset += amount;
-            if (buf_offset > buf_length)
-                throw new EndOfStreamException("End of stream reading data");
-            return offset;
-        }
-        
-        static void Fail(string reason) {
-            throw new InvalidDataException(reason);
-        }
         
         bool read_zlib_header;
         void SkipZLibHeader(byte[] src) {
