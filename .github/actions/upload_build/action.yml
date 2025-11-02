@@ -9,11 +9,7 @@ inputs:
     description: 'Name to use for the uploaded artifact'
     required: true
     type: string
-  DELETE_PERIOD:
-    description: 'Auto delete uploaded artifact after X days'
-    required: false
-    default: 90
-    type: string
+
 runs:
   using: "composite"
   steps:
@@ -21,4 +17,3 @@ runs:
       with:
         name: ${{ inputs.DEST_NAME }}
         path: ${{ inputs.SOURCE_FILE }}
-        retention-days: ${{ inputs.DELETE_PERIOD }}

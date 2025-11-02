@@ -6,9 +6,7 @@ on:
       - master
       - ConsoleDriver
   workflow_dispatch:
-  schedule:
-    # Every 90 days at 12am
-    - cron: '0 0 */90 * *'
+
 concurrency:
   group: ${{ github.ref }}-latest
   cancel-in-progress: true
@@ -192,10 +190,3 @@ jobs:
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'net80'
-        
-
-      - uses: ./.github/actions/notify_failure
-        if: failure()
-        with:
-          NOTIFY_MESSAGE: 'Failed to produce MCGalaxy dotnet 8.0 build'
-          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
