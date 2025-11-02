@@ -55,18 +55,6 @@ namespace MCGalaxy.Levels.IO
                 lvl.FastSetExtTile(x, y, z, raw);
             }
         }
-        
-        /// <summary> Reads the given number of bytes from the given stream </summary>
-        /// <remarks> Throws EndOfStreamException if unable to read sufficient bytes </remarks>
-        protected static void ReadFully(Stream s, byte[] data, int count) {
-            int offset = 0;
-            while (count > 0) {
-                int read = s.Read(data, offset, count);
-                
-                if (read == 0) throw new EndOfStreamException("End of stream reading data");
-                offset += read; count -= read;
-            }
-        }
          
         
         /// <summary> List of all level format importers </summary>

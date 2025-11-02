@@ -82,13 +82,6 @@ jobs:
           make_standalone_tar mcg-linux64
           
           find .
-
-
-      - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile.outcome == 'failure' }}
-        with:
-          NOTIFY_MESSAGE: 'Failed to produce release'
-          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
         
       # Generate .NET release files
@@ -136,3 +129,10 @@ jobs:
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'release'
+
+
+      - uses: ./.github/actions/notify_failure
+        if: failure()
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce release'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'

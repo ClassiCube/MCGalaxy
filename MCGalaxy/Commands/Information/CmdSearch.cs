@@ -108,6 +108,7 @@ namespace MCGalaxy.Commands.Info
         static void SearchMaps(Player p, string keyword, string modifier) {
             string[] allMaps = LevelInfo.AllMapNames();
             List<string> maps = Wildcard.Filter(allMaps, keyword, map => map);
+            maps.Sort(new AlphanumComparator());
             OutputList(p, keyword, "search levels", "maps", modifier, maps);
         }
         

@@ -37,7 +37,7 @@ namespace MCGalaxy.DB
         public override long CountEntries(Stream s) {
             byte[] data = new byte[8];
             s.Position = 16;
-            BlockDBFile.ReadFully(s, data, 0, data.Length);
+            StreamUtils.ReadFully(s, data, 0, data.Length);
             
             uint lo = (uint)ReadInt32(data, 0);
             uint hi = (uint)ReadInt32(data, 4);
@@ -57,7 +57,7 @@ namespace MCGalaxy.DB
             // NOTE: bulk and entriesPtr point to same thing
             // But we read into the end of the bulk array, thus the entriesPtr pointing
             // to start of array never ends up overlapping with the data being read
-            BlockDBFile.ReadFully(s, bulk, offset, bytes);
+            StreamUtils.ReadFully(s, bulk, offset, bytes);
             return DecompressChunk(bulk, offset, entriesPtr);
         }
         
@@ -69,7 +69,7 @@ namespace MCGalaxy.DB
                 
                 pos -= bytes;
                 s.Position = pos;
-                BlockDBFile.ReadFully(s, bulk, offset, bytes);
+                StreamUtils.ReadFully(s, bulk, offset, bytes);
                 s.Position = pos; // set correct position for next backward read
                 return DecompressChunk(bulk, offset, entriesPtr);
             }

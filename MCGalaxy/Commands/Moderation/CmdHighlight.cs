@@ -44,7 +44,7 @@ namespace MCGalaxy.Commands.Moderation {
             if (parts.Length >= 2) {
                 if (!CommandParser.GetTimespan(p, parts[1], ref delta, "highlight the past", "s")) return;
             } else {
-                delta = TimeSpan.FromMinutes(30);
+                delta = TimeSpan.FromDays(100);
             }
             
             parts[0] = PlayerDB.MatchNames(p, parts[0]);
@@ -100,7 +100,7 @@ namespace MCGalaxy.Commands.Moderation {
             p.Message("&HHighlights blocks changed by [player] in the past <timespan>");
             p.Message("&T/Highlight area [player] <timespan>");
             p.Message("&HOnly highlights in the specified region.");
-            p.Message("&H If <timespan> is not given, highlights for last 30 minutes");
+            p.Message("&H If <timespan> is not given, highlights for last 100 days");
             p.Message("&W/Highlight cannot be disabled, use /reload to un-highlight");
         }
     }

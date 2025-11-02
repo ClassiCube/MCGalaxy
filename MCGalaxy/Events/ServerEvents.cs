@@ -126,4 +126,13 @@ namespace MCGalaxy.Events.ServerEvents
             CallCommon(pl => pl(p, channel, data));
         }
     }
+    
+    public delegate void OnPluginsLoaded();
+    /// <summary>Called when all plugins have been auto-loaded.</summary>
+    public sealed class OnPluginsLoadedEvent : IEvent<OnPluginsLoaded> {
+        public static void Call() {
+            if (handlers.Count == 0) return;
+            CallCommon(pl => pl());
+        }
+    }
 }

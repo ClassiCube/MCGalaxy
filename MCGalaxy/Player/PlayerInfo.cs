@@ -71,7 +71,12 @@ namespace MCGalaxy
             return Matcher.Find(pl, name, out matches, Online.Items,
                                 p => pl.CanSee(p), p => p.name, p => p.color + p.name, "online players");
         }
-        
+
+        /// <summary>
+        /// Matches given name against the names of all online players that the given player can see.
+        /// If no online player is matched, attempts to find an offline player name match.
+        /// </summary>
+        /// <returns>A player name if exactly one found. Otherwise, null.</returns>
         public static string FindMatchesPreferOnline(Player p, string name) {
             if (!Formatter.ValidPlayerName(p, name)) return null;
             int matches;

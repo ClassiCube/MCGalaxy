@@ -27,32 +27,54 @@ namespace MCGalaxy.Bots {
             if (!File.Exists(path)) {
                 p.Message("Could not find specified AI."); return false;
             }
-
-            string[] instructions = File.ReadAllLines(path);
-            if (instructions.Length == 0) {
-                p.Message("No instructions in the AI."); return false;
+            
+            bool readAnyLines;
+            using (StreamReader r = new StreamReader(path))
+            {
+                try {
+                    readAnyLines = ProcessLines(bot, r, ai);
+                } catch (Exception ex) {
+                    p.Message("AI file corrupt.");
+                    Logger.LogError("reading bot AI", ex);
+                    return false;
+                }
             }
-
-            bot.AIName = ai;
-            bot.Instructions.Clear();
-            bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
-
-            foreach (string line in instructions) {
+            
+            if (!readAnyLines) {
+                p.Message("No instructions in the AI.");
+                return false;
+            }
+            return true;
+        }
+        
+        static bool ProcessLines(PlayerBot bot, StreamReader r, string ai) {
+            bool readAnyLines = false;
+            string line;
+            
+            while ((line = r.ReadLine()) != null)
+            {
+                if (!readAnyLines) {
+                    ResetState(bot, ai);
+                    readAnyLines = true;
+                }
+                
                 if (line.IsCommentLine()) continue;
                 string[] args = line.SplitSpaces();
 
-                try {
-                    BotInstruction ins = BotInstruction.Find(args[0]);
-                    if (ins == null) continue;
-                    
-                    InstructionData data = ins.Parse(args);
-                    data.Name = args[0];
-                    bot.Instructions.Add(data);
-                } catch {
-                    p.Message("AI file corrupt."); return false;
-                }
+                BotInstruction ins = BotInstruction.Find(args[0]);
+                if (ins == null) continue;
+                
+                InstructionData data = ins.Parse(args);
+                data.Name = args[0];
+                bot.Instructions.Add(data);
             }
-            return true;
+            return readAnyLines;
+        }
+        
+        static void ResetState(PlayerBot bot, string ai) {
+            bot.AIName = ai;
+            bot.Instructions.Clear();
+            bot.cur = 0; bot.countdown = 0; bot.movementSpeed = 3;
         }
         
         public static string Append(Player p, string ai, string cmd, string[] args) {
@@ -67,7 +89,7 @@ namespace MCGalaxy.Bots {
                 
                 CommandExtraPerms killPerms = CommandExtraPerms.Find("BotSet", 1);
                 if (ins.Name.CaselessEq("kill") && !killPerms.UsableBy(p)) {
-                    killPerms.MessageCannotUse(p); 
+                    killPerms.MessageCannotUse(p);
                     return null;
                 }
                 

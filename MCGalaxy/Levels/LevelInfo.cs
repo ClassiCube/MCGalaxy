@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using MCGalaxy.DB;
@@ -199,8 +200,8 @@ namespace MCGalaxy {
             }
             return true;
         }
-        
-        
+
+        //TODO: Move Realm methods into Realm class
         public static bool IsRealmOwner(string name, string map) {
             LevelConfig cfg = GetConfig(map); 
             return IsRealmOwner(map, cfg, name);
@@ -240,5 +241,77 @@ namespace MCGalaxy {
             // Match the backwards compatibilty case of IsRealmOwner
             return PlayerDB.FindName(map);
         }
+
+        /// <summary>
+        /// If playerName owns levelName and levelName begins with playerName.
+        /// </summary>
+        internal static bool IsPersonalRealmOwner(string playerName, string levelName) {
+            //TODO public after refactor into new class
+            return levelName.CaselessStarts(playerName) && LevelInfo.IsRealmOwner(playerName, levelName);
+        }
+        /// <summary>
+        /// Returns all the os maps personally(level name begins with player name) owned by p, sorted alphabetically.
+        /// </summary>
+        internal static List<string> AllPersonalRealms(string playerName) {
+            //TODO public after refactor into new class
+            string[] allMaps = LevelInfo.AllMapNames();
+            List<string> owned = new List<string>();
+            foreach (string lvlName in allMaps) {
+                if (LevelInfo.IsPersonalRealmOwner(playerName, lvlName)) owned.Add(lvlName);
+            }
+            owned.Sort(new AlphanumComparator());
+            return owned;
+        }
+
+        public static void ListMaps(Player p, IList<string> maps, string levelsTitle, string listCmd, string itemName, string page, bool showVisitable = true) {
+            p.Message("{0} (&c[no] &Sif not visitable):", levelsTitle);
+            Paginator.Output(p, maps, (file) => FormatMap(p, file, showVisitable),
+                             listCmd, itemName, page);
+        }
+        static string FormatMap(Player p, string map, bool showVisitable) {
+            LevelPermission visitP, buildP;
+            bool loadOnGoto;
+            RetrieveProps(map, out visitP, out buildP, out loadOnGoto);
+            
+            LevelPermission maxPerm = visitP;
+            if (maxPerm < buildP) maxPerm = buildP;
+
+            string visit;
+            if (showVisitable) {
+                visit = loadOnGoto && p.Rank >= visitP ? "" : " &c[no]";
+            } else {
+                visit = "";
+            }
+            return Group.GetColor(maxPerm) + map + visit;
+        }
+        
+        static void RetrieveProps(string level, out LevelPermission visit,
+                                  out LevelPermission build, out bool loadOnGoto) {
+            visit = LevelPermission.Guest;
+            build = LevelPermission.Guest;
+            loadOnGoto = true;
+            
+            string propsPath = LevelInfo.PropsPath(level);
+            SearchArgs args = new SearchArgs();
+            if (!PropertiesFile.Read(propsPath, ref args, ProcessLine)) return;
+            
+            visit = Group.ParsePermOrName(args.Visit, visit);
+            build = Group.ParsePermOrName(args.Build, build);
+            if (!bool.TryParse(args.LoadOnGoto, out loadOnGoto))
+                loadOnGoto = true;
+        }
+        
+        static void ProcessLine(string key, string value, ref SearchArgs args) {
+            if (key.CaselessEq("pervisit")) {
+                args.Visit = value;
+            } else if (key.CaselessEq("perbuild")) {
+                args.Build = value;
+            } else if (key.CaselessEq("loadongoto")) {
+                args.LoadOnGoto = value;
+            }
+        }
+        
+        struct SearchArgs { public string Visit, Build, LoadOnGoto; }
+
     }
 }

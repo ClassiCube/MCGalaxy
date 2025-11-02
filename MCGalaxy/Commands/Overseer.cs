@@ -48,22 +48,35 @@ namespace MCGalaxy.Commands.World {
         }
         
 
-        static string GetLevelName(Player p, int i) {
-            string name = p.name.ToLower();
-            return i == 1 ? name : name + i;
+        static string GetLevelName(Player p, string mapSubName) {
+            return p.name.ToLower() + mapSubName;
         }
 
         static string NextLevel(Player p) {
-            int realms = p.group.OverseerMaps;
+            string[] allMaps = LevelInfo.AllMapNames();
 
-            for (int i = 1; realms > 0; i++) 
-            {
-                string map = GetLevelName(p, i);
-                if (!LevelInfo.MapExists(map)) return map;
-
-                if (LevelInfo.IsRealmOwner(p.name, map)) realms--;
+            int realmsOwned = 0;
+            foreach (string lvlName in allMaps) {
+                if (LevelInfo.IsPersonalRealmOwner(p.name, lvlName)) {
+                    realmsOwned += 1;
+                    if (realmsOwned >= p.group.OverseerMaps) {
+                        break;
+                    }
+                }
             }
-            p.Message("You have reached the limit for your overseer maps."); return null;
+
+            if (realmsOwned < p.group.OverseerMaps) {
+                for (int i = 1; ; i++) {
+                    string levelName = GetLevelName(p, i == 1 ? "" : "" + i);
+
+                    if (!LevelInfo.MapExists(levelName)) {
+                        return levelName;
+                    }
+                }
+            }
+
+            p.Message("You have reached the limit for your overseer maps.");
+            return null;
         }
 
         static string[] addHelp = new string[] {
@@ -191,15 +204,26 @@ namespace MCGalaxy.Commands.World {
             "&T/os go &H- Teleports you to your first map.",
             "&T/os go [num] &H- Teleports you to your nth map.",
         };
-        static void HandleGoto(Player p, string map) {
-            byte mapNum = 0;
-            if (map.Length == 0) map = "1";
+        static void HandleGoto(Player p, string message) {
+            string map = GetLevelName(p, message);
 
-            if (!byte.TryParse(map, out mapNum)) {
-                p.MessageLines(gotoHelp); return;
+            if (message.Length == 0) {
+                GotoExact(p, map); return;
             }
-            map = GetLevelName(p, mapNum);
 
+            int mapNumber;
+            if (NumberUtils.TryParseInt32(message, out mapNumber)) {
+                //If it's a number, use exact goto logic like before
+                GotoExact(p, map); return;
+            }
+
+            if (Formatter.ValidMapName(p, map)) {
+                //Allow partial match for going to renamed os map
+                //Works funky with level auto load off...? TOO BAD! No one should ever use that setting
+                PlayerActions.ChangeMap(p, map);
+            }
+        }
+        static void GotoExact(Player p, string map) {
             if (LevelInfo.FindExact(map) == null)
                 LevelActions.Load(p, map, !Server.Config.AutoLoadMaps);
             if (LevelInfo.FindExact(map) != null)
@@ -296,6 +320,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Add",      (p, arg) => { MapMoved(p, arg, "add",      HandleAdd, false);}, false, new string[] { "create", "new" } ),
                     new SubCommand("Delete",   (p, arg) => { MapMoved(p, arg, "delete",   HandleDelete);    }, false, new string[] { "del", "remove" } ),
                     new SubCommand("Save",     (p, arg) => { MapMoved(p, arg, "save",     HandleSave);      }),
+                    new SubCommand("Rename",   (p, arg) => { MapMoved(p, arg, "rename",   HandleRename);    }),
                     new SubCommand("Restore",  (p, arg) => { MapMoved(p, arg, "restore",  HandleRestore);   }),
                     new SubCommand("Resize",   (p, arg) => { MapMoved(p, arg, "resize",   HandleResize);    }),
                     new SubCommand("PerVisit", (p, arg) => { MapMoved(p, arg, "pervisit", HandlePervisit);  }),
@@ -404,12 +429,16 @@ namespace MCGalaxy.Commands.World {
             "&H  Plots are zones that can change permissions and environment." +
             "&H  See &T/Help zone &Hto learn what args you can use.",
         };
+        static void HandlePlotHelp(Player p, string message) {
+            Moderation.CmdZone.HelpName(p, "os plot", message);
+        }
         static void HandlePlot(Player p, string raw) {
             string[] args = raw.SplitSpaces(2);
 
             if (args.Length == 1) {
-                p.Message("This command is the &T/{0} &Sversion of &T/zone&S.", commandShortcut);
-                p.Message("To learn how to use it, read &T/help zone&S");
+                HandlePlotHelp(p, raw);
+                //p.Message("This command is the &T/{0} &Sversion of &T/zone&S.", commandShortcut);
+                //p.Message("To learn how to use it, read &T/help zone&S");
             } else {
                 UseCommand(p, "Zone", args[0] + " " + args[1]);
             }
@@ -424,6 +453,29 @@ namespace MCGalaxy.Commands.World {
         static void HandleSave(Player p, string unused) {
             UseCommand(p, "Save", "");
         }
+
+        static string[] renameHelp = new string[] {
+            "&T/os rename <name>",
+            "&H  Renames your current map. Your player name is always kept as prefix.",
+            "&H  Without <name>, renames to just your player name.",
+            "&H  With <name>, renames to 'yourname[name]'.",
+        };
+        static void HandleRename(Player p, string args) {
+            if (!Server.Config.OSRenameAllowed) {
+                p.Message("This server does not allow renaming os realms.");
+                return;
+            }
+
+            if (args.Length > 0 && !Formatter.IsValidName(p, args, "os name", Player.USERNAME_ALPHABET)) {
+                return;
+            }
+            const int MAX_LENGTH = 16;
+            if (args.Length > MAX_LENGTH) {
+                p.Message("Your os name must be {0} characters or fewer.", MAX_LENGTH);
+                return;
+            }
+            UseCommand(p, "RenameLvl", p.level.name + " " + GetLevelName(p, args));
+        }
         
         static string[] restoreHelp = new string[] {
             "&T/os restore <number>",
@@ -432,6 +484,86 @@ namespace MCGalaxy.Commands.World {
         };
         static void HandleRestore(Player p, string args) {
             UseCommand(p, "Restore", args);
+        }
+
+        static string[] listHelp = new string[] {
+            "&T/os list <player>",
+            "&H  Lists all the os realms for <player>",
+            "&H  By default, lists your own realms.",
+        };
+        static void HandleList(Player p, string args) {
+            string[] words = args.SplitSpaces(2);
+            string word0 = words[0];
+            string word1 = words.Length > 1 ? words[1] : ""; //How many times have I typed a variant of this
+            string playerName = word0.Length == 0 ? p.name : PlayerInfo.FindMatchesPreferOnline(p, word0);
+            if (playerName == null) return;
+            string page = word1;
+            LevelInfo.ListMaps(p, LevelInfo.AllPersonalRealms(playerName), "OS realms", "os list "+playerName, "OS realms", page, playerName != p.name);
+        }
+
+        static string[] tourHelp = new string[] {
+            "&T/os tour",
+            "&H  Determines who owns the realm you're in,",
+            "&H  then takes you to that player's next realm.",
+            "&T/os tour prev",
+            "&H  takes you to that player's previous realm.",
+        };
+        static void HandleTour(Player p, string arg) {
+            int direction = 1;
+
+            // Allow "/os visit next" to work for consistency's sake
+            if (arg.Length > 0 && !arg.CaselessEq("next")) {
+                if (arg.CaselessEq("prev") || arg.CaselessEq("previous") || arg.CaselessEq("back")) {
+                    direction = -1;
+                } else {
+                    p.Message("To visit the next os map, use &T/os tour");
+                    p.Message("To go backwards, use &T/os tour prev");
+                    return;
+                }
+            }
+
+            Level curLevel = p.level; // Cache in case another thread changes it
+            string[] owners = curLevel.Config.RealmOwner.SplitComma();
+            string curLevelOwner = null;
+            foreach (string owner in owners) {
+                if (curLevel.name.CaselessStarts(owner)) { curLevelOwner = owner; break; }
+            }
+            if (curLevelOwner == null) {
+                p.Message("&HTo use &T/os tour&H, first join any player's personal realm.");
+                p.Message("&S(to join your own, use &T/os go&S)");
+                p.Message("&HOnce you are in someone's realm, use &T/os tour <prev/next>");
+                p.Message("&Hto easily join other realms owned by that player.");
+                return;
+            }
+
+            List<string> realms = LevelInfo.AllPersonalRealms(curLevelOwner);
+            int curIndex = -1;
+            for (int i = 0; i < realms.Count; i++) {
+                if (curLevel.name == realms[i]) { curIndex = i; break; }
+            }
+            if (curIndex == -1) {
+                throw new InvalidOperationException(
+                    String.Format("Guessed \"{0}\" as the realm owner of \"{1}\", but \"{2}\" does not actually own the level \"{3}\"",
+                    curLevelOwner, curLevel.name, curLevelOwner, curLevel.name));
+            }
+
+            bool blockedFromJoining = false;
+        tryAgain:
+            curIndex += 1 * direction;
+            if (curIndex >= realms.Count || curIndex < 0) {
+                string who = curLevelOwner == p.name ? "your" : p.FormatNick(curLevelOwner) + "&S's";
+
+                p.Message("You are in {0} {1} {2}realm.",
+                    who,
+                    direction == 1 ? "last" : "first",
+                    blockedFromJoining ? "accessible " : "");
+                return;
+            }
+            if (!PlayerActions.ChangeMap(p, realms[curIndex])) {
+                blockedFromJoining = true;
+                // Try going to the next one until you get to one that can actually be visited
+                goto tryAgain;
+            }
         }
         
         //Placed at the end so that the help arrays aren't null
@@ -448,7 +580,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Preset",     HandlePreset,     presetHelp),
                     new SubCommand("Map",        HandleMap,        mapHelp, false),
 
-                    new SubCommand("Plot",       HandlePlot,       plotHelp, true, new string[] { "plots" }),
+                    new SubCommand("Plot",       HandlePlot,       HandlePlotHelp, true, new string[] { "plots" }),
                     new SubCommand("PerBuild",   HandlePerbuild,   perbuildHelp),
                     new SubCommand("PerVisit",   HandlePervisit,   pervisitHelp),
                     new SubCommand("Physics",    HandlePhysics,    physicsHelp),
@@ -462,7 +594,10 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Resize",     HandleResize,     resizeHelp),
                     new SubCommand("Save",       HandleSave,       saveHelp),
                     new SubCommand("Delete",     HandleDelete,     deleteHelp, true, new string[] { "del", "remove" } ),
+                    new SubCommand("Rename",     HandleRename,     renameHelp),
                     new SubCommand("Restore",    HandleRestore,    restoreHelp),
+                    new SubCommand("List",       HandleList,       listHelp, false),
+                    new SubCommand("Tour",       HandleTour,       tourHelp, false),
                 }
             );
 

@@ -30,33 +30,57 @@ namespace MCGalaxy.Commands.World {
                     new CommandAlias("GotoRandom", "-random"), new CommandAlias("JoinRandom", "-random") }; }
         }
         public override bool SuperUseable { get { return false; } }
+        public override CommandParallelism Parallelism { get { return CommandParallelism.NoAndWarn; } }
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) { Help(p); return; }
             
             if (message.CaselessStarts("-random")) {
+                Random r = new Random();
                 string[] files = LevelInfo.AllMapFiles();
                 string[] args = message.SplitSpaces(2);
-                string map;
-                
-                // randomly only visit certain number of maps
-                if (args.Length > 1) {
-                    List<string> maps = Wildcard.Filter(files, args[1],
-                                                        mapFile => Path.GetFileNameWithoutExtension(mapFile));
-                    if (maps.Count == 0) {
-                        p.Message("No maps found containing \"{0}\"", args[1]);
-                        return;
-                    }
-                    map = maps[new Random().Next(maps.Count)];
-                } else {
-                    map = files[new Random().Next(files.Length)];
-                    map = Path.GetFileNameWithoutExtension(map);
+
+                int attempts = 0;
+                GrResult res;
+                do {
+                    attempts++;
+                    res = TryGotoRandom(p, r, files, args);
+                } while (attempts < 5 && res == GrResult.NoPermission);
+
+                if (res == GrResult.NoPermission) {
+                    p.Message("&WTook too long to find a random map to go to. Giving up.");
                 }
 
-                PlayerActions.ChangeMap(p, map);
             } else if (Formatter.ValidMapName(p, message)) {
                 PlayerActions.ChangeMap(p, message);
             }
+        }
+
+        enum GrResult { NoLevels, NoPermission, Success }
+        static GrResult TryGotoRandom(Player p, Random r, string[] files, string[] args) {
+            string map;
+
+            // randomly visit a specified subset of all levels
+            if (args.Length > 1) {
+                List<string> maps = Wildcard.Filter(files, args[1],
+                                                    mapFile => Path.GetFileNameWithoutExtension(mapFile));
+                if (maps.Count == 0) {
+                    p.Message("No maps found containing \"{0}\"", args[1]);
+                    return GrResult.NoLevels;
+                }
+                map = maps[r.Next(maps.Count)];
+            } else {
+                map = files[r.Next(files.Length)];
+                map = Path.GetFileNameWithoutExtension(map);
+            }
+            if (p.level.name == map) {
+                // try again silently
+                return GrResult.NoPermission;
+            }
+
+            bool changed = PlayerActions.ChangeMap(p, map);
+            if (changed) return GrResult.Success;
+            return GrResult.NoPermission;
         }
         
         public override void Help(Player p) {

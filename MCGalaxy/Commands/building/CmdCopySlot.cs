@@ -34,6 +34,16 @@ namespace MCGalaxy.Commands.Building
                 OutputCopySlots(p);
             } else if (message.CaselessEq("random")) {
                 SetRandomCopySlot(p);
+            } else if (message.CaselessStarts("clear")) {
+                string[] words = message.SplitSpaces();
+                if (words.Length < 2) {
+                    p.Message("You must provide a slot number to clear.");
+                    return;
+                }
+                int num = 0;
+                if (!CommandParser.GetInt(p, words[1], "Slot number", ref num, 1, p.group.CopySlots)) return;
+
+                ClearCopySlot(p, num);
             } else {
                 int i = 0;
                 if (!CommandParser.GetInt(p, message, "Slot number", ref i, 1, p.group.CopySlots)) return;
@@ -84,6 +94,17 @@ namespace MCGalaxy.Commands.Building
                 p.Message("Selected copy slot {0}: {1}", i, p.CurrentCopy.Summary);
             }
         }
+
+        static void ClearCopySlot(Player p, int num) {
+            int i = num - 1; //We know that i is 0 at min bc num passed to this is 1 at min
+            List<CopyState> copySlots = p.CopySlots;
+            if (i >= copySlots.Count || copySlots[i] == null) {
+                p.Message("Copy slot {0} is already empty.", num);
+                return;
+            }
+            copySlots[i] = null;
+            p.Message("Cleared copy slot {0}.", num);
+        }
         
         public override void Help(Player p) {
             p.Message("&T/CopySlot random");
@@ -91,6 +112,8 @@ namespace MCGalaxy.Commands.Building
             p.Message("&T/CopySlot [number]");
             p.Message("&HSelects the slot to &T/copy &Hand &T/paste &Hfrom");
             p.Message("&HMaxmimum number of copy slots is determined by your rank");
+            p.Message("&T/CopySlot clear [number]");
+            p.Message("&HRemoves the copy data from the given slot, making it empty");
             p.Message("&T/CopySlot");
             p.Message("&HLists details about any copies stored in any slots");
         }

@@ -90,7 +90,7 @@ namespace MCGalaxy
             return IsValidName(p, name, "player", alphabet);
         }
         
-        static bool IsValidName(Player p, string name, string type, string alphabet) {
+        public static bool IsValidName(Player p, string name, string type, string alphabet) {
             if (name.Length > 0 && name.ContainsAllIn(alphabet)) return true;
             p.Message("\"{0}\" is not a valid {1} name.", name, type);
             return false;
@@ -128,6 +128,47 @@ namespace MCGalaxy
             }
 
             return true;
+        }
+    }
+
+    /// <summary>
+    /// Sorts a list of strings such that a1 a2 a3 comes before a10 a11 a12 and so on.
+    /// </summary>
+    public class AlphanumComparator : IComparer<string> {
+        public int Compare(string a, string b) {
+            int aLen, bLen;
+            int aDigit = GetDigits(a, out aLen);
+            int bDigit = GetDigits(b, out bLen);
+
+            string aName = a.Substring(0, aLen);
+            string bName = b.Substring(0, bLen);
+
+            if (aName.Length != bName.Length || (aDigit == -1 && bDigit == -1)) {
+                return aName.CompareTo(bName);
+            }
+
+            return aDigit.CompareTo(bDigit);
+        }
+
+        /// <summary>
+        /// Returns the digits on the end of the string or -1 if no integer found.
+        /// </summary>
+        static int GetDigits(string name, out int nameLength) {
+            nameLength = name.Length;
+            if (!Char.IsDigit(name[name.Length - 1])) return -1;
+
+            int decimalShift = 1;
+            int number = 0;
+            for (int i = name.Length - 1; i >= 0; i--) {
+                if (!Char.IsDigit(name[i])) return number;
+
+                nameLength--;
+                int digit = name[i] - '0'; //Paige Ruten: here's the most insane way to convert a digit char to an integer 
+                number += digit * decimalShift;
+                decimalShift *= 10;
+            }
+
+            return number;
         }
     }
 }

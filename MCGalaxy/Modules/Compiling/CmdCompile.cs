@@ -19,6 +19,7 @@
 using System;
 using MCGalaxy.Commands;
 using MCGalaxy.Scripting;
+using System.IO;
 
 namespace MCGalaxy.Modules.Compiling 
 {
@@ -64,23 +65,39 @@ namespace MCGalaxy.Modules.Compiling
         }
         
         protected virtual void CompilePlugin(Player p, string[] paths, ICompiler compiler) {
-            string dstPath = IScripting.PluginPath(paths[0]);
+            string pln     = paths[0];
+            string dstPath = IScripting.PluginPath(pln);
             
             for (int i = 0; i < paths.Length; i++) 
             {
                  paths[i] = compiler.PluginPath(paths[i]);
             }
+            paths = TryDirectory(ICompiler.PLUGINS_SOURCE_DIR, pln, paths, compiler);
+            
             CompilerOperations.Compile(p, compiler, "Plugin", paths, dstPath);
         }
         
         protected virtual void CompileCommand(Player p, string[] paths, ICompiler compiler) {
-            string dstPath = IScripting.CommandPath(paths[0]);
+            string cmd     = paths[0];
+            string dstPath = IScripting.CommandPath(cmd);
             
             for (int i = 0; i < paths.Length; i++) 
             {
                  paths[i] = compiler.CommandPath(paths[i]);
             }
+            paths = TryDirectory(ICompiler.COMMANDS_SOURCE_DIR, cmd, paths, compiler);
+
             CompilerOperations.Compile(p, compiler, "Command", paths, dstPath);
+        }
+        
+        // If first source file doesn't exist, try treating it as a directory instead
+        string[] TryDirectory(string root, string name, string[] srcPaths, ICompiler compiler) {
+            if (File.Exists(srcPaths[0])) return srcPaths;
+            
+            string dir = Path.Combine(root, name);
+            if (!Directory.Exists(dir)) return srcPaths;
+            
+            return Directory.GetFiles(dir, "*" + compiler.FileExtension);
         }
 
         public override void Help(Player p) {

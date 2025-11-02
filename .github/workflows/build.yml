@@ -26,24 +26,26 @@ jobs:
         id: compile
         run: |
           msbuild MCGalaxy.sln /p:Configuration=Release /p:TargetFrameworkVersion=v2.0 /p:DefineConstants="NET_20"
-
-      - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile.outcome == 'failure' }}
-        with:
-          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy .NET 2.0 build'
-          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           SOURCE_FILE: 'bin/Release'
           DEST_NAME: 'MCGalaxy-net2.0'
+
           
       - uses: ./.github/actions/notify_success
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'net20'
+
+
+      - uses: ./.github/actions/notify_failure
+        if: failure()
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce MCGalaxy .NET 2.0 build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
    
    
 #============================================
@@ -61,12 +63,6 @@ jobs:
           cp -R bin/Release bin/Release_normal
           rm bin/Release/MCGalaxy_.dll bin/Release/MCGalaxy_.pdb
           msbuild MCGalaxy/MCGalaxy_.csproj /p:Configuration=Release /t:Rebuild /p:DefineConstants="TEN_BIT_BLOCKS"
-
-      - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile.outcome == 'failure' }}
-        with:
-          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy .NET build'
-          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -79,12 +75,20 @@ jobs:
         with:
           SOURCE_FILE: 'bin/Release'
           DEST_NAME: 'MCGalaxy-net40-infid'
+
           
       - uses: ./.github/actions/notify_success
         if: ${{ always() && steps.compile.outcome == 'success' }}
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'net40'
+
+
+      - uses: ./.github/actions/notify_failure
+        if: failure()
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce MCGalaxy .NET 4.0 build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
 
 #============================================
@@ -105,12 +109,6 @@ jobs:
         id: compile
         run: |
           dotnet build CLI/MCGalaxyCLI_dotnet6.csproj --no-restore
-        
-      - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile.outcome == 'failure' }}
-        with:
-          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy dotnet build'
-          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -154,6 +152,13 @@ jobs:
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'net60'
+        
+
+      - uses: ./.github/actions/notify_failure
+        if: failure()
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce MCGalaxy dotnet 6.0 build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
 
 #============================================
@@ -174,12 +179,6 @@ jobs:
         id: compile
         run: |
           dotnet build CLI/MCGalaxyCLI_dotnet8.csproj --no-restore
-        
-      - uses: ./.github/actions/notify_failure
-        if: ${{ always() && steps.compile.outcome == 'failure' }}
-        with:
-          NOTIFY_MESSAGE: 'Failed to compile MCGalaxy dotnet build'
-          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
           
       - uses: ./.github/actions/upload_build
         if: ${{ always() && steps.compile.outcome == 'success' }}
@@ -193,3 +192,10 @@ jobs:
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'net80'
+        
+
+      - uses: ./.github/actions/notify_failure
+        if: failure()
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce MCGalaxy dotnet 8.0 build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'

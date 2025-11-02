@@ -51,7 +51,7 @@ namespace MCGalaxy.Levels.IO
                 lvl.roty   = header[15];
                 // pervisit/perbuild permission bytes ignored
                 
-                ReadFully(gs, lvl.blocks, lvl.blocks.Length);
+                StreamUtils.ReadFully(gs, lvl.blocks, 0, lvl.blocks.Length);
                 ReadCustomBlocksSection(lvl, gs);
                 if (!metadata) return lvl;
                 
@@ -70,7 +70,7 @@ namespace MCGalaxy.Levels.IO
         }
         
         static Vec3U16 ReadHeader(Stream gs, byte[] header) {
-            ReadFully(gs, header, HEADER_SIZE);
+            StreamUtils.ReadFully(gs, header, 0, HEADER_SIZE);
             int signature = BitConverter.ToUInt16(header, 0);
             if (signature != 1874)
                 throw new InvalidDataException("Invalid .lvl map signature");
@@ -95,7 +95,7 @@ namespace MCGalaxy.Levels.IO
                 read = gs.Read(data, 0, 1);
                 if (read > 0 && data[0] == 1) {
                     byte[] chunk = new byte[16 * 16 * 16];
-                    ReadFully(gs, chunk, chunk.Length);
+                    StreamUtils.ReadFully(gs, chunk, 0, chunk.Length);
                     lvl.CustomBlocks[index] = chunk;
                 }
                 index++;
@@ -156,10 +156,11 @@ namespace MCGalaxy.Levels.IO
             int metaCount = TryRead_I32(buffer, gs);
             ConfigElement[] elems = Server.zoneConfig;
             
-            for (int j = 0; j < metaCount; j++) {
+            for (int j = 0; j < metaCount; j++) 
+            {
                 int size = Read_U16(buffer, gs);
                 if (size > buffer.Length) buffer = new byte[size + 16];
-                ReadFully(gs, buffer, size);
+                StreamUtils.ReadFully(gs, buffer, 0, size);
                 
                 string line = Encoding.UTF8.GetString(buffer, 0, size), key, value;
                 PropertiesFile.ParseLine(line, '=', out key, out value);
@@ -174,12 +175,14 @@ namespace MCGalaxy.Levels.IO
         static int TryRead_I32(byte[] buffer, Stream gs) {
             int read = gs.Read(buffer, 0, sizeof(int));
             if (read < sizeof(int)) return 0;
-            return NetUtils.ReadI32(buffer, 0);
+            
+            return MemUtils.ReadI32_BE(buffer, 0);
         }
         
         static ushort Read_U16(byte[] buffer, Stream gs) {
-            ReadFully(gs, buffer, sizeof(ushort));
-            return NetUtils.ReadU16(buffer, 0);
+            StreamUtils.ReadFully(gs, buffer, 0, sizeof(ushort));
+            
+            return MemUtils.ReadU16_BE(buffer, 0);
         }
     }
 }

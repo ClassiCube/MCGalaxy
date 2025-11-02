@@ -52,8 +52,8 @@ namespace MCGalaxy.Commands.CPE
         
         static bool ParseArgs(Player p, string args, Entity entity) {
             if (args.Length == 0) {
-                Entities.UpdateEntityProp(entity, EntityProp.RotX, 0);
-                Entities.UpdateEntityProp(entity, EntityProp.RotZ, 0);
+                Entities.UpdateEntityRot(entity, EntityProp.RotX, 0);
+                Entities.UpdateEntityRot(entity, EntityProp.RotZ, 0);
                 return true;
             }
             
@@ -65,9 +65,9 @@ namespace MCGalaxy.Commands.CPE
             if (!CommandParser.GetInt(p, bits[1], "Angle", ref angle, -360, 360)) return false;
             
             if (bits[0].CaselessEq("x")) {
-                Entities.UpdateEntityProp(entity, EntityProp.RotX, angle);
+                Entities.UpdateEntityRot(entity, EntityProp.RotX, angle);
             } else if (bits[0].CaselessEq("z")) {
-                Entities.UpdateEntityProp(entity, EntityProp.RotZ, angle);
+                Entities.UpdateEntityRot(entity, EntityProp.RotZ, angle);
             } else {
                 p.Message("Axis name must be X or Z."); return false;
             }

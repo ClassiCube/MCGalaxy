@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using System.IO;
 
 namespace MCGalaxy.Commands.Info 
 {
@@ -31,55 +30,11 @@ namespace MCGalaxy.Commands.Info
         }
         
         public override void Use(Player p, string message, CommandData data) {
-            string[] files = LevelInfo.AllMapFiles();
+            string[] files = LevelInfo.AllMapNames();
             // Files list is not guaranteed to be in alphabetical order
-            Array.Sort(files);
-            
-            p.Message("Levels (&c[no] &Sif not visitable):");
-            Paginator.Output(p, files, (file) => FormatMap(p, file),
-                             "Levels", "levels", message);
+            Array.Sort(files, new AlphanumComparator());
+            LevelInfo.ListMaps(p, files, "Levels", "Levels", "levels", message);
         }
-        
-        static string FormatMap(Player p, string file) {
-            LevelPermission visitP, buildP;
-            bool loadOnGoto;
-            string map = Path.GetFileNameWithoutExtension(file);
-            RetrieveProps(map, out visitP, out buildP, out loadOnGoto);
-            
-            LevelPermission maxPerm = visitP;
-            if (maxPerm < buildP) maxPerm = buildP;
-            
-            string visit = loadOnGoto && p.Rank >= visitP ? "" : " &c[no]";
-            return Group.GetColor(maxPerm) + map + visit;
-        }
-        
-        static void RetrieveProps(string level, out LevelPermission visit,
-                                  out LevelPermission build, out bool loadOnGoto) {
-            visit = LevelPermission.Guest;
-            build = LevelPermission.Guest;
-            loadOnGoto = true;
-            
-            string propsPath = LevelInfo.PropsPath(level);
-            SearchArgs args = new SearchArgs();
-            if (!PropertiesFile.Read(propsPath, ref args, ProcessLine)) return;
-            
-            visit = Group.ParsePermOrName(args.Visit, visit);
-            build = Group.ParsePermOrName(args.Build, build);
-            if (!bool.TryParse(args.LoadOnGoto, out loadOnGoto))
-                loadOnGoto = true;
-        }
-        
-        static void ProcessLine(string key, string value, ref SearchArgs args) {
-            if (key.CaselessEq("pervisit")) {
-                args.Visit = value;
-            } else if (key.CaselessEq("perbuild")) {
-                args.Build = value;
-            } else if (key.CaselessEq("loadongoto")) {
-                args.LoadOnGoto = value;
-            }
-        }
-        
-        struct SearchArgs { public string Visit, Build, LoadOnGoto; }
 
         public override void Help(Player p) {
             p.Message("&T/Levels");

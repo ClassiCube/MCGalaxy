@@ -38,7 +38,7 @@ namespace MCGalaxy.Commands.Building {
             BrushArgs args = new BrushArgs(p, message, Block.Air);
             if (!BrushFactory.Find("Paste").Validate(args)) return;
             
-            p.Message("Place a block in the corner of where you want to paste.");
+            DrawCmd.DrawMessage(p, "Place a block in the corner of where you want to paste.");
             p.MakeSelection(1, "Selecting location for &SPaste", args, DoPaste);
         }
 

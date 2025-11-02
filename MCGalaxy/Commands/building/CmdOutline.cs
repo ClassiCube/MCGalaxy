@@ -38,24 +38,33 @@ namespace MCGalaxy.Commands.Building {
             if (!CommandParser.GetBlock(p, parts[0], out target)) return null;
             
             OutlineDrawOp op = new OutlineDrawOp();
-            // e.g. testing air 'above' grass - therefore op.Above needs to be false for 'up mode'
-            if (dArgs.Mode == DrawMode.up)    { op.Layer = false; op.Above = false; }
-            if (dArgs.Mode == DrawMode.down)  { op.Layer = false; op.Below = false; }
-            if (dArgs.Mode == DrawMode.layer) { op.Above = false; op.Below = false; }
+            op.side = GetSides(dArgs.Message.SplitSpaces());
+            if (op.side == OutlineDrawOp.Side.Unspecified) op.side = OutlineDrawOp.Side.All;
             op.Target = target;
             return op;
         }
-        
-                
-        protected override DrawMode GetMode(string[] parts) {
-            if (parts.Length == 1) return DrawMode.normal;
-            
+
+        OutlineDrawOp.Side GetSides(string[] parts) {
+            if (parts.Length == 1) return OutlineDrawOp.Side.Unspecified;
+
             string type = parts[1];
-            if (type == "down")  return DrawMode.down;
-            if (type == "up")    return DrawMode.up;
-            if (type == "layer") return DrawMode.layer;
-            if (type == "all")   return DrawMode.solid;
-            return DrawMode.normal;
+            if (type == "left")  return OutlineDrawOp.Side.Left;
+            if (type == "right") return OutlineDrawOp.Side.Right;
+            if (type == "front") return OutlineDrawOp.Side.Front;
+            if (type == "back")  return OutlineDrawOp.Side.Back;
+            if (type == "down")  return OutlineDrawOp.Side.Down;
+            if (type == "up")    return OutlineDrawOp.Side.Up;
+
+            if (type == "layer") return OutlineDrawOp.Side.Layer;
+            if (type == "all")   return OutlineDrawOp.Side.All;
+
+            return OutlineDrawOp.Side.Unspecified;
+        }
+        
+        // Parts is just Command.Use's message.SplitSpaces()
+        protected override DrawMode GetMode(string[] parts) {
+            // Need to return "normal" if a unique side was typed, otherwise "not normal". This tells the ModeArgsCount how to work correctly
+            return GetSides(parts) == OutlineDrawOp.Side.Unspecified ? DrawMode.normal : DrawMode.solid;
         }
         
         protected override void GetBrush(DrawArgs dArgs) {
@@ -66,7 +75,7 @@ namespace MCGalaxy.Commands.Building {
             p.Message("&T/Outline [block] <brush args>");
             p.Message("&HOutlines [block] with output of your current brush.");
             p.Message("&T/Outline [block] [mode] <brush args>");
-            p.Message("&HModes: &fall/up/layer/down (default all)");
+            p.Message("&HModes: &fall/up/layer/down/left/right/front/back (default all)");
             p.Message(BrushHelpLine);
         }
     }

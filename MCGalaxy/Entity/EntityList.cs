@@ -86,13 +86,12 @@ namespace MCGalaxy {
 
         //Thanks fCraft
         Stack<byte> freeIDs;
-        readonly object visLocker = new object();
+        readonly object locker = new object();
 
 
         #region TabList
         Dictionary<object, TabObject> tabObjects = new Dictionary<object, TabObject>();
         bool[] usedTabIDs;
-        readonly object tabLocker = new object();
 
         void AddTab(Entity e) {
             if (e is Player) {
@@ -113,7 +112,7 @@ namespace MCGalaxy {
             if (!p.hasExtList) return;
             bool self = o == p;
 
-            lock (tabLocker) {
+            lock (locker) {
                 TabObject tabby;
 
                 if (tabObjects.TryGetValue(o, out tabby)) {
@@ -137,17 +136,15 @@ namespace MCGalaxy {
 
             //Try finding a matching visible entity for the ID
             if (o is Entity) {
-                lock (visLocker) {
-                    VisibleEntity vis;
-                    Entity e = (Entity)o;
-                    if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
-                        //We need to match the tablist ID to the matching entity in the level if possible,
-                        //because a few popular plugins (chatsounds, CEF) rely on this
+                VisibleEntity vis;
+                Entity e = (Entity)o;
+                if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
+                    //We need to match the tablist ID to the matching entity in the level if possible,
+                    //because a few popular plugins (chatsounds, CEF) rely on this
 
-                        //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
-                        usedTabIDs[vis.id] = true;
-                        return vis.id;
-                    }
+                    //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
+                    usedTabIDs[vis.id] = true;
+                    return vis.id;
                 }
             }
 
@@ -169,7 +166,7 @@ namespace MCGalaxy {
         public void SendRemoveTabEntry(object o) {
             if (!p.hasExtList) return;
 
-            lock (tabLocker) {
+            lock (locker) {
                 TabObject tabby;
                 if (tabObjects.TryGetValue(o, out tabby)) {
                     tabby = tabObjects[o];
@@ -191,26 +188,26 @@ namespace MCGalaxy {
             this.p = p;
             this.maxEntityID = maxEntityID;
 
-            lock (visLocker) {
+            lock (locker) {
                 freeIDs = new Stack<byte>(maxEntityID);
                 for (int i = maxEntityID; i >= 0; i--) {
                     freeIDs.Push((byte)i);
                 }
-            }
 
-            lock (tabLocker) {
-                usedTabIDs = new bool[maxEntityID+1];
+                usedTabIDs = new bool[maxEntityID + 1];
             }
         }
 
         /// <summary>
-        /// Adds the given entity. Returns true if an entity was spawned, otherwise false if it could not immediately be spawned (it will spawn later if enough are removed)
+        /// Adds the given entity and calls OnSendingModelEvent. Returns true if an entity was spawned, otherwise false if it could not immediately be spawned (it will spawn later if enough are removed)
         /// If this returns false and tabList is true, once the entity spawns, it will be added to the tab list.
         /// </summary>
         public bool Add(Entity e, Position pos, Orientation rot, string skin, string name, string model, bool tabList) {
             bool self = e == p;
 
-            lock (visLocker) {
+            OnSendingModelEvent.Call(e, ref model, p);
+
+            lock (locker) {
                 if (freeIDs.Count > 0 || self) {
                     VisibleEntity vis;
                     if (!visible.TryGetValue(e, out vis)) {
@@ -227,13 +224,11 @@ namespace MCGalaxy {
 
                     //If this entity has a matching tab entry, we need to make sure the IDs get synced
                     //because a few popular plugins (chatsounds, CEF) rely on this
-                    lock (tabLocker) {
-                        TabObject tabby;
-                        if (tabObjects.TryGetValue(vis.e, out tabby) && tabby.id != vis.id) {
-                            //p.Message("%bReadding tab {0} :)", tabby.nick);
-                            SendRemoveTabEntry(vis.e);
-                            SendAddTabEntry(vis.e, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
-                        }
+                    TabObject tabby;
+                    if (tabObjects.TryGetValue(vis.e, out tabby) && tabby.id != vis.id) {
+                        //p.Message("%bReadding tab {0} :)", tabby.nick);
+                        SendRemoveTabEntry(vis.e);
+                        SendAddTabEntry(vis.e, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
                     }
 
                     return true;
@@ -254,7 +249,7 @@ namespace MCGalaxy {
         /// </summary>
         public bool Remove(Entity e, bool tabList) {
             bool self = e == p;
-            lock (visLocker) {
+            lock (locker) {
 
                 //If we're removing a currently invisible entity...
                 WaitingEntity waiting = IsWaitingToSpawn(e);
@@ -293,7 +288,7 @@ namespace MCGalaxy {
 
         void Spawn(VisibleEntity vis, Position pos, Orientation rot, string skin, string name, string model) {
             p.Session.SendSpawnEntity(vis.id, name, skin, pos, rot);
-            _SendModel(vis, model, true);
+            _SendModel(vis, model);
             _SendRot(vis, rot);
             _SendScales(vis);
         }
@@ -301,17 +296,20 @@ namespace MCGalaxy {
             p.Session.SendRemoveEntity(vis.id);
         }
 
+        /// <summary>
+        /// Calls OnSendingModelEvent and changes the model of the given entity.
+        /// </summary>
         public void SendModel(Entity e, string model) {
-            lock (visLocker) {
+            OnSendingModelEvent.Call(e, ref model, p);
+            lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
-                _SendModel(vis, model, false);
+                _SendModel(vis, model);
             }
         }
-        void _SendModel(VisibleEntity vis, string model, bool spawning) {
+        void _SendModel(VisibleEntity vis, string model) {
             if (p.hasChangeModel) {
-                OnSendingModelEvent.Call(vis.e, ref model, p);
-                if (!(spawning && model.CaselessEq("humanoid"))) p.Session.SendChangeModel(vis.id, model);
+                p.Session.SendChangeModel(vis.id, model);
             }
         }
         void _SendRot(VisibleEntity vis, Orientation rot) {
@@ -323,7 +321,7 @@ namespace MCGalaxy {
 
 
         public void SendScales(Entity e) {
-            lock (visLocker) {
+            lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
                 _SendScales(vis);
@@ -348,7 +346,7 @@ namespace MCGalaxy {
 
         public void SendProp(Entity e, EntityProp prop, int value) {
             if (!p.Supports(CpeExt.EntityProperty)) return;
-            lock (visLocker) {
+            lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
                 p.Session.SendEntityProperty(vis.id, prop, value);
@@ -356,7 +354,7 @@ namespace MCGalaxy {
         }
 
         public bool GetID(Entity e, out byte id) {
-            lock (visLocker) {
+            lock (locker) {
                 VisibleEntity vis;
                 if (visible.TryGetValue(e, out vis)) {
                     id = vis.id;
@@ -371,7 +369,7 @@ namespace MCGalaxy {
         /// For plugins. Unused in base MCGalaxy.
         /// </summary>
         public void SendTeleport(Entity e, Position pos, Orientation rot, Packet.TeleportMoveMode mode) {
-            lock (visLocker) {
+            lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
                 if (!p.Session.SendTeleport(vis.id, pos, rot, mode)) {
@@ -383,7 +381,7 @@ namespace MCGalaxy {
         /// For plugins. Unused in base MCGalaxy.
         /// </summary>
         public void SendTeleport(Entity e, Position pos, Orientation rot) {
-            lock (visLocker) {
+            lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
                 p.Session.SendTeleport(vis.id, pos, rot);
@@ -398,7 +396,7 @@ namespace MCGalaxy {
             Player dst = p;
 
 
-            lock (visLocker) {
+            lock (locker) {
                 cachedVisible.Clear();
                 //We want to avoid locking during the entire enumeration of position sending
                 //We need a cached collection to prevent the collection from changing while being enumerated over.
@@ -422,10 +420,10 @@ namespace MCGalaxy {
                 Orientation rot = e.Rot; byte pitch = rot.HeadX;
                 //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
                 if (e is Player) {
-                    Player p = (Player)e; //No pattern matching because we're ancient C#
-                    if (Server.flipHead || p.flipHead) pitch = FlippedPitch(pitch);
+                    Player pl = (Player)e; //No pattern matching because we're ancient C#
+                    if (Server.flipHead || pl.flipHead) pitch = FlippedPitch(pitch);
                     // flip head when infected in ZS, but doesn't support model
-                    if (!dst.hasChangeModel && p.infected)
+                    if (!dst.hasChangeModel && pl.infected)
                         pitch = FlippedPitch(pitch);
                 }
 

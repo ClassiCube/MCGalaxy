@@ -172,6 +172,9 @@ namespace MCGalaxy
                       Orientation.PackedToDegrees(src.Rot.HeadX));
         }
 
+        /// <summary>
+        /// Broadcasts the current model and scales for e to everyone who can see it.
+        /// </summary>
         internal static void BroadcastModel(Entity e, string m) {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = e.Level;
@@ -182,35 +185,51 @@ namespace MCGalaxy
 
                 string model = Chat.Format(m, pl, true, false);
 
-                OnSendingModelEvent.Call(e, ref model, pl);
                 pl.EntityList.SendModel(e, model);
                 pl.EntityList.SendScales(e);
             }
         }
 
-        public static void UpdateEntityProp(Entity e, EntityProp prop, int value) {
-            Player[] players = PlayerInfo.Online.Items;
-            Level lvl = e.Level;
-            
+        /// <summary>
+        /// Sets the rot of the given entity on the given axis to the given degrees, then broadcasts it to everyone who can see it.
+        /// </summary>
+        public static void UpdateEntityRot(Entity e, EntityProp prop, int degrees) {
+            if (!(prop == EntityProp.RotX || prop == EntityProp.RotY || prop == EntityProp.RotZ)) {
+                throw new ArgumentException("You may only pass EntityProp.RotX, EntityProp.RotY, or EntityProp.RotZ to UpdateEntityRot");
+            }
+
             Orientation rot = e.Rot;
-            byte angle = Orientation.DegreesToPacked(value);
-            if (prop == EntityProp.RotX) rot.RotX = angle;
-            if (prop == EntityProp.RotY) rot.RotY = angle;
-            if (prop == EntityProp.RotZ) rot.RotZ = angle;
-            
+            byte packedDeg = Orientation.DegreesToPacked(degrees);
+
+            if (prop == EntityProp.RotX) rot.RotX = packedDeg;
+            if (prop == EntityProp.RotY) rot.RotY = packedDeg;
+            if (prop == EntityProp.RotZ) rot.RotZ = packedDeg;
+
             e.Rot = rot;
             if (prop == EntityProp.RotY) e.SetYawPitch(rot.RotY, rot.HeadX);
+
+            degrees = Orientation.PackedToDegrees(packedDeg);
+
+            BroadcastEntityProp(e, prop, degrees);
+        }
+        /// <summary>
+        /// Broadcasts the given prop for this entity for everyone who can see it. Does not update any server-side fields for the given entity.
+        /// </summary>
+        public static void BroadcastEntityProp(Entity e, EntityProp prop, int value) {
+            Player[] players = PlayerInfo.Online.Items;
+            Level lvl = e.Level;
 
             foreach (Player pl in players) {
                 if (pl.level != lvl || !pl.Supports(CpeExt.EntityProperty)) continue;
                 if (!pl.CanSeeEntity(e)) continue;
-                pl.EntityList.SendProp(e, prop, Orientation.PackedToDegrees(angle));
+                pl.EntityList.SendProp(e, prop, value);
             }
         }
-        
+
+
         #region Position updates
-        
-        
+
+
         public static void GlobalUpdate() {
             Player[] players = PlayerInfo.Online.Items;
 

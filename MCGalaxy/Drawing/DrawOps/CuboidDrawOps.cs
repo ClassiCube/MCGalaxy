@@ -65,9 +65,23 @@ namespace MCGalaxy.Drawing.Ops
     
     public class OutlineDrawOp : CuboidDrawOp 
     {
+        [Flags]
+        public enum Side : byte {
+            Unspecified = 0,
+            Left   = 1 << 0,
+            Right  = 1 << 1,
+            Front  = 1 << 2,
+            Back   = 1 << 3,
+            Up     = 1 << 4,
+            Down   = 1 << 5,
+
+            Layer = Left | Right | Front | Back,
+            All = Layer | Up | Down,
+        }
+
         public override string Name { get { return "Outline"; } }
         public BlockID Target;
-        public bool Above = true, Layer = true, Below = true;
+        public Side side;
         
         public override void Perform(Vec3S32[] marks, Brush brush, DrawOpOutput output) {
             Vec3U16 p1 = Clamp(Min), p2 = Clamp(Max);
@@ -76,12 +90,12 @@ namespace MCGalaxy.Drawing.Ops
                     for (ushort x = p1.X; x <= p2.X; x++)
             {
                 bool outline = false;
-                outline |= Layer && Level.GetBlock((ushort)(x - 1), y, z) == Target;
-                outline |= Layer && Level.GetBlock((ushort)(x + 1), y, z) == Target;
-                outline |= Layer && Level.GetBlock(x, y, (ushort)(z - 1)) == Target;
-                outline |= Layer && Level.GetBlock(x, y, (ushort)(z + 1)) == Target;
-                outline |= Below && Level.GetBlock(x, (ushort)(y - 1), z) == Target;
-                outline |= Above && Level.GetBlock(x, (ushort)(y + 1), z) == Target;
+                outline |= (side & Side.Left ) > 0 && Level.GetBlock((ushort)(x + 1), y, z) == Target;
+                outline |= (side & Side.Right) > 0 && Level.GetBlock((ushort)(x - 1), y, z) == Target;
+                outline |= (side & Side.Front) > 0 && Level.GetBlock(x, y, (ushort)(z + 1)) == Target;
+                outline |= (side & Side.Back ) > 0 && Level.GetBlock(x, y, (ushort)(z - 1)) == Target;
+                outline |= (side & Side.Down ) > 0 && Level.GetBlock(x, (ushort)(y + 1), z) == Target;
+                outline |= (side & Side.Up   ) > 0 && Level.GetBlock(x, (ushort)(y - 1), z) == Target;
 
                 if (outline && Level.GetBlock(x, y, z) != Target)
                     output(Place(x, y, z, brush));
