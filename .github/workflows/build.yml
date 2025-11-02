@@ -190,3 +190,10 @@ jobs:
         with:
           DESTINATION_URL: '${{ secrets.NOTIFY_URL }}'
           WORKFLOW_NAME: 'net80'
+        
+
+      - uses: ./.github/actions/notify_failure
+        if: failure()
+        with:
+          NOTIFY_MESSAGE: 'Failed to produce MCGalaxy dotnet 8.0 build'
+          WEBHOOK_URL: '${{ secrets.WEBHOOK_URL }}'
