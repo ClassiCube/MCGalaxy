@@ -24,6 +24,7 @@ namespace MCGalaxy.Commands.Chatting
         public override bool SuperUseable { get { return false; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override bool MessageBlockRestricted { get { return true; } }
+        public override bool UpdatesLastCmd { get { return false; } }
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.Length == 0) {
