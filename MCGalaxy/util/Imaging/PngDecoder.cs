@@ -1,9 +1,26 @@
-﻿using System;
+﻿/*
+    Copyright 2015-2024 MCGalaxy
+        
+    Dual-licensed under the Educational Community License, Version 2.0 and
+    the GNU General Public License, Version 3 (the "Licenses"); you may
+    not use this file except in compliance with the Licenses. You may
+    obtain a copy of the Licenses at
+    
+    https://opensource.org/license/ecl-2-0/
+    https://www.gnu.org/licenses/gpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the Licenses are distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the Licenses for the specific language governing
+    permissions and limitations under the Licenses.
+ */
+using System;
 using System.IO;
 using System.IO.Compression;
 using MCGalaxy.Util;
 
-namespace MCGalaxy
+namespace MCGalaxy.Util.Imaging
 {
     public unsafe class PngDecoder : ImageDecoder
     {
@@ -16,13 +33,12 @@ namespace MCGalaxy
          *#########################################################################################################################*/
         const int IHDR_SIZE    = 13;
         const int MAX_PALETTE  = 256;
-        const int PNG_SIG_SIZE =  8;
         const int MAX_PNG_DIMS = 32768;
        
 
+        // PNG spec - 5.2 PNG signature
         static byte[] pngSig = new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 };
 
-        /* 5.2 PNG signature */
         public static bool DetectHeader(byte[] data) {
             return MatchesSignature(data, pngSig);
         }
@@ -49,7 +65,7 @@ namespace MCGalaxy
         static byte[] samplesPerPixel = new byte [] { 1, 0, 3, 1, 2, 0, 4 };
         static Pixel BLACK = new Pixel(0, 0, 0, 255);
         
-        public SimpleBitmap Decode(byte[] src) {
+        public override SimpleBitmap Decode(byte[] src) {
             byte colorspace = 0xFF;
             byte bitsPerSample = 0;
 
@@ -64,7 +80,7 @@ namespace MCGalaxy
             buf_length = src.Length;
 
             if (!DetectHeader(src)) Fail("sig invalid");
-            AdvanceOffset(PNG_SIG_SIZE);
+            AdvanceOffset(pngSig.Length);
             bool reachedEnd = false;
             
             while (!reachedEnd)
@@ -89,7 +105,7 @@ namespace MCGalaxy
                             colorspace    = src[offset + 9];
                             if (bitsPerSample == 16) Fail("16 bpp");
 
-                            rowExpander = Png_GetExpander(colorspace, bitsPerSample);
+                            rowExpander = GetRowExpander(colorspace, bitsPerSample);
                             if (rowExpander == null) Fail("Colorspace/bpp combination");
 
                             if (src[offset + 10] != 0) Fail("Compression method");
@@ -214,7 +230,7 @@ namespace MCGalaxy
                     if (method > PNG_FILTER_PAETH) Fail("Scanline");
                     StreamUtils.ReadFully(src, line, 0, scanline_size);
 
-                    Png_Reconstruct(method, bytesPerPixel, line, prior, scanline_size);
+                    ReconstructRow(method, bytesPerPixel, line, prior, scanline_size);
                     rowExpander(bmp.Width, palette, line, dst + y * bmp.Width);
                     
                     // Swap current and prior line
@@ -262,7 +278,7 @@ namespace MCGalaxy
         const int PNG_FILTER_AVERAGE = 3;
         const int PNG_FILTER_PAETH   = 4;
         
-        static void Png_Reconstruct(byte type, int bytesPerPixel, byte[] line, byte[] prior, int lineLen) {
+        static void ReconstructRow(byte type, int bytesPerPixel, byte[] line, byte[] prior, int lineLen) {
             int i, j;
             
             switch (type) {
@@ -338,7 +354,7 @@ namespace MCGalaxy
         const byte SCALE_2BPP =  85;
         const byte SCALE_4BPP =  17;
 
-        static void Png_Expand_GRAYSCALE_1(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_GRAYSCALE_1(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte rgb = (byte)(Get_1BPP(src, i) * SCALE_1BPP);
@@ -346,7 +362,7 @@ namespace MCGalaxy
             }
         }
 
-        static void Png_Expand_GRAYSCALE_2(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_GRAYSCALE_2(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte rgb = (byte)(Get_2BPP(src, i) * SCALE_2BPP);
@@ -354,7 +370,7 @@ namespace MCGalaxy
             }
         }
 
-        static void Png_Expand_GRAYSCALE_4(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_GRAYSCALE_4(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte rgb = (byte)(Get_4BPP(src, i) * SCALE_4BPP);
@@ -362,7 +378,7 @@ namespace MCGalaxy
             }
         }
 
-        static void Png_Expand_GRAYSCALE_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_GRAYSCALE_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte rgb = src[i];
@@ -370,7 +386,7 @@ namespace MCGalaxy
             }
         }
 
-        static void Png_Expand_RGB_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_RGB_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte r = src[i * 3 + 0];
@@ -380,23 +396,23 @@ namespace MCGalaxy
             }
         }
 
-        static void Png_Expand_INDEXED_1(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_INDEXED_1(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++) { dst[i] = palette[Get_1BPP(src, i)]; }
         }
 
-        static void Png_Expand_INDEXED_2(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_INDEXED_2(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++) { dst[i] = palette[Get_2BPP(src, i)]; }
         }
 
-        static void Png_Expand_INDEXED_4(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_INDEXED_4(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++) { dst[i] = palette[Get_4BPP(src, i)]; }
         }
 
-        static void Png_Expand_INDEXED_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_INDEXED_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++) { dst[i] = palette[src[i]]; }
         }
 
-        static void Png_Expand_GRAYSCALE_A_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_GRAYSCALE_A_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte rgb = src[i * 2 + 0];
@@ -405,7 +421,7 @@ namespace MCGalaxy
             }
         }
 
-        static void Png_Expand_RGB_A_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+        static void Expand_RGB_A_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte r = src[i * 4 + 0];
@@ -417,41 +433,41 @@ namespace MCGalaxy
         }
         
 
-        static RowExpander Png_GetExpander(byte col, byte bitsPerSample) {
-            switch (col) {
+        static RowExpander GetRowExpander(byte colorspace, byte bitsPerSample) {
+            switch (colorspace) {
                 case PNG_COLOR_GRAYSCALE:
                     switch (bitsPerSample) {
-                            case 1:  return Png_Expand_GRAYSCALE_1;
-                            case 2:  return Png_Expand_GRAYSCALE_2;
-                            case 4:  return Png_Expand_GRAYSCALE_4;
-                            case 8:  return Png_Expand_GRAYSCALE_8;
+                            case 1:  return Expand_GRAYSCALE_1;
+                            case 2:  return Expand_GRAYSCALE_2;
+                            case 4:  return Expand_GRAYSCALE_4;
+                            case 8:  return Expand_GRAYSCALE_8;
                     }
                     return null;
 
                 case PNG_COLOR_RGB:
                     switch (bitsPerSample) {
-                            case 8:  return Png_Expand_RGB_8;
+                            case 8:  return Expand_RGB_8;
                     }
                     return null;
 
                 case PNG_COLOR_INDEXED:
                     switch (bitsPerSample) {
-                            case 1: return Png_Expand_INDEXED_1;
-                            case 2: return Png_Expand_INDEXED_2;
-                            case 4: return Png_Expand_INDEXED_4;
-                            case 8: return Png_Expand_INDEXED_8;
+                            case 1: return Expand_INDEXED_1;
+                            case 2: return Expand_INDEXED_2;
+                            case 4: return Expand_INDEXED_4;
+                            case 8: return Expand_INDEXED_8;
                     }
                     return null;
 
                 case PNG_COLOR_GRAYSCALE_A:
                     switch (bitsPerSample) {
-                            case 8:  return Png_Expand_GRAYSCALE_A_8;
+                            case 8:  return Expand_GRAYSCALE_A_8;
                     }
                     return null;
 
                 case PNG_COLOR_RGB_A:
                     switch (bitsPerSample) {
-                            case 8:  return Png_Expand_RGB_A_8;
+                            case 8:  return Expand_RGB_A_8;
                     }
                     return null;
             }
