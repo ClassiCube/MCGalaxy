@@ -74,6 +74,11 @@ namespace MCGalaxy
     
     public static class MemUtils
     {
+        /// <summary> Reads an unsigned 16 bit little endian integer. </summary>
+        public static ushort ReadU16_LE(byte[] array, int offset) {
+            return (ushort)(array[offset] | array[offset + 1] << 8);
+        }
+        
         /// <summary> Reads a signed 16 bit big endian integer. </summary>
         public static short ReadI16_BE(byte[] array, int offset) {
             return (short)(array[offset] << 8 | array[offset + 1]);

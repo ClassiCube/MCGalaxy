@@ -33,6 +33,7 @@ namespace MCGalaxy.Util.Imaging
         protected byte[] buf_data;
         protected int buf_offset, buf_length;       
         
+        /// <summary> Attempts to advance next read offset by 'amount', then returns current read offset </summary>
         protected int AdvanceOffset(int amount) {
             int offset = buf_offset;
             
@@ -41,6 +42,13 @@ namespace MCGalaxy.Util.Imaging
                 throw new EndOfStreamException("End of stream reading data");
             return offset;
         }
+        
+        protected void SetBuffer(byte[] src) {
+            buf_data   = src;
+            buf_offset = 0;
+            buf_length = src.Length;
+        }
+        
         
         protected static void Fail(string reason) {
             throw new InvalidDataException(reason);

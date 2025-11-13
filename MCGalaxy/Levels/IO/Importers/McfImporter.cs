@@ -43,9 +43,9 @@ namespace MCGalaxy.Levels.IO {
                 Vec3U16 dims = ReadHeader(header, gs);
 
                 Level lvl = new Level(name, dims.X, dims.Y, dims.Z);
-                lvl.spawnx = BitConverter.ToUInt16(header, 6);
-                lvl.spawnz = BitConverter.ToUInt16(header, 8);
-                lvl.spawny = BitConverter.ToUInt16(header, 10);
+                lvl.spawnx = MemUtils.ReadU16_LE(header, 6);
+                lvl.spawnz = MemUtils.ReadU16_LE(header, 8);
+                lvl.spawny = MemUtils.ReadU16_LE(header, 10);
                 lvl.rotx = header[12]; lvl.roty = header[13];
                 // 2 bytes for perbuild and pervisit
 
@@ -59,14 +59,14 @@ namespace MCGalaxy.Levels.IO {
         
         static Vec3U16 ReadHeader(byte[] header, Stream gs) {
             StreamUtils.ReadFully(gs, header, 0, 2);
-            if (BitConverter.ToUInt16(header, 0) != 1874)
+            if (MemUtils.ReadU16_LE(header, 0) != 1874)
                 throw new InvalidDataException(".mcf files must have a version of 1874");
             
             StreamUtils.ReadFully(gs, header, 0, 16);
             Vec3U16 dims;
-            dims.X = BitConverter.ToUInt16(header, 0);
-            dims.Z = BitConverter.ToUInt16(header, 2);
-            dims.Y = BitConverter.ToUInt16(header, 4);
+            dims.X = MemUtils.ReadU16_LE(header, 0);
+            dims.Z = MemUtils.ReadU16_LE(header, 2);
+            dims.Y = MemUtils.ReadU16_LE(header, 4);
             return dims;
         }
     }

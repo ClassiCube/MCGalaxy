@@ -37,9 +37,14 @@ namespace MCGalaxy.Util
     { 
         public byte A, R, G, B;
         
-        public Pixel(byte r, byte g, byte b, byte a)
-        {
+        public Pixel(byte r, byte g, byte b, byte a) {
             R = r; G = g; B = b; A = a;
+        }
+        
+        public static Pixel BLACK = new Pixel(0, 0, 0, 255);
+        
+        public override string ToString() {
+            return string.Format("R={0}, G={1}, B={2}, A={3}", R, G, B, A);
         }
     }
 

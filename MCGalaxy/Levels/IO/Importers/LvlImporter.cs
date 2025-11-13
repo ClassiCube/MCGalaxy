@@ -44,9 +44,9 @@ namespace MCGalaxy.Levels.IO
                 Vec3U16 dims  = ReadHeader(gs, header);
 
                 Level lvl  = new Level(name, dims.X, dims.Y, dims.Z);
-                lvl.spawnx = BitConverter.ToUInt16(header,  8);
-                lvl.spawnz = BitConverter.ToUInt16(header, 10);
-                lvl.spawny = BitConverter.ToUInt16(header, 12);
+                lvl.spawnx = MemUtils.ReadU16_LE(header,  8);
+                lvl.spawnz = MemUtils.ReadU16_LE(header, 10);
+                lvl.spawny = MemUtils.ReadU16_LE(header, 12);
                 lvl.rotx   = header[14];
                 lvl.roty   = header[15];
                 // pervisit/perbuild permission bytes ignored
@@ -71,14 +71,14 @@ namespace MCGalaxy.Levels.IO
         
         static Vec3U16 ReadHeader(Stream gs, byte[] header) {
             StreamUtils.ReadFully(gs, header, 0, HEADER_SIZE);
-            int signature = BitConverter.ToUInt16(header, 0);
+            int signature = MemUtils.ReadU16_LE(header, 0);
             if (signature != 1874)
                 throw new InvalidDataException("Invalid .lvl map signature");
             
             Vec3U16 dims;
-            dims.X = BitConverter.ToUInt16(header, 2);
-            dims.Z = BitConverter.ToUInt16(header, 4);
-            dims.Y = BitConverter.ToUInt16(header, 6);
+            dims.X = MemUtils.ReadU16_LE(header, 2);
+            dims.Z = MemUtils.ReadU16_LE(header, 4);
+            dims.Y = MemUtils.ReadU16_LE(header, 6);
             return dims;
         }
         
