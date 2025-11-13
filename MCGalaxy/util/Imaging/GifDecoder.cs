@@ -40,33 +40,35 @@ namespace MCGalaxy.Util.Imaging
             if (!DetectHeader(src)) Fail("sig invalid");
             AdvanceOffset(gif87Sig.Length);
             
-            ReadGlobalHeader(src);
-            ReadMarkers(src);
-            Fail("GIF decoder unfinished");
-            return null;
+            SimpleBitmap bmp = new SimpleBitmap();
+            ReadGlobalHeader(src, bmp);
+            ReadMarkers(src, bmp);
+            return bmp;
         }
         
         const int LOGICAL_DESC_SIZE = 7;
-        void ReadGlobalHeader(byte[] src) {
+        void ReadGlobalHeader(byte[] src, SimpleBitmap bmp) {
             // read logical screen descriptor
             int offset = AdvanceOffset(LOGICAL_DESC_SIZE);
             
-            ushort width  = MemUtils.ReadU16_LE(src, offset + 0);
-            ushort height = MemUtils.ReadU16_LE(src, offset + 2);
+            bmp.Width  = MemUtils.ReadU16_LE(src, offset + 0);
+            bmp.Height = MemUtils.ReadU16_LE(src, offset + 2);
             
             byte flags   = src[offset + 4];
             byte bgIndex = src[offset + 5];
             // src[offset + 6] is pixel aspect ratio - not used
             
             bool hasGlobalPal = (flags & 0x80) != 0;
-            int globalPalSize = 1 << ((flags & 0x7) + 1);
-            if (hasGlobalPal) ReadGlobalPalette(src, globalPalSize);
+            if (hasGlobalPal)
+                globalPal = ReadPalette(src, flags);
+            if (hasGlobalPal && bgIndex < globalPal.Length)
+                bgColor   = globalPal[bgIndex];
             
-            if (hasGlobalPal && bgIndex < globalPalSize)
-                bgColor = globalPal[bgIndex];
+            bmp.AllocatePixels();
         }
         
-        void ReadGlobalPalette(byte[] src, int size) {
+        Pixel[] ReadPalette(byte[] src, byte flags) {
+            int size    = 1 << ((flags & 0x7) + 1);
             Pixel[] pal = new Pixel[size];
             int offset  = AdvanceOffset(3 * size);
             
@@ -77,7 +79,7 @@ namespace MCGalaxy.Util.Imaging
                 pal[i].B = src[offset++];
                 pal[i].A = 255;
             }
-            globalPal = pal;
+            return pal;
         }
         
         
@@ -85,7 +87,7 @@ namespace MCGalaxy.Util.Imaging
         const byte MARKER_IMAGE_END = 0x3B;
         const byte MARKER_IMAGE_BEG = 0x2C;
         
-        void ReadMarkers(byte[] src) {
+        void ReadMarkers(byte[] src, SimpleBitmap bmp) {
             for (;;)
             {
                 int offset  = AdvanceOffset(1);
@@ -96,7 +98,7 @@ namespace MCGalaxy.Util.Imaging
                         ReadExtension(src);
                         break;
                     case MARKER_IMAGE_BEG:
-                        ReadImage(src);
+                        ReadImage(src, bmp);
                         return; // NOTE: stops reading at first frame
                     case MARKER_IMAGE_END:
                         return;
@@ -151,8 +153,13 @@ namespace MCGalaxy.Util.Imaging
             }
         }
         
+        const int MAX_CODE_LEN = 12;
+        const int MAX_CODES = 1 << MAX_CODE_LEN;
+        byte curSubBlockLeft;
+        bool subBlocksEnd;
+        int subBlocksOffset;
         
-        void ReadImage(byte[] src) {
+        void ReadImage(byte[] src, SimpleBitmap bmp) {
             // Read image descriptor header
             int offset = AdvanceOffset(2 + 2 + 2 + 2 + 1);
             
@@ -162,16 +169,32 @@ namespace MCGalaxy.Util.Imaging
             ushort imageH = MemUtils.ReadU16_LE(src, offset + 6);
             byte flags    = src[offset + 8];
             
+            if ((flags & 0x40) != 0) Fail("Interlaced GIF unsupported");
+            if (imageX + imageW > bmp.Width)  Fail("Invalid X dimensions");
+            if (imageY + imageH > bmp.Height) Fail("Invalid Y dimensions");
+            
+            bool hasLocalPal = (flags & 0x80) != 0;
+            Pixel[] localPal = null;
+            if (hasLocalPal)
+                localPal = ReadPalette(src, flags);
+            
+            Pixel[] pal = localPal ?? globalPal;
+            int dst_index = 0;
+            
             // Read image data
             offset = AdvanceOffset(1);
             byte minCodeSize = src[offset];
+            if (minCodeSize >= MAX_CODE_LEN) Fail("codesize too long");
+            
+            curSubBlockLeft = 0;
+            subBlocksEnd    = false;
             
             // Init LZW variables
             int codeLen   = minCodeSize + 1;
             int codeMask  = (1 << codeLen) - 1;
             int clearCode = (1 << minCodeSize) + 0;
             int stopCode  = (1 << minCodeSize) + 1;
-            int dictEnd;
+            int prevCode, availCode;
             DictEntry[] dict = new DictEntry[1 << codeLen];
             
             // Bit buffer state
@@ -179,51 +202,123 @@ namespace MCGalaxy.Util.Imaging
             int bufLen  = 0;
             
             // Spec says clear code _should_ be sent first, but not required
-            for (dictEnd = 0; dictEnd < (1 << minCodeSize); dictEnd++)
+            for (availCode = 0; availCode < (1 << minCodeSize); availCode++)
             {
-                dict[dictEnd].value = (byte)dictEnd;
-                dict[dictEnd].prev  = -1;
-                dict[dictEnd].len   =  1;
+                dict[availCode].value = (byte)availCode;
+                dict[availCode].prev  = -1;
+                dict[availCode].len   =  1;
             }
-            dictEnd += 2; // "clear code" and "stop code" entries
+            
+            availCode += 2; // "clear code" and "stop code" entries
+            prevCode = -1;
             
             for (;;)
             {
-                int code = 0;
-                
+                // Refill buffer when needed
                 if (bufLen < codeLen) {
+                    int read;
+                    while (bufLen <= 24 && (read = ReadNextByte()) >= 0) {
+                        bufVal |= (uint)read << bufLen;
+                        bufLen += 8;
+                    }
                     
+                    if (bufLen < codeLen) Fail("not enough bits for code");
                 }
                 
-                code = (int)(bufVal & codeMask);
-                bufVal >>= codeMask;
-                bufLen -= codeLen;
+                int code = (int)(bufVal & codeMask);
+                bufVal >>= codeLen;
+                bufLen  -= codeLen;
                 
                 if (code == clearCode) {
                     codeLen  = minCodeSize + 1;
                     codeMask = (1 << codeLen) - 1;
                     
                     // Clear dictionary
-                    for (dictEnd = 0; dictEnd < (1 << minCodeSize); dictEnd++)
+                    for (availCode = 0; availCode < (1 << minCodeSize); availCode++)
                     {
-                        dict[dictEnd].value = (byte)dictEnd;
-                        dict[dictEnd].prev  = -1;
-                        dict[dictEnd].len   =  1;
+                        dict[availCode].value = (byte)availCode;
+                        dict[availCode].prev  = -1;
+                        dict[availCode].len   =  1;
                     }
-                    dictEnd += 2; // "clear code" and "stop code" entries
+                    
+                    availCode += 2; // "clear code" and "stop code" entries
+                    prevCode = -1;
                 } else if (code == stopCode) {
                     break;
                 }
+                
+                if (code > availCode) Fail("invalid code");
+                
+                // Add new entry to code table unless it's full
+                // GIF spec allows this as per 'deferred clear codes'
+                if (prevCode >= 0 && availCode < MAX_CODES) {
+                    int firstCode = code == availCode ? prevCode : code;
+                    // Follow chain back to find first value
+                    // TODO optimise this...
+                    while (dict[firstCode].prev != -1)
+                    {
+                        firstCode = dict[firstCode].prev;
+                    }
+                    
+                    dict[availCode].value = dict[firstCode].value;
+                    dict[availCode].prev  = (short)prevCode;
+                    dict[availCode].len   = (short)(dict[prevCode].len + 1);
+                    
+                    // Check if inserted code in last free entry of table
+                    // If this is the case, then the table is immediately expanded
+                    if (availCode == codeMask && availCode != (MAX_CODES - 1)) {
+                        codeLen++;
+                        codeMask = (1 << codeLen) - 1;
+                        Array.Resize(ref dict, 1 << codeLen);
+                    }
+                    availCode++;
+                }
+                
+                prevCode = code;
+                // TODO output code
+                
+                // "top" entry is actually last entry in chain
+                int chain_len = dict[code].len;
+                for (int i = chain_len - 1; i >= 0; i--)
+                {
+                    int index = dst_index + i;
+                    byte palIndex = dict[code].value;
+                    
+                    //int localX = index % imageW;
+                    //int localY = index / imageW;
+                    int globalX = imageX + (index % imageW);
+                    int globalY = imageY + (index / imageW);                    
+                    bmp.pixels[globalY * bmp.Width + globalX] = pal[palIndex];
+                    
+                    code = dict[code].prev;
+                }
+
+                dst_index += chain_len;
             }
-            
-            //SkipSubBlocks(src);
-            Fail("GIF decoder unfinished");
         }
         
         struct DictEntry
         {
             public byte value;
             public short prev, len;
+        }
+        
+        int ReadNextByte() {
+            if (curSubBlockLeft == 0) {
+                if (subBlocksEnd) return -1;
+                
+                subBlocksOffset = AdvanceOffset(1);
+                curSubBlockLeft = buf_data[subBlocksOffset++];
+                
+                // If sub block length is 0, then reached end of sub blocks
+                if (curSubBlockLeft == 0) {
+                    subBlocksEnd = true;
+                    return -1;
+                }
+            }
+            
+            curSubBlockLeft--;
+            return buf_data[subBlocksOffset++];
         }
     }
 }

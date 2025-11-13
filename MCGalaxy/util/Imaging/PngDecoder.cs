@@ -108,10 +108,9 @@ namespace MCGalaxy.Util.Imaging
                             if (src[offset + 11] != 0) Fail("Filter");
                             if (src[offset + 12] != 0) Fail("Interlaced unsupported");
 
-                            bytesPerPixel  = ((samplesPerPixel[colorspace] * bitsPerSample) + 7) >> 3;
-                            scanline_size  = ((samplesPerPixel[colorspace] * bitsPerSample * bmp.Width) + 7) >> 3;
-
-                            bmp.pixels = new Pixel[bmp.Width * bmp.Height];
+                            bytesPerPixel = ((samplesPerPixel[colorspace] * bitsPerSample) + 7) >> 3;
+                            scanline_size = ((samplesPerPixel[colorspace] * bitsPerSample * bmp.Width) + 7) >> 3;
+                            bmp.AllocatePixels();
                         } break;
 
                         // 11.2.3 PLTE Palette

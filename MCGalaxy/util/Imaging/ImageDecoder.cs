@@ -26,6 +26,10 @@ namespace MCGalaxy.Util.Imaging
     {
         public int Width, Height;
         public Pixel[] pixels;
+        
+        public void AllocatePixels() {
+            pixels = new Pixel[Width * Height];
+        }
     }
     
     public abstract class ImageDecoder
