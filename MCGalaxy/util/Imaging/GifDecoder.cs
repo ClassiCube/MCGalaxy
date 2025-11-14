@@ -103,7 +103,7 @@ namespace MCGalaxy.Util.Imaging
                     case MARKER_IMAGE_END:
                         return;
                     default:
-                        Fail("unknown marker");
+                        Fail("unknown marker:" + marker.ToString("X2"));
                         break;
                 }
             }
@@ -251,9 +251,7 @@ namespace MCGalaxy.Util.Imaging
                     break;
                 }
                 
-                if (code > availCode) {
-                    Fail("invalid code");
-                }
+                if (code > availCode) Fail("invalid code");
                 
                 // Add new entry to code table unless it's full
                 // GIF spec allows this as per 'deferred clear codes'
@@ -268,7 +266,7 @@ namespace MCGalaxy.Util.Imaging
                     
                     // Check if inserted code was last free entry of table
                     // If this is the case, then the table is immediately expanded
-                    if ((availCode & codeMask) == 0 && availCode != (MAX_CODES - 1)) {
+                    if ((availCode & codeMask) == 0 && availCode != MAX_CODES) {
                         codeLen++;
                         codeMask = (1 << codeLen) - 1;
                         Array.Resize(ref dict, 1 << codeLen);
@@ -276,7 +274,6 @@ namespace MCGalaxy.Util.Imaging
                 }
                 
                 prevCode = code;
-                // TODO output code
                 
                 // "top" entry is actually last entry in chain
                 int chain_len = dict[code].len;
