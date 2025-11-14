@@ -204,6 +204,7 @@ namespace MCGalaxy.Util.Imaging
             // Spec says clear code _should_ be sent first, but not required
             for (availCode = 0; availCode < (1 << minCodeSize); availCode++)
             {
+                dict[availCode].first = (byte)availCode;
                 dict[availCode].value = (byte)availCode;
                 dict[availCode].prev  = -1;
                 dict[availCode].len   =  1;
@@ -238,6 +239,7 @@ namespace MCGalaxy.Util.Imaging
                     // Clear dictionary
                     for (availCode = 0; availCode < (1 << minCodeSize); availCode++)
                     {
+                        dict[availCode].first = (byte)availCode;
                         dict[availCode].value = (byte)availCode;
                         dict[availCode].prev  = -1;
                         dict[availCode].len   =  1;
@@ -256,20 +258,15 @@ namespace MCGalaxy.Util.Imaging
                 // Add new entry to code table unless it's full
                 // GIF spec allows this as per 'deferred clear codes'
                 if (prevCode >= 0 && availCode < MAX_CODES) {
-                    int firstCode = code == availCode ? prevCode : code;
-                    // Follow chain back to find first value
-                    // TODO optimise this...
-                    while (dict[firstCode].prev != -1)
-                    {
-                        firstCode = dict[firstCode].prev;
-                    }
+                    int chainCode = code == availCode ? prevCode : code;
                     
-                    dict[availCode].value = dict[firstCode].value;
+                    dict[availCode].first = dict[prevCode].first;
+                    dict[availCode].value = dict[chainCode].first;
                     dict[availCode].prev  = (short)prevCode;
                     dict[availCode].len   = (short)(dict[prevCode].len + 1);
                     availCode++;
                     
-                    // Check if inserted code in last free entry of table
+                    // Check if inserted code was last free entry of table
                     // If this is the case, then the table is immediately expanded
                     if ((availCode & codeMask) == 0 && availCode != (MAX_CODES - 1)) {
                         codeLen++;
@@ -303,7 +300,7 @@ namespace MCGalaxy.Util.Imaging
         
         struct DictEntry
         {
-            public byte value;
+            public byte first, value;
             public short prev, len;
         }
         
