@@ -209,7 +209,7 @@ namespace MCGalaxy.Util.Imaging
                 dict[availCode].len   =  1;
             }
             
-            availCode += 2; // "clear code" and "stop code" entries
+            availCode++; // "clear code" and "stop code" entries
             prevCode = -1;
             
             for (;;)
@@ -222,7 +222,9 @@ namespace MCGalaxy.Util.Imaging
                         bufLen += 8;
                     }
                     
-                    if (bufLen < codeLen) Fail("not enough bits for code");
+                    if (bufLen < codeLen) {
+                        Fail("not enough bits for code");
+                    }
                 }
                 
                 int code = (int)(bufVal & codeMask);
@@ -241,13 +243,15 @@ namespace MCGalaxy.Util.Imaging
                         dict[availCode].len   =  1;
                     }
                     
-                    availCode += 2; // "clear code" and "stop code" entries
+                    availCode++; // "clear code" and "stop code" entries
                     prevCode = -1;
                 } else if (code == stopCode) {
                     break;
                 }
                 
-                if (code > availCode) Fail("invalid code");
+                if (code > availCode) {
+                    Fail("invalid code");
+                }
                 
                 // Add new entry to code table unless it's full
                 // GIF spec allows this as per 'deferred clear codes'
@@ -263,15 +267,15 @@ namespace MCGalaxy.Util.Imaging
                     dict[availCode].value = dict[firstCode].value;
                     dict[availCode].prev  = (short)prevCode;
                     dict[availCode].len   = (short)(dict[prevCode].len + 1);
+                    availCode++;
                     
                     // Check if inserted code in last free entry of table
                     // If this is the case, then the table is immediately expanded
-                    if (availCode == codeMask && availCode != (MAX_CODES - 1)) {
+                    if ((availCode & codeMask) == 0 && availCode != (MAX_CODES - 1)) {
                         codeLen++;
                         codeMask = (1 << codeLen) - 1;
                         Array.Resize(ref dict, 1 << codeLen);
                     }
-                    availCode++;
                 }
                 
                 prevCode = code;
@@ -315,6 +319,7 @@ namespace MCGalaxy.Util.Imaging
                     subBlocksEnd = true;
                     return -1;
                 }
+                AdvanceOffset(curSubBlockLeft);
             }
             
             curSubBlockLeft--;
