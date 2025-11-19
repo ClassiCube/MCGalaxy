@@ -42,8 +42,7 @@ namespace MCGalaxy.Util.Imaging
             SimpleBitmap bmp = new SimpleBitmap();
             
             ReadMarkers(src, bmp);
-            Fail("JPEG decoder unfinished");
-            return null;
+            return bmp;
         }
         
         
@@ -249,7 +248,7 @@ namespace MCGalaxy.Util.Imaging
         
         static byte[] zigzag_to_linear = new byte[64]
         {
-             0,  1,  8, 16,  9,  2,  3, 10,
+            0,  1,  8, 16,  9,  2,  3, 10,
             17, 24, 32, 25, 18, 11,  4,  5,
             12, 19, 26, 33, 40, 48, 41, 34,
             27, 20, 13,  6,  7, 14, 21, 28,
@@ -262,7 +261,6 @@ namespace MCGalaxy.Util.Imaging
         void DecodeMCUs(byte[] src, SimpleBitmap bmp) {
             int mcus_x = (bmp.Width  + 7) / 8;
             int mcus_y = (bmp.Height + 7) / 8;
-            bit_offset = AdvanceOffset(0);
             
             JpegComponent[] comps = this.comps;
             int[] block = new int[64];
@@ -307,24 +305,60 @@ namespace MCGalaxy.Util.Imaging
                         }
                     } while (idx < 64);
                     
-                    Fail("DE");
+                    float[] output = new float[64];
+                    IDCT(block, output);
+                    
+                    for (int YY = 0; YY < 8; YY++)
+                        for (int XX = 0; XX < 8; XX++)
+                    {
+                        int globalX = x * 8 + XX;
+                        int globalY = y * 8 + YY;
+                        if (globalX < bmp.Width && globalY < bmp.Height) {
+                            byte rgb = (byte)output[YY*8+XX];
+                            Pixel p = new Pixel(rgb, rgb, rgb, 255);
+                            bmp.pixels[globalY * bmp.Width + globalX] = p;
+                        }
+                    }
+                    // Fail("DE");
                 }
             }
-            Fail("MCUs");
+            // Fail("MCUs");
+        }
+        
+        void IDCT(int[] block, float[] output) {
+            for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
+            {
+                float sum = 0.0f;
+                for (int v = 0; v < 8; v++)
+                    for (int u = 0; u < 8; u++)
+                {
+                    float cu = u == 0 ? 0.70710678f : 1.0f;
+                    float cv = v == 0 ? 0.70710678f : 1.0f;
+                    
+                    float suv = block[v*8+u];
+                    float cosu = (float)Math.Cos((2 * x + 1) * u * Math.PI / 16.0);
+                    float cosv = (float)Math.Cos((2 * y + 1) * v * Math.PI / 16.0);
+                    
+                    sum += cu * cv * suv * cosu * cosv;
+                }
+                output[y*8+x] = (sum / 4.0f) + 128.0f; // undo level shift at end
+            }
         }
         
         uint bit_buf;
         int bit_cnt;
-        int bit_offset;
+        bool end;
         
         int ReadBits(byte[] src, int count) {
-            while (bit_cnt <= 24) {
-                byte next = src[bit_offset++];
+            while (bit_cnt <= 24 && !end) {
+                byte next = src[buf_offset++];
                 // JPEG byte stuffing
                 // TODO restart markers ?
                 if (next == 0xFF) {
-                    byte type = src[bit_offset++];
-                    if (type != 0) Fail("unexpected marker");
+                    byte type = src[buf_offset++];
+                    if (type == 0xD9) { end = true; buf_offset -= 2; }
+                    else if (type != 0) Fail("unexpected marker");
                 }
                 
                 bit_buf <<= 8;
