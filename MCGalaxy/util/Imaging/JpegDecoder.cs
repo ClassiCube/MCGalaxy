@@ -50,11 +50,12 @@ namespace MCGalaxy.Util.Imaging
         const ushort MARKER_IMAGE_BEG = 0xFFD8;
         const ushort MARKER_IMAGE_END = 0xFFD9;
         const ushort MARKER_APP0      = 0xFFE0;
-        const ushort MARKER_APP1      = 0xFFE1;
+        const ushort MARKER_APP15     = 0xFFEF;
         const ushort MARKER_TBL_QUANT = 0xFFDB;
         const ushort MARKER_TBL_HUFF  = 0xFFC4;
         const ushort MARKER_FRAME_BEG = 0xFFC0;
         const ushort MARKER_SCAN_BEG  = 0xFFDA;
+        const ushort MARKER_COMMENT   = 0xFFFE;
         
         void ReadMarkers(byte[] src, SimpleBitmap bmp) {
             for (;;)
@@ -62,34 +63,25 @@ namespace MCGalaxy.Util.Imaging
                 int offset    = AdvanceOffset(2);
                 ushort marker = MemUtils.ReadU16_BE(src, offset);
                 
-                switch (marker)
-                {
-                    case MARKER_IMAGE_BEG:
-                        break; // Nothing to do
-                    case MARKER_IMAGE_END:
-                        return;
-                    case MARKER_APP0:
-                    case MARKER_APP1:
-                        SkipMarker(src);
-                        break;
-                        
-                    case MARKER_TBL_HUFF:
-                        ReadHuffmanTable(src);
-                        break;
-                    case MARKER_TBL_QUANT:
-                        ReadQuantisationTables(src);
-                        break;
-                    case MARKER_FRAME_BEG:
-                        ReadFrameStart(src);
-                        break;
-                    case MARKER_SCAN_BEG:
-                        ReadScanStart(src);
-                        DecodeMCUs(src);
-                        break;                        
-                        
-                    default:
-                        Fail("unknown marker:" + marker.ToString("X4"));
-                        break;
+                if (marker == MARKER_IMAGE_BEG) {
+                    // Nothing to do
+                } else if (marker == MARKER_IMAGE_END) {
+                    return;
+                } else if (marker >= MARKER_APP0 && marker <= MARKER_APP15) {
+                    SkipMarker(src);
+                } else if (marker == MARKER_COMMENT) {
+                    SkipMarker(src);
+                } else if (marker == MARKER_TBL_HUFF) {
+                    ReadHuffmanTable(src);
+                } else if (marker == MARKER_TBL_QUANT) {
+                    ReadQuantisationTables(src);
+                } else if (marker == MARKER_FRAME_BEG) {
+                    ReadFrameStart(src, bmp);
+                } else if (marker == MARKER_SCAN_BEG) {
+                    ReadScanStart(src);
+                    DecodeMCUs(src, bmp);
+                } else {
+                    Fail("unknown marker:" + marker.ToString("X4"));
                 }
             }
         }
@@ -137,10 +129,12 @@ namespace MCGalaxy.Util.Imaging
             // length *includes* 2 bytes of length
             offset = AdvanceOffset(length - 2);
             
-            // TODO multi tables
             byte flags = src[offset++];
             
-            HuffmanTable table;
+            HuffmanTable table    = new HuffmanTable();
+            HuffmanTable[] tables = (flags >> 4) != 0 ? ac_huff_tables : dc_huff_tables;
+            tables[flags & 0x03]  = table;
+            
             table.firstCodewords = new ushort[HUFF_MAX_BITS];
             table.endCodewords   = new ushort[HUFF_MAX_BITS];
             table.firstOffsets   = new ushort[HUFF_MAX_BITS];
@@ -150,11 +144,11 @@ namespace MCGalaxy.Util.Imaging
             //  Codewords are ordered, so consider this example tree:
             //    2 of length 2, 3 of length 3, 1 of length 4
             //  Codewords produced would be: 00,01 100,101,110, 1110
-            int code  = 0; 
+            int code  = 0;
             int total = 0;
             byte[] counts = new byte[HUFF_MAX_BITS];
             
-            for (int i = 0; i < HUFF_MAX_BITS; i++) 
+            for (int i = 0; i < HUFF_MAX_BITS; i++)
             {
                 byte count = src[offset++];
                 if (count > (1 << (i+1))) Fail("too many codewords for bit length");
@@ -167,11 +161,8 @@ namespace MCGalaxy.Util.Imaging
                 // Last codeword is actually: code + (count - 1)
                 //  However, when decoding we peform < against this value though, so need to add 1 here.
                 //  This way, don't need to special case bit lengths with 0 codewords when decoding.
-                //
                 if (count != 0) {
                     table.endCodewords[i] = (ushort)(code + count);
-                } else {
-                    table.endCodewords[i] = 0;
                 }
                 code = (code + count) << 1;
             }
@@ -181,19 +172,16 @@ namespace MCGalaxy.Util.Imaging
             // Read values for each codeword.
             //  Note that although codewords are ordered, values may not be.
             //  Some values may also not be assigned to any codeword.
-            for (int i = 0; i < counts.Length; i++) 
+            for (int i = 0; i < counts.Length; i++)
             {
                 for (int j = 0; j < counts[i]; j++)
                 {
                     table.values[total++] = src[offset++];
                 }
             }
-            
-            HuffmanTable[] tables = (flags >> 4) != 0 ? ac_huff_tables : dc_huff_tables;
-            tables[flags & 0x03]  = table;
         }
         
-        void ReadFrameStart(byte[] src) {
+        void ReadFrameStart(byte[] src, SimpleBitmap bmp) {
             int offset = AdvanceOffset(2);
             int length = MemUtils.ReadU16_BE(src, offset);
             // length *includes* 2 bytes of length
@@ -201,8 +189,10 @@ namespace MCGalaxy.Util.Imaging
             
             byte bits  = src[offset + 0];
             if (bits != 8) Fail("bits per sample");
-            int height = MemUtils.ReadU16_BE(src, offset + 1);
-            int width  = MemUtils.ReadU16_BE(src, offset + 3);
+            
+            bmp.Height = MemUtils.ReadU16_BE(src, offset + 1);
+            bmp.Width  = MemUtils.ReadU16_BE(src, offset + 3);
+            bmp.AllocatePixels();
             
             byte numComps = src[offset + 5];
             if (!(numComps == 1 || numComps == 3)) Fail("num components");
@@ -251,13 +241,137 @@ namespace MCGalaxy.Util.Imaging
                 
                 comps[i].DCHuffTable = (byte)(tables >> 4);
                 comps[i].ACHuffTable = (byte)(tables & 0x0F);
+                comps[i].PredDCValue = 0;
                 return;
             }
             Fail("unknown scan component");
         }
         
-        void DecodeMCUs(byte[] src) {
+        static byte[] zigzag_to_linear = new byte[64]
+        {
+             0,  1,  8, 16,  9,  2,  3, 10,
+            17, 24, 32, 25, 18, 11,  4,  5,
+            12, 19, 26, 33, 40, 48, 41, 34,
+            27, 20, 13,  6,  7, 14, 21, 28,
+            35, 42, 49, 56, 57, 50, 43, 36,
+            29, 22, 15, 23, 30, 37, 44, 51,
+            58, 59, 52, 45, 38, 31, 39, 46,
+            53, 60, 61, 54, 47, 55, 62, 63,
+        };
+        
+        void DecodeMCUs(byte[] src, SimpleBitmap bmp) {
+            int mcus_x = (bmp.Width  + 7) / 8;
+            int mcus_y = (bmp.Height + 7) / 8;
+            bit_offset = AdvanceOffset(0);
+            
+            JpegComponent[] comps = this.comps;
+            int[] block = new int[64];
+            
+            for (int y = 0; y < mcus_y; y++)
+                for (int x = 0; x < mcus_x; x++)
+            {
+                for (int i = 0; i < comps.Length; i++)
+                {
+                    // DC value is relative to DC value from prior block
+                    var table    = dc_huff_tables[comps[i].DCHuffTable];
+                    int dc_code  = ReadHuffman(table, src);
+                    int dc_delta = ReadBiasedValue(src, dc_code);
+                    
+                    int dc_value = comps[i].PredDCValue + dc_delta;
+                    comps[i].PredDCValue = dc_value;
+                    
+                    byte[] dequant = quant_tables[comps[i].QuantTable];
+                    for (int j = 0; j < block.Length; j++) block[j] = 0;
+                    block[0] = dc_value * dequant[0];
+                    
+                    // 63 AC values
+                    table = ac_huff_tables[comps[i].ACHuffTable];
+                    int idx = 1;
+                    do {
+                        int code = ReadHuffman(table, src);
+                        if (code == 0) break;
+                        
+                        int bits = code & 0x0F;
+                        int num_zeros = code >> 4;
+                        
+                        if (bits == 0) {
+                            if (code == 0) break; // 0 value - end of block
+                            // TODO is this right?
+                            if (num_zeros != 15) Fail("too many zeroes");
+                            idx += 16;
+                        } else {
+                            idx += num_zeros;
+                            int lin = zigzag_to_linear[idx];
+                            block[lin] = ReadBiasedValue(src, bits) * dequant[idx];
+                            idx++;
+                        }
+                    } while (idx < 64);
+                    
+                    Fail("DE");
+                }
+            }
             Fail("MCUs");
+        }
+        
+        uint bit_buf;
+        int bit_cnt;
+        int bit_offset;
+        
+        int ReadBits(byte[] src, int count) {
+            while (bit_cnt <= 24) {
+                byte next = src[bit_offset++];
+                // JPEG byte stuffing
+                // TODO restart markers ?
+                if (next == 0xFF) {
+                    byte type = src[bit_offset++];
+                    if (type != 0) Fail("unexpected marker");
+                }
+                
+                bit_buf <<= 8;
+                bit_buf |= next;
+                bit_cnt += 8;
+            }
+            
+            int read = bit_cnt - count;
+            int bits = (int)(bit_buf >> read);
+            
+            bit_buf &= (uint)((1 << read) - 1);
+            bit_cnt -= count;
+            return bits;
+        }
+        
+        byte ReadHuffman(HuffmanTable table, byte[] src) {
+            int codeword = 0;
+            // TODO optimise
+            for (int i = 0; i < HUFF_MAX_BITS; i++)
+            {
+                codeword <<= 1;
+                codeword |= ReadBits(src, 1);
+                
+                if (codeword < table.endCodewords[i]) {
+                    int offset = table.firstOffsets[i] + (codeword - table.firstCodewords[i]);
+                    byte value = table.values[offset];
+                    return value;
+                }
+            }
+            
+            Fail("no huffman code");
+            return 0;
+        }
+        
+        int ReadBiasedValue(byte[] src, int bits) {
+            if (bits == 0) return 0;
+            
+            int value = ReadBits(src, bits);
+            int midpoint = 1 << (bits - 1);
+            
+            // E.g. for two bits, bits/values are:
+            // 00, 01, 10, 11
+            // -3, -2,  2,  3
+            if (value < midpoint) {
+                value += (-1 << bits) + 1;
+            }
+            return value;
         }
     }
     
@@ -269,9 +383,10 @@ namespace MCGalaxy.Util.Imaging
         public byte QuantTable;
         public byte ACHuffTable;
         public byte DCHuffTable;
+        public int  PredDCValue;
     }
     
-    struct HuffmanTable
+    class HuffmanTable
     {
         // Maximum of 256 values/symbols and 16 bit length codes
         
