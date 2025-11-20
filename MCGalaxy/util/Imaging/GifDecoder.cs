@@ -180,6 +180,7 @@ namespace MCGalaxy.Util.Imaging
             
             Pixel[] pal = localPal ?? globalPal;
             int dst_index = 0;
+            bool fastPath = imageX == 0 && imageY == 0 && imageW == bmp.Width && imageH == bmp.Height;
             
             // Read image data
             offset = AdvanceOffset(1);
@@ -277,18 +278,29 @@ namespace MCGalaxy.Util.Imaging
                 
                 // "top" entry is actually last entry in chain
                 int chain_len = dict[code].len;
-                for (int i = chain_len - 1; i >= 0; i--)
-                {
-                    int index = dst_index + i;
-                    byte palIndex = dict[code].value;
-                    
-                    //int localX = index % imageW;
-                    //int localY = index / imageW;
-                    int globalX = imageX + (index % imageW);
-                    int globalY = imageY + (index / imageW);                    
-                    bmp.pixels[globalY * bmp.Width + globalX] = pal[palIndex];
-                    
-                    code = dict[code].prev;
+                // If frame is same size as image, no need to convert coordinates
+                if (fastPath) {
+                    for (int i = chain_len - 1; i >= 0; i--)
+                    {
+                        byte palIndex = dict[code].value;
+                        bmp.pixels[dst_index + i] = pal[palIndex];  
+                        
+                        code = dict[code].prev;
+                    }
+                } else {
+                    for (int i = chain_len - 1; i >= 0; i--)
+                    {
+                        int index = dst_index + i;
+                        byte palIndex = dict[code].value;
+                        
+                        //int localX = index % imageW;
+                        //int localY = index / imageW;
+                        int globalX = imageX + (index % imageW);
+                        int globalY = imageY + (index / imageW);
+                        bmp.pixels[globalY * bmp.Width + globalX] = pal[palIndex];
+                        
+                        code = dict[code].prev;
+                    }
                 }
 
                 dst_index += chain_len;
