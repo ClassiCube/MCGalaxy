@@ -268,13 +268,26 @@ namespace MCGalaxy.Util.Imaging
         };
         
         const int BLOCK_SAMPLES = 8;
+        const int BLOCK_SIZE    = 8 * 8;
+        
+        struct YCbCr { public float Y, Cb, Cr; };
+        
         void DecodeMCUs(byte[] src, SimpleBitmap bmp) {
-            int mcus_x = Utils.CeilDiv(bmp.Width,  lowestHor * BLOCK_SAMPLES);
-            int mcus_y = Utils.CeilDiv(bmp.Height, lowestVer * BLOCK_SAMPLES);
+            int mcu_w  = lowestHor * BLOCK_SAMPLES;
+            int mcu_h  = lowestVer * BLOCK_SAMPLES;
+            int mcus_x = Utils.CeilDiv(bmp.Width,  mcu_w);
+            int mcus_y = Utils.CeilDiv(bmp.Height, mcu_h);
             
             JpegComponent[] comps = this.comps;
-            int[] block = new int[64];
-            float[] output = new float[64];
+            int[] block = new int[BLOCK_SIZE];
+            float[] output = new float[BLOCK_SIZE];
+            
+            YCbCr[] colors = new YCbCr[mcu_w * mcu_h];
+            for (int i = 0; i < colors.Length; i++)
+            {
+                colors[i].Cr = 128;
+                colors[i].Cb = 128;
+            }
             
             for (int mcuY = 0; mcuY < mcus_y; mcuY++)
                 for (int mcuX = 0; mcuX < mcus_x; mcuX++)
@@ -283,29 +296,66 @@ namespace MCGalaxy.Util.Imaging
                 {
                     JpegComponent comp = comps[i];
                     
-                    for (int blockY = 0; blockY < comp.BlocksPerMcuY; blockY++)
-                        for (int blockX = 0; blockX < comp.BlocksPerMcuX; blockX++)
+                    for (int by = 0; by < comp.BlocksPerMcuY; by++)
+                        for (int bx = 0; bx < comp.BlocksPerMcuX; bx++)
                     {
                         DecodeBlock(comp, src, block, output);
                         IDCT(block, output);
-                    }
-                    
-                    for (int YY = 0; YY < BLOCK_SAMPLES; YY++)
-                        for (int XX = 0; XX < BLOCK_SAMPLES; XX++)
-                    {
-                        int globalX = mcuX * BLOCK_SAMPLES + XX;
-                        int globalY = mcuY * BLOCK_SAMPLES + YY;
                         
-                        if (globalX < bmp.Width && globalY < bmp.Height) {
-                            byte rgb = (byte)output[YY*BLOCK_SAMPLES+XX];
-                            Pixel p = new Pixel(rgb, rgb, rgb, 255);
-                            bmp.pixels[globalY * bmp.Width + globalX] = p;
+                        int samplesX = lowestHor / comp.SamplingHor;
+                        int samplesY = lowestVer / comp.SamplingVer;
+                        
+                        for (int y = 0; y < BLOCK_SAMPLES; y++)
+                            for (int x = 0; x < BLOCK_SAMPLES; x++)
+                        {
+                            for (int py = 0; py < samplesY; py++)
+                                for (int px = 0; px < samplesX; px++)
+                            {
+                                int YY = (by * BLOCK_SAMPLES + y) * samplesY + py;
+                                int XX = (bx * BLOCK_SAMPLES + x) * samplesX + px;
+                                int idx = YY * mcu_w + XX;
+                                
+                                if (i == 0)
+                                    colors[idx].Y  = output[y * BLOCK_SAMPLES + x];
+                                else if (i == 1)
+                                    colors[idx].Cb = output[y * BLOCK_SAMPLES + x];
+                                else if (i == 2)
+                                    colors[idx].Cr = output[y * BLOCK_SAMPLES + x];
+                            }
                         }
                     }
-                    // Fail("DE");
+                }
+                
+                int baseX = mcuX * mcu_w;
+                int baseY = mcuY * mcu_h;
+                int j = 0;
+                
+                for (int YY = 0; YY < mcu_w; YY++)
+                    for (int XX = 0; XX < mcu_h; XX++, j++)
+                {
+                    int globalX = baseX + XX;
+                    int globalY = baseY + YY;
+                    
+                    if (globalX < bmp.Width && globalY < bmp.Height) {
+                        float y  = colors[j].Y;
+                        float cr = colors[j].Cr;
+                        float cb = colors[j].Cb;
+                        
+                        float r =  1.40200f * (cr - 128) + y;
+                        float g = -0.34414f * (cb - 128) - 0.71414f * (cr - 128) + y;
+                        float b =  1.77200f * (cb - 128) + y;
+                        
+                        Pixel p = new Pixel(ByteClamp(r), ByteClamp(g), ByteClamp(b), 255);
+                        bmp.pixels[globalY * bmp.Width + globalX] = p;
+                    }
                 }
             }
-            // Fail("MCUs");
+        }
+        
+        static byte ByteClamp(float v) {
+            if (v < 0) return 0;
+            if (v > 255) return 255;
+            return (byte)v;
         }
         
         void DecodeBlock(JpegComponent comp, byte[] src, int[] block, float[] output) {
