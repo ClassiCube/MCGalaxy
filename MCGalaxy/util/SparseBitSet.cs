@@ -28,9 +28,9 @@ namespace MCGalaxy.Util {
         
         /// <summary> Initialises a sparse bit set for the given 3D volume. </summary>
         public SparseBitSet(int width, int height, int length) {
-            chunksX = Utils.CeilDiv16(width);
-            chunksY = Utils.CeilDiv16(height);
-            chunksZ = Utils.CeilDiv16(length);
+            chunksX = Utils.CeilDiv(width,  16);
+            chunksY = Utils.CeilDiv(height, 16);
+            chunksZ = Utils.CeilDiv(length, 16);
             bits = new byte[chunksX * chunksY * chunksZ][];
         }
         

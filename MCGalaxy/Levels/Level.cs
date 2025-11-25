@@ -73,9 +73,9 @@ namespace MCGalaxy
             this.name = name; MapName = name.ToLower();
             BlockDB   = new BlockDB(this);
             
-            ChunksX = Utils.CeilDiv16(width);
-            ChunksY = Utils.CeilDiv16(height);
-            ChunksZ = Utils.CeilDiv16(length);
+            ChunksX = Utils.CeilDiv(width,  16);
+            ChunksY = Utils.CeilDiv(height, 16);
+            ChunksZ = Utils.CeilDiv(length, 16);
             if (CustomBlocks == null) CustomBlocks = new byte[ChunksX * ChunksY * ChunksZ][];
 
             spawnx = (ushort)(width / 2);

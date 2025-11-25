@@ -31,6 +31,8 @@ namespace MCGalaxy.Util.Imaging
         HuffmanTable[] ac_huff_tables = new HuffmanTable[4];
         HuffmanTable[] dc_huff_tables = new HuffmanTable[4];
         JpegComponent[] comps;
+        byte lowestHor = 1;
+        byte lowestVer = 1;
 
         public static bool DetectHeader(byte[] data) {
             return MatchesSignature(data, jfifSig)
@@ -92,6 +94,7 @@ namespace MCGalaxy.Util.Imaging
             AdvanceOffset(length - 2);
         }
         
+        const int QUANT_DATA_LEN = 65; // 1 byte flags, 64 byte values
         void ReadQuantisationTables(byte[] src) {
             int offset = AdvanceOffset(2);
             int length = MemUtils.ReadU16_BE(src, offset);
@@ -103,8 +106,8 @@ namespace MCGalaxy.Util.Imaging
             // Can have more than one quantisation table
             while (length != 0)
             {
-                if (length < 65) Fail("quant table too short: " + length);
-                length -= 65;
+                if (length < QUANT_DATA_LEN) Fail("quant table too short: " + length);
+                length -= QUANT_DATA_LEN;
                 
                 byte flags = src[offset++];
                 // As per Table B.4, 16 bit quantisation tables not in baseline JPEG
@@ -198,15 +201,26 @@ namespace MCGalaxy.Util.Imaging
             offset += 6;
             
             comps = new JpegComponent[numComps];
+            
             for (int i = 0; i < numComps; i++)
             {
-                JpegComponent comp = default(JpegComponent);
+                JpegComponent comp = new JpegComponent();
                 comp.ID          = src[offset++];
                 byte sampling    = src[offset++];
                 comp.SamplingHor = (byte)(sampling >> 4);
                 comp.SamplingVer = (byte)(sampling & 0x0F);
                 comp.QuantTable  = src[offset++];
-                comps[i] = comp;
+                
+                lowestHor = Math.Max(lowestHor, comp.SamplingHor);
+                lowestVer = Math.Max(lowestVer, comp.SamplingVer);
+                comps[i]  = comp;
+            }
+            
+            // In most JPEG images there is chroma sub-sampling
+            for (int i = 0; i < numComps; i++)
+            {
+                comps[i].BlocksPerMcuX = comps[i].SamplingHor;
+                comps[i].BlocksPerMcuY = comps[i].SamplingVer;
             }
         }
         
@@ -224,13 +238,8 @@ namespace MCGalaxy.Util.Imaging
                 SetHuffTables(compID, tables);
             }
             
-            byte spec_lo  = src[offset++];
-            byte spec_hi  = src[offset++];
-            byte succ_apr = src[offset++];
-            
-            if (spec_lo != 0) Fail("spectral range start");
-            if (spec_hi != 0 && spec_hi != 63) Fail("spectral range end");
-            if (succ_apr != 0) Fail("successive approximation");
+            // Spectral lo/hi data and successive approximation irrelevant
+            offset += 3;
         }
         
         void SetHuffTables(byte compID, byte tables) {
@@ -258,63 +267,37 @@ namespace MCGalaxy.Util.Imaging
             53, 60, 61, 54, 47, 55, 62, 63,
         };
         
+        const int BLOCK_SAMPLES = 8;
         void DecodeMCUs(byte[] src, SimpleBitmap bmp) {
-            int mcus_x = (bmp.Width  + 7) / 8;
-            int mcus_y = (bmp.Height + 7) / 8;
+            int mcus_x = Utils.CeilDiv(bmp.Width,  lowestHor * BLOCK_SAMPLES);
+            int mcus_y = Utils.CeilDiv(bmp.Height, lowestVer * BLOCK_SAMPLES);
             
             JpegComponent[] comps = this.comps;
             int[] block = new int[64];
+            float[] output = new float[64];
             
-            for (int y = 0; y < mcus_y; y++)
-                for (int x = 0; x < mcus_x; x++)
+            for (int mcuY = 0; mcuY < mcus_y; mcuY++)
+                for (int mcuX = 0; mcuX < mcus_x; mcuX++)
             {
                 for (int i = 0; i < comps.Length; i++)
                 {
-                    // DC value is relative to DC value from prior block
-                    var table    = dc_huff_tables[comps[i].DCHuffTable];
-                    int dc_code  = ReadHuffman(table, src);
-                    int dc_delta = ReadBiasedValue(src, dc_code);
+                    JpegComponent comp = comps[i];
                     
-                    int dc_value = comps[i].PredDCValue + dc_delta;
-                    comps[i].PredDCValue = dc_value;
-                    
-                    byte[] dequant = quant_tables[comps[i].QuantTable];
-                    for (int j = 0; j < block.Length; j++) block[j] = 0;
-                    block[0] = dc_value * dequant[0];
-                    
-                    // 63 AC values
-                    table = ac_huff_tables[comps[i].ACHuffTable];
-                    int idx = 1;
-                    do {
-                        int code = ReadHuffman(table, src);
-                        if (code == 0) break;
-                        
-                        int bits = code & 0x0F;
-                        int num_zeros = code >> 4;
-                        
-                        if (bits == 0) {
-                            if (code == 0) break; // 0 value - end of block
-                            // TODO is this right?
-                            if (num_zeros != 15) Fail("too many zeroes");
-                            idx += 16;
-                        } else {
-                            idx += num_zeros;
-                            int lin = zigzag_to_linear[idx];
-                            block[lin] = ReadBiasedValue(src, bits) * dequant[idx];
-                            idx++;
-                        }
-                    } while (idx < 64);
-                    
-                    float[] output = new float[64];
-                    IDCT(block, output);
-                    
-                    for (int YY = 0; YY < 8; YY++)
-                        for (int XX = 0; XX < 8; XX++)
+                    for (int blockY = 0; blockY < comp.BlocksPerMcuY; blockY++)
+                        for (int blockX = 0; blockX < comp.BlocksPerMcuX; blockX++)
                     {
-                        int globalX = x * 8 + XX;
-                        int globalY = y * 8 + YY;
+                        DecodeBlock(comp, src, block, output);
+                        IDCT(block, output);
+                    }
+                    
+                    for (int YY = 0; YY < BLOCK_SAMPLES; YY++)
+                        for (int XX = 0; XX < BLOCK_SAMPLES; XX++)
+                    {
+                        int globalX = mcuX * BLOCK_SAMPLES + XX;
+                        int globalY = mcuY * BLOCK_SAMPLES + YY;
+                        
                         if (globalX < bmp.Width && globalY < bmp.Height) {
-                            byte rgb = (byte)output[YY*8+XX];
+                            byte rgb = (byte)output[YY*BLOCK_SAMPLES+XX];
                             Pixel p = new Pixel(rgb, rgb, rgb, 255);
                             bmp.pixels[globalY * bmp.Width + globalX] = p;
                         }
@@ -323,6 +306,46 @@ namespace MCGalaxy.Util.Imaging
                 }
             }
             // Fail("MCUs");
+        }
+        
+        void DecodeBlock(JpegComponent comp, byte[] src, int[] block, float[] output) {
+            // DC value is relative to DC value from prior block
+            var table    = dc_huff_tables[comp.DCHuffTable];
+            int dc_code  = ReadHuffman(table, src);
+            int dc_delta = ReadBiasedValue(src, dc_code);
+            
+            int dc_value = comp.PredDCValue + dc_delta;
+            comp.PredDCValue = dc_value;
+            
+            byte[] dequant = quant_tables[comp.QuantTable];
+            for (int j = 0; j < block.Length; j++) block[j] = 0;
+            block[0] = dc_value * dequant[0];
+            
+            // 63 AC values
+            table = ac_huff_tables[comp.ACHuffTable];
+            int idx = 1;
+            
+            do {
+                int code = ReadHuffman(table, src);
+                if (code == 0) break;
+                
+                int bits = code & 0x0F;
+                int num_zeros = code >> 4;
+                
+                if (bits == 0) {
+                    if (code == 0) break; // 0 value - end of block
+                    // TODO is this right?
+                    if (num_zeros != 15) Fail("too many zeroes");
+                    idx += 16;
+                } else {
+                    idx += num_zeros;
+                    int lin = zigzag_to_linear[idx];
+                    block[lin] = ReadBiasedValue(src, bits) * dequant[idx];
+                    idx++;
+                }
+            } while (idx < 64);
+            
+            IDCT(block, output);
         }
         
         void IDCT(int[] block, float[] output) {
@@ -344,6 +367,10 @@ namespace MCGalaxy.Util.Imaging
                 }
                 output[y*8+x] = (sum / 4.0f) + 128.0f; // undo level shift at end
             }
+        }
+        
+        void OutputImage(SimpleBitmap bmp) {
+            
         }
         
         uint bit_buf;
@@ -409,12 +436,16 @@ namespace MCGalaxy.Util.Imaging
         }
     }
     
-    struct JpegComponent
+    class JpegComponent
     {
         public byte ID;
+        public byte QuantTable;
+        
         public byte SamplingHor;
         public byte SamplingVer;
-        public byte QuantTable;
+        public byte BlocksPerMcuX;
+        public byte BlocksPerMcuY;
+        
         public byte ACHuffTable;
         public byte DCHuffTable;
         public int  PredDCValue;

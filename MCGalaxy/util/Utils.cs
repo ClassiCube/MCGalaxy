@@ -51,8 +51,10 @@ namespace MCGalaxy
             return Math.Max(Math.Min(value, hi), lo);
         }
         
-        /// <summary> Divides by 16, rounding up if there is a remainder. </summary>
-        public static int CeilDiv16(int x) { return (x + 15) / 16; }
+        /// <summary> Divides x by y, rounding up if there is a remainder. </summary>
+        public static int CeilDiv(int x, int y) { 
+            return (x + (y - 1)) / y;
+        }
 
         
         public static List<string> ReadAllLinesList(string path) {
