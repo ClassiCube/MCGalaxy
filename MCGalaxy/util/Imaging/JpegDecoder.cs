@@ -43,6 +43,7 @@ namespace MCGalaxy.Util.Imaging
             SetBuffer(src);
             SimpleBitmap bmp = new SimpleBitmap();
             
+            ComputeIDCTFactors();
             ReadMarkers(src, bmp);
             return bmp;
         }
@@ -398,7 +399,26 @@ namespace MCGalaxy.Util.Imaging
             IDCT(block, output);
         }
         
+        float[] idct_factors;
+        void ComputeIDCTFactors() {
+            float[] factors = new float[128];
+            
+            for (int xy = 0; xy < 8; xy++)
+            {
+                for (int uv = 0; uv < 8; uv++)
+                {
+                    float cuv   = uv == 0 ? 0.70710678f : 1.0f;
+                    float cosuv = (float)Math.Cos((2 * xy + 1) * uv * Math.PI / 16.0);
+                    
+                    factors[(2 * xy + 1) * uv] = cuv * cosuv;
+                } 
+            }
+            idct_factors = factors;
+        }
+        
         void IDCT(int[] block, float[] output) {
+            float[] factors = idct_factors;
+            
             for (int y = 0; y < 8; y++)
                 for (int x = 0; x < 8; x++)
             {
@@ -406,21 +426,14 @@ namespace MCGalaxy.Util.Imaging
                 for (int v = 0; v < 8; v++)
                     for (int u = 0; u < 8; u++)
                 {
-                    float cu = u == 0 ? 0.70710678f : 1.0f;
-                    float cv = v == 0 ? 0.70710678f : 1.0f;
-                    
                     float suv = block[v*8+u];
-                    float cosu = (float)Math.Cos((2 * x + 1) * u * Math.PI / 16.0);
-                    float cosv = (float)Math.Cos((2 * y + 1) * v * Math.PI / 16.0);
+                    float cu_cosu = factors[(2 * x + 1) * u];
+                    float cv_cosv = factors[(2 * y + 1) * v];
                     
-                    sum += cu * cv * suv * cosu * cosv;
+                    sum += cu_cosu * cv_cosv * suv;
                 }
                 output[y*8+x] = (sum / 4.0f) + 128.0f; // undo level shift at end
             }
-        }
-        
-        void OutputImage(SimpleBitmap bmp) {
-            
         }
         
         uint bit_buf;
