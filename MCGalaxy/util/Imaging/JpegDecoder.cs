@@ -309,6 +309,8 @@ namespace MCGalaxy.Util.Imaging
                         for (int y = 0; y < BLOCK_SAMPLES; y++)
                             for (int x = 0; x < BLOCK_SAMPLES; x++)
                         {
+                            float sample = output[y * BLOCK_SAMPLES + x];
+                            
                             for (int py = 0; py < samplesY; py++)
                                 for (int px = 0; px < samplesX; px++)
                             {
@@ -316,12 +318,9 @@ namespace MCGalaxy.Util.Imaging
                                 int XX = (bx * BLOCK_SAMPLES + x) * samplesX + px;
                                 int idx = YY * mcu_w + XX;
                                 
-                                if (i == 0)
-                                    colors[idx].Y  = output[y * BLOCK_SAMPLES + x];
-                                else if (i == 1)
-                                    colors[idx].Cb = output[y * BLOCK_SAMPLES + x];
-                                else if (i == 2)
-                                    colors[idx].Cr = output[y * BLOCK_SAMPLES + x];
+                                if (i == 0)      colors[idx].Y  = sample;
+                                else if (i == 1) colors[idx].Cb = sample;
+                                else if (i == 2) colors[idx].Cr = sample;
                             }
                         }
                     }
@@ -401,7 +400,7 @@ namespace MCGalaxy.Util.Imaging
         
         float[] idct_factors;
         void ComputeIDCTFactors() {
-            float[] factors = new float[128];
+            float[] factors = new float[64];
             
             for (int xy = 0; xy < 8; xy++)
             {
@@ -410,29 +409,40 @@ namespace MCGalaxy.Util.Imaging
                     float cuv   = uv == 0 ? 0.70710678f : 1.0f;
                     float cosuv = (float)Math.Cos((2 * xy + 1) * uv * Math.PI / 16.0);
                     
-                    factors[(2 * xy + 1) * uv] = cuv * cosuv;
+                    factors[(xy * 8) + uv] = cuv * cosuv;
                 } 
             }
             idct_factors = factors;
         }
         
-        void IDCT(int[] block, float[] output) {
-            float[] factors = idct_factors;
+        unsafe void IDCT(int[] block, float[] output) {
+            float[] factors = idct_factors;      
+            float* tmp = stackalloc float[BLOCK_SAMPLES * BLOCK_SAMPLES];
             
-            for (int y = 0; y < 8; y++)
-                for (int x = 0; x < 8; x++)
+            for (int col = 0; col < BLOCK_SAMPLES; col++)
             {
-                float sum = 0.0f;
-                for (int v = 0; v < 8; v++)
-                    for (int u = 0; u < 8; u++)
+                for (int y = 0; y < BLOCK_SAMPLES; y++)
                 {
-                    float suv = block[v*8+u];
-                    float cu_cosu = factors[(2 * x + 1) * u];
-                    float cv_cosv = factors[(2 * y + 1) * v];
-                    
-                    sum += cu_cosu * cv_cosv * suv;
+                    float sum = 0.0f;
+                    for (int v = 0; v < BLOCK_SAMPLES; v++)
+                    {
+                        sum += block[v * 8 + col] * factors[(y * 8) + v];
+                    }
+                    tmp[y * 8 + col] = sum;
                 }
-                output[y*8+x] = (sum / 4.0f) + 128.0f; // undo level shift at end
+            }
+            
+            for (int row = 0; row < BLOCK_SAMPLES; row++)
+            {
+                for (int x = 0; x < BLOCK_SAMPLES; x++)
+                {
+                    float sum = 0.0f;
+                    for (int u = 0; u < BLOCK_SAMPLES; u++)
+                    {
+                        sum += tmp[row * 8 + u] * factors[(x * 8) + u];
+                    }
+                    output[row * 8 + x] = (sum / 4.0f) + 128.0f; // undo level shift at end
+                }
             }
         }
         
