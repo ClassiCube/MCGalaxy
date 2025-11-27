@@ -300,7 +300,7 @@ namespace MCGalaxy.Util.Imaging
                     for (int by = 0; by < comp.BlocksPerMcuY; by++)
                         for (int bx = 0; bx < comp.BlocksPerMcuX; bx++)
                     {
-                        DecodeBlock(comp, src, block, output);
+                        DecodeBlock(comp, src, block);
                         IDCT(block, output);
                         
                         int samplesX = lowestHor / comp.SamplingHor;
@@ -358,7 +358,7 @@ namespace MCGalaxy.Util.Imaging
             return (byte)v;
         }
         
-        void DecodeBlock(JpegComponent comp, byte[] src, int[] block, float[] output) {
+        void DecodeBlock(JpegComponent comp, byte[] src, int[] block) {
             // DC value is relative to DC value from prior block
             var table    = dc_huff_tables[comp.DCHuffTable];
             int dc_code  = ReadHuffman(table, src);
@@ -394,8 +394,6 @@ namespace MCGalaxy.Util.Imaging
                     idx++;
                 }
             } while (idx < 64);
-            
-            IDCT(block, output);
         }
         
         float[] idct_factors;
