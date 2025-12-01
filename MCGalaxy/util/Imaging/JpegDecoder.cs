@@ -22,7 +22,7 @@ using MCGalaxy.Util;
 
 namespace MCGalaxy.Util.Imaging
 {
-    public class JpegDecoder : ImageDecoder
+    public unsafe class JpegDecoder : ImageDecoder
     {
         static byte[] jfifSig = new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }; // "SOI", "APP0"
         static byte[] exifSig = new byte[] { 0xFF, 0xD8, 0xFF, 0xE1 }; // "SOI", "APP1"
@@ -49,14 +49,17 @@ namespace MCGalaxy.Util.Imaging
         }
         
         
+        const ushort MARKER_FRAME_BEG = 0xFFC0;
+        const ushort MARKER_TBL_HUFF  = 0xFFC4;
+        const ushort MARKER_RST_MRKR0 = 0xFFD0;
+        const ushort MARKER_RST_MRKR7 = 0xFFD7;
         const ushort MARKER_IMAGE_BEG = 0xFFD8;
         const ushort MARKER_IMAGE_END = 0xFFD9;
+        const ushort MARKER_SCAN_BEG  = 0xFFDA;
+        const ushort MARKER_TBL_QUANT = 0xFFDB;
+        const ushort MARKER_RST_NTRVL = 0xFFDD;
         const ushort MARKER_APP0      = 0xFFE0;
         const ushort MARKER_APP15     = 0xFFEF;
-        const ushort MARKER_TBL_QUANT = 0xFFDB;
-        const ushort MARKER_TBL_HUFF  = 0xFFC4;
-        const ushort MARKER_FRAME_BEG = 0xFFC0;
-        const ushort MARKER_SCAN_BEG  = 0xFFDA;
         const ushort MARKER_COMMENT   = 0xFFFE;
         
         void ReadMarkers(byte[] src, SimpleBitmap bmp) {
@@ -71,7 +74,7 @@ namespace MCGalaxy.Util.Imaging
                     return;
                 } else if (marker >= MARKER_APP0 && marker <= MARKER_APP15) {
                     SkipMarker(src);
-                } else if (marker == MARKER_COMMENT) {
+                } else if (marker == MARKER_COMMENT || marker == MARKER_RST_NTRVL) {
                     SkipMarker(src);
                 } else if (marker == MARKER_TBL_HUFF) {
                     ReadHuffmanTable(src);
@@ -99,13 +102,12 @@ namespace MCGalaxy.Util.Imaging
         void ReadQuantisationTables(byte[] src) {
             int offset = AdvanceOffset(2);
             int length = MemUtils.ReadU16_BE(src, offset);
-            
-            // length *includes* 2 bytes of length
-            offset = AdvanceOffset(length - 2);
-            length -= 2;
+
+            length -= 2; // length *includes* 2 bytes of length
+            offset = AdvanceOffset(length);
             
             // Can have more than one quantisation table
-            while (length != 0)
+            while (length > 0)
             {
                 if (length < QUANT_DATA_LEN) Fail("quant table too short: " + length);
                 length -= QUANT_DATA_LEN;
@@ -129,15 +131,25 @@ namespace MCGalaxy.Util.Imaging
         void ReadHuffmanTable(byte[] src) {
             int offset = AdvanceOffset(2);
             int length = MemUtils.ReadU16_BE(src, offset);
-            // length *includes* 2 bytes of length
-            offset = AdvanceOffset(length - 2);
             
-            byte flags = src[offset++];
+            length -= 2; // length *includes* 2 bytes of length
+            offset = AdvanceOffset(length);
             
-            HuffmanTable table    = new HuffmanTable();
-            HuffmanTable[] tables = (flags >> 4) != 0 ? ac_huff_tables : dc_huff_tables;
-            tables[flags & 0x03]  = table;
-            
+            // Can have more than one huffman table
+            while (length > 0) 
+            {
+                byte flags = src[offset++];
+                
+                HuffmanTable table    = new HuffmanTable();
+                HuffmanTable[] tables = (flags >> 4) != 0 ? ac_huff_tables : dc_huff_tables;
+                tables[flags & 0x03]  = table;
+                
+                int read = DecodeHuffmanTable(src, table, ref offset);
+                length -= 1 + read; // 1 byte for flags
+            }
+        }
+        
+        int DecodeHuffmanTable(byte[] src, HuffmanTable table, ref int offset) {
             table.firstCodewords = new ushort[HUFF_MAX_BITS];
             table.endCodewords   = new ushort[HUFF_MAX_BITS];
             table.firstOffsets   = new ushort[HUFF_MAX_BITS];
@@ -170,7 +182,7 @@ namespace MCGalaxy.Util.Imaging
                 code = (code + count) << 1;
             }
             if (total > HUFF_MAX_VALS) Fail("too many values");
-            total = 0;
+            int valueIdx = 0;
 
             // Read values for each codeword.
             //  Note that although codewords are ordered, values may not be.
@@ -179,9 +191,11 @@ namespace MCGalaxy.Util.Imaging
             {
                 for (int j = 0; j < counts[i]; j++)
                 {
-                    table.values[total++] = src[offset++];
+                    table.values[valueIdx++] = src[offset++];
                 }
             }
+            
+            return HUFF_MAX_BITS + total;
         }
         
         void ReadFrameStart(byte[] src, SimpleBitmap bmp) {
@@ -281,7 +295,7 @@ namespace MCGalaxy.Util.Imaging
             
             JpegComponent[] comps = this.comps;
             int[] block = new int[BLOCK_SIZE];
-            float[] output = new float[BLOCK_SIZE];
+            float* output = stackalloc float[BLOCK_SIZE];
             
             YCbCr[] colors = new YCbCr[mcu_w * mcu_h];
             for (int i = 0; i < colors.Length; i++)
@@ -293,6 +307,16 @@ namespace MCGalaxy.Util.Imaging
             for (int mcuY = 0; mcuY < mcus_y; mcuY++)
                 for (int mcuX = 0; mcuX < mcus_x; mcuX++)
             {
+                // Technically, reset0-7 markers should only occur every # MCUs
+                //  as per the 'restart interval' marker. However, since proper
+                //  spec compliant decoding is unimportant, just hackily decode
+                if (hit_rst) {
+                    hit_rst = false;
+                    // Align bit reader to next byte, then reset DC prediction value
+                    ConsumeBits(bit_cnt & 0x07);
+                    for (int i = 0; i < comps.Length; i++) comps[i].PredDCValue = 0;
+                }
+                
                 for (int i = 0; i < comps.Length; i++)
                 {
                     JpegComponent comp = comps[i];
@@ -408,13 +432,13 @@ namespace MCGalaxy.Util.Imaging
                     float cosuv = (float)Math.Cos((2 * xy + 1) * uv * Math.PI / 16.0);
                     
                     factors[(xy * 8) + uv] = cuv * cosuv;
-                } 
+                }
             }
             idct_factors = factors;
         }
         
-        unsafe void IDCT(int[] block, float[] output) {
-            float[] factors = idct_factors;      
+        void IDCT(int[] block, float* output) {
+            float[] factors = idct_factors;
             float* tmp = stackalloc float[BLOCK_SAMPLES * BLOCK_SAMPLES];
             
             for (int col = 0; col < BLOCK_SAMPLES; col++)
@@ -446,17 +470,26 @@ namespace MCGalaxy.Util.Imaging
         
         uint bit_buf;
         int bit_cnt;
-        bool end;
+        bool hit_end, hit_rst;
         
         int ReadBits(byte[] src, int count) {
-            while (bit_cnt <= 24 && !end) {
+            while (bit_cnt <= 24 && !hit_end) {
                 byte next = src[buf_offset++];
                 // JPEG byte stuffing
                 // TODO restart markers ?
                 if (next == 0xFF) {
                     byte type = src[buf_offset++];
-                    if (type == 0xD9) { end = true; buf_offset -= 2; }
-                    else if (type != 0) Fail("unexpected marker");
+                    
+                    if (type == (MARKER_IMAGE_END & 0xFF)) {
+                        next = 0;
+                        hit_end = true; 
+                        buf_offset -= 2;
+                    } else if (type >= (MARKER_RST_MRKR0 & 0xFF) && type <= (MARKER_RST_MRKR7 & 0xFF)) {
+                        hit_rst = true;
+                        continue;
+                    } else if (type != 0) {
+                        Fail("unexpected marker");
+                    }
                 }
                 
                 bit_buf <<= 8;
@@ -470,6 +503,13 @@ namespace MCGalaxy.Util.Imaging
             bit_buf &= (uint)((1 << read) - 1);
             bit_cnt -= count;
             return bits;
+        }
+        
+        void ConsumeBits(int count) {
+            int read = bit_cnt - count;
+            
+            bit_buf &= (uint)((1 << read) - 1);
+            bit_cnt -= count;
         }
         
         byte ReadHuffman(HuffmanTable table, byte[] src) {
