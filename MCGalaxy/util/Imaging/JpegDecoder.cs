@@ -126,8 +126,11 @@ namespace MCGalaxy.Util.Imaging
             }
         }
         
-        const int HUFF_MAX_BITS = 16;
-        const int HUFF_MAX_VALS = 256;
+        const int HUFF_MAX_BITS  = 16;
+        const int HUFF_MAX_VALS  = 256;
+        const int HUFF_FAST_BITS = 8;
+        const int HUFF_FAST_LEN_SHIFT = 8;
+        
         void ReadHuffmanTable(byte[] src) {
             int offset = AdvanceOffset(2);
             int length = MemUtils.ReadU16_BE(src, offset);
@@ -136,7 +139,7 @@ namespace MCGalaxy.Util.Imaging
             offset = AdvanceOffset(length);
             
             // Can have more than one huffman table
-            while (length > 0) 
+            while (length > 0)
             {
                 byte flags = src[offset++];
                 
@@ -154,6 +157,7 @@ namespace MCGalaxy.Util.Imaging
             table.endCodewords   = new ushort[HUFF_MAX_BITS];
             table.firstOffsets   = new ushort[HUFF_MAX_BITS];
             table.values         = new byte[HUFF_MAX_VALS];
+            table.fast           = new ushort[1 << HUFF_FAST_BITS];
             
             // Compute the codewords for the huffman tree.
             //  Codewords are ordered, so consider this example tree:
@@ -191,7 +195,21 @@ namespace MCGalaxy.Util.Imaging
             {
                 for (int j = 0; j < counts[i]; j++)
                 {
-                    table.values[valueIdx++] = src[offset++];
+                    byte value = src[offset++];
+                    table.values[valueIdx++] = value;
+                    
+                    // Codeword too long to fast pack?
+                    int len = i + 1;
+                    if (len > HUFF_FAST_BITS) continue;
+                    
+                    ushort packed = (ushort)((len << HUFF_FAST_LEN_SHIFT) | value);
+                    int codeword  = table.firstCodewords[i] + j;
+                    codeword <<= (HUFF_FAST_BITS - len);
+
+                    for (int k = 0; k < 1 << (HUFF_FAST_BITS - len); k++)
+                    {
+                        table.fast[codeword + k] = packed;
+                    }
                 }
             }
             
@@ -472,17 +490,16 @@ namespace MCGalaxy.Util.Imaging
         int bit_cnt;
         bool hit_end, hit_rst;
         
-        int ReadBits(byte[] src, int count) {
+        void RefillBits(byte[] src) {
             while (bit_cnt <= 24 && !hit_end) {
                 byte next = src[buf_offset++];
                 // JPEG byte stuffing
-                // TODO restart markers ?
                 if (next == 0xFF) {
                     byte type = src[buf_offset++];
                     
                     if (type == (MARKER_IMAGE_END & 0xFF)) {
                         next = 0;
-                        hit_end = true; 
+                        hit_end = true;
                         buf_offset -= 2;
                     } else if (type >= (MARKER_RST_MRKR0 & 0xFF) && type <= (MARKER_RST_MRKR7 & 0xFF)) {
                         hit_rst = true;
@@ -496,12 +513,21 @@ namespace MCGalaxy.Util.Imaging
                 bit_buf |= next;
                 bit_cnt += 8;
             }
-            
+        }
+        
+        // Duplicates PeekBits/ConsumeBits for faster functionality
+        int ReadBits(int count) {
             int read = bit_cnt - count;
             int bits = (int)(bit_buf >> read);
             
             bit_buf &= (uint)((1 << read) - 1);
             bit_cnt -= count;
+            return bits;
+        }
+        
+        int PeekBits(int count) {
+            int read = bit_cnt - count;
+            int bits = (int)(bit_buf >> read);
             return bits;
         }
         
@@ -513,12 +539,20 @@ namespace MCGalaxy.Util.Imaging
         }
         
         byte ReadHuffman(HuffmanTable table, byte[] src) {
-            int codeword = 0;
-            // TODO optimise
-            for (int i = 0; i < HUFF_MAX_BITS; i++)
+            RefillBits(src);
+            int codeword = PeekBits(HUFF_FAST_BITS);
+            
+            int packed = table.fast[codeword];
+            if (packed != 0) {
+                ConsumeBits(packed >> HUFF_FAST_LEN_SHIFT);
+                return (byte)packed;
+            }
+            
+            ConsumeBits(HUFF_FAST_BITS); 
+            for (int i = HUFF_FAST_BITS; i < HUFF_MAX_BITS; i++)
             {
                 codeword <<= 1;
-                codeword |= ReadBits(src, 1);
+                codeword |= ReadBits(1);
                 
                 if (codeword < table.endCodewords[i]) {
                     int offset = table.firstOffsets[i] + (codeword - table.firstCodewords[i]);
@@ -533,8 +567,9 @@ namespace MCGalaxy.Util.Imaging
         
         int ReadBiasedValue(byte[] src, int bits) {
             if (bits == 0) return 0;
+            RefillBits(src);
             
-            int value = ReadBits(src, bits);
+            int value = ReadBits(bits);
             int midpoint = 1 << (bits - 1);
             
             // E.g. for two bits, bits/values are:
@@ -573,6 +608,8 @@ namespace MCGalaxy.Util.Imaging
         // Base offset into Values for codewords of each bit length.
         public ushort[] firstOffsets;
         // Values/Symbols list
-        public byte[] values;
+        public byte[]   values;
+        // Fast lookup table for huffman codes
+        public ushort[] fast;
     }
 }
