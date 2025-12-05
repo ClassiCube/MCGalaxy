@@ -251,8 +251,12 @@ namespace MCGalaxy.Util.Imaging
             // In most JPEG images there is chroma sub-sampling
             for (int i = 0; i < numComps; i++)
             {
-                comps[i].BlocksPerMcuX = comps[i].SamplingHor;
-                comps[i].BlocksPerMcuY = comps[i].SamplingVer;
+                JpegComponent comp = comps[i];
+                comp.BlocksPerMcuX = comp.SamplingHor;
+                comp.BlocksPerMcuY = comp.SamplingVer;
+                
+                comp.SamplesPerBlockX = (byte)(lowestHor / comp.BlocksPerMcuX);
+                comp.SamplesPerBlockY = (byte)(lowestVer / comp.BlocksPerMcuY);
             }
         }
         
@@ -311,8 +315,11 @@ namespace MCGalaxy.Util.Imaging
             int mcus_y = Utils.CeilDiv(bmp.Height, mcu_h);
             
             JpegComponent[] comps = this.comps;
-            int[] block = new int[BLOCK_SIZE];
+            int* block    = stackalloc int[BLOCK_SIZE + 32];
             float* output = stackalloc float[BLOCK_SIZE];
+            // NOTE: block has extra data at end, in case of invalid huffman code
+            //  resulting in 'num zeroes' going past limit of 64
+            // Although there can be at most 15 extra zeroes, add 32 padding to be safe
             
             YCbCr[] colors = new YCbCr[mcu_w * mcu_h];
             
@@ -339,8 +346,8 @@ namespace MCGalaxy.Util.Imaging
                         DecodeBlock(comp, src, block);
                         IDCT(block, output);
                         
-                        int samplesX = lowestHor / comp.SamplingHor;
-                        int samplesY = lowestVer / comp.SamplingVer;
+                        int samplesX = comp.SamplesPerBlockX;
+                        int samplesY = comp.SamplesPerBlockY;
                         
                         for (int y = 0; y < BLOCK_SAMPLES; y++)
                             for (int x = 0; x < BLOCK_SAMPLES; x++)
@@ -400,7 +407,7 @@ namespace MCGalaxy.Util.Imaging
             return (byte)v;
         }
         
-        void DecodeBlock(JpegComponent comp, byte[] src, int[] block) {
+        void DecodeBlock(JpegComponent comp, byte[] src, int* block) {
             // DC value is relative to DC value from prior block
             var table    = dc_huff_tables[comp.DCHuffTable];
             int dc_code  = ReadHuffman(table, src);
@@ -410,7 +417,7 @@ namespace MCGalaxy.Util.Imaging
             comp.PredDCValue = dc_value;
             
             byte[] dequant = quant_tables[comp.QuantTable];
-            for (int j = 0; j < block.Length; j++) block[j] = 0;
+            for (int j = 0; j < BLOCK_SIZE; j++) block[j] = 0;
             block[0] = dc_value * dequant[0];
             
             // 63 AC values
@@ -455,7 +462,7 @@ namespace MCGalaxy.Util.Imaging
         const float C7 = 0.19509032201f / 4.0f; // cos(7pi/16)
         
         const int DCT_SIZE = 8;
-        static void IDCT(int[] block, float* output) {
+        static void IDCT(int* block, float* output) {
             float* tmp = stackalloc float[DCT_SIZE * DCT_SIZE];
             
             for (int col = 0; col < DCT_SIZE; col++)
@@ -626,16 +633,18 @@ namespace MCGalaxy.Util.Imaging
     class JpegComponent
     {
         public byte ID;
-        public byte QuantTable;
+        public byte QuantTable;    
+        public byte ACHuffTable;
+        public byte DCHuffTable;      
+        public int  PredDCValue;
+        
+        public byte BlocksPerMcuX;
+        public byte BlocksPerMcuY;        
+        public byte SamplesPerBlockX;
+        public byte SamplesPerBlockY;
         
         public byte SamplingHor;
         public byte SamplingVer;
-        public byte BlocksPerMcuX;
-        public byte BlocksPerMcuY;
-        
-        public byte ACHuffTable;
-        public byte DCHuffTable;
-        public int  PredDCValue;
     }
     
     class HuffmanTable
