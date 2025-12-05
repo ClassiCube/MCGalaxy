@@ -257,6 +257,7 @@ namespace MCGalaxy.Util.Imaging
                 
                 comp.SamplesPerBlockX = (byte)(lowestHor / comp.BlocksPerMcuX);
                 comp.SamplesPerBlockY = (byte)(lowestVer / comp.BlocksPerMcuY);
+                comp.OutputBlock = GetBlockOutputFunction(comp);
             }
         }
         
@@ -306,8 +307,6 @@ namespace MCGalaxy.Util.Imaging
         const int BLOCK_SAMPLES = 8;
         const int BLOCK_SIZE    = 8 * 8;
         
-        struct YCbCr { public float Y, Cb, Cr; };
-        
         void DecodeMCUs(byte[] src, SimpleBitmap bmp) {
             int mcu_w  = lowestHor * BLOCK_SAMPLES;
             int mcu_h  = lowestVer * BLOCK_SAMPLES;
@@ -346,26 +345,8 @@ namespace MCGalaxy.Util.Imaging
                         DecodeBlock(comp, src, block);
                         IDCT(block, output);
                         
-                        int samplesX = comp.SamplesPerBlockX;
-                        int samplesY = comp.SamplesPerBlockY;
-                        
-                        for (int y = 0; y < BLOCK_SAMPLES; y++)
-                            for (int x = 0; x < BLOCK_SAMPLES; x++)
-                        {
-                            float sample = output[y * BLOCK_SAMPLES + x];
-                            
-                            for (int py = 0; py < samplesY; py++)
-                                for (int px = 0; px < samplesX; px++)
-                            {
-                                int YY = (by * BLOCK_SAMPLES + y) * samplesY + py;
-                                int XX = (bx * BLOCK_SAMPLES + x) * samplesX + px;
-                                int idx = YY * mcu_w + XX;
-                                
-                                if (i == 0)      colors[idx].Y  = sample;
-                                else if (i == 1) colors[idx].Cb = sample;
-                                else if (i == 2) colors[idx].Cr = sample;
-                            }
-                        }
+                        comp.OutputBlock(comp, colors, mcu_w, i, output,
+                                         bx * BLOCK_SAMPLES, by * BLOCK_SAMPLES);
                     }
                 }
                 
@@ -628,23 +609,141 @@ namespace MCGalaxy.Util.Imaging
             }
             return value;
         }
+        
+        
+        static JpegBlockOutput GetBlockOutputFunction(JpegComponent comp) {
+            if (comp.SamplesPerBlockX == 1 && comp.SamplesPerBlockY == 1) {
+                if (comp.ID == 1) return  Y_1x1Output;
+                if (comp.ID == 2) return Cb_1x1Output;
+                if (comp.ID == 3) return Cr_1x1Output;
+            }
+            
+            if (comp.SamplesPerBlockX == 2 && comp.SamplesPerBlockY == 2) {
+                if (comp.ID == 2) return Cb_2x2Output;
+                if (comp.ID == 3) return Cr_2x2Output;
+            }
+            return Generic_BlockOutput;
+        }
+        
+        static void Generic_BlockOutput(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                        int i, float* output, int baseX, int baseY) {
+            int samplesX = comp.SamplesPerBlockX;
+            int samplesY = comp.SamplesPerBlockY;
+            
+            for (int y = 0; y < BLOCK_SAMPLES; y++)
+                for (int x = 0; x < BLOCK_SAMPLES; x++)
+            {
+                float sample = output[y * BLOCK_SAMPLES + x];
+                
+                for (int py = 0; py < samplesY; py++)
+                    for (int px = 0; px < samplesX; px++)
+                {
+                    int YY  = (baseY + y) * samplesY + py;
+                    int XX  = (baseX + x) * samplesX + px;
+                    int idx = YY * mcu_w + XX;
+                    
+                    if (i == 0)      colors[idx].Y  = sample;
+                    else if (i == 1) colors[idx].Cb = sample;
+                    else if (i == 2) colors[idx].Cr = sample;
+                }
+            }
+        }
+        
+        
+        static void Y_1x1Output(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                int i, float* output, int baseX, int baseY) {
+            for (int y = 0, src = 0; y < BLOCK_SAMPLES; y++)
+            {
+                int dst = (baseY + y) * mcu_w + (baseX + 0);
+                
+                for (int x = 0; x < BLOCK_SAMPLES; x++)
+                {
+                    colors[dst++].Y = output[src++];
+                }
+            }
+        }
+        static void Cb_1x1Output(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                int i, float* output, int baseX, int baseY) {
+            for (int y = 0, src = 0; y < BLOCK_SAMPLES; y++)
+            {
+                int dst = (baseY + y) * mcu_w + (baseX + 0);
+                
+                for (int x = 0; x < BLOCK_SAMPLES; x++)
+                {
+                    colors[dst++].Cb = output[src++];
+                }
+            }
+        }
+        
+        static void Cr_1x1Output(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                int i, float* output, int baseX, int baseY) {
+            for (int y = 0, src = 0; y < BLOCK_SAMPLES; y++)
+            {
+                int dst = (baseY + y) * mcu_w + (baseX + 0);
+                
+                for (int x = 0; x < BLOCK_SAMPLES; x++)
+                {
+                    colors[dst++].Cr = output[src++];
+                }
+            }
+        }
+        
+        
+        static void Cb_2x2Output(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                 int i, float* output, int baseX, int baseY) {
+            for (int y = 0, src = 0; y < BLOCK_SAMPLES; y++)
+            {
+                int dst = ((baseY + y) * 2) * mcu_w + (baseX + 0) * 2;
+                for (int x = 0; x < BLOCK_SAMPLES; x++, dst += 2)
+                {
+                    float sample = output[src++];
+                    colors[dst         + 0].Cb = sample; // X + 0, Y + 0
+                    colors[dst         + 1].Cb = sample; // X + 1, Y + 0
+                    colors[dst + mcu_w + 0].Cb = sample; // X + 0, Y + 1
+                    colors[dst + mcu_w + 1].Cb = sample; // X + 1, Y + 1
+                }
+            }
+        }
+        
+        static void Cr_2x2Output(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                 int i, float* output, int baseX, int baseY) {
+            for (int y = 0, src = 0; y < BLOCK_SAMPLES; y++)
+            {
+                int dst = ((baseY + y) * 2) * mcu_w + (baseX + 0) * 2;
+                for (int x = 0; x < BLOCK_SAMPLES; x++, dst += 2)
+                {
+                    float sample = output[src++];
+                    colors[dst         + 0].Cr = sample; // X + 0, Y + 0
+                    colors[dst         + 1].Cr = sample; // X + 1, Y + 0
+                    colors[dst + mcu_w + 0].Cr = sample; // X + 0, Y + 1
+                    colors[dst + mcu_w + 1].Cr = sample; // X + 1, Y + 1
+                }
+            }
+        }
     }
+    
+    struct YCbCr { public float Y, Cb, Cr; };
+    
+    unsafe delegate void JpegBlockOutput(JpegComponent comp, YCbCr[] colors, int mcu_w,
+                                         int i, float* output, int baseX, int baseY);
     
     class JpegComponent
     {
         public byte ID;
-        public byte QuantTable;    
+        public byte QuantTable;
         public byte ACHuffTable;
-        public byte DCHuffTable;      
+        public byte DCHuffTable;
         public int  PredDCValue;
         
         public byte BlocksPerMcuX;
-        public byte BlocksPerMcuY;        
+        public byte BlocksPerMcuY;
         public byte SamplesPerBlockX;
         public byte SamplesPerBlockY;
         
         public byte SamplingHor;
         public byte SamplingVer;
+        
+        public JpegBlockOutput OutputBlock;
     }
     
     class HuffmanTable
