@@ -43,7 +43,6 @@ namespace MCGalaxy.Util.Imaging
             SetBuffer(src);
             SimpleBitmap bmp = new SimpleBitmap();
             
-            ComputeIDCTFactors();
             ReadMarkers(src, bmp);
             return bmp;
         }
@@ -316,11 +315,6 @@ namespace MCGalaxy.Util.Imaging
             float* output = stackalloc float[BLOCK_SIZE];
             
             YCbCr[] colors = new YCbCr[mcu_w * mcu_h];
-            for (int i = 0; i < colors.Length; i++)
-            {
-                colors[i].Cr = 128;
-                colors[i].Cb = 128;
-            }
             
             for (int mcuY = 0; mcuY < mcus_y; mcuY++)
                 for (int mcuX = 0; mcuX < mcus_x; mcuX++)
@@ -379,13 +373,19 @@ namespace MCGalaxy.Util.Imaging
                     int globalY = baseY + YY;
                     
                     if (globalX < bmp.Width && globalY < bmp.Height) {
-                        float y  = colors[j].Y;
+                        // Following standard code assumes JPEG DCT output is level shifted
+                        //   float r =  1.40200f * (cr - 128) + y;
+                        //   float g = -0.34414f * (cb - 128) - 0.71414f * (cr - 128) + y;
+                        //   float b =  1.77200f * (cb - 128) + y;
+                        // Use a slightly different algorithm to avoid level shifting
+                        
+                        float y  = colors[j].Y + 128.0f;
                         float cr = colors[j].Cr;
                         float cb = colors[j].Cb;
                         
-                        float r =  1.40200f * (cr - 128) + y;
-                        float g = -0.34414f * (cb - 128) - 0.71414f * (cr - 128) + y;
-                        float b =  1.77200f * (cb - 128) + y;
+                        float r =  1.40200f * cr + y;
+                        float g = -0.34414f * cb - 0.71414f * cr + y;
+                        float b =  1.77200f * cb + y;
                         
                         Pixel p = new Pixel(ByteClamp(r), ByteClamp(g), ByteClamp(b), 255);
                         bmp.pixels[globalY * bmp.Width + globalX] = p;
@@ -437,52 +437,93 @@ namespace MCGalaxy.Util.Imaging
                 }
             } while (idx < 64);
         }
+
+        const float A1 = 0.98078528040f; // cos(1pi/16)
+        const float A2 = 0.92387953251f; // cos(2pi/16)
+        const float A3 = 0.83146961230f; // cos(3pi/16)
+        const float A4 = 0.70710678118f; // cos(4pi/16)
+        const float A5 = 0.55557023302f; // cos(5pi/16)
+        const float A6 = 0.38268343236f; // cos(6pi/16)
+        const float A7 = 0.19509032201f; // cos(7pi/16)
         
-        float[] idct_factors;
-        void ComputeIDCTFactors() {
-            float[] factors = new float[64];
-            
-            for (int xy = 0; xy < 8; xy++)
-            {
-                for (int uv = 0; uv < 8; uv++)
-                {
-                    float cuv   = uv == 0 ? 0.70710678f : 1.0f;
-                    float cosuv = (float)Math.Cos((2 * xy + 1) * uv * Math.PI / 16.0);
-                    
-                    factors[(xy * 8) + uv] = cuv * cosuv;
-                }
-            }
-            idct_factors = factors;
-        }
+        const float C1 = 0.98078528040f / 4.0f; // cos(1pi/16)
+        const float C2 = 0.92387953251f / 4.0f; // cos(2pi/16)
+        const float C3 = 0.83146961230f / 4.0f; // cos(3pi/16)
+        const float C4 = 0.70710678118f / 4.0f; // cos(4pi/16)
+        const float C5 = 0.55557023302f / 4.0f; // cos(5pi/16)
+        const float C6 = 0.38268343236f / 4.0f; // cos(6pi/16)
+        const float C7 = 0.19509032201f / 4.0f; // cos(7pi/16)
         
-        void IDCT(int[] block, float* output) {
-            float[] factors = idct_factors;
-            float* tmp = stackalloc float[BLOCK_SAMPLES * BLOCK_SAMPLES];
+        const int DCT_SIZE = 8;
+        static void IDCT(int[] block, float* output) {
+            float* tmp = stackalloc float[DCT_SIZE * DCT_SIZE];
             
-            for (int col = 0; col < BLOCK_SAMPLES; col++)
+            for (int col = 0; col < DCT_SIZE; col++)
             {
-                for (int y = 0; y < BLOCK_SAMPLES; y++)
-                {
-                    float sum = 0.0f;
-                    for (int v = 0; v < BLOCK_SAMPLES; v++)
-                    {
-                        sum += block[v * 8 + col] * factors[(y * 8) + v];
-                    }
-                    tmp[y * 8 + col] = sum;
-                }
+                float B0 = block[0 * DCT_SIZE + col], B1 = block[1 * DCT_SIZE + col];
+                float B2 = block[2 * DCT_SIZE + col], B3 = block[3 * DCT_SIZE + col];
+                float B4 = block[4 * DCT_SIZE + col], B5 = block[5 * DCT_SIZE + col];
+                float B6 = block[6 * DCT_SIZE + col], B7 = block[7 * DCT_SIZE + col];
+                
+                /* Phase 1 */ float a4 = A4 * B0;
+                /* Phase 5 */ float e4 = A4 * B4;
+                /* Phase 3 */ float c2 = A2 * B2, c6 = A6 * B2;
+                /* Phase 7 */ float g2 = A2 * B6, g6 = A6 * B6;
+                /* Phase 2 */ float b1 = A1 * B1, b3 = A3 * B1, b5 = A5 * B1, b7 = A7 * B1;
+                /* Phase 4 */ float d1 = A1 * B3, d3 = A3 * B3, d5 = A5 * B3, d7 = A7 * B3;
+                /* Phase 6 */ float f1 = A1 * B5, f3 = A3 * B5, f5 = A5 * B5, f7 = A7 * B5;
+                /* Phase 8 */ float h1 = A1 * B7, h3 = A3 * B7, h5 = A5 * B7, h7 = A7 * B7;
+
+                /* Phase 1+5 */ float w1 = a4 + e4, w2 = a4 - e4;
+                /* Phase 3+7 */ float x1 = c2 + g6, x2 = c6 - g2;
+                /* Phase 2+6 */ float y1 = b1 + d3, y2 = b3 - d7, y3 = b5 - d1, y4 = b7 - d5;
+                /* Phase 4+8 */ float z1 = f5 + h7, z2 = f1 + h5, z3 = f7 + h3, z4 = f3 - h1;
+                
+                /* Phase 1+3+5+7 */ float u1 = w1 + x1, u2 = w2 + x2, u3 = w2 - x2, u4 = w1 - x1;
+                /* Phase 2+6+4+8 */ float v1 = y1 + z1, v2 = y2 - z2, v3 = y3 + z3, v4 = y4 + z4;
+
+                tmp[0 * DCT_SIZE + col] = u1 + v1;
+                tmp[1 * DCT_SIZE + col] = u2 + v2;
+                tmp[2 * DCT_SIZE + col] = u3 + v3;
+                tmp[3 * DCT_SIZE + col] = u4 + v4;
+                tmp[4 * DCT_SIZE + col] = u4 - v4;
+                tmp[5 * DCT_SIZE + col] = u3 - v3;
+                tmp[6 * DCT_SIZE + col] = u2 - v2;
+                tmp[7 * DCT_SIZE + col] = u1 - v1;
             }
             
-            for (int row = 0; row < BLOCK_SAMPLES; row++)
+            for (int row = 0; row < DCT_SIZE; row++)
             {
-                for (int x = 0; x < BLOCK_SAMPLES; x++)
-                {
-                    float sum = 0.0f;
-                    for (int u = 0; u < BLOCK_SAMPLES; u++)
-                    {
-                        sum += tmp[row * 8 + u] * factors[(x * 8) + u];
-                    }
-                    output[row * 8 + x] = (sum / 4.0f) + 128.0f; // undo level shift at end
-                }
+                float B0 = tmp[row * DCT_SIZE + 0], B1 = tmp[row * DCT_SIZE + 1];
+                float B2 = tmp[row * DCT_SIZE + 2], B3 = tmp[row * DCT_SIZE + 3];
+                float B4 = tmp[row * DCT_SIZE + 4], B5 = tmp[row * DCT_SIZE + 5];
+                float B6 = tmp[row * DCT_SIZE + 6], B7 = tmp[row * DCT_SIZE + 7];
+                
+                /* Phase 1 */ float a4 = C4 * B0;
+                /* Phase 5 */ float e4 = C4 * B4;
+                /* Phase 3 */ float c2 = C2 * B2, c6 = C6 * B2;
+                /* Phase 7 */ float g2 = C2 * B6, g6 = C6 * B6;
+                /* Phase 2 */ float b1 = C1 * B1, b3 = C3 * B1, b5 = C5 * B1, b7 = C7 * B1;
+                /* Phase 4 */ float d1 = C1 * B3, d3 = C3 * B3, d5 = C5 * B3, d7 = C7 * B3;
+                /* Phase 6 */ float f1 = C1 * B5, f3 = C3 * B5, f5 = C5 * B5, f7 = C7 * B5;
+                /* Phase 8 */ float h1 = C1 * B7, h3 = C3 * B7, h5 = C5 * B7, h7 = C7 * B7;
+
+                /* Phase 1+5 */ float w1 = a4 + e4, w2 = a4 - e4;
+                /* Phase 3+7 */ float x1 = c2 + g6, x2 = c6 - g2;
+                /* Phase 2+6 */ float y1 = b1 + d3, y2 = b3 - d7, y3 = b5 - d1, y4 = b7 - d5;
+                /* Phase 4+8 */ float z1 = f5 + h7, z2 = f1 + h5, z3 = f7 + h3, z4 = f3 - h1;
+                
+                /* Phase 1+3+5+7 */ float u1 = w1 + x1, u2 = w2 + x2, u3 = w2 - x2, u4 = w1 - x1;
+                /* Phase 2+6+4+8 */ float v1 = y1 + z1, v2 = y2 - z2, v3 = y3 + z3, v4 = y4 + z4;
+
+                output[row * DCT_SIZE + 0] = u1 + v1;
+                output[row * DCT_SIZE + 1] = u2 + v2;
+                output[row * DCT_SIZE + 2] = u3 + v3;
+                output[row * DCT_SIZE + 3] = u4 + v4;
+                output[row * DCT_SIZE + 4] = u4 - v4;
+                output[row * DCT_SIZE + 5] = u3 - v3;
+                output[row * DCT_SIZE + 6] = u2 - v2;
+                output[row * DCT_SIZE + 7] = u1 - v1;
             }
         }
         
@@ -548,7 +589,7 @@ namespace MCGalaxy.Util.Imaging
                 return (byte)packed;
             }
             
-            ConsumeBits(HUFF_FAST_BITS); 
+            ConsumeBits(HUFF_FAST_BITS);
             for (int i = HUFF_FAST_BITS; i < HUFF_MAX_BITS; i++)
             {
                 codeword <<= 1;
