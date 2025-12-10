@@ -155,30 +155,38 @@ namespace MCGalaxy.Commands.Moderation {
         }
         
         public override void Help(Player p) {
-            p.Message("&T/Zone add [name] <permissions>");
+            HelpName(p, name);
+        }
+
+        public override void Help(Player p, string message) {
+            HelpName(p, name, message);
+        }
+
+
+        internal static void HelpName(Player p, string cmdName) {
+            p.Message("&T/{0} add [name] <permissions>", cmdName);
             p.Message("&HCreates a new zone, optionally also sets build permissions");
-            p.Message("&T/Zone del [name]");
+            p.Message("&T/{0} del [name]", cmdName);
             p.Message("&HDeletes the given zone");
-            p.Message("&T/Zone perbuild [name] [permissions]");
+            p.Message("&T/{0} perbuild [name] [permissions]", cmdName);
             p.Message("&HSets build permissions for the given zone");
             p.Message("&H  For syntax of permissions, see &T/Help PerBuild");
-            p.Message("&T/Zone set [name] [property] [value]");
-            p.Message("&HSets a property of this zone. See &T/Help zone properties");
+            p.Message("&T/{0} set [name] [property] [value]", cmdName);
+            p.Message("&HSets a property of this zone. See &T/Help {0} properties", cmdName);
         }
-        
-        public override void Help(Player p, string message) {
+        internal static void HelpName(Player p, string cmdName, string message) {
             if (message.CaselessEq("properties")) {
-                p.Message("&T/Zone set [name] alpha [value]");
+                p.Message("&T/{0} set [name] alpha [value]", cmdName);
                 p.Message("&HSets how solid the box shown around the zone is");
                 p.Message("&H0 - not shown at all, 0.5 - half solid, 1 - fully solid");
-                p.Message("&T/Zone set [name] color [hex color]");
+                p.Message("&T/{0} set [name] color [hex color]", cmdName);
                 p.Message("&HSets the color of the box shown around the zone");
-                p.Message("&T/Zone set [name] motd [value]");
+                p.Message("&T/{0} set [name] motd [value]", cmdName);
                 p.Message("&HSets the MOTD applied when in the zone. See &T/Help map motd");
-                p.Message("&T/Zone set [name] [env property] [value]");
+                p.Message("&T/{0} set [name] [env property] [value]", cmdName);
                 p.Message("&HSets an env setting applied when in the zone. See &T/Help env");
             } else {
-                base.Help(p, message);
+                HelpName(p, cmdName);
             }
         }
     }

@@ -32,7 +32,21 @@ namespace MCGalaxy.Util
 {
     public delegate Pixel PixelGet(int x, int y);
     public delegate void  PixelSet(int x, int y, Pixel pixel);
-    public struct Pixel { public byte A, R, G, B; }
+    
+    public struct Pixel 
+    { 
+        public byte A, R, G, B;
+        
+        public Pixel(byte r, byte g, byte b, byte a) {
+            R = r; G = g; B = b; A = a;
+        }
+        
+        public static Pixel BLACK = new Pixel(0, 0, 0, 255);
+        
+        public override string ToString() {
+            return string.Format("R={0}, G={1}, B={2}, A={3}", R, G, B, A);
+        }
+    }
 
     /// <summary> Represents a 2D image </summary>
     /// <remarks> Backing implementation depends on whether running on dotnet or .NET </remarks>

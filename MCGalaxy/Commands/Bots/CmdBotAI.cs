@@ -120,8 +120,10 @@ namespace MCGalaxy.Commands.Bots
             if (!File.Exists("bots/" + ai)) {
                 p.Message("There is no bot AI with that name."); return;
             }
+            
             string[] lines = File.ReadAllLines("bots/" + ai);
-            foreach (string line in lines) {
+            foreach (string line in lines) 
+            {
                 if (line.IsCommentLine()) continue;
                 p.Message(line);
             }

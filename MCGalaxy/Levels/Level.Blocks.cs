@@ -245,7 +245,7 @@ namespace MCGalaxy {
                 Zone zn = zones[i];
                 if (x < zn.MinX || x > zn.MaxX || y < zn.MinY || y > zn.MaxY || z < zn.MinZ || z > zn.MaxZ) continue;
                 AccessResult access = zn.Access.Check(p.name, p.Rank);
-                if (access == AccessResult.Allowed || access == AccessResult.Whitelisted) continue;
+                if (access == AccessResult.Accepted || access == AccessResult.Whitelisted) continue;
                 
                 return zn.Access;
             }

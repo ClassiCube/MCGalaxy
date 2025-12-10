@@ -80,7 +80,7 @@ namespace MCGalaxy.Commands.Misc {
         
         static bool CheckVisitPerm(Player p, Player target, bool confirmed) {
             AccessResult result = p.level.VisitAccess.Check(target.name, target.Rank);
-            if (result == AccessResult.Allowed) return true;
+            if (result == AccessResult.Accepted) return true;
             if (result == AccessResult.Whitelisted) return true;
             if (result == AccessResult.AboveMaxRank && confirmed) return true;
             if (result == AccessResult.BelowMinRank && confirmed) return true;

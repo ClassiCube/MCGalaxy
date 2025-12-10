@@ -429,12 +429,16 @@ namespace MCGalaxy.Commands.World {
             "&H  Plots are zones that can change permissions and environment." +
             "&H  See &T/Help zone &Hto learn what args you can use.",
         };
+        static void HandlePlotHelp(Player p, string message) {
+            Moderation.CmdZone.HelpName(p, "os plot", message);
+        }
         static void HandlePlot(Player p, string raw) {
             string[] args = raw.SplitSpaces(2);
 
             if (args.Length == 1) {
-                p.Message("This command is the &T/{0} &Sversion of &T/zone&S.", commandShortcut);
-                p.Message("To learn how to use it, read &T/help zone&S");
+                HandlePlotHelp(p, raw);
+                //p.Message("This command is the &T/{0} &Sversion of &T/zone&S.", commandShortcut);
+                //p.Message("To learn how to use it, read &T/help zone&S");
             } else {
                 UseCommand(p, "Zone", args[0] + " " + args[1]);
             }
@@ -576,7 +580,7 @@ namespace MCGalaxy.Commands.World {
                     new SubCommand("Preset",     HandlePreset,     presetHelp),
                     new SubCommand("Map",        HandleMap,        mapHelp, false),
 
-                    new SubCommand("Plot",       HandlePlot,       plotHelp, true, new string[] { "plots" }),
+                    new SubCommand("Plot",       HandlePlot,       HandlePlotHelp, true, new string[] { "plots" }),
                     new SubCommand("PerBuild",   HandlePerbuild,   perbuildHelp),
                     new SubCommand("PerVisit",   HandlePervisit,   pervisitHelp),
                     new SubCommand("Physics",    HandlePhysics,    physicsHelp),

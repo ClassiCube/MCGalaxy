@@ -43,7 +43,11 @@ namespace MCGalaxy.Commands.World {
                 if (!CheckExtraPerm(p, data, 1)) return;
                 if (!Formatter.ValidMapName(p, message)) return;
                 if (!LevelInfo.Check(p, data.Rank, Server.mainLevel, "set main to another map")) return;
-                
+                if (data.Context == CommandContext.MessageBlock) {
+                    p.Message("&WSetting the main map with a message block is not allowed.", name);
+                    return;
+                }
+
                 string map = Matcher.FindMaps(p, message);
                 if (map == null) return;
                 if (!LevelInfo.Check(p, data.Rank, map, "set main to this map")) return;

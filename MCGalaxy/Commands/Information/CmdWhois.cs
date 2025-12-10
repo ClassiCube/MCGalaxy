@@ -27,7 +27,7 @@ namespace MCGalaxy.Commands.Info
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override CommandPerm[] ExtraPerms {
-            get { return new[] { new CommandPerm(LevelPermission.AdvBuilder, "can see sensitive player information (e.g. IP)") }; }
+            get { return new[] { new CommandPerm(LevelPermission.Operator, "can see sensitive player information (e.g. IP)") }; }
         }
         public override CommandAlias[] Aliases {
             get { return new CommandAlias[] { new CommandAlias("Info"), new CommandAlias("i") }; }
