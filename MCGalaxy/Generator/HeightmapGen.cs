@@ -18,6 +18,7 @@
 using System;
 using MCGalaxy.Network;
 using MCGalaxy.Util;
+using MCGalaxy.Util.Imaging;
 
 namespace MCGalaxy.Generator
 {
@@ -37,49 +38,47 @@ namespace MCGalaxy.Generator
             
             byte[] data = HttpUtil.DownloadImage(url, p);
             if (data == null) return false;
-            IBitmap2D bmp = ImageUtils.DecodeImage(data, p);
+            
+            Bitmap2D bmp = ImageUtils.DecodeImage(data, p);
             if (bmp == null) return false;
             
             int index = 0, oneY = lvl.Width * lvl.Length;
             int lvlWidth  = lvl.Width;
             int lvlLength = lvl.Length;
             
-            using (bmp) {
-                bool resized = bmp.Width != lvlWidth || bmp.Height != lvlLength;
-                
-                if (resized) {
-                    p.Message("&cHeightmap size ({0}x{1}) does not match Width x Length ({2}x{3}) of the level",
-                              bmp.Width, bmp.Height, lvlWidth, lvlLength);
-                    p.Message("&cAs such, the map may not look accurate.");
-                }
-                bmp.LockBits();
-                
-                byte[] hmap = resized ? ResizeHeightmap(bmp, lvlWidth, lvlLength) 
-                                    : ComputeHeightmap(bmp);
+            bool resized = bmp.Width != lvlWidth || bmp.Height != lvlLength;
+            
+            if (resized) {
+                p.Message("&cHeightmap size ({0}x{1}) does not match Width x Length ({2}x{3}) of the level",
+                          bmp.Width, bmp.Height, lvlWidth, lvlLength);
+                p.Message("&cAs such, the map may not look accurate.");
+            }
+            
+            byte[] hmap = resized ? ResizeHeightmap(bmp, lvlWidth, lvlLength)
+                : ComputeHeightmap(bmp);
 
-                for (int z = 0; z < lvlLength; z++)
-                    for (int x = 0; x < lvlWidth; x++)
+            for (int z = 0; z < lvlLength; z++)
+                for (int x = 0; x < lvlWidth; x++)
+            {
+                int height = hmap[index];
+                byte layer = biome.Ground, top = biome.Surface;
+                
+                if (
+                    IsCliff(height, hmap, lvl, x - 1, z) ||
+                    IsCliff(height, hmap, lvl, x + 1, z) ||
+                    IsCliff(height, hmap, lvl, x, z - 1) ||
+                    IsCliff(height, hmap, lvl, x, z + 1))
                 {
-                    int height = hmap[index];
-                    byte layer = biome.Ground, top = biome.Surface;
-                    
-                    if (
-                        IsCliff(height, hmap, lvl, x - 1, z) ||
-                        IsCliff(height, hmap, lvl, x + 1, z) ||
-                        IsCliff(height, hmap, lvl, x, z - 1) ||
-                        IsCliff(height, hmap, lvl, x, z + 1))
-                    {
-                        layer = biome.Cliff; top = biome.Cliff;
-                    }
-                    
-                    // remap from 0..255 to 0..lvl.Height
-                    height = height * lvl.Height / 255;
-                    for (int y = 0; y < height - 1; y++)
-                        lvl.blocks[index + oneY * y] = layer;
-                    if (height > 0)
-                        lvl.blocks[index + oneY * (height - 1)] = top;
-                    index++;
+                    layer = biome.Cliff; top = biome.Cliff;
                 }
+                
+                // remap from 0..255 to 0..lvl.Height
+                height = height * lvl.Height / 255;
+                for (int y = 0; y < height - 1; y++)
+                    lvl.blocks[index + oneY * y] = layer;
+                if (height > 0)
+                    lvl.blocks[index + oneY * (height - 1)] = top;
+                index++;
             }
             return true;
         }
@@ -91,20 +90,21 @@ namespace MCGalaxy.Generator
             return height >= neighbourHeight + 2;
         }
         
-        static byte[] ComputeHeightmap(IBitmap2D bmp) {
+        static byte[] ComputeHeightmap(Bitmap2D bmp) {
             byte[] hmap = new byte[bmp.Width * bmp.Height];
             int i = 0;
             
             for (int y = 0; y < bmp.Height; y++)
                 for (int x = 0; x < bmp.Width; x++)
             {
-                hmap[i++] = bmp.Get(x, y).R;
+                hmap[i] = bmp.Pixels[i].R;
+                i++;
             }
             return hmap;
         }
         
         // Calculates adjusted X/Y coordinates using nearest neighbour resizing
-        static byte[] ResizeHeightmap(IBitmap2D bmp, int dstWidth, int dstHeight) {
+        static byte[] ResizeHeightmap(Bitmap2D bmp, int dstWidth, int dstHeight) {
             byte[] hmap = new byte[dstWidth * dstHeight];
             int i = 0;
             

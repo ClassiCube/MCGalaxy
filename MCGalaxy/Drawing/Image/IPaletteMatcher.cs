@@ -17,7 +17,7 @@
  */
 using System;
 using BlockID = System.UInt16;
-using MCGalaxy.Util;
+using MCGalaxy.Util.Imaging;
 
 namespace MCGalaxy.Drawing 
 {

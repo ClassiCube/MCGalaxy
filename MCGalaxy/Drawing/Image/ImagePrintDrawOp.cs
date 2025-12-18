@@ -19,6 +19,7 @@ using System;
 using MCGalaxy.Drawing.Brushes;
 using MCGalaxy.Maths;
 using MCGalaxy.Util;
+using MCGalaxy.Util.Imaging;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Drawing.Ops 
@@ -31,7 +32,7 @@ namespace MCGalaxy.Drawing.Ops
             return Source.Width * Source.Height;
         }
         
-        internal IBitmap2D Source;
+        internal Bitmap2D Source;
         internal bool DualLayer, LayerMode;
         public ImagePalette Palette;
         
@@ -42,12 +43,7 @@ namespace MCGalaxy.Drawing.Ops
             selector = new RgbPaletteMatcher();
             CalcLayerColors();
 
-            try {
-                Source.LockBits();
-                OutputPixels(output);
-            } finally {
-                Source.UnlockBits();
-            }
+            OutputPixels(output);
             selector = null;
             
             // Put all the blocks in shadow
@@ -63,7 +59,6 @@ namespace MCGalaxy.Drawing.Ops
                 }
             }
             
-            Source.Dispose();
             Source = null;
             Player.Message("Finished printing image using {0} palette.", Palette.Name);
         }

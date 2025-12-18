@@ -39,9 +39,9 @@ namespace MCGalaxy.Util.Imaging
                 || MatchesSignature(data, exifSig);
         }
         
-        public override SimpleBitmap Decode(byte[] src) {
+        public override Bitmap2D Decode(byte[] src) {
             SetBuffer(src);
-            SimpleBitmap bmp = new SimpleBitmap();
+            Bitmap2D bmp = new Bitmap2D();
             
             ReadMarkers(src, bmp);
             return bmp;
@@ -61,7 +61,7 @@ namespace MCGalaxy.Util.Imaging
         const ushort MARKER_APP15     = 0xFFEF;
         const ushort MARKER_COMMENT   = 0xFFFE;
         
-        void ReadMarkers(byte[] src, SimpleBitmap bmp) {
+        void ReadMarkers(byte[] src, Bitmap2D bmp) {
             for (;;)
             {
                 int offset    = AdvanceOffset(2);
@@ -215,7 +215,7 @@ namespace MCGalaxy.Util.Imaging
             return HUFF_MAX_BITS + total;
         }
         
-        void ReadFrameStart(byte[] src, SimpleBitmap bmp) {
+        void ReadFrameStart(byte[] src, Bitmap2D bmp) {
             int offset = AdvanceOffset(2);
             int length = MemUtils.ReadU16_BE(src, offset);
             // length *includes* 2 bytes of length
@@ -307,7 +307,7 @@ namespace MCGalaxy.Util.Imaging
         const int BLOCK_SAMPLES = 8;
         const int BLOCK_SIZE    = 8 * 8;
         
-        void DecodeMCUs(byte[] src, SimpleBitmap bmp) {
+        void DecodeMCUs(byte[] src, Bitmap2D bmp) {
             int mcu_w  = lowestHor * BLOCK_SAMPLES;
             int mcu_h  = lowestVer * BLOCK_SAMPLES;
             int mcus_x = Utils.CeilDiv(bmp.Width,  mcu_w);
@@ -376,7 +376,7 @@ namespace MCGalaxy.Util.Imaging
                         float b =  1.77200f * cb + y;
                         
                         Pixel p = new Pixel(ByteClamp(r), ByteClamp(g), ByteClamp(b), 255);
-                        bmp.pixels[globalY * bmp.Width + globalX] = p;
+                        bmp.Pixels[globalY * bmp.Width + globalX] = p;
                     }
                 }
             }

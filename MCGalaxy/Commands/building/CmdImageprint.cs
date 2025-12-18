@@ -23,6 +23,7 @@ using MCGalaxy.Drawing.Ops;
 using MCGalaxy.Maths;
 using MCGalaxy.Network;
 using MCGalaxy.Util;
+using MCGalaxy.Util.Imaging;
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Commands.Building {
@@ -121,7 +122,7 @@ namespace MCGalaxy.Commands.Building {
         }
         
         void DoDrawImageCore(Player p, Vec3S32[] marks, DrawArgs dArgs) {
-            IBitmap2D bmp = ImageUtils.DecodeImage(dArgs.Data, p);
+            Bitmap2D bmp = ImageUtils.DecodeImage(dArgs.Data, p);
             if (bmp == null) return;
 
             ImagePrintDrawOp op = dArgs.Dithered ? new ImagePrintDitheredDrawOp() : new ImagePrintDrawOp();
@@ -133,7 +134,7 @@ namespace MCGalaxy.Commands.Building {
             Clamp(p, marks, op, ref width, ref height);
             
             if (width < bmp.Width || height < bmp.Height) {
-                bmp.Resize(width, height, true);
+                bmp = ImageUtils.ResizeBilinear(bmp, width, height);
             }
             
             op.Source = bmp; op.Palette = dArgs.Pal;
