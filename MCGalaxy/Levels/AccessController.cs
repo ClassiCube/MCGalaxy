@@ -91,26 +91,48 @@ namespace MCGalaxy {
             return false;
         }
         
+        /// <summary>
+        /// For binary compatibility with plugins
+        /// </summary>
         public void Describe(Player p, StringBuilder perms) {
+            Describe(p, perms, false);
+        }
+
+        const int DESCRIBE_LIMIT = 5;
+        /// <summary>
+        /// Returns true if shortening occured (more than <see cref="DESCRIBE_LIMIT"/> in a list)
+        /// </summary>
+        public bool Describe(Player p, StringBuilder perms, bool shorten) {
             perms.Append(Group.GetColoredName(Min) + "&S+");
             if (Max < LevelPermission.Owner) {
                 perms.Append(" up to " + Group.GetColoredName(Max));
             }
             
-            List<string> whitelist = Whitelisted;
-            foreach (string name in whitelist) {
-                perms.Append(", " + p.FormatNick(name));
-            }
+            bool shortened = false;
+            DescribeList(p, perms, Whitelisted, ", {0}", shorten, ref shortened);
 
-            List<string> blacklist = Blacklisted;
-            if (blacklist.Count == 0) return;
-            
+            if (Blacklisted.Count == 0) return shortened;
             perms.Append(" &S(except ");
-            foreach (string name in blacklist) {
-                perms.Append(p.FormatNick(name) + ", ");
-            }
+            DescribeList(p, perms, Blacklisted, "{0}, ", shorten, ref shortened);
+            //Remove the comma and space
             perms.Remove(perms.Length - 2, 2);
+
             perms.Append("&S)");
+            return shortened;
+        }
+        static void DescribeList(Player p, StringBuilder perms, List<string> list, string format, bool shorten, ref bool shortened) {
+            
+            int displayCount = list.Count;
+            if (shorten && list.Count > DESCRIBE_LIMIT) displayCount = DESCRIBE_LIMIT;
+            for (int i = 0; i < displayCount; i++) {
+                string name = list[i];
+                perms.Append(String.Format(format, p.FormatNick(name)));
+            }
+            if (list.Count > displayCount) {
+                shortened = true;
+                //perms.Append(" &Sand " + (list.Count - displayCount) + " more");
+                perms.Append(String.Format(format, "&Sand " + (list.Count - displayCount) + " more"));
+            }
         }
         
 

@@ -65,10 +65,10 @@ namespace MCGalaxy.Commands.Info
             }
             
             if (env) ShowEnv(p, info, info.Config);
-            else ShowNormal(p, info, info.Config);
+            else ShowNormal(p, info, info.Config, args.Length > 1 && args[1].CaselessEq("all"));
         }
         
-        void ShowNormal(Player p, MapInfo data, LevelConfig cfg) {
+        void ShowNormal(Player p, MapInfo data, LevelConfig cfg, bool showAll) {
             p.Message("&bAbout {0}&S: Width={1} Height={2} Length={3}", 
                       cfg.Color + data.Name, data.Width, data.Height, data.Length);
             
@@ -95,29 +95,35 @@ namespace MCGalaxy.Commands.Info
             p.Message(dbFormat, 
                       cfg.UseBlockDB ? "&aEnabled" : "&cDisabled", data.BlockDBEntries);
             
-            ShowPermissions(p, data, cfg);
+            ShowPermissions(p, data, cfg, showAll);
             p.Message("Use &T/mi env {0} &Sto see environment settings.", data.MapName);
             ShowGameInfo(p, data, cfg);
         }
         
-        void ShowPermissions(Player p, MapInfo data, LevelConfig cfg) {
-            PrintRanks(p, data.Visit, "  Visitable by ");
-            PrintRanks(p, data.Build, "  Modifiable by ");
-            
+        void ShowPermissions(Player p, MapInfo data, LevelConfig cfg, bool showAll) {
+            bool shortened = false;
+            if (PrintRanks(p, "  Visitable by ", data.Visit, !showAll)) shortened = true;
+            if (PrintRanks(p, "  Modifiable by ", data.Build, !showAll)) shortened = true;
+
             string realmOwner = cfg.RealmOwner;
             if (String.IsNullOrEmpty(cfg.RealmOwner)) {
                 realmOwner = LevelInfo.DefaultRealmOwner(data.MapName);
             }
-            if (String.IsNullOrEmpty(realmOwner)) return;
-            
-            string[] owners = realmOwner.SplitComma();
-            p.Message("  This map is a personal realm of {0}", owners.Join(n => p.FormatNick(n)));
+            if (!String.IsNullOrEmpty(realmOwner)) {
+                string[] owners = realmOwner.SplitComma();
+                p.Message("  This map is a personal realm of {0}", owners.Join(n => p.FormatNick(n)));
+            }
+            if (shortened) p.Message("Use &T/mi {0} all &Sto see all permissions", data.MapName);
         }
         
-        static void PrintRanks(Player p, AccessController access, string initial) {
+        /// <summary>
+        /// Returns true if the printing got shortened
+        /// </summary>
+        static bool PrintRanks(Player p, string initial, AccessController access, bool shorten) {
             StringBuilder perms = new StringBuilder(initial);
-            access.Describe(p, perms);
+            bool shortened = access.Describe(p, perms, shorten);
             p.Message(perms.ToString());
+            return shortened;
         }
         
         void ShowGameInfo(Player p, MapInfo data, LevelConfig cfg) {
