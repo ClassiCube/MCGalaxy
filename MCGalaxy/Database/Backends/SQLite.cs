@@ -78,7 +78,7 @@ namespace MCGalaxy.SQL
         }
         
         public override List<string> ColumnNames(string table) {
-            Database.ValidateName(table);
+            SqlUtils.ValidateName(table);
             List<string> columns = new List<string>();
             
             Database.Iterate("PRAGMA table_info(`" + table + "`)",

@@ -503,7 +503,7 @@ namespace MCGalaxy.SQL
 
             string value = GetString(col);
             if (affinity == TypeAffinity.Text || affinity == TypeAffinity.Blob) 
-                return Quote(value);
+                return SqlUtils.QuoteString(value);
 
             // TODO doubles not exact? probably doesn't matter
             return value;

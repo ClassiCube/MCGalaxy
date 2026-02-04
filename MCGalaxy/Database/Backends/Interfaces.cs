@@ -96,11 +96,5 @@ namespace MCGalaxy.SQL
             int col = GetOrdinal(name);
             return IsDBNull(col) ? 0 : GetInt64(col);
         }
-
-        protected static string Quote(string value) {
-            if (value.IndexOf('\'') >= 0) // escape '
-                value = value.Replace("'", "''");
-            return "'" + value + "'";
-        }
     }
 }
