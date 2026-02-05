@@ -28,6 +28,15 @@ namespace MCGalaxy.SQL
             return "'" + value + "'";
         }
         
+        public static string QuoteName(string name) {
+            ValidateName(name);
+            return "`" + name + "`";
+        }
+        
+        public static string WithTable(string sql, string table) {
+            return sql.Replace("{table}", QuoteName(table));
+        }
+        
         
         public static bool ValidNameChar(char c) {
             return 

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using MCGalaxy.SQL;
 
-namespace MCGalaxy.Commands.Chatting 
+namespace MCGalaxy.Commands.Chatting
 {
     public sealed class CmdInbox : Command2
     {
@@ -36,7 +36,7 @@ namespace MCGalaxy.Commands.Chatting
                 p.Message("Your inbox is empty."); return;
             }
             
-            List<string[]> entries = Database.GetRows("Inbox" + p.name, "Contents,TimeSent,PlayerFrom", 
+            List<string[]> entries = Database.GetRows("Inbox" + p.name, "Contents,TimeSent,PlayerFrom",
                                                       "ORDER BY TimeSent");
             if (entries.Count == 0) {
                 p.Message("Your inbox is empty."); return;
@@ -50,16 +50,23 @@ namespace MCGalaxy.Commands.Chatting
                 }
             } else if (IsDeleteAction(args[0])) {
                 if (args.Length == 1) {
-                    p.Message("You need to provide either \"all\" or a number."); return;
+                    p.Message("You need to provide either \"all\" or a number.");
                 } else if (args[1].CaselessEq("all")) {
-                    int count = Database.DeleteRows("Inbox" + p.name, "");
-                    p.Message("Deleted all {0} messages.", count);
+                    DeleteAll(p);
                 } else {
                     DeleteByID(p, args[1], entries);
                 }
             } else {
                 OutputByID(p, message, entries);
             }
+        }
+        
+        static void DeleteAll(Player p) {
+            const string fmt = "DELETE FROM {table}";
+            
+            string sql = SqlUtils.WithTable(fmt, "Inbox" + p.name);
+            int count  = Database.Execute(sql);
+            p.Message("Deleted all {0} messages.", count);
         }
         
         static void DeleteByID(Player p, string value, List<string[]> entries) {
@@ -70,8 +77,10 @@ namespace MCGalaxy.Commands.Chatting
                 p.Message("Message #{0} does not exist.", num);
             } else {
                 string[] entry = entries[num - 1];
-                Database.DeleteRows("Inbox" + p.name,
-                                    "WHERE PlayerFrom=@0 AND TimeSent=@1", entry[i_from], entry[i_sent]);
+                const string fmt = "DELETE FROM {table} WHERE PlayerFrom=@0 AND TimeSent=@1";
+                
+                string sql = SqlUtils.WithTable(fmt, "Inbox" + p.name);
+                Database.Execute(sql, entry[i_from], entry[i_sent]);
                 p.Message("Deleted message #{0}", num);
             }
         }

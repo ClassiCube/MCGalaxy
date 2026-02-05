@@ -82,7 +82,7 @@ namespace MCGalaxy.Blocks.Extended {
             if (!ExistsInDB(map)) return coords;
             
             Database.ReadRows("Portals" + map, "EntryX,EntryY,EntryZ",
-                                record => coords.Add(ParseCoords(record)));
+                              record => coords.Add(ParseCoords(record)));
             return coords;
         }
 
@@ -91,8 +91,8 @@ namespace MCGalaxy.Blocks.Extended {
             List<PortalExit> exits = new List<PortalExit>();
             if (!ExistsInDB(map)) return exits;
 
-            Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ", 
-                                record => exits.Add(ParseExit(record)));
+            Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
+                              record => exits.Add(ParseExit(record)));
             return exits;
         }
         
@@ -106,8 +106,11 @@ namespace MCGalaxy.Blocks.Extended {
             if (!ExistsInDB(src)) return;
             Database.CreateTable("Portals" + dst, LevelDB.createPortals);
             Database.CopyAllRows("Portals" + src, "Portals" + dst);
+            
             // Fixup portal exists that go to the same map
-            Database.UpdateRows("Portals" + dst, "ExitMap=@1", "WHERE ExitMap=@0", src, dst);
+            const string fmt = "UPDATE {table} SET ExitMap=@1 WHERE ExitMap=@0";
+            string sql = SqlUtils.WithTable(fmt, "Portals" + dst);
+            Database.Execute(sql, src, dst);
         }
         
         /// <summary> Moves all portals from the given map to another map. </summary>
@@ -122,15 +125,17 @@ namespace MCGalaxy.Blocks.Extended {
         public static PortalExit Get(string map, ushort x, ushort y, ushort z) {
             PortalExit exit = null;
             Database.ReadRows("Portals" + map, "ExitMap,ExitX,ExitY,ExitZ",
-                                record => exit = ParseExit(record),
-                                "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+                              record => exit = ParseExit(record),
+                              "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
             return exit;
         }
         
         /// <summary> Deletes the given portal from the given map. </summary>
         public static void Delete(string map, ushort x, ushort y, ushort z) {
-            Database.DeleteRows("Portals" + map,
-                                "WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2", x, y, z);
+            const string fmt = "DELETE FROM {table} WHERE EntryX=@0 AND EntryY=@1 AND EntryZ=@2";
+            
+            string sql = SqlUtils.WithTable(fmt, "Portals" + map);
+            Database.Execute(sql, x, y, z);
         }
         
         /// <summary> Creates or updates the given portal in the given map. </summary>
