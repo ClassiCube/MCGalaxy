@@ -54,7 +54,11 @@ namespace MCGalaxy.Commands.Chatting
                 return;
             }
             
-            Database.AddRow("Inbox" + name, "PlayerFrom, TimeSent, Contents",
+            const string fmt = "INSERT INTO {table} (PlayerFrom, TimeSent, Contents)" +
+                                            " VALUES (@0, @1, @2)";
+            
+            string sql = SqlUtils.WithTable(fmt, "Inbox" + name);
+            Database.Execute(sql,
                             p.name, DateTime.Now.ToInvariantDateString(), message);
             p.CheckForMessageSpam();
 

@@ -32,6 +32,7 @@ namespace MCGalaxy.Modules.Relay.Discord
     {
         public string Token;
         public string Host;
+        readonly object msgLock = new object();
         
         DiscordApiMessage GetNextRequest() {
             if (queue.Count == 0) return null;
@@ -49,12 +50,21 @@ namespace MCGalaxy.Modules.Relay.Discord
         protected override string ThreadName { get { return "Discord-ApiClient"; } }
         protected override void HandleNext() {
             DiscordApiMessage msg = null;
-            WebResponse res = null;
             
             lock (queueLock) { msg = GetNextRequest(); }
             if (msg == null) { WaitForWork(); return;  }
             
-            for (int retry = 0; retry < 10; retry++) 
+            lock (msgLock) { ProcessMessage(msg); }
+        }
+        
+        public void SendNow(DiscordApiMessage msg) {
+            lock (msgLock) { ProcessMessage(msg); }
+        }
+        
+        void ProcessMessage(DiscordApiMessage msg) {
+            WebResponse res = null;
+            
+            for (int retry = 0; retry < 10; retry++)
             {
                 try {
                     HttpWebRequest req = HttpUtil.CreateRequest(Host + msg.Path);
@@ -87,7 +97,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             
             // Avoid triggering HTTP 429 error if possible
             string remaining = res.Headers["X-RateLimit-Remaining"];
-            if (remaining == "1") SleepForRetryPeriod(res);
+            if (remaining == "1") SleepForRetryPeriod(res);            
         }
         
         static bool HandleErrorResponse(WebException ex, DiscordApiMessage msg, int retry) {
@@ -126,7 +136,7 @@ namespace MCGalaxy.Modules.Relay.Discord
         
         
         static HttpStatusCode GetStatus(WebException ex) {
-            if (ex.Response == null) return 0;            
+            if (ex.Response == null) return 0;
             return ((HttpWebResponse)ex.Response).StatusCode;
         }
         
@@ -143,7 +153,7 @@ namespace MCGalaxy.Modules.Relay.Discord
             if (string.IsNullOrEmpty(err)) return;
             
             // Discord sometimes returns <html>..</html> responses for internal server errors
-            //  most of this is useless content, so just truncate these particular errors 
+            //  most of this is useless content, so just truncate these particular errors
             if (err.Length > 200) err = err.Substring(0, 200) + "...";
             
             Logger.Log(LogType.Warning, "Discord API returned: " + err);

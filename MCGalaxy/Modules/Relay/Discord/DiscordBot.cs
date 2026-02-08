@@ -442,6 +442,13 @@ namespace MCGalaxy.Modules.Relay.Discord
             if (api != null) api.QueueAsync(msg);
         }
         
+        /// <summary> Synchronously sends a message to the discord API </summary>
+        /// <remarks> Use with CAUTION, as synchronous messages can be sent out of order 
+        /// (i.e. may be sent before pending async messages) </remarks>
+        public void SendNow(DiscordApiMessage msg) {
+            if (api != null) api.SendNow(msg);
+        }
+        
         protected override void DoSendMessage(string channel, string message) {
             message = ConvertMessage(message);
             const int MAX_MSG_LEN = 2000;
