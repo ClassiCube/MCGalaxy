@@ -245,15 +245,14 @@ namespace MCGalaxy {
         /// <summary>
         /// If playerName owns levelName and levelName begins with playerName.
         /// </summary>
-        internal static bool IsPersonalRealmOwner(string playerName, string levelName) {
+        public static bool IsPersonalRealmOwner(string playerName, string levelName) {
             //TODO public after refactor into new class
             return levelName.CaselessStarts(playerName) && LevelInfo.IsRealmOwner(playerName, levelName);
         }
         /// <summary>
         /// Returns all the os maps personally(level name begins with player name) owned by p, sorted alphabetically.
         /// </summary>
-        internal static List<string> AllPersonalRealms(string playerName) {
-            //TODO public after refactor into new class
+        public static List<string> AllPersonalRealms(string playerName) {
             string[] allMaps = LevelInfo.AllMapNames();
             List<string> owned = new List<string>();
             foreach (string lvlName in allMaps) {
