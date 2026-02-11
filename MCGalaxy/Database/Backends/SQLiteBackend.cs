@@ -275,11 +275,10 @@ namespace MCGalaxy.SQL
 
     public sealed class SQLiteCommand : ISqlCommand 
     {
-        string sqlCmd;
         internal SQLiteConnection conn;
         SQLiteStatement stmt;
-        List<string> param_names  = new List<string>();
-        List<object> param_values = new List<object>();
+        SqlArgument[] sqlArgs;
+        string sqlCmd;
         
         public SQLiteCommand(string sql, SQLiteConnection connection) {
             sqlCmd = sql;
@@ -293,9 +292,6 @@ namespace MCGalaxy.SQL
         
         public void Dispose() {
             conn = null;
-            param_names.Clear();
-            param_values.Clear();
-            sqlCmd = null;
             DisposeStatement();
         }
 
@@ -312,20 +308,14 @@ namespace MCGalaxy.SQL
                 throw;
             }
             
-            if (stmt != null) stmt.BindAll(param_names, param_values);
+            if (stmt != null) stmt.BindAll(sqlArgs);
             return stmt;
         }
         
         public void Prepare() { }
-
-        public void ClearParameters() {
-            param_names.Clear();
-            param_values.Clear();
-        }
         
-        public void AddParameter(string name, object value) {
-            param_names.Add(name);
-            param_values.Add(value);
+        public void SetParameters(SqlArgument[] args) {
+            sqlArgs = args;
         }
 
         public ISqlReader ExecuteReader() {
@@ -706,15 +696,15 @@ namespace MCGalaxy.SQL
             return Interop.sqlite3_column_type(handle, index);
         }
 
-        internal void BindAll(List<string> names, List<object> values) {
-            if (paramNames == null || names.Count == 0) return;
+        internal void BindAll(SqlArgument[] args) {
+            if (args == null) return;
             
-            for (int idx = 0; idx < names.Count; idx++) 
+            for (int idx = 0; idx < args.Length; idx++) 
             {
-                int i = FindParameter(names[idx]);
-                if (i == -1) continue;
+                int i = FindParameter(args[idx].Name);
+                if (i == -1) continue; // TODO throw error ?
                 
-                SQLiteErrorCode n = BindParameter(i + 1, values[idx]);
+                SQLiteErrorCode n = BindParameter(i + 1, args[idx].Value);
                 if (n != SQLiteErrorCodes.Ok) throw new SQLiteException(n, conn.GetLastError());
             }
         }

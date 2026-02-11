@@ -152,7 +152,7 @@ namespace MCGalaxy.SQL
         #region Raw SQL functions
         
         /// <summary> Executes an SQL command and returns the number of affected rows. </summary>
-        public virtual int Execute(string sql, object[] parameters, bool createDB) {
+        public virtual int Execute(string sql, SqlArgument[] args, bool createDB) {
             int rows = 0;
             
             using (ISqlConnection conn = CreateConnection()) {
@@ -161,7 +161,8 @@ namespace MCGalaxy.SQL
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
-                    FillParams(cmd, parameters);
+                    cmd.SetParameters(args);
+                    
                     rows = cmd.ExecuteNonQuery();
                 }
                 conn.Close();
@@ -170,7 +171,7 @@ namespace MCGalaxy.SQL
         }
 
         /// <summary> Excecutes an SQL query, invoking a callback on the returned rows one by one. </summary>        
-        public virtual int Iterate(string sql, object[] parameters, ReaderCallback callback) {
+        public virtual int Iterate(string sql, SqlArgument[] args, ReaderCallback callback) {
             int rows = 0;
             
             using (ISqlConnection conn = CreateConnection()) {
@@ -179,7 +180,8 @@ namespace MCGalaxy.SQL
                     conn.ChangeDatabase(Server.Config.MySQLDatabaseName);
                 
                 using (ISqlCommand cmd = conn.CreateCommand(sql)) {
-                    FillParams(cmd, parameters);
+                    cmd.SetParameters(args);
+                    
                     using (ISqlReader reader = cmd.ExecuteReader()) {
                         while (reader.Read()) { callback(reader); rows++; }
                     }
@@ -190,16 +192,18 @@ namespace MCGalaxy.SQL
         }
         
         
-        /// <summary> Sets the SQL command's parameter values to the given arguments </summary>
-        public static void FillParams(ISqlCommand cmd, object[] parameters) {
-            if (parameters == null || parameters.Length == 0) return;
+        public static SqlArgument[] MapLegacyArgs(object[] args) {
+            if (args == null) return new SqlArgument[0];
             
-            string[] names = GetNames(parameters.Length);
-            for (int i = 0; i < parameters.Length; i++) 
+            SqlArgument[] sql_args = new SqlArgument[args.Length];
+            string[] names = GetNames(args.Length);
+            
+            for (int i = 0; i < args.Length; i++) 
             {
-                cmd.AddParameter(names[i], parameters[i]);
+                sql_args[i] = new SqlArgument(names[i], args[i]);
             }
-        }
+            return sql_args;
+        }       
         
         volatile static string[] ids;
         internal static string[] GetNames(int count) {

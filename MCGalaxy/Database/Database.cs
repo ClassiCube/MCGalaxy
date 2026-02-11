@@ -185,9 +185,11 @@ namespace MCGalaxy.SQL
             return Do(sql, false, callback, args);
         }
 
-        internal static int Do(string sql, bool createDB, ReaderCallback callback, object[] args) {
+        internal static int Do(string sql, bool createDB, ReaderCallback callback, object[] raw_args) {
             IDatabaseBackend db = Backend;
             Exception e = null;
+            
+            SqlArgument[] args = IDatabaseBackend.MapLegacyArgs(raw_args);
             
             for (int i = 0; i < 5; i++) {
                 try {

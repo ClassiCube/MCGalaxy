@@ -33,8 +33,7 @@ namespace MCGalaxy.SQL
     /// <summary> Abstracts a SQL command/statement </summary>
     public interface ISqlCommand : IDisposable
     {
-        void ClearParameters();
-        void AddParameter(string name, object value);
+        void SetParameters(SqlArgument[] args);
 
         void Prepare();
         /// <summary> Executes this command and returns the number of rows affected </summary>
@@ -95,6 +94,16 @@ namespace MCGalaxy.SQL
         public long GetLong(string name) {
             int col = GetOrdinal(name);
             return IsDBNull(col) ? 0 : GetInt64(col);
+        }
+    }
+    
+    public struct SqlArgument
+    {
+        public readonly string Name;
+        public readonly object Value;
+        
+        public SqlArgument(string name, object value) {
+            Name = name; Value = value;
         }
     }
 }

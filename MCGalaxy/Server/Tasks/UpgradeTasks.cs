@@ -87,7 +87,7 @@ namespace MCGalaxy.Tasks {
         
         static List<int> playerIds;
         static List<long> playerSeconds;
-        static int playerCount, playerFailed = 0;
+        static int playerCount, playerFailed;
         
         static void DumpPlayerTimeSpents() {
             playerIds = new List<int>();
@@ -110,9 +110,11 @@ namespace MCGalaxy.Tasks {
         
         static void UpgradePlayerTimeSpents() {
             using (SqlTransaction bulk = new SqlTransaction()) {
-                for (int i = 0; i < playerIds.Count; i++) {
-                    bulk.Execute("UPDATE Players SET TimeSpent=@1 WHERE ID=@0", 
-                                 playerIds[i], playerSeconds[i]);
+                for (int i = 0; i < playerIds.Count; i++) 
+                {
+                    bulk.Execute("UPDATE Players SET TimeSpent=@time WHERE ID=@pid", 
+                                 new SqlArgument("@pid",  playerIds[i]),
+                                 new SqlArgument("@time", playerSeconds[i]));
                 }
                 bulk.Commit();
             }

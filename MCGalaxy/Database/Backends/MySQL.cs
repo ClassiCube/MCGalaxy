@@ -184,12 +184,15 @@ namespace MCGalaxy.SQL
     {        
         readonly MySqlCommand cmd;
         public MySQLCommand(MySqlCommand cmd) { this.cmd = cmd; }
-
-        public void ClearParameters() { 
-            cmd.Parameters.Clear(); 
-        }
-        public void AddParameter(string name, object value) {
-            cmd.Parameters.AddWithValue(name, value);
+        
+        public void SetParameters(SqlArgument[] args) {
+            cmd.Parameters.Clear();
+            if (args == null) return;
+            
+            for (int i = 0; i < args.Length; i++)
+            {
+                cmd.Parameters.AddWithValue(args[i].Name, args[i].Value);
+            }
         }
 
         public void Dispose() { cmd.Dispose(); }
