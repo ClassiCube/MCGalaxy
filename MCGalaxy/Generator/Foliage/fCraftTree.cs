@@ -21,7 +21,7 @@ namespace MCGalaxy.Generator.fCraft
             const double odds = 0.618;
             
             for( int dy = 0; dy < height; dy++ )
-                output( x, (ushort)(y + dy), z, Block.Log );
+                output( x, (ushort)(y + dy), z, TrunkBlock );
 
             for( int dy = -1; dy < height / 2; dy++ ) 
             {
@@ -35,7 +35,7 @@ namespace MCGalaxy.Generator.fCraft
                     if( rnd.NextDouble() > odds && Math.Abs( dx ) == Math.Abs( dz ) && Math.Abs( dx ) == radius )
                         continue;
                     
-                    output( (ushort)(x + dx), (ushort)(y + height + dy - 1), (ushort)(z + dz), Block.Leaves );
+                    output( (ushort)(x + dx), (ushort)(y + height + dy - 1), (ushort)(z + dz), LeafBlock );
                 }
             }
         }

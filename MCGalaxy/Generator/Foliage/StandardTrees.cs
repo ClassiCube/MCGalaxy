@@ -31,6 +31,8 @@ namespace MCGalaxy.Generator.Foliage
 {
     public sealed class CactusTree : Tree 
     {
+        public CactusTree() { TrunkBlock = Block.Green; }
+        
         public override long EstimateBlocksAffected() { return height + 3 * 2; }
         
         public override int DefaultSize(Random rnd) { return rnd.Next(3, 6); }
@@ -43,7 +45,7 @@ namespace MCGalaxy.Generator.Foliage
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (ushort dy = 0; dy <= height; dy++) {
-                output(x, (ushort)(y + dy), z, Block.Green);
+                output(x, (ushort)(y + dy), z, TrunkBlock);
             }
 
             int value = rnd.Next(1, 3);
@@ -51,10 +53,10 @@ namespace MCGalaxy.Generator.Foliage
             int dz = value == 2 ? -1 : 0;
 
             for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
-                output((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), Block.Green);
+                output((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), TrunkBlock);
             }
             for (int dy = height; dy <= rnd.Next(height + 2, height + 5); dy++) {
-                output((ushort)(x - dx), (ushort)(y + dy), (ushort)(z - dz), Block.Green);
+                output((ushort)(x - dx), (ushort)(y + dy), (ushort)(z - dz), TrunkBlock);
             }
         }
     }
@@ -73,7 +75,7 @@ namespace MCGalaxy.Generator.Foliage
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (ushort dy = 0; dy < height + size - 1; dy++)
-                output(x, (ushort)(y + dy), z, Block.Log);
+                output(x, (ushort)(y + dy), z, TrunkBlock);
             
             for (int dy = -size; dy <= size; ++dy)
                 for (int dz = -size; dz <= size; ++dz)
@@ -84,7 +86,7 @@ namespace MCGalaxy.Generator.Foliage
                     ushort xx = (ushort)(x + dx), yy = (ushort)(y + dy + height), zz = (ushort)(z + dz);
 
                     if (xx != x || zz != z || dy >= size - 1)
-                        output(xx, yy, zz, Block.Leaves);
+                        output(xx, yy, zz, LeafBlock);
                 }
             }
         }
@@ -104,7 +106,7 @@ namespace MCGalaxy.Generator.Foliage
         
         public override void Generate(ushort x, ushort y, ushort z, TreeOutput output) {
             for (int dy = 0; dy <= height; dy++)
-                output(x, (ushort)(y + dy), z, Block.Log);
+                output(x, (ushort)(y + dy), z, TrunkBlock);
 
             for (int dy = height - 2; dy <= height + 1; dy++) {
                 int extent = dy > height - 1 ? 2 : 3;
@@ -116,9 +118,9 @@ namespace MCGalaxy.Generator.Foliage
 
                     if (Math.Abs(dx) == extent && Math.Abs(dz) == extent) {
                         if (dy > height) continue;
-                        if (rnd.Next(2) == 0) output(xx, yy, zz, Block.Leaves);
+                        if (rnd.Next(2) == 0) output(xx, yy, zz, LeafBlock);
                     } else {
-                        output(xx, yy, zz, Block.Leaves);
+                        output(xx, yy, zz, LeafBlock);
                     }
                 }
             }

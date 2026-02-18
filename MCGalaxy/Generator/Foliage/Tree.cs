@@ -28,7 +28,10 @@ namespace MCGalaxy.Generator.Foliage
     public delegate Tree TreeConstructor();
     
     public abstract class Tree 
-    {
+    { 
+        public BlockID LeafBlock = Block.Leaves;
+        public BlockID TrunkBlock  = Block.Log;
+                    
         protected internal int height, size;
         protected Random rnd;
         
@@ -52,14 +55,15 @@ namespace MCGalaxy.Generator.Foliage
         public abstract void Generate(ushort x, ushort y, ushort z, TreeOutput output);
         
 
-        /// <summary> Returns true if any green or trunk blocks are in the cube centred at (x, y, z) of extent 'size'. </summary>
-        public static bool TreeCheck(Level lvl, ushort x, ushort y, ushort z, short size) { //return true if tree is near
+        /// <summary> Returns true if any 'trunk' blocks are in the cube centred at (x, y, z) of extent 'size'. </summary>
+        public static bool TreeCheck(Level lvl, ushort x, ushort y, ushort z, 
+                                     short size, BlockID trunk) {
             for (int dy = -size; dy <= size; ++dy)
                 for (int dz = -size; dz <= size; ++dz)
                     for (int dx = -size; dx <= size; ++dx)
             {
                 BlockID block = lvl.GetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-                if (block == Block.Log || block == Block.Green) return true;
+                if (block == trunk) return true;
             }
             return false;
         } // TODO move to generic helper function

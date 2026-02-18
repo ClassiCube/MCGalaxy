@@ -164,7 +164,7 @@ namespace MCGalaxy.Generator.Realistic
             
             if (tree != null && overlay[index] < 0.65f && overlayT[index] < treeDens) {
                 if (lvl.IsAirAt(x, (ushort)(height + 1), z) && lvl.GetBlock(x, height, z) == biome.Surface) {
-                    if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist)) {
+                    if (rng.Next(13) == 0 && !Tree.TreeCheck(lvl, x, height, z, treeDist, tree.TrunkBlock)) {
                         tree.SetData(rng, tree.DefaultSize(rng));
                         tree.Generate(x, (ushort)(height + 1), z, (xT, yT, zT, bT) =>
                                       {

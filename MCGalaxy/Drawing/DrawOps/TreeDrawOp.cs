@@ -52,7 +52,7 @@ namespace MCGalaxy.Drawing.Ops
             
             Tree.Generate(P.X, P.Y, P.Z, (xT, yT, zT, bT) =>
                           {
-                              if (bT != Block.Leaves) {
+                              if (bT != Tree.LeafBlock) {
                                   output(Place(xT, yT, zT, bT));
                               } else if (lvl.IsAirAt(xT, yT, zT)) {
                                   leaves.Add(new Vec3U16(xT, yT, zT));
