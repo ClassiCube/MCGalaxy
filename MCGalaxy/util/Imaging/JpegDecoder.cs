@@ -48,7 +48,8 @@ namespace MCGalaxy.Util.Imaging
         }
         
         
-        const ushort MARKER_FRAME_BEG = 0xFFC0;
+        const ushort MARKER_FRAME_BSL = 0xFFC0; // baseline
+        const ushort MARKER_FRAME_PRG = 0xFFC2; // progressive
         const ushort MARKER_TBL_HUFF  = 0xFFC4;
         const ushort MARKER_RST_MRKR0 = 0xFFD0;
         const ushort MARKER_RST_MRKR7 = 0xFFD7;
@@ -79,8 +80,10 @@ namespace MCGalaxy.Util.Imaging
                     ReadHuffmanTable(src);
                 } else if (marker == MARKER_TBL_QUANT) {
                     ReadQuantisationTables(src);
-                } else if (marker == MARKER_FRAME_BEG) {
+                } else if (marker == MARKER_FRAME_BSL) {
                     ReadFrameStart(src, bmp);
+                } else if (marker == MARKER_FRAME_PRG) {
+                    Fail("Progressive JPEGs unsupported");
                 } else if (marker == MARKER_SCAN_BEG) {
                     ReadScanStart(src);
                     DecodeMCUs(src, bmp);
