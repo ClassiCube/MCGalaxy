@@ -24,8 +24,7 @@ namespace MCGalaxy
 {
     public static partial class Block 
     {
-        static string[] coreNames = new string[Block.CORE_COUNT];
-        public static bool Undefined(BlockID block) { return IsPhysicsType(block) && coreNames[block].CaselessEq("unknown"); }
+        public static bool Undefined(BlockID block) { return IsPhysicsType(block) && BlockNames.coreNames[block].CaselessEq("unknown"); }
         
         public static bool ExistsGlobal(BlockID b) { return ExistsFor(Player.Console, b); }
         
@@ -39,7 +38,7 @@ namespace MCGalaxy
         /// <summary> Gets the name for the block with the given block ID </summary>
         /// <remarks> Block names can differ depending on the player's level </remarks>
         public static string GetName(Player p, BlockID block) {
-            if (IsPhysicsType(block)) return coreNames[block];
+            if (IsPhysicsType(block)) return BlockNames.coreNames[block];
             
             BlockDefinition def;
             if (!p.IsSuper) {
@@ -49,7 +48,7 @@ namespace MCGalaxy
             }
             if (def != null) return def.Name.Replace(" ", "");
             
-            return block < CPE_COUNT ? coreNames[block] : ToRaw(block).ToString();
+            return block < CPE_COUNT ? BlockNames.coreNames[block] : ToRaw(block).ToString();
         }
 
         public static BlockID Parse(Player p, string input) {
@@ -66,7 +65,7 @@ namespace MCGalaxy
             if (def != null) return def.GetBlock();
             
             byte coreID;
-            bool success = Aliases.TryGetValue(input.ToLower(), out coreID);
+            bool success = BlockNames.Aliases.TryGetValue(input.ToLower(), out coreID);
             return success ? coreID : Invalid;
         }
         

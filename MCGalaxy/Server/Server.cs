@@ -168,6 +168,7 @@ namespace MCGalaxy
             Heartbeat.ReloadDefault();
             Group.LoadAll();
             CommandPerms.Load();
+            BlockNames.UpdateCore();
             Block.SetBlocks();
             BlockPerms.Load();
             AwardsList.Load();

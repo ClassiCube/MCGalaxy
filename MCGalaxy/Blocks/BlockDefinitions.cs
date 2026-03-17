@@ -223,7 +223,7 @@ namespace MCGalaxy {
             if (global) UpdateGlobalCustom(block, def);
             
             defs[block] = def;
-            if (global) Block.SetDefaultNames();
+            if (global) BlockNames.UpdateCore();
             if (!global) level.UpdateCustomBlock(block, def);
             
             Player[] players = PlayerInfo.Online.Items;
@@ -242,7 +242,7 @@ namespace MCGalaxy {
             if (global) UpdateGlobalCustom(block, null);
             
             defs[block] = null;
-            if (global) Block.SetDefaultNames();
+            if (global) BlockNames.UpdateCore();
             if (!global) level.UpdateCustomBlock(block, null);
             
             Player[] players = PlayerInfo.Online.Items;
