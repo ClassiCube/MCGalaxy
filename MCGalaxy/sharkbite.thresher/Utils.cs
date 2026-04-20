@@ -27,9 +27,7 @@ namespace Sharkbite.Irc
 	public delegate void ReplyEventHandler( ReplyCode code, string message );
 	public delegate void ErrorMessageEventHandler( ReplyCode code, string message );
 	public delegate void NickErrorEventHandler( string badNick, string reason ) ;
-	public delegate void PingEventHandler( string message );
 	public delegate void RegisteredEventHandler();
-	public delegate void DisconnectedEventHandler();
 	public delegate void PublicNoticeEventHandler( string user, string channel, string notice );
 	public delegate void PrivateNoticeEventHandler( string user, string notice );
 	public delegate void JoinEventHandler( string user, string channel );
@@ -40,7 +38,6 @@ namespace Sharkbite.Irc
 	public delegate void NickEventHandler( string user, string newNick );
 	public delegate void PartEventHandler( string user, string channel, string reason);
 	public delegate void QuitEventHandler( string user, string reason);
-	public delegate void InviteEventHandler( string user, string channel );
 	public delegate void KickEventHandler( string user, string channel, string kickee, string reason );
 	public delegate void NamesEventHandler( string channel, string[] nicks, bool last );
 	public delegate void ChannelModeChangeEventHandler( string who, string channel );
@@ -141,18 +138,8 @@ namespace Sharkbite.Irc
 		ERR_USERSDONTMATCH = 502,
 
 		/// <summary>
-		/// The IRC server sent an 'ERROR' message for some
-		/// reason.
+		/// The IRC server sent an 'ERROR' message for some reason.
 		/// </summary>
 		IrcServerError = 1001,
-
-		/// <summary>
-		/// A message from the IRC server that cannot be parsed. This may be because
-		/// the message is intended to cause problems, it may be an unsupported protocol
-		/// such as DCC Voice, or it may be that the Thresher parser simply cannot understand
-		/// it.
-		/// </summary>
-		UnparseableMessage = 1003,
-
 	}
 }

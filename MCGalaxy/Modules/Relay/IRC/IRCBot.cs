@@ -303,6 +303,8 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
         
         void OnRegistered() {
+            conn.Registered = true;
+            
             OnReady();
             Authenticate();
             JoinChannels();
@@ -310,6 +312,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         
         void JoinChannels() {
             Logger.Log(LogType.RelayActivity, "Joining IRC channels...");
+            
             foreach (string chan in Channels)   { Join(chan); }
             foreach (string chan in OpChannels) { Join(chan); }
             ready = true;
@@ -322,6 +325,7 @@ namespace MCGalaxy.Modules.Relay.IRC
             if (!notice.CaselessStarts("You are now identified")) return;
             JoinChannels();
         }
+        
         void OnPrivateAction(string user, string message) {
         }
         

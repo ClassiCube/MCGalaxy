@@ -71,15 +71,6 @@ namespace Sharkbite.Irc
 				
 		/// <summary> Whether this client is connected and has successfully registered. </summary>
 		public bool Registered;
-		/// <summary> Whether a TCP/IP connection has been established with the IRC server. </summary>
-		public bool Connected;
-
-		/// <summary> Respond to IRC keep-alives. </summary>
-		/// <param name="message">The message that should be echoed back</param>
-		void KeepAlive(string message)
-		{
-			SendPong( message );
-		}
 
 		void MyNickChanged(string user, string newNick)
 		{
@@ -88,12 +79,6 @@ namespace Sharkbite.Irc
 			{
 				Nick = newNick;
 			}
-		}
-		
-		void HandleRegistered()
-		{
-			Registered = true;
-			OnRegistered -= HandleRegistered;
 		}
 		
 		string GetNewNick()
@@ -120,16 +105,10 @@ namespace Sharkbite.Irc
 		
 		void RegisterDelegates()
 		{
-			OnPing += KeepAlive;
 			OnNick += MyNickChanged;
 			OnNickError += HandleNickError;
-			OnRegistered += HandleRegistered;
 		}
 
-		/// <summary>
-		/// Read in message lines from the IRC server and send them to a parser for processing.
-		/// Discards CTCP and DCC messages if these protocols are not enabled.
-		/// </summary>
 		public void ReceiveIRCMessages()
 		{
 			string line;
@@ -137,9 +116,6 @@ namespace Sharkbite.Irc
 			{
 				while ( (line = reader.ReadLine() ) != null )
 				{
-					if( IsDccRequest( line ) ) continue;
-					if( IsCtcpMessage( line) ) continue;
-
 					Parse( line );
 				}
 			}
@@ -148,8 +124,6 @@ namespace Sharkbite.Irc
 				//The connection to the IRC server has been closed either
 				//by client request or the server itself closed the connection.
 				client.Close();
-				Registered = false;
-				Connected  = false;
 			}
 		}
 		
@@ -160,55 +134,29 @@ namespace Sharkbite.Irc
 			return MCGalaxy.Network.HttpUtil.WrapSSLStream( raw, Hostname );
 		}
 		
-		/// <summary> Connect to the IRC server and start listening for messages on a new thread. </summary>
-		/// <exception cref="SocketException">If a connection cannot be established with the IRC server</exception>
 		public void Connect()
 		{
-			lock ( this )
-			{
-				if( Connected ) throw new InvalidOperationException("Connection with IRC server already opened.");
-				client = new TcpClient();
-				client.Connect( Hostname, Port );
-				Stream s  = MakeDataStream();
-				Connected = true;
+			Registered = false;
 				
-				writer = new StreamWriter( s, encoding );
-				writer.AutoFlush = true;
-				reader = new StreamReader( s, encoding );
-				
-				SendPass(ServerPassword);
-				// NOTE: The following two commands may fail if
-				//   nick is already in use by another IRC user
-				SendNick(Nick);
-				SendUser();
-			}
+			client = new TcpClient();
+			client.Connect( Hostname, Port );
+			Stream s  = MakeDataStream();
+			
+			writer = new StreamWriter( s, encoding );
+			writer.AutoFlush = true;
+			reader = new StreamReader( s, encoding );
+			
+			SendPass(ServerPassword);
+			// NOTE: The following two commands may fail if
+			//   nick is already in use by another IRC user
+			SendNick(Nick);
+			SendUser();
 		}
 
 		public void Disconnect( string reason )
 		{
-			lock ( this )
-			{
-				SendQuit( reason );
-				client.Close();
-			}
-		}
-		
-
-		const string ctcpTypes = "(FINGER|USERINFO|VERSION|SOURCE|CLIENTINFO|ERRMSG|PING|TIME)";
-		static Regex ctcpRegex = new Regex(":([^ ]+) [A-Z]+ [^:]+:\u0001" + ctcpTypes + "([^\u0001]*)\u0001", RegexOptions.Compiled | RegexOptions.Singleline );
-		/// <summary> Test if the message contains CTCP commands. </summary>
-		/// <param name="message">The raw message from the IRC server</param>
-		/// <returns>True if this is a Ctcp request or reply.</returns>
-		static bool IsCtcpMessage( string message ) {
-			return ctcpRegex.IsMatch( message );
-		}
-		
-		static Regex dccMatchRegex = new Regex(":([^ ]+) PRIVMSG [^:]+:\u0001DCC (CHAT|SEND|GET|RESUME|ACCEPT)[^\u0001]*\u0001", RegexOptions.Compiled | RegexOptions.Singleline );
-		/// <summary> Test if the message contains a DCC request. </summary>
-		/// <param name="message">The raw message from the IRC server</param>
-		/// <returns>True if this is a DCC request.</returns>
-		static bool IsDccRequest( string message ) {
-			return dccMatchRegex.IsMatch( message );
+			SendQuit( reason );
+			client.Close();
 		}
 
 
@@ -349,10 +297,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event NickErrorEventHandler OnNickError;
 		/// <summary>
-		/// A server keep-alive message.
-		/// </summary>
-		public event PingEventHandler OnPing;
-		/// <summary>
 		/// Connection with the IRC server is open and registered.
 		/// </summary>
 		public event RegisteredEventHandler OnRegistered;
@@ -397,10 +341,6 @@ namespace Sharkbite.Irc
 		/// </summary>
 		public event QuitEventHandler OnQuit;
 		/// <summary>
-		/// The user has been invited to a channel.
-		/// </summary>
-		public event InviteEventHandler OnInvite;
-		/// <summary>
 		/// Someone has been kicked from a channel. 
 		/// </summary>
 		public event KickEventHandler OnKick;
@@ -420,7 +360,8 @@ namespace Sharkbite.Irc
 
 
 		#region Parsing
-		private const string ACTION = "\u0001ACTION";
+		const string CTCP_ACTION = "\u0001ACTION";
+		const string CTCP_PREFIX = "\u0001";
 		private readonly char[] Separator = new char[] { ' ' };
 		private readonly Regex replyRegex = new Regex("^:([^\\s]*) ([\\d]{3}) ([^\\s]*) (.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -429,7 +370,7 @@ namespace Sharkbite.Irc
 			string[] tokens = message.Split( Separator );
 			if( tokens[0] == "PING" ) 
 			{
-				OnPing( GetSuffix( tokens, 1 ) );
+				SendPong( GetSuffix( tokens, 1 ) );
 			}
 			else if( tokens[0] == "NOTICE" ) 
 			{
@@ -475,7 +416,7 @@ namespace Sharkbite.Irc
 					break;
 				case "PRIVMSG":
 					tokens[3] = RemoveLeadingColon( tokens[3] );
-					if( tokens[3] == ACTION ) 
+					if( tokens[3] == CTCP_ACTION ) 
 					{
 						if( IsValidChannelName( tokens[2] ) )
 						{
@@ -489,6 +430,10 @@ namespace Sharkbite.Irc
 							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
 							OnPrivateAction( user, CondenseStrings( tokens, 4) );
 						}
+					}
+					else if( tokens[3].StartsWith( CTCP_PREFIX ) ) 
+					{
+					    // Other CTCP/DCC etc messages aren't supported
 					}
 					else if( IsValidChannelName( tokens[2] ) )
 					{
@@ -508,12 +453,6 @@ namespace Sharkbite.Irc
 				case "QUIT":
 					OnQuit( user, GetSuffix( tokens, 2 ) );
 					break;
-				case "INVITE":
-					if( OnInvite != null ) 
-					{
-						OnInvite( user, RemoveLeadingColon( tokens[3] ) );
-					}
-					break;
 				case "KICK":
 					OnKick( user, tokens[2], tokens[3], GetSuffix( tokens, 4 ) );
 					break;
@@ -526,8 +465,7 @@ namespace Sharkbite.Irc
 				case "KILL":
 					OnKill( user, tokens[2], GetSuffix( tokens, 3 ) );
 					break;
-				default: 
-					OnError( ReplyCode.UnparseableMessage, GetSuffix( tokens, 0 ) );
+				default:
 					break;
 			}
 		}
@@ -627,22 +565,25 @@ namespace Sharkbite.Irc
 		const string NickChars = "[" + Special + "a-zA-Z][\\w\\-" + Special + "]{0,8}";
 
 		// Regex that matches a legal IRC nick 
-		static readonly Regex nickRegex = new Regex( NickChars ); 
-		//Regex to create a UserInfo from a string
-		static readonly Regex nameSplitterRegex = new Regex("[!@]",RegexOptions.Compiled | RegexOptions.Singleline );
-		const string ChannelPrefix = "#!+&";
+		static readonly Regex nickRegex = new Regex( NickChars );
+		const string CHAN_PREFIXES = "#!+&";
 
 		public static string ExtractNick( string fullUserName ) 
 		{
+		    // from RFC - nickname [ [ "!" user ] "@" host ]
+		    // i.e. 'user' and 'host' are both optional parameters
 			if( IsEmpty( fullUserName ) ) return "";
+			
+			int userBeg = TryFindPrefix( fullUserName, '!' );
+			int hostBeg = TryFindPrefix( fullUserName, '@' );
+			int nickEnd = Math.Min( userBeg, hostBeg );
 
-			Match match = nameSplitterRegex.Match( fullUserName );
-			if( match.Success ) 
-			{
-				string[] parts = nameSplitterRegex.Split( fullUserName );
-				return parts[0];
-			}
-			return fullUserName;
+			return fullUserName.Substring( 0, nickEnd );
+		}
+		
+		static int TryFindPrefix( string str, char c ) {
+		    int index = str.IndexOf( c );
+		    return index == -1 ? str.Length : index;
 		}
 
 		static bool IsValidChannelName( string channel ) 
@@ -651,7 +592,7 @@ namespace Sharkbite.Irc
 			if( HasSpace( channel ) ) return false;
 
 			// valid channels start with #, !, + or &
-			return channel.Length > 1 && ChannelPrefix.IndexOf(channel[0]) >= 0;
+			return channel.Length > 1 && CHAN_PREFIXES.IndexOf(channel[0]) >= 0;
 		}
 
 		static bool IsValidNick( string nick ) 
