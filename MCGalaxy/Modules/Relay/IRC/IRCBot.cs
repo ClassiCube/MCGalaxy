@@ -73,7 +73,8 @@ namespace MCGalaxy.Modules.Relay.IRC
 
         void Join(string channel) {
             if (String.IsNullOrEmpty(channel)) return;
-            conn.SendJoin(channel);
+            
+            conn.SendRaw("JOIN " + channel);
         }
         
         
@@ -83,7 +84,7 @@ namespace MCGalaxy.Modules.Relay.IRC
             ready   = false;
             botNick = Server.Config.IRCNick.Replace(" ", "");
             
-            if (conn == null) conn = new Connection(new UTF8Encoding(false));
+            if (conn == null) conn = new Connection();
             conn.Hostname = Server.Config.IRCServer;
             conn.Port     = Server.Config.IRCPort;
             conn.UseSSL   = Server.Config.IRCSSL;

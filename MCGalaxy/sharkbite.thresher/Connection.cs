@@ -45,9 +45,9 @@ namespace Sharkbite.Irc
 		/// Prepare a connection to an IRC server but do not open it.
 		/// </summary>
 		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
-		public Connection(Encoding textEncoding)
+		public Connection()
 		{
-			encoding = textEncoding;
+			encoding = new UTF8Encoding(false);
 			RegisterDelegates();
 		}
 		
@@ -278,24 +278,6 @@ namespace Sharkbite.Irc
 		void SendPass(string password) 
 		{
 			SendCommand("PASS " + password);
-		}
-
-		public void SendJoin(string channel) 
-		{
-			if ( IsEmpty( channel ) )
-				throw new ArgumentException(channel + " is not a valid channel name.");
-			
-			SendCommand("JOIN " + channel);
-		}
-
-		public void SendJoin(string channel, string password) 
-		{
-			if ( IsEmpty( password ) ) 
-				throw new ArgumentException("Password cannot be empty or null.");
-			if ( IsEmpty( channel ) )
-				throw new ArgumentException("Channel name cannot be empty or null.");
-				
-			SendCommand("JOIN " + channel + " " + password);
 		}
 
 		public void SendNick(string nick) 

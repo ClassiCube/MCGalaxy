@@ -44,7 +44,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         public void OnChangedNick(string userNick, string newNick) {
             foreach (var chans in userMap)
             {
-                int index = GetNickIndex(userNick, chans.Value);
+                int index = FindNick(userNick, chans.Value);
                 if (index >= 0) {
                     string prefix = GetPrefix(chans.Value[index]);
                     chans.Value[index] = prefix + newNick;
@@ -73,64 +73,11 @@ namespace MCGalaxy.Modules.Relay.IRC
             return nicks;
         }
         
-        void UpdateNick(string n, List<string> chanNicks) {
-            string unprefixNick = Unprefix(n);
-            for (int i = 0; i < chanNicks.Count; i++ ) 
-            {
-                if (unprefixNick == Unprefix(chanNicks[i])) {
-                    chanNicks[i] = n; return;
-                }
-            }
-            chanNicks.Add(n);
-        }
-        
-        void RemoveNick(string n, List<string> chanNicks) {
-            int index = GetNickIndex(n, chanNicks);
-            if (index >= 0) chanNicks.RemoveAt(index);
-        }
-        
-        int GetNickIndex(string n, List<string> chanNicks) {
-            if (chanNicks == null) return -1;
-            string unprefixNick = Unprefix(n);
-            
-            for (int i = 0; i < chanNicks.Count; i++ ) 
-            {
-                if (unprefixNick == Unprefix(chanNicks[i]))
-                    return i;
-            }
-            return -1;
-        }
-        
-        string Unprefix(string nick) {
-            return nick.Substring(GetPrefixLength(nick));
-        }
-        
-        string GetPrefix(string nick) {
-            return nick.Substring(0, GetPrefixLength(nick));
-        }
-        
-        int GetPrefixLength(string nick) {
-            int prefixChars = 0;
-            for (int i = 0; i < nick.Length; i++) 
-            {
-                if (!IsNickChar(nick[i]))
-                    prefixChars++;
-                else
-                    return prefixChars;
-            }
-            return prefixChars;
-        }
-        
-        bool IsNickChar(char c) {
-            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-                c == '[' || c == ']' || c == '{' || c == '}' || c == '^' || c == '`' || c == '_' || c == '|';
-        }
-        
         public bool VerifyNick(string channel, string userNick, ref string error, ref bool foundAtAll) {
             List<string> chanNicks = GetNicks(channel);
             if (chanNicks.Count == 0) return false;
             
-            int index = GetNickIndex(userNick, chanNicks);
+            int index = FindNick(userNick, chanNicks);
             if (index == -1) return false;
             foundAtAll = true;
             
@@ -148,11 +95,65 @@ namespace MCGalaxy.Modules.Relay.IRC
                     chanNicks = GetNicks(chan);
                     if (chanNicks.Count == 0) continue;
                     
-                    index = GetNickIndex(userNick, chanNicks);
+                    index = FindNick(userNick, chanNicks);
                     if (index != -1) return true;
                 }
                 error = "You must have joined the opchannel to use commands from IRC."; return false;
             }
+        }
+        
+        
+        static void UpdateNick(string n, List<string> chanNicks) {
+            int index = FindNick(n, chanNicks);
+            
+            if (index >= 0) {
+                chanNicks[index] = n;
+            } else {
+                chanNicks.Add(n);
+            }
+        }
+        
+        static void RemoveNick(string n, List<string> chanNicks) {
+            int index = FindNick(n, chanNicks);
+            if (index >= 0) chanNicks.RemoveAt(index);
+        }
+        
+        static int FindNick(string n, List<string> chanNicks) {
+            if (chanNicks == null) return -1;
+            string unprefixNick = Unprefix(n);
+            
+            for (int i = 0; i < chanNicks.Count; i++ ) 
+            {
+                if (unprefixNick == Unprefix(chanNicks[i]))
+                    return i;
+            }
+            return -1;
+        }
+        
+        
+        static string Unprefix(string nick) {
+            return nick.Substring(GetPrefixLength(nick));
+        }
+        
+        static string GetPrefix(string nick) {
+            return nick.Substring(0, GetPrefixLength(nick));
+        }
+        
+        static int GetPrefixLength(string nick) {
+            int prefixChars = 0;
+            for (int i = 0; i < nick.Length; i++) 
+            {
+                if (!IsNickChar(nick[i]))
+                    prefixChars++;
+                else
+                    return prefixChars;
+            }
+            return prefixChars;
+        }
+        
+        static bool IsNickChar(char c) {
+            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+                c == '[' || c == ']' || c == '{' || c == '}' || c == '^' || c == '`' || c == '_' || c == '|';
         }
     }
 }
