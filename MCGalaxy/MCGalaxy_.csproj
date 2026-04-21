@@ -606,6 +606,7 @@
     <Compile Include="Modules\Relay\Discord\DiscordPlugin.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordUtils.cs" />
     <Compile Include="Modules\Relay\Discord\DiscordWebsocket.cs" />
+    <Compile Include="Modules\Relay\IRC\IRCCmds.cs" />
     <Compile Include="Modules\Relay\IRC\IRCNickList.cs" />
     <Compile Include="Modules\Relay\IRC\IRCPlugin.cs" />
     <Compile Include="Modules\Relay\RelayBot.cs" />

@@ -35,31 +35,15 @@ namespace Sharkbite.Irc
 	/// </summary>
 	public sealed class Connection
 	{
-		TcpClient client;
-		StreamReader reader;
-		StreamWriter writer;
-		Encoding encoding;
+		public StreamReader reader;
+		public StreamWriter writer;
 		Random rnd = new Random();
 
-		/// <summary>
-		/// Prepare a connection to an IRC server but do not open it.
-		/// </summary>
-		/// <param name="textEncoding">The text encoding for the incoming stream.</param>
 		public Connection()
 		{
-			encoding = new UTF8Encoding(false);
 			RegisterDelegates();
 		}
 		
-		
-		/// <summary> The IRC server hostname </summary>
-		/// <value>The full hostname such as irc.gamesnet.net</value>
-		public string Hostname;
-		/// <summary> The TCP/IP port the IRC listens server listens on. </summary>
-		/// <value> Normally should be set to 6667. </value>
-		public int Port = 6667;	
-		/// <summary> Whether to connect using SSL or not </summary>		
-		public bool UseSSL;
 		/// <summary> The user's current nick name. </summary>
 		public string Nick;	
 		/// <summary> The user's 'real' name. </summary>
@@ -100,7 +84,6 @@ namespace Sharkbite.Irc
 			// If this is our initial connection attempt
 			Nick = GetNewNick();
 			SendNick(Nick);
-			SendUser();
 		}
 		
 		void RegisterDelegates()
@@ -108,57 +91,25 @@ namespace Sharkbite.Irc
 			OnNick += MyNickChanged;
 			OnNickError += HandleNickError;
 		}
-
-		public void ReceiveIRCMessages()
-		{
-			string line;
-			try
-			{
-				while ( (line = reader.ReadLine() ) != null )
-				{
-					Parse( line );
-				}
-			}
-			finally
-			{
-				//The connection to the IRC server has been closed either
-				//by client request or the server itself closed the connection.
-				client.Close();
-			}
-		}
 		
-		Stream MakeDataStream() 
+		public void Init( Stream s )
 		{
-			Stream raw = client.GetStream();
-			if (!UseSSL) return raw;
-			return MCGalaxy.Network.HttpUtil.WrapSSLStream( raw, Hostname );
-		}
-		
-		public void Connect()
-		{
+			Encoding encoding = new UTF8Encoding(false);
 			Registered = false;
-				
-			client = new TcpClient();
-			client.Connect( Hostname, Port );
-			Stream s  = MakeDataStream();
 			
 			writer = new StreamWriter( s, encoding );
 			writer.AutoFlush = true;
-			reader = new StreamReader( s, encoding );
-			
-			SendPass(ServerPassword);
+			reader = new StreamReader( s, encoding );			
+		}
+		
+		public void UpdateUser()
+		{
 			// NOTE: The following two commands may fail if
 			//   nick is already in use by another IRC user
 			SendNick(Nick);
-			SendUser();
+			SendUser();		    
 		}
-
-		public void Disconnect( string reason )
-		{
-			SendQuit( reason );
-			client.Close();
-		}
-
+		
 
 		#region Sending
 		const int MAX_COMMAND_SIZE = 512;
@@ -210,22 +161,9 @@ namespace Sharkbite.Irc
 			SendCommand("USER " + UserName + " 4 * :" + RealName );
 		}
 
-		void SendQuit(string reason) 
-		{
-			if ( IsEmpty( reason ) ) 
-				throw new ArgumentException("Quit reason cannot be null or empty.");
-			
-			SendCommand("QUIT :" + reason);
-		}
-
 		void SendPong(string message) 
 		{
 			SendCommand("PONG " + message);
-		}
-
-		void SendPass(string password) 
-		{
-			SendCommand("PASS " + password);
 		}
 
 		public void SendNick(string nick) 
@@ -234,14 +172,6 @@ namespace Sharkbite.Irc
 				throw new ArgumentException(nick + " is not a valid nickname.");
 				
 			SendCommand("NICK " + nick);
-		}
-
-		public void SendNames(string channel) 
-		{
-			if ( IsEmpty( channel ) ) 
-				throw new ArgumentException("Channel name cannot be null or empty.");
-			
-			SendCommand("NAMES " + channel);
 		}
 
 		public void SendMessage(string target, string message) 
@@ -365,7 +295,7 @@ namespace Sharkbite.Irc
 		private readonly char[] Separator = new char[] { ' ' };
 		private readonly Regex replyRegex = new Regex("^:([^\\s]*) ([\\d]{3}) ([^\\s]*) (.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
-		void Parse(string message ) 
+		public void Parse(string message ) 
 		{
 			string[] tokens = message.Split( Separator );
 			if( tokens[0] == "PING" ) 

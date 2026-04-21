@@ -50,7 +50,7 @@ namespace MCGalaxy.Modules.Relay.IRC
                     chans.Value[index] = prefix + newNick;
                 } else {
                     // should never happen, but just in case
-                    bot.conn.SendNames(chans.Key);
+                    bot.conn.SendRaw(IRCCmds.Names(chans.Key));
                 }
             }
         }

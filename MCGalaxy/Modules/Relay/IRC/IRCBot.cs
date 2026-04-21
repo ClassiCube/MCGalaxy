@@ -16,9 +16,11 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
-using MCGalaxy.Modules.Relay;
+using MCGalaxy.Network;
 using Sharkbite.Irc;
 
 namespace MCGalaxy.Modules.Relay.IRC 
@@ -29,6 +31,8 @@ namespace MCGalaxy.Modules.Relay.IRC
     public class IRCBot : RelayBot 
     {
         internal Connection conn;
+        TcpClient client;
+        
         string botNick;
         IRCNickList nicks;
         bool ready;
@@ -74,7 +78,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         void Join(string channel) {
             if (String.IsNullOrEmpty(channel)) return;
             
-            conn.SendRaw("JOIN " + channel);
+            conn.SendRaw(IRCCmds.Join(channel));
         }
         
         
@@ -85,12 +89,12 @@ namespace MCGalaxy.Modules.Relay.IRC
             botNick = Server.Config.IRCNick.Replace(" ", "");
             
             if (conn == null) conn = new Connection();
-            conn.Hostname = Server.Config.IRCServer;
-            conn.Port     = Server.Config.IRCPort;
-            conn.UseSSL   = Server.Config.IRCSSL;
+            string host = Server.Config.IRCServer;
+            int port    = Server.Config.IRCPort;
+            bool useSSL = Server.Config.IRCSSL;
 
             // most IRC servers supporting SSL/TLS do so on port 6697
-            if (conn.Port == 6697) conn.UseSSL = true;
+            if (port == 6697) useSSL = true;
             
             conn.Nick     = botNick;
             conn.UserName = botNick;
@@ -98,18 +102,35 @@ namespace MCGalaxy.Modules.Relay.IRC
             HookIRCEvents();
             
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
-            conn.ServerPassword = usePass ? Server.Config.IRCPassword : "*";
-            conn.Connect();
-        }
+            string serverPass = usePass ? Server.Config.IRCPassword : "*";
+
+			client = new TcpClient();
+			client.Connect(host, port);
+			
+			Stream s = client.GetStream();
+			if (useSSL) s = HttpUtil.WrapSSLStream(s, host);
+			conn.Init(s);
+			
+			conn.SendRaw(IRCCmds.Pass(serverPass));
+			conn.UpdateUser();
+		}
         
         protected override void DoReadLoop() {
-            conn.ReceiveIRCMessages();
+            string line;
+            
+            try {
+                while ((line = conn.reader.ReadLine()) != null) { conn.Parse(line); }
+            } finally {
+                client.Close();
+            }
         }
         
         protected override void DoDisconnect(string reason) {
             nicks.Clear();
+            
             try {
-                conn.Disconnect(reason);
+                conn.SendRaw(IRCCmds.Quit(reason));
+                client.Close();
             } catch {
                 // no point logging disconnect failures
             }
@@ -250,8 +271,9 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
         
         void OnJoin(string user, string channel) {
+            conn.SendRaw(IRCCmds.Names(channel));
+            
             string nick = Connection.ExtractNick(user);
-            conn.SendNames(channel);
             AnnounceJoinLeave(nick, "joined", channel);
         }
         
@@ -354,7 +376,7 @@ namespace MCGalaxy.Modules.Relay.IRC
         }
         
         void OnChannelModeChange(string who, string channel) {
-            conn.SendNames(channel);
+            conn.SendRaw(IRCCmds.Names(channel));
         }
         
         void OnKick(string user, string channel, string kickee, string reason) {
