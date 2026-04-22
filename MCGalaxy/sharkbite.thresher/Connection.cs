@@ -41,16 +41,12 @@ namespace Sharkbite.Irc
 
 		public Connection()
 		{
-			RegisterDelegates();
+			OnNick += MyNickChanged;
+			OnNickError += HandleNickError;
 		}
 		
 		/// <summary> The user's current nick name. </summary>
-		public string Nick;	
-		/// <summary> The user's 'real' name. </summary>
-		public string RealName;		
-		/// <summary> The user's machine logon name. </summary>
-		public string UserName;
-				
+		public string Nick;				
 		/// <summary> Whether this client is connected and has successfully registered. </summary>
 		public bool Registered;
 
@@ -84,12 +80,6 @@ namespace Sharkbite.Irc
 			SendNick(Nick);
 		}
 		
-		void RegisterDelegates()
-		{
-			OnNick += MyNickChanged;
-			OnNickError += HandleNickError;
-		}
-		
 		public void Init( Stream s )
 		{
 			Encoding encoding = new UTF8Encoding(false);
@@ -104,8 +94,7 @@ namespace Sharkbite.Irc
 		{
 			// NOTE: The following two commands may fail if
 			//   nick is already in use by another IRC user
-			SendNick(Nick);
-			SendUser();		    
+			SendNick(Nick);    
 		}
 		
 
@@ -115,98 +104,45 @@ namespace Sharkbite.Irc
 		const int MAX_NICKNAME_LEN = 30;
 		readonly object sendLock = new object();
 				
-		/// <summary> Send a message to the IRC server. </summary>
-		void SendCommand(string command)
+		public void SendRaw(string msg)
 		{
-			try
-			{
-				lock (sendLock) { writer.WriteLine( command ); }
-			}
-			catch
-			{
-			}
-		}
-		
-		/// <summary>
-		/// Break up a large message into smaller peices that will fit within the IRC
-		/// max message size.
-		/// </summary>
-		/// <param name="message">The text to be broken up</param>
-		/// <param name="maxSize">The largest size a piece can be</param>
-		/// <returns>A string array holding the correctly sized messages.</returns>
-		string[] BreakUpMessage(string message, int maxSize) 
-		{
-			int pieces = (int) Math.Ceiling( (float)message.Length / (float)maxSize );
-			string[] parts = new string[ pieces ];
-			for( int i = 0; i < pieces; i++ ) 
-			{
-				int start = i * maxSize;
-				if( i == pieces - 1 ) 
-				{
-					parts[i] = message.Substring( start );	
-				}
-				else 
-				{
-					parts[i] = message.Substring( start , maxSize );	
-				}
-			}
-			return parts;
-		}
+			if (msg.Length > MAX_COMMAND_SIZE) 
+				msg = msg.Substring(0, MAX_COMMAND_SIZE);
 
-		void SendUser() 
-		{
-			// 4 = IRC mode mask (invisible and not receive wallops)
-			SendCommand("USER " + UserName + " 4 * :" + RealName );
+			try {
+				lock (sendLock) { writer.WriteLine(msg); }
+			} catch { }
 		}
 
 		void SendPong(string message) 
 		{
-			SendCommand("PONG " + message);
+			SendRaw("PONG " + message);
 		}
 
 		public void SendNick(string nick) 
 		{
-			if ( !IsValidNick( nick ) )
+			if ( IsEmptyOrWhitespace( nick ) )
 				throw new ArgumentException(nick + " is not a valid nickname.");
 				
-			SendCommand("NICK " + nick);
+			SendRaw("NICK " + nick);
 		}
 
+		// target is either a channel name or user nickname
 		public void SendMessage(string target, string message) 
-		{
-			// target is either a channel name or user nickname
-			if ( IsEmpty( message ) ) 
-				throw new ArgumentException("Public message cannot be null or empty.");
-			if ( IsEmpty( target ) )
-				throw new ArgumentException("Channel/Nick name cannot be null or empty.");
+		{			
+			string cmd = "PRIVMSG " + target + " :";
+			int maxLen = MAX_COMMAND_SIZE - cmd.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN - 2;
 
 			lock (sendLock)
 			{
-				// 11 is PRIVMSG + 2 x Spaces + : + CR + LF
-				int max = MAX_COMMAND_SIZE - 11 - target.Length - MAX_HOSTNAME_LEN - MAX_NICKNAME_LEN;
-				if (message.Length > max) 
-				{
-					string[] parts = BreakUpMessage( message, max );
-					foreach( string part in parts )
-					{
-						SendCommand("PRIVMSG " + target + " :" + part);
-					}
-				}
-				else 
-				{
-					SendCommand("PRIVMSG " + target + " :" + message);
-				}
+			    for (int idx = 0; idx < message.Length; ) {
+			        int partLen = Math.Min(maxLen, message.Length - idx);
+			        string part = message.Substring(idx, partLen);
+			        
+			        SendRaw(cmd + part);
+			        idx += partLen;
+			    }
 			}
-		}
-
-		public void SendRaw(string message) 
-		{
-			if ( IsEmpty( message ) )
-				throw new ArgumentException("Message cannot be null or empty.");			
-			if ( message.Length > MAX_COMMAND_SIZE ) 
-				message = message.Substring( 0, MAX_COMMAND_SIZE );
-
-			SendCommand( message );
 		}
 		#endregion
 
@@ -433,6 +369,7 @@ namespace Sharkbite.Irc
 		const int RPL_TRYAGAIN   = 263;
 		
 		const int ERR_NOSUCHNICK     = 401;
+		const int ERR_ERRONEUSNICKNAME = 432;
 		const int ERR_NICKNAMEINUSE  = 433;
 		const int ERR_NICKCOLLISION  = 436;
 		const int ERR_USERSDONTMATCH = 502;
@@ -456,6 +393,8 @@ namespace Sharkbite.Irc
 		        // RPL_ENDOFNAMES - <channel> :End of NAMES list
 				channel  = IRCUtils.NextParam(line, ref index);
 				OnNames( channel, new string[0], true );
+		    //} else if (code == ERR_ERRONEUSNICKNAME) { TODO throw error
+		        //throw new InvalidOperationException("Invalid characters in IRC bot nickname");
 		    } else if (code == ERR_NICKNAMEINUSE || code == ERR_NICKCOLLISION) {
 		        // ERR_NICKNAMEINUSE - <nick> :Nickname is already in use
 		        // ERR_NICKCOLLISION - <nick> :Nickname collision KILL from <user>@<host>
@@ -468,40 +407,19 @@ namespace Sharkbite.Irc
 		#endregion
 
 
-		#region Utilities
-		// Odd chars that IRC allows in nicknames 
-		const string Special = "\\[\\]\\`_\\^\\{\\|\\}";
-		const string NickChars = "[" + Special + "a-zA-Z][\\w\\-" + Special + "]{0,8}";
-
-		// Regex that matches a legal IRC nick 
-		static readonly Regex nickRegex = new Regex( NickChars );
-		const string CHAN_PREFIXES = "#!+&";
-		
+		#region Utilities		
+		const string CHAN_PREFIXES = "#!+&";	
 		static bool IsValidChannelName( string channel ) 
 		{
-			if( IsEmpty(  channel ) ) return false;
-			if( HasSpace( channel ) ) return false;
-
 			// valid channels start with #, !, + or &
-			return channel.Length > 1 && CHAN_PREFIXES.IndexOf(channel[0]) >= 0;
+			return !IsEmptyOrWhitespace(channel)
+			    && CHAN_PREFIXES.IndexOf(channel[0]) >= 0;
 		}
 
-		static bool IsValidNick( string nick ) 
+		static bool IsEmptyOrWhitespace( string str ) 
 		{
-			if( IsEmpty(  nick ) ) return false;
-			if( HasSpace( nick ) ) return false;
-
-			return nickRegex.IsMatch( nick );
-		}
-
-		static bool IsEmpty( string str ) 
-		{
-			return str == null || str.Trim().Length == 0;
-		}
-
-		static bool HasSpace( string str ) 
-		{
-			return str.IndexOf( ' ' ) != -1;
+			return str == null || str.Length == 0 
+			    || str.IndexOf( ' ' ) != -1;
 		}
 		#endregion
 	}

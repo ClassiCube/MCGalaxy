@@ -96,9 +96,7 @@ namespace MCGalaxy.Modules.Relay.IRC
             // most IRC servers supporting SSL/TLS do so on port 6697
             if (port == 6697) useSSL = true;
             
-            conn.Nick     = botNick;
-            conn.UserName = botNick;
-            conn.RealName = Server.SoftwareNameVersioned;
+            conn.Nick = botNick;
             HookIRCEvents();
             
             bool usePass = Server.Config.IRCIdentify && Server.Config.IRCPassword.Length > 0;
@@ -112,6 +110,7 @@ namespace MCGalaxy.Modules.Relay.IRC
 			conn.Init(s);
 			
 			conn.SendRaw(IRCCmds.Pass(serverPass));
+			conn.SendRaw(IRCCmds.User(botNick, Server.SoftwareNameVersioned));
 			conn.UpdateUser();
 		}
         

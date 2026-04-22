@@ -30,6 +30,11 @@ namespace MCGalaxy.Modules.Relay.IRC
             return "PASS :" + password;
         }
         
+        public static string User(string username, string realname) {
+			// 4 = IRC mode mask (invisible and not receive wallops)
+            return "USER " + username + " 4 * :" + realname;
+        }
+        
         
         public static string Join(string target) {
             return "JOIN " + target;
