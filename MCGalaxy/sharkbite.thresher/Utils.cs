@@ -24,9 +24,8 @@ using System;
 
 namespace Sharkbite.Irc
 {
-	public delegate void ReplyEventHandler( ReplyCode code, string message );
-	public delegate void ErrorMessageEventHandler( ReplyCode code, string message );
-	public delegate void NickErrorEventHandler( string badNick, string reason ) ;
+	public delegate void ErrorMessageEventHandler( int code, string message );
+	public delegate void NickErrorEventHandler( string badNick ) ;
 	public delegate void RegisteredEventHandler();
 	public delegate void PublicNoticeEventHandler( string user, string channel, string notice );
 	public delegate void PrivateNoticeEventHandler( string user, string notice );
@@ -42,104 +41,77 @@ namespace Sharkbite.Irc
 	public delegate void NamesEventHandler( string channel, string[] nicks, bool last );
 	public delegate void ChannelModeChangeEventHandler( string who, string channel );
 	public delegate void KillEventHandler( string user, string nick, string reason );
-
-		/// <summary>
-	/// Numeric message codes taken from RFC 2812
-	/// </summary>
-
-	public enum ReplyCode: int
+	
+	public static class IRCUtils
 	{
-		/// <summary>
-		/// IRC: Welcome to the Internet Relay Networ [nick]![user]@[host]
-		/// 
-		/// </summary>
-		RPL_WELCOME = 001,
+	    public static char[] SPACE = { ' ' };
+	    
+		public static string ExtractNick(string fullUserName) 
+		{
+		    // from RFC - nickname [ [ "!" user ] "@" host ]
+		    // i.e. 'user' and 'host' are both optional parameters
+		    if (String.IsNullOrEmpty(fullUserName)) return "";
+			
+			int userBeg = TryFindPrefix( fullUserName, '!' );
+			int hostBeg = TryFindPrefix( fullUserName, '@' );
+			int nickEnd = Math.Min( userBeg, hostBeg );
 
-		/// <summary>
-		/// IRC: ( "=" / "*" / "@" ) [channel :[ "@" / "+" ] [nick] *( " " [ "@" / "+" ] [nick] 
-		/// 
-		/// Description: "@" is used for secret channels, "*" for private
-		/// channels, and "=" for others (public channels).
-		/// 
-		/// </summary>
-		RPL_NAMREPLY = 353,
-
-		/// <summary>
-		/// IRC: [channel] :End of NAMES list
-		/// 
-		/// Description: To reply to a NAMES message, a reply pair consisting
-		/// of RPL_NAMREPLY and RPL_ENDOFNAMES is sent by the
-		/// server back to the client. If there is no channel
-		/// found as in the query, then only RPL_ENDOFNAMES is
-		/// returned. The exception to this is when a NAMES
-		/// message is sent with no parameters and all visible
-		/// channels and contents are sent back in a series of
-		/// RPL_NAMEREPLY messages with a RPL_ENDOFNAMES to mark
-		/// the end.
-		/// 
-		/// </summary>
-		RPL_ENDOFNAMES = 366,
-
-		/// <summary>
-		/// IRC: You are service [servicename]
-		/// 
-		/// Description: Sent by the server to a service upon successful
-		/// registration.
-		/// 
-		/// </summary>
-		RPL_YOURESERVICE = 383,
-
-		/// <summary>
-		/// IRC: [command] :Please wait a while and try again.
-		/// 
-		/// Description: When a server drops a command without processing it,
-		/// it MUST use the reply RPL_TRYAGAIN to inform the
-		/// originating client.
-		/// 
-		/// </summary>
-		RPL_TRYAGAIN = 263,
-
-		/// <summary>
-		/// IRC: [nickname] :No such nick/channel
-		/// 
-		/// Description: Used to indicate the nickname parameter supplied to a
-		/// command is currently unused.
-		/// 
-		/// </summary>
-		ERR_NOSUCHNICK = 401,
-
-		/// <summary>
-		/// IRC: [nick] :Nickname is already in use
-		/// 
-		/// Description: Returned when a NICK message is processed that results
-		/// in an attempt to change to a currently existing
-		/// nickname.
-		/// 
-		/// </summary>
-		ERR_NICKNAMEINUSE = 433,
-
-		/// <summary>
-		/// IRC: [nick] :Nickname collision KILL from [user]@[host]
-		/// 
-		/// Description: Returned by a server to a client when it detects a
-		/// nickname collision (registered of a NICK that
-		/// already exists by another server).
-		/// 
-		/// </summary>
-		ERR_NICKCOLLISION = 436,
-
-		/// <summary>
-		/// IRC: :Cannot change mode for other users
-		/// 
-		/// Description: Error sent to any user trying to view or change the
-		/// user mode for a user other than themselves.
-		/// 
-		/// </summary>
-		ERR_USERSDONTMATCH = 502,
-
-		/// <summary>
-		/// The IRC server sent an 'ERROR' message for some reason.
-		/// </summary>
-		IrcServerError = 1001,
+			return fullUserName.Substring(0, nickEnd);
+		}
+		
+		static int TryFindPrefix(string str, char c) {
+		    int index = str.IndexOf(c);
+		    return index == -1 ? str.Length : index;
+		}
+		
+	    
+	    public static string ExtractPrefix(string str, ref int index) {
+		    // See RFC 2812, 2.3.1 Message format in Augmented BNF
+		    // message =  [ ":" prefix SPACE ] command [ params ] crlf
+		    EatWhitespace(str, ref index);
+		    if (index >= str.Length || str[index] != ':') return "";
+		    
+		    index++; // skip :
+		    return EatWord(str, ref index);
+		}
+	    
+	    public static string NextParam(string str, ref int index) {
+	        EatWhitespace(str, ref index);
+	        if (index >= str.Length) return "";
+        
+	        if (str[index] != ':')
+	            return EatWord(str, ref index);
+	        
+	        index++; // skip :
+	        return EatToEnd(str, ref index);
+	    }
+	    
+	    public static string NextAll(string str, ref int index) {
+	        EatWhitespace(str, ref index);
+	        if (index >= str.Length) return "";
+	        
+	        if (str[index] == ':') index++; // skip :
+	        return EatToEnd(str, ref index);
+	    }
+	    
+	    
+	    static void EatWhitespace(string str, ref int index) {
+	        while (index < str.Length && str[index] == ' ') index++;
+	    }
+	    
+	    static string EatWord(string str, ref int index) {
+	        int spaceIdx = str.IndexOf(' ', index);
+		    if (spaceIdx == -1) spaceIdx = str.Length;
+		    
+		    string part = str.Substring(index, spaceIdx - index);
+		    index = spaceIdx;
+		    return part;
+	    }
+	    
+	    static string EatToEnd(string str, ref int index) {	        
+	        string rest = str.Substring(index);
+	        index = str.Length;
+	        return rest.TrimEnd(SPACE);	        
+	    }
 	}
 }

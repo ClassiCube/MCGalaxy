@@ -49,16 +49,14 @@ namespace Sharkbite.Irc
 		/// <summary> The user's 'real' name. </summary>
 		public string RealName;		
 		/// <summary> The user's machine logon name. </summary>
-		public string UserName;		
-		/// <summary> The password for this server. These are seldomly used. Set to '*'  </summary>
-		public string ServerPassword = "*";
+		public string UserName;
 				
 		/// <summary> Whether this client is connected and has successfully registered. </summary>
 		public bool Registered;
 
 		void MyNickChanged(string user, string newNick)
 		{
-			string nick = ExtractNick(user);
+			string nick = IRCUtils.ExtractNick(user);
 			if ( Nick == nick )
 			{
 				Nick = newNick;
@@ -77,7 +75,7 @@ namespace Sharkbite.Irc
 		}
 		
 		
-		void HandleNickError( string badNick, string reason )
+		void HandleNickError( string badNick )
 		{
 			if( Registered ) return;
 			
@@ -215,10 +213,6 @@ namespace Sharkbite.Irc
 
 		#region Events
 		/// <summary>
-		/// Messages that are not handled by other events and are not errors.
-		/// </summary>
-		public event ReplyEventHandler OnReply;
-		/// <summary>
 		/// Error messages from the IRC server.
 		/// </summary>
 		public event ErrorMessageEventHandler OnError;
@@ -292,199 +286,184 @@ namespace Sharkbite.Irc
 		#region Parsing
 		const string CTCP_ACTION = "\u0001ACTION";
 		const string CTCP_PREFIX = "\u0001";
-		private readonly char[] Separator = new char[] { ' ' };
-		private readonly Regex replyRegex = new Regex("^:([^\\s]*) ([\\d]{3}) ([^\\s]*) (.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+		readonly char[] Separator = new char[] { ' ' };
 
-		public void Parse(string message ) 
+		public void Parse(string line ) 
 		{
-			string[] tokens = message.Split( Separator );
-			if( tokens[0] == "PING" ) 
-			{
-				SendPong( GetSuffix( tokens, 1 ) );
-			}
-			else if( tokens[0] == "NOTICE" ) 
-			{
-				OnPrivateNotice( "", GetSuffix( tokens, 2 ) );
-			}
-			else if ( tokens[0] == "ERROR" ) 
-			{
-				OnError( ReplyCode.IrcServerError, GetSuffix( tokens, 1 ) );
-			}
-			else if( replyRegex.IsMatch( message ) )
-			{
-				ParseReply( tokens );
-			}
-			else 
-			{
-				ParseCommand( tokens );
+		    int index = 0;
+		    string prefix = IRCUtils.ExtractPrefix(line, ref index);
+		    string cmd    = IRCUtils.NextParam(line, ref index);
+			int code;
+			
+			if ( int.TryParse( cmd, out code ) ) {
+				ParseReply( prefix, code, line, index );
+			} else {
+				ParseCommand( prefix, cmd, line, index );
 			}
 		}
-
-		/// <summary>
-		/// Parse the message and call the callback methods on the listeners.
-		/// </summary>
-		/// <param name="tokens">The text received from the IRC server</param>
-		void ParseCommand(string[] tokens ) 
+		
+		void ParseCommand(string user, string cmd, string line, int index ) 
 		{	
-			// Remove leading colon from user info
-			string user = RemoveLeadingColon( tokens[0] );
-
-			switch( tokens[1] ) 
+		    string msg, channel, target, nick;
+		    
+			switch( cmd ) 
 			{
+			    case "PING":
+			        // 3.7.2 Ping
+                    msg = IRCUtils.NextAll(line, ref index);
+				    SendPong( msg );
+				    break;
+				    
+				case "ERROR":
+				    // 3.7.4 Error - <error message>
+                    msg = IRCUtils.NextAll(line, ref index);
+				    OnError( -1, msg );
+				    break;
+				    
 				case "NOTICE":
-					if( IsValidChannelName( tokens[2] ) )
+				    // 3.3.2 Notice - <msgtarget> <text>
+				    // "The difference between NOTICE and PRIVMSG is that automatic replies 
+				    //  MUST NEVER be sent in response to a NOTICE message"
+					target = IRCUtils.NextParam(line, ref index);
+					msg    = IRCUtils.NextAll(  line, ref index);
+					
+					if( IsValidChannelName( target ) )
 					{			
-						OnPublicNotice( user, tokens[2], GetSuffix( tokens, 3 ) );
+						OnPublicNotice( user, target, msg );
 					}
 					else 
 					{
-						OnPrivateNotice( user, GetSuffix( tokens, 3 ) );
+						OnPrivateNotice( user, msg );
 					}
 					break;
+					
 				case "JOIN":
-					OnJoin( user, RemoveLeadingColon( tokens[2] ) );
+					// 3.2.1 Join - ( <channel> *( "," <channel> ) [ <key> *( "," <key> ) ] ) / "0"
+					channel = IRCUtils.NextParam(line, ref index);
+					
+					OnJoin( user, channel );
 					break;
+					
 				case "PRIVMSG":
-					tokens[3] = RemoveLeadingColon( tokens[3] );
-					if( tokens[3] == CTCP_ACTION ) 
+					// 3.3.1 Private messages - <msgtarget> <text to be sent>
+					target = IRCUtils.NextParam(line, ref index);
+					msg    = IRCUtils.NextAll(  line, ref index);
+					
+					if( msg.StartsWith(CTCP_ACTION) )
 					{
-						if( IsValidChannelName( tokens[2] ) )
+					    msg = msg.Replace("\x01", "");
+						if( IsValidChannelName( target ) )
 						{
-							int last = tokens.Length - 1;
-							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnAction( user, tokens[2], CondenseStrings( tokens, 4) );
+							OnAction( user, target, msg );
 						}
 						else 
 						{
-							int last = tokens.Length - 1;
-							tokens[ last ] = RemoveTrailingQuote( tokens[last] );
-							OnPrivateAction( user, CondenseStrings( tokens, 4) );
+						    OnPrivateAction( user, msg );
 						}
 					}
-					else if( tokens[3].StartsWith( CTCP_PREFIX ) ) 
+					else if( msg.StartsWith( CTCP_PREFIX ) ) 
 					{
 					    // Other CTCP/DCC etc messages aren't supported
 					}
-					else if( IsValidChannelName( tokens[2] ) )
+					else if( IsValidChannelName( target ) )
 					{
-						OnPublic( user, tokens[2], CondenseStrings( tokens, 3) );
+						OnPublic( user, target, msg );
 					}
 					else 
 					{
-						OnPrivate( user, CondenseStrings( tokens, 3) );
+						OnPrivate( user, msg );
 					}
 					break;
+					
 				case "NICK":
-					OnNick(	user, RemoveLeadingColon( tokens[2] ) );
+					// 3.1.2 Nick message - <nickname>
+					nick    = IRCUtils.NextParam(line, ref index);
+					
+					OnNick(	user, nick );
 					break;
+					
 				case "PART":
-					OnPart( user, tokens[2], GetSuffix( tokens, 3 ) );
+					// 3.2.2 Part - Parameters: <channel> *( "," <channel> ) [ <Part Message> ]
+					channel = IRCUtils.NextParam(line, ref index);
+					msg     = IRCUtils.NextAll(  line, ref index);
+					
+					OnPart( user, channel, msg );
 					break;
+					
 				case "QUIT":
-					OnQuit( user, GetSuffix( tokens, 2 ) );
+					// 3.1.7 Quit - [ <Quit Message> ]
+					msg = IRCUtils.NextAll(line, ref index);
+					
+					OnQuit( user, msg );
 					break;
+					
 				case "KICK":
-					OnKick( user, tokens[2], tokens[3], GetSuffix( tokens, 4 ) );
+					// 3.2.8 Kick - <channel> *( "," <channel> ) <user> *( "," <user> ) [<comment>]
+					channel = IRCUtils.NextParam(line, ref index);
+					nick    = IRCUtils.NextParam(line, ref index);
+					msg     = IRCUtils.NextAll(  line, ref index);
+					
+					OnKick( user, channel, nick, msg );
 					break;
+					
 				case "MODE":
-					if ( IsValidChannelName( tokens[2] ) )
+					// 3.1.5 User mode - <nickname> *( ( "+" / "-" ) *( "i" / "w" / "o" / "O" / "r" ) )
+					// 3.2.3 Channel mode - <channel> *( ( "-" / "+" ) *<modes> *<modeparams> )
+					target = IRCUtils.NextParam(line, ref index);
+					
+					if ( IsValidChannelName( target ) )
 					{
-						OnChannelModeChange( tokens[0], tokens[2] );
+						OnChannelModeChange( user, target );
 					}
 					break;
+					
 				case "KILL":
-					OnKill( user, tokens[2], GetSuffix( tokens, 3 ) );
-					break;
-				default:
+					// 3.7.1 Kill - <nickname> <comment>
+					nick = IRCUtils.NextParam(line, ref index);
+					msg  = IRCUtils.NextAll(line, ref index);
+					
+					OnKill( user, nick, msg );
 					break;
 			}
 		}
 		
-		void ParseReply( string[] tokens ) 
-		{
-			ReplyCode code = (ReplyCode) int.Parse( tokens[1], CultureInfo.InvariantCulture );
-			tokens[3] = RemoveLeadingColon( tokens[3] );
-			switch( code )
-			{
-				//Messages sent upon successful registration 
-				case ReplyCode.RPL_WELCOME:
-				case ReplyCode.RPL_YOURESERVICE:
-					OnRegistered();
-					break;	
-				case ReplyCode.RPL_NAMREPLY:
-					if ( OnNames != null ) 
-					{
-						tokens[5] = RemoveLeadingColon( tokens[5] );
-						int numberOfUsers = tokens.Length - 5;
-						string[] users = new string[ numberOfUsers ];
-						Array.Copy( tokens, 5 , users, 0 , numberOfUsers);
-						OnNames( tokens[4], 
-							users,
-							false );
-					}
-					break;
-				case ReplyCode.RPL_ENDOFNAMES:
-					OnNames( tokens[3], new string[0], true );
-					break;
-				case ReplyCode.ERR_NICKNAMEINUSE:
-				case ReplyCode.ERR_NICKCOLLISION:
-					OnNickError( tokens[3], GetSuffix( tokens, 4 ) );
-					break;
-				default:
-					HandleDefaultReply( code, tokens );
-					break;
-			}
-		}
-
-		void HandleDefaultReply( ReplyCode code, string[] tokens ) 
-		{
-			if (code >= ReplyCode.ERR_NOSUCHNICK && code <= ReplyCode.ERR_USERSDONTMATCH) 
-			{
-				OnError(code, GetSuffix( tokens, 3 ) );
-			}
-			else if( OnReply != null )
-			{
-				OnReply(code, GetSuffix( tokens, 3 ) );
-			}
-		}
+		const int RPL_WELCOME    = 001;
+		const int RPL_NAMREPLY   = 353;
+		const int RPL_ENDOFNAMES = 366;
+		const int RPL_TRYAGAIN   = 263;
 		
-		/// <summary>
-		/// Turn an array of strings back into a single string.
-		/// </summary>
-		static string CondenseStrings( string[] strings, int start ) 
-		{
-			if( strings.Length == start + 1 ) 
-			{
-				return strings[start];
-			}
-			else 
-			{
-				return String.Join(" ", strings, start, (strings.Length - start) );
-			}
-		}
+		const int ERR_NOSUCHNICK     = 401;
+		const int ERR_NICKNAMEINUSE  = 433;
+		const int ERR_NICKCOLLISION  = 436;
+		const int ERR_USERSDONTMATCH = 502;
 		
-		static string RemoveLeadingColon( string text ) 
+		void ParseReply( string prefix, int code, string line, int index ) 
 		{
-			if( text[0] == ':' )
-			{
-				return text.Substring(1);
+		    string nick, channel, chanType;
+		    string target = IRCUtils.NextParam(line, ref index);
+		    string[] names;
+		    
+		    if (code == RPL_WELCOME) {
+				OnRegistered();
+		    } else if (code == RPL_NAMREPLY) {
+		        // RPL_NAMREPLY - ( "=" / "*" / "@" ) <channel> :[ "@" / "+" ] <nick> *( " " [ "@" / "+" ] <nick> )
+				chanType = IRCUtils.NextParam(line, ref index);
+				channel  = IRCUtils.NextParam(line, ref index);
+				names    = IRCUtils.NextAll(  line, ref index).Split(IRCUtils.SPACE);
+					
+				OnNames( channel, names, false );
+		    } else if (code == RPL_ENDOFNAMES) {
+		        // RPL_ENDOFNAMES - <channel> :End of NAMES list
+				channel  = IRCUtils.NextParam(line, ref index);
+				OnNames( channel, new string[0], true );
+		    } else if (code == ERR_NICKNAMEINUSE || code == ERR_NICKCOLLISION) {
+		        // ERR_NICKNAMEINUSE - <nick> :Nickname is already in use
+		        // ERR_NICKCOLLISION - <nick> :Nickname collision KILL from <user>@<host>
+				nick = IRCUtils.NextParam(line, ref index);
+				OnNickError( nick );
+		    } else if (code >= ERR_NOSUCHNICK && code <= ERR_USERSDONTMATCH) {
+		        OnError(code, IRCUtils.NextAll(line, ref index) );
 			}
-			return text;
-		}
-
-		static string GetSuffix( string[] strings, int start ) 
-		{
-			if( start >= strings.Length ) return "";
-
-			return RemoveLeadingColon( CondenseStrings( strings, start ) );
-		}
-		
-		/// <summary>
-		/// Strip off the trailing CTCP quote.
-		/// </summary>
-		static string RemoveTrailingQuote( string text ) 
-		{
-			return text.Substring(0, text.Length -1 );		
 		}
 		#endregion
 
@@ -497,25 +476,7 @@ namespace Sharkbite.Irc
 		// Regex that matches a legal IRC nick 
 		static readonly Regex nickRegex = new Regex( NickChars );
 		const string CHAN_PREFIXES = "#!+&";
-
-		public static string ExtractNick( string fullUserName ) 
-		{
-		    // from RFC - nickname [ [ "!" user ] "@" host ]
-		    // i.e. 'user' and 'host' are both optional parameters
-			if( IsEmpty( fullUserName ) ) return "";
-			
-			int userBeg = TryFindPrefix( fullUserName, '!' );
-			int hostBeg = TryFindPrefix( fullUserName, '@' );
-			int nickEnd = Math.Min( userBeg, hostBeg );
-
-			return fullUserName.Substring( 0, nickEnd );
-		}
 		
-		static int TryFindPrefix( string str, char c ) {
-		    int index = str.IndexOf( c );
-		    return index == -1 ? str.Length : index;
-		}
-
 		static bool IsValidChannelName( string channel ) 
 		{
 			if( IsEmpty(  channel ) ) return false;
