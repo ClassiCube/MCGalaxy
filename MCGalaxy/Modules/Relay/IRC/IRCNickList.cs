@@ -17,7 +17,6 @@
  */
 using System;
 using System.Collections.Generic;
-using Sharkbite.Irc;
 
 namespace MCGalaxy.Modules.Relay.IRC 
 {    
@@ -50,7 +49,7 @@ namespace MCGalaxy.Modules.Relay.IRC
                     chans.Value[index] = prefix + newNick;
                 } else {
                     // should never happen, but just in case
-                    bot.conn.SendRaw(IRCCmds.Names(chans.Key));
+                    bot.SendRaw(IRCCmds.Names(chans.Key));
                 }
             }
         }

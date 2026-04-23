@@ -609,6 +609,7 @@
     <Compile Include="Modules\Relay\IRC\IRCCmds.cs" />
     <Compile Include="Modules\Relay\IRC\IRCNickList.cs" />
     <Compile Include="Modules\Relay\IRC\IRCPlugin.cs" />
+    <Compile Include="Modules\Relay\IRC\IRCUtils.cs" />
     <Compile Include="Modules\Relay\RelayBot.cs" />
     <Compile Include="Modules\Relay\RelayBotCmd.cs" />
     <Compile Include="Modules\Relay\RelayBotEvents.cs" />
@@ -713,8 +714,6 @@
     <Compile Include="util\Threading\VolatileArray.cs" />
     <Compile Include="util\UIHelpers.cs" />
     <Compile Include="util\Utils.cs" />
-    <Compile Include="sharkbite.thresher\Connection.cs" />
-    <Compile Include="sharkbite.thresher\Utils.cs" />
     <Compile Include="util\ExtrasCollection.cs" />
     <Compile Include="properties\AssemblyInfo.cs" />
     <Compile Include="Database\PlayerDB.cs" />

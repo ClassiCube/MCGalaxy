@@ -21,6 +21,11 @@ namespace MCGalaxy.Modules.Relay.IRC
 {
     public static class IRCCmds
     {
+        public static string Pong(string reason) {
+            return "PONG :" + reason;
+        }
+        
+        
         public static string Quit(string reason) {
             return "QUIT :" + reason;
         }
@@ -33,6 +38,10 @@ namespace MCGalaxy.Modules.Relay.IRC
         public static string User(string username, string realname) {
 			// 4 = IRC mode mask (invisible and not receive wallops)
             return "USER " + username + " 4 * :" + realname;
+        }
+        
+        public static string Nick(string nick) {
+            return "NICK " + nick;
         }
         
         
