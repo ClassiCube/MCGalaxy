@@ -144,10 +144,21 @@ namespace MCGalaxy.DB
             bool hasModel = !(who.Model.CaselessEq("humanoid") || who.Model.CaselessEq("human"));
             
             if (hasSkin && hasModel) {
-                p.Message("  Skin: &f{0} &Smodel: &f{1}", who.SkinName, who.Model);
-            } else if (hasSkin) {
+                //We only want do display skin and model on the same line if they actually fit on one line
+                string format = String.Format("  Skin: &f{0} &SModel: &f{1}", who.SkinName, who.Model);
+                if (format.Length <= NetUtils.StringSize - 2) { //-2 to account for "> " in line wrap
+                    p.Message(format);
+                    //One line OK, exit method
+                    return;
+                }
+                //else {
+                // Not one line, fall through to split line case
+                //}
+            }
+            if (hasSkin) {
                 p.Message("  Skin: &f{0}", who.SkinName);
-            } else if (hasModel) {
+            }
+            if (hasModel) {
                 p.Message("  Model: &f{0}", who.Model);
             }
         }
