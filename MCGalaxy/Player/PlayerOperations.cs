@@ -120,7 +120,9 @@ namespace MCGalaxy
             } else {
                 if (!p.CheckCanSpeak("change titles")) return false;
                 
-                MessageAction(p, target, who, "λACTOR &Schanged λTARGET title to &b[" + title + "&b]");
+                MessageAction(p, target, who,
+                    String.Format("λACTOR &Schanged λTARGET title to {0}[{1}{2}{0}]", who.color, who.titlecolor, title)
+                    );
             }
             
             if (who != null) who.title = title;
