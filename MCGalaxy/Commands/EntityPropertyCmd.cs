@@ -46,34 +46,84 @@ namespace MCGalaxy.Commands {
             if (!bot.EditableBy(p, "change the " + type + " of")) { return; }
             SetBotData(p, bot, args.Length > 2 ? args[2] : "");
         }
-        
-        protected void UseOnline(Player p, CommandData data, string message, string type) {
-            if (message.Length == 0) { Help(p); return; }
+
+        protected const string OTHER_FLAG = "-other";
+        const string OWN_FLAG = "-own";
+        bool ProcessArgs(Player p, string message, string dataType, out string target, out string value) {
             string[] args = message.SplitSpaces(2);
-            string name   = CheckOwn(p, args[0], "player name");
-            if (name == null) return;
+
+            if (args[0].CaselessEq(OTHER_FLAG)) {
+                if (args.Length == 1) {
+                    target = null; value = null;
+                    p.Message("You must provide the name of the player that are you are changing the {0} of.", dataType);
+                    return false;
+                }
+                string[] otherArgs = args[1].SplitSpaces(2);
+                target = otherArgs[0];
+                value = otherArgs.Length > 1 ? otherArgs[1] : "";
+                return true;
+            }
+            if (p.IsSuper) {
+                target = args[0];
+                value = args.Length > 1 ? args[1] : "";
+                return true;
+            }
+
+            if (args[0].CaselessEq(OWN_FLAG)) {
+                target = p.name;
+                value = args.Length > 1 ? args[1] : "";
+            } else {
+                target = p.name;
+                value = message;
+            }
+
+            string firstWord = value.SplitSpaces(2)[0];
+
+            if (value.Length > 1) {
+                int matches;
+                Player maybe = PlayerInfo.FindMatches(p, firstWord, out matches, false, false);
+                if (maybe != null) {
+                    string tipModel = args.Length > 1 ? args[1] : "";
+                    string action = tipModel == "" ? "remove" : "change";
+                    if (maybe == p) {
+                        p.Message("&WTIP:");
+                        p.Message("&H  To "+action+" your own {0}, use /{1} {2}", dataType, name.ToLower(), tipModel);
+                    } else {
+                        if (HasExtraPerm(p, p.Rank, 1)) {
+                            p.Message("&WTIP:");
+                            p.Message("&H  To "+action+" &Wother&H player's {0}, use /O{1} [player] {2}", dataType, name, tipModel);
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        protected void UseOnline(Player p, CommandData data, string message, string type) {
+            //if (message.Length == 0) { Help(p); return; }
+            string target, value;
+            if (!ProcessArgs(p, message, type, out target, out value)) return;
             
-            Player who = PlayerInfo.FindMatches(p, name);
+            Player who = PlayerInfo.FindMatches(p, target);
             if (who == null) return;
             
             if (p != who && !CheckExtraPerm(p, data, 1)) return;
             if (!CheckRank(p, data, who, "change the " + type + " of", true)) return;
-            SetOnlineData(p, who, args.Length > 1 ? args[1] : "");
+            SetOnlineData(p, who, value);
         }
         
         protected void UsePlayer(Player p, CommandData data, string message, string type) {
-            if (message.Length == 0) { Help(p); return; }
-            string[] args = message.SplitSpaces(2);
-            string target = CheckOwn(p, args[0], "player name");
-            if (target == null) return;
-            
+            //if (message.Length == 0) { Help(p); return; }
+            string target, value;
+            if (!ProcessArgs(p, message, type, out target, out value)) return;
+
             target = PlayerInfo.FindMatchesPreferOnline(p, target);
             if (target == null) return;            
             if (p.name != target && !CheckExtraPerm(p, data, 1)) return;
             
             LevelPermission rank = Group.GroupIn(target).Permission;
             if (!CheckRank(p, data, target, rank, "change the " + type + " of", true)) return;
-            SetPlayerData(p, target, args.Length > 1 ? args[1] : "");
+            SetPlayerData(p, target, value);
         }
 
         protected virtual void SetBotData(Player p, PlayerBot bot,    string args) { }      

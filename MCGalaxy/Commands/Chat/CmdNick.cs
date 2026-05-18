@@ -30,7 +30,10 @@ namespace MCGalaxy.Commands.Chatting
                     new CommandPerm(LevelPermission.Operator, "can change the nick of bots") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new CommandAlias[] { new CommandAlias("xnick", "-own") }; }
+            get { return new[] {
+                new CommandAlias("XNick"),
+                new CommandAlias("ONick", OTHER_FLAG)
+            }; }
         }
         
         public override void Use(Player p, string message, CommandData data) {
@@ -61,11 +64,13 @@ namespace MCGalaxy.Commands.Chatting
         }
         
         public override void Help(Player p) {
-            p.Message("&T/Nick [player] [nick]");
-            p.Message("&HSets the nick of that player.");
-            p.Message("&H  If [nick] is not given, reverts [player]'s nick to their account name.");
-            p.Message("&T/Nick bot [bot] [name]");
-            p.Message("&HSets the name shown above that bot in game.");
+            p.Message("&T/Nick <nick>");
+            p.Message("&H Sets your nickname");
+            p.Message("&T/ONick [player] <nick>");
+            p.Message("&H Sets the nickname of other player");
+            p.Message("&T/Nick bot [bot] <nick>");
+            p.Message("&H Sets the nickname of that bot.");
+            p.Message("&H  Leave <nick> blank to remove it.");
             p.Message("&H  If [name] is \"empty\", the bot will not have a name shown.");
         }
     }

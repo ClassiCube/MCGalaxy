@@ -28,7 +28,10 @@ namespace MCGalaxy.Commands.Chatting
             get { return new[] { new CommandPerm(LevelPermission.Admin, "can change the title of others") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("XTitle", "-own") }; }
+            get { return new[] {
+                new CommandAlias("XTitle"),
+                new CommandAlias("OTitle", OTHER_FLAG)
+            }; }
         }
         
         public override void Use(Player p, string message, CommandData data) {
@@ -40,9 +43,11 @@ namespace MCGalaxy.Commands.Chatting
         }
         
         public override void Help(Player p) {
-            p.Message("&T/Title [player] [title]");
-            p.Message("&HSets the title of [player]");
-            p.Message("&H  If [title] is not given, removes [player]'s title.");
+            p.Message("&T/Title <title>");
+            p.Message("&H Sets your title");
+            p.Message("&T/OTitle [player] <title>");
+            p.Message("&H Sets the title of other player");
+            p.Message("&H  Leave title blank to remove it.");
         }
     }
 }

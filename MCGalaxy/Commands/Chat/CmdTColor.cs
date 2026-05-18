@@ -26,7 +26,10 @@ namespace MCGalaxy.Commands.Chatting
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the title color of others") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("TColour"), new CommandAlias("XTColor", "-own") }; }
+            get { return new[] {
+                new CommandAlias("XTColor"),
+                new CommandAlias("OTColor", OTHER_FLAG)
+            }; }
         }
         public override void Use(Player p, string message, CommandData data) { 
             UsePlayer(p, data, message, "title color"); 
@@ -37,10 +40,12 @@ namespace MCGalaxy.Commands.Chatting
         }
 
         public override void Help(Player p) {
-            p.Message("&T/TColor [player] [color]");
-            p.Message("&HSets the title color of [player]");
-            p.Message("&H  If [color] is not given, title color is removed.");
-            p.Message("&HTo see a list of all colors, use &T/Help colors.");
+            p.Message("&T/TColor <color>");
+            p.Message("&H Sets your title color");
+            p.Message("&T/OTColor [player] <color>");
+            p.Message("&H Sets the title color of other player");
+            p.Message("&H  Leave color blank to reset it.");
+            p.Message("&H  To see a list of all colors, use &T/Help colors.");
         }
     }
 }

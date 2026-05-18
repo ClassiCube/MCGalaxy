@@ -30,7 +30,10 @@ namespace MCGalaxy.Commands.CPE
                     new CommandPerm(LevelPermission.Operator, "can change the model of bots") }; }
         }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("XModel", "-own") }; }
+            get { return new[] {
+                new CommandAlias("XModel"),
+                new CommandAlias("OModel", OTHER_FLAG)
+            }; }
         }
 
         public override void Use(Player p, string message, CommandData data) {
@@ -94,10 +97,12 @@ namespace MCGalaxy.Commands.CPE
         }
 
         public override void Help(Player p) {
-            p.Message("&T/Model [name] [model] &H- Sets the model of that player.");
-            p.Message("&T/Model bot [name] [model] &H- Sets the model of that bot.");
-            p.Message("&HUse &T/Help Model models &Hfor a list of models.");
-            p.Message("&HUse &T/Help Model scale &Hfor how to scale a model.");
+            p.Message("&T/Model <model> &H- Sets your own model.");
+            p.Message("&T/OModel [name] <model> &H- Sets the model of other player.");
+            p.Message("&T/Model bot [name] <model> &H- Sets the model of that bot.");
+            p.Message("&H Leave <model> blank to reset it.");
+            p.Message("&H  Use &T/Help Model models &Hfor a list of models.");
+            p.Message("&H  Use &T/Help Model scale &Hfor how to scale a model.");
         }
         
         public override void Help(Player p, string message) {
