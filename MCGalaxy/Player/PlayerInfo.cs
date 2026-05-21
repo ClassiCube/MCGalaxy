@@ -54,13 +54,19 @@ namespace MCGalaxy
         /// <summary> Matches given name against the names of all online players that the given player can see </summary>
         /// <returns> A Player instance if exactly one match was found </returns>
         public static Player FindMatches(Player pl, string name, bool _useless = false) {
-            int matches; return FindMatches(pl, name, out matches);
+            int matches; return FindMatches(pl, name, out matches, _useless = false);
         }
-        
+
+        /// <summary>
+        /// Binary compatibility for plugins that used FindMatches with out int matches
+        /// </summary>
+        public static Player FindMatches(Player pl, string name, out int matches, bool _useless = false) {
+            return FindMatches(pl, name, out matches, _useless, false);
+        }
         /// <summary> Matches given name against the names of all online players that the given player can see </summary>
         /// <param name="matches"> Outputs the number of matching players </param>
         /// <returns> A Player instance if exactly one match was found </returns>
-        public static Player FindMatches(Player pl, string name, out int matches, bool _useless = false, bool feedback = true) {
+        public static Player FindMatches(Player pl, string name, out int matches, bool _useless, bool feedback) {
             matches = 0;
             if (!Formatter.ValidPlayerName(pl, name, feedback)) return null;
             

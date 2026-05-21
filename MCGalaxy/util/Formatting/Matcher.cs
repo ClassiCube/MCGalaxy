@@ -78,12 +78,19 @@ namespace MCGalaxy
             return Find<T>(p, name, out matches, items, filter, nameGetter, nameGetter, group, limit);
         }
         
-        
+        /// <summary>
+        /// Binary compatibility with plugins before feedback was introduced
+        /// </summary>
+        public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
+                                Predicate<T> filter, StringFormatter<T> nameGetter, 
+                                StringFormatter<T> itemFormatter, string group, int limit = 5) {
+            return Find<T>(p, name, out matches, items, filter, nameGetter, itemFormatter, group, limit, true);
+        }
         /// <summary> Finds partial matches of 'name' against the names of the items in the 'items' enumerable. </summary>
         /// <returns> If exactly one match, the matching item. </returns>
         public static T Find<T>(Player p, string name, out int matches, IEnumerable<T> items,
                                 Predicate<T> filter, StringFormatter<T> nameGetter, 
-                                StringFormatter<T> itemFormatter, string group, int limit = 5, bool feedback = true)  {
+                                StringFormatter<T> itemFormatter, string group, int limit, bool feedback)  {
             T match = default(T); matches = 0;
             StringBuilder output = new StringBuilder();
             const StringComparison comp = StringComparison.OrdinalIgnoreCase;
