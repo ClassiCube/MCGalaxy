@@ -47,8 +47,8 @@ namespace MCGalaxy.Commands {
             SetBotData(p, bot, args.Length > 2 ? args[2] : "");
         }
 
-        protected const string OTHER_FLAG = "-other";
-        const string OWN_FLAG = "-own";
+        public const string OTHER_FLAG = "-other";
+        public const string OWN_FLAG = "-own";
         bool ProcessArgs(Player p, string message, string dataType, out string target, out string value) {
             string[] args = message.SplitSpaces(2);
 

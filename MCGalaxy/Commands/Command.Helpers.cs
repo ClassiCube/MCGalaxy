@@ -69,6 +69,14 @@ namespace MCGalaxy
             }
             return false;
         }
+
+        public string CheckOwn(Player p, string name, string type) {
+            if (name.CaselessEq(EntityPropertyCmd.OWN_FLAG)) {
+                if (p.IsSuper) { SuperRequiresArgs(p, type); return null; }
+                return p.name;
+            }
+            return name;
+        }
         
         public static bool IsListModifier(string str) {
             int ignored;
