@@ -61,7 +61,7 @@ namespace MCGalaxy
         /// Binary compatibility for plugins that used FindMatches with out int matches
         /// </summary>
         public static Player FindMatches(Player pl, string name, out int matches, bool _useless = false) {
-            return FindMatches(pl, name, out matches, _useless, false);
+            return FindMatches(pl, name, out matches, _useless, true);
         }
         /// <summary> Matches given name against the names of all online players that the given player can see </summary>
         /// <param name="matches"> Outputs the number of matching players </param>
