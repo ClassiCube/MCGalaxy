@@ -26,7 +26,7 @@ namespace MCGalaxy.Network
     {
         // these are checked very frequently, so avoid overhead of .Supports(
         bool hasEmoteFix, hasTwoWayPing, hasExtTexs, hasTextColors;
-        bool hasHeldBlock, hasLongerMessages;
+        bool hasHeldBlock, hasLongerMessages, hasAmpersand;
         
         bool finishedCpeLogin;
         int extensionCount;
@@ -354,6 +354,8 @@ namespace MCGalaxy.Network
                 hasHeldBlock = true;
             } else if (ext.Name == CpeExt.LongerMessages) {
                 hasLongerMessages = true;
+            } else if (ext.Name == CpeExt.AmpersandSupport) {
+                hasAmpersand = true;
             }
             #if TEN_BIT_BLOCKS
             else if (ext.Name == CpeExt.ExtBlocks) {
@@ -433,8 +435,8 @@ namespace MCGalaxy.Network
         public override void SendChat(string message) {
             int bufferLen;
             // See comment in CleanupColors
-            char[] buffer = LineWrapper.CleanupColors(message, out bufferLen, 
-                                                      hasTextColors, hasTextColors);
+            char[] buffer = LineWrapper.CleanupColors(message, out bufferLen,
+                                                      hasAmpersand || hasTextColors, hasTextColors);
             List<string> lines = LineWrapper.Wordwrap(buffer, bufferLen, hasEmoteFix);
 
             // Need to combine chat line packets into one Send call, so that
@@ -731,7 +733,7 @@ namespace MCGalaxy.Network
             // Since it's impossible to identify which client is being used,
             //  just remove the ampersands to be on the safe side
             //  when text colours extension is not supported
-            return LineWrapper.CleanupColors(value, hasTextColors, hasTextColors);
+            return LineWrapper.CleanupColors(value, hasAmpersand || hasTextColors, hasTextColors);
         }
 
         public override string ClientName() {
