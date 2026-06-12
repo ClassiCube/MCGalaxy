@@ -81,7 +81,7 @@ namespace MCGalaxy.Commands {
 
             if (value.Length > 1) {
                 int matches;
-                Player maybe = PlayerInfo.FindMatches(p, firstWord, out matches, false, false);
+                Player maybe = firstWord.Length < 3 ? null : PlayerInfo.FindMatches(p, firstWord, out matches, false, false);
                 if (maybe != null) {
                     string tipModel = args.Length > 1 ? args[1] : "";
                     string action = tipModel == "" ? "remove" : "change";

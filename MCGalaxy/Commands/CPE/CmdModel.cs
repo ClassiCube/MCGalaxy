@@ -37,10 +37,6 @@ namespace MCGalaxy.Commands.CPE
         }
 
         public override void Use(Player p, string message, CommandData data) {
-            if (message.IndexOf(' ') == -1) {
-                message = "-own " + message;
-                message = message.TrimEnd();
-            }
             UseBotOrOnline(p, data, message, "model");
         }
         
@@ -60,7 +56,7 @@ namespace MCGalaxy.Commands.CPE
             who.UpdateModel(model);
             
             if (p != who) {
-                Chat.MessageFrom(who, "λNICK &Shad " + who.pronouns.Object + " model changed to &c" + model);
+                PlayerOperations.MessageAction(p, who.name, who, "λACTOR &Schanged λTARGET model to &c" + model);
             } else {
                 who.Message("Changed your own model to &c" + model);
             }
