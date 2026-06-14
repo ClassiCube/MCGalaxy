@@ -26,7 +26,8 @@ namespace MCGalaxy.Events.PlayerEvents
     public enum MouseAction { Pressed, Released }
     public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }
     public enum NotifyActionType { BlockListSelected, BlockListToggled, LevelSaved, Respawned, SpawnUpdated, TexturePackChanged, TexturePromptResponded, ThirdPersonChanged }
-    
+    public enum PlayerOperation { Skin, LoginMessage, LogoutMessage, Nick, Title, TitleColor, Color }
+
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player sends chat to the server </summary>
     /// <remarks> You must cancel this event to prevent the message being sent to the user (and others). </remarks>
@@ -331,7 +332,21 @@ namespace MCGalaxy.Events.PlayerEvents
             }
         }
     }
-    
+
+    public delegate void OnPlayerOperation(Player p, PlayerOperation operation, string targetName, Player target, ref string value, ref bool cancel);
+    /// <summary> Called when a player is updating cosmetic data (PlayerOperations class) of self or another player. </summary>
+    /// <remarks> Player target is null when target is offline. You can use this to modify what is about to be edited, or prevent it entirely.  </remarks>
+    public sealed class OnPlayerOperationEvent : IEvent<OnPlayerOperation> {
+        public static void Call(Player p, PlayerOperation operation, string targetName, Player target, ref string value, ref bool cancel) {
+            IEvent<OnPlayerOperation>[] items = handlers.Items;
+            // Can't use CallCommon because we need to pass arguments by ref
+            for (int i = 0; i < items.Length; i++) {
+                try { items[i].method(p, operation, targetName, target, ref value, ref cancel); }
+                catch (Exception ex) { LogHandlerException(ex, items[i]); }
+            }
+        }
+    }
+
     public delegate void OnGettingMotd(Player p, ref string motd);
     /// <summary> Called when MOTD is being retrieved for a player </summary>
     /// <remarks> e.g. You can use this event to make one player always have +hax motd. </remarks>

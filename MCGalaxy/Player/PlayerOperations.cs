@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.DB;
+using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
 
 namespace MCGalaxy 
@@ -36,6 +37,11 @@ namespace MCGalaxy
             if (skin == null) return;
 
             Player who = PlayerInfo.FindExact(target);
+
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.Skin, target, who, ref skin, ref cancel);
+            if (cancel) return;
+
             if (p == who) {
                 p.Message("Changed your own skin to &c" + skin);
             } else {
@@ -48,6 +54,10 @@ namespace MCGalaxy
         /// <summary> Attempts to change the login message of the target player </summary>
         /// <remarks> Not allowed when players who cannot speak (e.g. muted) </remarks>
         public static bool SetLoginMessage(Player p, string target, string message) {
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.LoginMessage, target, null, ref message, ref cancel);
+            if (cancel) return false;
+
             if (message.Length == 0) {
                 p.Message("Login message of {0} &Swas removed", p.FormatNick(target));
             } else {
@@ -65,6 +75,10 @@ namespace MCGalaxy
         /// <summary> Attempts to change the logout message of the target player </summary>
         /// <remarks> Not allowed when players who cannot speak (e.g. muted) </remarks>
         public static bool SetLogoutMessage(Player p, string target, string message) {
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.LogoutMessage, target, null, ref message, ref cancel);
+            if (cancel) return false;
+
             if (message.Length == 0) {
                 p.Message("Logout message of {0} &Swas removed", p.FormatNick(target));
             } else {
@@ -83,12 +97,17 @@ namespace MCGalaxy
         /// <summary> Attempts to change the nickname of the target player </summary>
         /// <remarks> Not allowed when players who cannot speak (e.g. muted) </remarks>
         public static bool SetNick(Player p, string target, string nick) {
+            Player who = PlayerInfo.FindExact(target);
+
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.Nick, target, who, ref nick, ref cancel);
+            if (cancel) return false;
+
             if (Colors.Strip(nick).Length >= 30) { 
                 p.Message("Nick must be under 30 letters."); 
                 return false; 
             }
-            Player who = PlayerInfo.FindExact(target);
-            
+
             if (nick.Length == 0) {
                 MessageAction(p, target, who, "λACTOR &Sremoved λTARGET nick");
                 nick = Server.ToRawUsername(target);
@@ -109,11 +128,16 @@ namespace MCGalaxy
         /// <summary> Attempts to change the title of the target player </summary>
         /// <remarks> Not allowed when players who cannot speak (e.g. muted) </remarks>
         public static bool SetTitle(Player p, string target, string title) {
+            Player who = PlayerInfo.FindExact(target);
+
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.Title, target, who, ref title, ref cancel);
+            if (cancel) return false;
+
             if (title.Length >= 20) { 
                 p.Message("&WTitle must be under 20 characters."); 
                 return false;
             }
-            Player who = PlayerInfo.FindExact(target);
             
             if (title.Length == 0) {
                 MessageAction(p, target, who, "λACTOR &Sremoved λTARGET title");
@@ -132,14 +156,18 @@ namespace MCGalaxy
         }
         
         /// <summary> Attempts to change the title color of the target player </summary>
-        public static bool SetTitleColor(Player p, string target, string name) {
+        public static bool SetTitleColor(Player p, string target, string colorName) {
             string color = "";
             Player who = PlayerInfo.FindExact(target);
-            
-            if (name.Length == 0) {
+
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.TitleColor, target, who, ref colorName, ref cancel);
+            if (cancel) return false;
+
+            if (colorName.Length == 0) {
                 MessageAction(p, target, who, "λACTOR &Sremoved λTARGET title color");
             } else  {
-                color = Matcher.FindColor(p, name);
+                color = Matcher.FindColor(p, colorName);
                 if (color == null) return false;
                 
                 MessageAction(p, target, who, "λACTOR &Schanged λTARGET title color to " + color + Colors.Name(color));
@@ -152,17 +180,21 @@ namespace MCGalaxy
         }
         
         /// <summary> Attempts to change the color of the target player </summary>
-        public static bool SetColor(Player p, string target, string name) {
-            string color = "";
+        public static bool SetColor(Player p, string target, string colorName) {
             Player who = PlayerInfo.FindExact(target);
-            
-            if (name.Length == 0) {
+
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.Color, target, who, ref colorName, ref cancel);
+            if (cancel) return false;
+
+            string color;
+            if (colorName.Length == 0) {
                 color = Group.GroupIn(target).Color;
                 
                 PlayerDB.Update(target, PlayerData.ColumnColor, "");
                 MessageAction(p, target, who, "λACTOR &Sremoved λTARGET color");
             } else {
-                color = Matcher.FindColor(p, name);
+                color = Matcher.FindColor(p, colorName);
                 if (color == null) return false;
                 
                 PlayerDB.Update(target, PlayerData.ColumnColor, color);
