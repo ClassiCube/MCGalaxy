@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using MCGalaxy.Commands.CPE;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
@@ -28,6 +29,52 @@ namespace MCGalaxy
     /// <remarks> See PlayerActions.cs for lower level operations. (TODO: Actually respect this distinction across both classes) </remarks>
     public static class PlayerOperations 
     {
+
+        internal static string ParseModel(Player dst, Entity e, string model) {
+            // Reset entity's model
+            if (model.Length == 0) {
+                e.ScaleX = 0; e.ScaleY = 0; e.ScaleZ = 0;
+                return "humanoid";
+            }
+
+            model = model.ToLower();
+            model = model.Replace(':', '|'); // since users assume : is for scale instead of |.
+
+            float max = ModelInfo.MaxScale(e, model);
+            // restrict player model scale, but bots can have unlimited model scale
+            if (ModelInfo.GetRawScale(model) > max) {
+                dst.Message("&WScale must be {0} or less for {1} model",
+                            max, ModelInfo.GetRawModel(model));
+                return null;
+            }
+            return model;
+        }
+        public static void SetModel(Player p, Player who, string model) {
+            bool cancel = false;
+            OnPlayerOperationEvent.Call(p, PlayerOperation.Model, who.name, who, ref model, ref cancel);
+            if (cancel) return;
+
+            string orig = model;
+            model = ParseModel(p, who, model);
+            if (model == null) return;
+            who.UpdateModel(model);
+
+            if (p != who) {
+                MessageAction(p, who.name, who, "λACTOR &Schanged λTARGET model to &c" + model);
+            } else {
+                who.Message("Changed your own model to &c" + model);
+            }
+
+            if (!model.CaselessEq("humanoid")) {
+                Server.models.Update(who.name, model);
+            } else {
+                Server.models.Remove(who.name);
+            }
+            Server.models.Save();
+
+            // Remove model scale too when resetting model
+            if (orig.Length == 0) CmdModelScale.UpdateSavedScale(who);
+        }
         /// <summary>
         /// Attempts to set the skin for the given target, which will be saved across play sessions.
         /// </summary>

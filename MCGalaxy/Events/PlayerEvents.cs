@@ -26,7 +26,7 @@ namespace MCGalaxy.Events.PlayerEvents
     public enum MouseAction { Pressed, Released }
     public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }
     public enum NotifyActionType { BlockListSelected, BlockListToggled, LevelSaved, Respawned, SpawnUpdated, TexturePackChanged, TexturePromptResponded, ThirdPersonChanged }
-    public enum PlayerOperation { Skin, LoginMessage, LogoutMessage, Nick, Title, TitleColor, Color }
+    public enum PlayerOperation { Skin, LoginMessage, LogoutMessage, Nick, Title, TitleColor, Color, Model }
 
     public delegate void OnPlayerChat(Player p, string message);
     /// <summary> Called whenever a player sends chat to the server </summary>
