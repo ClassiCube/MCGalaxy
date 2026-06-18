@@ -145,7 +145,7 @@ namespace MCGalaxy.Generator.Classic
                 double caveY = rnd.Next(Height);
                 double caveZ = rnd.Next(Length);
                 
-                int caveLen  = (int)(rnd.NextFloat() * rnd.NextFloat() * 200);
+                int caveLen  = (int)((rnd.NextFloat() + rnd.NextFloat()) * 200);
                 double theta = rnd.NextFloat() * 2 * Math.PI, deltaTheta = 0;
                 double phi   = rnd.NextFloat() * 2 * Math.PI, deltaPhi = 0;
                 double caveRadius = rnd.NextFloat() * rnd.NextFloat();
@@ -232,7 +232,7 @@ namespace MCGalaxy.Generator.Classic
         }
         
         void FloodFillWater() {
-            int numSources = Width * Length / 800;
+            int numSources = Width * Length / 8000;
             
             CurrentState = "Flooding water";
             byte water = biome.Water;
@@ -247,7 +247,7 @@ namespace MCGalaxy.Generator.Classic
         }
         
         void FloodFillLava() {
-            int numSources = Width * Length / 20000;
+            int numSources = Width * Height * Length / 20000;
             CurrentState = "Flooding lava";
             
             for (int i = 0; i < numSources; i++) 
@@ -333,6 +333,8 @@ namespace MCGalaxy.Generator.Classic
                     {
                         mushX += rnd.Next(6) - rnd.Next(6);
                         mushZ += rnd.Next(6) - rnd.Next(6);
+                        mushY += rnd.Next(2) - rnd.Next(2);
+
                         if (mushX < 0 || mushZ < 0 || mushX >= Width || mushZ >= Length)
                             continue;
                         int solidHeight = heightmap[mushZ * Width + mushX];
