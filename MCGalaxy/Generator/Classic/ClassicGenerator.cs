@@ -335,7 +335,7 @@ namespace MCGalaxy.Generator.Classic
                         mushZ += rnd.Next(6) - rnd.Next(6);
                         mushY += rnd.Next(2) - rnd.Next(2);
 
-                        if (mushX < 0 || mushZ < 0 || mushX >= Width || mushZ >= Length)
+                        if (mushX < 0 || mushY < 0 || mushZ < 0 || mushX >= Width || mushY >= Height || mushZ >= Length)
                             continue;
                         int solidHeight = heightmap[mushZ * Width + mushX];
                         if (mushY >= (solidHeight - 1))
