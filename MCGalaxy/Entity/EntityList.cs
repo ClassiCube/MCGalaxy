@@ -288,10 +288,11 @@ namespace MCGalaxy {
 
         void Spawn(VisibleEntity vis, Position pos, Orientation rot, string skin, string name, string model) {
             p.Session.SendSpawnEntity(vis.id, name, skin, pos, rot);
-            _SendModel(vis, model);
+            p.Session.SendChangeModel(vis.id, model);
             _SendRot(vis, rot);
             _SendScales(vis);
         }
+        
         void Despawn(VisibleEntity vis) {
             p.Session.SendRemoveEntity(vis.id);
         }
@@ -301,17 +302,15 @@ namespace MCGalaxy {
         /// </summary>
         public void SendModel(Entity e, string model) {
             OnSendingModelEvent.Call(e, ref model, p);
+            
             lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
-                _SendModel(vis, model);
-            }
-        }
-        void _SendModel(VisibleEntity vis, string model) {
-            if (p.hasChangeModel) {
+                
                 p.Session.SendChangeModel(vis.id, model);
             }
         }
+        
         void _SendRot(VisibleEntity vis, Orientation rot) {
             if (p.Supports(CpeExt.EntityProperty)) {
                 p.Session.SendEntityProperty(vis.id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX));

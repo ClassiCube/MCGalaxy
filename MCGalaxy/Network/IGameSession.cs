@@ -88,7 +88,8 @@ namespace MCGalaxy.Network
         public abstract void SendTeleport(byte id, Position pos, Orientation rot);
         /// <summary> Sends an ext entity teleport with more control over behavior </summary>
         public virtual bool SendTeleport(byte id, Position pos, Orientation rot,
-                                         Packet.TeleportMoveMode moveMode, bool usePos = true, bool interpolateOri = false, bool useOri = true) { return false; }
+                                         Packet.TeleportMoveMode moveMode, 
+                                         bool usePos = true, bool interpolateOri = false, bool useOri = true) { return false; }
         /// <summary> Sends a spawn/add entity packet to the client </summary>
         public abstract void SendSpawnEntity(byte id, string name, string skin, Position pos, Orientation rot);
         /// <summary> Sends a despawn/remove entity to the client </summary>
@@ -103,7 +104,7 @@ namespace MCGalaxy.Network
         public abstract bool SendHoldThis(BlockID block, bool locked);
         /// <summary> Sends an update environment color packet to the client </summary>
         public abstract bool SendSetEnvColor(byte type, string hex);
-        public abstract void SendChangeModel(byte id, string model);
+        public abstract bool SendChangeModel(byte id, string model);
 
         public abstract void SendEntityProperty(byte id, EntityProp prop, int value);
         /// <summary> Sends an update weather packet </summary>

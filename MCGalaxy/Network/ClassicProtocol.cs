@@ -515,8 +515,10 @@ namespace MCGalaxy.Network
             return true;
         }
 
-        public override void SendChangeModel(byte id, string model) {
+        public override bool SendChangeModel(byte id, string model) {
+            if (!player.hasChangeModel) return false;
             BlockID raw;
+            
             if (BlockID.TryParse(model, out raw) && raw > MaxRawBlock) {
                 BlockID block = Block.FromRaw(raw);
                 if (block >= Block.SUPPORTED_COUNT) {
@@ -525,7 +527,9 @@ namespace MCGalaxy.Network
                     model = ConvertBlock(block).ToString();
                 }                
             }
+            
             Send(Packet.ChangeModel(id, model, player.hasCP437));
+            return true;
         }
         public override void SendEntityProperty(byte id, EntityProp prop, int value) {
 
