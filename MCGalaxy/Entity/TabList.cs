@@ -39,27 +39,12 @@ namespace MCGalaxy
     {
         /// <summary> Adds the given entry to that player's tab list (if their client support it). </summary>
         public static void Add(Player dst, ITabListEntry e) {
-            if (!dst.hasExtList) return;
-            
-            string name = e.GetTabListName();
-            string nick = e.GetTabListNick(dst);
-            
-            string group = e.GetTabListGroup();
-            byte   rank  = e.GetTabListRank();
-            
-            OnTabListEntryAddedEvent.Call(e, ref nick, ref group, dst);
-            string suffix = e.GetTabListSuffix();
-            if (!string.IsNullOrEmpty(suffix)) nick += suffix;
-            
-            dst.EntityList.SendAddTabEntry(e, name, nick, group, rank);
+            dst.EntityList.AddTabEntry(e);
         }
         
         /// <summary> Removes the given entry from player's tab list (if their client supports it). </summary>
         public static void Remove(Player dst, ITabListEntry e) {
-            if (!dst.hasExtList) return;
-            
-            OnTabListEntryRemovedEvent.Call(e, dst);
-            dst.EntityList.SendRemoveTabEntry(e);
+            dst.EntityList.RemoveTabEntry(e);
         }
         
         

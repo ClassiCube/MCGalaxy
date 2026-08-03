@@ -516,26 +516,26 @@ namespace MCGalaxy {
         }   
 
         
-        public bool SharesTabListWith(Player target) {
+        public override bool SharesTabListWith(Player target) {
             return (level == target.level || Server.Config.TablistGlobal) 
                 && target.CanSee(this);
         }
         
-        public string GetTabListName() { return truename; }
+        public override string GetTabListName() { return truename; }
         
-        public string GetTabListNick(Player target) { 
+        public override string GetTabListNick(Player target) { 
             string name = target.Ignores.Nicks ? color + truename : ColoredName;
             return Colors.Escape(name);
         }
         
-        public string GetTabListSuffix() { 
+        public override string GetTabListSuffix() { 
             if (hidden && IsAfk) return " &f(Hid, &7AFK)";
             if (hidden) return " &f(Hid)";
             if (IsAfk)  return " &7(AFK)";
             return null;
         }
         
-        public string GetTabListGroup() {
+        public override string GetTabListGroup() {
             if (!Server.Config.TablistGlobal) return "&fPlayers";
             
             string map = level.name;
@@ -543,7 +543,7 @@ namespace MCGalaxy {
             return "On " + map;
         }
         
-        public byte GetTabListRank() {
+        public override byte GetTabListRank() {
             if (!Server.Config.TablistRankSorted) return 1;
             
             // Want higher ranks at top of tab list, banned at bottom of tab list

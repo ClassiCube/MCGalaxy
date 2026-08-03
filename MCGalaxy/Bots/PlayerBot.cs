@@ -298,16 +298,16 @@ namespace MCGalaxy
                 }*/
         
         
-        public bool SharesTabListWith(Player target) {
+        public override bool SharesTabListWith(Player target) {
             return level == target.level && Server.Config.TablistBots;
         }
         
-        public string GetTabListName() { return name; }
+        public override string GetTabListName() { return name; }
         
-        public string GetTabListNick(Player target) { return color + name; }
-        public string GetTabListSuffix() { return null; }
+        public override string GetTabListNick(Player target) { return color + name; }
+        public override string GetTabListSuffix() { return null; }
         
-        public string GetTabListGroup() { return "Bots"; }
-        public byte   GetTabListRank () { return 0; }
+        public override string GetTabListGroup() { return "Bots"; }
+        public override byte   GetTabListRank () { return 0; }
     }
 }

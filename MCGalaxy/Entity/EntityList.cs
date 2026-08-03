@@ -90,95 +90,80 @@ namespace MCGalaxy {
 
 
         #region TabList
-        Dictionary<object, TabObject> tabObjects = new Dictionary<object, TabObject>();
+        Dictionary<ITabListEntry, byte> tabMap = new Dictionary<ITabListEntry, byte>();
         bool[] usedTabIDs;
 
-        void AddTab(Entity e) {
-            if (e is Player) {
-                if (!Server.Config.TablistGlobal) TabList.Add(p, (Player)e);
-            } else if (e is PlayerBot) {
-                if (Server.Config.TablistBots) TabList.Add(p, (PlayerBot)e);
-            }
-        }
-        void RemoveTab(Entity e) {
-            if (e is Player) {
-                if (!Server.Config.TablistGlobal) TabList.Remove(p, (Player)e);
-            } else if (e is PlayerBot) {
-                if (Server.Config.TablistBots) TabList.Remove(p, (PlayerBot)e);
-            }
-        }
-
-        public void SendAddTabEntry(object o, string name, string nick, string group, byte groupRank) {
+        /// <summary> Adds the given entry to that player's tab list (if their client supports it). </summary>
+        public void AddTabEntry(ITabListEntry entry) {
             if (!p.hasExtList) return;
-            bool self = o == p;
+            
+            string name  = entry.GetTabListName();
+            string nick  = entry.GetTabListNick(p);
+            string group = entry.GetTabListGroup();
+            byte   rank  = entry.GetTabListRank();
+            
+            OnTabListEntryAddedEvent.Call(entry, ref nick, ref group, p);
+            string suffix = entry.GetTabListSuffix();
+            if (!string.IsNullOrEmpty(suffix)) nick += suffix;
+            byte id;
 
             lock (locker) {
-                TabObject tabby;
-
-                if (tabObjects.TryGetValue(o, out tabby)) {
-                    tabby.UpdateFields(name, nick, group, groupRank); //Refresh every field other than entity and ID
-                    //p.Message("RETABBING {0}&S with ID {1}", name, tabby.id);
-                } else {
-                    int tentativeID = FindFreeTabID(o, self);
+                if (entry == p) {
+                    id = Entities.SelfID;
+                } else if (!tabMap.TryGetValue(entry, out id)) {
+                    int tentativeID = FindFreeTabID(entry);
                     if (tentativeID == -1) return;
+                    // TODO this doesn't handle tablist reaching capacity..
+                    // maybe handle this by setting tabObjects[e] to 255?
 
-                    byte ID = (byte)tentativeID;
-                    //p.Message("| &a+TAB &S{0}&S with ID {1}", name, ID);
-                    tabby = new TabObject(o, ID, name, nick, group, groupRank);
-                    tabObjects[o] = tabby;
+                    id = (byte)tentativeID;
+                    usedTabIDs[id] = true;
+                    tabMap[entry]  = id;
                 }
 
-                p.Session.SendAddTabEntry(tabby.id, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
+                p.Session.SendAddTabEntry(id, name, nick, group, rank);
             }
         }
-        int FindFreeTabID(object o, bool self) {
-            if (self) return Entities.SelfID;
+ 
+        /// <summary> Removes the given entry from player's tab list (if their client supports it). </summary>       
+        public void RemoveTabEntry(ITabListEntry e) {
+            if (!p.hasExtList) return;
+            
+            OnTabListEntryRemovedEvent.Call(e, p);
+            byte id;
 
+            lock (locker) {               
+                if (!tabMap.TryGetValue(e, out id)) return;
+
+                usedTabIDs[id] = false;
+                tabMap.Remove(e);
+                
+                p.Session.SendRemoveTabEntry(id);
+            }
+        }
+        
+        int FindFreeTabID(ITabListEntry entry) {
             //Try finding a matching visible entity for the ID
-            if (o is Entity) {
+            if (entry is Entity) {
                 VisibleEntity vis;
-                Entity e = (Entity)o;
-                if (visible.TryGetValue(e, out vis) && usedTabIDs[vis.id] != true) {
-                    //We need to match the tablist ID to the matching entity in the level if possible,
-                    //because a few popular plugins (chatsounds, CEF) rely on this
-
-                    //p.Message("Found {0}&S in level, using ID {1}", vis.displayName, vis.id);
-                    usedTabIDs[vis.id] = true;
+                Entity e = (Entity)entry;
+                
+                if (visible.TryGetValue(e, out vis) && !usedTabIDs[vis.id]) {
+                    // Match tablist ID to corresponding entity in the level if possible,
+                    // because a few popular plugins (chatsounds, CEF) rely on this
                     return vis.id;
                 }
             }
 
-            //In this case, it's an entry for an Entity not on your level (or one that hasn't spawned yet)
-            //Since visible entities are assigned starting from 0 and going up,
-            //we'll find tab list IDs going from 254 down so there's less chance of
-            //an entity from another level sharing an ID with an entity on your level
-            for (int i = maxEntityID; i >= 0; i--) {
-                if (usedTabIDs[i] == false) {
-                    usedTabIDs[i] = true;
-                    //p.Message("Tab ID {0} is now used.", i);
-                    return i;
-                }
-            }
-
-            //p.Message("No IDS left :(");
-            return -1; //No IDs left :(
-        }
-        public void SendRemoveTabEntry(object o) {
-            if (!p.hasExtList) return;
-
-            lock (locker) {
-                TabObject tabby;
-                if (tabObjects.TryGetValue(o, out tabby)) {
-                    tabby = tabObjects[o];
-                    if (o != p) usedTabIDs[tabby.id] = false;
-                    //p.Message("| &c-TAB &S{0}&S with ID {1}", tabby.name, tabby.id);
-                    tabObjects.Remove(o);
-                    p.Session.SendRemoveTabEntry(tabby.id);
-                } else {
-                    //Seems to happen when reconnecting
-                    //Logger.Log(LogType.Warning, "{0}'s entitymap: Tried removing Tablist ({0}) that wasn't in the collection...", p.name, e.SkinName);
-                }
-            }
+            // In this case, it's not an entity on the player's level (or entity that hasn't spawned yet)
+            // Since visible entities are assigned starting from 0 and going up,
+            //  assign tab list IDs going from 254 down so there's less chance
+            //  of colliding with the ID of an entity on the player's level
+            for (int i = maxEntityID; i >= 0; i--) 
+            {
+                if (!usedTabIDs[i]) return i;
+            }           
+            return -1;
         }
         #endregion
 
@@ -220,15 +205,15 @@ namespace MCGalaxy {
                         //p.Message("RESPAWNING {0}&S with ID {1}", name, vis.id);
                     }
                     Spawn(vis, pos, rot, skin, name, model);
-                    if (tabList) AddTab(e);
+                    if (tabList) AddTabEntry(e);
 
                     //If this entity has a matching tab entry, we need to make sure the IDs get synced
                     //because a few popular plugins (chatsounds, CEF) rely on this
-                    TabObject tabby;
-                    if (tabObjects.TryGetValue(vis.e, out tabby) && tabby.id != vis.id) {
+                    byte tabID;
+                    if (tabMap.TryGetValue(vis.e, out tabID) && tabID != vis.id) {
                         //p.Message("%bReadding tab {0} :)", tabby.nick);
-                        SendRemoveTabEntry(vis.e);
-                        SendAddTabEntry(vis.e, tabby.name, tabby.nick, tabby.group, tabby.groupRank);
+                        RemoveTabEntry(vis.e);
+                        AddTabEntry(vis.e);
                     }
 
                     return true;
@@ -266,7 +251,7 @@ namespace MCGalaxy {
                     //p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
 
                     visible.Remove(e);
-                    if (tabList) RemoveTab(e);
+                    if (tabList) RemoveTabEntry(e);
                     Despawn(vis);
 
                     //Now that we've removed a visible entity, try spawning a waiting invisible one
@@ -428,7 +413,7 @@ namespace MCGalaxy {
 
                 rot.HeadX = pitch;
                 p.Session.GetPositionPacket(ref ptr, id, e.hasExtPositions, dst.hasExtPositions,
-                                           e._positionUpdatePos, e._lastPos, rot, e._lastRot);
+                                            e._positionUpdatePos, e._lastPos, rot, e._lastRot);
 
                 //bool rotChanged = rot.RotY != e._lastRot.RotY || rot.HeadX != e._lastRot.HeadX;
                 //if (pair.Value.displayName.CaselessContains("temp") && (e._lastPos != e._positionUpdatePos || rotChanged)) {
