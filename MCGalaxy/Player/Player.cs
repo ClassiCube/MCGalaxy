@@ -47,7 +47,7 @@ namespace MCGalaxy {
         }
     }
     
-    public partial class Player : Entity, IDisposable {
+    public partial class Player : Entity, IDisposable, ITabListEntry {
 
         static int sessionCounter;
         public static Player Console = new ConsolePlayer();
@@ -513,6 +513,42 @@ namespace MCGalaxy {
             SendCpeMessage(CpeMessageType.BottomRight3, "");
             SendCpeMessage(CpeMessageType.BottomRight2, "");
             SendCpeMessage(CpeMessageType.BottomRight1, "");
-        }        
+        }   
+
+        
+        public bool SharesTabListWith(Player target) {
+            return (level == target.level || Server.Config.TablistGlobal) 
+                && target.CanSee(this);
+        }
+        
+        public string GetTabListName() { return truename; }
+        
+        public string GetTabListNick(Player target) { 
+            string name = target.Ignores.Nicks ? color + truename : ColoredName;
+            return Colors.Escape(name);
+        }
+        
+        public string GetTabListSuffix() { 
+            if (hidden && IsAfk) return " &f(Hid, &7AFK)";
+            if (hidden) return " &f(Hid)";
+            if (IsAfk)  return " &7(AFK)";
+            return null;
+        }
+        
+        public string GetTabListGroup() {
+            if (!Server.Config.TablistGlobal) return "&fPlayers";
+            
+            string map = level.name;
+            if (!level.SeesServerWideChat) map += " &S<Local chat>";
+            return "On " + map;
+        }
+        
+        public byte GetTabListRank() {
+            if (!Server.Config.TablistRankSorted) return 1;
+            
+            // Want higher ranks at top of tab list, banned at bottom of tab list
+            const LevelPermission offset = LevelPermission.Console;
+            return (byte)(offset - Rank);
+        } 
     }
 }

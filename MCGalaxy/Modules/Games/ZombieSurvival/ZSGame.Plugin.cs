@@ -79,7 +79,7 @@ namespace MCGalaxy.Modules.Games.ZS
             model = p == dst ? p.Model : Config.ZombieModel;
         }
         
-        void HandleTabListEntryAdded(Entity e, ref string tabName, ref string tabGroup, Player dst) {
+        void HandleTabListEntryAdded(ITabListEntry e, ref string tabName, ref string tabGroup, Player dst) {
             Player p = e as Player;
             if (p == null || p.level != Map) return;
             

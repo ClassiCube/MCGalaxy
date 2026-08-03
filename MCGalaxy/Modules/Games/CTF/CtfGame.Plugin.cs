@@ -121,8 +121,8 @@ namespace MCGalaxy.Modules.Games.CTF
             pos = Position.FromFeetBlockCoords(coords.X, coords.Y, coords.Z);
         }
         
-        void HandleTabListEntryAdded(Entity entity, ref string tabName, ref string tabGroup, Player dst) {
-            Player p = entity as Player;
+        void HandleTabListEntryAdded(ITabListEntry e, ref string tabName, ref string tabGroup, Player dst) {
+            Player p = e as Player;
             if (p == null || p.level != Map) return;
             CtfTeam team = TeamOf(p);
             
