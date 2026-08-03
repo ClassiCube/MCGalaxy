@@ -41,31 +41,9 @@ namespace MCGalaxy {
                 this.displayName = displayName;
             }
         }
-        class TabObject {
-            public readonly object o;
-            public readonly byte id;
-            public string name;
-            public string nick;
-            public string group;
-            public byte groupRank;
-
-            public TabObject(object o, byte id, string name, string nick, string group, byte groupRank) {
-                this.o = o;
-                this.id = id;
-                this.name = name;
-                this.nick = nick;
-                this.group = group;
-                this.groupRank = groupRank;
-            }
-            public void UpdateFields(string name, string nick, string group, byte groupRank) {
-                this.name = name;
-                this.nick = nick;
-                this.group = group;
-                this.groupRank = groupRank;
-            }
-        }
-        class WaitingEntity : VisibleEntity {
-
+        
+        class WaitingEntity : VisibleEntity 
+        {
             public readonly bool tabList;
             public WaitingEntity(Entity e, byte id, string displayName, bool tabList) : base(e, id, displayName) {
                 this.tabList = tabList;
@@ -184,12 +162,13 @@ namespace MCGalaxy {
         }
 
         /// <summary>
-        /// Adds the given entity and calls OnSendingModelEvent. Returns true if an entity was spawned, otherwise false if it could not immediately be spawned (it will spawn later if enough are removed)
+        /// Attempts to spawn the given entity (if cannot be immediately spawned, will spawn later if enough other entities are despawned)
         /// If this returns false and tabList is true, once the entity spawns, it will be added to the tab list.
         /// </summary>
         public bool Add(Entity e, Position pos, Orientation rot, string skin, string name, string model, bool tabList) {
             bool self = e == p;
 
+            OnEntitySpawnedEvent.Call(e, ref name, ref skin, ref model, p);
             OnSendingModelEvent.Call(e, ref model, p);
 
             lock (locker) {
@@ -229,11 +208,12 @@ namespace MCGalaxy {
             }
         }
 
-        /// <summary>
-        /// Remove the given entity and despawns it for this player. Returns true if an entity was despawned, otherwise false.
-        /// </summary>
+        /// <summary> Attempts to despawn the given entity </summary>
+        /// <returns> Whether the given entity was previously spawned to the player </returns>
         public bool Remove(Entity e, bool tabList) {
             bool self = e == p;
+            OnEntityDespawnedEvent.Call(e, p);
+            
             lock (locker) {
 
                 //If we're removing a currently invisible entity...

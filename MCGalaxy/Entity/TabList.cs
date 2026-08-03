@@ -58,6 +58,7 @@ namespace MCGalaxy
                     continue;
                 }
                 
+                // TODO remove if not sharing ??
                 if (p.SharesTabListWith(other)) Add(other, p);
                 if (other.SharesTabListWith(p)) Add(p, other);
             }
@@ -68,7 +69,7 @@ namespace MCGalaxy
         internal static void RemoveAll(Player p, bool self, bool toVisible) {
             if (!Server.Config.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player other in players) {               
+            foreach (Player other in players) {
                 if (p == other) {
                     if (self) Remove(other, p); 
                     continue;
