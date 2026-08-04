@@ -225,37 +225,33 @@ namespace MCGalaxy {
                 }
 
                 VisibleEntity vis;
-                if (visible.TryGetValue(e, out vis)) {
-                    vis = visible[e];
-                    if (!self) freeIDs.Push(vis.id);
-                    //p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
+                if (!visible.TryGetValue(e, out vis)) return false;
+                
+                if (!self) freeIDs.Push(vis.id);
+                //p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
 
-                    visible.Remove(e);
-                    if (tabList) RemoveTabEntry(e);
-                    Despawn(vis);
+                visible.Remove(e);
+                if (tabList) RemoveTabEntry(e);
+                Despawn(vis);
 
-                    //Now that we've removed a visible entity, try spawning a waiting invisible one
-                    if (invisible.Count > 0 && freeIDs.Count > 0 && !self) {
-                        waiting = invisible[0];
-                        invisible.RemoveAt(0);
-                        //p.Message("Adding {0} who was invisible :)", waiting.displayName);
-                        Add(waiting.e, waiting.e.Pos, waiting.e.Rot, waiting.e.SkinName, waiting.displayName, waiting.e.Model, waiting.tabList);
-                    }
-
-                    return true;
-                } else {
-                    //Seems to happen when reconnecting
-                    //Logger.Log(LogType.Warning, "{0}'s entitymap: Tried removing an entity ({0}) that wasn't in the collection...", p.name, e.SkinName);
-                    return false;
+                //Now that we've removed a visible entity, try spawning a waiting invisible one
+                if (invisible.Count > 0 && freeIDs.Count > 0 && !self) {
+                    waiting = invisible[0];
+                    invisible.RemoveAt(0);
+                    //p.Message("Adding {0} who was invisible :)", waiting.displayName);
+                    Add(waiting.e, waiting.e.Pos, waiting.e.Rot, waiting.e.SkinName, waiting.displayName, waiting.e.Model, waiting.tabList);
                 }
+
+                return true;
             }
         }
 
         void Spawn(VisibleEntity vis, Position pos, Orientation rot, string skin, string name, string model) {
-            p.Session.SendSpawnEntity(vis.id, name, skin, pos, rot);
-            p.Session.SendChangeModel(vis.id, model);
-            _SendRot(vis, rot);
-            _SendScales(vis);
+            byte id = vis.id;
+            p.Session.SendSpawnEntity(id, name, skin, pos, rot);
+            p.Session.SendChangeModel(id, model);
+            _SendRot(id, rot);
+            _SendScales(id, vis.e);
         }
         
         void Despawn(VisibleEntity vis) {
@@ -276,10 +272,10 @@ namespace MCGalaxy {
             }
         }
         
-        void _SendRot(VisibleEntity vis, Orientation rot) {
+        void _SendRot(byte id, Orientation rot) {
             if (p.Supports(CpeExt.EntityProperty)) {
-                p.Session.SendEntityProperty(vis.id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX));
-                p.Session.SendEntityProperty(vis.id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ));
+                p.Session.SendEntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX));
+                p.Session.SendEntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ));
             }
         }
 
@@ -288,24 +284,26 @@ namespace MCGalaxy {
             lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return;
-                _SendScales(vis);
+                _SendScales(vis.id, vis.e);
             }
         }
-        void _SendScales(VisibleEntity vis) {
+        
+        void _SendScales(byte id, Entity e) {
             if (!p.Supports(CpeExt.EntityProperty)) return;
 
-            float max = ModelInfo.MaxScale(vis.e, vis.e.Model);
-            _SendScale(vis, EntityProp.ScaleX, vis.e.ScaleX, max);
-            _SendScale(vis, EntityProp.ScaleY, vis.e.ScaleY, max);
-            _SendScale(vis, EntityProp.ScaleZ, vis.e.ScaleZ, max);
+            float max = ModelInfo.MaxScale(e, e.Model);
+            _SendScale(id, EntityProp.ScaleX, e.ScaleX, max);
+            _SendScale(id, EntityProp.ScaleY, e.ScaleY, max);
+            _SendScale(id, EntityProp.ScaleZ, e.ScaleZ, max);
         }
-        void _SendScale(VisibleEntity vis, EntityProp axis, float value, float max) {
+        
+        void _SendScale(byte id, EntityProp axis, float value, float max) {
             if (value == 0) return;
             value = Math.Min(value, max);
 
             int packed = (int)(value * 1000);
             if (packed == 0) return;
-            p.Session.SendEntityProperty(vis.id, axis, packed);
+            p.Session.SendEntityProperty(id, axis, packed);
         }
 
         public void SendProp(Entity e, EntityProp prop, int value) {
