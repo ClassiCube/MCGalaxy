@@ -89,9 +89,8 @@ namespace MCGalaxy
 
             string name = p.color + p.truename + possession;
             string skin = p.SkinName, model = p.Model;
-            OnEntitySpawnedEvent.Call(p, ref name, ref skin, ref model, dst);
 
-            SpawnRaw(dst, p, pos, rot, skin, name, model);
+            dst.EntityList.Add(p, pos, rot, skin, name, model, true);
         }
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
@@ -127,32 +126,18 @@ namespace MCGalaxy
         public static void Spawn(Player dst, PlayerBot b) {
             string name  = Chat.Format(b.color + b.DisplayName, dst, true, false);
             if (b.DisplayName.CaselessEq("empty")) name = "";
+            
             string skin  = Chat.Format(b.SkinName, dst, true, false);
             string model = Chat.Format(b.Model, dst, true, false);
             
-            OnEntitySpawnedEvent.Call(b, ref name, ref skin, ref model, dst);
-            SpawnRaw(dst, b, b.Pos, b.Rot, skin, name, model);
+            dst.EntityList.Add(b, b.Pos, b.Rot, skin, name, model, true);
         }
         
-        /// <summary>
-        /// Attempts to spawn and add an entity to p's tab list.
-        /// </summary>
-        static void SpawnRaw(Player p, Entity e, Position pos, Orientation rot,
-                             string skin, string name, string model) {
-
-            p.EntityList.Add(e, pos, rot, skin, name, model, true);
-        }
-        
-        /// <summary>
-        /// Despawns other to dst and calls OnEntityDespawnedEvent
-        /// </summary>
         public static void Despawn(Player dst, Player other) {
-            OnEntityDespawnedEvent.Call(other, dst);
             dst.EntityList.Remove(other, true);
         }
         
         public static void Despawn(Player dst, PlayerBot b) {
-            OnEntityDespawnedEvent.Call(b, dst);
             dst.EntityList.Remove(b, true);
         }
 

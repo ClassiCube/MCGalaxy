@@ -21,53 +21,30 @@ using MCGalaxy.Network;
 
 namespace MCGalaxy 
 {
+    public interface ITabListEntry
+    {
+        bool SharesTabListWith(Player target);
+        
+        string GetTabListName();
+        
+        string GetTabListNick(Player target);
+        string GetTabListSuffix();
+        
+        string GetTabListGroup();
+        byte   GetTabListRank ();
+    }
+    
     /// <summary> Contains methods related to the management of tab list of player names. </summary>
     public static class TabList 
     {
-        // Want higher ranks at top of tab list, banned at bottom of tab list
-        const LevelPermission offset = LevelPermission.Console;
-        
-        /// <summary> Adds the given player to that player's tab list (if their client supports it). </summary>
-        public static void Add(Player dst, Player p) {
-            if (!dst.hasExtList) return;
-            byte grpPerm = (byte)(offset - p.Rank);
-            if (!Server.Config.TablistRankSorted) grpPerm = 1;
-            
-            string name, group;
-            GetEntry(p, dst, out name, out group);
-            
-            name = Colors.Escape(name); // for nicks
-            dst.EntityList.SendAddTabEntry(p, p.truename, name, group, grpPerm);
+        /// <summary> Adds the given entry to that player's tab list (if their client support it). </summary>
+        public static void Add(Player dst, ITabListEntry e) {
+            dst.EntityList.AddTabEntry(e);
         }
         
-        static void GetEntry(Player p, Player dst, out string name, out string group) {
-            string map = p.level.name;
-            if (!p.level.SeesServerWideChat) map += " &S<Local chat>";
-            
-            group = Server.Config.TablistGlobal ? "On " + map : "&fPlayers";
-            name  = dst.Ignores.Nicks ? p.color + p.truename : p.ColoredName;
-            OnTabListEntryAddedEvent.Call(p, ref name, ref group, dst);
-
-            if (p.hidden && p.IsAfk) { name += " &f(Hid, &7AFK)"; return; }
-            if (p.hidden) name += " &f(Hid)";
-            if (p.IsAfk) name += " &7(AFK)";
-        }
-        
-        /// <summary> Adds the given bot to that player's tab list (if their client support it). </summary>
-        public static void Add(Player dst, PlayerBot b) {
-            if (!dst.hasExtList) return;
-            
-            string name = b.color + b.name, group = "Bots";
-            OnTabListEntryAddedEvent.Call(b, ref name, ref group, dst);
-            dst.EntityList.SendAddTabEntry(b, b.name, name, group, 0);
-        }
-        
-        /// <summary> Removes the given entity from player's tab list (if their client supports it). </summary>
-        public static void Remove(Player dst, Entity entity) {
-            if (!dst.hasExtList) return;
-            
-            OnTabListEntryRemovedEvent.Call(entity, dst);
-            dst.EntityList.SendRemoveTabEntry(entity);
+        /// <summary> Removes the given entry from player's tab list (if their client supports it). </summary>
+        public static void Remove(Player dst, ITabListEntry e) {
+            dst.EntityList.RemoveTabEntry(e);
         }
         
         
@@ -80,10 +57,10 @@ namespace MCGalaxy
                     if (self) Add(other, p);
                     continue;
                 }
-                if (!Server.Config.TablistGlobal && p.level != other.level) continue;
                 
-                if (other.CanSee(p)) Add(other, p);
-                if (p.CanSee(other)) Add(p, other);
+                // TODO remove if not sharing ??
+                if (p.SharesTabListWith(other)) Add(other, p);
+                if (other.SharesTabListWith(p)) Add(p, other);
             }
         }
         
@@ -92,7 +69,7 @@ namespace MCGalaxy
         internal static void RemoveAll(Player p, bool self, bool toVisible) {
             if (!Server.Config.TablistGlobal) return;
             Player[] players = PlayerInfo.Online.Items;
-            foreach (Player other in players) {               
+            foreach (Player other in players) {
                 if (p == other) {
                     if (self) Remove(other, p); 
                     continue;

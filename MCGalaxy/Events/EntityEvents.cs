@@ -20,11 +20,11 @@ using System.Collections.Generic;
 
 namespace MCGalaxy.Events.EntityEvents {
 
-    public delegate void OnTabListEntryAdded(Entity e, ref string tabName, ref string tabGroup, Player dst);
+    public delegate void OnTabListEntryAdded(ITabListEntry e, ref string tabName, ref string tabGroup, Player dst);
     /// <summary> Called when a tab list entry is being sent to a user. </summary>
     public sealed class OnTabListEntryAddedEvent : IEvent<OnTabListEntryAdded> {
         
-        public static void Call(Entity e, ref string tabName, ref string tabGroup, Player dst) {
+        public static void Call(ITabListEntry e, ref string tabName, ref string tabGroup, Player dst) {
             IEvent<OnTabListEntryAdded>[] items = handlers.Items;
             // Can't use CallCommon because we need to pass arguments by ref
             for (int i = 0; i < items.Length; i++) {
@@ -37,11 +37,11 @@ namespace MCGalaxy.Events.EntityEvents {
         }
     }
 
-    public delegate void OnTabListEntryRemoved(Entity e, Player dst);
+    public delegate void OnTabListEntryRemoved(ITabListEntry e, Player dst);
     /// <summary> Called when a tab list entry is being removed from a user. </summary>
     public sealed class OnTabListEntryRemovedEvent : IEvent<OnTabListEntryRemoved> {
         
-        public static void Call(Entity e, Player dst) {
+        public static void Call(ITabListEntry e, Player dst) {
             IEvent<OnTabListEntryRemoved>[] items = handlers.Items;
             // Don't use CallCommon, because this event is called very frequently
             // and want to avoid lots of pointless temp mem allocations

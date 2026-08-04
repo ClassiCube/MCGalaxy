@@ -21,7 +21,7 @@ using MCGalaxy.Maths;
 
 namespace MCGalaxy 
 {
-    public abstract class Entity 
+    public abstract class Entity : ITabListEntry
     {
         // Raw orientation/position - access must be threadsafe
         volatile uint _rot;
@@ -97,5 +97,18 @@ namespace MCGalaxy
             SetModel(model);
             Entities.BroadcastModel(this, model);
         }
+                
+        
+        public abstract bool SharesTabListWith(Player target);
+        
+        public abstract string GetTabListName();
+        
+        public abstract string GetTabListNick(Player target);
+        
+        public abstract string GetTabListSuffix();
+        
+        public abstract string GetTabListGroup();
+        
+        public abstract byte GetTabListRank();
     }
 }
