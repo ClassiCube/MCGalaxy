@@ -95,7 +95,7 @@ namespace MCGalaxy
         /// <summary> Calls SetModel, then broadcasts the new model to players. Broadcasts current scales as well. </summary>
         public void UpdateModel(string model) {
             SetModel(model);
-            Entities.BroadcastModel(this, model);
+            Entities.BroadcastModel(this);
         }
                 
         

@@ -49,6 +49,7 @@ namespace MCGalaxy
             }
             return model;
         }
+        
         public static void SetModel(Player p, Player who, string model) {
             bool cancel = false;
             OnPlayerOperationEvent.Call(p, PlayerOperation.Model, who.name, who, ref model, ref cancel);

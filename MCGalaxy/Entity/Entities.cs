@@ -137,17 +137,15 @@ namespace MCGalaxy
         /// <summary>
         /// Broadcasts the current model and scales for e to everyone who can see it.
         /// </summary>
-        internal static void BroadcastModel(Entity e, string m) {
+        internal static void BroadcastModel(Entity e) {
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = e.Level;
 
-            foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.hasChangeModel) continue;
-                if (!pl.CanSeeEntity(e)) continue;
+            foreach (Player pl in players) 
+            {
+                if (pl.level != lvl) continue;
 
-                string model = Chat.Format(m, pl, true, false);
-
-                pl.EntityList.SendModel(e, model);
+                pl.EntityList.SendModel(e, e.GetSpawnModel(pl));
                 pl.EntityList.SendScales(e);
             }
         }

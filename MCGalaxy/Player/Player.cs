@@ -553,7 +553,7 @@ namespace MCGalaxy {
         
         public override string GetSpawnName (Player target) {
             //return p.color + p.truename + possession;
-            string nametag = color + truename;            
+            string nametag = color + truename;
             if (!possessed) return nametag;
             
             Player controller = PlayerInfo.FindExact(following);

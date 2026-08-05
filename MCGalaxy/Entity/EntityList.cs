@@ -40,7 +40,7 @@ namespace MCGalaxy {
             }
         }
         
-        class WaitingEntity : VisibleEntity 
+        class WaitingEntity : VisibleEntity
         {
             public readonly bool tabList;
             public WaitingEntity(Entity e, byte id, bool tabList) : base(e, id) {
@@ -100,15 +100,15 @@ namespace MCGalaxy {
                 p.Session.SendAddTabEntry(id, name, nick, group, rank);
             }
         }
- 
-        /// <summary> Removes the given entry from player's tab list (if their client supports it). </summary>       
+        
+        /// <summary> Removes the given entry from player's tab list (if their client supports it). </summary>
         public void RemoveTabEntry(ITabListEntry e) {
             if (!p.hasExtList) return;
             
             OnTabListEntryRemovedEvent.Call(e, p);
             byte id;
 
-            lock (locker) {               
+            lock (locker) {
                 if (!tabMap.TryGetValue(e, out id)) return;
 
                 usedTabIDs[id] = false;
@@ -135,10 +135,10 @@ namespace MCGalaxy {
             // Since visible entities are assigned starting from 0 and going up,
             //  assign tab list IDs going from 254 down so there's less chance
             //  of colliding with the ID of an entity on the player's level
-            for (int i = maxEntityID; i >= 0; i--) 
+            for (int i = maxEntityID; i >= 0; i--)
             {
                 if (!usedTabIDs[i]) return i;
-            }           
+            }
             return -1;
         }
         #endregion
@@ -164,56 +164,51 @@ namespace MCGalaxy {
         /// If this returns false and tabList is true, once the entity spawns, it will be added to the tab list.
         /// </summary>
         public bool Add(Entity e, Position pos, Orientation rot, bool tabList) {
-            bool self = e == p;
-            
-            string name  = e.GetSpawnName(p);           
+            string name  = e.GetSpawnName(p);
             string skin  = e.GetSpawnSkin(p);
             string model = e.GetSpawnModel(p);
 
             OnEntitySpawnedEvent.Call(e, ref name, ref skin, ref model, p);
             OnSendingModelEvent.Call(e, ref model, p);
+            VisibleEntity vis;
+            byte id;
 
             lock (locker) {
-                if (freeIDs.Count > 0 || self) {
-                    VisibleEntity vis;
-                    if (!visible.TryGetValue(e, out vis)) {
-                        byte ID = self ? Entities.SelfID : freeIDs.Pop();
-                        //p.Message("| &a+ &S{0}&S with ID {1}", name, ID);
-
-                        vis = new VisibleEntity(e, ID);
-                        visible[e] = vis;
-                    } else {
-                        //p.Message("RESPAWNING {0}&S with ID {1}", name, vis.id);
-                    }
-                    Spawn(vis, pos, rot, skin, name, model);
-                    if (tabList) AddTabEntry(e);
-
-                    //If this entity has a matching tab entry, we need to make sure the IDs get synced
-                    //because a few popular plugins (chatsounds, CEF) rely on this
-                    byte tabID;
-                    if (tabMap.TryGetValue(e, out tabID) && tabID != vis.id) {
-                        //p.Message("%bReadding tab {0} :)", tabby.nick);
-                        RemoveTabEntry(e);
-                        AddTabEntry(e);
-                    }
-
-                    return true;
-                }
-
-                //Don't add if it's already queued
-                if (IsWaitingToSpawn(e) == null) {
+                if (e == p) {
+                    id = Entities.SelfID;
+                } else if (visible.TryGetValue(e, out vis)) {
+                    id = vis.id;
+                } else if (freeIDs.Count > 0) {
+                    id = freeIDs.Pop();
+                    visible[e] = new VisibleEntity(e, id);
+                } else {
+                    // Don't add if it's already queued
+                    if (IsWaitingToSpawn(e) != null) return false;
+                    
                     WaitingEntity waiting = new WaitingEntity(e, 0, tabList);
                     invisible.Add(waiting);
-                    //p.Message("Queuing {0} as invisible.", waiting.displayName);
+                    return false;
                 }
-                return false;
+                
+                Spawn(id, e, pos, rot, skin, name, model);
+                if (tabList) AddTabEntry(e);
+
+                // If this entity has a matching tab entry, try to ensure IDs are synced
+                // because a few popular plugins (chatsounds, CEF) rely on this
+                byte tabID;
+                if (tabMap.TryGetValue(e, out tabID) && tabID != id) {
+                    //p.Message("%bReadding tab {0} :)", tabby.nick);
+                    RemoveTabEntry(e);
+                    AddTabEntry(e);
+                }
+                return true;
             }
         }
 
         /// <summary> Attempts to despawn the given entity </summary>
         /// <returns> Whether the given entity was previously spawned to the player </returns>
         public bool Remove(Entity e, bool tabList) {
-            bool self = e == p;
+            if (e == p) return false; // TODO still remove tab entry?
             OnEntityDespawnedEvent.Call(e, p);
             
             lock (locker) {
@@ -229,15 +224,14 @@ namespace MCGalaxy {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return false;
                 
-                if (!self) freeIDs.Push(vis.id);
-                //p.Message("| &c- &S{0}&S with ID {1}", vis.displayName, vis.id);
-
+                freeIDs.Push(vis.id);
                 visible.Remove(e);
+                
                 if (tabList) RemoveTabEntry(e);
-                Despawn(vis);
+                Despawn(vis.id);
 
                 //Now that we've removed a visible entity, try spawning a waiting invisible one
-                if (invisible.Count > 0 && freeIDs.Count > 0 && !self) {
+                if (invisible.Count > 0 && freeIDs.Count > 0) {
                     waiting = invisible[0];
                     invisible.RemoveAt(0);
                     //p.Message("Adding {0} who was invisible :)", waiting.displayName);
@@ -248,16 +242,15 @@ namespace MCGalaxy {
             }
         }
 
-        void Spawn(VisibleEntity vis, Position pos, Orientation rot, string skin, string name, string model) {
-            byte id = vis.id;
+        void Spawn(byte id, Entity e, Position pos, Orientation rot, string skin, string name, string model) {
             p.Session.SendSpawnEntity(id, name, skin, pos, rot);
             p.Session.SendChangeModel(id, model);
             _SendRot(id, rot);
-            _SendScales(id, vis.e);
+            _SendScales(id, e);
         }
         
-        void Despawn(VisibleEntity vis) {
-            p.Session.SendRemoveEntity(vis.id);
+        void Despawn(byte id) {
+            p.Session.SendRemoveEntity(id);
         }
 
         /// <summary>
@@ -379,7 +372,7 @@ namespace MCGalaxy {
                 Entity e = pair.Key;
                 byte id = pair.Value.id;
 
-                if (dst == e || dst.level != e.Level || !dst.CanSeeEntity(e)) continue;
+                if (dst.level != e.Level || !dst.CanSeeEntity(e)) continue;
 
                 Orientation rot = e.Rot; byte pitch = rot.HeadX;
                 //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
