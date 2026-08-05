@@ -51,6 +51,8 @@ namespace MCGalaxy.Gui.Popups {
             // 
             // gbUpnp
             // 
+            this.gbUpnp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbUpnp.Controls.Add(this.btnForward);
             this.gbUpnp.Controls.Add(this.btnDelete);
             this.gbUpnp.Controls.Add(this.lblResult);
@@ -94,14 +96,15 @@ namespace MCGalaxy.Gui.Popups {
             // 
             // lblInfo
             // 
+            this.lblInfo.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblInfo.AutoSize = true;
             this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInfo.Location = new System.Drawing.Point(5, 17);
+            this.lblInfo.Location = new System.Drawing.Point(4, 17);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(266, 39);
             this.lblInfo.TabIndex = 12;
             this.lblInfo.Text = "This uses UPnP, which not all routers support.\r\nIf this doesn\'t work, you will ha" +
-            "ve to\r\n manually port forward in your router.";
+    "ve to\r\n manually port forward in your router.";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkHelpForward
@@ -139,8 +142,8 @@ namespace MCGalaxy.Gui.Popups {
             // 
             // PortTools
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(296, 160);
             this.Controls.Add(this.gbLogs);
             this.Controls.Add(this.gbUpnp);
@@ -160,6 +163,7 @@ namespace MCGalaxy.Gui.Popups {
             this.gbLogs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         private System.Windows.Forms.TextBox txtLogs;
         private System.Windows.Forms.GroupBox gbLogs;

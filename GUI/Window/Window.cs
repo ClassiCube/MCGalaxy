@@ -318,7 +318,7 @@ Trying to mix two versions is unsupported - you may experience issues";
                 notifyIcon.Dispose();
             }
             
-            if (Server.shuttingDown || Popup.OKCancel("Really shutdown the server? All players will be disconnected!", "Exit")) {
+            if (Server.shuttingDown || Popup.OKCancel("Are you sure you want to shut down the server? All players will be disconnected!", "Exit")) {
                 Server.Stop(false, Server.Config.DefaultShutdownMessage);
                 notifyIcon.Dispose();
             } else {
