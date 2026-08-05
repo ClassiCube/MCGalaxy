@@ -119,7 +119,7 @@ namespace MCGalaxy {
         public string possess = "";
         // Only used for possession.
         //Using for anything else can cause unintended effects!
-        public bool possessed;
+        public bool possessed, possessedSkin;
         
         /// <summary> Whether this player has permission to build in the current level. </summary>
         public bool AllowBuild = true;

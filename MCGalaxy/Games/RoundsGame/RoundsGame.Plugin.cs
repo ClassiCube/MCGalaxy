@@ -101,7 +101,7 @@ namespace MCGalaxy.Games {
                 Entities.GlobalDespawn(p, false, false);
             }
             
-            Entities.GlobalSpawn(p, false, "");
+            Entities.GlobalSpawn(p, false);
             TabList.Update(p, true);
         }
         

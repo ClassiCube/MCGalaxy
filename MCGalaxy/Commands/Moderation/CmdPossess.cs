@@ -71,11 +71,12 @@ namespace MCGalaxy.Commands.Moderation {
                 target.following = p.name;
                 if (!p.invincible) p.invincible = true;
                 
-                bool result = (skin == "#") ? target.MarkPossessed() : target.MarkPossessed(p.name);
-                if (!result) return;
+                target.possessedSkin = skin == "#";
+                target.possessed     = true;
                 
+                Entities.GlobalRespawn(target, true);
                 Entities.Despawn(p, target);
-                target.possessed = true;
+                
                 p.Message("Now posessing {0}&S.", p.FormatNick(target));
             }
         }

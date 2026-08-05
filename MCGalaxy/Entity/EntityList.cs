@@ -33,19 +33,17 @@ namespace MCGalaxy {
         class VisibleEntity {
             public readonly Entity e;
             public readonly byte id;
-            public readonly string displayName;
 
-            public VisibleEntity(Entity e, byte id, string displayName) {
+            public VisibleEntity(Entity e, byte id) {
                 this.e = e;
                 this.id = id;
-                this.displayName = displayName;
             }
         }
         
         class WaitingEntity : VisibleEntity 
         {
             public readonly bool tabList;
-            public WaitingEntity(Entity e, byte id, string displayName, bool tabList) : base(e, id, displayName) {
+            public WaitingEntity(Entity e, byte id, bool tabList) : base(e, id) {
                 this.tabList = tabList;
             }
         }
@@ -165,8 +163,12 @@ namespace MCGalaxy {
         /// Attempts to spawn the given entity (if cannot be immediately spawned, will spawn later if enough other entities are despawned)
         /// If this returns false and tabList is true, once the entity spawns, it will be added to the tab list.
         /// </summary>
-        public bool Add(Entity e, Position pos, Orientation rot, string skin, string name, string model, bool tabList) {
+        public bool Add(Entity e, Position pos, Orientation rot, bool tabList) {
             bool self = e == p;
+            
+            string name  = e.GetSpawnName(p);           
+            string skin  = e.GetSpawnSkin(p);
+            string model = e.GetSpawnModel(p);
 
             OnEntitySpawnedEvent.Call(e, ref name, ref skin, ref model, p);
             OnSendingModelEvent.Call(e, ref model, p);
@@ -178,7 +180,7 @@ namespace MCGalaxy {
                         byte ID = self ? Entities.SelfID : freeIDs.Pop();
                         //p.Message("| &a+ &S{0}&S with ID {1}", name, ID);
 
-                        vis = new VisibleEntity(e, ID, name);
+                        vis = new VisibleEntity(e, ID);
                         visible[e] = vis;
                     } else {
                         //p.Message("RESPAWNING {0}&S with ID {1}", name, vis.id);
@@ -189,10 +191,10 @@ namespace MCGalaxy {
                     //If this entity has a matching tab entry, we need to make sure the IDs get synced
                     //because a few popular plugins (chatsounds, CEF) rely on this
                     byte tabID;
-                    if (tabMap.TryGetValue(vis.e, out tabID) && tabID != vis.id) {
+                    if (tabMap.TryGetValue(e, out tabID) && tabID != vis.id) {
                         //p.Message("%bReadding tab {0} :)", tabby.nick);
-                        RemoveTabEntry(vis.e);
-                        AddTabEntry(vis.e);
+                        RemoveTabEntry(e);
+                        AddTabEntry(e);
                     }
 
                     return true;
@@ -200,7 +202,7 @@ namespace MCGalaxy {
 
                 //Don't add if it's already queued
                 if (IsWaitingToSpawn(e) == null) {
-                    WaitingEntity waiting = new WaitingEntity(e, 0, name, tabList);
+                    WaitingEntity waiting = new WaitingEntity(e, 0, tabList);
                     invisible.Add(waiting);
                     //p.Message("Queuing {0} as invisible.", waiting.displayName);
                 }
@@ -239,7 +241,7 @@ namespace MCGalaxy {
                     waiting = invisible[0];
                     invisible.RemoveAt(0);
                     //p.Message("Adding {0} who was invisible :)", waiting.displayName);
-                    Add(waiting.e, waiting.e.Pos, waiting.e.Rot, waiting.e.SkinName, waiting.displayName, waiting.e.Model, waiting.tabList);
+                    Add(waiting.e, waiting.e.Pos, waiting.e.Rot, waiting.tabList);
                 }
 
                 return true;

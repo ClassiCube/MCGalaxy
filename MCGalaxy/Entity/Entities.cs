@@ -34,12 +34,12 @@ namespace MCGalaxy
         }
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalSpawn(Player p, bool self, string possession = "") {
-            GlobalSpawn(p, p.Pos, p.Rot, self, possession);
+        public static void GlobalSpawn(Player p, bool self) {
+            GlobalSpawn(p, p.Pos, p.Rot, self);
         }
         
         /// <summary> Spawns this player to all other players that can see the player in the current world. </summary>
-        public static void GlobalSpawn(Player p, Position pos, Orientation rot, bool self, string possession = "") {
+        public static void GlobalSpawn(Player p, Position pos, Orientation rot, bool self) {
             Player[] players = PlayerInfo.Online.Items;
             TabList.Update(p, self);
             
@@ -47,11 +47,11 @@ namespace MCGalaxy
                 if ((other.Loading && p != other) || p.level != other.level) continue;
                 
                 if (p != other && other.CanSeeEntity(p)) {
-                    Spawn(other, p, pos, rot, possession);
+                    Spawn(other, p, pos, rot);
                 } else if (p == other && self) {
                     other.Pos = pos; other.SetYawPitch(rot.RotY, rot.HeadX);
                     other._lastPos = other.Pos; other._lastRot = other.Rot;
-                    Spawn(other, p, pos, rot, possession);
+                    Spawn(other, p, pos, rot);
                 }
             }
         }
@@ -77,21 +77,16 @@ namespace MCGalaxy
         }
 
 
-        /// <summary>
-        /// Spawns p to dst and calls OnEntitySpawnedEvent
-        /// </summary>
-        public static void Spawn(Player dst, Player p) { Spawn(dst, p, p.Pos, p.Rot); }
-        /// <summary>
-        /// Spawns p to dst at the given pos and rot and calls OnEntitySpawnedEvent
-        /// </summary>
-        public static void Spawn(Player dst, Player p, Position pos,
-                                 Orientation rot, string possession = "") {
-
-            string name = p.color + p.truename + possession;
-            string skin = p.SkinName, model = p.Model;
-
-            dst.EntityList.Add(p, pos, rot, skin, name, model, true);
+        public static void Spawn(Player dst, Entity e) { Spawn(dst, e, e.Pos, e.Rot); }
+        
+        public static void Spawn(Player dst, Entity e, Position pos, Orientation rot) {
+            dst.EntityList.Add(e, pos, rot, true);
         }
+        
+        public static void Despawn(Player dst, Entity e) {
+            dst.EntityList.Remove(e, true);
+        }
+        
         
         /// <summary> Spawns this player to all other players, and spawns all others players to this player. </summary>
         internal static void SpawnEntities(Player p, bool bots = true) { SpawnEntities(p, p.Pos, p.Rot, bots); }
@@ -121,24 +116,6 @@ namespace MCGalaxy
             if (!bots) return;
             PlayerBot[] botsList = p.level.Bots.Items;
             foreach (PlayerBot b in botsList) { Despawn(p, b); }
-        }
-        
-        public static void Spawn(Player dst, PlayerBot b) {
-            string name  = Chat.Format(b.color + b.DisplayName, dst, true, false);
-            if (b.DisplayName.CaselessEq("empty")) name = "";
-            
-            string skin  = Chat.Format(b.SkinName, dst, true, false);
-            string model = Chat.Format(b.Model, dst, true, false);
-            
-            dst.EntityList.Add(b, b.Pos, b.Rot, skin, name, model, true);
-        }
-        
-        public static void Despawn(Player dst, Player other) {
-            dst.EntityList.Remove(other, true);
-        }
-        
-        public static void Despawn(Player dst, PlayerBot b) {
-            dst.EntityList.Remove(b, true);
         }
 
         #endregion

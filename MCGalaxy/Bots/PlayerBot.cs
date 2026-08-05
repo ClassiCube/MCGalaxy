@@ -298,6 +298,7 @@ namespace MCGalaxy
                 }*/
         
         
+        #region ITabListEntry        
         public override bool SharesTabListWith(Player target) {
             return level == target.level && Server.Config.TablistBots;
         }
@@ -308,6 +309,24 @@ namespace MCGalaxy
         public override string GetTabListSuffix() { return null; }
         
         public override string GetTabListGroup() { return "Bots"; }
-        public override byte   GetTabListRank () { return 0; }
+        public override byte   GetTabListRank () { return 0; }        
+        #endregion
+        
+        
+        #region Spawning
+        public override string GetSpawnModel(Player target) {
+            return Chat.Format(Model, target, true, false);
+        }
+        
+        public override string GetSpawnSkin (Player target) {
+            return Chat.Format(SkinName, target, true, false);
+        }
+        
+        public override string GetSpawnName (Player target) {
+            if (DisplayName.CaselessEq("empty")) return "";
+            
+            return Chat.Format(color + DisplayName, target, true, false);
+        }       
+        #endregion
     }
 }

@@ -99,6 +99,7 @@ namespace MCGalaxy
         }
                 
         
+        #region ITabListEntry
         public abstract bool SharesTabListWith(Player target);
         
         public abstract string GetTabListName();
@@ -110,5 +111,13 @@ namespace MCGalaxy
         public abstract string GetTabListGroup();
         
         public abstract byte GetTabListRank();
+        #endregion
+        
+        
+        #region Spawning
+        public abstract string GetSpawnModel(Player target);
+        public abstract string GetSpawnSkin (Player target);
+        public abstract string GetSpawnName (Player target);
+        #endregion
     }
 }

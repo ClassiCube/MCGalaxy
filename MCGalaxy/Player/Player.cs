@@ -198,18 +198,6 @@ namespace MCGalaxy {
             return cmd != null && CanUse(cmd);
         }
 
-        public bool MarkPossessed(string marker = "") {
-            if (marker.Length > 0) {
-                Player controller = PlayerInfo.FindExact(marker);
-                if (controller == null) return false;
-                marker = " (" + controller.color + controller.name + color + ")";
-            }
-            
-            Entities.GlobalDespawn(this, true);
-            Entities.GlobalSpawn(this, true, marker);
-            return true;
-        }
-
         #region == DISCONNECTING ==
         
         /// <summary> Disconnects the player from the server, 
@@ -516,6 +504,7 @@ namespace MCGalaxy {
         }   
 
         
+        #region ITabListEntry       
         public override bool SharesTabListWith(Player target) {
             return (level == target.level || Server.Config.TablistGlobal) 
                 && target.CanSee(this);
@@ -549,6 +538,29 @@ namespace MCGalaxy {
             // Want higher ranks at top of tab list, banned at bottom of tab list
             const LevelPermission offset = LevelPermission.Console;
             return (byte)(offset - Rank);
-        } 
+        }        
+        #endregion
+        
+        
+        #region Spawning
+        public override string GetSpawnModel(Player target) {
+            return Model;    
+        }
+        
+        public override string GetSpawnSkin (Player target) {
+            return SkinName;            
+        }
+        
+        public override string GetSpawnName (Player target) {
+            //return p.color + p.truename + possession;
+            string nametag = color + truename;            
+            if (!possessed) return nametag;
+            
+            Player controller = PlayerInfo.FindExact(following);
+            if (controller == null || possessedSkin) return nametag;
+            
+            return nametag + " (" + controller.color + controller.name + color + ")";
+        }       
+        #endregion
     }
 }
