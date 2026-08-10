@@ -23,10 +23,6 @@ namespace MCGalaxy
 {
     public interface ITabListEntry
     {
-        /// <summary>
-        /// Some classes of entities such as PlayerBot may never appear in tab list depending on the server's config
-        /// </summary>
-        bool IncludedInTabList();
         bool SharesTabListWith(Player target);
         
         string GetTabListName();

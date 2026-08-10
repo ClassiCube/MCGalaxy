@@ -504,8 +504,7 @@ namespace MCGalaxy {
         }   
 
         
-        #region ITabListEntry       
-        public override bool IncludedInTabList() { return true; }
+        #region ITabListEntry
         public override bool SharesTabListWith(Player target) {
             return (level == target.level || Server.Config.TablistGlobal) 
                 && target.CanSee(this);
