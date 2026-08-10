@@ -66,47 +66,60 @@ namespace MCGalaxy.Commands.Bots
         }
         
         void HandleDelete(Player p, string ai, string[] args) {
-            if (!Directory.Exists("bots/deleted"))
-                Directory.CreateDirectory("bots/deleted");
-            if (!File.Exists("bots/" + ai)) {
+            string path = ScriptFile.GetPath(ai);
+            if (!File.Exists(path)) {
                 p.Message("Could not find specified bot AI."); return;
             }
             
-            for (int attempt = 0; attempt < 10; attempt++) {
-                try {
-                    if (args.Length == 2) {
+            if (!Directory.Exists(ScriptFile.DELETED_DIR))
+                Directory.CreateDirectory(ScriptFile.DELETED_DIR);
+            
+            if (args.Length == 2) {
+                // TODO better solution
+                for (int attempt = 0; attempt < 10; attempt++) 
+                {
+                    try {
                         DeleteAI(p, ai, attempt); return;
-                    } else if (args[2].CaselessEq("last")) {
-                        DeleteLast(p, ai); return;
-                    } else {
-                        Help(p); return;
+                    } catch (IOException) {
                     }
-                } catch (IOException) {
-                }
-            }
+                }            
+            } else if (args[2].CaselessEq("last")) {
+                DeleteLast(p, ai);
+            } else {
+                Help(p);
+            }            
         }
         
         static void DeleteAI(Player p, string ai, int attempt) {
+            string src = ScriptFile.GetPath(ai);
+            string dst;
+            
             if (attempt == 0) {
-                File.Move("bots/" + ai, "bots/deleted/" + ai);
+                dst = ScriptFile.GetDeletedPath(ai);
             } else {
-                File.Move("bots/" + ai, "bots/deleted/" + ai + attempt);
+                dst = ScriptFile.GetDeletedPath(ai + attempt);
             }
+            
+            File.Move(src, dst);
             p.Message("Deleted bot AI &b" + ai);
         }
         
         static void DeleteLast(Player p, string ai) {
-            List<string> lines = Utils.ReadAllLinesList("bots/" + ai);
+            string path = ScriptFile.GetPath(ai);
+            
+            List<string> lines = Utils.ReadAllLinesList(path);
             if (lines.Count > 0) lines.RemoveAt(lines.Count - 1);
 
-            File.WriteAllLines("bots/" + ai, lines.ToArray());
+            File.WriteAllLines(path, lines.ToArray());
             p.Message("Deleted last instruction from bot AI &b" + ai);
         }
 
         void HandleAdd(Player p, string ai, string[] args) {
-            if (!File.Exists("bots/" + ai)) {
+            string path = ScriptFile.GetPath(ai);
+            
+            if (!File.Exists(path)) {
                 p.Message("Created new bot AI: &b" + ai);
-                using (StreamWriter w = new StreamWriter("bots/" + ai)) {
+                using (StreamWriter w = new StreamWriter(path)) {
                     // For backwards compatibility
                     w.WriteLine("#Version 2");
                 }
@@ -119,20 +132,20 @@ namespace MCGalaxy.Commands.Bots
             }
         }
         
-        internal static string[] GetFiles { get { return Directory.GetFiles("bots"); } }
         void HandleList(Player p, string modifier) {
-            string[] files = GetFiles;
+            string[] files = ScriptFile.GetAll();
             Array.Sort(files);
             Paginator.Output(p, files, f => Path.GetFileName(f),
                              "BotAI list", "bot AIs", modifier);
         }
         
         void HandleInfo(Player p, string ai) {
-            if (!File.Exists("bots/" + ai)) {
+            string path = ScriptFile.GetPath(ai);
+            if (!File.Exists(path)) {
                 p.Message("There is no bot AI with that name."); return;
             }
             
-            string[] lines = File.ReadAllLines("bots/" + ai);
+            string[] lines = File.ReadAllLines(path);
             foreach (string line in lines) 
             {
                 if (line.IsCommentLine()) continue;

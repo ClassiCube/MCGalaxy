@@ -15,6 +15,7 @@ permissions and limitations under the Licenses.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using MCGalaxy.Bots;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
@@ -114,7 +115,7 @@ namespace MCGalaxy.Commands.Info
         }
 
         public static void SearchBotAIs(Player p, string keyword, string modifier) {
-            string[] files = Bots.CmdBotAI.GetFiles;
+            string[] files = ScriptFile.GetAll();
             List<string> fileNames = new List<string>(files.Length);
             foreach (var file in files) fileNames.Add(Path.GetFileName(file));
             fileNames.Sort((a, b) => string.Compare(a, b));

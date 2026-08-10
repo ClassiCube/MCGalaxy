@@ -19,11 +19,22 @@ using System;
 using System.IO;
 using MCGalaxy.Commands;
 
-namespace MCGalaxy.Bots {
-    public static class ScriptFile {
+namespace MCGalaxy.Bots 
+{
+    public static class ScriptFile 
+    {      
+        public const string SCRIPTS_DIR = "bots";
+        public const string DELETED_DIR = "bots/deleted";
+        
+        public static string[] GetAll() { return Directory.GetFiles(SCRIPTS_DIR); }
+        
+        public static string GetPath(string ai) { return SCRIPTS_DIR + "/" + ai; }
+        
+        public static string GetDeletedPath(string ai) { return DELETED_DIR + "/" + ai; }
+        
         
         public static bool Parse(Player p, PlayerBot bot, string ai) {
-            string path = "bots/" + ai;
+            string path = GetPath(ai);
             if (!File.Exists(path)) {
                 p.Message("Could not find specified AI."); return false;
             }
@@ -78,7 +89,9 @@ namespace MCGalaxy.Bots {
         }
         
         public static string Append(Player p, string ai, string cmd, string[] args) {
-            using (StreamWriter w = new StreamWriter("bots/" + ai, true)) {
+            string path = GetPath(ai);
+            
+            using (StreamWriter w = new StreamWriter(path, true)) {
                 if (cmd.Length == 0)      cmd = "walk";
                 if (cmd.CaselessEq("tp")) cmd = "teleport";
 
