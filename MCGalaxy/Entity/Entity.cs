@@ -100,6 +100,7 @@ namespace MCGalaxy
                 
         
         #region ITabListEntry
+        public abstract bool IncludedInTabList();
         public abstract bool SharesTabListWith(Player target);
         
         public abstract string GetTabListName();
