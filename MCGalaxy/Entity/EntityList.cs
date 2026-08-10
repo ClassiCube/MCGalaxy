@@ -71,7 +71,7 @@ namespace MCGalaxy {
 
         /// <summary> Adds the given entry to that player's tab list (if their client supports it). </summary>
         public void AddTabEntry(ITabListEntry entry) {
-            if (!p.hasExtList) return;
+            if (!p.hasExtList || !entry.IncludedInTabList()) return;
             
             string name  = entry.GetTabListName();
             string nick  = entry.GetTabListNick(p);

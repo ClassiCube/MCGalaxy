@@ -23,7 +23,7 @@ namespace MCGalaxy
 {
     public static class Wildcard 
     {
-        /// <summary> Filters the given list of items to matching item names. Accepts * and ? wildcard tokens. </summary>
+        /// <summary> Returns a new list filtered to match the given keyword. Accepts * and ? wildcard tokens. </summary>
         public static List<string> Filter<T>(IList<T> input, string keyword, StringFormatter<T> nameGetter,
                                           Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
             List<string> matches = new List<string>();

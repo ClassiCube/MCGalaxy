@@ -14,7 +14,7 @@ permissions and limitations under the Licenses.
  */
 using System;
 using System.Collections.Generic;
-using MCGalaxy.Blocks;
+using System.IO;
 using MCGalaxy.SQL;
 using BlockID = System.UInt16;
 
@@ -49,12 +49,13 @@ namespace MCGalaxy.Commands.Info
                 SearchLoaded(p, keyword, modifier);
             } else if (list == "level" || list == "levels" || list == "maps") {
                 SearchMaps(p, keyword, modifier);
+            } else if (list == "botais" || list == "botai") {
+                SearchBotAIs(p, keyword, modifier);
             } else {
                 Help(p);
             }
         }
-        
-        
+
         static void SearchBlocks(Player p, string keyword, string modifier) {
             List<BlockID> blocks = new List<BlockID>();
             for (int b = 0; b < Block.SUPPORTED_COUNT; b++) 
@@ -111,7 +112,16 @@ namespace MCGalaxy.Commands.Info
             maps.Sort(new AlphanumComparator());
             OutputList(p, keyword, "search levels", "maps", modifier, maps);
         }
-        
+
+        public static void SearchBotAIs(Player p, string keyword, string modifier) {
+            string[] files = Bots.CmdBotAI.GetFiles;
+            List<string> fileNames = new List<string>(files.Length);
+            foreach (var file in files) fileNames.Add(Path.GetFileName(file));
+            fileNames.Sort((a, b) => string.Compare(a, b));
+            fileNames = Wildcard.Filter(fileNames, keyword, (a) => a, null, null);
+            OutputList(p, keyword, "search botais", "botais", modifier, fileNames);
+        }
+
         static void OutputList(Player p, string keyword, string cmd, string type, string modifier, List<string> items) {
             if (items.Count == 0) {
                 p.Message("No {0} found containing \"{1}\"", type, keyword);
@@ -140,7 +150,8 @@ namespace MCGalaxy.Commands.Info
             p.Message("&H  keyword can also include wildcard characters:");
             p.Message("&H    * - placeholder for zero or more characters");
             p.Message("&H    ? - placeholder for exactly one character");
-            p.Message("&HLists: &fblocks/commands/ranks/players/online/loaded/maps");
+            p.Message("&HLists:");
+            p.Message("&f> blocks, commands, ranks, players, online, loaded, maps, botais");
         }
     }
 }

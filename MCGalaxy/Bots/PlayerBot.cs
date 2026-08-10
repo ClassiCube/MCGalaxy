@@ -299,6 +299,9 @@ namespace MCGalaxy
         
         
         #region ITabListEntry        
+        public override bool IncludedInTabList() {
+            return Server.Config.TablistBots;
+        }
         public override bool SharesTabListWith(Player target) {
             return level == target.level && Server.Config.TablistBots;
         }

@@ -38,6 +38,15 @@ namespace MCGalaxy.Commands.Bots
                 HandleList(p, modifier);
                 return;
             }
+            if (cmd.CaselessEq("search")) {
+                if (args.Length == 1) {
+                    p.Message("&WPlease specify a search keyword"); return;
+                }
+                string keyword = args[1];
+                string modifier = args.Length > 2 ? args[2] : "";
+                Info.CmdSearch.SearchBotAIs(p, keyword, modifier);
+                return;
+            }
             
             if (args.Length < 2) { Help(p); return; }
             string ai = args[1].ToLower();
@@ -110,8 +119,10 @@ namespace MCGalaxy.Commands.Bots
             }
         }
         
+        internal static string[] GetFiles { get { return Directory.GetFiles("bots"); } }
         void HandleList(Player p, string modifier) {
-            string[] files = Directory.GetFiles("bots");
+            string[] files = GetFiles;
+            Array.Sort(files);
             Paginator.Output(p, files, f => Path.GetFileName(f),
                              "BotAI list", "bot AIs", modifier);
         }
@@ -134,6 +145,7 @@ namespace MCGalaxy.Commands.Bots
             p.Message("&T/BotAI del [name] last&H- deletes last instruction of that AI");
             p.Message("&T/BotAI info [name] &H- prints list of instructions that AI has");
             p.Message("&T/BotAI list &H- lists all current AIs");
+            p.Message("&T/BotAI search [keyword] &H- search all current AIs");
             p.Message("&T/BotAI add [name] [instruction] <args>");
             
             p.Message("&HInstructions: &S{0}",
