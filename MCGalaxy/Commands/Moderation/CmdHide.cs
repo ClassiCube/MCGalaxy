@@ -48,7 +48,6 @@ namespace MCGalaxy.Commands.Moderation {
                 silent = true;
             }
             
-            Command adminchat = Command.Find("AdminChat");
             Command opchat = Command.Find("OpChat");
             Entities.GlobalDespawn(p, false);
             
@@ -75,7 +74,6 @@ namespace MCGalaxy.Commands.Moderation {
                 }
                 
                 if (p.opchat) opchat.Use(p, "", data);
-                if (p.adminchat) adminchat.Use(p, "", data);
                 Server.hidden.Remove(p.name);
                 OnPlayerActionEvent.Call(p, PlayerAction.Unhide);
             }
