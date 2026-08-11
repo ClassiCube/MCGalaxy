@@ -63,25 +63,24 @@ namespace MCGalaxy.Util.Imaging
         
         public abstract Bitmap2D Decode(byte[] src);
     }
+        
+    public delegate ImageDecoder ImageDecoderConstructor();
     
     public sealed class ImageFormat 
     {
-        public readonly string Extension;
         public Predicate<byte[]> DetectHeader;
-        public Func<ImageDecoder> CreateDecoder;
+        public ImageDecoderConstructor CreateDecoder;
         
-        public ImageFormat(string ext, Predicate<byte[]> detector, Func<ImageDecoder> decoder) {
-            Extension       = ext;
-            DetectHeader = detector;
-            CreateDecoder   = decoder;
+        public ImageFormat(Predicate<byte[]> detector, ImageDecoderConstructor decoder) {
+            DetectHeader  = detector;
+            CreateDecoder = decoder;
         }
         
         
-        // TODO .jpeg etc
         public static List<ImageFormat> KnownFormats = new List<ImageFormat>() {
-            new ImageFormat(".png",  PngDecoder.DetectHeader, () => new  PngDecoder()),
-            new ImageFormat(".jpg", JpegDecoder.DetectHeader, () => new JpegDecoder()),
-            new ImageFormat(".gif",  GifDecoder.DetectHeader, () => new  GifDecoder()),
+            new ImageFormat( PngDecoder.DetectHeader, () => new  PngDecoder()),
+            new ImageFormat(JpegDecoder.DetectHeader, () => new JpegDecoder()),
+            new ImageFormat( GifDecoder.DetectHeader, () => new  GifDecoder()),
         };
                 
         public static ImageDecoder DetectFrom(byte[] src) {

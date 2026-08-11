@@ -103,8 +103,8 @@ namespace MCGalaxy
             return false;
         }
         
-        static char[] separators = { '/', '\\', ':' };
-        static char[] invalid    = { '<', '>', '|', '"', '*', '?' };
+        internal static char[] DIR_SEPARATORS = { '/', '\\', ':' };
+        internal static char[] PATH_INVALID   = { '<', '>', '|', '"', '*', '?' };
         /// <summary> Checks that the input is a valid filename (non-empty and no directory separator) </summary>
         /// <remarks> If the input is invalid, messages the player the reason why </remarks>
         public static bool ValidFilename(Player p, string name) {
@@ -113,12 +113,12 @@ namespace MCGalaxy
                 return false;
             }
             
-            if (name.IndexOfAny(separators) >= 0) {
+            if (name.IndexOfAny(DIR_SEPARATORS) >= 0) {
                 p.Message("&W\"{0}\" includes a directory separator (/, : or \\), which is not allowed", name);
                 return false;
             }
 
-            if (name.IndexOfAny(invalid) >= 0) {
+            if (name.IndexOfAny(PATH_INVALID) >= 0) {
                 p.Message("&W\"{0}\" includes a prohibited character (<, >, |, \", *, or ?)", name);
                 return false;
             }

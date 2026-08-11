@@ -72,17 +72,27 @@ namespace MCGalaxy.Commands.Building {
                 if (!CommandParser.GetInt(p, parts[4], "Height", ref dArgs.Height, 1, 1024)) return;
             }
             
-            if (parts[0].IndexOf('.') != -1) {
-                dArgs.Data = HttpUtil.DownloadImage(parts[0], p);
+            string arg = parts[0];
+            if (arg.IndexOf('.') == -1) {
+                p.Message("&WInput must be a URL or filename with extension");
+                return;
+            }
+            
+            if (!IsFile(arg)) {
+                dArgs.Data = HttpUtil.DownloadImage(arg, p);
                 if (dArgs.Data == null) return;
             } else {
-                string path = "extra/images/" + parts[0] + ".bmp";
-                if (!File.Exists(path)) { p.Message("{0} does not exist", path); return; }
-                dArgs.Data = File.ReadAllBytes(path);
+                dArgs.Data = File.ReadAllBytes("extra/images/" + arg);
             }
 
             p.Message("Place or break two blocks to determine direction.");
             p.MakeSelection(2, "Selecting direction for &SImagePrint", dArgs, DoImage);
+        }
+        
+        static bool IsFile(string arg) {
+            // TODO better filename validation
+            return arg.IndexOfAny(Formatter.DIR_SEPARATORS) == -1
+                && File.Exists("extra/images/" + arg);
         }
 
         bool ParseMode(string mode, DrawArgs args) {
@@ -170,7 +180,7 @@ namespace MCGalaxy.Commands.Building {
         
         public override void Help(Player p) {
             p.Message("&T/ImagePrint [file/url] [palette] <mode> <width height>");
-            p.Message("&HPrints image from given URL, or from a .bmp file in /extra/images/ folder");
+            p.Message("&HPrints image from given URL, or from a file in /extra/images/ folder");
             p.Message("&HPalettes: &f{0}", ImagePalette.Palettes.Join(pal => pal.Name));
             p.Message("&HModes: &fWall, WallDither, Wall2Layer, Floor, FloorDither");
             p.Message("&H  <width height> optionally resize the printed image");
