@@ -23,28 +23,28 @@ namespace MCGalaxy.Util.Imaging
     public static class ImageUtils
     {
         public static Bitmap2D DecodeImage(byte[] data, Player p) {
-            try {
-                return ImageDecoder.DecodeFrom(data);
-            } catch (UnknownImageFormatException ex) {
+            var decoder = ImageFormat.DetectFrom(data);
+            
+            if (decoder == null) {
                 // This is a fairly expected error - e.g. when a user tries to /imgprint
                 //   the webpage an image is hosted on, instead of the actual image itself.
                 // So don't bother logging a full error for this case
-                Logger.Log(LogType.Warning, "Error decoding image: " + ex.Message);
-                OnDecodeError(p);
+                
+                // TODO failed to decode the image. make sure you are using the URL of the image directly, not just the webpage it is hosted on
+                p.Message("&WThere was an error trying to read the given image.");
+                p.Message("&WData is either not an image or image format is unsupported");
+                p.Message("&WThe URL may need to end with its extension (such as .jpg).");
                 return null;
+            }
+            
+            try {
+                return decoder.Decode(data);
             } catch (Exception ex) {
                 Logger.LogError("Error decoding image", ex);
-                OnDecodeError(p);
+                p.Message("&WThere was an error trying to read the given image.");
                 return null;
             }
         }
-
-        static void OnDecodeError(Player p) {
-            // TODO failed to decode the image. make sure you are using the URL of the image directly, not just the webpage it is hosted on
-            p.Message("&WThere was an error reading the downloaded image.");
-            p.Message("&WThe url may need to end with its extension (such as .jpg).");
-        }
-        
         
         public static Bitmap2D ResizeBilinear(Bitmap2D src, int dstWidth, int dstHeight) {
             Bitmap2D dst = new Bitmap2D();

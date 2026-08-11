@@ -16,8 +16,8 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Util.Imaging
@@ -61,23 +61,37 @@ namespace MCGalaxy.Util.Imaging
         }
         
         
-        public static Bitmap2D DecodeFrom(byte[] src) {
-            ImageDecoder decoder = DetectFrom(src);
-            if (decoder != null) return decoder.Decode(src);
-            
-            throw new UnknownImageFormatException();
-        }
-        
-        static ImageDecoder DetectFrom(byte[] src) {
-            if ( PngDecoder.DetectHeader(src)) return new PngDecoder();
-            if ( GifDecoder.DetectHeader(src)) return new GifDecoder();
-            if (JpegDecoder.DetectHeader(src)) return new JpegDecoder();
-            
-            return null;
-        }
-        
         public abstract Bitmap2D Decode(byte[] src);
     }
     
-    public sealed class UnknownImageFormatException : Exception { }
+    public sealed class ImageFormat 
+    {
+        public readonly string Extension;
+        public Predicate<byte[]> DetectHeader;
+        public Func<ImageDecoder> CreateDecoder;
+        
+        public ImageFormat(string ext, Predicate<byte[]> detector, Func<ImageDecoder> decoder) {
+            Extension       = ext;
+            DetectHeader = detector;
+            CreateDecoder   = decoder;
+        }
+        
+        
+        // TODO .jpeg etc
+        public static List<ImageFormat> KnownFormats = new List<ImageFormat>() {
+            new ImageFormat(".png",  PngDecoder.DetectHeader, () => new  PngDecoder()),
+            new ImageFormat(".jpg", JpegDecoder.DetectHeader, () => new JpegDecoder()),
+            new ImageFormat(".gif",  GifDecoder.DetectHeader, () => new  GifDecoder()),
+        };
+                
+        public static ImageDecoder DetectFrom(byte[] src) {
+            foreach (var format in ImageFormat.KnownFormats)
+            {
+                if (!format.DetectHeader(src)) continue;
+                
+                return format.CreateDecoder();
+            }
+            return null;
+        }
+    }
 }
