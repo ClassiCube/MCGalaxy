@@ -24,8 +24,7 @@ namespace MCGalaxy.Util.Imaging
 {
     public unsafe class JpegDecoder : ImageDecoder
     {
-        static byte[] jfifSig = new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 }; // "SOI", "APP0"
-        static byte[] exifSig = new byte[] { 0xFF, 0xD8, 0xFF, 0xE1 }; // "SOI", "APP1"
+        static byte[] SOI_marker = new byte[] { 0xFF, 0xD8 }; // "SOI"
         
         byte[][] quant_tables = new byte[4][];
         HuffmanTable[] ac_huff_tables = new HuffmanTable[4];
@@ -35,8 +34,7 @@ namespace MCGalaxy.Util.Imaging
         byte lowestVer = 1;
 
         public static bool DetectHeader(byte[] data) {
-            return MatchesSignature(data, jfifSig)
-                || MatchesSignature(data, exifSig);
+            return MatchesSignature(data, SOI_marker);
         }
         
         public override Bitmap2D Decode(byte[] src) {
