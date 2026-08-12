@@ -306,27 +306,17 @@ namespace MCGalaxy {
             return false;
         }
 
-        /// <summary>
-        /// For plugins. Unused in base MCGalaxy.
-        /// </summary>
-        public void SendTeleport(Entity e, Position pos, Orientation rot, Packet.TeleportMoveMode mode) {
+        /// <summary> Performs an action while holding lock on entity list </summary>
+        /// <remarks> Becaus callback is called while holding lock on entity list,
+        /// it should be a very simple function (e.g. just sending one or two packets) </remarks>
+        public bool PerformAction(Entity e, Action<Entity, byte> callback) {
             lock (locker) {
                 VisibleEntity vis;
-                if (!visible.TryGetValue(e, out vis)) return;
-                if (!p.Session.SendTeleport(vis.id, pos, rot, mode)) {
-                    p.Session.SendTeleport(vis.id, pos, rot);
-                }
+                if (!visible.TryGetValue(e, out vis)) return false;
+                
+                callback(e, vis.id);
             }
-        }
-        /// <summary>
-        /// For plugins. Unused in base MCGalaxy.
-        /// </summary>
-        public void SendTeleport(Entity e, Position pos, Orientation rot) {
-            lock (locker) {
-                VisibleEntity vis;
-                if (!visible.TryGetValue(e, out vis)) return;
-                p.Session.SendTeleport(vis.id, pos, rot);
-            }
+            return true;
         }
 
         readonly Dictionary<Entity, VisibleEntity> cachedVisible = new Dictionary<Entity, VisibleEntity>(32);

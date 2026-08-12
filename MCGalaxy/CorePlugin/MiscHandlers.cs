@@ -85,25 +85,27 @@ namespace MCGalaxy.Core {
         
         static bool ClickOnBot(Player p, byte id) {
             PlayerBot[] bots = p.level.Bots.Items;
-            for (int i = 0; i < bots.Length; i++) {
-
+            for (int i = 0; i < bots.Length; i++) 
+            {
+                PlayerBot bot = bots[i];
                 byte botID;
-                if (!p.EntityList.GetID(bots[i], out botID)) continue;
+                
+                if (!p.EntityList.GetID(bot, out botID)) continue;
                 if (botID != id) continue;
 
-                if (bots[i].ClickedOnText == null && !p.checkingBotInfo) return false;
+                if (bot.ClickedOnText == null && !p.checkingBotInfo) return false;
                 
-                Vec3F32 delta = p.Pos.ToVec3F32() - bots[i].Pos.ToVec3F32();
+                Vec3F32 delta = p.Pos.ToVec3F32() - bot.Pos.ToVec3F32();
                 float reachSq = p.ReachDistance * p.ReachDistance;
                 if (delta.LengthSquared > (reachSq + 1)) return false;
                 
                 if (p.checkingBotInfo) {
-                    bots[i].DisplayInfo(p);
+                    bot.DisplayInfo(p);
                     p.checkingBotInfo = false;
                     return true;
                 }
-                string message = bots[i].ClickedOnText;
-                MessageBlock.Execute(p, message, bots[i].Pos.FeetBlockCoords);
+                string message = bot.ClickedOnText;
+                MessageBlock.Execute(p, message, bot.Pos.FeetBlockCoords);
                 return true;
             }
             return false;
