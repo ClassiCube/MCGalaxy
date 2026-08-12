@@ -245,7 +245,8 @@ namespace MCGalaxy {
         void Spawn(byte id, Entity e, Position pos, Orientation rot, string skin, string name, string model) {
             p.Session.SendSpawnEntity(id, name, skin, pos, rot);
             p.Session.SendChangeModel(id, model);
-            _SendRot(id, rot);
+            p.Session.SendEntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX));
+            p.Session.SendEntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ));
             _SendScales(id, e);
         }
         
@@ -253,10 +254,8 @@ namespace MCGalaxy {
             p.Session.SendRemoveEntity(id);
         }
 
-        /// <summary>
-        /// Calls OnSendingModelEvent and changes the model of the given entity.
-        /// </summary>
-        public void SendModel(Entity e, string model) {
+        /// <summary> Attempts to update the model + scales of the given entity </summary>
+        public void UpdateModel(Entity e, string model) {
             OnSendingModelEvent.Call(e, ref model, p);
             
             lock (locker) {
@@ -264,22 +263,7 @@ namespace MCGalaxy {
                 if (!visible.TryGetValue(e, out vis)) return;
                 
                 p.Session.SendChangeModel(vis.id, model);
-            }
-        }
-        
-        void _SendRot(byte id, Orientation rot) {
-            if (p.Supports(CpeExt.EntityProperty)) {
-                p.Session.SendEntityProperty(id, EntityProp.RotX, Orientation.PackedToDegrees(rot.RotX));
-                p.Session.SendEntityProperty(id, EntityProp.RotZ, Orientation.PackedToDegrees(rot.RotZ));
-            }
-        }
-
-
-        public void SendScales(Entity e) {
-            lock (locker) {
-                VisibleEntity vis;
-                if (!visible.TryGetValue(e, out vis)) return;
-                _SendScales(vis.id, vis.e);
+                _SendScales(vis.id, e);
             }
         }
         

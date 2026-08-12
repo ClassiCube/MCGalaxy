@@ -145,8 +145,7 @@ namespace MCGalaxy
             {
                 if (pl.level != lvl) continue;
 
-                pl.EntityList.SendModel(e, e.GetSpawnModel(pl));
-                pl.EntityList.SendScales(e);
+                pl.EntityList.UpdateModel(e, e.GetSpawnModel(pl));
             }
         }
 
@@ -172,6 +171,7 @@ namespace MCGalaxy
 
             BroadcastEntityProp(e, prop, degrees);
         }
+        
         /// <summary>
         /// Broadcasts the given prop for this entity for everyone who can see it. Does not update any server-side fields for the given entity.
         /// </summary>
@@ -179,9 +179,9 @@ namespace MCGalaxy
             Player[] players = PlayerInfo.Online.Items;
             Level lvl = e.Level;
 
-            foreach (Player pl in players) {
-                if (pl.level != lvl || !pl.Supports(CpeExt.EntityProperty)) continue;
-                if (!pl.CanSeeEntity(e)) continue;
+            foreach (Player pl in players) 
+            {
+                if (pl.level != lvl) continue;
                 pl.EntityList.SendProp(e, prop, value);
             }
         }

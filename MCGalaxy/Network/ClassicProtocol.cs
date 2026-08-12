@@ -531,9 +531,12 @@ namespace MCGalaxy.Network
             Send(Packet.ChangeModel(id, model, player.hasCP437));
             return true;
         }
-        public override void SendEntityProperty(byte id, EntityProp prop, int value) {
+        
+        public override bool SendEntityProperty(byte id, EntityProp prop, int value) {
+            if (!Supports(CpeExt.EntityProperty)) return false;
 
             Send(Packet.EntityProperty(id, prop, value));
+            return true;
         }
 
         public override bool SendSetWeather(byte weather) {

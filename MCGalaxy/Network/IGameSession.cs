@@ -106,7 +106,7 @@ namespace MCGalaxy.Network
         public abstract bool SendSetEnvColor(byte type, string hex);
         public abstract bool SendChangeModel(byte id, string model);
 
-        public abstract void SendEntityProperty(byte id, EntityProp prop, int value);
+        public abstract bool SendEntityProperty(byte id, EntityProp prop, int value);
         /// <summary> Sends an update weather packet </summary>
         public abstract bool SendSetWeather(byte weather);
         /// <summary> Sends an update text color code packet to the client </summary>
