@@ -465,6 +465,10 @@ namespace MCGalaxy.Commands.World {
                 p.Message("This server does not allow renaming os realms.");
                 return;
             }
+            if (!p.CanSpeak()) {
+                p.Message("&WYou cannot rename os realms when muted.");
+                return;
+            }
 
             if (args.Length > 0 && !Formatter.IsValidName(p, args, "os name", Player.USERNAME_ALPHABET)) {
                 return;
