@@ -306,10 +306,11 @@ namespace MCGalaxy {
             return false;
         }
 
+        public delegate void EntityAction(Entity e, byte id);
         /// <summary> Performs an action while holding lock on entity list </summary>
         /// <remarks> Becaus callback is called while holding lock on entity list,
         /// it should be a very simple function (e.g. just sending one or two packets) </remarks>
-        public bool PerformAction(Entity e, Action<Entity, byte> callback) {
+        public bool PerformAction(Entity e, EntityAction callback) {
             lock (locker) {
                 VisibleEntity vis;
                 if (!visible.TryGetValue(e, out vis)) return false;
