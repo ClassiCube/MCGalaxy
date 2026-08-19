@@ -27,8 +27,12 @@ namespace MCGalaxy.Commands.Info
         public override string type { get { return CommandTypes.Information; } }
         public override bool UseableWhenFrozen { get { return true; } }
         public override CommandAlias[] Aliases {
-            get { return new[] { new CommandAlias("CmdHelp"), new CommandAlias("Ranks", "ranks"),
-                    new CommandAlias("Colors", "colors"), new CommandAlias("Emotes", "emotes") }; }
+            get { return new[] {
+                new CommandAlias("CmdHelp"),
+                new CommandAlias("Ranks", "ranks"),
+                new CommandAlias("Colors", "colors"),
+                new CommandAlias("Colours", "colors"),
+                new CommandAlias("Emotes", "emotes") }; }
         }
 
         public override void Use(Player p, string message, CommandData data) {
