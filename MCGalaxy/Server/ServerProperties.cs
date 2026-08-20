@@ -150,7 +150,7 @@ namespace MCGalaxy
             w.WriteLine("#   irc-channel                   = The channel to join");
             w.WriteLine("#   irc-opchannel                 = The channel to join (posts OpChat)");
             w.WriteLine("#   irc-port                      = The port to use to connect");
-            w.WriteLine("#   irc-identify                  = (true/false)    Do you want the IRC bot to Identify itself with nickserv. Note: You will need to register it's name with nickserv manually.");
+            w.WriteLine("#   irc-identify                  = (true/false)    Do you want the IRC bot to Identify itself with nickserv. Note: You will need to register its name with nickserv manually.");
             w.WriteLine("#   irc-password                  = The password you want to use if you're identifying with nickserv");
             w.WriteLine("# Explanation of Backup settings:");
             w.WriteLine("#   backup-time                   = The number of seconds between automatic backups");
