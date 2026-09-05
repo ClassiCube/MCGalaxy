@@ -64,6 +64,9 @@ namespace MCGalaxy {
         Stack<byte> freeIDs;
         readonly object locker = new object();
 
+        VisibleEntity[] visible_list;
+        int visible_count;
+
 
         #region TabList
         Dictionary<ITabListEntry, byte> tabMap = new Dictionary<ITabListEntry, byte>();
@@ -149,14 +152,14 @@ namespace MCGalaxy {
             this.p = p;
             this.maxEntityID = maxEntityID;
 
-            lock (locker) {
-                freeIDs = new Stack<byte>(maxEntityID);
-                for (int i = maxEntityID; i >= 0; i--) {
-                    freeIDs.Push((byte)i);
-                }
-
-                usedTabIDs = new bool[maxEntityID + 1];
+            freeIDs = new Stack<byte>(maxEntityID);
+            for (int i = maxEntityID; i >= 0; i--)
+            {
+                freeIDs.Push((byte)i);
             }
+
+            usedTabIDs   = new bool[maxEntityID + 1];
+            visible_list = new VisibleEntity[maxEntityID + 1];
         }
 
         /// <summary>
@@ -186,7 +189,8 @@ namespace MCGalaxy {
                     invisible.Add(waiting);
                     return false;
                 }
-                
+
+                visible_count = -1;
                 Spawn(id, e, pos, rot, skin, name, model);
                 if (tabList) AddTabEntry(e);
 
@@ -223,6 +227,7 @@ namespace MCGalaxy {
                 
                 freeIDs.Push(vis.id);
                 visible.Remove(e);
+                visible_count = -1;
                 
                 if (tabList) RemoveTabEntry(e);
                 Despawn(vis.id);
@@ -320,34 +325,49 @@ namespace MCGalaxy {
             return true;
         }
 
-        readonly Dictionary<Entity, VisibleEntity> cachedVisible = new Dictionary<Entity, VisibleEntity>(32);
+        int UpdateVisibleList() {
+            VisibleEntity[] list = visible_list;
+            // check if list hasn't changed since last iteration
+            if (visible_count >= 0) return visible_count;
+            int i = 0;
+
+            foreach (KeyValuePair<Entity, VisibleEntity> pair in visible)
+            {
+                if (!pair.Key.autoBroadcastPosition) continue;
+                list[i++] = pair.Value;
+            }
+
+            visible_count = i;
+            return i;
+        }
+
         internal unsafe void BroadcastEntityPositions() {
 
             byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
             byte* ptr = src;
             Player dst = p;
 
+            int count;
+            VisibleEntity[] list = visible_list;
 
             lock (locker) {
-                cachedVisible.Clear();
+                count = UpdateVisibleList();
                 //We want to avoid locking during the entire enumeration of position sending
                 //We need a cached collection to prevent the collection from changing while being enumerated over.
                 //Also, ignore entities that we don't want to automatically update the position of.
-                foreach (KeyValuePair<Entity, VisibleEntity> pair in visible) {
-                    if (!pair.Key.autoBroadcastPosition) continue;
-
-                    cachedVisible[pair.Key] = pair.Value;
-                    if (pair.Key.untracked) {
-                        pair.Key._positionUpdatePos = pair.Key.Pos;
+                for (int i = 0; i < count; i++)
+                {
+                    Entity entity = list[i].e;
+                    if (entity.untracked) {
+                        entity._positionUpdatePos = entity.Pos;
                     }
                 }
             }
 
-            foreach (KeyValuePair<Entity, VisibleEntity> pair in cachedVisible) {
-                Entity e = pair.Key;
-                byte id = pair.Value.id;
-
-                if (dst.level != e.Level || !dst.CanSeeEntity(e)) continue;
+            for (int i = 0; i < count; i++)
+            {
+                Entity e = list[i].e;
+                byte id  = list[i].id;
 
                 Orientation rot = e.Rot; byte pitch = rot.HeadX;
                 //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
@@ -369,16 +389,18 @@ namespace MCGalaxy {
                 //}
             }
 
-            int count = (int)(ptr - src);
-            if (count == 0) return;
+            int size = (int)(ptr - src);
+            if (size == 0) return;
 
-            byte[] packet = new byte[count];
+            byte[] packet = new byte[size];
             for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
             dst.Send(packet);
 
-            foreach (KeyValuePair<Entity, VisibleEntity> pair in cachedVisible) {
-                if (pair.Key.untracked) {
-                    pair.Key._lastPos = pair.Key._positionUpdatePos; pair.Key._lastRot = pair.Key.Rot;
+            for (int i = 0; i < count; i++)
+            {
+                Entity entity = list[i].e;
+                if (entity.untracked) {
+                    entity._lastPos = entity._positionUpdatePos; entity._lastRot = entity.Rot;
                 }
             }
         }
