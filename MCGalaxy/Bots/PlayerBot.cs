@@ -153,12 +153,6 @@ namespace MCGalaxy
                 UpdatePositions(levels[i]);
             }
         }
-        internal static void GlobalPostBroadcastPosition() {
-            Level[] levels = LevelInfo.Loaded.Items;
-            for (int i = 0; i < levels.Length; i++) {
-                PostBroadcastPosition(levels[i]);
-            }
-        }
 
         static void UpdatePositions(Level lvl) {
             PlayerBot[] bots = lvl.Bots.Items;
@@ -166,16 +160,6 @@ namespace MCGalaxy
                 PlayerBot bot = bots[i];
 
                 if (bot.movement) bot.PerformMovement();
-                bot._positionUpdatePos = bot.Pos;
-            }
-        }
-        static void PostBroadcastPosition(Level lvl) {
-            PlayerBot[] bots = lvl.Bots.Items;
-            for (int i = 0; i < bots.Length; i++) {
-                PlayerBot bot = bots[i];
-
-                bot._lastPos = bot._positionUpdatePos;
-                bot._lastRot = bot.Rot;
             }
         }
         

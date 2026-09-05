@@ -50,7 +50,6 @@ namespace MCGalaxy
                     Spawn(other, p, pos, rot);
                 } else if (p == other && self) {
                     other.Pos = pos; other.SetYawPitch(rot.RotY, rot.HeadX);
-                    other._lastPos = other.Pos; other._lastRot = other.Rot;
                     Spawn(other, p, pos, rot);
                 }
             }
@@ -188,28 +187,14 @@ namespace MCGalaxy
 
 
         #region Position updates
-
-
         public static void GlobalUpdate() {
             Player[] players = PlayerInfo.Online.Items;
 
             PlayerBot.GlobalUpdatePosition(); //Bots update their positions internally first
 
-            // We need to cache the player's position before iterating.
-            // Avoids the very rare issue of player's position changing mid-way through iteration,
-            // which can cause this player to show minorly offset to other players.
             foreach (Player p in players) {
-                p._positionUpdatePos = p.Pos;
-            }
-            foreach (Player p in players) {
-                //TODO: Maytbe set _lastPos in here
                 p.EntityList.BroadcastEntityPositions();
             }
-            foreach (Player p in players) {
-                p._lastPos = p._positionUpdatePos; p._lastRot = p.Rot;
-            }
-
-            PlayerBot.GlobalPostBroadcastPosition(); //Need to set bot's _lastPos and _lastRot
         }
         #endregion
     }

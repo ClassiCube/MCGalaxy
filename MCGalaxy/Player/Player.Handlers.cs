@@ -221,41 +221,38 @@ namespace MCGalaxy
             }
         }
         
+        byte lastYaw, lastPitch;
         public void ProcessMovement(int x, int y, int z, byte yaw, byte pitch, int held) {
             if (held >= 0) ClientHeldBlock = (BlockID)held;
 
+            ProcessMovementCore(x, y, z, yaw, pitch);
+        }
+
+        void ProcessMovementCore(int x, int y, int z, byte yaw, byte pitch) {
             if (Session.Ping.IgnorePosition || Loading) { return; }
             if (trainGrab || following.Length > 0) { CheckBlocks(Pos, Pos); return; } // Doesn't check zones? Potential bug
 
             Position next = new Position(x, y, z);
-            ProcessMovementCore(next, yaw, pitch, true);
-        }
-
-        /// <summary>
-        /// Called to update player's position and check blocks and zones.
-        /// If fromClient is true, calls OnPlayerMove event and updates AFK status.
-        /// </summary>
-        internal void ProcessMovementCore(Position next, byte yaw, byte pitch, bool fromClient) {
-
             CheckBlocks(Pos, next);
 
-            if (fromClient) {
-                bool cancel = false;
-                OnPlayerMoveEvent.Call(this, next, yaw, pitch, ref cancel);
-                if (cancel) { cancel = false; return; }
-            }
+            bool cancel = false;
+            OnPlayerMoveEvent.Call(this, next, yaw, pitch, ref cancel);
+            if (cancel) { cancel = false; return; }
 
             Pos = next;
             SetYawPitch(yaw, pitch);
             CheckZones(next);
 
-            if (fromClient) {
-                if (!Moved()) return;
-                if (DateTime.UtcNow < AFKCooldown) return;
+            UpdateAfkState(yaw, pitch);
+            lastYaw = yaw; lastPitch = pitch;
+        }
 
-                LastAction = DateTime.UtcNow;
-                if (IsAfk) CmdAfk.ToggleAfk(this, "");
-            }
+        void UpdateAfkState(byte yaw, byte pitch) {
+            if (yaw == lastYaw && pitch == lastPitch) return;
+            if (DateTime.UtcNow < AFKCooldown) return;
+
+            LastAction = DateTime.UtcNow;
+            if (IsAfk) CmdAfk.ToggleAfk(this, "");
         }
         
         void CheckZones(Position pos) {
@@ -355,8 +352,6 @@ namespace MCGalaxy
                 Logger.LogError(ex);
             }
         }
-        
-        bool Moved() { return _lastRot.RotY != Rot.RotY || _lastRot.HeadX != Rot.HeadX; }
         
         public void AnnounceDeath(string msg) {
             //Chat.MessageFrom(ChatScope.Level, this, msg.Replace("@p", "λNICK"), level, Chat.FilterVisible(this));

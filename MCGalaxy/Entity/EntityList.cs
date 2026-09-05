@@ -19,6 +19,7 @@
 using MCGalaxy.Events.EntityEvents;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using MCGalaxy.Network;
 
 namespace MCGalaxy {
@@ -33,6 +34,8 @@ namespace MCGalaxy {
         class VisibleEntity {
             public readonly Entity e;
             public readonly byte id;
+            public long lastPos;
+            public uint lastRot;
 
             public VisibleEntity(Entity e, byte id) {
                 this.e = e;
@@ -190,7 +193,16 @@ namespace MCGalaxy {
                     return false;
                 }
 
+                // TODO not lookup again
                 visible_count = -1;
+                VisibleEntity vis;
+                visible.TryGetValue(e, out vis);
+
+                if (vis != null) {
+                    vis.lastRot = rot.Pack();
+                    vis.lastPos = pos.Pack();
+                }
+
                 Spawn(id, e, pos, rot, skin, name, model);
                 if (tabList) AddTabEntry(e);
 
@@ -341,11 +353,17 @@ namespace MCGalaxy {
             return i;
         }
 
+        const int MAX_ENTITIES = 256;
         internal unsafe void BroadcastEntityPositions() {
-
-            byte* src = stackalloc byte[16 * 256]; // 16 = size of absolute update, with extended positions
+            byte* src = stackalloc byte[16 * MAX_ENTITIES]; // 16 = size of absolute update, with extended positions
             byte* ptr = src;
             Player dst = p;
+
+            long* _curPos = stackalloc long[MAX_ENTITIES];
+            long* _prvPos = stackalloc long[MAX_ENTITIES];
+
+            uint* _curRot = stackalloc uint[MAX_ENTITIES];
+            uint* _prvRot = stackalloc uint[MAX_ENTITIES];
 
             int count;
             VisibleEntity[] list = visible_list;
@@ -354,34 +372,49 @@ namespace MCGalaxy {
                 count = UpdateVisibleList();
                 //We want to avoid locking during the entire enumeration of position sending
                 //We need a cached collection to prevent the collection from changing while being enumerated over.
-                //Also, ignore entities that we don't want to automatically update the position of.
                 for (int i = 0; i < count; i++)
                 {
-                    Entity entity = list[i].e;
-                    if (entity.untracked) {
-                        entity._positionUpdatePos = entity.Pos;
-                    }
+                    VisibleEntity vis = list[i];
+                    Entity e = vis.e;
+
+                    long pos    = Interlocked.Read(ref e._pos);
+                    _prvPos[i]  = vis.lastPos;
+                    _curPos[i]  = pos;
+                    vis.lastPos = pos;
+
+                    uint rot    = e._rot;
+                    _prvRot[i]  = vis.lastRot;
+                    _curRot[i]  = rot;
+                    vis.lastRot = rot;
                 }
             }
 
             for (int i = 0; i < count; i++)
             {
-                Entity e = list[i].e;
-                byte id  = list[i].id;
+                VisibleEntity vis = list[i];
+                Entity e = vis.e;
+                byte id  = vis.id;
 
-                Orientation rot = e.Rot; byte pitch = rot.HeadX;
+                Position curPos    = Position.Unpack(_curPos[i]);
+                Position prvPos    = Position.Unpack(_prvPos[i]);
+
+                Orientation prvRot = Orientation.Unpack(_prvRot[i]);
+                Orientation curRot = Orientation.Unpack(_curRot[i]);
+                
                 //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
                 if (e is Player) {
+                    byte pitch = curRot.HeadX;
                     Player pl = (Player)e; //No pattern matching because we're ancient C#
                     if (Server.flipHead || pl.flipHead) pitch = FlippedPitch(pitch);
                     // flip head when infected in ZS, but doesn't support model
                     if (!dst.hasChangeModel && pl.infected)
                         pitch = FlippedPitch(pitch);
+                    curRot.HeadX = pitch;
                 }
 
-                rot.HeadX = pitch;
+               
                 p.Session.GetPositionPacket(ref ptr, id, e.hasExtPositions, dst.hasExtPositions,
-                                            e._positionUpdatePos, e._lastPos, rot, e._lastRot);
+                                            curPos, prvPos, curRot, prvRot);
 
                 //bool rotChanged = rot.RotY != e._lastRot.RotY || rot.HeadX != e._lastRot.HeadX;
                 //if (pair.Value.displayName.CaselessContains("temp") && (e._lastPos != e._positionUpdatePos || rotChanged)) {
@@ -395,15 +428,8 @@ namespace MCGalaxy {
             byte[] packet = new byte[size];
             for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
             dst.Send(packet);
-
-            for (int i = 0; i < count; i++)
-            {
-                Entity entity = list[i].e;
-                if (entity.untracked) {
-                    entity._lastPos = entity._positionUpdatePos; entity._lastRot = entity.Rot;
-                }
-            }
         }
+
         static byte FlippedPitch(byte pitch) {
             if (pitch > 64 && pitch < 192) return pitch;
             else return 128;
