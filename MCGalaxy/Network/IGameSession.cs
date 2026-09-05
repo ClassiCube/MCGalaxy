@@ -131,8 +131,10 @@ namespace MCGalaxy.Network
         /// <summary> Gets the name of the software the client is using </summary>
         /// <example> ClassiCube, Classic 0.0.16, etc </example>
         public abstract string ClientName();
-        public abstract unsafe void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos,
-                                                            Position pos, Position oldPos, Orientation rot, Orientation oldRot);
+
+        /// <summary> Sends updated positions and orientations for given list of visible entities </summary>
+        public abstract unsafe void UpdateEntities(int count, VisibleEntity[] list,
+                                                    long* _curPos, long* _prvPos, uint* _curRot, uint* _prvRot);
 
         /// <summary> Converts the given block ID into a raw block ID that the client supports </summary>
         public virtual BlockID ConvertBlock(BlockID block) {
@@ -159,5 +161,9 @@ namespace MCGalaxy.Network
             return raw;
         }
 
+        protected static byte FlippedPitch(byte pitch) {
+            if (pitch > 64 && pitch < 192) return pitch;
+            else return 128;
+        }
     }
 }

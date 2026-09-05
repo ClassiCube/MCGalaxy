@@ -756,39 +756,76 @@ namespace MCGalaxy.Network
             return "Classic 0.28-0.30";
         }
 
-        public override unsafe void GetPositionPacket(ref byte* ptr, byte id, bool srcExtPos, bool extPos,
-                                                    Position pos, Position oldPos, Orientation rot, Orientation oldRot) {
-            Position delta = GetDelta(pos, oldPos, srcExtPos);
-            bool posChanged = delta.X != 0 || delta.Y != 0 || delta.Z != 0;
-            bool oriChanged = rot.RotY != oldRot.RotY || rot.HeadX != oldRot.HeadX;
-            bool absPosUpdate = Math.Abs(delta.X) > 32 || Math.Abs(delta.Y) > 32 || Math.Abs(delta.Z) > 32;
+        public override unsafe void UpdateEntities(int count, VisibleEntity[] list, 
+                                                    long* _curPos, long* _prvPos, uint* _curRot, uint* _prvRot) {
+            byte* src = stackalloc byte[16 * EntityList.MAX_ENTITIES]; // 16 = size of absolute update, with extended positions
+            byte* ptr = src;
 
-            if (absPosUpdate) {
-                *ptr = Opcode.EntityTeleport; ptr++;
-                *ptr = id; ptr++;
+            Player dst  = player;
+            bool extPos = dst.hasExtPositions;
 
-                if (extPos) {
-                    WriteI32(ref ptr, pos.X); WriteI32(ref ptr, pos.Y); WriteI32(ref ptr, pos.Z);
-                } else {
-                    WriteI16(ref ptr, (short)pos.X); WriteI16(ref ptr, (short)pos.Y); WriteI16(ref ptr, (short)pos.Z);
+            for (int i = 0; i < count; i++)
+            {
+                VisibleEntity vis = list[i];
+                Entity e = vis.e;
+                byte id = vis.id;
+
+                if (e.ShouldFlipPitch(dst)) {
+                    Orientation rot = Orientation.Unpack(_curRot[i]);
+                    byte pitch = rot.HeadX;
+                    rot.HeadX  = FlippedPitch(pitch);
+                    _curRot[i] = rot.Pack();
                 }
-            } else if (posChanged) {
-                byte opcode = oriChanged ? Opcode.RelPosAndOrientationUpdate : Opcode.RelPosUpdate;
-                *ptr = opcode; ptr++;
-                *ptr = id; ptr++;
+                
+                bool posChanged   = _curPos[i] != _prvPos[i];
+                bool oriChanged   = _curRot[i] != _prvRot[i]; // TODO only check yaw and pitch?
+                bool absPosUpdate = false;
 
-                *ptr = (byte)(delta.X); ptr++;
-                *ptr = (byte)(delta.Y); ptr++;
-                *ptr = (byte)(delta.Z); ptr++;
-            } else if (oriChanged) {
-                *ptr = Opcode.OrientationUpdate; ptr++;
-                *ptr = id; ptr++;
+                if (!posChanged) {
+                    if (!oriChanged) continue;
+
+                    *ptr = Opcode.OrientationUpdate; ptr++;
+                    *ptr = id; ptr++;
+                } else {
+                    Position pos    = Position.Unpack(_curPos[i]);
+                    Position oldPos = Position.Unpack(_prvPos[i]);
+
+                    Position delta = GetDelta(pos, oldPos, e.hasExtPositions);
+                    absPosUpdate   = Math.Abs(delta.X) > 32 || Math.Abs(delta.Y) > 32 || Math.Abs(delta.Z) > 32;
+
+                    if (absPosUpdate) {
+                        *ptr = Opcode.EntityTeleport; ptr++;
+                        *ptr = id; ptr++;
+
+                        if (extPos) {
+                            WriteI32(ref ptr, pos.X);        WriteI32(ref ptr, pos.Y);        WriteI32(ref ptr, pos.Z);
+                        } else {
+                            WriteI16(ref ptr, (short)pos.X); WriteI16(ref ptr, (short)pos.Y); WriteI16(ref ptr, (short)pos.Z);
+                        }
+                    } else if (posChanged) {
+                        byte opcode = oriChanged ? Opcode.RelPosAndOrientationUpdate : Opcode.RelPosUpdate;
+                        *ptr = opcode; ptr++;
+                        *ptr = id; ptr++;
+
+                        *ptr = (byte)(delta.X); ptr++;
+                        *ptr = (byte)(delta.Y); ptr++;
+                        *ptr = (byte)(delta.Z); ptr++;
+                    }
+                }
+
+                if (absPosUpdate || oriChanged) {
+                    uint raw = _curRot[i];
+                    *ptr = Orientation.RawYaw(raw);   ptr++;
+                    *ptr = Orientation.RawPitch(raw); ptr++;
+                }
             }
 
-            if (absPosUpdate || oriChanged) {
-                *ptr = rot.RotY; ptr++;
-                *ptr = rot.HeadX; ptr++;
-            }
+            int size = (int)(ptr - src);
+            if (size == 0) return;
+
+            byte[] packet = new byte[size];
+            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
+            socket.Send(packet, SendFlags.None);
         }
 
         unsafe static void WriteI32(ref byte* ptr, int value) {

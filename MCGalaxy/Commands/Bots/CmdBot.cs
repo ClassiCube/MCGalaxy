@@ -83,7 +83,7 @@ namespace MCGalaxy.Commands.Bots
                 p.Message("Reached maximum number of bots allowed on this map."); return;
             }
             
-            bot.SetInitialPos(p.Pos);
+            bot.Pos = p.Pos;
             bot.SetYawPitch(p.Rot.RotY, 0);
             
             p.Message("You added the bot " + bot.ColoredName);

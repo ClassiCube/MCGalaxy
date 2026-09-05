@@ -165,7 +165,7 @@ namespace MCGalaxy.Bots {
         }
         
         public void ApplyTo(PlayerBot bot) {
-            bot.SetInitialPos(new Position(X, Y, Z));
+            bot.Pos = new Position(X, Y, Z);
             bot.SetYawPitch(RotX, RotY);
             Orientation rot = bot.Rot;
             rot.RotX = BodyX; rot.RotZ = BodyZ;
