@@ -20,29 +20,28 @@ using MCGalaxy.Events.EntityEvents;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using MCGalaxy.Network;
 
 namespace MCGalaxy {
+    //Thanks fCraft
+    public class VisibleEntity {
+        public readonly Entity e;
+        public readonly byte id;
+        public long lastPos;
+        public uint lastRot;
 
+        public VisibleEntity(Entity e, byte id) {
+            this.e = e;
+            this.id = id;
+        }
+    }
 
     /// <summary>
     /// Manages a collection of entities that a player is intended to see.
     /// </summary>
-    public sealed class EntityList {
+    public sealed class EntityList 
+    {
+        public const int MAX_ENTITIES = 256;
 
-        //Thanks fCraft
-        class VisibleEntity {
-            public readonly Entity e;
-            public readonly byte id;
-            public long lastPos;
-            public uint lastRot;
-
-            public VisibleEntity(Entity e, byte id) {
-                this.e = e;
-                this.id = id;
-            }
-        }
-        
         class WaitingEntity : VisibleEntity
         {
             public readonly bool tabList;
@@ -353,12 +352,7 @@ namespace MCGalaxy {
             return i;
         }
 
-        const int MAX_ENTITIES = 256;
         internal unsafe void BroadcastEntityPositions() {
-            byte* src = stackalloc byte[16 * MAX_ENTITIES]; // 16 = size of absolute update, with extended positions
-            byte* ptr = src;
-            Player dst = p;
-
             long* _curPos = stackalloc long[MAX_ENTITIES];
             long* _prvPos = stackalloc long[MAX_ENTITIES];
 
@@ -389,40 +383,7 @@ namespace MCGalaxy {
                 }
             }
 
-            for (int i = 0; i < count; i++)
-            {
-                VisibleEntity vis = list[i];
-                Entity e = vis.e;
-                byte id  = vis.id;
-
-                Position curPos    = Position.Unpack(_curPos[i]);
-                Position prvPos    = Position.Unpack(_prvPos[i]);
-
-                Orientation prvRot = Orientation.Unpack(_prvRot[i]);
-                Orientation curRot = Orientation.Unpack(_curRot[i]);
-                
-                //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
-                if (e.ShouldFlipPitch(dst)) {
-                    byte pitch   = curRot.HeadX;
-                    curRot.HeadX = FlippedPitch(pitch);
-                }
-            
-                p.Session.GetPositionPacket(ref ptr, id, e.hasExtPositions, dst.hasExtPositions,
-                                            curPos, prvPos, curRot, prvRot);
-            }
-
-            int size = (int)(ptr - src);
-            if (size == 0) return;
-
-            byte[] packet = new byte[size];
-            for (int i = 0; i < packet.Length; i++) { packet[i] = src[i]; }
-            dst.Send(packet);
+            p.Session.UpdateEntities(count, list, _curPos, _prvPos, _curRot, _prvRot);
         }
-
-        static byte FlippedPitch(byte pitch) {
-            if (pitch > 64 && pitch < 192) return pitch;
-            else return 128;
-        }
-
     }
 }

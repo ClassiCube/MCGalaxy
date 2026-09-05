@@ -134,5 +134,13 @@ namespace MCGalaxy
             rot.RotZ = (byte)(raw >> 16); rot.HeadX = (byte)(raw >> 24);
             return rot;
         }
+
+        internal static byte RawYaw(uint raw) {
+            return (byte)(raw >> 8);
+        }
+
+        internal static byte RawPitch(uint raw) {
+            return (byte)(raw >> 24);
+        }
     }
 }
