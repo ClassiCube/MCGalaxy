@@ -402,24 +402,13 @@ namespace MCGalaxy {
                 Orientation curRot = Orientation.Unpack(_curRot[i]);
                 
                 //CODE REVIEW: How should this be done? We could maybe have the visible pitch be a virtual getter in Entity and player implements its own logic
-                if (e is Player) {
-                    byte pitch = curRot.HeadX;
-                    Player pl = (Player)e; //No pattern matching because we're ancient C#
-                    if (Server.flipHead || pl.flipHead) pitch = FlippedPitch(pitch);
-                    // flip head when infected in ZS, but doesn't support model
-                    if (!dst.hasChangeModel && pl.infected)
-                        pitch = FlippedPitch(pitch);
-                    curRot.HeadX = pitch;
+                if (e.ShouldFlipPitch(dst)) {
+                    byte pitch   = curRot.HeadX;
+                    curRot.HeadX = FlippedPitch(pitch);
                 }
-
-               
+            
                 p.Session.GetPositionPacket(ref ptr, id, e.hasExtPositions, dst.hasExtPositions,
                                             curPos, prvPos, curRot, prvRot);
-
-                //bool rotChanged = rot.RotY != e._lastRot.RotY || rot.HeadX != e._lastRot.HeadX;
-                //if (pair.Value.displayName.CaselessContains("temp") && (e._lastPos != e._positionUpdatePos || rotChanged)) {
-                //    p.Message("Moving {0} to {1}", pair.Value.displayName, e._positionUpdatePos.ToVec3F32().ToString());
-                //}
             }
 
             int size = (int)(ptr - src);

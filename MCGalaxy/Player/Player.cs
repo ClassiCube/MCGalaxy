@@ -84,7 +84,16 @@ namespace MCGalaxy {
 
         public override Level Level { get { return level; } }
         public override bool RestrictsScale { get { return true; } }
-        
+
+        public override bool ShouldFlipPitch(Player dst) {
+            if (Server.flipHead || flipHead) return true;
+
+            // flip head when infected in ZS, but doesn't support model
+            if (!dst.hasChangeModel && infected) return true;
+
+            return false;
+        }
+
         /// <summary> Whether this player can see the given player. </summary>
         public bool CanSee(Player target) { return CanSee(target, Rank); }
         /// <summary> Whether this player can see the given player, as if they were the given rank. </summary>

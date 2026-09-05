@@ -78,6 +78,9 @@ namespace MCGalaxy
             SetModel(model);
             Entities.BroadcastModel(this);
         }
+
+
+        public virtual bool ShouldFlipPitch(Player dst) { return false; }
                 
         
         #region ITabListEntry
