@@ -259,10 +259,13 @@ namespace MCGalaxy
         [ConfigBool("WorldChat", "General", true)]
         public bool ServerWideChat = true;
 
+        // Other settings
         [ConfigBool("UseBlockDB", "Other", true)]
         public bool UseBlockDB = true;
         [ConfigInt("LoadDelay", "Other", 0, 0, 2000)]
         public int LoadDelay = 0;
+        [ConfigBool("AllowBots", "Other", true)]
+        public bool AllowBots = true;
 
         [ConfigString("Texture", "Env", "", true)]
         public string Terrain = "";
@@ -282,7 +285,7 @@ namespace MCGalaxy
         public List<string> VisitWhitelist = new List<string>();
         [ConfigStringList("VisitBlacklist", "Permissions")]
         public List<string> VisitBlacklist = new List<string>();
-        
+
         // Physics settings
         [ConfigInt("Physics", "Physics", 0, 0, 5)]
         public int Physics;
@@ -340,6 +343,7 @@ namespace MCGalaxy
         public int RoundsPlayed = 0;
         [ConfigInt("RoundsHumanWon", "Game", 0)]
         public int RoundsHumanWon = 0;
+
         
         readonly object saveLock = new object();
         public string Color {
