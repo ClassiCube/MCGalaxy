@@ -23,6 +23,7 @@ namespace MCGalaxy.Commands.Chatting
         public override string name { get { return "LogoutMessage"; } }
         public override string shortcut { get { return "LogoutMsg"; } }
         public override string type { get { return CommandTypes.Chat; } }
+        public override bool MessageBlockRestricted { get { return true; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Operator; } }
         public override CommandPerm[] ExtraPerms {
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the logout message of others") }; }
