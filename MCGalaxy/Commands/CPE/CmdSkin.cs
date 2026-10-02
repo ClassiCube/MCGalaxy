@@ -30,6 +30,11 @@ namespace MCGalaxy.Commands.CPE
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the skin of others"),
                     new CommandPerm(LevelPermission.Operator, "can change the skin of bots") }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] {
+                new CommandAlias("OSkin", OTHER_FLAG)
+            }; }
+        }
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.IndexOf(' ') == -1) {
@@ -56,9 +61,11 @@ namespace MCGalaxy.Commands.CPE
         }
 
         public override void Help(Player p) {
-            p.Message("&T/Skin [name] [skin] &H- Sets the skin of that player.");
-            p.Message("&T/Skin bot [name] [skin] &H- Sets the skin of that bot.");
-            p.Message("&H[skin] can be:");
+            p.Message("&T/Skin <skin> &H- Sets your skin in this server.");
+            p.Message("&T/OSkin [player] <skin>");
+            p.Message("&H Sets the skin of another player.");
+            p.Message("&T/Skin bot [name] <skin> &H- Sets the skin of that bot.");
+            p.Message("&H<skin> can be:");
             p.Message("&H - a ClassiCube player's name (e.g Hetal)");
             p.Message("&H - a Minecraft player's name, if you put a + (e.g +Hypixel)");
             p.Message("&H - a direct url to a skin");

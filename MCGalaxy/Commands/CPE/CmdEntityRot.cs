@@ -30,6 +30,11 @@ namespace MCGalaxy.Commands.CPE
             get { return new[] { new CommandPerm(LevelPermission.Operator, "can change the rotation of others"),
                     new CommandPerm(LevelPermission.Operator, "can change the rotation of bots") }; }
         }
+        public override CommandAlias[] Aliases {
+            get { return new[] {
+                new CommandAlias("OEntityRot", OTHER_FLAG)
+            }; }
+        }
 
         public override void Use(Player p, string message, CommandData data) {
             if (message.IndexOf(' ') == -1) {
@@ -75,8 +80,10 @@ namespace MCGalaxy.Commands.CPE
         }
 
         public override void Help(Player p) {
-            p.Message("&T/EntityRot [name] x/z [angle].");
+            p.Message("&T/EntityRot x/z [angle].");
             p.Message("&HSets X or Z axis rotation (in degrees) of that player.");
+            p.Message("&T/OEntityRot [name] x/z [angle].");
+            p.Message("&HSets the rotation of another player.");
             p.Message("&T/EntityRot bot [name] x/z [angle]");
             p.Message("&HSets the X or Z axis rotation (in degrees) of that bot.");
         }
