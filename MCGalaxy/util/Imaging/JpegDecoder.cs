@@ -32,6 +32,7 @@ namespace MCGalaxy.Util.Imaging
         JpegComponent[] comps;
         byte lowestHor = 1;
         byte lowestVer = 1;
+        int rstInterval, rstCounter;
 
         public static bool DetectHeader(byte[] data) {
             return MatchesSignature(data, SOI_marker);
@@ -72,8 +73,10 @@ namespace MCGalaxy.Util.Imaging
                     return;
                 } else if (marker >= MARKER_APP0 && marker <= MARKER_APP15) {
                     SkipMarker(src);
-                } else if (marker == MARKER_COMMENT || marker == MARKER_RST_NTRVL) {
+                } else if (marker == MARKER_COMMENT) {
                     SkipMarker(src);
+                } else if (marker == MARKER_RST_NTRVL) {
+                    ReadRestartInterval(src);
                 } else if (marker == MARKER_TBL_HUFF) {
                     ReadHuffmanTable(src);
                 } else if (marker == MARKER_TBL_QUANT) {
@@ -91,20 +94,34 @@ namespace MCGalaxy.Util.Imaging
             }
         }
         
+        int ProcessMarker(byte[] src, out int length) {
+            int offset;
+            offset = AdvanceOffset(2);
+            length = MemUtils.ReadU16_BE(src, offset);
+            
+            length -= 2; // length *includes* the 2 bytes of length value
+            return AdvanceOffset(length);            
+        }
+        
         void SkipMarker(byte[] src) {
-            int offset = AdvanceOffset(2);
-            int length = MemUtils.ReadU16_BE(src, offset);
-            // length *includes* 2 bytes of length
-            AdvanceOffset(length - 2);
+            int length;
+            ProcessMarker(src, out length);
+        }
+        
+        void ReadRestartInterval(byte[] src) {
+            int length;
+            int offset = ProcessMarker(src, out length);
+            
+            if (length < 2) Fail("restart interval too short");
+            
+            rstInterval = MemUtils.ReadU16_BE(src, offset);
+            rstCounter  = rstInterval;
         }
         
         const int QUANT_DATA_LEN = 65; // 1 byte flags, 64 byte values
         void ReadQuantisationTables(byte[] src) {
-            int offset = AdvanceOffset(2);
-            int length = MemUtils.ReadU16_BE(src, offset);
-
-            length -= 2; // length *includes* 2 bytes of length
-            offset = AdvanceOffset(length);
+            int length;
+            int offset = ProcessMarker(src, out length);
             
             // Can have more than one quantisation table
             while (length > 0)
@@ -132,11 +149,8 @@ namespace MCGalaxy.Util.Imaging
         const int HUFF_FAST_LEN_SHIFT = 8;
         
         void ReadHuffmanTable(byte[] src) {
-            int offset = AdvanceOffset(2);
-            int length = MemUtils.ReadU16_BE(src, offset);
-            
-            length -= 2; // length *includes* 2 bytes of length
-            offset = AdvanceOffset(length);
+            int length;
+            int offset = ProcessMarker(src, out length);
             
             // Can have more than one huffman table
             while (length > 0)
@@ -217,10 +231,8 @@ namespace MCGalaxy.Util.Imaging
         }
         
         void ReadFrameStart(byte[] src, Bitmap2D bmp) {
-            int offset = AdvanceOffset(2);
-            int length = MemUtils.ReadU16_BE(src, offset);
-            // length *includes* 2 bytes of length
-            offset = AdvanceOffset(length - 2);
+            int length;
+            int offset = ProcessMarker(src, out length);
             
             byte bits  = src[offset + 0];
             if (bits != 8) Fail("bits per sample");
@@ -263,10 +275,8 @@ namespace MCGalaxy.Util.Imaging
         }
         
         void ReadScanStart(byte[] src) {
-            int offset = AdvanceOffset(2);
-            int length = MemUtils.ReadU16_BE(src, offset);
-            // length *includes* 2 bytes of length
-            offset = AdvanceOffset(length - 2);
+            int length;
+            int offset = ProcessMarker(src, out length);
             
             byte numComps = src[offset++];
             for (int i = 0; i < numComps; i++)
@@ -292,6 +302,7 @@ namespace MCGalaxy.Util.Imaging
             }
             Fail("unknown scan component");
         }
+        
         
         static byte[] zigzag_to_linear = new byte[64]
         {
@@ -326,16 +337,6 @@ namespace MCGalaxy.Util.Imaging
             for (int mcuY = 0; mcuY < mcus_y; mcuY++)
                 for (int mcuX = 0; mcuX < mcus_x; mcuX++)
             {
-                // Technically, reset0-7 markers should only occur every # MCUs
-                //  as per the 'restart interval' marker. However, since proper
-                //  spec compliant decoding is unimportant, just hackily decode
-                if (hit_rst) {
-                    hit_rst = false;
-                    // Align bit reader to next byte, then reset DC prediction value
-                    ConsumeBits(bit_cnt & 0x07);
-                    for (int i = 0; i < comps.Length; i++) comps[i].PredDCValue = 0;
-                }
-                
                 for (int i = 0; i < comps.Length; i++)
                 {
                     JpegComponent comp = comps[i];
@@ -379,6 +380,14 @@ namespace MCGalaxy.Util.Imaging
                         Pixel p = new Pixel(ByteClamp(r), ByteClamp(g), ByteClamp(b), 255);
                         bmp.Pixels[globalY * bmp.Width + globalX] = p;
                     }
+                }
+                
+                if (rstInterval > 0 && --rstCounter <= 0) {
+                    rstCounter = rstInterval;
+                    
+                    // Align bit reader to next byte, then reset DC prediction value
+                    ConsumeBits(bit_cnt & 0x07);
+                    for (int i = 0; i < comps.Length; i++) comps[i].PredDCValue = 0;
                 }
             }
         }
@@ -520,7 +529,7 @@ namespace MCGalaxy.Util.Imaging
         
         uint bit_buf;
         int bit_cnt;
-        bool hit_end, hit_rst;
+        bool hit_end;
         
         void RefillBits(byte[] src) {
             while (bit_cnt <= 24 && !hit_end) {
@@ -534,7 +543,9 @@ namespace MCGalaxy.Util.Imaging
                         hit_end = true;
                         buf_offset -= 2;
                     } else if (type >= (MARKER_RST_MRKR0 & 0xFF) && type <= (MARKER_RST_MRKR7 & 0xFF)) {
-                        hit_rst = true;
+                        // Technically, reset0-7 markers should only occur every # MCUs
+                        //  as per the 'restart interval' marker. However, since proper
+                        //  spec compliant decoding is unimportant, don't bother validating
                         continue;
                     } else if (type != 0) {
                         Fail("unexpected marker");
