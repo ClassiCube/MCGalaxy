@@ -1,4 +1,49 @@
-﻿v 1.9.5.3
+﻿v 1.9.5.4
+Added: `/os` maps can now be renamed with `/os rename` (thanks @SpiralP and @Goodlyay, can be turned off in server.properties)
+Added: ToggleBlockList CPE (Thanks @VenkSociety)
+Added: `/copyslot clear` (thanks @lordmaker1234)
+Added: `/search botai` and `/botai search` (Thanks @Goodlyay)
+Added: `/os list` and `/os tour` (Thanks @Goodlyay)
+Added: AmpersandSupport CPE extension (Thanks @SpiralP)
+Improved: Entity IDs are now player specific rather than being shared on a global or per-level basis
+Improved: Some commands now have dedicated shortcut for altering other players (e.g. `/OTitle` for `/Title`, Thanks @Goodlyay)
+Improved: Make it possible to compile commands/plugins with more modern C# features, if on Windows and Visual Studio is installed
+Improved: `/imageprint` now supports reading any file extension from local /extra/images folder
+Improved: Increased the default timespan that `/highlight` uses to 100 days (Thanks @Goodlyay)
+Improved: `/compile` and `/pcompile` now support providing a directory path to compile all files in it
+Improved: Respect /ignore drawoutput in more cases (Thanks @Goodlyay)
+Improved: Added left/right/front/back modes to /outline (Thanks @Goodlyay)
+Improved: Server name now accepts some additional code page 437 characters
+Improved: Added `/colours` as alias to list colors
+Improved: Try to load debugging info from .pdb rather than .mdb on mono
+Improved: Automatically retry /gr if no level change occurs (Thanks @Goodlyay)
+Improved: Don't display every player in /mi permissions by default (Thanks @Goodlyay)
+Improved: `/os go [name]` now supports partial name matching (Thanks @Goodlyay)
+Improved: Assembly resolution failure is now logged for non-command/plugin DLLs too
+Improved: Use customer JPG/PNG/GIF decoder for `/imageprint` and heightmap mapgen
+Improved: Allow using `Custom` as the discord relay bot's activity presence (thanks @forkiesassds)
+Improved: When a player is kicked for blockspam, also include level name in logs (Thanks @Goodlyay)
+Improved: Increased default extra permission 1 for `/whois` (Thanks @Goodlyay)
+Improved: `/whois` displays too long skin/model on separate lines (thanks @Goodlyay)
+Improved: perbuild/pervisit output more clearly identifies level-only output message (Thanks @Goodlyay)
+Improved: .dat decoder is now more robust (Thanks @123DMWM)
+Fixed: Errors from mcs (mono C# compiler) being swallowed
+Fixed: Classic map generator inaccuracies
+Fixed: URL query parameters can't be included in heartbeat URLs
+Fixed: ZS `/top Survived` and `/top ConsecutiveInfected` being swapped (Thanks @brycemthompson)
+Fixed: `/eat` messages should appear to Discord/IRC relay (Thanks @Goodlyay)
+Fixed: `/map realmowner` not checking provided name(s) are valid player names (Thanks @Goodlyay)
+Fixed: `/reach`, `/inmsg`, `/outmsg`, `/main [level]` being usable from Message Blocks
+Fixed: `RankMsg` and Whisper commands shouldn't update last cmd (thanks @RandomStrangers)
+Fixed: Fix very rare case where `/server reload` could cause custom message blocks/portals to be deleted for a level
+Fixed: `/possess` sometimes misbehaving
+Fixed: Turning off /hide shouldn't re-enable adminchat
+Fixed: Changed title message not always displaying accurate colors (Thanks @Goodlyay)
+Fixed: Don't use `/mode` for /[block] fallback if `/mode` is disabled (thanks @forkiesassds)
+Plugins: Added PushStrength entity property support (Thanks @VenkSociety)
+Plugins: Added plugins loaded event (thanks @Celsiusss)
+
+v 1.9.5.3
 Fixed: some commands being usable in cases they shouldn't have been
 v 1.9.5.2
 Added: NotifyAction CPE.
