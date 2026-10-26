@@ -354,18 +354,19 @@ namespace MCGalaxy.SQL
             return data;
         }
 
-        public static string FromUTF8(IntPtr ptr, int len) {
+        public unsafe static string FromUTF8(IntPtr ptr, int len) {
             if (ptr == IntPtr.Zero) return "";
             
+            // len < 0 = null terminated string
             if (len < 0) {
+                byte* b = (byte*)ptr;
                 len = 0;
-                while (Marshal.ReadByte(ptr, len) != 0) { len++; }
+                while (*b != 0) { b++; len++; }
             }
-            if (len == 0) return "";
             
-            byte[] data = new byte[len];
-            Marshal.Copy(ptr, data, 0, len);
-            return utf8.GetString(data, 0, len);
+            if (len == 0) return "";
+            byte* src = (byte*)ptr;
+            return utf8.GetString(src, len);
         }
         
         public static DateTime ToDateTime(string text) {
