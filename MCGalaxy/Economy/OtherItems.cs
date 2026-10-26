@@ -16,6 +16,7 @@
     permissions and limitations under the Licenses.
  */
 using System;
+using System.Collections.Generic;
 using MCGalaxy.Util;
 
 namespace MCGalaxy.Eco 
@@ -38,14 +39,27 @@ namespace MCGalaxy.Eco
             if (!CheckPrice(p)) return;
             TextFile eatFile = TextFile.Files["Eat"];
             eatFile.EnsureExists();
-            
-            string[] actions = eatFile.GetText();
-            string action = "ate some food";
-            if (actions.Length > 0)
-                action = actions[new Random().Next(actions.Length)];
-            
             if (!p.CheckCanSpeak("eat a snack")) return;
-            Chat.MessageFrom(p, "λNICK &S" + action, null, true);
+            
+            string[] lines = eatFile.GetText();
+            List<string> actions = new List<string>(lines.Length);
+            foreach (string line in lines) { if (!line.StartsWith("//")) actions.Add(line); }
+
+            string action = "ate some food.";
+
+            if (actions.Count > 0) {
+                action = actions[new Random().Next(actions.Count)];
+                action = Pronouns.ParseInto(action, p, "@p{0}");
+                action = action.Replace("@p", "λNICK&S");
+                //     had @p.object food stolen by a dog and @p.subject began to cry. ->
+                //zoey had her       food stolen by a dog and she        began to cry.
+            }
+
+            if (!action.Contains("λNICK")) {
+                //Allows eat message to specify where the player's name appears rather than hardcoded at the beginning with a space
+                action = "λNICK&S " + action;
+            }
+            Chat.MessageFrom(p, action, null, true);
             p.CheckForMessageSpam();
             
             p.NextEat = DateTime.UtcNow.AddSeconds(10);

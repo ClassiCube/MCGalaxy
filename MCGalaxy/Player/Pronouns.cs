@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using MCGalaxy.Tasks;
 
 namespace MCGalaxy {
@@ -204,6 +205,48 @@ namespace MCGalaxy {
             return p.pronounsList.Join((pro) => pro.Name, separator);
         }
 
+        /// <summary>
+        /// Convert a string with placeholders for pronouns into a string formatted with pronouns
+        /// "<zombie> stuck <zombie.object> teeth into <human>" -> "<zombie> stuck her teeth into <human>"
+        /// </summary>
+        public static string ParseInto(string message, Player actor1, string actor1Format, Player actor2 = null, string actor2Format = null) {
+
+            List<KeyValuePair<string, string>> formats = GetFormats(actor1, actor1Format);
+            if (actor2 != null) {
+                if (actor2Format == null) throw new ArgumentNullException("You must pass actor2Format when passing a non-null actor2.");
+                formats.AddRange(GetFormats(actor2, actor2Format));
+            }
+
+            StringBuilder sb = new StringBuilder(message.Length);
+            int i = 0;
+            while (i < message.Length) {
+                foreach (var pair in formats) {
+                    if (message.Length-i >= pair.Key.Length && message.Substring(i, pair.Key.Length) == pair.Key) {
+                        sb.Append(pair.Value);
+                        i += pair.Key.Length;
+                        //"continue;" would only continue the current foreach, but we want to continue the while
+                        goto SuperContinue;
+                    }
+                }
+                sb.Append(message[i]);
+                i++;
+
+                SuperContinue:
+                ;
+            }
+            return sb.ToString();
+        }
+        static List<KeyValuePair<string, string>> GetFormats(Player p, string format) {
+            return new List<KeyValuePair<string, string>> {
+                new KeyValuePair<string, string>(String.Format(format, ".subject"),   p.pronouns.Subject),
+                new KeyValuePair<string, string>(String.Format(format, ".object"),    p.pronouns.Object),
+                new KeyValuePair<string, string>(String.Format(format, ".reflexive"), p.pronouns.Reflexive),
+                new KeyValuePair<string, string>(String.Format(format, ".thirdpersonobjectivesingular"), p.pronouns.ThirdPersonObjectiveSingular),
+                //Name is more complex (e.g. may need to handle /ignore nicks) and is probably out of scope for this parsing
+                //new KeyValuePair<string, string>(String.Format(format, ".name"),      p.DisplayName),
+                //new KeyValuePair<string, string>(String.Format(format, ""),           p.DisplayName),
+            };            
+        }
 
         public readonly string Name;
         /// <summary>

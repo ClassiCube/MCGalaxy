@@ -27,12 +27,13 @@ namespace MCGalaxy.Commands.Chatting
         
         // Custom command, so can still be used even when economy is disabled
         public override void Use(Player p, string message, CommandData data) {
-            Item item = Economy.GetItem("Snack");
+            //Switched to get via type after the 4th time I've struggled to find the implementation for the actual item
+            SnackItem item = Economy.GetItem<SnackItem>();
             item.OnPurchase(p, message);
         }
      
         public override void Help(Player p) {
-            SimpleItem item = (SimpleItem)Economy.GetItem("Snack");
+            SnackItem item = Economy.GetItem<SnackItem>();
             p.Message("&T/Eat &H- Eats a random snack.");
             
             if (item.Price == 0) return;

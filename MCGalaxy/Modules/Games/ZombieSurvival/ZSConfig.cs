@@ -125,21 +125,18 @@ namespace MCGalaxy.Modules.Games.ZS
 
         public const string InfectZombiePlaceholder = "<zombie>";
         public const string InfectHumanPlaceholder = "<human>";
-        const string InfectZombieObjectPlaceholder = "<zobject>";
-        const string InfectHumanObjectPlaceholder = "<hobject>";
 
-        static string[] defMessages = new string[] { "<zombie> WIKIWOO'D <human>", "<zombie> stuck <zobject> teeth into <human>",
-            "<zombie> licked <human>'s brain ", "<zombie> danubed <human>", "<zombie> made <human> meet <hobject> maker", "<zombie> tripped <human>",
+        internal static string[] defMessages = new string[] { "<zombie> WIKIWOO'D <human>", "<zombie> stuck <zombie.object> teeth into <human>",
+            "<zombie> licked <human>'s brain ", "<zombie> danubed <human>", "<zombie> made <human> meet <human.object> maker", "<zombie> tripped <human>",
             "<zombie> made some zombie babies with <human>", "<zombie> made <human> see the dark side", "<zombie> tweeted <human>",
             "<zombie> made <human> open source", "<zombie> infected <human>", "<zombie> iDotted <human>", "<human> got nommed on",
             "<zombie> transplanted <human>'s living brain" };
 
         public static string FormatInfectMessage(string infectMsg, Player pKiller, Player pAlive) {
+            infectMsg = Pronouns.ParseInto(infectMsg, pKiller, "<zombie{0}>", pAlive, "<human{0}>");
             return infectMsg
                 .Replace(InfectZombiePlaceholder, "&c" + pKiller.DisplayName + "&S")
-                .Replace(InfectHumanPlaceholder, pAlive.ColoredName + "&S")
-                .Replace(InfectZombieObjectPlaceholder, pKiller.pronouns.Object)
-                .Replace(InfectHumanObjectPlaceholder, pAlive.pronouns.Object);
+                .Replace(InfectHumanPlaceholder, pAlive.ColoredName + "&S");
         }
 
         public static List<string> LoadInfectMessages() {
@@ -179,7 +176,9 @@ namespace MCGalaxy.Modules.Games.ZS
             {
                 messages[i] = messages[i]
                                 .Replace("{0}", InfectZombiePlaceholder)
-                                .Replace("{1}", InfectHumanPlaceholder);
+                                .Replace("{1}", InfectHumanPlaceholder)
+                                .Replace("<zobject>", "<zombie.object>") //Old pronoun format conversion
+                                .Replace("<hobject>", "<human.object>");
             }
             return messages;
         }
