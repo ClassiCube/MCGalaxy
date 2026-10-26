@@ -142,12 +142,6 @@ namespace MCGalaxy.Eco
             }
             return null;
         }
-        internal static T GetItem<T>() where T : Item {
-            foreach (Item item in Items) {
-                if (item.GetType() == typeof(T)) return (T)item;
-            }
-            return null;
-        }
         
         public static List<Item> GetEnabledItems() {
             List<Item> enabled = new List<Item>();

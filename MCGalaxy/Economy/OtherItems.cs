@@ -23,12 +23,12 @@ namespace MCGalaxy.Eco
 {
     public sealed class SnackItem : SimpleItem 
     {
+        internal const string NAME = "Snack";
         public SnackItem() {
-            Aliases = new string[] { "snack" };
+            Aliases = new string[] { NAME };
             Price = 0;
         }
-        
-        public override string Name { get { return "Snack"; } }
+        public override string Name { get { return NAME; } }
         
         public override void OnPurchase(Player p, string args) {
             if (DateTime.UtcNow < p.NextEat) {
