@@ -19,25 +19,17 @@ using System;
 using System.Threading;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Games;
-using MCGalaxy.Commands.World;
+using MCGalaxy.DB;
 
 namespace MCGalaxy 
 {
     public static class PlayerActions 
     {
         public static void SetSkin(string target, string skin) {
-            string rawName = Server.ToRawUsername(target);
-            
-            if (skin == rawName) {
-                Server.skins.Remove(target);
-            } else {
-                Server.skins.Update(target, skin);
-            }          
-            Server.skins.Save();
-            
+            PlayerDB.SetSkin(target, skin);
             Player who = PlayerInfo.FindExact(target);
-            if (who == null) return;
             
+            if (who == null) return;          
             who.SkinName = skin;
             Entities.GlobalRespawn(who);
         }

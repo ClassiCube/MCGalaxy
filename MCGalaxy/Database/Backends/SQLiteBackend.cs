@@ -359,14 +359,15 @@ namespace MCGalaxy.SQL
             
             // len < 0 = null terminated string
             if (len < 0) {
-                byte* b = (byte*)ptr;
+                byte* b = (byte*)ptr;                
                 len = 0;
                 while (*b != 0) { b++; len++; }
             }
-            
             if (len == 0) return "";
-            byte* src = (byte*)ptr;
-            return utf8.GetString(src, len);
+            
+            byte[] data = new byte[len];
+            Marshal.Copy(ptr, data, 0, len);
+            return utf8.GetString(data, 0, len);
         }
         
         public static DateTime ToDateTime(string text) {

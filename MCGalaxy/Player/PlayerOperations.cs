@@ -16,7 +16,6 @@
     permissions and limitations under the Licenses.
  */
 using System;
-using MCGalaxy.Commands.CPE;
 using MCGalaxy.DB;
 using MCGalaxy.Events.PlayerEvents;
 using MCGalaxy.Network;
@@ -66,16 +65,12 @@ namespace MCGalaxy
                 who.Message("Changed your own model to &c" + model);
             }
 
-            if (!model.CaselessEq("humanoid")) {
-                Server.models.Update(who.name, model);
-            } else {
-                Server.models.Remove(who.name);
-            }
-            Server.models.Save();
+            PlayerDB.SetModel(who.name, model);
 
             // Remove model scale too when resetting model
-            if (orig.Length == 0) CmdModelScale.UpdateSavedScale(who);
+            if (orig.Length == 0) PlayerDB.SetModelScale(who.name, who.ScaleX, who.ScaleY, who.ScaleZ);
         }
+        
         /// <summary>
         /// Attempts to set the skin for the given target, which will be saved across play sessions.
         /// </summary>

@@ -84,6 +84,39 @@ namespace MCGalaxy.DB
         }
         
         
+        public static void SetSkin(string target, string skin) {
+            string rawName = Server.ToRawUsername(target);
+            
+            if (skin == rawName) {
+                bool removed = Server.skins.Remove(target);
+                if (!removed) return; // if no change to list, no need to save it
+            } else {
+                Server.skins.Update(target, skin);
+            }          
+            Server.skins.Save();
+        }
+        
+        public static void SetModel(string target, string model) {
+            if (!model.CaselessEq("humanoid")) {
+                Server.models.Update(target, model);
+            } else {
+                bool removed = Server.models.Remove(target);
+                if (!removed) return; // if no change to list, no need to save it
+            }
+            Server.models.Save();
+        }
+                
+        public static void SetModelScale(string target, float scaleX, float scaleY, float scaleZ) {
+            if (scaleX != 0 || scaleY != 0 || scaleZ != 0) {
+                Server.modelScales.Update(target, scaleX + " " + scaleY + " " + scaleZ);
+            } else {
+                bool removed = Server.modelScales.Remove(target);
+                if (!removed) return; // if no change to list, no need to save it
+            }
+            Server.modelScales.Save();
+        }
+        
+        
         /// <summary> Returns the fields of the row whose Name field caselessly equals the given name </summary>
         public static PlayerData FindData(string name) {
             return FindExact(name, "*", PlayerData.Parse);

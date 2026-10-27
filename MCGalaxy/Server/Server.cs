@@ -371,17 +371,6 @@ namespace MCGalaxy
             return new string(str);
         }
         
-        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
-        static MD5CryptoServiceProvider md5  = new MD5CryptoServiceProvider();
-        static object md5Lock = new object();
-        
-        /// <summary> Calculates mppass (verification token) for the given username. </summary>
-        public static string CalcMppass(string name, string salt) {
-            byte[] hash = null;
-            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
-            return Utils.ToHexString(hash);
-        }
-        
         /// <summary> Converts a formatted username into its original username </summary>
         /// <remarks> If ClassiCubeAccountPlus option is set, removes + </remarks>
         public static string ToRawUsername(string name) {

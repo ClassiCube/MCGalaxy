@@ -45,6 +45,18 @@ namespace MCGalaxy.Authentication
             
             return !Server.Config.VerifyNames || (IPUtil.IsPrivate(p.IP) && !Server.Config.VerifyLanIPs);
         }
+        
+               
+        static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
+        static MD5CryptoServiceProvider md5  = new MD5CryptoServiceProvider();
+        static object md5Lock = new object();
+        
+        /// <summary> Calculates mppass (verification token) for the given username. </summary>
+        public static string CalcMppass(string name, string salt) {
+            byte[] hash = null;
+            lock (md5Lock) hash = md5.ComputeHash(enc.GetBytes(salt + name));
+            return Utils.ToHexString(hash);
+        }
     }
     
     /// <summary> Authenticates a player using the provided mppass </summary>
@@ -59,7 +71,7 @@ namespace MCGalaxy.Authentication
         }
         
         static bool Authenticate(AuthService auth, Player p, string mppass) {
-            string calc = Server.CalcMppass(p.truename, auth.Salt);
+            string calc = CalcMppass(p.truename, auth.Salt);
             if (!mppass.CaselessEq(calc)) return false;
 
             auth.AcceptPlayer(p);

@@ -17,6 +17,7 @@
  */
 using System;
 using MCGalaxy.Bots;
+using MCGalaxy.DB;
 
 namespace MCGalaxy.Commands.CPE 
 {
@@ -60,17 +61,7 @@ namespace MCGalaxy.Commands.CPE
                 who.Message("Changed your own {0} scale to {1}", axis, res);
             }
             
-            UpdateSavedScale(who);
-            Server.modelScales.Save();
-        }
-        
-        internal static void UpdateSavedScale(Player p) {
-            if (p.ScaleX != 0 || p.ScaleY != 0 || p.ScaleZ != 0) {
-                Server.modelScales.Update(p.name, p.ScaleX + " " + p.ScaleY + " " + p.ScaleZ);
-            } else {
-                Server.modelScales.Remove(p.name);
-            }
-            Server.modelScales.Save();
+            PlayerDB.SetModelScale(who.name, who.ScaleX, who.ScaleY, who.ScaleZ);
         }
         
         bool ParseArgs(Player dst, Entity e, string args, out string axis, out string res) {
