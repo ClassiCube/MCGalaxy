@@ -24,26 +24,26 @@ namespace MCGalaxy
     public static class Wildcard 
     {
         /// <summary> Returns a new list filtered to match the given keyword. Accepts * and ? wildcard tokens. </summary>
-        public static List<string> Filter<T>(IList<T> input, string keyword, StringFormatter<T> nameGetter,
-                                          Predicate<T> filter = null, StringFormatter<T> listFormatter = null) {
-            List<string> matches = new List<string>();
+        public static List<T> Filter<T>(IEnumerable<T> input, string keyword, StringFormatter<T> nameGetter,
+                                        Predicate<T> filter = null) {
+            List<T> matches = new List<T>();
             Regex regex = null;
+            
             // wildcard matching
             if (keyword.Contains("*") || keyword.Contains("?")) {
                 string pattern = "^" + Regex.Escape(keyword).Replace("\\?", ".").Replace("\\*", ".*") + "$";
                 regex = new Regex(pattern, RegexOptions.IgnoreCase);
             }
             
-            foreach (T item in input) {
+            foreach (T item in input) 
+            {
                 if (filter != null && !filter(item)) continue;
                 string name = nameGetter(item);
                 
                 if (regex != null) { if (!regex.IsMatch(name)) continue; }
                 else { if (!name.CaselessContains(keyword))    continue; }
                 
-                // format this item for display
-                if (listFormatter != null) name = listFormatter(item);
-                matches.Add(name);
+                matches.Add(item);
             }
             return matches;
         }
@@ -54,6 +54,28 @@ namespace MCGalaxy
             
             filter = filter.Replace('*', '%').Replace('?', '_');
             return "%" + filter + "%";
+        }
+
+        
+        public static void PrintMatches<T>(Player p, string keyword, string cmd, string type, string modifier, 
+                                        List<T> items, StringFormatter<T> itemFormatter) {
+            if (items.Count == 0) {
+                p.Message("No {0} found containing \"{1}\"", type, keyword);
+            } else {
+                Paginator.Output(p, items, itemFormatter, cmd + " " + keyword, type, modifier);
+            }
+        }
+        
+        public static void OutputMatches<T>(Player p, string keyword, string cmd, string type, string modifier, 
+                                            IList<T> input, StringFormatter<T> nameGetter, 
+                                            StringFormatter<T> listFormatter = null,
+                                            Predicate<T> filter = null,
+                                            IComparer<T> sorter = null) {
+            List<T> items = Filter(input, keyword, nameGetter, filter);
+            if (sorter != null) items.Sort(sorter);
+            
+            PrintMatches(p, keyword, cmd, type, modifier, items, 
+                         listFormatter ?? nameGetter);
         }
     }
 }

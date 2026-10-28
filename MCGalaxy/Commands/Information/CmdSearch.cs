@@ -65,70 +65,55 @@ namespace MCGalaxy.Commands.Info
                 if (Block.ExistsFor(p, block)) blocks.Add(block);
             }
 
-            List<string> blockNames = Wildcard.Filter(blocks, keyword, 
-                                                      b => Block.GetName(p, b), null,
-                                                      b => Block.GetColoredName(p, b));
-            OutputList(p, keyword, "search blocks", "blocks", modifier, blockNames);
+            Wildcard.OutputMatches(p, keyword, "search blocks", "blocks", modifier,
+                                   blocks, b => Block.GetName(p, b),
+                                   b => Block.GetColoredName(p, b));
         }
         
         static void SearchCommands(Player p, string keyword, string modifier) {
-            List<string> commands  = Wildcard.Filter(Command.allCmds, keyword, cmd => cmd.name,
-                                                     null, Command.GetColoredName);
-            List<string> shortcuts = Wildcard.Filter(Command.allCmds, keyword, cmd => cmd.shortcut,
-                                                     cmd => !String.IsNullOrEmpty(cmd.shortcut), 
-                                                     Command.GetColoredName);
+            List<Command> commands  = Wildcard.Filter(Command.allCmds, keyword, cmd => cmd.name);
+            List<Command> shortcuts = Wildcard.Filter(Command.allCmds, keyword, cmd => cmd.shortcut,
+                                                      cmd => !String.IsNullOrEmpty(cmd.shortcut));
             
             // Match both names and shortcuts
-            foreach (string shortcutCmd in shortcuts) 
+            foreach (Command shortcutCmd in shortcuts) 
             {
-                if (commands.CaselessContains(shortcutCmd)) continue;
+                if (commands.Contains(shortcutCmd)) continue;
                 commands.Add(shortcutCmd);
             }
             
-            OutputList(p, keyword, "search commands", "commands", modifier, commands);
+            Wildcard.PrintMatches(p, keyword, "search commands", "commands", modifier, 
+                                  commands, Command.GetColoredName);
         }
         
         static void SearchRanks(Player p, string keyword, string modifier) {
-            List<string> ranks = Wildcard.Filter(Group.GroupList, keyword, grp => grp.Name,
-                                                null, grp => grp.ColoredName);
-            OutputList(p, keyword, "search ranks", "ranks", modifier, ranks);
+            Wildcard.OutputMatches(p, keyword, "search ranks", "ranks", modifier,
+                                   Group.GroupList, grp => grp.Name,
+                                   grp => grp.ColoredName);
         }
         
         static void SearchOnline(Player p, string keyword, string modifier) {
-            Player[] online = PlayerInfo.Online.Items;
-            List<string> players = Wildcard.Filter(online, keyword, pl => pl.name,
-                                                  pl => p.CanSee(pl), pl => pl.ColoredName);
-            OutputList(p, keyword, "search online", "players", modifier, players);
+            Wildcard.OutputMatches(p, keyword, "search online", "players", modifier,
+                                   PlayerInfo.Online.Items, pl => pl.name,
+                                   pl => pl.ColoredName, 
+                                   pl => p.CanSee(pl));
         }
         
         static void SearchLoaded(Player p, string keyword, string modifier) {
-            Level[] loaded = LevelInfo.Loaded.Items;
-            List<string> levels = Wildcard.Filter(loaded, keyword, level => level.name);
-            OutputList(p, keyword, "search loaded", "loaded levels", modifier, levels);
+            Wildcard.OutputMatches(p, keyword, "search loaded", "loaded levels", modifier,
+                                   LevelInfo.Loaded.Items, lvl => lvl.name);                                   
         }
         
         static void SearchMaps(Player p, string keyword, string modifier) {
-            string[] allMaps = LevelInfo.AllMapNames();
-            List<string> maps = Wildcard.Filter(allMaps, keyword, map => map);
-            maps.Sort(new AlphanumComparator());
-            OutputList(p, keyword, "search levels", "maps", modifier, maps);
+            Wildcard.OutputMatches(p, keyword, "search levels", "maps", modifier,
+                                   LevelInfo.AllMapNames(), map => map,
+                                   null, null, new AlphanumComparator());
         }
 
-        public static void SearchBotAIs(Player p, string keyword, string modifier) {
-            string[] files = ScriptFile.GetAll();
-            List<string> fileNames = new List<string>(files.Length);
-            foreach (var file in files) fileNames.Add(Path.GetFileName(file));
-            fileNames.Sort((a, b) => string.Compare(a, b));
-            fileNames = Wildcard.Filter(fileNames, keyword, (a) => a, null, null);
-            OutputList(p, keyword, "search botais", "botais", modifier, fileNames);
-        }
-
-        static void OutputList(Player p, string keyword, string cmd, string type, string modifier, List<string> items) {
-            if (items.Count == 0) {
-                p.Message("No {0} found containing \"{1}\"", type, keyword);
-            } else {
-                Paginator.Output(p, items, item => item, cmd + " " + keyword, type, modifier);
-            }
+        static void SearchBotAIs(Player p, string keyword, string modifier) {
+            Wildcard.OutputMatches(p, keyword, "search botais", "botais", modifier,
+                                   ScriptFile.GetAllNames(), ai => ai,
+                                   null, null, StringComparer.Ordinal);
         }
         
         
@@ -141,7 +126,8 @@ namespace MCGalaxy.Commands.Info
                               "WHERE Name LIKE @0 ESCAPE '#' LIMIT 100" + suffix,
                               Wildcard.ToSQLFilter(keyword));
             
-            OutputList(p, keyword, "search players", "players", modifier, names);
+            Wildcard.PrintMatches(p, keyword, "search players", "players", modifier, 
+                                  names, name => name);
         }
         
         

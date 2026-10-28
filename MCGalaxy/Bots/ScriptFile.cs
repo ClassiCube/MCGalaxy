@@ -32,6 +32,15 @@ namespace MCGalaxy.Bots
         
         public static string GetDeletedPath(string ai) { return DELETED_DIR + "/" + ai; }
         
+        public static string[] GetAllNames() {
+            string[] files = GetAll();
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = Path.GetFileName(files[i]);
+            }
+            return files;
+        }
+        
         
         public static bool Parse(Player p, PlayerBot bot, string ai) {
             string path = GetPath(ai);

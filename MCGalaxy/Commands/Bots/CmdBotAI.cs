@@ -38,13 +38,17 @@ namespace MCGalaxy.Commands.Bots
                 HandleList(p, modifier);
                 return;
             }
+            
             if (cmd.CaselessEq("search")) {
                 if (args.Length == 1) {
                     p.Message("&WPlease specify a search keyword"); return;
                 }
                 string keyword = args[1];
                 string modifier = args.Length > 2 ? args[2] : "";
-                Info.CmdSearch.SearchBotAIs(p, keyword, modifier);
+                
+                Wildcard.OutputMatches(p, keyword, "search botais", "botais", modifier,
+                                       ScriptFile.GetAllNames(), name => name,
+                                       null, null, StringComparer.Ordinal);
                 return;
             }
             
@@ -133,9 +137,9 @@ namespace MCGalaxy.Commands.Bots
         }
         
         void HandleList(Player p, string modifier) {
-            string[] files = ScriptFile.GetAll();
-            Array.Sort(files);
-            Paginator.Output(p, files, f => Path.GetFileName(f),
+            string[] names = ScriptFile.GetAllNames();
+            Array.Sort(names);
+            Paginator.Output(p, names, name => name,
                              "BotAI list", "bot AIs", modifier);
         }
         
