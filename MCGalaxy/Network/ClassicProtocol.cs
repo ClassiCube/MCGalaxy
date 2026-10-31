@@ -360,7 +360,7 @@ namespace MCGalaxy.Network
             #if TEN_BIT_BLOCKS
             else if (ext.Name == CpeExt.ExtBlocks) {
                 hasExtBlocks = true;
-                if (MaxRawBlock < 767) MaxRawBlock = 767;
+                if (MaxRawBlock < Block.MaxRaw) MaxRawBlock = Block.MaxRaw;
             }
             #endif
         }

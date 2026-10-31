@@ -48,20 +48,44 @@ namespace MCGalaxy
         // E.g. 0x180 = class 01, value 128 =  custom block 128
         
         #if TEN_BIT_BLOCKS
-        public const ushort MaxRaw = 767;
-        internal const int SUPPORTED_COUNT = 256 * 4;
+        internal const int SUPPORTED_COUNT = 256 * 16;
+        public const ushort MaxRaw = SUPPORTED_COUNT - 256 - 1; // 3839
         internal static ushort[] ExtendedBase = new ushort[CORE_COUNT];
-        internal static byte[] ExtendedClass  = new byte[4];
+        internal static byte[] ExtendedClass  = new byte[SUPPORTED_COUNT >> 8]; // 16 slots
         
         static Block() {
             ExtendedBase[custom_block]   = Extended;
             ExtendedBase[custom_block_2] = Extended * 2;
             ExtendedBase[custom_block_3] = Extended * 3;
+            ExtendedBase[custom_block_4] = Extended * 4;
+            ExtendedBase[custom_block_5] = Extended * 5;
+            ExtendedBase[custom_block_6] = Extended * 6;
+            ExtendedBase[custom_block_7] = Extended * 7;
+            ExtendedBase[custom_block_8] = Extended * 8;
+            ExtendedBase[custom_block_9] = Extended * 9;
+            ExtendedBase[custom_block_10] = Extended * 10;
+            ExtendedBase[custom_block_11] = Extended * 11;
+            ExtendedBase[custom_block_12] = Extended * 12;
+            ExtendedBase[custom_block_13] = Extended * 13;
+            ExtendedBase[custom_block_14] = Extended * 14;
+            ExtendedBase[custom_block_15] = Extended * 15;
             
             ExtendedClass[0] = Air;
             ExtendedClass[1] = custom_block;
             ExtendedClass[2] = custom_block_2;
             ExtendedClass[3] = custom_block_3;
+            ExtendedClass[4] = custom_block_4;
+            ExtendedClass[5] = custom_block_5;
+            ExtendedClass[6] = custom_block_6;
+            ExtendedClass[7] = custom_block_7;
+            ExtendedClass[8] = custom_block_8;
+            ExtendedClass[9] = custom_block_9;
+            ExtendedClass[10] = custom_block_10;
+            ExtendedClass[11] = custom_block_11;
+            ExtendedClass[12] = custom_block_12;
+            ExtendedClass[13] = custom_block_13;
+            ExtendedClass[14] = custom_block_14;
+            ExtendedClass[15] = custom_block_15;
         }
         #else
         public const ushort MaxRaw = 255;
@@ -145,20 +169,43 @@ namespace MCGalaxy
         //public const byte Door_Black_Air = 67;     // unused in core
         //public const byte Door_Gray_Air  = 68;     // unused in core
         //public const byte Door_White_Air = 69;     // unused in core
+        #if TEN_BIT_BLOCKS
+        public const byte custom_block_4 = 66;
+        public const byte custom_block_5 = 67;
+        public const byte custom_block_6 = 68;
+        public const byte custom_block_7 = 69;
+        #endif
+
         public const byte FlagBase = 70;
 
         //Seasons
         //public const byte FallSnow = 71;           // unused in core
         //public const byte Snow = 72;               // unused in core
+        #if TEN_BIT_BLOCKS
+        public const byte custom_block_8 = 71;
+        public const byte custom_block_9 = 72;
+        #endif
 
         public const byte Deadly_FastLava = 73;
 
         public const byte C4 = 74;
         public const byte C4Detonator = 75;
-        // 76, 77, 78, 79 free
+
+        #if TEN_BIT_BLOCKS
+        public const byte custom_block_10 = 76;
+        public const byte custom_block_11 = 77;
+        public const byte custom_block_12 = 78;
+        public const byte custom_block_13 = 79;
+        #endif
 
         public const byte Door_Cobblestone = 80;
         //public const byte Door_Cobblestone_air = 81;// unused in core
+
+        #if TEN_BIT_BLOCKS
+        public const byte custom_block_14 = 81;
+        public const byte custom_block_15 = 82;
+        #endif
+
         public const byte Door_Red = 83;
         //public const byte Door_Red_air = 84;        // unused in core
 
