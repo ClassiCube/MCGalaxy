@@ -46,7 +46,7 @@ namespace MCGalaxy.Commands.Bots
                 string keyword = args[1];
                 string modifier = args.Length > 2 ? args[2] : "";
                 
-                Wildcard.OutputMatches(p, keyword, "search botais", "botais", modifier,
+                Wildcard.OutputMatches(p, keyword, "BotAI search", "botais", modifier,
                                        ScriptFile.GetAllNames(), name => name,
                                        null, null, StringComparer.Ordinal);
                 return;
