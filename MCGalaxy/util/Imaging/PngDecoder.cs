@@ -99,10 +99,9 @@ namespace MCGalaxy.Util.Imaging
 
                             bitsPerSample = src[offset + 8];
                             colorspace    = src[offset + 9];
-                            if (bitsPerSample == 16) Fail("16 bpp");
 
                             rowExpander = GetRowExpander(colorspace, bitsPerSample);
-                            if (rowExpander == null) Fail("Colorspace/bpp combination");
+                            if (rowExpander == null) Fail("Unsupported colorspace/bpp " + colorspace + "," + bitsPerSample);
 
                             if (src[offset + 10] != 0) Fail("Compression method");
                             if (src[offset + 11] != 0) Fail("Filter");
@@ -381,12 +380,30 @@ namespace MCGalaxy.Util.Imaging
             }
         }
 
+        static void Expand_GRAYSCALE_16(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+            for (int i = 0; i < width; i++)
+            {
+                byte rgb = src[i * 2]; // higher 8 bits of 16 bit samples
+                dst[i]   = new Pixel(rgb, rgb, rgb, 255);
+            }
+        }
+
         static void Expand_RGB_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
                 byte r = src[i * 3 + 0];
                 byte g = src[i * 3 + 1];
                 byte b = src[i * 3 + 2];
+                dst[i] = new Pixel(r, g, b, 255);
+            }
+        }
+        
+        static void Expand_RGB_16(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+            for (int i = 0; i < width; i++)
+            {
+                byte r = src[i * 6 + 0]; // higher 8 bits of 16 bit samples
+                byte g = src[i * 6 + 2]; // higher 8 bits of 16 bit samples
+                byte b = src[i * 6 + 4]; // higher 8 bits of 16 bit samples
                 dst[i] = new Pixel(r, g, b, 255);
             }
         }
@@ -416,6 +433,15 @@ namespace MCGalaxy.Util.Imaging
             }
         }
 
+        static void Expand_GRAYSCALE_A_16(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+            for (int i = 0; i < width; i++)
+            {
+                byte rgb = src[i * 4 + 0]; // higher 8 bits of 16 bit samples
+                byte a   = src[i * 4 + 2]; // higher 8 bits of 16 bit samples
+                dst[i] = new Pixel(rgb, rgb, rgb, a);
+            }
+        }
+
         static void Expand_RGB_A_8(int width, Pixel[] palette, byte[] src, Pixel* dst) {
             for (int i = 0; i < width; i++)
             {
@@ -423,6 +449,17 @@ namespace MCGalaxy.Util.Imaging
                 byte g = src[i * 4 + 1];
                 byte b = src[i * 4 + 2];
                 byte a = src[i * 4 + 3];
+                dst[i] = new Pixel(r, g, b, a);
+            }
+        }
+
+        static void Expand_RGB_A_16(int width, Pixel[] palette, byte[] src, Pixel* dst) {
+            for (int i = 0; i < width; i++)
+            {
+                byte r = src[i * 8 + 0]; // higher 8 bits of 16 bit samples
+                byte g = src[i * 8 + 2]; // higher 8 bits of 16 bit samples
+                byte b = src[i * 8 + 4]; // higher 8 bits of 16 bit samples
+                byte a = src[i * 8 + 6]; // higher 8 bits of 16 bit samples
                 dst[i] = new Pixel(r, g, b, a);
             }
         }
@@ -436,12 +473,14 @@ namespace MCGalaxy.Util.Imaging
                             case 2:  return Expand_GRAYSCALE_2;
                             case 4:  return Expand_GRAYSCALE_4;
                             case 8:  return Expand_GRAYSCALE_8;
+                            case 16: return Expand_GRAYSCALE_16;
                     }
                     return null;
 
                 case PNG_COLOR_RGB:
                     switch (bitsPerSample) {
                             case 8:  return Expand_RGB_8;
+                            case 16: return Expand_RGB_16;
                     }
                     return null;
 
@@ -457,12 +496,14 @@ namespace MCGalaxy.Util.Imaging
                 case PNG_COLOR_GRAYSCALE_A:
                     switch (bitsPerSample) {
                             case 8:  return Expand_GRAYSCALE_A_8;
+                            case 16: return Expand_GRAYSCALE_A_16;
                     }
                     return null;
 
                 case PNG_COLOR_RGB_A:
                     switch (bitsPerSample) {
                             case 8:  return Expand_RGB_A_8;
+                            case 16: return Expand_RGB_A_8;
                     }
                     return null;
             }
