@@ -50,16 +50,19 @@ namespace MCGalaxy.Util.Imaging
         const int PNG_COLOR_GRAYSCALE_A = 4;
         const int PNG_COLOR_RGB_A       = 6;
 
-        static Pixel ExpandRGB(byte bitsPerSample, int r, int g, int b) {
+        // rescales a 'bits per sample' value to 8 bits per sample
+        static int RescaledValue(byte bitsPerSample, byte[] src, int offset) {
+            // NOTE: value is always encoded as 16 bit unsigned integer, even when bps <= 8           
+            if (bitsPerSample == 16) 
+                return src[offset]; // higher 8 bits of 16 bit samples
+            
+            int value = src[offset + 1];         
             switch (bitsPerSample) {
-                case 1:
-                    r *= SCALE_1BPP; g *= SCALE_1BPP; b *= SCALE_1BPP; break;
-                case 2:
-                    r *= SCALE_2BPP; g *= SCALE_2BPP; b *= SCALE_2BPP; break;
-                case 4:
-                    r *= SCALE_4BPP; g *= SCALE_4BPP; b *= SCALE_4BPP; break;
+                case 1:  return value * SCALE_1BPP;
+                case 2:  return value * SCALE_2BPP;
+                case 4:  return value * SCALE_4BPP;
+                default: return value;
             }
-            return new Pixel((byte)r, (byte)g, (byte)b, 0);
         }
 
         static byte[] samplesPerPixel = new byte [] { 1, 0, 3, 1, 2, 0, 4 };
@@ -138,8 +141,8 @@ namespace MCGalaxy.Util.Imaging
                                 offset = AdvanceOffset(dataSize);
 
                                 // RGB is always two bytes
-                                byte rgb  = src[offset + 1];
-                                trnsColor = ExpandRGB(bitsPerSample, rgb, rgb, rgb);
+                                int rgb   = RescaledValue(bitsPerSample, src, offset + 0);
+                                trnsColor = new Pixel((byte)rgb, (byte)rgb, (byte)rgb, 0);
                             } else if (colorspace == PNG_COLOR_INDEXED) {
                                 if (dataSize > MAX_PALETTE) Fail("tRNS size");
 
@@ -157,10 +160,10 @@ namespace MCGalaxy.Util.Imaging
                                 offset = AdvanceOffset(dataSize);
 
                                 // R,G,B are always two bytes
-                                byte r = src[offset + 1];
-                                byte g = src[offset + 3];
-                                byte b = src[offset + 5];
-                                trnsColor = ExpandRGB(bitsPerSample, r, g, b);
+                                int r = RescaledValue(bitsPerSample, src, offset + 0);
+                                int g = RescaledValue(bitsPerSample, src, offset + 2);
+                                int b = RescaledValue(bitsPerSample, src, offset + 4);
+                                trnsColor = new Pixel((byte)r, (byte)g, (byte)b, 0);
                             } else {
                                 Fail("tRNS/colorspace combination");
                             }
