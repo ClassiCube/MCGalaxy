@@ -69,6 +69,8 @@ namespace MCGalaxy.Network
     public static class SocketUtil 
     { 
         /// <summary> Retrieves the remote IP address associated with the given socket </summary>
+        /// <remarks> Can throw SocketException if the socket is not connected 
+        /// (e.g. if the remote endpoint closed the connection) </remarks>
         public static IPAddress GetIP(Socket s) {
             IPAddress addr = ((IPEndPoint)s.RemoteEndPoint).Address;
             

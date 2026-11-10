@@ -48,7 +48,9 @@ namespace MCGalaxy.Modules.Security
         }
         
         void HandleConnectionReceived(Socket s, ref bool cancel, ref bool announce) {
-            IPAddress ip = SocketUtil.GetIP(s);
+            IPAddress ip = null;
+            try { ip = SocketUtil.GetIP(s); } catch (SocketException) { return; }
+            
             if (!Server.Config.IPSpamCheck || IPAddress.IsLoopback(ip)) return;
             
             DateTime now = DateTime.UtcNow;
