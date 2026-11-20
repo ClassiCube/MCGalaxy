@@ -20,5 +20,5 @@ using System.Reflection;
 [assembly: AssemblyTitle("MCGalaxy")]
 [assembly: AssemblyDescription("ClassiCube Server Software")]
 [assembly: AssemblyProduct("MCGalaxy")]
-[assembly: AssemblyCopyright("Copyright © 2015-2022")]
+[assembly: AssemblyCopyright("Copyright © 2015-2026")]
 [assembly: AssemblyVersion(MCGalaxy.Server.InternalVersion)]
