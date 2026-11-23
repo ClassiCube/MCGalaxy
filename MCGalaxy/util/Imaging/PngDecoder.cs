@@ -97,12 +97,15 @@ namespace MCGalaxy.Util.Imaging
 
                             bmp.Width  = MemUtils.ReadI32_BE(src, offset + 0);
                             bmp.Height = MemUtils.ReadI32_BE(src, offset + 4);
-                            if (bmp.Width  < 0 || bmp.Width  > MAX_PNG_DIMS) Fail("too wide");
-                            if (bmp.Height < 0 || bmp.Height > MAX_PNG_DIMS) Fail("too tall");
+                            
+                            if (bmp.Width <= 0 || bmp.Height <= 0) Fail("pixels size must be >= 0");
+                            if (bmp.Width  > MAX_PNG_DIMS) Fail("too wide");
+                            if (bmp.Height > MAX_PNG_DIMS) Fail("too tall");
 
                             bitsPerSample = src[offset + 8];
                             colorspace    = src[offset + 9];
 
+                            if (rowExpander != null) Fail("multiple headers");
                             rowExpander = GetRowExpander(colorspace, bitsPerSample);
                             if (rowExpander == null) Fail("Unsupported colorspace/bpp " + colorspace + "," + bitsPerSample);
 
