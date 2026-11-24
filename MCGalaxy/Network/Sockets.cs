@@ -126,7 +126,7 @@ namespace MCGalaxy.Network
         byte[] recvBuffer = new byte[256];
         readonly SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
         
-        byte[] sendBuffer = new byte[4096];
+        byte[] sendBuffer = new byte[4096*5];
         readonly object sendLock = new object();
         readonly Queue<byte[]> sendQueue = new Queue<byte[]>(64);
         volatile bool sendInProgress;

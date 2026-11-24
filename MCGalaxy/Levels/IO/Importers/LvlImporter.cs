@@ -114,7 +114,7 @@ namespace MCGalaxy.Levels.IO
         }
         
         static void ReadPhysicsEntries(Level lvl, Stream gs, int count) {
-            byte[] buffer = new byte[Math.Min(count, 1024) * 8];
+            byte[] buffer = new byte[Math.Min(count, 1024*4) * 8];
             Check C;
             
             fixed (byte* ptr = buffer)

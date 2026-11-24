@@ -157,6 +157,18 @@ namespace MCGalaxy.Network
             #if TEN_BIT_BLOCKS
             byte* convExt2 = conv + 256 * 2;
             byte* convExt3 = conv + 256 * 3;
+            byte* convExt4 = conv + 256 * 4;
+            byte* convExt5 = conv + 256 * 5;
+            byte* convExt6 = conv + 256 * 6;
+            byte* convExt7 = conv + 256 * 7;
+            byte* convExt8 = conv + 256 * 8;
+            byte* convExt9 = conv + 256 * 9;
+            byte* convExt10 = conv + 256 * 10;
+            byte* convExt11 = conv + 256 * 11;
+            byte* convExt12 = conv + 256 * 12;
+            byte* convExt13 = conv + 256 * 13;
+            byte* convExt14 = conv + 256 * 14;
+            byte* convExt15 = conv + 256 * 15;
             #endif
 
             for (int j = 0; j < Block.SUPPORTED_COUNT; j++) {
@@ -176,6 +188,30 @@ namespace MCGalaxy.Network
                     } else if (block == Block.custom_block_2) {
                         break;
                     } else if (block == Block.custom_block_3) {
+                        break;
+                    } else if (block == Block.custom_block_4) {
+                        break;
+                    } else if (block == Block.custom_block_5) {
+                        break;
+                    } else if (block == Block.custom_block_6) {
+                        break;
+                    } else if (block == Block.custom_block_7) {
+                        break;
+                    } else if (block == Block.custom_block_8) {
+                        break;
+                    } else if (block == Block.custom_block_9) {
+                        break;
+                    } else if (block == Block.custom_block_10) {
+                        break;
+                    } else if (block == Block.custom_block_11) {
+                        break;
+                    } else if (block == Block.custom_block_12) {
+                        break;
+                    } else if (block == Block.custom_block_13) {
+                        break;
+                    } else if (block == Block.custom_block_14) {
+                        break;
+                    } else if (block == Block.custom_block_15) {
                         break;
                     } else {
                         buffer[bIndex] = conv[block];
@@ -218,6 +254,42 @@ namespace MCGalaxy.Network
                         } else if (block == Block.custom_block_3) {
                             buffer[bIndex]  = lvl.GetExtTile(i);
                             buffer2[bIndex] = 2;
+                        } else if (block == Block.custom_block_4) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 3;
+                        } else if (block == Block.custom_block_5) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 4;
+                        } else if (block == Block.custom_block_6) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 5;
+                        } else if (block == Block.custom_block_7) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 6;
+                        } else if (block == Block.custom_block_8) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 7;
+                        } else if (block == Block.custom_block_9) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 8;
+                        } else if (block == Block.custom_block_10) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 9;
+                        } else if (block == Block.custom_block_11) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 10;
+                        } else if (block == Block.custom_block_12) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 11;
+                        } else if (block == Block.custom_block_13) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 12;
+                        } else if (block == Block.custom_block_14) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 13;
+                        } else if (block == Block.custom_block_15) {
+                            buffer[bIndex]  = lvl.GetExtTile(i);
+                            buffer2[bIndex] = 14;
                         } else {
                             buffer[bIndex]  = conv[block];
                             buffer2[bIndex] = 0;
@@ -242,6 +314,30 @@ namespace MCGalaxy.Network
                         buffer[bIndex] = convExt2[lvl.GetExtTile(i)];
                     } else if (block == Block.custom_block_3) {
                         buffer[bIndex] = convExt3[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_4) {
+                        buffer[bIndex] = convExt4[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_5) {
+                        buffer[bIndex] = convExt5[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_6) {
+                        buffer[bIndex] = convExt6[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_7) {
+                        buffer[bIndex] = convExt7[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_8) {
+                        buffer[bIndex] = convExt8[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_9) {
+                        buffer[bIndex] = convExt9[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_10) {
+                        buffer[bIndex] = convExt10[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_11) {
+                        buffer[bIndex] = convExt11[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_12) {
+                        buffer[bIndex] = convExt12[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_13) {
+                        buffer[bIndex] = convExt13[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_14) {
+                        buffer[bIndex] = convExt14[lvl.GetExtTile(i)];
+                    } else if (block == Block.custom_block_15) {
+                        buffer[bIndex] = convExt15[lvl.GetExtTile(i)];
                     } else {
                         buffer[bIndex] = conv[block];
                     }
