@@ -260,27 +260,53 @@ namespace MCGalaxy.Network
 
         int HandleNotifyAction(byte[] buffer, int offset, int left)
         {
-            const int size = 1 + 2 + 2;
+            const int size = 1 + 2 + 2; //opcode, action enum, value
             if (left < size) return 0;
 
-            NotifyActionType action = (NotifyActionType)buffer[offset + 2];
-            short value = MemUtils.ReadI16_BE(buffer, offset + 3);
+            CpeExt ext = FindExtension(CpeExt.NotifyAction);
+            if (ext == null || ext.ClientVersion < 2) {
+                //Version 1 is broken and processed only to be ignored
+                return size;
+            }
 
-            OnNotifyActionEvent.Call(player, action, value);
+            NotifyActionType type = (NotifyActionType)buffer[offset + 2];
+            ushort value = MemUtils.ReadU16_BE(buffer, offset + 3);
+
+
+            OnNotifyActionEvent.Call(player, NotifyAction.Create(type, value));
             return size;
         }
 
         int HandleNotifyPositionAction(byte[] buffer, int offset, int left)
         {
-            const int size = 1 + 2 + 2 + 2 + 2;
+            CpeExt ext = FindExtension(CpeExt.NotifyAction);
+            if (ext == null || ext.ClientVersion < 2) {
+                //Version 1 is broken and processed only to be ignored
+                const int v1size = 1 + 2 + 2 + 2 + 2; //Opcode, action enum, blockX, blockY, blockZ
+                if (left < v1size) return 0;
+                return v1size;
+            }
+
+            int size = 1 + 2 + 2 + 2 + 2; //Opcode, action enum, fShortX, fShortY, fShortZ
+            if (player.hasExtPositions) size += 6; //2-byte fShort -> 4-byte fInt
+
             if (left < size) return 0;
 
-            NotifyActionType action = (NotifyActionType)buffer[offset + 2];
-            ushort x = MemUtils.ReadU16_BE(buffer, offset + 3);
-            ushort y = MemUtils.ReadU16_BE(buffer, offset + 5);
-            ushort z = MemUtils.ReadU16_BE(buffer, offset + 7);
+            offset++; //skip over opcode
+            NotifyActionType type = (NotifyActionType)MemUtils.ReadU16_BE(buffer, offset); offset += 2;
 
-            OnNotifyPositionActionEvent.Call(player, action, x, y, z);
+            int x, y, z;
+            if (player.hasExtPositions) {
+                x = MemUtils.ReadI32_BE(buffer, offset); offset += 4;
+                y = MemUtils.ReadI32_BE(buffer, offset); offset += 4;
+                z = MemUtils.ReadI32_BE(buffer, offset); offset += 4;
+            } else {
+                x = MemUtils.ReadI16_BE(buffer, offset); offset += 2;
+                y = MemUtils.ReadI16_BE(buffer, offset); offset += 2;
+                z = MemUtils.ReadI16_BE(buffer, offset); offset += 2;
+            }
+
+            OnNotifyActionEvent.Call(player, NotifyAction.Create(type, new Position(x, y, z)));
             return size;
         }
 

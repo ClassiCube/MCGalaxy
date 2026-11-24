@@ -25,7 +25,6 @@ namespace MCGalaxy.Events.PlayerEvents
     public enum MouseButton { Left, Right, Middle }  
     public enum MouseAction { Pressed, Released }
     public enum TargetBlockFace { AwayX, TowardsX, AwayY, TowardsY, AwayZ, TowardsZ, None }
-    public enum NotifyActionType { BlockListSelected, BlockListToggled, LevelSaved, Respawned, SpawnUpdated, TexturePackChanged, TexturePromptResponded, ThirdPersonChanged }
     public enum PlayerOperation { Skin, LoginMessage, LogoutMessage, Nick, Title, TitleColor, Color, Model }
 
     public delegate void OnPlayerChat(Player p, string message);
@@ -210,31 +209,16 @@ namespace MCGalaxy.Events.PlayerEvents
         }
     }
 
-    public delegate void OnNotifyAction(Player p, NotifyActionType action, short value);
+    public delegate void OnNotifyAction(Player p, NotifyAction action);
     /// <summary> Called whenever a player triggers a certain client event </summary>
     public sealed class OnNotifyActionEvent : IEvent<OnNotifyAction>
     {
-        public static void Call(Player p, NotifyActionType action, short value)
+        public static void Call(Player p, NotifyAction action)
         {
             IEvent<OnNotifyAction>[] items = handlers.Items;
             for (int i = 0; i < items.Length; i++)
             {
-                try { items[i].method(p, action, value); }
-                catch (Exception ex) { LogHandlerException(ex, items[i]); }
-            }
-        }
-    }
-
-    public delegate void OnNotifyPositionAction(Player p, NotifyActionType action, ushort x, ushort y, ushort z);
-    /// <summary> Called whenever a player triggers a respawn/setspawn client event </summary>
-    public sealed class OnNotifyPositionActionEvent : IEvent<OnNotifyPositionAction>
-    {
-        public static void Call(Player p, NotifyActionType action, ushort x, ushort y, ushort z)
-        {
-            IEvent<OnNotifyPositionAction>[] items = handlers.Items;
-            for (int i = 0; i < items.Length; i++)
-            {
-                try { items[i].method(p, action, x, y, z); }
+                try { items[i].method(p, action); }
                 catch (Exception ex) { LogHandlerException(ex, items[i]); }
             }
         }

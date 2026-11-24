@@ -436,6 +436,7 @@
     <Compile Include="Entity\Structs.cs" />
     <Compile Include="Entity\TabList.cs" />
     <Compile Include="Events\BlockDBEvents.cs" />
+    <Compile Include="Events\NotifyAction.cs" />
     <Compile Include="Events\PlayerDBEvents.cs" />
     <Compile Include="Events\EconomyEvents.cs" />
     <Compile Include="Events\EntityEvents.cs" />
