@@ -2,7 +2,14 @@
 using BlockID = System.UInt16;
 
 namespace MCGalaxy.Events.PlayerEvents {
-    public enum NotifyActionType { BlockListSelected, BlockListToggled, LevelSaved, Respawned, SpawnUpdated, TexturePackChanged, TexturePackPromptResponse, ThirdPersonChanged }
+    public enum NotifyActionType {
+        BlockListSelected, BlockListToggled,
+        LevelSaved,
+        Respawned, SpawnUpdated,
+        TexturePackChanged, TexturePackPromptResponse,
+        ThirdPersonChanged,
+        HotbarIndexChanged
+    }
 
     public abstract class NotifyAction {
         public readonly NotifyActionType type;
@@ -39,6 +46,9 @@ namespace MCGalaxy.Events.PlayerEvents {
                     break;
                 case NotifyActionType.ThirdPersonChanged:
                     action = new NotifyActionThirdPersonChanged(type, value);
+                    break;
+                case NotifyActionType.HotbarIndexChanged:
+                    action = new NotifyActionHotbarIndexChanged(type, value);
                     break;
                 default:
                     throw new System.ArgumentException("Unhandled NotifyAction type \""+ type + "\"");
@@ -93,5 +103,10 @@ namespace MCGalaxy.Events.PlayerEvents {
         };
         public PointOfView pointOfView { get { return (PointOfView)value; } }
         public NotifyActionThirdPersonChanged(NotifyActionType type, object value) : base(type, value) { }
+    }
+    public class NotifyActionHotbarIndexChanged : NotifyAction {
+        public int hotbarNumber { get { return (ushort)value >> 8; } } //hotbar number is stored in the most significant byte
+        public int hotbarSlot { get { return (ushort)value & 0xFF; } } //hotbar slot (index) is stored in the least significant byte
+        public NotifyActionHotbarIndexChanged(NotifyActionType type, object value) : base(type, value) { }
     }
 }
