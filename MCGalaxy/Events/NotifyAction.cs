@@ -14,6 +14,10 @@ namespace MCGalaxy.Events.PlayerEvents {
     public abstract class NotifyAction {
         public readonly NotifyActionType type;
         public readonly object value;
+        public abstract string valueString { get; }
+        public override string ToString() {
+            return type + " " + valueString;
+        }
         protected NotifyAction(NotifyActionType type, object value) {
             this.type = type;
             this.value = value;
@@ -57,27 +61,33 @@ namespace MCGalaxy.Events.PlayerEvents {
         }
     }
     public class NotifyActionBlockListSelected : NotifyAction {
+        public override string valueString { get { return selectedBlock.ToString(); } }
         public BlockID selectedBlock { get { return (BlockID)value; } }
         public NotifyActionBlockListSelected(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionBlockListToggled : NotifyAction {
+        public override string valueString { get { return OpenedBlockMenu.ToString(); } }
         public bool OpenedBlockMenu { get { return (ushort)value > 0 ? true : false; } }
         public NotifyActionBlockListToggled(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionLevelSaved : NotifyAction {
+        public override string valueString { get { return ""; } }
         public NotifyActionLevelSaved(NotifyActionType type, object value) : base(type, value) { }
     }
 
-
-    public class NotifyActionRespawned : NotifyAction {
+    public class NotifyActionPosition : NotifyAction {
+        public override string valueString { get { Position pos = this.pos; return String.Format("{0} {1} {2}", pos.X, pos.Y, pos.Z); } }
         public Position pos { get { return (Position)value; } }
+        public NotifyActionPosition(NotifyActionType type, object value) : base(type, value) { }
+    }
+    public class NotifyActionRespawned : NotifyActionPosition {
         public NotifyActionRespawned(NotifyActionType type, object value) : base(type, value) { }
     }
-    public class NotifyActionSpawnUpdated : NotifyAction {
-        public Position pos { get { return (Position)value; } }
+    public class NotifyActionSpawnUpdated : NotifyActionPosition {
         public NotifyActionSpawnUpdated(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionTexturePackChanged : NotifyAction {
+        public override string valueString { get { return changedValue.ToString(); } }
         public enum ChangedValue : ushort {
             Failure = 0,
             FromServer = 1,
@@ -87,6 +97,7 @@ namespace MCGalaxy.Events.PlayerEvents {
         public NotifyActionTexturePackChanged(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionTexturePackPromptResponse : NotifyAction {
+        public override string valueString { get { return responseValue.ToString(); } }
         public enum ResponseValue : ushort {
             Opened = 0,
             Accepted = 1,
@@ -96,6 +107,7 @@ namespace MCGalaxy.Events.PlayerEvents {
         public NotifyActionTexturePackPromptResponse(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionThirdPersonChanged : NotifyAction {
+        public override string valueString { get { return pointOfView.ToString(); } }
         public enum PointOfView : ushort {
             FirstPerson = 0,
             ThirdPerson = 1,
@@ -105,6 +117,7 @@ namespace MCGalaxy.Events.PlayerEvents {
         public NotifyActionThirdPersonChanged(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionHotbarIndexChanged : NotifyAction {
+        public override string valueString { get { return String.Format("{0} {1}", hotbarNumber, hotbarSlot); } }
         public int hotbarNumber { get { return (ushort)value >> 8; } } //hotbar number is stored in the most significant byte
         public int hotbarSlot { get { return (ushort)value & 0xFF; } } //hotbar slot (index) is stored in the least significant byte
         public NotifyActionHotbarIndexChanged(NotifyActionType type, object value) : base(type, value) { }
