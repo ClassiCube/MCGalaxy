@@ -5,7 +5,7 @@ namespace MCGalaxy.Events.PlayerEvents {
     public enum NotifyActionType {
         BlockListSelected, BlockListToggled,
         LevelSaved,
-        Respawned, SpawnUpdated,
+        Respawned, SetSpawn,
         TexturePackChanged, TexturePackPromptResponse,
         ThirdPersonChanged,
         HotbarIndexChanged
@@ -39,8 +39,8 @@ namespace MCGalaxy.Events.PlayerEvents {
                 case NotifyActionType.Respawned:
                     action = new NotifyActionRespawned(type, value);
                     break;
-                case NotifyActionType.SpawnUpdated:
-                    action = new NotifyActionSpawnUpdated(type, value);
+                case NotifyActionType.SetSpawn:
+                    action = new NotifyActionSetSpawn(type, value);
                     break;
                 case NotifyActionType.TexturePackChanged:
                     action = new NotifyActionTexturePackChanged(type, value);
@@ -83,8 +83,8 @@ namespace MCGalaxy.Events.PlayerEvents {
     public class NotifyActionRespawned : NotifyActionPosition {
         public NotifyActionRespawned(NotifyActionType type, object value) : base(type, value) { }
     }
-    public class NotifyActionSpawnUpdated : NotifyActionPosition {
-        public NotifyActionSpawnUpdated(NotifyActionType type, object value) : base(type, value) { }
+    public class NotifyActionSetSpawn : NotifyActionPosition {
+        public NotifyActionSetSpawn(NotifyActionType type, object value) : base(type, value) { }
     }
     public class NotifyActionTexturePackChanged : NotifyAction {
         public override string valueString { get { return changedValue.ToString(); } }
